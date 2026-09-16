@@ -1,0 +1,29 @@
+{
+  "id": "0b0e657b-f3a5-472b-9fe3-b8dcda738018",
+  "base": "719a5715188b1d027034ae428e0dc560b8c77dfb",
+  "contentTree": "ac1c404a30775630bf8218f27fa39b975439208f",
+  "reviewer": "Codex",
+  "summary": "Track the Stratic skill installation manifest.",
+  "examined": [
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "Skill installer bookkeeping does not change the unimplemented placeholder."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "ac1c404a30775630bf8218f27fa39b975439208f",
+      "method": "stratic validate; stratic skill status; inspect installer manifest",
+      "outcome": "pass",
+      "environment": "Stratic 0.1.0, formatVersion 1",
+      "evidence": "Structure valid; installed skill current; installer manifest records its bundled skill hash. Snapshot unchanged across checks.",
+      "tests": [],
+      "id": "522fe2c7-cfda-47d5-8382-b2cbd2941134",
+      "recordedAt": "2026-09-16T11:04:17.596Z"
+    }
+  ],
+  "recordedAt": "2026-09-16T11:04:17.950Z",
+  "unmapped": []
+}
