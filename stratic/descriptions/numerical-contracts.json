@@ -1,0 +1,17 @@
+{
+  "id": "numerical-contracts",
+  "parent": {
+    "description": "verification-interface",
+    "passage": {
+      "quote": "Numerical contracts distinguish real-valued meaning, floating-point behavior, bounded error, and correspondence with a concrete PyTorch implementation."
+    }
+  },
+  "summary": [
+    "Specify precision, ordering, rounding, and permitted approximations explicitly.",
+    "Relate all permitted outputs and VJPs to real-valued targets with interpretable error bounds.",
+    "Distinguish numerical accuracy from bitwise or bounded PyTorch agreement."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Concrete numerical contracts, compositional error bounds, and their explanations remain to be implemented.",
+  "links": []
+}

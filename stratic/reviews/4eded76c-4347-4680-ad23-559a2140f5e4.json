@@ -1,0 +1,146 @@
+{
+  "id": "4eded76c-4347-4680-ad23-559a2140f5e4",
+  "base": "dd049c75b1448748234280548f00089b84180dc1",
+  "contentTree": "5709eee759d5c2339deb17ce92f36fef0422fda1",
+  "reviewer": "Codex",
+  "summary": "Describe lasting PTXLean responsibilities and introduce Examples above Gemma. Integrate documentation obligations throughout the hierarchy and keep tentative choices in separate design notes.",
+  "examined": [
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Expresses lasting project responsibilities and cross-cutting explanatory and evidence standards without historical or discussion-specific content."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "revised",
+      "reason": "Preserves full ISA scope and the relational foundation; describes local explanations and examples as part of the semantic responsibility."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Describes reproducible semantic interpretation and model-assisted checking without contingent provider selection or authorization notes."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "revised",
+      "reason": "Preserves tensor/storage and numerical separation with composition contracts and level-appropriate explanation obligations."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "revised",
+      "reason": "Expresses reusable state lifetime and launch composition responsibilities without application-specific scope or open-question lists."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "revised",
+      "reason": "Keeps general numerical guarantees and explanatory obligations; removes the Gemma-specific provisional policy from the reusable layer."
+    },
+    {
+      "id": "backward",
+      "outcome": "revised",
+      "reason": "Preserves automatic TorchLean construction and separately authored PTX proofs; keeps Gemma-specific cache choices at the example level."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Introduces a root child responsible for reproducible demonstrations of the reusable verification infrastructure."
+    },
+    {
+      "id": "gemma",
+      "outcome": "revised",
+      "reason": "Places the substantial text-only example beneath Examples and preserves cached forward, cache-free block-parameter backward, and mixed-precision contracts."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "5709eee759d5c2339deb17ce92f36fef0422fda1",
+      "method": "stratic validate; git diff --check; manual review of all descriptions and hierarchy against the requested editorial correction",
+      "outcome": "pass",
+      "environment": "Stratic 0.1.0; documentation-only proposal",
+      "evidence": "Validation has no issues. Nine descriptions have nonempty summaries and unimplemented realization; all parent and dependency passages resolve. Root has PTX semantics, verification interface, and Examples children; Gemma is under Examples. Removed the standalone documentation/release and provisional precision nodes. Removed historical-project references and discussion/authorization prose from descriptions; moved tentative precision choices and open questions to design notes. Reviewed that technical scope and the backward automation boundary are preserved and documentation obligations are expressed at relevant levels. Whitespace checks pass and the before/after snapshots match. No implementation was changed or tested.",
+      "tests": [],
+      "id": "0a32c9d5-ab37-46e4-8bc4-f10e2dc0fda0",
+      "recordedAt": "2026-09-17T07:02:40.459Z"
+    }
+  ],
+  "recordedAt": "2026-09-17T07:02:42.217Z",
+  "unmapped": [
+    {
+      "path": "docs/design-notes.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/backward.json",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/backward.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/examples.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/gemma.json",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/gemma.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.json",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/orchestration.json",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/orchestration.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.json",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/root.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/verification-interface.json",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    },
+    {
+      "path": "stratic/descriptions/verification-interface.md",
+      "reason": "Responsibility prose/metadata or explicitly tentative design notes. Parent and dependency links carry the hierarchy; no program implementation exists to justify implementation links."
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "examples",
+  "parent": {
+    "description": "root",
+    "passage": {
+      "quote": "Examples demonstrate how the reusable semantics and verification interfaces establish correctness of concrete neural-network implementations."
+    }
+  },
+  "summary": [
+    "Demonstrate reproducible end-to-end verification of concrete neural networks using reusable contracts.",
+    "Explain application-specific assumptions and distinguish proved guarantees from experimental evidence."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Concrete example implementations, proofs, and reproduction instructions remain to be developed.",
+  "links": [
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Examples demonstrate end-to-end verification by connecting a concrete network\nspecification, its kernel implementation, and checked correctness results through\nthe reusable PTX semantics and verification interface."
+      },
+      "to": {
+        "description": "verification-interface",
+        "passage": {
+          "quote": "Composition requires a producer's guarantees to satisfy its consumer's\nrequirements, including ownership, lifetime, synchronization, and numerical\nconditions."
+        }
+      },
+      "reason": "Examples rely on sound contract composition to establish network-level guarantees."
+    }
+  ]
+}

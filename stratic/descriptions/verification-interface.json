@@ -1,0 +1,30 @@
+{
+  "id": "verification-interface",
+  "parent": {
+    "description": "root",
+    "passage": {
+      "quote": "The verification interface connects TorchLean specifications to tensor representations, orchestrated kernels, and PTX executions."
+    }
+  },
+  "summary": [
+    "Relate logical tensors and state to concrete storage with separate layout and numerical obligations.",
+    "Compose kernel guarantees into network-level correctness under explicit assumptions."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Tensor representation relations, kernel contracts, composition proofs, and explanations remain to be implemented.",
+  "links": [
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Kernel contracts state input representations and preconditions, the specified\ncomputation, and output representations and guarantees."
+      },
+      "to": {
+        "description": "ptx-semantics",
+        "passage": {
+          "quote": "The authoritative semantics describes permitted PTX executions."
+        }
+      },
+      "reason": "Kernel contracts are interpreted over the executions admitted by PTX semantics."
+    }
+  ]
+}

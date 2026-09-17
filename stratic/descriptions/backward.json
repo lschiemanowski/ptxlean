@@ -1,0 +1,43 @@
+{
+  "id": "backward",
+  "parent": {
+    "description": "verification-interface",
+    "passage": {
+      "quote": "Backward specifications are constructed automatically in TorchLean; PTX backward implementations and their correctness proofs are supplied separately."
+    }
+  },
+  "summary": [
+    "Construct justified TorchLean VJPs automatically and verify independently authored PTX backward implementations.",
+    "Keep derivative correctness, numerical accuracy, and kernel execution guarantees separate."
+  ],
+  "realization": "unimplemented",
+  "remaining": "The TorchLean backward bridge, supplied kernel proofs, and explanatory examples remain to be implemented.",
+  "links": [
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Mathematical differentiability and backward correctness, numerical accuracy,\nkernel correspondence, and execution existence, safety, and termination have\nseparate proof obligations."
+      },
+      "to": {
+        "description": "numerical-contracts",
+        "passage": {
+          "quote": "Forward and backward error bounds account for saved forward values, backward arithmetic, and permitted approximations."
+        }
+      },
+      "reason": "Numerical backward guarantees must account for all forward and backward error sources."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The PTX backward implementation is authored separately, together with its\ncorrectness proof."
+      },
+      "to": {
+        "description": "ptx-semantics",
+        "passage": {
+          "quote": "The authoritative semantics describes permitted PTX executions."
+        }
+      },
+      "reason": "The implementation proof must apply to permitted PTX behavior."
+    }
+  ]
+}

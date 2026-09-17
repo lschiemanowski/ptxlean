@@ -1,0 +1,56 @@
+{
+  "id": "gemma",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "The Gemma example verifies text-only Gemma 4 12B implementations for KV-cached forward inference and cache-free forward/backward computation."
+    }
+  },
+  "summary": [
+    "Verify text-only Gemma 4 12B with KV-cached forward and cache-free backward.",
+    "Cover all transformer-block parameter VJPs and a concrete loss with explicit numerical and execution contracts."
+  ],
+  "realization": "unimplemented",
+  "remaining": "The model specification, kernels, correctness proofs, and explanatory material remain to be implemented.",
+  "links": [
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "KV-cached forward inference verifies cache updates and their relationship to\nthe cache-free network, including positions, masks, and architecture-specific\nstate behavior."
+      },
+      "to": {
+        "description": "orchestration",
+        "passage": {
+          "quote": "It supports persistent state across calls as well as\ntemporary values shared between computations."
+        }
+      },
+      "reason": "Cache state must remain valid across composed launches and calls."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "TorchLean constructs the backward specification, while the PTX implementation\nand its correctness proof are developed separately."
+      },
+      "to": {
+        "description": "backward",
+        "passage": {
+          "quote": "TorchLean constructs the backward computation automatically, with checked\ncorrectness results connecting it to the mathematical VJP under explicit\nhypotheses."
+        }
+      },
+      "reason": "The example instantiates the justified VJP construction for its block parameters."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The implementation uses an explicit mixed-precision policy."
+      },
+      "to": {
+        "description": "numerical-contracts",
+        "passage": {
+          "quote": "Numerical contracts are precision-parametric."
+        }
+      },
+      "reason": "Gemma instantiates explicit precision contracts and their numerical guarantees."
+    }
+  ]
+}

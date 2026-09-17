@@ -1,0 +1,30 @@
+{
+  "id": "orchestration",
+  "parent": {
+    "description": "verification-interface",
+    "passage": {
+      "quote": "Orchestration contracts account for allocations, launches, dependencies, storage lifetime, and observable results across kernels."
+    }
+  },
+  "summary": [
+    "Compose kernels through explicit allocation, launch, dependency, and lifetime contracts.",
+    "Distinguish abstract orchestration guarantees from concrete runtime correspondence."
+  ],
+  "realization": "unimplemented",
+  "remaining": "The orchestration model, runtime contracts, composition proofs, and examples remain to be implemented.",
+  "links": [
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The orchestration layer composes permitted kernel executions while preserving their safety and execution premises."
+      },
+      "to": {
+        "description": "ptx-semantics",
+        "passage": {
+          "quote": "Safety, correctness of completed executions, execution existence, and progress\nor termination have separate statements with explicit scheduling, fairness,\nresource, and environment premises."
+        }
+      },
+      "reason": "Composition must preserve the premises and meaning of the kernel execution guarantees."
+    }
+  ]
+}
