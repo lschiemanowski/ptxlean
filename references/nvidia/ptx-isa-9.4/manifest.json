@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "document_title": "1. Introduction \u2014 PTX ISA 9.4 documentation",
+  "isa_version": "9.4",
+  "artifact": "index.html",
+  "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html",
+  "resolved_url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html",
+  "retrieved_at_utc": "2026-09-17T07:18:03.208585+00:00",
+  "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+  "bytes": 3928316,
+  "content_type": "text/html",
+  "etag": "\"b7985febce5509e44f982d91a5fc7721\"",
+  "last_modified": "Wed, 16 Sep 2026 21:45:22 GMT",
+  "capture_scope": "Exact HTML response body; linked images, stylesheets, and other pages were not downloaded.",
+  "sections": [
+    {
+      "anchor": "scope-and-applicability",
+      "heading": "8.1. Scope and applicability of the model",
+      "source_line": 6509,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#scope-and-applicability",
+      "local_reference": "index.html#scope-and-applicability"
+    },
+    {
+      "anchor": "memory-operations",
+      "heading": "8.2. Memory operations",
+      "source_line": 6526,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#memory-operations",
+      "local_reference": "index.html#memory-operations"
+    },
+    {
+      "anchor": "initialization",
+      "heading": "8.2.6. Initialization",
+      "source_line": 6585,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#initialization",
+      "local_reference": "index.html#initialization"
+    },
+    {
+      "anchor": "scope",
+      "heading": "8.5. Scope",
+      "source_line": 6741,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#scope",
+      "local_reference": "index.html#scope"
+    },
+    {
+      "anchor": "proxies",
+      "heading": "8.6. Proxies",
+      "source_line": 6788,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#proxies",
+      "local_reference": "index.html#proxies"
+    },
+    {
+      "anchor": "morally-strong-operations",
+      "heading": "8.7. Morally strong operations",
+      "source_line": 6834,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#morally-strong-operations",
+      "local_reference": "index.html#morally-strong-operations"
+    },
+    {
+      "anchor": "release-acquire-patterns",
+      "heading": "8.8. Release and Acquire Patterns",
+      "source_line": 6874,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#release-acquire-patterns",
+      "local_reference": "index.html#release-acquire-patterns"
+    },
+    {
+      "anchor": "program-order",
+      "heading": "8.9.1. Program Order",
+      "source_line": 6953,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#program-order",
+      "local_reference": "index.html#program-order"
+    },
+    {
+      "anchor": "program-order-async-operations",
+      "heading": "8.9.1.1. Asynchronous Operations",
+      "source_line": 6961,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#program-order-async-operations",
+      "local_reference": "index.html#program-order-async-operations"
+    },
+    {
+      "anchor": "observation-order",
+      "heading": "8.9.2. Observation Order",
+      "source_line": 6984,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#observation-order",
+      "local_reference": "index.html#observation-order"
+    },
+    {
+      "anchor": "memory-synchronization",
+      "heading": "8.9.4. Memory synchronization",
+      "source_line": 7003,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#memory-synchronization",
+      "local_reference": "index.html#memory-synchronization"
+    },
+    {
+      "anchor": "causality-order",
+      "heading": "8.9.5. Causality Order",
+      "source_line": 7048,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#causality-order",
+      "local_reference": "index.html#causality-order"
+    },
+    {
+      "anchor": "coherence-order",
+      "heading": "8.9.6. Coherence Order",
+      "source_line": 7091,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#coherence-order",
+      "local_reference": "index.html#coherence-order"
+    },
+    {
+      "anchor": "communication-order",
+      "heading": "8.9.7. Communication Order",
+      "source_line": 7104,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#communication-order",
+      "local_reference": "index.html#communication-order"
+    },
+    {
+      "anchor": "coherence-axiom",
+      "heading": "8.10.1. Coherence",
+      "source_line": 7125,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#coherence-axiom",
+      "local_reference": "index.html#coherence-axiom"
+    },
+    {
+      "anchor": "fence-sc-axiom",
+      "heading": "8.10.2. Fence-SC",
+      "source_line": 7132,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#fence-sc-axiom",
+      "local_reference": "index.html#fence-sc-axiom"
+    },
+    {
+      "anchor": "atomicity-axiom",
+      "heading": "8.10.3. Atomicity",
+      "source_line": 7140,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#atomicity-axiom",
+      "local_reference": "index.html#atomicity-axiom"
+    },
+    {
+      "anchor": "no-thin-air-axiom",
+      "heading": "8.10.4. No Thin Air",
+      "source_line": 7249,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#no-thin-air-axiom",
+      "local_reference": "index.html#no-thin-air-axiom"
+    },
+    {
+      "anchor": "sc-per-loc-axiom",
+      "heading": "8.10.5. Sequential Consistency Per Location",
+      "source_line": 7368,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#sc-per-loc-axiom",
+      "local_reference": "index.html#sc-per-loc-axiom"
+    },
+    {
+      "anchor": "causality-axiom",
+      "heading": "8.10.6. Causality",
+      "source_line": 7430,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#causality-axiom",
+      "local_reference": "index.html#causality-axiom"
+    },
+    {
+      "anchor": "addresses-as-operands",
+      "heading": "6.4.1. Addresses as Operands",
+      "source_line": 5495,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#addresses-as-operands",
+      "local_reference": "index.html#addresses-as-operands"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-ld",
+      "heading": "9.7.10.8. Data Movement and Conversion Instructions: ld",
+      "source_line": 16540,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-ld",
+      "local_reference": "index.html#data-movement-and-conversion-instructions-ld"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-st",
+      "heading": "9.7.10.11. Data Movement and Conversion Instructions: st",
+      "source_line": 16977,
+      "url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-st",
+      "local_reference": "index.html#data-movement-and-conversion-instructions-st"
+    }
+  ]
+}

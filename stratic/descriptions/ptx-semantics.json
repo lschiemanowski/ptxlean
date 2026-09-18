@@ -12,5 +12,30 @@
   ],
   "realization": "unimplemented",
   "remaining": "PTX execution semantics, derived proof rules, and their explanations remain to be implemented.",
-  "links": []
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Explanations relate the formal rules to the programming and computing model in\n[NVIDIA's PTX manual](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html)."
+      },
+      "to": {
+        "path": "docs/foundations/message-passing.md",
+        "passage": {
+          "quote": "This study works out a small instance of the relational PTX foundation. It is a\nsource-reviewed mathematical argument and a proposed proof target, not a Lean\nproof, assembled kernel, hardware experiment, or implementation of PTX semantics."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Explanations relate the formal rules to the programming and computing model in\n[NVIDIA's PTX manual](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html)."
+      },
+      "to": {
+        "path": "docs/foundations/representation.md",
+        "passage": {
+          "quote": "Use local operational derivations to explain each thread's executed instructions,\nregister changes, and emitted effects. Use a candidate execution to assign\nmemory-read sources and express global constraints on the resulting events."
+        }
+      }
+    }
+  ]
 }

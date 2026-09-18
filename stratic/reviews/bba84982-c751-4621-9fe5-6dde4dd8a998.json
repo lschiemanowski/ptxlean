@@ -1,0 +1,87 @@
+{
+  "id": "bba84982-c751-4621-9fe5-6dde4dd8a998",
+  "base": "170a2622294e14d6c218c4aa52a991485a179d87",
+  "contentTree": "cbadcb2c1b8516515d99c86a63d76183d3e79357",
+  "reviewer": "Codex",
+  "summary": "Pin the NVIDIA PTX ISA 9.4 source and document a two-thread publication argument, a missing-acquire counterexample, and a proposed Lean representation. No Lean implementation or checked semantic proof is claimed.",
+  "examined": [
+    {
+      "id": "ptx-semantics",
+      "outcome": "revised",
+      "reason": "Added links to the publication explanation and proposed representation as supporting documentation. Execution semantics and proofs remain unimplemented; the responsibility and coverage target are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Added a reproducible source-record link with exact bytes, hash, and section locators; this supplies provenance, not semantic correctness or hardware evidence."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "The source snapshot and bounded foundations study elaborate existing semantic and documentation responsibilities without changing project scope."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "The study does not change PTX guarantees, backward construction, or the separate backward kernel proof obligation."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "unchanged",
+      "reason": "The study explicitly excludes multi-kernel runtime execution and does not change orchestration contracts."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "A documentation-only study supplies no new tensor or kernel interface and does not change composition guarantees."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "cbadcb2c1b8516515d99c86a63d76183d3e79357",
+      "method": "sha256sum -c; offline manifest and local-link inspection; stratic validate; git diff --check; source review of the message-passing argument and representation proposal",
+      "outcome": "pass",
+      "environment": "Stratic 0.1.0; Python standard library; frozen NVIDIA PTX ISA 9.4 HTML; no Lean build or GPU execution",
+      "evidence": "Source SHA-256 0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed, byte count 3928316, title/version and all 23 anchor/line references match the saved bytes. 20 local documentation links resolve, including HTML fragments. Stratic reports no issues and authored whitespace checks pass. Manually reviewed the acquire publication implication and weakened relaxed witness against scope, proxy, release/acquire, causality, and the six memory axioms in the pinned source; these remain paper arguments, not checked proofs. The proposal keeps base causality separate from causality and identifies safety, existence, and progress obligations. Snapshot unchanged across checks. No Lean files or executable semantics were added.",
+      "tests": [],
+      "id": "1a7495de-680a-414f-b869-41665064da94",
+      "recordedAt": "2026-09-17T07:25:02.721Z"
+    }
+  ],
+  "recordedAt": "2026-09-17T07:25:05.692Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/message-passing.md",
+      "reason": "Stratic metadata or immutable vendor source/provenance record supporting the linked study. The exact source is hashed and retained unmodified; it is not an implementation of PTX semantics."
+    },
+    {
+      "path": "docs/foundations/representation.md",
+      "reason": "Stratic metadata or immutable vendor source/provenance record supporting the linked study. The exact source is hashed and retained unmodified; it is not an implementation of PTX semantics."
+    },
+    {
+      "path": "references/nvidia/ptx-isa-9.4/README.md",
+      "reason": "Stratic metadata or immutable vendor source/provenance record supporting the linked study. The exact source is hashed and retained unmodified; it is not an implementation of PTX semantics."
+    },
+    {
+      "path": "references/nvidia/ptx-isa-9.4/SHA256SUMS",
+      "reason": "Stratic metadata or immutable vendor source/provenance record supporting the linked study. The exact source is hashed and retained unmodified; it is not an implementation of PTX semantics."
+    },
+    {
+      "path": "references/nvidia/ptx-isa-9.4/index.html",
+      "reason": "Stratic metadata or immutable vendor source/provenance record supporting the linked study. The exact source is hashed and retained unmodified; it is not an implementation of PTX semantics."
+    },
+    {
+      "path": "references/nvidia/ptx-isa-9.4/manifest.json",
+      "reason": "Stratic metadata or immutable vendor source/provenance record supporting the linked study. The exact source is hashed and retained unmodified; it is not an implementation of PTX semantics."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.json",
+      "reason": "Stratic metadata or immutable vendor source/provenance record supporting the linked study. The exact source is hashed and retained unmodified; it is not an implementation of PTX semantics."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Stratic metadata or immutable vendor source/provenance record supporting the linked study. The exact source is hashed and retained unmodified; it is not an implementation of PTX semantics."
+    }
+  ]
+}
