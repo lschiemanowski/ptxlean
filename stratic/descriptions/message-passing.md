@@ -30,3 +30,10 @@ The guide connects source clauses to definitions and proof steps, distinguishes
 formal guarantees from semantic interpretation, and gives reproducible checks.
 Finite local execution and admitted completed candidates are distinct from a
 general progress theorem for GPU executions.
+
+A finite candidate checker accepts exactly the executions satisfying the
+restricted memory-validity predicate, including its unbounded path constraints.
+The message-passing outcome classification is complete for both acquire and
+relaxed consumers. Source-reviewed litmus examples exercise store buffering,
+same-location ordering, and multi-instruction synchronization patterns through
+admitted executions and universal exclusion results.

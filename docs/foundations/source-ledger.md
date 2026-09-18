@@ -74,3 +74,13 @@ The coverage claim is restricted scalar u32 message passing and its reusable
 local/relational definitions. There is no complete PTX byte model, dependency
 model, target validator, undefined-behavior semantics, hardware conformance
 proof, compiler correctness proof, or GPU scheduling/progress theorem.
+
+## Finite checking and litmus evidence
+
+The [finite-checking guide](finite-checking.md) adds algorithmic and example
+evidence without changing these semantic clauses. `Graph.check_iff` proves exact
+equivalence to the existing validity predicate. The complete message-passing
+outcome classification and the store-buffering, same-location, release-pair, and
+acquire-pair results are checked relative to it. Independent source review
+confirmed the intended behaviors against the pinned clauses; this does not
+upgrade the source-level normalization argument to a checked PTX equivalence.

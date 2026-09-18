@@ -1,0 +1,89 @@
+{
+  "id": "finite-checking",
+  "parent": {
+    "description": "message-passing",
+    "passage": {
+      "quote": "A finite candidate checker accepts exactly the executions satisfying the\nrestricted memory-validity predicate, including its unbounded path constraints."
+    }
+  },
+  "summary": [
+    "Decide finite candidate validity exactly, with proved soundness and completeness against the existing memory relations.",
+    "Compute nonempty reachability without losing cycles or introducing identity paths.",
+    "Expose algorithm correctness separately from program outcome classification and PTX semantic fidelity."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The checker decides the restricted memory-validity predicate for every finite\ncandidate graph."
+      },
+      "to": {
+        "path": "Ptx/Checker.lean",
+        "passage": {
+          "quote": "theorem check_iff (g : Graph n) : g.check = true \u2194 g.Valid := by\n  simp only [check, decide_eq_true_eq, baseCheck_iff, causeCheck_iff, locationCheck_iff]\n  exact \u27e8fun \u27e8hs, hc, hb, hw, hf, ho, hl\u27e9 => \u27e8hs, hc, hb, hw, hf, ho, hl\u27e9,\n    fun h => \u27e8h.sources, h.co, h.base_irrefl, h.coherence_cause,\n      h.no_future, h.no_stale, h.sc_per_location\u27e9\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Nonempty reachability preserves exactly the paths of the supplied edge relation."
+      },
+      "to": {
+        "path": "Ptx/Reachability.lean",
+        "passage": {
+          "quote": "theorem reachable_iff (r : Fin n \u2192 Fin n \u2192 Bool) (a b : Fin n) :\n    reachable r a b = true \u2194 Path (fun x y => r x y = true) a b := by\n  constructor\n  \u00b7 exact reachableVia_sound _\n  \u00b7 intro path\n    induction path with\n    | edge edge => exact reachableVia_edge _ edge\n    | @join a middle b first second ih\u2081 ih\u2082 =>\n        apply reachableVia_trans _ _ ih\u2081 ih\u2082\n        exact List.mem_ofFn.mpr \u27e8middle, rfl\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Regression examples distinguish\nnonempty paths from reflexive reachability and exercise malformed sources,\ncoherence, and cyclic ordering."
+      },
+      "to": {
+        "path": "Ptx/CheckerExamples.lean",
+        "passage": {
+          "quote": "theorem empty_relation (a b : Fin 3) :\n    reachable (fun _ _ : Fin 3 => false) a b = false := by\n  revert a b\n  decide\n\ntheorem singleton_loop : reachable (fun _ _ : Fin 1 => true) 0 0 = true := by decide\n\ndef cycleEdges (a b : Fin 3) : Bool := b.val == (a.val + 1) % 3\n\n/-- In particular, nonempty cycles make every diagonal reachable. -/\ntheorem cycle_reachable : \u2200 a b : Fin 3, reachable cycleEdges a b = true := by decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Regression examples distinguish\nnonempty paths from reflexive reachability and exercise malformed sources,\ncoherence, and cyclic ordering."
+      },
+      "to": {
+        "path": "Ptx/CheckerExamples.lean",
+        "passage": {
+          "quote": "theorem wrong_value_rejected : wrongValue.check = false := by decide\ntheorem wrong_address_rejected : wrongAddress.check = false := by decide\ntheorem missing_initial_coherence_rejected : missingCo.check = false := by decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Regression examples distinguish\nnonempty paths from reflexive reachability and exercise malformed sources,\ncoherence, and cyclic ordering."
+      },
+      "to": {
+        "path": "Ptx/CheckerExamples.lean",
+        "passage": {
+          "quote": "theorem base_cycle_detected : cyclicBase.baseCheck 0 0 = true := by decide\ntheorem base_cycle_rejected : cyclicBase.check = false := by decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The explanation separates algorithmic equivalence, outcome completeness, and\nfidelity to the documented PTX semantics."
+      },
+      "to": {
+        "path": "docs/foundations/finite-checking.md",
+        "passage": {
+          "quote": "## Three different completeness questions\n\n| Claim | Checked result | Boundary |\n| --- | --- | --- |\n| Does the checker accept exactly valid finite graphs? | `Graph.check_iff`: `g.check = true \u2194 g.Valid`, for arbitrary size and labels. | This is equivalence to our existing formal predicate, not to the entire PTX ISA. |\n| Are the message-passing outcome lists exhaustive? | `acquire_outcomes` and `relaxed_outcomes`, for arbitrary u32 result words. | Every listed outcome has an admitted program execution; every admitted result lies in the list. |\n| Does this model faithfully capture NVIDIA's semantics? | Source ledger and independent semantic review, supported by discriminating examples. | The original whole-word/initialization interpretations remain source arguments. No full PTX or hardware equivalence theorem has been added. |\n\n`Graph.check` takes event labels, read sources, and a coherence relation already\nchosen by its caller. It does not enumerate all choices or synthesize executions.\nIt also does not validate an instruction program or an allocation. The checked\n`Program.Admitted` predicate supplies generated program labels and arena bounds\nin each execution-existence theorem."
+        }
+      }
+    }
+  ]
+}

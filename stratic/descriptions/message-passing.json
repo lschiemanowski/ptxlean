@@ -9,7 +9,8 @@
   "summary": [
     "Connect finite immediate u32 stores and register loads to restricted PTX memory relations.",
     "Prove acquire publication, construct successful and relaxed stale-read executions, and establish aligned arena access safety.",
-    "Expose source interpretations, logical dependencies, and fragment restrictions in a reproducible study guide."
+    "Expose source interpretations, logical dependencies, and fragment restrictions in a reproducible study guide.",
+    "Decide finite candidate validity exactly and classify message-passing outcomes, with source-reviewed memory-order litmus proofs."
   ],
   "realization": "implemented",
   "links": [
@@ -130,6 +131,78 @@
         "path": "docs/foundations/source-ledger.md",
         "passage": {
           "quote": "The normative input is the locally [pinned PTX ISA 9.4 manual](../../references/nvidia/ptx-isa-9.4/README.md),\nSHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.\nLinks below resolve to that file, not the mutable online manual. The manifest\nrecords source retrieval and section locators. This ledger is a reviewed\ninterpretation of prose; Lean does not prove the prose has been faithfully\ntranslated. No hardware testing or comparison to another full PTX model is\nclaimed."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The message-passing outcome classification is complete for both acquire and\nrelaxed consumers."
+      },
+      "to": {
+        "path": "Ptx/MessagePassingOutcomes.lean",
+        "passage": {
+          "quote": "theorem acquire_outcomes (flag payload : Word) :\n    Possible .acquire flag payload \u2194\n      (flag = 0 \u2227 payload = 0) \u2228 (flag = 0 \u2227 payload = 7) \u2228 (flag = 1 \u2227 payload = 7) := by\n  constructor\n  \u00b7 rintro \u27e8source, co, \u27e8_, valid\u27e9, _\u27e9\n    obtain \u27e8hf, hp\u27e9 := source_values .acquire flag payload source co valid.sources\n    rcases hf with hf | hf\n    \u00b7 rcases hp with hp | hp\n      \u00b7 exact Or.inl \u27e8hf, hp\u27e9\n      \u00b7 exact Or.inr (Or.inl \u27e8hf, hp\u27e9)\n    \u00b7 subst flag\n      exact Or.inr (Or.inr \u27e8rfl, publication payload source co valid\u27e9)\n  \u00b7 rintro (\u27e8rfl, rfl\u27e9 | \u27e8rfl, rfl\u27e9 | \u27e8rfl, rfl\u27e9)\n    \u00b7 exact possible_of_check .acquire false false (zero_flag_check .acquire false)\n    \u00b7 exact possible_of_check .acquire false true (zero_flag_check .acquire true)\n    \u00b7 exact possible_of_check .acquire true true acquire_success_check"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The message-passing outcome classification is complete for both acquire and\nrelaxed consumers."
+      },
+      "to": {
+        "path": "Ptx/MessagePassingOutcomes.lean",
+        "passage": {
+          "quote": "theorem relaxed_outcomes (flag payload : Word) :\n    Possible .relaxed flag payload \u2194\n      (flag = 0 \u2228 flag = 1) \u2227 (payload = 0 \u2228 payload = 7) := by\n  constructor\n  \u00b7 rintro \u27e8source, co, \u27e8_, valid\u27e9, _\u27e9\n    exact source_values .relaxed flag payload source co valid.sources\n  \u00b7 rintro \u27e8hf | hf, hp | hp\u27e9 <;> subst flag <;> subst payload\n    \u00b7 exact possible_of_check .relaxed false false (relaxed_check false false)\n    \u00b7 exact possible_of_check .relaxed false true (relaxed_check false true)\n    \u00b7 exact possible_of_check .relaxed true false (relaxed_check true false)\n    \u00b7 exact possible_of_check .relaxed true true (relaxed_check true true)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Source-reviewed litmus examples exercise store buffering,\nsame-location ordering, and multi-instruction synchronization patterns through\nadmitted executions and universal exclusion results."
+      },
+      "to": {
+        "path": "Ptx/Litmus.lean",
+        "passage": {
+          "quote": "theorem both_zero_exists : \u2203 (x y : Word), \u2203 source co,\n    program.Admitted zeroRegisters (oracle x y) source co \u2227 result x y = (0, 0) := by\n  refine \u27e80, 0, source, co, \u27e8?_, witness_valid\u27e9, rfl\u27e9\n  simp [Program.Bounded, program, left, right, Instr.address]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Source-reviewed litmus examples exercise store buffering,\nsame-location ordering, and multi-instruction synchronization patterns through\nadmitted executions and universal exclusion results."
+      },
+      "to": {
+        "path": "Ptx/Litmus.lean",
+        "passage": {
+          "quote": "theorem ordered_read (value : Word) (source co) (valid : (graph value source co).Valid) :\n    result value = 1 := by\n  let g := graph value source co\n  have causes : g.cause 1 2 := Or.inl \u27e8Path.edge (Or.inl \u27e8(by intro h; cases h), rfl, (by change 0 < 1; decide)\u27e9), rfl\u27e9\n  have notInitial : source 2 \u2260 0 := by\n    intro hs\n    have hc := valid.co.initFirst 0 1 rfl (by trivial) rfl (by decide)\n    exact valid.no_stale 1 2 (by trivial) (by trivial) rfl causes (by change g.coherence (source _) _; rw [hs]; exact hc)\n  have h := valid.sources.compatible 2 (by trivial)\n  change g.write (source 2) \u2227 g.sameAddress (source 2) 2 \u2227\n    (g.event (source 2)).effect.value = value at h\n  have cases : source 2 = 0 \u2228 source 2 = 1 \u2228 source 2 = 2 := by omega\n  rcases cases with hs | hs | hs\n  \u00b7 exact False.elim (notInitial hs)\n  \u00b7 rw [hs] at h\n    exact h.2.2.symm\n  \u00b7 rw [hs] at h\n    exact False.elim h.1"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Source-reviewed litmus examples exercise store buffering,\nsame-location ordering, and multi-instruction synchronization patterns through\nadmitted executions and universal exclusion results."
+      },
+      "to": {
+        "path": "Ptx/Litmus.lean",
+        "passage": {
+          "quote": "theorem ReleasePair.pair_required : \u2200 a b : Fin 8,\n    \u00ac(\u2203 r, ReleasePair.witness.release a \u2227\n      ReleasePair.witness.acquirePattern r b \u2227\n      ReleasePair.witness.observation a r \u2227\n      ReleasePair.witness.morallyStrong a b) := by decide\n\n/-- Removing the nontrivial acquire-pattern branch likewise eliminates every\npossible synchronization pair in the independent acquire-pair witness. -/\ntheorem AcquirePair.pair_required : \u2200 a b : Fin 8,\n    \u00ac(\u2203 w, AcquirePair.witness.releasePattern a w \u2227\n      AcquirePair.witness.acquire b \u2227\n      AcquirePair.witness.observation w b \u2227\n      AcquirePair.witness.morallyStrong a b) := by decide\n\ntheorem ReleasePair.witness_synchronizes : ReleasePair.witness.sync 3 6 := by decide\ntheorem AcquirePair.witness_synchronizes : AcquirePair.witness.sync 3 5 := by decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Source-reviewed litmus examples exercise store buffering,\nsame-location ordering, and multi-instruction synchronization patterns through\nadmitted executions and universal exclusion results."
+      },
+      "to": {
+        "path": "docs/foundations/finite-checking.md",
+        "passage": {
+          "quote": "## Four source-reviewed litmus programs\n\n[`Ptx/Litmus.lean`](../../Ptx/Litmus.lean) uses actual instruction lists,\n`Program.graph`, and final register projections throughout. These are derived\nexamples within the restricted model, not runnable PTX modules or copies of\nNVIDIA's fence-based examples.\n\n| Namespace | Programs and proved result | Modeling error this exercises |\n| --- | --- | --- |\n| `StoreBuffering` | Each thread stores 1 to its own word, then reads the other's word; both reads can return 0. | Imposing global sequential consistency on the union of cross-location PO and communication would wrongly forbid this witness. |\n| `SameLocation` | One thread stores 1 then reads that same word; every admitted execution reads 1, and such an execution exists. | Ignoring same-location causality or initialization order could admit a stale initial read. |\n| `ReleasePair` | Producer stores payload7, releases flag1, then stores flag2 relaxed. Consumer reads flag2 relaxed, then acquires the flag, then reads payload. The final payload must be7. | Recognizing only a release instruction itself as the observed write would miss the paired-release synchronization. |\n| `AcquirePair` | Producer stores payload7 and releases flag1. Consumer first reads flag1 relaxed, then acquires flag2 written by a separate relaxed writer, then reads payload. The final payload must be7. | Recognizing only observation by the acquire instruction itself would miss the paired-acquire synchronization. |\n\nThe paired-release witness has both flag reads observe the later relaxed store;\n`no_direct_release_observation` proves neither observes the release itself.\nThe paired-acquire witness has its acquire observe the independent third\nthread's store; again there is no direct release-to-acquire observation. For each witness, `pair_required` rules out every synchronization derivation\nusing only the corresponding direct form, while `witness_synchronizes` proves\nthe actual relation. These choices ensure the pair rules have substantive work\nto do. The release example\nalso uses an acquire pair in its proof, but the separate third-thread example\nis what independently exercises that rule without a direct-acquire alternative.\n\nBoth publication theorems quantify over arbitrary remaining read values, source\nmaps, and coherence choices satisfying validity. Each has a checked admitted\nwitness, an actual final-register theorem, and arena-safety results. Store\nbuffering establishes the both-zero witness only; this work does not claim its\ncomplete outcome table. All instructions are finite, and the existing\n`Program.all_threads_run` supplies local completion for their chosen oracles.\nNone of these results asserts hardware scheduling or eventual flag observation.\n\nThe relevant source clauses are [release/acquire patterns][patterns],\n[synchronization][sync], [causality order][cause],\n[SC-per-location][sc], and [the causality axiom][causality]. The\n[source ledger](source-ledger.md) records how they specialize to this fragment."
         }
       }
     }

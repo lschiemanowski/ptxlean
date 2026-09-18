@@ -1,0 +1,118 @@
+{
+  "id": "b7fa3069-389d-4fd9-9e1d-a4e6e31ec556",
+  "base": "09d73a0044829e7d4bc803c3b9d4163ef5cf981a",
+  "contentTree": "0889f17eae5ce82d02197f80c858ecf099fbbf03",
+  "reviewer": "Codex with independent semantic and proof reviewers",
+  "summary": "Verify finite memory checking and classify message-passing outcomes",
+  "examined": [
+    {
+      "id": "finite-checking",
+      "outcome": "revised",
+      "reason": "New implemented responsibility for exact finite Graph.Valid checking: nonempty reachability soundness/completeness, all existing validity constraints, executable Boolean checker, and boundary/malformed-candidate regressions. No semantic definition changed."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "revised",
+      "reason": "Extended the bounded fragment with complete acquire/relaxed outcome classifications over arbitrary word values and source/coherence choices, plus store-buffering, same-location and discriminating paired-release/acquire examples. Maintained program-derived labels, admitted witnesses, actual registers, safety, and audited proof dependencies."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "The existing operational/relational foundation gains exact checking and additional derived examples within the same instruction/scope/address restrictions. Full ISA, scope/topology, byte normalization, and hardware progress limitations remain unchanged; broad responsibility remains partial."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Additional independent proof/source reviews and discriminating litmus examples supply evidence under the existing contract. Algorithm completeness is explicitly distinct from fidelity to the pinned PTX prose; no hardware or general byte-semantics equivalence is asserted."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "The authorized work strengthens the existing restricted PTX foundation only; no numerical, TorchLean, backward, Gemma, target/topology, or instruction-language scope is added."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "0889f17eae5ce82d02197f80c858ecf099fbbf03",
+      "method": "scripts/check.sh --clean; stratic validate; all local documentation-link/HTML-fragment checks; git diff --check; independent source and proof review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.33.0 d8b18978322de05a8f3dba51ef03cf5461676c17, bundled libraries only; Python standard library; Stratic 0.1.0; frozen PTX ISA 9.4 HTML; no GPU execution or paid external model calls",
+      "evidence": "Exact snapshot unchanged before/after checks. Clean build completes all 12 jobs. Source guard scans 11 Lean files; 75 theorem dependency reports contain only standard propext, Quot.sound, and Classical.choice, with no proof placeholders, custom axioms, or unchecked native-evaluation dependencies. PTX source SHA-256, 3928316 bytes, and 23 manifest anchors verify; 67 local documentation links/fragments resolve; Stratic structure/passage links and whitespace checks pass. Independent proof reviewers cross-reviewed the separately authored reachability/checker/outcome/litmus modules and inspected theorem dependencies. Exact reachability handles nonempty paths, self-loops, empty vertex types, and cycles without a cutoff. check_iff covers every unchanged Graph.Valid field. Complete MP classifications quantify arbitrary words/source/co and include admitted witness directions. Four litmus programs have source-reviewed results and checked program witnesses; paired-rule necessity is itself kernel-checked with pair_required and witness_synchronizes. Independent semantic reviewer found no blocking issue or required correction in code/source correspondence or final docs. Completeness is relative to the existing fragment semantics, not full PTX/hardware semantics; fixed GPU/global/generic, whole-word, immediate-store restrictions persist.",
+      "tests": [],
+      "id": "a3ef6eb2-24b6-4c27-9661-4ea97dedafd6",
+      "recordedAt": "2026-09-18T19:25:32.513Z"
+    }
+  ],
+  "recordedAt": "2026-09-18T19:25:34.772Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Imports the new outcome, checker-regression and litmus modules so default library builds check all proofs."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Extended public theorem audit includes exact closure/checker equivalences, complete outcomes, regression propositions, litmus guarantees/safety, and paired-rule discrimination."
+    },
+    {
+      "path": "Ptx/Checker.lean",
+      "reason": "Linked equivalence theorem anchors the exact-checker responsibility; reviewed all primitive decidability instances, source/coherence structural equivalences, finite base/cause/location checks, and both acceptance/rejection directions against unchanged Valid."
+    },
+    {
+      "path": "Ptx/CheckerExamples.lean",
+      "reason": "Linked boundary/rejection propositions anchor regression behavior; reviewed remaining candidate construction, cycles, source typing/value/address, and coherence examples as a whole. Synthetic raw graphs intentionally test checker domain, not program admission."
+    },
+    {
+      "path": "Ptx/Litmus.lean",
+      "reason": "Linked representative admission, exclusion, and pair-discrimination theorems anchor the suite; all program/oracle/graph/result definitions, universal proofs, checker witnesses and bounds/safety proofs were independently reviewed. SB coverage is only the00 witness, explicitly documented."
+    },
+    {
+      "path": "Ptx/MessagePassingOutcomes.lean",
+      "reason": "Linked complete classification statements anchor the responsibility; reviewed arbitrary-word source-value bounds, seven checker-backed admitted witnesses, and actual register projections. No exhaustive search claim is made."
+    },
+    {
+      "path": "Ptx/Reachability.lean",
+      "reason": "Linked exact-path equivalence anchors correctness; reviewed recurrence, edge inclusion, soundness and processed-vertex transitivity lemmas. Functional elimination has no memoized complexity claim and preserves cycle diagonals."
+    },
+    {
+      "path": "README.md",
+      "reason": "Updated entry documentation directs readers to exact checking and litmus guide while retaining fragment and semantic-fidelity boundaries."
+    },
+    {
+      "path": "docs/foundations/finite-checking.md",
+      "reason": "Linked sections anchor responsibilities; full algorithm explanation, exact theorem boundaries, source-reviewed examples, discriminating cases, regressions, and reproducible commands reviewed independently."
+    },
+    {
+      "path": "docs/foundations/guide.md",
+      "reason": "Adds a continuation link and separates algorithm equivalence, outcome classification and source fidelity; original teaching sequence retained."
+    },
+    {
+      "path": "docs/foundations/message-passing.md",
+      "reason": "Replaces paper-only outcome-table caveat with checked complete classification and link to its proof explanation; original source argument preserved."
+    },
+    {
+      "path": "docs/foundations/representation.md",
+      "reason": "Adds exact-checker and additional-example account while preserving all representation restrictions and original semantics."
+    },
+    {
+      "path": "docs/foundations/source-ledger.md",
+      "reason": "Adds reviewed algorithmic/litmus evidence without changing any source interpretation or claiming general byte-model/hardware equivalence."
+    },
+    {
+      "path": "stratic/descriptions/finite-checking.json",
+      "reason": "Responsibility prose or metadata: inspected parent hierarchy, nonempty summaries, implemented bounded status, and exact passage links. Metadata does not need implementation links to itself."
+    },
+    {
+      "path": "stratic/descriptions/finite-checking.md",
+      "reason": "Responsibility prose or metadata: inspected parent hierarchy, nonempty summaries, implemented bounded status, and exact passage links. Metadata does not need implementation links to itself."
+    },
+    {
+      "path": "stratic/descriptions/message-passing.json",
+      "reason": "Responsibility prose or metadata: inspected parent hierarchy, nonempty summaries, implemented bounded status, and exact passage links. Metadata does not need implementation links to itself."
+    },
+    {
+      "path": "stratic/descriptions/message-passing.md",
+      "reason": "Responsibility prose or metadata: inspected parent hierarchy, nonempty summaries, implemented bounded status, and exact passage links. Metadata does not need implementation links to itself."
+    }
+  ]
+}

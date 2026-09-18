@@ -95,11 +95,11 @@ obligation. The source rules are [causality order][cause-order] and the
 section uses fences; this study uses direct release/acquire accesses and stronger
 payload accesses, so it is a derived example rather than a transcription.
 
-The following table describes the source-derived outcomes under these
-assumptions. Lean checks the successful (1,7) acquire witness, the relaxed
-(1,0) witness, and universal exclusion of (1,0) with acquire. The remaining
-permitted table entries are paper arguments; their witnesses are not separately
-formalized.
+The following table is fully classified in Lean. Theorems `acquire_outcomes`
+and `relaxed_outcomes` prove existence for every permitted row and exclude every
+other pair of u32 results. See [finite checking](finite-checking.md) for the
+checker, the source-value bounds, and the distinction between finite-candidate
+checking and complete outcome classification.
 
 | C returns | D returns | With acquire at C | With relaxed at C |
 | --- | --- | --- | --- |

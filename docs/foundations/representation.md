@@ -109,3 +109,17 @@ and independent semantic review. This work provides neither full PTX coverage
 nor hardware conformance nor a formal refinement from a separate complete PTX
 model. Future generalization must revisit byte mixing, initialization, scopes,
 proxies, dependencies, target restrictions, and partial/infinite executions.
+
+## Exact finite checking and additional examples
+
+`Ptx/Reachability.lean` proves a finite nonempty-reachability algorithm equivalent
+to `Path`. `Ptx/Checker.lean` then proves `Graph.check` equivalent to the unchanged
+`Graph.Valid` predicate for every finite graph. This supports concrete witnesses
+without a hand-written upper relation or rank certificate. It does not enumerate
+program executions or discharge arena bounds.
+
+`Ptx/MessagePassingOutcomes.lean` classifies the entire acquire and relaxed
+outcome sets, including exclusion of arbitrary other word values.
+`Ptx/Litmus.lean` supplies store-buffering, same-location, paired-release, and
+paired-acquire examples. The [finite-checking guide](finite-checking.md) explains
+the algorithm, proof boundaries, and the distinct source rules exercised.

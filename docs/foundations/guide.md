@@ -124,3 +124,11 @@ ledger and independent source review support semantic fidelity; they do not
 turn this bounded fragment into full PTX coverage or a hardware-conformance
 result. No floating point, asynchronous instructions, TorchLean integration,
 or Gemma implementation is included.
+
+## Continue with finite checking
+
+The [finite-checking guide](finite-checking.md) explains the exact candidate
+checker, the now-complete publication outcome table, and four further litmus
+programs. It separates algorithm correctness, outcome completeness, and semantic
+fidelity, and shows why multi-instruction synchronization patterns need carefully
+chosen examples.

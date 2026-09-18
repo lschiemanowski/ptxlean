@@ -9,7 +9,11 @@ a successful execution and a relaxed stale-read counterexample, and establishes
 aligned arena access safety. It covers only straight-line immediate u32 stores
 and register loads, with fixed global/GPU/generic-proxy restrictions.
 
-Start with the [foundations study guide](docs/foundations/guide.md). The
+An exact finite candidate checker, complete message-passing outcome table, and
+additional memory-order litmus proofs support the same restricted fragment.
+
+Start with the [foundations study guide](docs/foundations/guide.md), then
+[finite checking and litmus examples](docs/foundations/finite-checking.md). The
 [source ledger](docs/foundations/source-ledger.md) distinguishes checked proofs
 from the interpretation of NVIDIA's documented semantics. This release state
 makes no hardware-conformance or general GPU-progress claim.
