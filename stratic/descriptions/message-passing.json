@@ -1,0 +1,137 @@
+{
+  "id": "message-passing",
+  "parent": {
+    "description": "ptx-semantics",
+    "passage": {
+      "quote": "A scalar message-passing fragment connects straight-line instruction execution to scoped memory relations and proves publication and counterexample results under explicit restrictions."
+    }
+  },
+  "summary": [
+    "Connect finite immediate u32 stores and register loads to restricted PTX memory relations.",
+    "Prove acquire publication, construct successful and relaxed stale-read executions, and establish aligned arena access safety.",
+    "Expose source interpretations, logical dependencies, and fragment restrictions in a reproducible study guide."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Instruction execution produces the events used by memory validity."
+      },
+      "to": {
+        "path": "Ptx/Language.lean",
+        "passage": {
+          "quote": "def Instr.step (instruction : Instr) (registers : Registers) (readValue : Word) :\n    Registers \u00d7 Effect :=\n  match instruction with\n  | .load order address destination =>\n      (fun register => if register = destination then readValue else registers register,\n       \u27e8.load order, address, readValue\u27e9)\n  | .store order address value =>\n      (registers, \u27e8.store order, address, value\u27e9)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Instruction execution produces the events used by memory validity."
+      },
+      "to": {
+        "path": "Ptx/Program.lean",
+        "passage": {
+          "quote": "def Program.events (p : Program) (registers : Nat \u2192 Registers)\n    (oracle : Nat \u2192 Nat \u2192 Word) : List Occurrence :=\n  p.initial.mapIdx (fun address value => \u27e8none, address, \u27e8.init, address, value\u27e9\u27e9) ++\n    (p.threads.mapIdx fun tid program => threadEvents tid program (registers tid) (oracle tid)).flatten\n\ndef Program.graph (p : Program) (registers : Nat \u2192 Registers) (oracle : Nat \u2192 Nat \u2192 Word)\n    (source : Fin (p.events registers oracle).length \u2192 Fin (p.events registers oracle).length)\n    (co : Fin (p.events registers oracle).length \u2192 Fin (p.events registers oracle).length \u2192 Bool) :\n    Graph (p.events registers oracle).length :=\n  \u27e8fun index => (p.events registers oracle).get index, source, co\u27e9\n\n/-- All typed accesses are inside the initialized word arena. -/\ndef Program.Bounded (p : Program) : Prop :=\n  \u2200 program \u2208 p.threads, \u2200 instruction \u2208 program,\n    instruction.address < p.initial.length\n\n/-- Admission combines arena bounds with the derived graph's memory constraints.\nLocal traces are already materialized by `events`; graph validity alone does not\nassert bounds or operational progress of a hardware scheduler. -/\ndef Program.Admitted (p : Program) (registers : Nat \u2192 Registers) (oracle : Nat \u2192 Nat \u2192 Word)\n    (source : Fin (p.events registers oracle).length \u2192 Fin (p.events registers oracle).length)\n    (co : Fin (p.events registers oracle).length \u2192 Fin (p.events registers oracle).length \u2192 Bool) :\n    Prop :=\n  p.Bounded \u2227 (p.graph registers oracle source co).Valid\n\n/-- Each actual program thread has the completed local run used to form its events.\nThis holds for any candidate oracle; global compatibility is checked separately. -/\ntheorem Program.all_threads_run (p : Program) (registers : Nat \u2192 Registers)\n    (oracle : Nat \u2192 Nat \u2192 Word) :\n    \u2200 (tid : Nat) (ht : tid < p.threads.length),\n      Runs p.threads[tid] (registers tid) (oracle tid)\n        (execute p.threads[tid] (registers tid) (oracle tid)).1\n        (execute p.threads[tid] (registers tid) (oracle tid)).2 := by\n  intro tid ht\n  exact execute_runs _ _ _"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Read sources and coherence choices must satisfy the restricted\nmemory constraints; a conclusion about publication is not itself a validity\ncondition."
+      },
+      "to": {
+        "path": "Ptx/Memory.lean",
+        "passage": {
+          "quote": "structure Valid (g : Graph n) : Prop where\n  sources : g.Sources\n  co : g.Coherent\n  base_irrefl : \u2200 a, \u00acg.base a a\n  coherence_cause : \u2200 a b, g.write a \u2192 g.write b \u2192 g.sameAddress a b \u2192\n    g.cause a b \u2192 g.coherence a b\n  no_future : \u2200 r w, g.read r \u2192 g.write w \u2192 g.sameAddress r w \u2192\n    g.cause r w \u2192 g.source r \u2260 w\n  no_stale : \u2200 w r, g.write w \u2192 g.read r \u2192 g.sameAddress w r \u2192\n    g.cause w r \u2192 \u00acg.coherence (g.source r) w\n  sc_per_location : \u2200 a, \u00acPath g.locationEdge a a"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The acquire publication program guarantees that observing its flag implies\nobserving the published payload."
+      },
+      "to": {
+        "path": "Ptx/MessagePassing.lean",
+        "passage": {
+          "quote": "theorem publication_observed (flag payload : Word) (source co)\n    (valid : (graph .acquire flag payload source co).Valid)\n    (observed : (result .acquire flag payload).1 = 1) :\n    (result .acquire flag payload).2 = 7 := by\n  change flag = 1 at observed\n  subst flag\n  exact publication payload source co valid"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A complete successful execution witnesses\nnon-vacuity."
+      },
+      "to": {
+        "path": "Ptx/MessagePassing.lean",
+        "passage": {
+          "quote": "theorem successful_execution_exists : \u2203 (flag payload : Word), \u2203 source co,\n    (program .acquire).Admitted registers (oracle flag payload) source co \u2227\n    result .acquire flag payload = (1, 7) := by\n  refine \u27e81, 7, successSource, witnessCo, \u27e8?_, success_valid\u27e9, rfl\u27e9\n  simp [Program.Bounded, program, producer, consumer, Instr.address]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Weakening the consumer's acquire to relaxed admits a complete stale\npayload witness."
+      },
+      "to": {
+        "path": "Ptx/MessagePassing.lean",
+        "passage": {
+          "quote": "theorem relaxed_counterexample_exists : \u2203 (flag payload : Word), \u2203 source co,\n    (program .relaxed).Admitted registers (oracle flag payload) source co \u2227\n    result .relaxed flag payload = (1, 0) := by\n  refine \u27e81, 0, staleSource, witnessCo, \u27e8?_, stale_valid\u27e9, rfl\u27e9\n  simp [Program.Bounded, program, producer, consumer, Instr.address]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The same instruction-level allocation premises establish safe\naligned accesses for both variants."
+      },
+      "to": {
+        "path": "Ptx/MessagePassing.lean",
+        "passage": {
+          "quote": "theorem memory_safe (order : LoadOrder) (flag payload : Word) (source co) (index : Fin 6) :\n    AccessSafe 2 ((graph order flag payload source co).event index).effect := by\n  apply Program.graph_access_safe\n  simp [program, producer, consumer, Instr.address]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The guide connects source clauses to definitions and proof steps, distinguishes\nformal guarantees from semantic interpretation, and gives reproducible checks."
+      },
+      "to": {
+        "path": "docs/foundations/guide.md",
+        "passage": {
+          "quote": "Read the [publication experiment](message-passing.md), then follow this guide\nwith the Lean files open. You need only understand a pair of stores, a pair of\nloads, and the difference between a locally executed instruction and a globally\npermitted memory result. The [representation account](representation.md) records\nwhy these particular data types were chosen. The [source ledger](source-ledger.md)\nconnects each memory rule to the pinned PTX 9.4 text."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Checked proofs expose their logical dependencies."
+      },
+      "to": {
+        "path": "Ptx/Audit.lean",
+        "passage": {
+          "quote": "#print axioms Ptx.step_exists\n#print axioms Ptx.step_deterministic\n#print axioms Ptx.load_writes_destination\n#print axioms Ptx.store_emits_operand\n#print axioms Ptx.execute_runs\n#print axioms Ptx.runs_eq_execute\n#print axioms Ptx.runs_exists\n#print axioms Ptx.runs_deterministic\n#print axioms Ptx.execute_effects\n#print axioms Ptx.execute_getElem?\n#print axioms Ptx.execute_access_safe\n#print axioms Ptx.word_footprints_disjoint\n#print axioms Ptx.Program.all_threads_run\n#print axioms Ptx.Program.events_origin\n#print axioms Ptx.Program.graph_event_origin\n#print axioms Ptx.Program.load_origin\n#print axioms Ptx.Program.store_origin\n#print axioms Ptx.Program.initial_origin\n#print axioms Ptx.Program.no_invented_values\n#print axioms Ptx.Program.admitted_access_safe\n#print axioms Ptx.Graph.single_copy\n#print axioms Ptx.Graph.no_source_coherence_predecessor\n#print axioms Ptx.Graph.valid_of_certificate\n#print axioms Ptx.MessagePassing.publication\n#print axioms Ptx.MessagePassing.publication_observed\n#print axioms Ptx.MessagePassing.successful_execution_exists\n#print axioms Ptx.MessagePassing.relaxed_counterexample_exists\n#print axioms Ptx.MessagePassing.memory_safe\n#print axioms Ptx.MessagePassing.objects_disjoint\n#print axioms Ptx.MessagePassing.local_completion\n#print axioms Ptx.MessagePassing.acquire_stale_impossible"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Source correspondence records\nexplain the restrictions under which whole-word read sources and constant-store\nvalue grounding represent the applicable PTX requirements."
+      },
+      "to": {
+        "path": "docs/foundations/source-ledger.md",
+        "passage": {
+          "quote": "The normative input is the locally [pinned PTX ISA 9.4 manual](../../references/nvidia/ptx-isa-9.4/README.md),\nSHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.\nLinks below resolve to that file, not the mutable online manual. The manifest\nrecords source retrieval and section locators. This ledger is a reviewed\ninterpretation of prose; Lean does not prove the prose has been faithfully\ntranslated. No hardware testing or comparison to another full PTX model is\nclaimed."
+        }
+      }
+    }
+  ]
+}

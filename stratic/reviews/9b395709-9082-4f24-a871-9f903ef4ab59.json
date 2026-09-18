@@ -1,0 +1,171 @@
+{
+  "id": "9b395709-9082-4f24-a871-9f903ef4ab59",
+  "base": "37ea9b1920bc4a40791a5d05aa9b3ec7417f6f5f",
+  "contentTree": "8793305c8364f5d6ae1eda385d29ada65868682f",
+  "reviewer": "Codex with independent semantic and proof reviewers",
+  "summary": "Implement and verify the restricted PTX 9.4 scalar message-passing foundation in pinned Lean 4.33.0: publication, successful execution, relaxed counterexample, arena safety, reusable local/relational semantics, source correspondence and study guide. Independent semantic and proof reviews completed without blocking findings; proof validity is distinct from source fidelity.",
+  "examined": [
+    {
+      "id": "message-passing",
+      "outcome": "revised",
+      "reason": "Implemented the bounded responsibility: generated operational events, source-linked relational validity, publication, complete successful and relaxed witnesses, aligned arena safety, independent semantic/proof reviews, and reproducible dependency checks. Explicit restrictions exclude unsupported PTX features and hardware progress."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "revised",
+      "reason": "Added the scalar child and repaired implementation links to checked study/representation. Marked the broad responsibility partial: this fragment supplies the first operational/axiomatic semantics, while full ISA and computing-model coverage remain absent."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Linked the clause-by-clause source ledger and reproducible source/build/dependency checks. Recorded source-reviewed normalization separately from Lean validity. Model-generation infrastructure, external hardware validation, and broader coverage remain unimplemented."
+    },
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Updated realization to partial for the first completed restricted fragment; retained full PTX/TorchLean/numerical/example responsibilities and their existing summary unchanged."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "No differentiation, TorchLean automatic backward, or PTX backward implementation was added. The separation between correctness, execution existence, and termination is preserved."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "unchanged",
+      "reason": "The abstract single-GPU arena has no allocator, launch, lifetime, multi-kernel, or runtime execution model. Existing orchestration contracts remain unimplemented."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "No tensor, numerical, TorchLean, or kernel-composition interface was introduced. The memory fragment is a future foundational dependency, not fulfillment of these contracts."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "The only bitvector values are scalar u32 payloads with no arithmetic or floating point. No precision policy, real-valued approximation, or PyTorch correspondence is changed."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The foundations litmus study exercises PTX memory semantics, not end-to-end network verification. The Examples responsibility retains its existing network-level contract."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "No Gemma architecture, implementation, cache, backward, loss, or numerical policy was changed."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "8793305c8364f5d6ae1eda385d29ada65868682f",
+      "method": "scripts/check.sh; stratic validate; local documentation link/HTML-fragment validation; git diff --check; independent semantic and proof reviews",
+      "outcome": "pass",
+      "environment": "Lean 4.33.0 (d8b18978322de05a8f3dba51ef03cf5461676c17), bundled libraries only; Python 3 standard library; Stratic 0.1.0; pinned PTX ISA 9.4 HTML; Linux x86_64; no GPU execution or paid external model calls",
+      "evidence": "Snapshot unchanged before/after checks. Lean build and 31 theorem dependency reports pass; only standard propext, Quot.sound, and Classical.choice occur. Source scan rejects proof placeholders/custom axioms/native_decide. PTX SHA-256 0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed, 3928316 bytes, and 23 exact manifest anchors verified. All 50 local documentation links/fragments resolve; Stratic structure and passage links validate; whitespace checks pass. A clean rebuild also passed for the same Lean sources. Independent semantic review found no blocker after clarifying target eligibility versus checked arena safety and paper-only remaining outcome rows. Independent proof review rebuilt the library and inspected 16 declarations, confirming generated event provenance, actual final-register projection, arbitrary source/coherence publication, complete admitted witnesses, and no missing-proof/custom-axiom dependencies. Whole-word/initialization normalization remains a reviewed source argument rather than a general byte-model equivalence theorem; hardware progress and full PTX coverage are not claimed.",
+      "tests": [],
+      "id": "e2409549-e0c5-4155-89e0-bf03c3cadfcc",
+      "recordedAt": "2026-09-18T19:04:42.619Z"
+    }
+  ],
+  "recordedAt": "2026-09-18T19:04:58.366Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Library entry point imports the implemented scalar fragment; build configuration support rather than a separate semantic responsibility."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "The linked audit statements cover theorem dependencies; remaining import/comment scaffolding was inspected with the whole audit."
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "reason": "The linked local step definition anchors the responsibility; inspected all additional instruction/value types, execution derivations, deterministic-run proofs, address/effect provenance, arena bounds and disjoint-footprint proofs."
+    },
+    {
+      "path": "Ptx/Memory.lean",
+      "reason": "The linked Valid block anchors the responsibility; inspected all underlying memory relations, source/coherence typing, single-copy lifting, finite certificate and its checked soundness proof. Source ledger accounts for restricted or vacuous PTX clauses."
+    },
+    {
+      "path": "Ptx/MessagePassing.lean",
+      "reason": "The result/safety statements are linked; inspected program/oracle construction, reduction table, universal publication proof, both complete finite witness certificates and negative acquire result. No desired outcome is concealed in Valid."
+    },
+    {
+      "path": "Ptx/Program.lean",
+      "reason": "The linked graph construction anchors the responsibility; inspected all initialization/thread provenance, bounds/admission, local completion, value grounding and arena-safety lemmas."
+    },
+    {
+      "path": "README.md",
+      "reason": "Project entry documentation states implemented coverage, reproduction command, and links to the guide and broader descriptions; no additional semantic contract."
+    },
+    {
+      "path": "docs/design-notes.md",
+      "reason": "Only stale source-pinning and implementation-absence statements updated; all unresolved numerical, TorchLean, Gemma, and broader PTX choices retained."
+    },
+    {
+      "path": "docs/foundations/guide.md",
+      "reason": "Linked opening anchors the educational responsibility; entire reading sequence, proof explanation, restrictions, and reproduction commands reviewed against actual definitions and scripts."
+    },
+    {
+      "path": "docs/foundations/message-passing.md",
+      "reason": "Linked study introduction anchors the explanation; remaining prose updated from proposal to checked fragment, with nonformalized outcome rows and legality/safety boundaries stated accurately."
+    },
+    {
+      "path": "docs/foundations/representation.md",
+      "reason": "Linked local-semantics passage anchors the account; entire representation, consequences, admission predicates, theorem quantifiers, and exclusions reviewed against implementation."
+    },
+    {
+      "path": "docs/foundations/source-ledger.md",
+      "reason": "Linked source/evidence passage anchors semantic fidelity; all source-table rows and initialization/no-thin-air/atomicity arguments independently reviewed against the pinned manual and Lean."
+    },
+    {
+      "path": "lake-manifest.json",
+      "reason": "Pinned dependency-free Lake project manifest; inspected configuration only."
+    },
+    {
+      "path": "lakefile.toml",
+      "reason": "Minimal library build declaration with Ptx default target; checked through Lake build."
+    },
+    {
+      "path": "lean-toolchain",
+      "reason": "Exact Lean 4.33.0 pin; scripts reject unexpected version."
+    },
+    {
+      "path": "scripts/check.sh",
+      "reason": "Linked check body anchors reproducibility; remaining shell argument handling, version guard, temporary-file cleanup and final status reviewed and executed."
+    },
+    {
+      "path": "scripts/check_proofs.py",
+      "reason": "Supporting audit parser and lexical guard enforce standard-axiom allowlist and complete distinct dependency reports. Normal runs and negative guard/parser cases reviewed by tooling agent."
+    },
+    {
+      "path": "scripts/check_sources.py",
+      "reason": "Supporting source-integrity checker verifies manifest SHA/bytes/anchors and source references against the frozen artifact; executed successfully."
+    },
+    {
+      "path": "stratic/descriptions/message-passing.json",
+      "reason": "Stratic responsibility prose or metadata: reviewed summaries, exact passage links, parent structure, and bounded realization status; these metadata files do not require implementation links to themselves."
+    },
+    {
+      "path": "stratic/descriptions/message-passing.md",
+      "reason": "Stratic responsibility prose or metadata: reviewed summaries, exact passage links, parent structure, and bounded realization status; these metadata files do not require implementation links to themselves."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.json",
+      "reason": "Stratic responsibility prose or metadata: reviewed summaries, exact passage links, parent structure, and bounded realization status; these metadata files do not require implementation links to themselves."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.md",
+      "reason": "Stratic responsibility prose or metadata: reviewed summaries, exact passage links, parent structure, and bounded realization status; these metadata files do not require implementation links to themselves."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Stratic responsibility prose or metadata: reviewed summaries, exact passage links, parent structure, and bounded realization status; these metadata files do not require implementation links to themselves."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Stratic responsibility prose or metadata: reviewed summaries, exact passage links, parent structure, and bounded realization status; these metadata files do not require implementation links to themselves."
+    }
+  ]
+}

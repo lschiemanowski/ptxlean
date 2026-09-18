@@ -10,8 +10,8 @@
     "Connect formal semantics to versioned source passages, reviewed interpretations, and independent evidence.",
     "Separate proof validity from semantic fidelity in cost-conscious model-assisted formalization."
   ],
-  "realization": "unimplemented",
-  "remaining": "Source interpretation records, independent checks, and model-assisted formalization infrastructure remain to be implemented.",
+  "realization": "partial",
+  "remaining": "The scalar fragment has pinned source interpretations, checked adequacy results, and independent reviews. Broader semantic coverage, external validation, and model-assisted generation/cost infrastructure remain unimplemented.",
   "links": [
     {
       "kind": "implementation",
@@ -22,6 +22,30 @@
         "path": "references/nvidia/ptx-isa-9.4/README.md",
         "passage": {
           "quote": "`manifest.json` records the original and resolved URL, UTC retrieval time,\nresponse metadata, byte count, SHA-256, and 23 section references."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The explanation of a rule states which parts of its justification come from\nsource interpretation, checked theorems, assumptions, or experiments."
+      },
+      "to": {
+        "path": "docs/foundations/source-ledger.md",
+        "passage": {
+          "quote": "The normative input is the locally [pinned PTX ISA 9.4 manual](../../references/nvidia/ptx-isa-9.4/README.md),\nSHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.\nLinks below resolve to that file, not the mutable online manual. The manifest\nrecords source retrieval and section locators. This ledger is a reviewed\ninterpretation of prose; Lean does not prove the prose has been faithfully\ntranslated. No hardware testing or comparison to another full PTX model is\nclaimed."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Lean checks submitted proofs, while source review and\nindependent checks address whether their definitions describe the intended\nbehavior."
+      },
+      "to": {
+        "path": "scripts/check.sh",
+        "passage": {
+          "quote": "python3 scripts/check_sources.py\npython3 scripts/check_proofs.py --scan\nif [[ \"${1:-}\" == --clean ]]; then\n  lake clean\nfi\nlake build\n\naudit_log=$(mktemp)\ntrap 'rm -f -- \"$audit_log\"' EXIT\nlake env lean Ptx/Audit.lean | tee \"$audit_log\"\npython3 scripts/check_proofs.py --audit \"$audit_log\""
         }
       }
     }

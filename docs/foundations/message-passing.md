@@ -1,10 +1,10 @@
 # Publishing a payload between two threads
 
-This study works out a small instance of the relational PTX foundation. It is a
-source-reviewed mathematical argument and a proposed proof target, not a Lean
-proof, assembled kernel, hardware experiment, or implementation of PTX semantics.
-The [representation proposal](representation.md) explains the resulting design
-constraints without committing to concrete Lean declarations.
+This study explains a source-reviewed, Lean-checked instance of the relational
+PTX foundation. The [study guide](guide.md) connects the argument to the Lean
+definitions and proofs; the [representation account](representation.md) and
+[source ledger](source-ledger.md) record restrictions and semantic judgments.
+It is not an assembled kernel or a hardware experiment.
 
 ## The experiment on paper
 
@@ -43,7 +43,7 @@ the failed version below isolates a missing synchronization edge.
 
 ## Candidate execution
 
-We propose to describe this example with six event identities. The initial
+The implementation derives six event identities from local instruction execution. The initial
 events are mathematical initialization events, not extra PTX instructions.
 
 | Event | Meaning | Value |
@@ -77,7 +77,8 @@ conditions. The release B and acquire C form the synchronization pair. See
 
 Our proof decomposition is:
 
-1. Establish the fragment's legality and its memory-access premises.
+1. Check the fixed fragment's source-level eligibility assumptions and prove
+   arena bounds and alignment.
 2. Recover the read source B from C's result 1.
 3. Derive synchronization B to C.
 4. Combine A to B, B to C, and C to D into a base-causality path A to D.
@@ -94,8 +95,11 @@ obligation. The source rules are [causality order][cause-order] and the
 section uses fences; this study uses direct release/acquire accesses and stronger
 payload accesses, so it is a derived example rather than a transcription.
 
-The following table is our derived target for completed executions under the
-stated assumptions. The entries are not results of a model checker.
+The following table describes the source-derived outcomes under these
+assumptions. Lean checks the successful (1,7) acquire witness, the relaxed
+(1,0) witness, and universal exclusion of (1,0) with acquire. The remaining
+permitted table entries are paper arguments; their witnesses are not separately
+formalized.
 
 | C returns | D returns | With acquire at C | With relaxed at C |
 | --- | --- | --- | --- |
@@ -133,7 +137,8 @@ an extra global ordering requirement. The [per-location rule][sc-location]
 does not compare this entire cross-location cycle.
 
 The source obligations for admitting this witness are reviewed below. This is a
-paper check for this finite fragment, not a general decision procedure.
+source-level explanation of the finite certificate checked in Lean, not a
+general decision procedure for PTX.
 
 | Obligation | Check for the (1,0) relaxed witness |
 | --- | --- |
@@ -148,20 +153,25 @@ paper check for this finite fragment, not a general decision procedure.
 
 Review these checks against [coherence][coherence], [Fence-SC][fence-sc],
 [atomicity][atomicity], [no thin air][nta], [per-location consistency][sc-location],
-and [causality][cause-axiom]. They motivate an explicit allowed witness as a
-future proof obligation; the absence of the positive proof alone would not show
-that the bad result is allowed.
+and [causality][cause-axiom]. The theorem `relaxed_counterexample_exists` supplies an explicit admitted
+witness; the absence of a positive proof alone would not show that the bad
+result is allowed. The ledger explains the whole-word initialization and
+atomicity interpretations behind the Lean representation.
 
 ## Safety, existence, and progress
 
 Memory safety here requires valid, aligned, initialized storage of sufficient
 extent, compatible state spaces, and legal instructions. It does not imply the
 publication property: the relaxed counterexample satisfies those premises.
+The Lean safety theorem proves arena extent and alignment; state space, proxy,
+scope, and target eligibility are fixed restrictions, not an implemented
+legality checker.
 
 Execution existence asks for a candidate satisfying all applicable constraints.
-The serialization witnesses and the relaxed witness above are inputs to that
-future construction. A proof that every completed execution has a property must
-not substitute for showing that at least one execution exists.
+Theorems `successful_execution_exists` and `relaxed_counterexample_exists`
+construct such candidates coupled to completed local runs and final registers.
+A proof that every completed execution has a property must not substitute for
+showing that at least one execution exists.
 
 Progress asks whether execution can reach completion. The fragments contain no
 loops or explicit waits, but their finiteness alone is not a proof that hardware
@@ -180,7 +190,7 @@ the failed behavior this study is meant to expose.
 
 This example does not exercise asynchronous completion, collectives, alias
 proxies, overlapping mixed-size accesses, floating point, or multi-kernel
-execution. The proposal must leave room for those responsibilities; this small
+execution. Future extensions must account for those responsibilities; this small
 example cannot validate their design. Its concrete target is the publication
 implication and an explicit counterexample after weakening the consumer.
 

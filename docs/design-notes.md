@@ -21,8 +21,9 @@ need assessment against instruction contracts, resources, and useful error bound
 
 ## Questions requiring investigation
 
-- Pin the PTX 9.4 source artifact and determine the concrete representation of
-  targets, undefined behavior, scheduling assumptions, and execution premises.
+- Extend the [pinned-source scalar foundation](foundations/guide.md) with a
+  representation of targets, undefined behavior, scheduling assumptions, and
+  execution premises for broader PTX coverage.
 - Select the TorchLean revision and inspect the derivative and correspondence
   theorems applicable to the required operations and execution paths.
 - Select the Gemma checkpoint/configuration and PyTorch reference; identify the
@@ -39,5 +40,7 @@ need assessment against instruction contracts, resources, and useful error bound
 - Determine concrete release artifacts, study-guide organization, and coverage
   reporting conventions.
 
-Implementation and proofs remain absent. These notes preserve unresolved design
-choices without treating discussion history as a permanent responsibility.
+The [scalar message-passing fragment](foundations/guide.md) has checked
+implementation and proofs. The broader features discussed here remain
+unimplemented. These notes preserve unresolved design choices without treating
+discussion history as a permanent responsibility.

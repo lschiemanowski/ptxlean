@@ -32,3 +32,5 @@ Explanations relate the formal rules to the programming and computing model in
 Examples show how scheduling, memory ordering, and asynchronous completion
 permit or prohibit behaviors, and identify which assumptions a kernel proof
 must establish.
+
+A scalar message-passing fragment connects straight-line instruction execution to scoped memory relations and proves publication and counterexample results under explicit restrictions.

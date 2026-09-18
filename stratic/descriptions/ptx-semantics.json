@@ -10,8 +10,8 @@
     "Describe permitted PTX executions through operational instruction rules and axiomatic memory constraints.",
     "Preserve documented behavior and distinguish safety, existence, and termination guarantees."
   ],
-  "realization": "unimplemented",
-  "remaining": "PTX execution semantics, derived proof rules, and their explanations remain to be implemented.",
+  "realization": "partial",
+  "remaining": "Only the restricted scalar message-passing fragment is implemented. Full ISA coverage, target validation, general byte/address/scope/dependency semantics, and GPU progress remain to be implemented.",
   "links": [
     {
       "kind": "implementation",
@@ -21,7 +21,7 @@
       "to": {
         "path": "docs/foundations/message-passing.md",
         "passage": {
-          "quote": "This study works out a small instance of the relational PTX foundation. It is a\nsource-reviewed mathematical argument and a proposed proof target, not a Lean\nproof, assembled kernel, hardware experiment, or implementation of PTX semantics."
+          "quote": "This study explains a source-reviewed, Lean-checked instance of the relational\nPTX foundation. The [study guide](guide.md) connects the argument to the Lean\ndefinitions and proofs; the [representation account](representation.md) and\n[source ledger](source-ledger.md) record restrictions and semantic judgments.\nIt is not an assembled kernel or a hardware experiment."
         }
       }
     },
@@ -33,7 +33,7 @@
       "to": {
         "path": "docs/foundations/representation.md",
         "passage": {
-          "quote": "Use local operational derivations to explain each thread's executed instructions,\nregister changes, and emitted effects. Use a candidate execution to assign\nmemory-read sources and express global constraints on the resulting events."
+          "quote": "`Ptx/Language.lean` defines `Instr`, `Instr.step`, `Step`, `execute`, and `Runs`.\nAn instruction is a relaxed/acquire load into a register or a relaxed/release\nstore of an immediate `BitVec 32`. Addresses are constant word indices. Registers\nare functions from natural-number identifiers to words. Execution consumes a\ncandidate value at each instruction position; stores ignore it. A load updates\nexactly its destination register. `execute_runs` and `runs_eq_execute` connect\nthe function to the inductive local execution relation. Every finite instruction\nlist has a completed local run for each candidate read assignment."
         }
       }
     }

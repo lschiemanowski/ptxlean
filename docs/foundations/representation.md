@@ -1,131 +1,111 @@
-# Proposed Lean representation for the publication example
+# Lean representation of the publication fragment
 
-This is a design proposal for review. Names below are schematic; no Lean types,
-semantics, or proofs have been implemented. The proposal is driven by the
-[publication study](message-passing.md) and the
-[pinned PTX source](../../references/nvidia/ptx-isa-9.4/README.md).
+The [publication study](message-passing.md) is implemented in Lean 4.33.0 using
+only its bundled libraries. Start with the [study guide](guide.md) for a reading
+path and the [source ledger](source-ledger.md) for semantic justification.
 
-## Two connected descriptions of execution
+## Local execution and global compatibility
 
-Use local operational derivations to explain each thread's executed instructions,
-register changes, and emitted effects. Use a candidate execution to assign
-memory-read sources and express global constraints on the resulting events.
+`Ptx/Language.lean` defines `Instr`, `Instr.step`, `Step`, `execute`, and `Runs`.
+An instruction is a relaxed/acquire load into a register or a relaxed/release
+store of an immediate `BitVec 32`. Addresses are constant word indices. Registers
+are functions from natural-number identifiers to words. Execution consumes a
+candidate value at each instruction position; stores ignore it. A load updates
+exactly its destination register. `execute_runs` and `runs_eq_execute` connect
+the function to the inductive local execution relation. Every finite instruction
+list has a completed local run for each candidate read assignment.
 
-Neither side may be independently fabricated. A candidate includes enough
-evidence to check that the chosen read values produce the local traces claimed
-for the program. Conversely, the local trace must account for the events in the
-candidate. This circular constraint is a consistency problem, not an instruction
-to let a sequential interpreter choose globally visible memory contents.
+`Ptx/Program.lean` materializes initialization followed by every thread's emitted
+events. Each program event records its thread and instruction position. The
+finite event index provides identity; list concatenation does **not** impose a
+cross-thread execution order. `events_origin`, `load_origin`, `store_origin`, and
+`initial_origin` expose the actual instructions and initialization behind the
+labels. A candidate cannot supply a different trace or invent a store value.
 
-For the publication fragment, control flow is straight-line and both stores
-have constant operands. This keeps read-dependent execution simple without
-removing the need to represent it in the eventual general interface.
+Read assignments may be globally inconsistent. `Program.graph` adds candidate
+read sources and coherence to the generated labels; `Graph.Valid` checks their
+memory compatibility. `Program.Admitted` additionally requires arena bounds.
+Read-source choices at non-read events are irrelevant. Coherence is a Boolean
+relation whose typing, strict order, per-word totality, and initialization order
+are separately checked. No global total order is imposed on distinct words.
 
-## Proposed objects
+## Deliberate restrictions
 
-| Concept | Proposed role | Obligation exposed by this example |
-| --- | --- | --- |
-| Target/environment | ISA version, target features, thread topology, and memory mapping | Selected instructions are legal; GPU scopes include both threads. |
-| Program | Parsed/validated instructions with typed operands and qualifiers | The two programs differ at C's memory-order qualifier only. |
-| Thread state | Registers, predicates, control position, and call state | C and D place the chosen values in the correct registers. |
-| Event identity | A dynamic occurrence, distinct from source instruction identity | Repeated instructions can eventually produce different events; I_p and I_f are initialization events. |
-| Event label | Issuer, kind, scope, proxy, addresses, byte footprint, values, and originating instruction | A and D overlap exactly; B and C overlap exactly; other cross-location pairs do not. |
-| Local derivation | Evidence connecting instructions, states, and emitted events | Establish A before B and C before D without imposing a cross-thread order. |
-| Candidate memory choices | Read sources and write-order witnesses with well-formedness conditions | Represent B-to-C and I_p-to-D even when no sequential interleaving realizes them. |
-| Execution validity | Conjunction of local consistency, applicability, and the actual memory constraints | Permit the relaxed counterexample and exclude the acquire counterpart. |
-| Observable result | A projection from an admitted execution | Return the pair of final consumer registers without treating arbitrary internal order as observable. |
+| Choice | Reason and precise boundary |
+| --- | --- |
+| Immediate stores; constant addresses; straight-line code | Prevent value, address, and control dependency cycles while retaining the weak-memory phenomenon. No branches, polling, arithmetic, register-valued stores, or early termination. |
+| `BitVec 32` values | Model the exact u32 bit payload, without silently using unbounded mathematical integers for values. There is no arithmetic or floating-point semantics. |
+| Natural-number word indices; `byteAddress i = 4*i` | Give a simple injective address/storage mapping with no pointer overflow. `AccessSafe` proves alignment and arena extent. Raw PTX pointers, allocation, lifetime, virtual aliases, and address translation are not implemented. |
+| All accesses global, strong, GPU-scoped, generic-proxy, on one GPU | These are fixed environmental restrictions, not variable labels checked at runtime. Under them, non-initial events at the same word are mutually morally strong. Eligible PTX 9.4 targets for these opcodes are assumed; no target validator exists. |
+| One initialization event per word, with no issuing thread | Group the manual's per-byte initial writes. Initialization precedes all other writes at its word in coherence, never receives program order. The normalization's source argument is in the ledger. |
+| One word source for each read | Encode non-torn matching u32 accesses. `byteSource` lifts this to a uniform source at all four byte offsets. There is no formal equivalence theorem to a general PTX byte model. |
+| Unbounded finite relational paths | Express actual transitive closure without a search-depth cutoff. Witness certificates bound derived paths by an independently checked transitive relation. |
 
-Choose bit representations for scalar values and byte-addressed footprints at
-the boundary to memory. A whole-word read-source map is a derived convenience
-for this fragment, not a universal assumption about PTX loads. Its justification
-must identify the atomicity and overlap conditions that make a single source
-adequate. Do not require a global total order on all writes.
+These choices are consequential restrictions of this formalization. They are not
+requirements for future full PTX coverage. Unsupported instructions have no
+constructor; this is not a parser that accepts them as no-ops. There is no general
+undefined-behavior classification. Arena bounds exclude out-of-bounds accesses
+from `Admitted`, while raw `Graph.Valid` only describes memory constraints.
 
-The general representation should carry virtual addressing separately from
-underlying storage identity; this example assumes a simple injective mapping.
-The exact treatment of aliasing, multimem addresses, and memory beyond the scope
-of the documented consistency model needs separate design work.
+## Relations and checked constraints
 
-## Relations must retain their distinct meanings
+`Ptx/Memory.lean` gives separate definitions to `po`, `rf`, `observation`,
+`releasePattern`, `acquirePattern`, `sync`, `base`, `proxyBase`, `cause`,
+`coherence`, `communication`, and `locationEdge`. Patterns cover both a direct
+qualified access and the applicable two-access forms; synchronization requires
+different endpoint threads and morally strong endpoints.
 
-The proposed interface gives separate names to program order, read-source
-communication, observation order, synchronizes-with, base causality,
-proxy-preserved base causality, causality, coherence, and communication order.
-Each derived relation is defined from its premises, not accepted as an arbitrary
-relation supplied by a kernel proof author.
+`base` is the nonempty transitive closure of program order and synchronization.
+`proxyBase` keeps its same-address endpoints under identity addressing and the
+generic proxy. `cause` is exactly `proxyBase` or observation followed by
+`proxyBase`. It is not transitively closed again.
 
-In particular, distinguish base causality from the later causality relation
-specified in [section 8.9.5][causality]. A convenience lemma may reduce the latter
-to a simpler condition under this fragment's address/proxy assumptions, but the
-general definition must retain its full construction. Likewise, reads-from
-must not automatically imply synchronizes-with: that error would erase the
-relaxed counterexample.
+`Graph.Valid` checks read-source compatibility, well-formed coherence, acyclic
+base order, the coherence axiom, both causality exclusions, and acyclicity of
+overlapping program order plus morally strong communication. Fence-SC and RMW
+rules have no syntax instances. Single-copy behavior is represented by one word
+source. Literal stores, independent control, and constant addresses exclude the
+dependency cycles relevant to no-thin-air here. `no_invented_values` proves value
+grounding; it is not a general no-thin-air theorem. The ledger makes these
+interpretations explicit rather than hiding them in a validity premise.
 
-Use small, separately named predicates for the memory axioms so that a proof can
-cite the constraint it needs. A predicate called ValidExecution is useful only
-when all its constituent conditions are defined and tied to source passages.
-An opaque assumption of validity would move the central work into a premise.
+`Certificate` is a sufficient proof device, not a changed execution semantics.
+Its `upper` relation contains each actual base edge and is transitive and
+irreflexive. Its natural-number rank increases on every per-location edge.
+`valid_of_certificate` proves that these finite obligations establish the
+path-based constraints in `Valid`. Certificates also check source, coherence,
+and both causality obligations. They do not take publication as an input.
 
-## Proposed theorem shapes
+## Results and their quantifiers
 
-These are mathematical obligations, not checked declarations:
+`Ptx/MessagePassing.lean` constructs the two-thread program and derives its six
+events by local execution. `publication_observed` quantifies over every candidate
+read assignment, source map, and coherence relation satisfying `Valid`: if the
+final consumer flag register is 1, its final payload register is 7.
 
-```text
-Publication:
-  for every admitted completed execution of the acquire fragment,
-  consumer.flag = 1 implies consumer.value = 7.
+`successful_execution_exists` supplies an admitted acquire execution with result
+(1,7). `relaxed_counterexample_exists` supplies an admitted relaxed execution
+with result (1,0). `acquire_stale_impossible` excludes (1,0) for *every* source and
+coherence choice in the acquire variant. `memory_safe` proves alignment and
+arena bounds even for candidates rejected by the memory constraints;
+`objects_disjoint` proves the word footprints do not overlap.
 
-SuccessfulExecutionExists:
-  an admitted completed execution of the acquire fragment has result (1,7).
+`Program.all_threads_run` and `local_completion` establish finite local execution
+for exactly the oracles used to create the graph. Combined with the existential
+admission results, this gives complete consistent candidates, not merely
+hand-drawn memory graphs. There is no theorem that a hardware scheduler realizes
+these candidates, no fairness model, and no eventual observation of flag 1.
 
-RelaxedCounterexampleExists:
-  an admitted completed execution of the weakened fragment has result (1,0).
+## Proof checking and semantic fidelity
 
-MemorySafety:
-  under the stated allocation and legality premises, the fragment's accesses
-  stay within their valid storage and satisfy the applicable access conditions.
-```
+The implementation has completed proofs with no placeholders or custom axioms.
+The witness checks use ordinary `decide`, whose generated proof is checked by
+the kernel; they do not use native evaluation. `Ptx/Audit.lean` and the check
+script report and constrain theorem dependencies.
 
-The proof of Publication should be assembled from local trace facts,
-source-write identification, synchronization, the payload's causality edge,
-and exclusion of the old write. RelaxedCounterexampleExists must supply a
-complete finite witness and establish each applicable axiom; failing to prove
-Publication for the weakened fragment is not a counterexample proof.
-
-A separate progress theorem would connect an operational execution account to
-the admitted candidates. State whether it asserts some completed execution or
-completion of every maximal execution under explicit assumptions. Do not claim
-the latter from finite trace enumeration or from the absence of a loop alone.
-
-## Guardrails for generalization
-
-- Event issuance and completion need separate identities or relations when
-  asynchronous instructions are introduced. Do not force every effect into
-  the issuing thread's ordinary program order.
-- Collective instructions require participation conditions beyond independent
-  scalar thread steps. This fragment supplies no validation of that design.
-- Scope and proxy compatibility are derived from labels and topology. They must
-  not be replaced by a single universal “synchronized” flag.
-- Unsupported instructions, invalid programs, and documented undefined behavior
-  must remain distinguishable from valid programs with no constructed witness.
-- No-thin-air obligations become more demanding with data-dependent control and
-  values. This example avoids such cycles; it does not justify a general
-  no-thin-air algorithm or an unrestricted acyclicity substitute.
-- Kernel results connect to orchestration through explicit memory/state and
-  completion contracts; this study does not provide a CUDA runtime model.
-
-## Decisions still needing review
-
-Decide how to encode local derivations and their coupling to read choices,
-which invariants belong in types versus explicit predicates, and whether byte
-read sources should be primitive or derived. Also decide the representation of
-initialization and unsupported/undefined cases without manufacturing vacuous
-success. A treatment of infinite or partial executions is needed before making
-general progress claims.
-
-The publication example gives a concrete review test: any proposed design must
-admit (1,0) for the relaxed variant, reject it for the acquire variant, and
-construct at least one successful acquire execution. Those obligations are
-necessary checks of the design, not sufficient evidence of full PTX fidelity.
-
-[causality]: ../../references/nvidia/ptx-isa-9.4/index.html#causality-order
+Those facts establish correctness relative to these definitions. Fidelity to
+NVIDIA's prose additionally relies on the source ledger, restriction arguments,
+and independent semantic review. This work provides neither full PTX coverage
+nor hardware conformance nor a formal refinement from a separate complete PTX
+model. Future generalization must revisit byte mixing, initialization, scopes,
+proxies, dependencies, target restrictions, and partial/infinite executions.
