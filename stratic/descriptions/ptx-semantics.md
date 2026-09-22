@@ -34,3 +34,8 @@ permit or prohibit behaviors, and identify which assumptions a kernel proof
 must establish.
 
 A scalar message-passing fragment connects straight-line instruction execution to scoped memory relations and proves publication and counterexample results under explicit restrictions.
+
+An explicit execution environment represents thread topology, memory scopes,
+address spaces, storage ownership, and instruction eligibility. Scalar execution
+connects register and predicate state, control flow, addresses, and memory effects
+to complete kernel proofs with stated execution and memory-model boundaries.

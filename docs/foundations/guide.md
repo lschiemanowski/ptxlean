@@ -132,3 +132,10 @@ checker, the now-complete publication outcome table, and four further litmus
 programs. It separates algorithm correctness, outcome completeness, and semantic
 fidelity, and shows why multi-instruction synchronization patterns need carefully
 chosen examples.
+
+## Continue with environments and scalar kernels
+
+[From litmus programs to scalar kernels](blocks12.md) introduces explicit scopes,
+storage contracts, the scalar interpreter and proved integer kernels. It explains
+which new pieces have checked bridges, and why dependent concurrent execution
+and bytewise raced observations remain separate semantic obligations.

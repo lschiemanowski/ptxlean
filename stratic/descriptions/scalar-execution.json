@@ -1,0 +1,150 @@
+{
+  "id": "scalar-execution",
+  "parent": {
+    "description": "ptx-semantics",
+    "passage": {
+      "quote": "Scalar execution\nconnects register and predicate state, control flow, addresses, and memory effects\nto complete kernel proofs with stated execution and memory-model boundaries."
+    }
+  },
+  "summary": [
+    "Execute fixed-width scalar instructions with explicit register, predicate, control and memory state.",
+    "Distinguish supported syntax, invalid execution, bounded evaluation and actual termination.",
+    "Support complete kernel proofs with explicit dependency and memory-model boundaries."
+  ],
+  "realization": "partial",
+  "remaining": "The stated scalar u32/u64 instruction subset, typed mnemonic boundary, local and candidate runs, run correspondence, safety and example kernel proofs are implemented. General dependent concurrent memory semantics and a generic trace-to-PTX refinement remain unimplemented; raw module parsing, ABI/launch and additional ISA forms are outside this slice.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar machine executes a specified subset of integer and bit instructions,\npredicates, register operands, address calculations, loads, stores, branches,\nand explicit termination."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "inductive Op where\n  | mov32 (destination : Nat) (source : Operand32)\n  | bin32 (operation : BinOp) (destination : Nat) (left right : Operand32)\n  | mov64 (destination : Nat) (source : Operand64)\n  | add64 (destination : Nat) (left right : Operand64)\n  | cvt64 (destination : Nat) (source : Operand32)\n  | setp (comparison : Compare) (destination : Nat) (left right : Operand32)\n  | load (destination : Nat) (address : Operand64)\n  | store (address : Operand64) (source : Operand32)\n  | bra (target : Nat)\n  | exit\n  | unsupported (spelling : String)\n  deriving DecidableEq, Repr"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Word arithmetic has fixed-width PTX behavior."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "def BinOp.eval : BinOp → Word → Word → Word\n  | .add, a, b => a + b\n  | .sub, a, b => a - b\n  | .mulLo, a, b => a * b\n  | .and, a, b => a &&& b\n  | .or, a, b => a ||| b\n  | .xor, a, b => a ^^^ b\n  | .shl, a, b => if b.toNat < 32 then a <<< b.toNat else 0\n  | .shr, a, b => if b.toNat < 32 then a >>> b.toNat else 0"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Dynamic\ninstruction occurrences retain control and memory effects; executed register\nvalues determine store operands and computed addresses."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "def eval (readOverride : Option Word) (instruction : Instr) (s : State) : StepResult :=\n  match instruction.op with\n  | .unsupported spelling => .unsupported spelling\n  | _ =>\n      if instruction.guard.eval s then\n        let advance := {s with pc := s.pc + 1}\n        let event := occurrence s instruction true\n        match instruction.op with\n        | .mov32 destination source =>\n            .next {advance with regs := update s.regs destination (source.eval s)} event\n        | .bin32 operation destination left right =>\n            .next {advance with regs := update s.regs destination (operation.eval (left.eval s) (right.eval s))} event\n        | .mov64 destination source =>\n            .next {advance with addrs := update s.addrs destination (source.eval s)} event\n        | .add64 destination left right =>\n            .next {advance with addrs := update s.addrs destination (left.eval s + right.eval s)} event\n        | .cvt64 destination source =>\n            .next {advance with addrs := update s.addrs destination (BitVec.ofNat 64 (source.eval s).toNat)} event\n        | .setp comparison destination left right =>\n            .next {advance with preds := update s.preds destination (comparison.eval (left.eval s) (right.eval s))} event\n        | .load destination address =>\n            let pointer := address.eval s\n            match addressIndex s.memory pointer with\n            | .error reason => .fault reason\n            | .ok index =>\n                let value := readOverride.getD (s.memory[index]!)\n                .next {advance with regs := update s.regs destination value}\n                  (occurrence s instruction true (some ⟨.load, pointer, value⟩))\n        | .store address source =>\n            let pointer := address.eval s\n            match addressIndex s.memory pointer with\n            | .error reason => .fault reason\n            | .ok index =>\n                let value := source.eval s\n                .next {advance with memory := s.memory.set index value}\n                  (occurrence s instruction true (some ⟨.store, pointer, value⟩))\n        | .bra target => .next {s with pc := target} event\n        | .exit => .halted s event\n        | .unsupported spelling => .unsupported spelling\n      else .next {s with pc := s.pc + 1} (occurrence s instruction false)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Unsupported syntax and features cannot silently execute as supported operations."
+      },
+      "to": {
+        "path": "Ptx/ScalarText.lean",
+        "passage": {
+          "quote": "def decodeOp (mnemonic : String) (operands : List Token) : Except DecodeError Op :=\n  match mnemonic, operands with\n  | \"mov.b32\", [.word (.reg d), .word s] => .ok (.mov32 d s)\n  | \"add.u32\", [.word (.reg d), .word a, .word b] => .ok (.bin32 .add d a b)\n  | \"sub.u32\", [.word (.reg d), .word a, .word b] => .ok (.bin32 .sub d a b)\n  | \"mul.lo.u32\", [.word (.reg d), .word a, .word b] => .ok (.bin32 .mulLo d a b)\n  | \"and.b32\", [.word (.reg d), .word a, .word b] => .ok (.bin32 .and d a b)\n  | \"or.b32\", [.word (.reg d), .word a, .word b] => .ok (.bin32 .or d a b)\n  | \"xor.b32\", [.word (.reg d), .word a, .word b] => .ok (.bin32 .xor d a b)\n  | \"shl.b32\", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shl d a b)\n  | \"shr.u32\", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shr d a b)\n  | \"mov.b64\", [.address (.reg d), .address s] => .ok (.mov64 d s)\n  | \"add.u64\", [.address (.reg d), .address a, .address b] => .ok (.add64 d a b)\n  | \"cvt.u64.u32\", [.address (.reg d), .word s] => .ok (.cvt64 d s)\n  | \"setp.eq.u32\", [.predicate d, .word a, .word b] => .ok (.setp .eq d a b)\n  | \"setp.ne.u32\", [.predicate d, .word a, .word b] => .ok (.setp .ne d a b)\n  | \"setp.lt.u32\", [.predicate d, .word a, .word b] => .ok (.setp .lt d a b)\n  | \"setp.le.u32\", [.predicate d, .word a, .word b] => .ok (.setp .le d a b)\n  | \"setp.gt.u32\", [.predicate d, .word a, .word b] => .ok (.setp .gt d a b)\n  | \"setp.ge.u32\", [.predicate d, .word a, .word b] => .ok (.setp .ge d a b)\n  | \"ld.relaxed.gpu.global.u32\", [.word (.reg d), .memory address] => .ok (.load d address)\n  | \"st.relaxed.gpu.global.u32\", [.memory address, .word (.reg source)] => .ok (.store address (.reg source))\n  | \"bra\", [.label target] => .ok (.bra target)\n  | \"exit\", [] => .ok .exit\n  | mnemonic, _ => if supportedMnemonic mnemonic then .error (.invalidOperands mnemonic)\n      else .error (.unsupportedMnemonic mnemonic)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction representation has a documented relationship to textual PTX."
+      },
+      "to": {
+        "path": "Ptx/ScalarText.lean",
+        "passage": {
+          "quote": "theorem decode_encode (instruction : Instr) (supported : Supported instruction) :\n    decode (encode instruction) = .ok instruction := by\n  rcases instruction with ⟨guard, op⟩\n  cases op with\n  | bin32 operation d a b => cases operation <;> rfl\n  | setp comparison d a b => cases comparison <;> rfl\n  | store address source =>\n      cases source with\n      | reg index => rfl\n      | imm value => exact False.elim supported\n  | unsupported spelling => exact False.elim supported\n  | _ => rfl"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Local finite\nruns and bounded execution procedures have checked relationships; exhausting a\nbound is not evidence of program termination."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "theorem runWith_sound (fuel : Nat) (oracle : Nat → Option Word) (program : List Instr) (s : State) :\n    Runs program oracle s (runWith fuel oracle program s) := by\n  induction fuel generalizing oracle s with\n  | zero => exact .exhausted\n  | succ fuel ih =>\n      simp only [runWith]\n      split\n      · exact .next (by assumption) (ih _ _)\n      · exact .halted (by assumption)\n      · exact .fault (by assumption)\n      · exact .unsupported (by assumption)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Local finite\nruns and bounded execution procedures have checked relationships; exhausting a\nbound is not evidence of program termination."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "theorem Runs.exists_run (h : Runs program oracle s result) :\n    ∃ fuel, runWith fuel oracle program s = result := by\n  induction h with\n  | exhausted => exact ⟨0, rfl⟩\n  | @next oracle s next event rest hs hr ih =>\n      obtain ⟨fuel, hf⟩ := ih\n      exact ⟨fuel + 1, by simp [runWith, hs, hf]⟩\n  | halted hs => exact ⟨1, by simp [runWith, hs]⟩\n  | fault hs => exact ⟨1, by simp [runWith, hs]⟩\n  | unsupported hs => exact ⟨1, by simp [runWith, hs]⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Reusable execution and safety rules support concrete scalar kernel proofs."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "theorem run_add (first second : Nat) (program : List Instr) (s : State) :\n    run (first + second) program s = resume second program (run first program s) := by\n  induction first generalizing s with\n  | zero => simp [run_zero, resume]\n  | succ first ih =>\n      rw [Nat.succ_add, run_succ, run_succ]\n      cases hs : step program s with\n      | next next event =>\n          simp only\n          rw [ih]\n          simp [resume]\n          split <;> rfl\n      | halted final event => simp [resume]\n      | fault reason => simp [resume]\n      | unsupported spelling => simp [resume]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Reusable execution and safety rules support concrete scalar kernel proofs."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "theorem run_trace_safe (fuel : Nat) (program : List Instr) (s : State) :\n    ∀ event ∈ (run fuel program s).trace,\n      ∀ effect, event.memory = some effect → ValidAddress s.memory effect.address :=\n  runWith_trace_safe _ _ _ _"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Any sufficient execution discipline or\nunimplemented general dependency semantics is distinguished from a complete\ncharacterization of PTX executions."
+      },
+      "to": {
+        "path": "docs/foundations/blocks12.md",
+        "passage": {
+          "quote": "Two source-level issues prevent treating these pieces as a finished general\nPTX execution model:"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Explanations connect source semantics and instruction traces to the\nLean definitions and proofs."
+      },
+      "to": {
+        "path": "docs/foundations/scalar-machine.md",
+        "passage": {
+          "quote": "The scalar machine executes integer instructions with registers, predicates,\ncomputed addresses, branches, and explicit thread termination. Its concrete\nmemory mode is a sequential arena interpreter. This supplies a useful execution\ndiscipline for kernels whose accessed memory is owned or otherwise suitably\nisolated. It is not a replacement for PTX's weak-memory model."
+        }
+      }
+    }
+  ]
+}

@@ -12,6 +12,14 @@ and register loads, with fixed global/GPU/generic-proxy restrictions.
 An exact finite candidate checker, complete message-passing outcome table, and
 additional memory-order litmus proofs support the same restricted fragment.
 
+The next foundation adds explicit topology, allocation/access contracts,
+non-torn scoped-memory candidates, and a scalar machine with register operands,
+predication, branches and bounded loops. A modular-add lane and array-summing
+loop have completed execution, correctness and safety proofs. See
+[from litmus programs to scalar kernels](docs/foundations/blocks12.md) for the
+checked connections and the remaining dependent-concurrency and bytewise-race
+semantics obligations.
+
 Start with the [foundations study guide](docs/foundations/guide.md), then
 [finite checking and litmus examples](docs/foundations/finite-checking.md). The
 [source ledger](docs/foundations/source-ledger.md) distinguishes checked proofs

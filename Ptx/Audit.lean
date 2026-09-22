@@ -78,3 +78,138 @@ import Ptx
 #print axioms Ptx.Litmus.AcquirePair.pair_required
 #print axioms Ptx.Litmus.ReleasePair.witness_synchronizes
 #print axioms Ptx.Litmus.AcquirePair.witness_synchronizes
+
+/-! Explicit environments, scoped constraints, scalar execution and kernel bridges. -/
+
+-- Environment
+#print axioms Ptx.Scope.includes_self
+#print axioms Ptx.Scope.cta_includes_cluster
+#print axioms Ptx.Scope.cluster_includes_gpu
+#print axioms Ptx.Environment.accessible_contract
+#print axioms Ptx.Environment.accessible_bounds
+
+-- ScopedMemory
+#print axioms Ptx.ScopedGraph.morallyStrong_legacy
+#print axioms Ptx.ScopedGraph.observation_legacy
+#print axioms Ptx.ScopedGraph.sync_legacy
+#print axioms Ptx.ScopedGraph.base_legacy
+#print axioms Ptx.ScopedGraph.cause_legacy
+#print axioms Ptx.ScopedGraph.location_legacy
+#print axioms Ptx.ScopedGraph.coherent_legacy
+#print axioms Ptx.ScopedGraph.valid_legacy
+
+-- ScopedExamples
+#print axioms Ptx.ScopedExamples.publication
+#print axioms Ptx.ScopedExamples.gpu_all_in_scope
+#print axioms Ptx.ScopedExamples.gpu_specialization
+#print axioms Ptx.ScopedExamples.in_scope_execution_exists
+#print axioms Ptx.ScopedExamples.outside_scope_execution_exists
+#print axioms Ptx.ScopedExamples.outside_scope_no_sync
+#print axioms Ptx.ScopedExamples.scope_inclusion_is_mutual
+#print axioms Ptx.ScopedExamples.different_grids_not_same_cta
+#print axioms Ptx.ScopedExamples.different_grids_same_gpu
+#print axioms Ptx.ScopedExamples.same_cluster_different_cta
+#print axioms Ptx.ScopedExamples.shared_owner_can_access
+#print axioms Ptx.ScopedExamples.shared_other_cta_cannot_access
+#print axioms Ptx.ScopedExamples.explicit_cluster_shared_access
+#print axioms Ptx.ScopedExamples.shared_other_grid_cannot_access
+#print axioms Ptx.ScopedExamples.misalignment_rejected
+#print axioms Ptx.ScopedExamples.bounds_rejected
+#print axioms Ptx.ScopedExamples.cluster_target_rejected
+#print axioms Ptx.ScopedExamples.cluster_target_accepted
+#print axioms Ptx.ScopedExamples.local_other_thread_rejected
+#print axioms Ptx.ScopedExamples.entry_parameter_store_rejected
+#print axioms Ptx.ScopedExamples.parameter_abi_explicitly_unsupported
+#print axioms Ptx.ScopedExamples.racy_writes_partial_coherence
+#print axioms Ptx.ScopedExamples.racy_program_admitted
+#print axioms Ptx.ScopedExamples.racy_not_legacy_valid
+
+-- Scalar
+#print axioms Ptx.Scalar.update_same
+#print axioms Ptx.Scalar.update_other
+#print axioms Ptx.Scalar.addressIndex_ok_iff
+#print axioms Ptx.Scalar.runWith_sound
+#print axioms Ptx.Scalar.run_sound
+#print axioms Ptx.Scalar.runWith_trace_length
+#print axioms Ptx.Scalar.run_zero
+#print axioms Ptx.Scalar.eval_skipped
+#print axioms Ptx.Scalar.shift_left_clamped
+#print axioms Ptx.Scalar.shift_right_clamped
+#print axioms Ptx.Scalar.run_succ
+#print axioms Ptx.Scalar.run_add
+#print axioms Ptx.Scalar.eval_memory_safe
+#print axioms Ptx.Scalar.eval_memory_length
+#print axioms Ptx.Scalar.step_memory_safe
+#print axioms Ptx.Scalar.step_memory_length
+#print axioms Ptx.Scalar.eval_halted
+#print axioms Ptx.Scalar.step_halted
+#print axioms Ptx.Scalar.runWith_memory_length
+#print axioms Ptx.Scalar.run_memory_length
+#print axioms Ptx.Scalar.runWith_trace_safe
+#print axioms Ptx.Scalar.run_trace_safe
+#print axioms Ptx.Scalar.Runs.exists_run
+#print axioms Ptx.Scalar.add_modulo
+#print axioms Ptx.Scalar.sub_modulo
+#print axioms Ptx.Scalar.mul_low_modulo
+#print axioms Ptx.Scalar.add64_modulo
+#print axioms Ptx.Scalar.validAddress_bytes
+#print axioms Ptx.Scalar.unsupported_not_hidden
+#print axioms Ptx.Scalar.shift_boundary_examples
+#print axioms Ptx.Scalar.unsigned_wrap_examples
+
+-- ScalarText
+#print axioms Ptx.Scalar.Text.decode_encode
+#print axioms Ptx.Scalar.Text.bare_load_rejected
+#print axioms Ptx.Scalar.Text.uniform_branch_rejected
+#print axioms Ptx.Scalar.Text.wrong_destination_rejected
+#print axioms Ptx.Scalar.Text.decodeOp_supported
+#print axioms Ptx.Scalar.Text.immediate_store_rejected
+#print axioms Ptx.Scalar.Text.decode_supported
+
+-- ScalarKernels
+#print axioms Ptx.Scalar.Kernels.add_lane_result
+#print axioms Ptx.Scalar.Kernels.elementwise_add
+#print axioms Ptx.Scalar.Kernels.loop_zero
+#print axioms Ptx.Scalar.Kernels.loop_advance
+#print axioms Ptx.Scalar.Kernels.sum_loop_correct
+#print axioms Ptx.Scalar.Kernels.add_lane_exists
+#print axioms Ptx.Scalar.Kernels.sum_loop_exists
+#print axioms Ptx.Scalar.Kernels.sum_loop_extra_fuel
+#print axioms Ptx.Scalar.Kernels.sum_loop_memory_safe
+
+-- ScalarEnvironment
+#print axioms Ptx.Scalar.arena_access_iff
+#print axioms Ptx.Scalar.run_environment_safe
+#print axioms Ptx.Scalar.separate_arenas
+#print axioms Ptx.Scalar.arena_forms_eligible
+
+-- ScalarExamples
+#print axioms Ptx.Scalar.Examples.zero_count_no_access
+#print axioms Ptx.Scalar.Examples.modular_sum
+#print axioms Ptx.Scalar.Examples.fuel_exhaustion_is_not_halt
+#print axioms Ptx.Scalar.Examples.misaligned_load_fault
+#print axioms Ptx.Scalar.Examples.out_of_bounds_load_fault
+#print axioms Ptx.Scalar.Examples.skipped_load_no_fault
+#print axioms Ptx.Scalar.Examples.invalid_pc_is_explicit
+#print axioms Ptx.Scalar.Examples.unsupported_is_explicit
+#print axioms Ptx.Scalar.Examples.add_lane_text_roundtrip
+#print axioms Ptx.Scalar.Examples.sum_loop_text_roundtrip
+
+-- ScalarMemoryWitness
+#print axioms Ptx.Scalar.MemoryWitness.events_eq
+#print axioms Ptx.Scalar.MemoryWitness.graph_event
+#print axioms Ptx.Scalar.MemoryWitness.graph_source
+#print axioms Ptx.Scalar.MemoryWitness.graph_event0
+#print axioms Ptx.Scalar.MemoryWitness.graph_event1
+#print axioms Ptx.Scalar.MemoryWitness.graph_event2
+#print axioms Ptx.Scalar.MemoryWitness.graph_event3
+#print axioms Ptx.Scalar.MemoryWitness.graph_event4
+#print axioms Ptx.Scalar.MemoryWitness.graph_event5
+#print axioms Ptx.Scalar.MemoryWitness.candidate_result
+#print axioms Ptx.Scalar.MemoryWitness.input_sources
+#print axioms Ptx.Scalar.MemoryWitness.candidate_correct
+#print axioms Ptx.Scalar.MemoryWitness.witness_valid
+#print axioms Ptx.Scalar.MemoryWitness.candidate_eq_concrete
+#print axioms Ptx.Scalar.MemoryWitness.label_preserves_address
+#print axioms Ptx.Scalar.MemoryWitness.witness_events_from_run
+#print axioms Ptx.Scalar.MemoryWitness.constructive_execution

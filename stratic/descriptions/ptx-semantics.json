@@ -8,10 +8,11 @@
   },
   "summary": [
     "Describe permitted PTX executions through operational instruction rules and axiomatic memory constraints.",
-    "Preserve documented behavior and distinguish safety, existence, and termination guarantees."
+    "Preserve documented behavior and distinguish safety, existence, and termination guarantees.",
+    "Make environment eligibility and scalar control, data and address behavior explicit in kernel proofs."
   ],
   "realization": "partial",
-  "remaining": "Only the restricted scalar message-passing fragment is implemented. Full ISA coverage, target validation, general byte/address/scope/dependency semantics, and GPU progress remain to be implemented.",
+  "remaining": "Implemented: original message-passing/checker, scoped non-torn candidates, explicit environment contracts, scalar integer/control execution and bounded kernel proofs with selected checked bridges. Remaining: complete byte/address/proxy and dependent concurrent semantics, full ISA/target coverage, shared launch refinement and GPU progress.",
   "links": [
     {
       "kind": "implementation",
@@ -34,6 +35,18 @@
         "path": "docs/foundations/representation.md",
         "passage": {
           "quote": "`Ptx/Language.lean` defines `Instr`, `Instr.step`, `Step`, `execute`, and `Runs`.\nAn instruction is a relaxed/acquire load into a register or a relaxed/release\nstore of an immediate `BitVec 32`. Addresses are constant word indices. Registers\nare functions from natural-number identifiers to words. Execution consumes a\ncandidate value at each instruction position; stores ignore it. A load updates\nexactly its destination register. `execute_runs` and `runs_eq_execute` connect\nthe function to the inductive local execution relation. Every finite instruction\nlist has a completed local run for each candidate read assignment."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An explicit execution environment represents thread topology, memory scopes,\naddress spaces, storage ownership, and instruction eligibility."
+      },
+      "to": {
+        "path": "docs/foundations/blocks12.md",
+        "passage": {
+          "quote": "The foundation now has explicit topology and allocation contracts, scoped\nmemory examples, a scalar interpreter, and instruction-level integer kernel\nproofs. These are useful, checked pieces of a PTX formalization. They do not yet\nform a complete concurrent semantics for programs with data-dependent stores,\ncomputed addresses, and branches."
         }
       }
     }

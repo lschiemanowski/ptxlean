@@ -6,6 +6,6 @@
     "Explain the computing model and verification contracts through source-linked documentation and reproducible examples."
   ],
   "realization": "partial",
-  "remaining": "The first restricted scalar PTX message-passing fragment and study guide are implemented. Full PTX coverage, TorchLean verification interfaces, numerical/backward infrastructure, and application examples remain unimplemented.",
+  "remaining": "Restricted message-passing, scoped non-torn candidates, allocation contracts and a scalar integer machine with local kernel proofs are implemented. Full PTX coverage, general dependent concurrent semantics, bytewise raced outcomes, TorchLean interfaces, numerical/backward infrastructure and application examples remain unimplemented.",
   "links": []
 }

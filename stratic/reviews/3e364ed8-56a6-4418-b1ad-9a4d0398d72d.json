@@ -1,0 +1,219 @@
+{
+  "id": "3e364ed8-56a6-4418-b1ad-9a4d0398d72d",
+  "base": "f8b3f733b1df6f8a7b2c63e62105f1ed183ebda0",
+  "contentTree": "fd7e417d7696c26fecfc10d4512be710be088ebb",
+  "reviewer": "Codex root, with independent semantic_review, proof_review and local_execution cross-reviews",
+  "summary": "Implement explicit environments and a useful scalar execution foundation with completed restricted proofs and readable studies. Independent source/proof review and exact-tree clean verification passed. The reviewed deliverable deliberately records incomplete general dependent concurrency, bytewise raced outcomes and launch refinement rather than weakening PTX requirements or claiming full blocks are general PTX coverage. Descriptions were refined before corresponding code changes; links and implementation statuses reconciled with the completed artifacts.",
+  "examined": [
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Updated implementation status to include the checked scoped/environment/scalar work and explicitly retain general dependent concurrency, bytewise raced outcomes and downstream project goals as unimplemented."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "revised",
+      "reason": "Added execution-environment and scalar-execution responsibilities before implementing them. The original semantics is unchanged; new restricted relations and selected adequacy bridges have explicit coverage boundaries."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "revised",
+      "reason": "Original theorem statements and semantics remain unchanged. Corrected the source exposition to show register-source st preceded by mov and identify literal stores as normalized IR, without claiming a checked lowering; linked guide and audit now include follow-on work."
+    },
+    {
+      "id": "finite-checking",
+      "outcome": "unchanged",
+      "reason": "Original finite checker, reachability, outcome and litmus contracts and definitions are unchanged. Existing checks are retained and pass in the clean combined build."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Added independent pinned-source interpretation review and checked bridges; describes bytewise race and no-thin-air gaps rather than treating Lean proofs as semantic fidelity or hardware evidence."
+    },
+    {
+      "id": "execution-environment",
+      "outcome": "revised",
+      "reason": "New description-first partial responsibility is realized by topology/access/eligibility definitions, scoped non-torn constraints, exact legacy bridge, counterexamples, and the scalar allocation bridge. Full bytewise and lifetime semantics remain explicit omissions."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "revised",
+      "reason": "New description-first partial responsibility covers actual scalar register/predicate/control/address execution, typed text boundary, faults, finite derivations and reusable safety. General concurrent dependent execution remains an open semantic obligation."
+    },
+    {
+      "id": "scalar-kernels",
+      "outcome": "revised",
+      "reason": "Description added before the kernel implementation. Arbitrary-input modular addition, parameterized real branching sum loop, halted witnesses, safe accesses, memory preservation and candidate-source bridge are proved. Lane composition is independent local views, not a shared GPU launch theorem."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "Integer arena examples establish no tensor/TorchLean interface; logical layouts, multi-kernel composition and numerical obligations remain unimplemented as described."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "unchanged",
+      "reason": "No allocator, launch scheduler, resource lifetime or shared-memory embedding is implemented; local lane products are explicitly not an orchestration proof."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Modular unsigned integer arithmetic introduces no floating-point or real-valued network accuracy contract; precision-parametric goals remain unimplemented."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "No change to automatic TorchLean VJP construction or separately authored PTX backward implementation/proof goals."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "These foundation kernels are studies below PTX semantics, not end-to-end neural-network application examples; the application responsibility remains unchanged."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "No Gemma implementation, architecture or numerical-policy change; text-only cached forward and cache-free backward scope is untouched."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "fd7e417d7696c26fecfc10d4512be710be088ebb",
+      "method": "PATH=/home/lothar/.elan/toolchains/leanprover--lean4---v4.33.0/bin:$PATH ./scripts/check.sh --clean; stratic validate; git diff --check; local Markdown link and pinned HTML-anchor inspection; independent source and proof reviews",
+      "outcome": "pass",
+      "environment": "Linux; Lean 4.33.0 d8b18978322de05a8f3dba51ef03cf5461676c17; bundled Std only; pinned PTX ISA 9.4 HTML SHA-256 0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed; no external paid model calls",
+      "evidence": "Clean build passed all 21 jobs; source guard checked 20 Lean files; dependency audit checked 190 declarations and admitted only propext, Quot.sound and Classical.choice. Source hash, 3928316 bytes and 23 manifest anchors verified; 130 local documentation links/HTML anchors checked; Stratic valid with no issues; whitespace clean; before/after source tree identical. Independent agents reviewed scalar, scoped, environment and bridge proofs and pinned-source interpretations. Findings corrected: immediate store operand legality and explicit non-torn/dependent-semantics limitations. Reviews found no remaining blocker for the stated restricted results. No hardware validation or complete concurrent dependent refinement claimed.",
+      "tests": [],
+      "id": "0c9fe465-fe32-48fa-a7c2-172aa1fa71ca",
+      "recordedAt": "2026-09-22T10:10:07.282Z"
+    }
+  ],
+  "recordedAt": "2026-09-22T10:11:42.746Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Library import integration makes all new modules part of the ordinary clean build; entrypoint wiring has no independent semantic contract."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Audit extended from 75 to 190 declarations, including every newly declared public theorem; standard-axiom output inspected. Existing audit entries retained."
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "reason": "Unlinked supporting data types, access diagnostics, permission rules and derived access bounds support the linked environment definitions/theorems; independently reviewed."
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "reason": "Unlinked typed operands, state/outcome/trace helpers, instances, modular facts and proof lemmas support linked evaluator/run contracts; every new theorem audited and scalar source independently reviewed."
+    },
+    {
+      "path": "Ptx/ScalarEnvironment.lean",
+      "reason": "Supporting allocation/address constructors, separation and eligibility lemmas support the linked exact access bridge; independently reviewed and all theorem dependencies audited."
+    },
+    {
+      "path": "Ptx/ScalarExamples.lean",
+      "reason": "Remaining boundary regression theorems cover empty input, modular sum, insufficient fuel, faults, skipped effects and unsupported instructions; compiled and audited as part of the standard library."
+    },
+    {
+      "path": "Ptx/ScalarKernels.lean",
+      "reason": "Supporting lane/loop definitions and intermediate execution/induction lemmas implement linked final contracts; larger-fuel stability and safety retain explicit bounds. Independent proof review found no hidden output assumption."
+    },
+    {
+      "path": "Ptx/ScalarMemoryWitness.lean",
+      "reason": "Supporting trace projection, event enumeration, source uniqueness, finite witness certificate and grounding equality implement the linked constructive/universal bridge; independently reviewed."
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "reason": "Remaining canonical encoder, typed token types, support predicates and rejection theorems support the linked boundary. Immediate stores are deliberately excluded from legal PTX text; no raw parsing claim."
+    },
+    {
+      "path": "Ptx/ScopedExamples.lean",
+      "reason": "Remaining same-CTA witness, topology/storage/eligibility regressions and partial-coherence counterexample support the linked scoped publication and outside-scope witness; reviewed and kernel checked."
+    },
+    {
+      "path": "Ptx/ScopedMemory.lean",
+      "reason": "Supporting partial coherence, mutual scope, relation definitions, intermediate iff proofs and injective used-thread topology implement the linked validity/specialization contract; non-torn and constant-store limits explicit."
+    },
+    {
+      "path": "README.md",
+      "reason": "Updated project orientation and links accurately distinguish the checked implementation from remaining full-PTX and application goals."
+    },
+    {
+      "path": "docs/foundations/blocks12-source-review.md",
+      "reason": "Complete source interpretation reviewed independently against pinned sections, including scope mutuality, partial coherence, store operand legality, initialization, target requirements, NTA and nontearing limits."
+    },
+    {
+      "path": "docs/foundations/blocks12.md",
+      "reason": "Overview explains theorem premises and study path, representation choices, actual checked bridges, partial scope and precise remaining semantic obligations; final claims independently reviewed."
+    },
+    {
+      "path": "docs/foundations/environment.md",
+      "reason": "Full environment/scoped study and scalar-arena bridge explanation inspected against code and source; local links checked."
+    },
+    {
+      "path": "docs/foundations/guide.md",
+      "reason": "Appended a next-study link to environments and scalar kernels; original reading path retained."
+    },
+    {
+      "path": "docs/foundations/message-passing.md",
+      "reason": "Corrected PTX snippet to register-source stores with explicit movs and clearly distinguished normalized memory-only IR and unproved lowering."
+    },
+    {
+      "path": "docs/foundations/representation.md",
+      "reason": "Added the same explicit normalization/lowering boundary without changing existing formalization claims."
+    },
+    {
+      "path": "docs/foundations/scalar-machine.md",
+      "reason": "Source-linked scalar guide covers exact opcode subset, boundary outcomes, candidate versus concrete semantics and proof APIs; independently reviewed."
+    },
+    {
+      "path": "docs/foundations/source-ledger.md",
+      "reason": "Corrected store source interpretation to distinguish legal register-store PTX from normalized literal-store IR; original source pin unchanged."
+    },
+    {
+      "path": "stratic/descriptions/execution-environment.json",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/execution-environment.md",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/message-passing.json",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.json",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.md",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.json",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.md",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-kernels.json",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-kernels.md",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Description/metadata is itself reviewed through its examined entry: parent passage, nonempty summaries, exact implementation links and deliberate partial/unimplemented status checked by Stratic validation."
+    }
+  ]
+}

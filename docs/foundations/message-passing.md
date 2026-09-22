@@ -25,10 +25,23 @@ thread selection, launch code, and output collection are intentionally absent;
 these blocks are not a runnable PTX module.
 
 ```text
-Producer                                      Consumer
-A: st.relaxed.gpu.global.u32 [payload], 7;      C: ld.acquire.gpu.global.u32 %flag, [ready];
-B: st.release.gpu.global.u32 [ready], 1;        D: ld.relaxed.gpu.global.u32 %value, [payload];
+Producer:
+   mov.b32 %payload_value, 7;
+   mov.b32 %ready_value, 1;
+A: st.relaxed.gpu.global.u32 [payload], %payload_value;
+B: st.release.gpu.global.u32 [ready], %ready_value;
+
+Consumer:
+C: ld.acquire.gpu.global.u32 %flag, [ready];
+D: ld.relaxed.gpu.global.u32 %value, [payload];
 ```
+
+PTX `st` requires its data operand in a register. The original memory-only
+Lean language normalizes the producer's two constant-setting moves into literal
+store operands; it does not accept literal stores as PTX assembly. This
+normalization is a documented source interpretation, not a proved compiler
+lowering. Only A–D contribute memory events. The newer
+[scalar machine](scalar-machine.md) represents register-valued stores directly.
 
 The consumer executes D even if C returns zero. This makes all four outcomes
 easy to inspect without introducing a branch or a polling loop. A conditional

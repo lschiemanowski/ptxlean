@@ -1,0 +1,148 @@
+{
+  "id": "scalar-kernels",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "The scalar kernel examples execute concrete instruction lists for elementwise\ninteger computation and bounded traversal."
+    }
+  },
+  "summary": [
+    "Verify instruction-level integer kernels with explicit input, memory and execution contracts.",
+    "Prove actual bounded-loop termination, functional results, and memory preservation under a stated ownership discipline."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An elementwise computation reads its inputs from an explicit memory view and\nwrites the modular u32 result while preserving other storage."
+      },
+      "to": {
+        "path": "Ptx/ScalarKernels.lean",
+        "passage": {
+          "quote": "theorem add_lane_result (x y old : Word) (tail : List Word) (registers addresses predicates) :\n    let result := run 5 addLane (laneStart x y old tail registers addresses predicates)\n    result.status = .halted ∧ result.state.memory = x :: y :: (x + y) :: tail ∧\n    result.state.regs 2 = x + y := by\n  simp [run, runWith, stepWith, eval, Guard.eval, Instr.plain, addLane,\n    laneStart, addressIndex, Operand64.eval, Operand32.eval, BinOp.eval, update]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A bounded loop\nuses actual predicate and branch instructions; a decreasing measure or explicit\nexecution theorem establishes termination rather than treating fuel exhaustion\nas success."
+      },
+      "to": {
+        "path": "Ptx/ScalarKernels.lean",
+        "passage": {
+          "quote": "def sumLoop : List Instr := [\n  .plain (.setp .eq 0 (.reg 0) (.imm 0)),\n  ⟨.pred 0 true, .bra 7⟩,\n  .plain (.load 2 (.reg 0)),\n  .plain (.bin32 .add 1 (.reg 1) (.reg 2)),\n  .plain (.add64 0 (.reg 0) (.imm 4)),\n  .plain (.bin32 .sub 0 (.reg 0) (.imm 1)),\n  .plain (.bra 0),\n  .plain .exit]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The kernel contracts expose all initial-register, pointer, extent, and aliasing\nconditions."
+      },
+      "to": {
+        "path": "Ptx/ScalarKernels.lean",
+        "passage": {
+          "quote": "theorem sum_loop_correct (count : Nat) (s : State) (start : Nat)\n    (pc : s.pc = 0) (counter : s.regs 0 = BitVec.ofNat 32 count)\n    (pointer : s.addrs 0 = BitVec.ofNat 64 (4 * start))\n    (extent : start + count ≤ s.memory.length)\n    (countFits : count < 2^32) (addressFits : 4 * (start + count) < 2^64) :\n    let final := outcome (7 * count + 3) sumLoop s\n    final.1 = .halted ∧ final.2.memory = s.memory ∧\n      final.2.regs 1 = sliceSum s.memory start count (s.regs 1) := by\n  induction count generalizing s start with\n  | zero =>\n    simpa [sliceSum] using loop_zero s pc counter\n  | succ count ih =>\n    have inside : start < s.memory.length := by omega\n    have addressNat : (s.addrs 0).toNat = 4 * start := by\n      rw [pointer]\n      simp only [BitVec.toNat_ofNat]\n      exact Nat.mod_eq_of_lt (by omega)\n    have indexOK : addressIndex s.memory (s.addrs 0) = .ok start := by\n      simp [addressIndex, addressNat, inside]\n    have nonzero : s.regs 0 ≠ 0 := by\n      intro zero\n      have h := congrArg BitVec.toNat zero\n      rw [counter] at h\n      simp only [BitVec.toNat_ofNat, Nat.mod_eq_of_lt countFits] at h\n      have : (0 : Word).toNat = 0 := rfl\n      rw [this] at h\n      omega\n    let next := loopNext s s.memory[start]!\n    have nextCounter : next.regs 0 = BitVec.ofNat 32 count := by\n      simp only [next, loopNext, update_same, counter]\n      change BitVec.ofNat 32 (count + 1) - BitVec.ofNat 32 1 = BitVec.ofNat 32 count\n      rw [BitVec.ofNat_sub_ofNat_of_le _ _ (by decide) (by omega)]\n      simp\n    have nextPointer : next.addrs 0 = BitVec.ofNat 64 (4 * (start + 1)) := by\n      simp only [next, loopNext, update_same, pointer]\n      change BitVec.ofNat 64 (4 * start) + BitVec.ofNat 64 4 = _\n      rw [← BitVec.ofNat_add]\n      congr 1\n    have inductionResult := ih next (start + 1) rfl nextCounter nextPointer\n      (by change start + 1 + count ≤ s.memory.length; omega) (by omega) (by omega)\n    have budget : 7 * (count + 1) + 3 = (7 * count + 3) + 7 := by omega\n    change (outcome (7 * (count + 1) + 3) sumLoop s).1 = .halted ∧ _\n    rw [budget, loop_advance s pc nonzero indexOK]\n    refine ⟨inductionResult.1, inductionResult.2.1, ?_⟩\n    rw [inductionResult.2.2]\n    simp only [sliceSum, next, loopNext]\n    rw [List.drop_eq_getElem_cons inside]\n    simp [update, inside, -List.getElem_cons_drop]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Constructed witnesses make\nexecution existence explicit."
+      },
+      "to": {
+        "path": "Ptx/ScalarKernels.lean",
+        "passage": {
+          "quote": "theorem sum_loop_exists (count : Nat) (s : State) (start : Nat)\n    (pc : s.pc = 0) (counter : s.regs 0 = BitVec.ofNat 32 count)\n    (pointer : s.addrs 0 = BitVec.ofNat 64 (4 * start))\n    (extent : start + count ≤ s.memory.length)\n    (countFits : count < 2^32) (addressFits : 4 * (start + count) < 2^64) :\n    ∃ result, Runs sumLoop (fun _ => none) s result ∧ result.status = .halted ∧\n      result.state.memory = s.memory ∧\n      result.state.regs 1 = sliceSum s.memory start count (s.regs 1) := by\n  exact ⟨run (7 * count + 3) sumLoop s, run_sound _ _ _,\n    sum_loop_correct count s start pc counter pointer extent countFits addressFits⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Completed execution, returned values, memory safety, and preservation\nare proved separately where they are independent."
+      },
+      "to": {
+        "path": "Ptx/ScalarKernels.lean",
+        "passage": {
+          "quote": "theorem sum_loop_memory_safe (count : Nat) (s : State)\n    (event : Occurrence) (member : event ∈ (run (7 * count + 3) sumLoop s).trace)\n    (effect : MemoryEffect) (memory : event.memory = some effect) :\n    effect.address.toNat % 4 = 0 ∧ effect.address.toNat + 4 ≤ 4 * s.memory.length :=\n  validAddress_bytes (run_trace_safe _ _ _ event member effect memory)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Lane-wise composition operates on independent owned memory views; a shared\nphysical-memory and scheduling interpretation remains a separate obligation."
+      },
+      "to": {
+        "path": "Ptx/ScalarKernels.lean",
+        "passage": {
+          "quote": "theorem elementwise_add (n : Nat) (left right old : Fin n → Word)\n    (registers : Fin n → Nat → Word) (addresses : Fin n → Nat → Address)\n    (predicates : Fin n → Nat → Bool) :\n    ∀ lane,\n      let result := run 5 addLane (laneStart (left lane) (right lane) (old lane) []\n        (registers lane) (addresses lane) (predicates lane))\n      result.status = .halted ∧\n        result.state.memory = [left lane, right lane, left lane + right lane] := by\n  intro lane\n  obtain ⟨hh, hm, _⟩ := add_lane_result (left lane) (right lane) (old lane) []\n    (registers lane) (addresses lane) (predicates lane)\n  exact ⟨hh, hm⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The source and text representations identify which PTX instruction variants the\nexamples use."
+      },
+      "to": {
+        "path": "Ptx/ScalarExamples.lean",
+        "passage": {
+          "quote": "theorem sum_loop_text_roundtrip :\n    sumLoop.map (fun instruction => Text.decode (Text.encode instruction)) =\n      sumLoop.map (fun instruction => (Except.ok instruction : Except Text.DecodeError Instr)) := rfl"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A constructive relational witness links the lane example's actual memory effects\nto initialized values and memory-order constraints."
+      },
+      "to": {
+        "path": "Ptx/ScalarMemoryWitness.lean",
+        "passage": {
+          "quote": "theorem witness_events_from_run (x y old : Word) (registers addresses predicates) :\n    events x y old x y registers addresses predicates =\n      initialEvents [x,y,old] ++\n        traceEvents 0 (run 5 addLane (laneStart x y old [] registers addresses predicates)).trace := by\n  simp only [events, candidate_eq_concrete]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A constructive relational witness links the lane example's actual memory effects\nto initialized values and memory-order constraints."
+      },
+      "to": {
+        "path": "Ptx/ScalarMemoryWitness.lean",
+        "passage": {
+          "quote": "theorem constructive_execution (x y old : Word) (registers addresses predicates) :\n    let start := laneStart x y old [] registers addresses predicates\n    let result := run 5 addLane start\n    Scalar.Runs addLane (fun _ => none) start result ∧\n      result.status = .halted ∧ result.state.memory = [x,y,x+y] ∧\n      (witness x y old registers addresses predicates).Valid := by\n  obtain ⟨halted, memory, _⟩ := add_lane_result x y old [] registers addresses predicates\n  exact ⟨run_sound _ _ _, halted, memory, witness_valid _ _ _ _ _ _⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Register-valued store data\ncomes from the scalar execution."
+      },
+      "to": {
+        "path": "Ptx/ScalarMemoryWitness.lean",
+        "passage": {
+          "quote": "theorem candidate_correct (x y old left right : Word) (registers addresses predicates)\n    (source co) (sources : (graph x y old left right registers addresses predicates source co).Sources) :\n    (candidateRun x y old left right registers addresses predicates).status = .halted ∧\n    (candidateRun x y old left right registers addresses predicates).state.memory = [x,y,x+y] := by\n  obtain ⟨rfl,rfl⟩ := input_sources x y old left right registers addresses predicates source co sources\n  exact candidate_result _ _ _ _ _ _ _ _"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Explanations distinguish local concrete execution from general\nweak-memory execution and do not claim an unproved concurrent refinement."
+      },
+      "to": {
+        "path": "docs/foundations/blocks12.md",
+        "passage": {
+          "quote": "The argument has both directions needed for a useful example. `candidate_correct`\nquantifies over arbitrary candidate input reads and source/coherence choices.\nSource compatibility forces each load to read its input's unique initialization\nwrite, so the completed result is the desired sum. This premise is an actual\nmemory source constraint; it does not assume the output is correct.\n`witness_valid` constructs compatible source and coherence choices for every\ninput. `candidate_eq_concrete` equates the grounded candidate with the concrete\ninterpreter run, and `witness_events_from_run` connects the labels to that run.\n`constructive_execution` packages the halted derivation, final memory and graph\nwitness."
+        }
+      }
+    }
+  ]
+}

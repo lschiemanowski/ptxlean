@@ -29,6 +29,11 @@ Read-source choices at non-read events are irrelevant. Coherence is a Boolean
 relation whose typing, strict order, per-word totality, and initialization order
 are separately checked. No global total order is imposed on distinct words.
 
+PTX itself requires a register as the data source of `st`. Literal stores here
+are a normalized memory-only representation of a preceding constant-setting
+move and its register store. This is not legal literal-store assembly or a
+proved compiler transformation; the study now shows the explicit moves.
+
 ## Deliberate restrictions
 
 | Choice | Reason and precise boundary |

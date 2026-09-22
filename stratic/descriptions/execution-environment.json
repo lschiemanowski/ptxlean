@@ -1,0 +1,162 @@
+{
+  "id": "execution-environment",
+  "parent": {
+    "description": "ptx-semantics",
+    "passage": {
+      "quote": "An explicit execution environment represents thread topology, memory scopes,\naddress spaces, storage ownership, and instruction eligibility."
+    }
+  },
+  "summary": [
+    "Represent topology, scopes and storage-access contracts explicitly and check supported instruction eligibility.",
+    "Prove scoped publication, non-torn raced witnesses and exact specialization to the original memory foundation.",
+    "Connect scalar access safety to an explicit allocation view while retaining bytewise-race and concurrent-refinement boundaries."
+  ],
+  "realization": "partial",
+  "remaining": "Topology, supported allocation/access/target contracts, scoped publication/counterexamples, exact legacy specialization and scalar arena bridge are checked. General bytewise raced outcomes, raw/generic address resolution, host participants, allocation lifetime and full target validation remain unimplemented.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The environment assigns threads to compute devices, clusters, and CTAs and\ninterprets scope membership and mutual inclusion."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "structure ThreadLocation where\n  device : Nat\n  grid : Nat\n  cluster : Nat\n  cta : Nat\n  thread : Nat\n  deriving DecidableEq, Repr"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The environment assigns threads to compute devices, clusters, and CTAs and\ninterprets scope membership and mutual inclusion."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "def Scope.includes (scope : Scope) (issuer participant : ThreadLocation) : Bool :=\n  match scope with\n  | .cta => issuer.sameCTA participant\n  | .cluster => issuer.sameCluster participant\n  | .gpu => issuer.device == participant.device\n  | .sys => true"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocated extents,\nalignment, access permissions, initialization, and private or shared ownership\nconstrain scalar memory accesses."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "def Environment.checkAccess (environment : Environment) (thread : ThreadLocation)\n    (kind : AccessKind) (address : Address) (width : Nat)\n    (clusterAccess : Bool := false) : Except AccessError Unit :=\n  match environment.allocations address.allocation with\n  | none => .error .unallocated\n  | some allocation =>\n    if allocation.space != address.space then .error .wrongSpace\n    else if !allocation.ownerAllows thread clusterAccess then .error .inaccessible\n    else if width == 0 then .error .invalidWidth\n    else if address.offset + width > allocation.bytes then .error .outOfBounds\n    else if allocation.alignment % width != 0 || allocation.alignment == 0 ||\n        address.offset % width != 0 then .error .misaligned\n    else if kind == .read then\n      if !allocation.readable then .error .permission\n      else if !allocation.initialized then .error .uninitialized\n      else .ok ()\n    else if !allocation.writable || address.space == .param then .error .permission\n    else .ok ()"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocated extents,\nalignment, access permissions, initialization, and private or shared ownership\nconstrain scalar memory accesses."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "theorem Environment.accessible_contract (environment : Environment) (thread : ThreadLocation)\n    (kind : AccessKind) (address : Address) (width : Nat) (clusterAccess : Bool)\n    (h : environment.accessible thread kind address width clusterAccess) :\n    ∃ allocation, environment.allocations address.allocation = some allocation ∧\n      allocation.space = address.space ∧ allocation.ownerAllows thread clusterAccess = true ∧\n      0 < width ∧ address.offset + width ≤ allocation.bytes ∧\n      0 < allocation.alignment ∧ allocation.alignment % width = 0 ∧ address.offset % width = 0 := by\n  unfold Environment.accessible Environment.checkAccess at h\n  cases ha : environment.allocations address.allocation with\n  | none => simp [ha] at h\n  | some allocation =>\n    simp only [ha] at h\n    simp at h\n    repeat' (first | split at h | contradiction)\n    all_goals refine ⟨allocation,rfl,?_,?_,?_,?_,?_,?_,?_⟩\n    all_goals first | assumption | omega | simp_all"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The supported instruction forms carry explicit\nISA-version and target requirements."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "def memoryEligibility (target : Target) (form : MemoryForm) : Eligibility :=\n  if target.isa > 94 then .unsupported \"ISA versions after pinned PTX 9.4\"\n  else if target.isa < 10 || target.sm < 10 then .illegal \"scalar ld/st require PTX 1.0\"\n  else if form.sharedCluster && form.space != .shared then .illegal \"::cluster requires shared space\"\n  else if form.scope.isSome && form.space != .global && form.space != .shared then\n    .illegal \"scoped relaxed/acquire/release require global or shared space\"\n  else if form.scope.isSome && (target.isa < 60 || target.sm < 70) then\n    .illegal \"scoped relaxed/acquire/release require PTX 6.0 and sm_70\"\n  else if (form.scope == some .cluster || form.sharedCluster) &&\n      (target.isa < 78 || target.sm < 90) then\n    .illegal \"cluster scope/addressing require PTX 7.8 and sm_90\"\n  else if form.space == .param && form.kind == .write then\n    .unsupported \"device-function parameter ABI and st.param are not modeled\"\n  else .supported"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Source-reviewed examples establish permitted synchronization within scope and\nits absence outside scope."
+      },
+      "to": {
+        "path": "Ptx/ScopedExamples.lean",
+        "passage": {
+          "quote": "theorem publication (payload : Word) (source co) (topology : Nat → ThreadLocation)\n    (scopes : Fin 6 → Scope)\n    (valid : (candidate 1 payload source co topology scopes).Valid)\n    (included : (candidate 1 payload source co topology scopes).mutualScope b c = true) :\n    payload = 7 := by\n  let g := candidate 1 payload source co topology scopes\n  have flagSource : source c = b := by\n    have h := valid.sources.compatible c (by trivial)\n    change g.graph.write (source c) ∧ g.graph.sameAddress (source c) c ∧\n      (g.graph.event (source c)).effect.value = 1 at h\n    have cases : source c = 0 ∨ source c = 1 ∨ source c = 2 ∨\n        source c = 3 ∨ source c = 4 ∨ source c = 5 := by omega\n    rcases cases with h' | h' | h' | h' | h' | h'\n    · rw [h'] at h\n      have bad : (0 : Word) = 1 := h.2.2\n      contradiction\n    · rw [h'] at h\n      have bad : (0 : Word) = 1 := h.2.2\n      contradiction\n    · rw [h'] at h\n      have bad : (0 : Nat) = 1 := h.2.1\n      omega\n    · exact h'\n    · rw [h'] at h; exact False.elim h.1\n    · rw [h'] at h; exact False.elim h.1\n  have moral : g.morallyStrong b c :=\n    ⟨(by intro h; cases h), (by intro h; cases h), rfl, Or.inr (Or.inr included)⟩\n  have synchronizes : g.sync b c :=\n    ⟨by change some 0 ≠ some 1; decide,\n      b,c,Or.inl ⟨rfl,rfl⟩,Or.inl ⟨rfl,rfl⟩,⟨⟨by trivial,flagSource⟩,moral⟩,moral⟩\n  have poab : g.graph.po a b := ⟨(by intro h; cases h),rfl,Nat.zero_lt_one⟩\n  have pocd : g.graph.po c d := ⟨(by intro h; cases h),rfl,Nat.zero_lt_one⟩\n  have ordered : g.base a d :=\n    .join (.edge (Or.inl poab))\n      (.join (.edge (Or.inr synchronizes))\n        (.edge (Or.inl pocd)))\n  have causes : g.cause a d := Or.inl ⟨ordered,rfl⟩\n  have notInitial : source d ≠ ip := by\n    intro hs\n    have hc := valid.co.initFirst ip a rfl (by trivial) rfl (by decide)\n    exact valid.no_stale a d (by trivial) (by trivial) rfl causes\n      (by change g.graph.coherence (source d) a; rw [hs]; exact hc)\n  have h := valid.sources.compatible d (by trivial)\n  change g.graph.write (source d) ∧ g.graph.sameAddress (source d) d ∧\n    (g.graph.event (source d)).effect.value = payload at h\n  have cases : source d = 0 ∨ source d = 1 ∨ source d = 2 ∨\n      source d = 3 ∨ source d = 4 ∨ source d = 5 := by omega\n  rcases cases with h' | h' | h' | h' | h' | h'\n  · exact False.elim (notInitial h')\n  · rw [h'] at h\n    have bad : (1 : Nat) = 0 := h.2.1\n    omega\n  · rw [h'] at h; exact h.2.2.symm\n  · rw [h'] at h\n    have bad : (1 : Nat) = 0 := h.2.1\n    omega\n  · rw [h'] at h; exact False.elim h.1\n  · rw [h'] at h; exact False.elim h.1"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Source-reviewed examples establish permitted synchronization within scope and\nits absence outside scope."
+      },
+      "to": {
+        "path": "Ptx/ScopedExamples.lean",
+        "passage": {
+          "quote": "theorem outside_scope_execution_exists :\n    (program .acquire).ScopedAdmitted registers (oracle 1 0) staleSource witnessCo\n      separateCTA (uniform .cta) ∧ result .acquire 1 0 = (1,0) := by\n  refine ⟨⟨?_, ?_, ?_⟩,rfl⟩\n  · simp [Program.Bounded, program, producer, consumer, Instr.address]\n  · intro i _ j _ h; exact congrArg ThreadLocation.cta h\n  · change (candidate 1 0 staleSource witnessCo separateCTA (uniform .cta)).Valid\n    decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Checked specialization results explain the relation\nto the existing global, GPU-scoped message-passing fragment."
+      },
+      "to": {
+        "path": "Ptx/ScopedMemory.lean",
+        "passage": {
+          "quote": "theorem valid_legacy (h : g.AllInScope) : g.Valid ↔ g.graph.Valid := by\n  constructor\n  · intro hv\n    exact {\n      sources := hv.sources\n      co := (coherent_legacy h).mp hv.co\n      base_irrefl := fun a ha => hv.base_irrefl a ((base_legacy h).mpr ha)\n      coherence_cause := fun a b ha hb hab hc => hv.coherence_cause a b ha hb hab ((cause_legacy h).mpr hc)\n      no_future := fun a b ha hb hab hc => hv.no_future a b ha hb hab ((cause_legacy h).mpr hc)\n      no_stale := fun a b ha hb hab hc => hv.no_stale a b ha hb hab ((cause_legacy h).mpr hc)\n      sc_per_location := fun a ha => hv.sc_per_location a ((location_legacy h).mpr ha)\n    }\n  · intro hv\n    exact {\n      sources := hv.sources\n      co := (coherent_legacy h).mpr hv.co\n      base_irrefl := fun a ha => hv.base_irrefl a ((base_legacy h).mp ha)\n      coherence_cause := fun a b ha hb hab hc => hv.coherence_cause a b ha hb hab ((cause_legacy h).mp hc)\n      no_future := fun a b ha hb hab hc => hv.no_future a b ha hb hab ((cause_legacy h).mp hc)\n      no_stale := fun a b ha hb hab hc => hv.no_stale a b ha hb hab ((cause_legacy h).mp hc)\n      sc_per_location := fun a ha => hv.sc_per_location a ((location_legacy h).mp ha)\n    }"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scoped relational extension retains whole-word sources."
+      },
+      "to": {
+        "path": "Ptx/ScopedMemory.lean",
+        "passage": {
+          "quote": "structure Valid (g : ScopedGraph n) : Prop where\n  sources : g.graph.Sources\n  co : g.Coherent\n  base_irrefl : ∀ a, ¬g.base a a\n  coherence_cause : ∀ a b, g.graph.write a → g.graph.write b → g.graph.sameAddress a b →\n    g.cause a b → g.graph.coherence a b\n  no_future : ∀ r w, g.graph.read r → g.graph.write w → g.graph.sameAddress r w →\n    g.cause r w → g.graph.source r ≠ w\n  no_stale : ∀ w r, g.graph.write w → g.graph.read r → g.graph.sameAddress w r →\n    g.cause w r → ¬g.graph.coherence (g.graph.source r) w\n  sc_per_location : ∀ a, ¬Path g.locationEdge a a"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For accesses that are\nnot mutually in scope, this selects non-torn candidates; it does not enumerate\nall bytewise outcomes permitted by PTX."
+      },
+      "to": {
+        "path": "docs/foundations/environment.md",
+        "passage": {
+          "quote": "The outside-scope result has an additional coverage boundary: whole-word read\nsources restrict this model to **non-torn candidates**. PTX's single-copy\nguarantee for morally strong pairs does not justify imposing that restriction\non all out-of-scope races. The stale candidate remains a useful witness of the\nlost publication guarantee; this extension is not a complete classification of\nthe byte-level results of raced PTX accesses. Mixed-size overlap remains absent."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Successful emitted accesses satisfy that view's ownership, initialization,\nalignment, and full byte-extent contract."
+      },
+      "to": {
+        "path": "Ptx/ScalarEnvironment.lean",
+        "passage": {
+          "quote": "theorem run_environment_safe (fuel : Nat) (program : List Instr) (s : State)\n    (thread : ThreadLocation) (allocationId : Nat)\n    (event : Occurrence) (member : event ∈ (run fuel program s).trace)\n    (effect : MemoryEffect) (memory : event.memory = some effect) :\n    (arenaEnvironment s.memory thread allocationId).accessible thread\n      (match effect.kind with | .load => .read | .store => .write)\n      (arenaAddress allocationId effect.address) 4 := by\n  exact (arena_access_iff ..).mpr (run_trace_safe _ _ _ event member effect memory)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar arena has a checked embedding into an allocated global-memory view."
+      },
+      "to": {
+        "path": "Ptx/ScalarEnvironment.lean",
+        "passage": {
+          "quote": "theorem arena_access_iff (memory : List Word) (thread : ThreadLocation)\n    (allocationId : Nat) (pointer : Address) (kind : AccessKind) :\n    (arenaEnvironment memory thread allocationId).accessible thread kind\n      (arenaAddress allocationId pointer) 4 ↔ ValidAddress memory pointer := by\n  have division := Nat.mod_add_div pointer.toNat 4\n  cases kind <;>\n    simp [Environment.accessible, Environment.checkAccess, arenaEnvironment,\n      arenaAddress, Allocation.ownerAllows, ValidAddress] <;>\n    (repeat' split) <;> simp_all <;> omega"
+        }
+      }
+    }
+  ]
+}
