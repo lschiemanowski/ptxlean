@@ -1,0 +1,170 @@
+{
+  "id": "14cbaaf3-0008-471e-9a0d-000b3d7619d2",
+  "base": "7decc7d9720da45f7bd1c4a5a180570980e777e4",
+  "contentTree": "e8b1b96f17cf0fe6acbac88e1f30980518d733b8",
+  "reviewer": "Codex root with independent semantic and proof cross-reviews",
+  "summary": "Model bytewise scoped observations and prove whole-word correspondence",
+  "examined": [
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Coverage now includes aligned-u32 bytewise observations; general dependent concurrency, full ISA coverage and settled torn-observation interpretation remain unimplemented."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "revised",
+      "reason": "Added byte model as a separate extension with exact specialization, preserving all old definitions/results. Full mixed-size/alias/proxy and runtime/hardware claims remain excluded."
+    },
+    {
+      "id": "execution-environment",
+      "outcome": "revised",
+      "reason": "Description refined before byte implementation; now links per-byte sources and all-in-scope wholeword correspondence while retaining original non-torn scoped model and separate allocation contracts."
+    },
+    {
+      "id": "byte-memory",
+      "outcome": "revised",
+      "reason": "New description-first partial responsibility has complete checked byte model, qualified atomicity, actual program torn/forbidden cases, uniform-source and all-in-scope equivalences. ObservationPolicy exposes an unresolved fidelity interpretation; no definition is silently chosen as uniquely authoritative."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Source interpretation explicitly distinguishes byte communication from ambiguous torn observation, and separately attributes little-endian ABI guidance. Source review and Lean validity remain distinct; both policy variants covered by reported examples and specialization."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "No existing message-passing semantics, proofs, or expected outcomes changed; audit entries retained and original whole-word embedding checked."
+    },
+    {
+      "id": "finite-checking",
+      "outcome": "unchanged",
+      "reason": "The original exact checker is unchanged. Byte decidability reuses checked reachability without redefining the prior graph predicate."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The guide gains a byte-study link; scalar interpreter, local/candidate outcomes and general dependency boundaries are unchanged."
+    },
+    {
+      "id": "scalar-kernels",
+      "outcome": "unchanged",
+      "reason": "No scalar kernel theorem or program changed; byte examples use the normalized dependency-free language and do not claim general scalar concurrent admission."
+    },
+    {
+      "id": "scalar-proof-rules",
+      "outcome": "unchanged",
+      "reason": "Reusable scalar contracts/rules are unchanged and pass the combined clean check."
+    },
+    {
+      "id": "shared-vector-add",
+      "outcome": "unchanged",
+      "reason": "Shared-layout/instruction/trace/graph theorems are unchanged and retained in the combined audit; byte model does not imply a new launch or hardware theorem."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "No TorchLean tensor or kernel interface implementation is introduced."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "unchanged",
+      "reason": "No allocation/lifetime runtime or multi-kernel launch behavior is implemented."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "No backward construction, implementation or proof scope changed."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Byte payload representation is not floating-point semantics or numerical accuracy verification."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "Foundation memory examples do not implement application-level neural-network examples."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "No application architecture or Gemma work."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "e8b1b96f17cf0fe6acbac88e1f30980518d733b8",
+      "method": "PATH=/home/lothar/.elan/toolchains/leanprover--lean4---v4.33.0/bin:$PATH ./scripts/check.sh --clean; local documentation-link and HTML-anchor check; stratic validate; git diff --check; independent source and proof reviews",
+      "outcome": "pass",
+      "environment": "Linux; Lean 4.33.0 d8b18978322de05a8f3dba51ef03cf5461676c17; bundled Std only; pinned PTX ISA9.4 HTML unchanged. Little-endian byte layout is explicitly attributed to the supplemental archived NVIDIA12.8 ABI guide, not to a fabricated ISA passage.",
+      "evidence": "Combined clean build passed 27 jobs; source guard checked 26 Lean files; 293 public declarations audited, admitting only propext, Quot.sound and Classical.choice. Original source SHA-256/3928316 bytes/23 anchors verified. 163 local document links and pinned HTML anchors checked; Stratic valid, whitespace clean, identical before/after trees. Independent source and proof reviews covered per-byte sourcing/communication/causality, qualified atomicity, exact uniform projection, scope-derived uniformity and both-policy torn/forbidden examples. No blocking proof/review finding. Unique torn-read observation interpretation remains intentionally unsettled and visible in metadata; no general dependentNTA or hardware-conformance claim.",
+      "tests": [],
+      "id": "957e3ace-4f8c-45b8-ab5b-98d82462dc53",
+      "recordedAt": "2026-09-22T11:17:36.755Z"
+    }
+  ],
+  "recordedAt": "2026-09-22T11:18:03.101Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Import includes byte-model regressions and their semantic dependencies in the ordinary library build."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Retains all264 prior audited declarations and adds all29 new public byte-model/example theorems; exact dependency output checked."
+    },
+    {
+      "path": "Ptx/ByteExamples.lean",
+      "reason": "Supporting actual Program, source/co/topology definitions and positive/negative numerical/identity checks implement the linked torn and in-scope-forbidden examples under both policies."
+    },
+    {
+      "path": "Ptx/ByteMemory.lean",
+      "reason": "Supporting byte reconstruction, relation/decidability definitions, projection helpers and program decoration underpin linked validity/atomicity/specialization statements; all public theorem dependencies audited and code independently reviewed."
+    },
+    {
+      "path": "README.md",
+      "reason": "Adds byte-study entry point and explicitly retains unsettled observation interpretation."
+    },
+    {
+      "path": "docs/foundations/blocks12.md",
+      "reason": "Appends a successor-study link clarifying how fixed-u32 byte sources address the earlier whole-word restriction without claiming mixed-size or settled observation semantics."
+    },
+    {
+      "path": "docs/foundations/byte-memory.md",
+      "reason": "Study explains source constraints, endian provenance, qualified atomicity, policy ambiguity, actual examples, uniform projection and scope-derived equivalence; independently reviewed and local links checked."
+    },
+    {
+      "path": "docs/foundations/environment.md",
+      "reason": "Appends exact byte-model continuation and wholeword correspondence guidance; original scoped model unchanged."
+    },
+    {
+      "path": "stratic/descriptions/byte-memory.json",
+      "reason": "Description/metadata reviewed in the examined entry, including parent passage, updated summaries, exact links and deliberately partial semantic-fidelity status."
+    },
+    {
+      "path": "stratic/descriptions/byte-memory.md",
+      "reason": "Description/metadata reviewed in the examined entry, including parent passage, updated summaries, exact links and deliberately partial semantic-fidelity status."
+    },
+    {
+      "path": "stratic/descriptions/execution-environment.json",
+      "reason": "Description/metadata reviewed in the examined entry, including parent passage, updated summaries, exact links and deliberately partial semantic-fidelity status."
+    },
+    {
+      "path": "stratic/descriptions/execution-environment.md",
+      "reason": "Description/metadata reviewed in the examined entry, including parent passage, updated summaries, exact links and deliberately partial semantic-fidelity status."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.json",
+      "reason": "Description/metadata reviewed in the examined entry, including parent passage, updated summaries, exact links and deliberately partial semantic-fidelity status."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Description/metadata reviewed in the examined entry, including parent passage, updated summaries, exact links and deliberately partial semantic-fidelity status."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Description/metadata reviewed in the examined entry, including parent passage, updated summaries, exact links and deliberately partial semantic-fidelity status."
+    }
+  ]
+}

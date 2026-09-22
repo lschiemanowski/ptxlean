@@ -1,0 +1,186 @@
+{
+  "id": "byte-memory",
+  "parent": {
+    "description": "execution-environment",
+    "passage": {
+      "quote": "A byte-level scoped memory model records the source of each observed byte and\nthe applicable atomicity constraints. Checked relationships identify when a\nwhole-word representation is justified and distinguish permitted torn reads\nfrom forbidden observations."
+    }
+  },
+  "summary": [
+    "Represent bytewise read sources with qualified atomicity and byte-derived scoped ordering.",
+    "Prove whole-word specialization and derive source uniformity under mutual scope coverage.",
+    "Check torn and forbidden examples under both explicit observation interpretations, retaining the unresolved source-fidelity boundary."
+  ],
+  "realization": "partial",
+  "remaining": "Aligned-u32 byte sources, qualified atomicity, fixed-width scoped relations, torn/forbidden examples and whole-word specialization are implemented. A uniquely justified PTX observation relation for torn reads remains unsettled; both named interpretations are explicit and the reported core examples/specializations cover both. Mixed-size overlap, aliases, additional proxies and general dependent concurrency are outside this fragment.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each byte read records a compatible source write and the corresponding byte\nvalue. Access widths, overlap, endianness, initialization and scope membership\nare explicit. The first model retains aligned fixed-size accesses and excludes\nmixed-size overlap and additional proxies."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "structure Sources (g : ByteGraph n) : Prop where\n  compatible : ∀ r, g.read r → ∀ offset,\n    g.write (g.source r offset) ∧ g.sameAddress (g.source r offset) r ∧\n      wordByte (g.event (g.source r offset)).effect.value offset =\n        wordByte (g.event r).effect.value offset"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Access widths, overlap, endianness, initialization and scope membership\nare explicit. The first model retains aligned fixed-size accesses and excludes\nmixed-size overlap and additional proxies."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "def wordByte (value : Word) (offset : Fin 4) : Byte :=\n  BitVec.ofNat 8 (value.toNat / 2 ^ (8 * offset.val))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The source-reviewed single-copy constraints apply exactly to their qualified\noperation pairs. Out-of-scope races are not forced to observe an entire word\nfrom one write. Examples construct permitted torn candidates and prove rejection\nwhere the relevant atomicity and ordering requirements forbid them."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "def SingleCopy (g : ByteGraph n) : Prop :=\n  ∀ r w, g.read r → g.write w → g.morallyStrong r w →\n    ∀ offset, g.source r offset = w → ∀ other, ¬g.coherence (g.source r other) w"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Out-of-scope races are not forced to observe an entire word\nfrom one write. Examples construct permitted torn candidates and prove rejection\nwhere the relevant atomicity and ordering requirements forbid them."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "structure Valid (g : ByteGraph n) : Prop where\n  sources : g.Sources\n  co : g.Coherent\n  atomicity : g.SingleCopy\n  base_irrefl : ∀ a, ¬g.base a a\n  coherence_cause : ∀ a b, g.write a → g.write b → g.sameAddress a b →\n    g.cause a b → g.coherence a b\n  no_future : ∀ r w, g.read r → g.write w → g.sameAddress r w →\n    g.cause r w → ∀ offset, g.source r offset ≠ w\n  no_stale : ∀ w r, g.write w → g.read r → g.sameAddress w r →\n    g.cause w r → ∀ offset, ¬g.coherence (g.source r offset) w\n  sc_per_location : ∀ a, ¬Path g.locationEdge a a"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Examples construct permitted torn candidates and prove rejection\nwhere the relevant atomicity and ordering requirements forbid them."
+      },
+      "to": {
+        "path": "Ptx/ByteExamples.lean",
+        "passage": {
+          "quote": "theorem torn_execution_exists (policy : ObservationPolicy) :\n    (program 4294967295).ByteAdmitted registers (oracle 4294901760) mixedSource coherence\n      topology (scope .cta) policy ∧ result 4294967295 4294901760 = 4294901760 := by\n  refine ⟨⟨?_, ?_, torn_valid policy⟩, rfl⟩\n  · simp [Program.Bounded, program, Instr.address]\n  · intro i _ j _ equal\n    exact congrArg ThreadLocation.cta equal"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Examples construct permitted torn candidates and prove rejection\nwhere the relevant atomicity and ordering requirements forbid them."
+      },
+      "to": {
+        "path": "Ptx/ByteExamples.lean",
+        "passage": {
+          "quote": "theorem in_scope_torn_forbidden (policy : ObservationPolicy) :\n    ¬(candidate 4294967295 4294901760 .gpu policy).Valid := by\n  intro valid\n  have moral : (candidate 4294967295 4294901760 .gpu policy).morallyStrong 2 1 := by\n    cases policy <;> decide\n  exact valid.atomicity 2 1 (by trivial) (by trivial) moral 2 rfl 0 (by rfl)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A checked specialization explains the relationship to the existing whole-word\nmodel. Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem projection_valid_iff (uniform : g.Uniform) : g.Valid ↔ g.toScoped.Valid := by\n  constructor\n  · intro h\n    exact {\n      sources := (sources_projection uniform).mp h.sources\n      co := (coherent_projection uniform).mp h.co\n      base_irrefl := fun a hp => h.base_irrefl a ((base_projection uniform).mpr hp)\n      coherence_cause := fun a b hw hw' ha hc =>\n        h.coherence_cause a b hw hw' ha ((cause_projection uniform).mpr hc)\n      no_future := fun r w hr hw ha hc =>\n        h.no_future r w hr hw ha ((cause_projection uniform).mpr hc) 0\n      no_stale := fun w r hw hr ha hc =>\n        h.no_stale w r hw hr ha ((cause_projection uniform).mpr hc) 0\n      sc_per_location := fun a hp => h.sc_per_location a ((location_projection uniform).mpr hp)\n    }\n  · intro h\n    refine {\n      sources := (sources_projection uniform).mpr h.sources\n      co := (coherent_projection uniform).mpr h.co\n      atomicity := ?_\n      base_irrefl := fun a hp => h.base_irrefl a ((base_projection uniform).mp hp)\n      coherence_cause := fun a b hw hw' ha hc =>\n        h.coherence_cause a b hw hw' ha ((cause_projection uniform).mp hc)\n      no_future := ?_\n      no_stale := ?_\n      sc_per_location := fun a hp => h.sc_per_location a ((location_projection uniform).mp hp)\n    }\n    · intro r w hr _ _ offset source other\n      rw [uniform r hr offset] at source\n      rw [uniform r hr other, source]\n      exact h.co.irrefl w\n    · intro r w hr hw ha hc offset\n      rw [uniform r hr offset]\n      exact h.no_future r w hr hw ha ((cause_projection uniform).mp hc)\n    · intro w r hw hr ha hc offset\n      rw [uniform r hr offset]\n      exact h.no_stale w r hw hr ha ((cause_projection uniform).mp hc)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A checked specialization explains the relationship to the existing whole-word\nmodel. Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem ofScoped_valid_iff (policy : ObservationPolicy) (g : ScopedGraph n) :\n    (ofScoped policy g).Valid ↔ g.Valid :=\n  projection_valid_iff (ofScoped_uniform policy g)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem sources_uniform_at (valid : g.Valid) (r : Fin n) (hr : g.read r)\n    (moral : ∀ offset, ¬g.initial (g.source r offset) → g.morallyStrong r (g.source r offset))\n    (comparable : ∀ first second, g.source r first ≠ g.source r second →\n      g.coherence (g.source r first) (g.source r second) ∨\n      g.coherence (g.source r second) (g.source r first)) :\n    ∀ offset, g.source r offset = g.source r 0 := by\n  intro offset\n  by_cases different : g.source r offset = g.source r 0\n  · exact different\n  exfalso\n  rcases comparable offset 0 different with forward | backward\n  · exact valid.atomicity r (g.source r 0) hr (valid.sources.compatible r hr 0).1\n      (moral 0 (coherence_later_not_initial valid.co forward)) 0 rfl offset forward\n  · exact valid.atomicity r (g.source r offset) hr (valid.sources.compatible r hr offset).1\n      (moral offset (coherence_later_not_initial valid.co backward)) offset rfl 0 backward"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem uniform_of_all_in_scope (valid : g.Valid) (inScope : g.toScoped.AllInScope) :\n    g.Uniform := by\n  intro r hr\n  apply sources_uniform_at valid r hr\n  · intro offset noninitial\n    apply (ScopedGraph.morallyStrong_legacy inScope).mpr\n    refine ⟨?_,noninitial,(valid.sources.compatible r hr offset).2.1.symm⟩\n    intro isInitial\n    change (g.toScoped.graph.event r).effect.op = .init at isInitial\n    simp [read, Graph.read, isInitial] at hr\n  · intro first second different\n    have left := valid.sources.compatible r hr first\n    have right := valid.sources.compatible r hr second\n    have same : g.sameAddress (g.source r first) (g.source r second) :=\n      left.2.1.trans right.2.1.symm\n    by_cases initialLeft : g.initial (g.source r first)\n    · exact Or.inl (valid.co.initFirst _ _ initialLeft right.1 same different)\n    by_cases initialRight : g.initial (g.source r second)\n    · exact Or.inr (valid.co.initFirst _ _ initialRight left.1 same.symm different.symm)\n    exact valid.co.total _ _ left.1 right.1\n      ((ScopedGraph.morallyStrong_legacy inScope).mpr ⟨initialLeft,initialRight,same⟩) different"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem all_in_scope_valid_iff (inScope : g.toScoped.AllInScope) :\n    g.Valid ↔ g.Uniform ∧ g.toScoped.graph.Valid := by\n  constructor\n  · intro valid\n    have uniform := uniform_of_all_in_scope valid inScope\n    exact ⟨uniform,(ScopedGraph.valid_legacy inScope).mp ((projection_valid_iff uniform).mp valid)⟩\n  · rintro ⟨uniform,valid⟩\n    exact (projection_valid_iff uniform).mpr ((ScopedGraph.valid_legacy inScope).mpr valid)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+      },
+      "to": {
+        "path": "Ptx/ByteExamples.lean",
+        "passage": {
+          "quote": "theorem equal_value_not_uniform (policy : ObservationPolicy) :\n    (candidate 0 0 .cta policy).Valid ∧\n    ((candidate 0 0 .cta policy).event 2).effect.value =\n      ((candidate 0 0 .cta policy).event 1).effect.value ∧\n    ¬(candidate 0 0 .cta policy).Uniform := by\n  cases policy <;> decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Where source wording leaves the observation relation for torn reads unsettled,\nnamed interpretations remain explicit. Results claimed independent of that\nchoice are proved for each interpretation; no chosen convention is presented\nas a settled translation of PTX."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "inductive ObservationPolicy where\n  | anyByte\n  | wholeSource\n  deriving DecidableEq, Repr"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Where source wording leaves the observation relation for torn reads unsettled,\nnamed interpretations remain explicit. Results claimed independent of that\nchoice are proved for each interpretation; no chosen convention is presented\nas a settled translation of PTX."
+      },
+      "to": {
+        "path": "docs/foundations/byte-memory.md",
+        "passage": {
+          "quote": "One source interpretation remains explicit: the pinned PTX manual does not spell\nout how its observation-order phrase “reads the value written by” applies when a\nread combines bytes from different writes. `ObservationPolicy` represents two\ninterpretations, `anyByte` and `wholeSource`. The specialization and examples are\nproved for both. This does not establish which interpretation uniquely matches\nPTX. See the [source review](next-source-review.md) for that precise remaining\nsemantic-fidelity obligation and the separate endianness source."
+        }
+      }
+    }
+  ]
+}

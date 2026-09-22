@@ -41,3 +41,8 @@ The [shared-allocation vector-add study](docs/foundations/shared-vector.md)
 adds reusable proof rules, arbitrary instruction interleavings over one memory
 allocation, and a checked connection from completed shared traces to a valid
 relational graph.
+
+The [byte-observation study](docs/foundations/byte-memory.md) adds per-byte read
+sources, qualified atomicity, torn-read examples and checked whole-word
+specialization. Two explicit observation interpretations preserve an unresolved
+source-fidelity question rather than silently selecting one.

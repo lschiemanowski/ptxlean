@@ -9,10 +9,12 @@
   "summary": [
     "Represent topology, scopes and storage-access contracts explicitly and check supported instruction eligibility.",
     "Prove scoped publication, non-torn raced witnesses and exact specialization to the original memory foundation.",
-    "Connect scalar access safety to an explicit allocation view while retaining bytewise-race and concurrent-refinement boundaries."
+    "Connect scalar access safety to an explicit allocation view while retaining bytewise-race and concurrent-refinement boundaries.",
+    "A byte-level scoped memory model records the source of each observed byte and the applicable atomicity constraints. Checked relationships identify when a whole-word representation is justified and distinguish permitted torn reads from forbidden observations.",
+    "Extend aligned-u32 observations to per-byte sources with checked atomicity and whole-word correspondence; keep torn-observation interpretation explicit."
   ],
   "realization": "partial",
-  "remaining": "Topology, supported allocation/access/target contracts, scoped publication/counterexamples, exact legacy specialization and scalar arena bridge are checked. General bytewise raced outcomes, raw/generic address resolution, host participants, allocation lifetime and full target validation remain unimplemented.",
+  "remaining": "Topology, access/target contracts, scalar-arena bridge and the original scoped whole-word model are checked. A separate aligned-u32 byte model provides qualified atomicity, torn outcomes and whole-word correspondence under explicit observation policies. Remaining: settled torn-observation interpretation, mixed-size/alias/proxy semantics, host participants, allocation lifetime and full target validation.",
   "links": [
     {
       "kind": "implementation",
@@ -155,6 +157,30 @@
         "path": "Ptx/ScalarEnvironment.lean",
         "passage": {
           "quote": "theorem arena_access_iff (memory : List Word) (thread : ThreadLocation)\n    (allocationId : Nat) (pointer : Address) (kind : AccessKind) :\n    (arenaEnvironment memory thread allocationId).accessible thread kind\n      (arenaAddress allocationId pointer) 4 ↔ ValidAddress memory pointer := by\n  have division := Nat.mod_add_div pointer.toNat 4\n  cases kind <;>\n    simp [Environment.accessible, Environment.checkAccess, arenaEnvironment,\n      arenaAddress, Allocation.ownerAllows, ValidAddress] <;>\n    (repeat' split) <;> simp_all <;> omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A byte-level scoped memory model records the source of each observed byte and\nthe applicable atomicity constraints. Checked relationships identify when a\nwhole-word representation is justified and distinguish permitted torn reads\nfrom forbidden observations."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "structure ByteGraph (n : Nat) where\n  event : Fin n → Occurrence\n  source : Fin n → Fin 4 → Fin n\n  co : Fin n → Fin n → Bool\n  topology : Nat → ThreadLocation\n  scope : Fin n → Scope\n  observationPolicy : ObservationPolicy"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Checked relationships identify when a\nwhole-word representation is justified and distinguish permitted torn reads\nfrom forbidden observations."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem all_in_scope_valid_iff (inScope : g.toScoped.AllInScope) :\n    g.Valid ↔ g.Uniform ∧ g.toScoped.graph.Valid := by\n  constructor\n  · intro valid\n    have uniform := uniform_of_all_in_scope valid inScope\n    exact ⟨uniform,(ScopedGraph.valid_legacy inScope).mp ((projection_valid_iff uniform).mp valid)⟩\n  · rintro ⟨uniform,valid⟩\n    exact (projection_valid_iff uniform).mpr ((ScopedGraph.valid_legacy inScope).mpr valid)"
         }
       }
     }

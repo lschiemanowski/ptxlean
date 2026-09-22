@@ -175,3 +175,11 @@ The [shared-vector study](shared-vector.md) develops reusable scalar proof rules
 and replaces independent local views with a shared allocation for the vector-add
 example. It proves arbitrary-interleaving invariants and exact per-thread trace
 correspondence, with an explicit completed execution and relational graph.
+
+## Continue with byte-level sources
+
+The [byte-observation study](byte-memory.md) addresses the non-torn restriction
+for fixed aligned `u32` accesses and proves a whole-word specialization. Full
+mixed-size and aliasing semantics remain absent. The interpretation of
+observation order for torn reads is exposed as two named policies, with the
+reported specialization and examples checked under both.

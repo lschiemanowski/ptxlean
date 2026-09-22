@@ -184,3 +184,12 @@ every emitted scalar memory effect. `separate_arenas` exposes distinct resolved
 allocation identities, and `arena_forms_eligible` checks the chosen relaxed
 GPU/global forms at PTX 9.4/sm_90. These bridges establish access contracts, not
 an unproved concurrent refinement or physical launch mapping.
+
+## Continue with byte-level observations
+
+The separate [byte model](byte-memory.md) removes the whole-word-source
+restriction for aligned `u32` candidates. It constructs a torn outcome, proves
+its exclusion under stronger scopes, and derives uniform sources when all
+operations mutually include one another. The old scoped model remains unchanged;
+the new model's exact whole-word specialization and explicit observation-policy
+boundary explain when the two agree.

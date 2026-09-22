@@ -297,3 +297,38 @@ import Ptx
 #print axioms Ptx.Scalar.SharedVectorMemory.candidate_event_eq
 #print axioms Ptx.Scalar.SharedVectorMemory.candidate_shared_trace_labels
 #print axioms Ptx.Scalar.SharedVectorMemory.candidate_output
+
+/-! Bytewise observations, atomicity and exact whole-word specialization. -/
+
+-- ByteMemory
+#print axioms Ptx.word_eq_of_bytes
+#print axioms Ptx.ByteGraph.rf_projection
+#print axioms Ptx.ByteGraph.readsWhole_projection
+#print axioms Ptx.ByteGraph.observation_projection
+#print axioms Ptx.ByteGraph.sync_projection
+#print axioms Ptx.ByteGraph.base_projection
+#print axioms Ptx.ByteGraph.cause_projection
+#print axioms Ptx.ByteGraph.communication_projection
+#print axioms Ptx.ByteGraph.location_projection
+#print axioms Ptx.ByteGraph.sources_projection
+#print axioms Ptx.ByteGraph.coherent_projection
+#print axioms Ptx.ByteGraph.projection_valid_iff
+#print axioms Ptx.ByteGraph.ofScoped_uniform
+#print axioms Ptx.ByteGraph.ofScoped_valid_iff
+#print axioms Ptx.ByteGraph.uniform_policy_independent
+#print axioms Ptx.ByteGraph.coherence_later_not_initial
+#print axioms Ptx.ByteGraph.sources_uniform_at
+#print axioms Ptx.ByteGraph.uniform_of_all_in_scope
+#print axioms Ptx.ByteGraph.all_in_scope_valid_iff
+#print axioms Ptx.Program.byteGraph_access_safe
+
+-- ByteExamples
+#print axioms Ptx.ByteExamples.result_eq
+#print axioms Ptx.ByteExamples.little_endian_example
+#print axioms Ptx.ByteExamples.torn_valid
+#print axioms Ptx.ByteExamples.torn_value_is_new
+#print axioms Ptx.ByteExamples.torn_execution_exists
+#print axioms Ptx.ByteExamples.in_scope_torn_forbidden
+#print axioms Ptx.ByteExamples.torn_projection_invalid
+#print axioms Ptx.ByteExamples.equal_value_not_uniform
+#print axioms Ptx.ByteExamples.memory_safe

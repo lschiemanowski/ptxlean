@@ -8,3 +8,4 @@ import Ptx.ScalarMemoryWitness
 import Ptx.ScalarRules
 import Ptx.SharedVectorExamples
 import Ptx.SharedVectorMemory
+import Ptx.ByteExamples

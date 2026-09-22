@@ -25,3 +25,8 @@ The scalar arena has a checked embedding into an allocated global-memory view.
 Successful emitted accesses satisfy that view's ownership, initialization,
 alignment, and full byte-extent contract. This bridge does not by itself supply
 concurrent ordering, launch behavior, or a weak-memory refinement.
+
+A byte-level scoped memory model records the source of each observed byte and
+the applicable atomicity constraints. Checked relationships identify when a
+whole-word representation is justified and distinguish permitted torn reads
+from forbidden observations.

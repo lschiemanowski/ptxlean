@@ -6,6 +6,6 @@
     "Explain the computing model and verification contracts through source-linked documentation and reproducible examples."
   ],
   "realization": "partial",
-  "remaining": "Restricted memory semantics, allocation contracts, scalar execution and reusable kernel rules include checked shared-allocation vector addition. Full PTX coverage, general dependent concurrent semantics, bytewise raced outcomes, TorchLean interfaces, numerical/backward infrastructure and application examples remain unimplemented.",
+  "remaining": "Restricted whole-word/bytewise memory models, scalar execution/rules and shared-allocation kernel proofs are implemented. Full PTX coverage, settled torn-observation semantics, general dependent concurrency, TorchLean interfaces, numerical/backward infrastructure and application examples remain unimplemented.",
   "links": []
 }

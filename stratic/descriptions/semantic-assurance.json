@@ -11,7 +11,7 @@
     "Separate proof validity from semantic fidelity in cost-conscious model-assisted formalization."
   ],
   "realization": "partial",
-  "remaining": "Pinned source interpretations and independent reviews cover the original memory fragment, scoped non-torn extension, storage contracts and selected scalar instructions. Internal adequacy and example bridges are checked; general dependent/bytewise semantic correspondence, external hardware validation and model-assisted generation/cost infrastructure remain unimplemented.",
+  "remaining": "Pinned source reviews and checked internal bridges cover restricted memory, aligned-u32 byte sources, environments, scalar rules and shared vector addition. The torn-read observation interpretation is unresolved and exposed explicitly; endianness uses separately attributed NVIDIA ABI guidance. Full dependent/mixed-size semantic correspondence, hardware validation and model-assisted generation/cost infrastructure remain unimplemented.",
   "links": [
     {
       "kind": "implementation",
@@ -82,6 +82,18 @@
         "path": "docs/foundations/next-source-review.md",
         "passage": {
           "quote": "This review uses the [pinned PTX ISA 9.4 source](../../references/nvidia/ptx-isa-9.4/README.md).\nIt separates a faithful transcription of the stated constraints from choices\nthat need a further correspondence argument. The [earlier review](blocks12-source-review.md)\nexplains the unresolved dependent no-thin-air problem; introducing byte sources\ndoes not solve it."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The explanation of a rule states which parts of its justification come from\nsource interpretation, checked theorems, assumptions, or experiments. These\nexplanations also provide material for studying the computing model."
+      },
+      "to": {
+        "path": "docs/foundations/byte-memory.md",
+        "passage": {
+          "quote": "One source interpretation remains explicit: the pinned PTX manual does not spell\nout how its observation-order phrase “reads the value written by” applies when a\nread combines bytes from different writes. `ObservationPolicy` represents two\ninterpretations, `anyByte` and `wholeSource`. The specialization and examples are\nproved for both. This does not establish which interpretation uniquely matches\nPTX. See the [source review](next-source-review.md) for that precise remaining\nsemantic-fidelity obligation and the separate endianness source."
         }
       }
     }
