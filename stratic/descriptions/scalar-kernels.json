@@ -8,7 +8,8 @@
   },
   "summary": [
     "Verify instruction-level integer kernels with explicit input, memory and execution contracts.",
-    "Prove actual bounded-loop termination, functional results, and memory preservation under a stated ownership discipline."
+    "Prove actual bounded-loop termination, functional results, and memory preservation under a stated ownership discipline.",
+    "A shared-allocation vector-add example executes distinct threads against one memory state. Disjoint output ownership supports noninterference, correct completed results, and an explicit completed execution witness."
   ],
   "realization": "implemented",
   "links": [
@@ -75,7 +76,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Lane-wise composition operates on independent owned memory views; a shared\nphysical-memory and scheduling interpretation remains a separate obligation."
+        "quote": "Lane-wise local results over independent owned memory views are distinguished\nfrom the shared-allocation and scheduling theorems."
       },
       "to": {
         "path": "Ptx/ScalarKernels.lean",

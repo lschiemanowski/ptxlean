@@ -72,6 +72,18 @@
           "quote": "Two source-level issues prevent treating these pieces as a finished general\nPTX execution model:"
         }
       }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The source and evidence records allow the interpretation to be reviewed\nand reproduced independently of its author."
+      },
+      "to": {
+        "path": "docs/foundations/next-source-review.md",
+        "passage": {
+          "quote": "This review uses the [pinned PTX ISA 9.4 source](../../references/nvidia/ptx-isa-9.4/README.md).\nIt separates a faithful transcription of the stated constraints from choices\nthat need a further correspondence argument. The [earlier review](blocks12-source-review.md)\nexplains the unresolved dependent no-thin-air problem; introducing byte sources\ndoes not solve it."
+        }
+      }
     }
   ]
 }

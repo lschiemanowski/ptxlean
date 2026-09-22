@@ -1,0 +1,136 @@
+{
+  "id": "shared-vector-add",
+  "parent": {
+    "description": "scalar-kernels",
+    "passage": {
+      "quote": "A shared-allocation vector-add example executes distinct threads against one\nmemory state. Disjoint output ownership supports noninterference, correct\ncompleted results, and an explicit completed execution witness."
+    }
+  },
+  "summary": [
+    "Verify scalar vector addition over one allocation under instruction-level interleaving.",
+    "Prove noninterference, correct completed results, access safety and constructive completion with explicit relational boundaries."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "All lanes execute their scalar load, load, add, store, and exit instructions\nagainst one explicit memory allocation. Each lane reads designated input words\nand owns its output word; input/output separation and output uniqueness are\npart of the representation or proved premises. Initial registers and memory\nare explicit inputs."
+      },
+      "to": {
+        "path": "Ptx/SharedVector.lean",
+        "passage": {
+          "quote": "structure State (n : Nat) where\n  memory : List Word\n  cursor : Fin n → Nat\n  regs : Fin n → Nat → Word"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each lane reads designated input words\nand owns its output word; input/output separation and output uniqueness are\npart of the representation or proved premises. Initial registers and memory\nare explicit inputs."
+      },
+      "to": {
+        "path": "Ptx/SharedVector.lean",
+        "passage": {
+          "quote": "def program (lane : Fin n) : List Instr := [\n  .plain (.load 0 (.imm (pointer (left lane)))),\n  .plain (.load 1 (.imm (pointer (right lane)))),\n  .plain (.bin32 .add 2 (.reg 0) (.reg 1)),\n  .plain (.store (.imm (pointer (output lane))) (.reg 2)),\n  .plain .exit]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A thread-step semantics permits instruction-level interleavings. Invariants\nestablish that other lanes cannot change a lane's inputs or overwrite its\noutput, that completed lanes return the modular sum, and that every actual\naccess remains in bounds. An explicit schedule constructs a completed execution;\nno unrestricted scheduler fairness or hardware progress is inferred."
+      },
+      "to": {
+        "path": "Ptx/SharedVector.lean",
+        "passage": {
+          "quote": "theorem advance_is_scalar_step (s : State n) (lane : Fin n)\n    (extent : 3 * n ≤ s.memory.length) (noWrap : 12 * n < 2^64)\n    (active : s.cursor lane < 4) (addresses predicates) :\n    ∃ event, step (program lane) (view s lane addresses predicates) =\n      .next (view (advance lane s) lane addresses predicates) event ∧\n      event.memory = effect s lane := by\n  have inleft : left lane < s.memory.length := by have := lane.isLt; simp [left]; omega\n  have inright : right lane < s.memory.length := by have := lane.isLt; simp [right]; omega\n  have inout : output lane < s.memory.length := by have := lane.isLt; simp [output]; omega\n  have l := pointer_index s.memory (left lane) inleft (by have := lane.isLt; simp [left]; omega)\n  have r := pointer_index s.memory (right lane) inright (by have := lane.isLt; simp [right]; omega)\n  have o := pointer_index s.memory (output lane) inout (by have := lane.isLt; simp [output]; omega)\n  have cases : s.cursor lane = 0 ∨ s.cursor lane = 1 ∨ s.cursor lane = 2 ∨ s.cursor lane = 3 := by omega\n  rcases cases with h | h | h | h <;>\n    simp [step,stepWith,view,program,eval,Instr.plain,Guard.eval,Operand32.eval,\n      Operand64.eval,BinOp.eval,h,l,r,o,advance,install,effect,occurrence]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Invariants\nestablish that other lanes cannot change a lane's inputs or overwrite its\noutput, that completed lanes return the modular sum, and that every actual\naccess remains in bounds. An explicit schedule constructs a completed execution;\nno unrestricted scheduler fairness or hardware progress is inferred."
+      },
+      "to": {
+        "path": "Ptx/SharedVector.lean",
+        "passage": {
+          "quote": "theorem advance_invariant (memory : List Word) (s : State n) (lane : Fin n)\n    (extent : 3 * n ≤ memory.length) (valid : Invariant memory s) :\n    Invariant memory (advance lane s) := by\n  have cases : s.cursor lane = 0 ∨ s.cursor lane = 1 ∨ s.cursor lane = 2 ∨\n      s.cursor lane = 3 ∨ s.cursor lane = 4 ∨ s.cursor lane = 5 := by\n    have := valid.cursor lane; omega\n  have bound : output lane < s.memory.length := by\n    have := lane.isLt\n    rw [valid.length]\n    simp [output]; omega\n  have inputs := valid.inputs\n  have first := valid.first\n  have second := valid.second\n  have added := valid.added\n  have stored := valid.stored\n  have different (a b : Fin n) (h : b ≠ a) : output a ≠ output b := by\n    intro eq; exact h (output_injective a b eq).symm\n  rcases cases with h | h | h | h | h | h\n  all_goals simp only [advance,h]\n  all_goals try exact valid\n  all_goals constructor\n  all_goals try simpa only [install, List.length_set] using valid.length\n  all_goals intro other\n  all_goals by_cases same : other = lane\n  all_goals try subst other\n  all_goals simp only [install,replace_same]\n  all_goals try simp only [replace_other same]\n  all_goals first\n    | exact valid.cursor _\n    | exact valid.inputs _\n    | exact valid.first _\n    | exact valid.second _\n    | exact valid.added _\n    | exact valid.stored _\n    | (simp_all [update, sum, output_ne_left, output_ne_right])\n  all_goals first\n    | (apply first; omega)\n    | (apply second; omega)\n    | (apply added; omega)\n    | (apply stored; omega)\n    | (rw [first lane (by omega), second lane (by omega)])\n    | (simpa [bound] using stored lane (by omega))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Invariants\nestablish that other lanes cannot change a lane's inputs or overwrite its\noutput, that completed lanes return the modular sum, and that every actual\naccess remains in bounds. An explicit schedule constructs a completed execution;\nno unrestricted scheduler fairness or hardware progress is inferred."
+      },
+      "to": {
+        "path": "Ptx/SharedVector.lean",
+        "passage": {
+          "quote": "theorem trace_access_safe (memory : List Word) (s : State n) (dispatches : List (Fin n))\n    (extent : 3 * n ≤ memory.length) (noWrap : 12 * n < 2^64)\n    (valid : Invariant memory s) (event : Ptx.Occurrence)\n    (member : event ∈ trace dispatches s) : AccessSafe memory.length event.effect := by\n  induction dispatches generalizing s with\n  | nil => simp [trace] at member\n  | cons lane rest ih =>\n    simp only [trace,List.mem_append] at member\n    rcases member with head | tail\n    · rw [← valid.length]\n      exact emitted_access_safe s lane (by rw [valid.length]; exact extent) noWrap event head\n    · exact ih _ (advance_invariant memory s lane extent valid) tail"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An explicit schedule constructs a completed execution;\nno unrestricted scheduler fairness or hardware progress is inferred."
+      },
+      "to": {
+        "path": "Ptx/SharedVector.lean",
+        "passage": {
+          "quote": "theorem completed_execution_exists (memory : List Word) (registers : Fin n → Nat → Word)\n    (extent : 3 * n ≤ memory.length) (noWrap : 12 * n < 2^64) :\n    ∃ (dispatches : List (Fin n)) (final : State n),\n      dispatches.length = 5 * n ∧ Execution dispatches (initial memory registers) final ∧\n      Complete final ∧ (∀ lane : Fin n, final.memory[output lane]! = sum memory lane) ∧\n      (∀ index, (∀ lane : Fin n, output lane ≠ index) → final.memory[index]? = memory[index]?) := by\n  refine ⟨schedule n, execute (schedule n) (initial memory registers), schedule_length,\n    execute_faithful memory _ _ extent noWrap (initial_invariant ..), schedule_complete memory registers,\n    completed_correct memory registers extent _ (schedule_complete memory registers), ?_⟩\n  exact fun index apart => execute_frame _ _ index apart"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory events come from actual local instruction execution. A checked connection\nto the restricted relational memory constraints supplies compatible observations\nand ordering, with all scope, address, initialization, and dependency restrictions\nstated. The interleaving machine itself is not declared to be all PTX behavior."
+      },
+      "to": {
+        "path": "Ptx/SharedVectorMemory.lean",
+        "passage": {
+          "quote": "theorem shared_trace_labels (memory : List Word) (registers : Fin n → Nat → Word)\n    (dispatches : List (Fin n)) (extent : 3*n ≤ memory.length)\n    (noWrap : 12*n < 2^64)\n    (completed : SharedVector.Complete (SharedVector.execute dispatches\n      (SharedVector.initial memory registers))) (lane : Fin n) :\n    SharedVector.laneTrace lane (SharedVector.trace dispatches\n      (SharedVector.initial memory registers)) =\n      [(witness memory).event (indexOf lane 3),\n       (witness memory).event (indexOf lane 4),\n       (witness memory).event (indexOf lane 5)] := by\n  rw [SharedVector.completed_trace memory registers dispatches extent noWrap completed lane]\n  simp [SharedVector.remaining, SharedVector.left, SharedVector.right,\n    SharedVector.output, SharedVector.sum, witness]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A checked connection\nto the restricted relational memory constraints supplies compatible observations\nand ordering, with all scope, address, initialization, and dependency restrictions\nstated. The interleaving machine itself is not declared to be all PTX behavior."
+      },
+      "to": {
+        "path": "Ptx/SharedVectorMemory.lean",
+        "passage": {
+          "quote": "theorem verified_shared_execution (memory : List Word) (registers : Fin n → Nat → Word)\n    (extent : 3*n ≤ memory.length) (noWrap : 12*n < 2^64) :\n    ∃ dispatches : List (Fin n),\n      dispatches.length = 5*n ∧\n      SharedVector.Execution dispatches (SharedVector.initial memory registers)\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)) ∧\n      SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers)) ∧\n      (∀ lane : Fin n,\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory[SharedVector.output lane]! =\n          SharedVector.sum memory lane) ∧\n      (witness (n:=n) memory).Valid ∧\n      ∀ lane : Fin n, SharedVector.laneTrace lane (SharedVector.trace dispatches\n        (SharedVector.initial memory registers)) =\n        [(witness memory).event (indexOf lane 3),\n         (witness memory).event (indexOf lane 4),\n         (witness memory).event (indexOf lane 5)] := by\n  refine ⟨SharedVector.schedule n, SharedVector.schedule_length,\n    SharedVector.execute_faithful memory _ _ extent noWrap (SharedVector.initial_invariant ..),\n    SharedVector.schedule_complete memory registers,\n    SharedVector.completed_correct memory registers extent _ (SharedVector.schedule_complete memory registers),\n    witness_valid memory, ?_⟩\n  exact shared_trace_labels memory registers _ extent noWrap (SharedVector.schedule_complete memory registers)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A checked connection\nto the restricted relational memory constraints supplies compatible observations\nand ordering, with all scope, address, initialization, and dependency restrictions\nstated. The interleaving machine itself is not declared to be all PTX behavior."
+      },
+      "to": {
+        "path": "Ptx/SharedVectorMemory.lean",
+        "passage": {
+          "quote": "theorem candidate_shared_trace_labels (memory : List Word) (left right : Fin n → Word)\n    (source co) (sources : (graph memory left right source co).Sources)\n    (registers : Fin n → Nat → Word) (dispatches : List (Fin n))\n    (extent : 3*n ≤ memory.length) (noWrap : 12*n < 2^64)\n    (completed : SharedVector.Complete (SharedVector.execute dispatches\n      (SharedVector.initial memory registers))) (lane : Fin n) :\n    SharedVector.laneTrace lane (SharedVector.trace dispatches\n      (SharedVector.initial memory registers)) =\n      [(graph memory left right source co).event (indexOf lane 3),\n       (graph memory left right source co).event (indexOf lane 4),\n       (graph memory left right source co).event (indexOf lane 5)] := by\n  simp only [candidate_event_eq memory left right source co sources]\n  exact shared_trace_labels memory registers dispatches extent noWrap completed lane"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The interleaving machine itself is not declared to be all PTX behavior."
+      },
+      "to": {
+        "path": "docs/foundations/shared-vector.md",
+        "passage": {
+          "quote": "There is also a separate universal relational statement. `input_sources` proves\nthat every source-compatible candidate graph must choose the original input\nvalues, across all lanes and arbitrary coherence choices. `candidate_output`\nthen derives the correct register-store value. Input/output separation supplies\na concrete grounding argument; it does not solve general dependent concurrent\nno-thin-air semantics. The candidate graph family fixes this kernel's memory\nevent structure, so it is not a general characterization of all PTX executions."
+        }
+      }
+    }
+  ]
+}

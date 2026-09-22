@@ -213,3 +213,87 @@ import Ptx
 #print axioms Ptx.Scalar.MemoryWitness.label_preserves_address
 #print axioms Ptx.Scalar.MemoryWitness.witness_events_from_run
 #print axioms Ptx.Scalar.MemoryWitness.constructive_execution
+
+/-! Reusable proof rules and shared-allocation vector addition. -/
+
+-- ScalarRules
+#print axioms Ptx.Scalar.Rules.segment_comp
+#print axioms Ptx.Scalar.Rules.segment_then_completed
+#print axioms Ptx.Scalar.Rules.segment_then_total
+#print axioms Ptx.Scalar.Rules.completed_total
+#print axioms Ptx.Scalar.Rules.eval_frame
+#print axioms Ptx.Scalar.Rules.step_frame
+#print axioms Ptx.Scalar.Rules.runWith_frame
+#print axioms Ptx.Scalar.Rules.run_frame
+#print axioms Ptx.Scalar.Rules.runWith_invariant
+#print axioms Ptx.Scalar.Rules.partial_of_invariant
+#print axioms Ptx.Scalar.Rules.terminates_of_decreasing_measure
+
+-- SharedVector
+#print axioms Ptx.Scalar.SharedVector.replace_same
+#print axioms Ptx.Scalar.SharedVector.replace_other
+#print axioms Ptx.Scalar.SharedVector.initial_invariant
+#print axioms Ptx.Scalar.SharedVector.output_ne_left
+#print axioms Ptx.Scalar.SharedVector.output_ne_right
+#print axioms Ptx.Scalar.SharedVector.output_injective
+#print axioms Ptx.Scalar.SharedVector.get_set_other
+#print axioms Ptx.Scalar.SharedVector.get_set_same
+#print axioms Ptx.Scalar.SharedVector.advance_other
+#print axioms Ptx.Scalar.SharedVector.advance_frame
+#print axioms Ptx.Scalar.SharedVector.advance_invariant
+#print axioms Ptx.Scalar.SharedVector.execute_invariant
+#print axioms Ptx.Scalar.SharedVector.execute_frame
+#print axioms Ptx.Scalar.SharedVector.completed_correct
+#print axioms Ptx.Scalar.SharedVector.pointer_index
+#print axioms Ptx.Scalar.SharedVector.advance_is_scalar_step
+#print axioms Ptx.Scalar.SharedVector.exit_is_scalar_step
+#print axioms Ptx.Scalar.SharedVector.scheduled_access_safe
+#print axioms Ptx.Scalar.SharedVector.cursor_advance
+#print axioms Ptx.Scalar.SharedVector.execute_cursor
+#print axioms Ptx.Scalar.SharedVector.schedule_length
+#print axioms Ptx.Scalar.SharedVector.schedule_complete
+#print axioms Ptx.Scalar.SharedVector.faithful_step
+#print axioms Ptx.Scalar.SharedVector.execute_faithful
+#print axioms Ptx.Scalar.SharedVector.completed_execution_exists
+#print axioms Ptx.Scalar.SharedVector.emitted_canonical
+#print axioms Ptx.Scalar.SharedVector.emitted_thread
+#print axioms Ptx.Scalar.SharedVector.filter_emitted
+#print axioms Ptx.Scalar.SharedVector.trace_correspondence
+#print axioms Ptx.Scalar.SharedVector.completed_trace
+#print axioms Ptx.Scalar.SharedVector.emitted_access_safe
+#print axioms Ptx.Scalar.SharedVector.trace_access_safe
+
+-- SharedVectorExamples
+#print axioms Ptx.Scalar.SharedVector.Examples.round_robin_result
+#print axioms Ptx.Scalar.SharedVector.Examples.uneven_result
+#print axioms Ptx.Scalar.SharedVector.Examples.unfair_schedule_incomplete
+#print axioms Ptx.Scalar.SharedVector.Examples.concrete_execution_exists
+#print axioms Ptx.Scalar.SharedVector.Examples.empty_arena_not_faithful
+#print axioms Ptx.Scalar.Rules.Examples.set_segment
+#print axioms Ptx.Scalar.Rules.Examples.exit_segment
+#print axioms Ptx.Scalar.Rules.Examples.composed_completion
+#print axioms Ptx.Scalar.Rules.Examples.composed_frame
+
+-- SharedVectorMemory
+#print axioms Ptx.Scalar.SharedVectorMemory.lane_index
+#print axioms Ptx.Scalar.SharedVectorMemory.slot_index
+#print axioms Ptx.Scalar.SharedVectorMemory.index_eta
+#print axioms Ptx.Scalar.SharedVectorMemory.index_eq
+#print axioms Ptx.Scalar.SharedVectorMemory.forall_index_iff
+#print axioms Ptx.Scalar.SharedVectorMemory.exists_index_iff
+#print axioms Ptx.Scalar.SharedVectorMemory.event0
+#print axioms Ptx.Scalar.SharedVectorMemory.event1
+#print axioms Ptx.Scalar.SharedVectorMemory.event2
+#print axioms Ptx.Scalar.SharedVectorMemory.event3
+#print axioms Ptx.Scalar.SharedVectorMemory.event4
+#print axioms Ptx.Scalar.SharedVectorMemory.event5
+#print axioms Ptx.Scalar.SharedVectorMemory.graph_event
+#print axioms Ptx.Scalar.SharedVectorMemory.witness_valid
+#print axioms Ptx.Scalar.SharedVectorMemory.shared_trace_labels
+#print axioms Ptx.Scalar.SharedVectorMemory.verified_shared_execution
+#print axioms Ptx.Scalar.SharedVectorMemory.initial_labels
+#print axioms Ptx.Scalar.SharedVectorMemory.input_writer
+#print axioms Ptx.Scalar.SharedVectorMemory.input_sources
+#print axioms Ptx.Scalar.SharedVectorMemory.candidate_event_eq
+#print axioms Ptx.Scalar.SharedVectorMemory.candidate_shared_trace_labels
+#print axioms Ptx.Scalar.SharedVectorMemory.candidate_output

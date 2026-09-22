@@ -9,10 +9,11 @@
   "summary": [
     "Execute fixed-width scalar instructions with explicit register, predicate, control and memory state.",
     "Distinguish supported syntax, invalid execution, bounded evaluation and actual termination.",
-    "Support complete kernel proofs with explicit dependency and memory-model boundaries."
+    "Support complete kernel proofs with explicit dependency and memory-model boundaries.",
+    "Reusable proof rules compose instruction steps and finite execution segments, express loop invariants and termination measures, and preserve memory outside the writes of a run."
   ],
   "realization": "partial",
-  "remaining": "The stated scalar u32/u64 instruction subset, typed mnemonic boundary, local and candidate runs, run correspondence, safety and example kernel proofs are implemented. General dependent concurrent memory semantics and a generic trace-to-PTX refinement remain unimplemented; raw module parsing, ABI/launch and additional ISA forms are outside this slice.",
+  "remaining": "The scalar instruction subset, typed text boundary, candidate/concrete runs, reusable proof rules and shared-allocation kernel proofs are implemented. General dependent concurrent semantics, arbitrary trace-to-PTX refinement and full raw module/ABI/launch support remain unimplemented.",
   "links": [
     {
       "kind": "implementation",

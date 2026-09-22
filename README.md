@@ -36,3 +36,8 @@ Lean 4.33.0 is pinned; there are no external Lean package dependencies.
 [Stratic descriptions](stratic/descriptions/root.md) record the larger intended
 responsibilities and their implementation status. TorchLean integration,
 numerical verification, and Gemma examples remain unimplemented.
+
+The [shared-allocation vector-add study](docs/foundations/shared-vector.md)
+adds reusable proof rules, arbitrary instruction interleavings over one memory
+allocation, and a checked connection from completed shared traces to a valid
+relational graph.

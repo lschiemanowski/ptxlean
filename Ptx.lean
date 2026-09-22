@@ -5,3 +5,6 @@ import Ptx.ScopedExamples
 import Ptx.ScalarExamples
 import Ptx.ScalarEnvironment
 import Ptx.ScalarMemoryWitness
+import Ptx.ScalarRules
+import Ptx.SharedVectorExamples
+import Ptx.SharedVectorMemory

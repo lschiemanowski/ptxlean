@@ -1,0 +1,112 @@
+{
+  "id": "scalar-proof-rules",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "Reusable proof rules compose instruction steps and finite execution segments,\nexpress loop invariants and termination measures, and preserve memory outside\nthe writes of a run."
+    }
+  },
+  "summary": [
+    "Compose checked execution segments and invariant arguments with explicit outcomes.",
+    "Prove preservation outside actual writes rather than assuming a final memory frame."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Reusable rules connect local instruction transitions, sequential execution\nsegments, invariants, and completed runs. A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "theorem segment_then_completed (first : Segment program firstFuel pre middle)\n    (second : Completed program secondFuel middle post) :\n    Completed program (firstFuel + secondFuel) pre post := by\n  intro s hs\n  obtain ⟨hf, hm⟩ := first s hs\n  obtain ⟨hh, hp⟩ := second _ hm\n  rw [run_add]\n  simpa only [resume, hf, ↓reduceIte] using And.intro hh hp"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "def PartialCorrect (program : List Instr) (pre post : Assertion) : Prop :=\n  ∀ s, pre s → ∀ fuel, (run fuel program s).status = .halted → post (run fuel program s).state"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "theorem terminates_of_decreasing_measure (program : List Instr) (invariant post : Assertion)\n    (measure : State → Nat)\n    (progress : ∀ s, invariant s →\n      (∃ final event, step program s = .halted final event ∧ post final) ∨\n      (∃ next event, step program s = .next next event ∧ invariant next ∧\n        measure next < measure s)) :\n    TotalCorrect program invariant post := by\n  have terminate : ∀ rank, ∀ s, measure s = rank → invariant s →\n      ∃ fuel, (run fuel program s).status = .halted ∧ post (run fuel program s).state := by\n    intro rank\n    induction rank using Nat.strongRecOn with\n    | ind rank ih =>\n      intro s rankEq initial\n      rcases progress s initial with ⟨final,event,hs,hpost⟩ | ⟨next,event,hs,hnext,less⟩\n      · exact ⟨1, by simp [run_succ, hs, hpost]⟩\n      · obtain ⟨fuel,hh,hp⟩ := ih (measure next) (by omega) next rfl hnext\n        exact ⟨fuel + 1, by simpa only [run_succ, hs] using And.intro hh hp⟩\n  exact fun s initial => terminate (measure s) s rfl initial"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory preservation is expressed through actual store effects and disjoint\nlocations. Frame arguments cannot assume the desired final memory or ignore\ninterference. The rules support branching loops and instruction-level kernel\nproofs while retaining the scalar machine's concrete/candidate distinction."
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "theorem runWith_frame (fuel : Nat) (oracle : Nat → Option Word) (program : List Instr)\n    (s : State) (index : Nat)\n    (untouched : TraceAvoids (runWith fuel oracle program s).trace index) :\n    (runWith fuel oracle program s).state.memory[index]? = s.memory[index]? := by\n  induction fuel generalizing oracle s with\n  | zero => rfl\n  | succ fuel ih =>\n    cases hs : stepWith (oracle 0) program s with\n    | next next emitted =>\n      simp only [runWith, hs] at untouched ⊢\n      have head := untouched emitted (by simp)\n      have tail : TraceAvoids (runWith fuel (fun i => oracle (i + 1)) program next).trace index :=\n        fun event member => untouched event (by simp [member])\n      exact (ih _ _ tail).trans (step_frame hs head)\n    | halted final emitted =>\n      simp only [runWith, hs]\n      rw [(step_halted hs).1]\n    | fault reason => simp [runWith, hs]\n    | unsupported spelling => simp [runWith, hs]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The rules support branching loops and instruction-level kernel\nproofs while retaining the scalar machine's concrete/candidate distinction."
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "theorem partial_of_invariant (program : List Instr) (pre invariant post : Assertion)\n    (initial : ∀ s, pre s → invariant s)\n    (preserved : ∀ s next event, invariant s →\n      step program s = .next next event → invariant next)\n    (exitPost : ∀ s final event, invariant s →\n      step program s = .halted final event → post final) :\n    PartialCorrect program pre post := by\n  have aux : ∀ fuel s, invariant s → (run fuel program s).status = .halted →\n      post (run fuel program s).state := by\n    intro fuel\n    induction fuel with\n    | zero => intro s hs halted; simp [run_zero] at halted\n    | succ fuel ih =>\n      intro s hs halted\n      rw [run_succ] at halted ⊢\n      cases stepEq : step program s with\n      | next next event =>\n        simp only [stepEq] at halted ⊢\n        exact ih next (preserved s next event hs stepEq) halted\n      | halted final event =>\n        exact exitPost s final event hs stepEq\n      | fault reason => simp [stepEq] at halted\n      | unsupported spelling => simp [stepEq] at halted\n  exact fun s hs fuel halted => aux fuel s (initial s hs) halted"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Reusable rules connect local instruction transitions, sequential execution\nsegments, invariants, and completed runs. A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+      },
+      "to": {
+        "path": "Ptx/SharedVectorExamples.lean",
+        "passage": {
+          "quote": "theorem composed_completion : Completed setThenExit 2 (fun s => s.pc = 0)\n    (fun s => s.regs 0 = 7) := segment_then_completed set_segment exit_segment"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory preservation is expressed through actual store effects and disjoint\nlocations. Frame arguments cannot assume the desired final memory or ignore\ninterference. The rules support branching loops and instruction-level kernel\nproofs while retaining the scalar machine's concrete/candidate distinction."
+      },
+      "to": {
+        "path": "Ptx/SharedVectorExamples.lean",
+        "passage": {
+          "quote": "theorem composed_frame (s : Scalar.State) (pc : s.pc = 0) (index : Nat) :\n    (run 2 setThenExit s).state.memory[index]? = s.memory[index]? := by\n  apply run_frame\n  simp [TraceAvoids,StoresTo,run,runWith,stepWith,setThenExit,eval,Instr.plain,\n    Guard.eval,Operand32.eval,pc,occurrence]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Reusable rules connect local instruction transitions, sequential execution\nsegments, invariants, and completed runs. A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+      },
+      "to": {
+        "path": "docs/foundations/scalar-rules.md",
+        "passage": {
+          "quote": "[`ScalarRules.lean`](../../Ptx/ScalarRules.lean) packages composition, preservation,\nand termination arguments for the existing scalar instruction interpreter. The\nrules do not change instruction semantics. Read the\n[scalar machine guide](scalar-machine.md) first for its concrete arena, candidate\nread, fault, and fuel conventions."
+        }
+      }
+    }
+  ]
+}

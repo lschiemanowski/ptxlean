@@ -12,7 +12,7 @@
     "Make environment eligibility and scalar control, data and address behavior explicit in kernel proofs."
   ],
   "realization": "partial",
-  "remaining": "Implemented: original message-passing/checker, scoped non-torn candidates, explicit environment contracts, scalar integer/control execution and bounded kernel proofs with selected checked bridges. Remaining: complete byte/address/proxy and dependent concurrent semantics, full ISA/target coverage, shared launch refinement and GPU progress.",
+  "remaining": "Restricted memory/checker and scoped non-torn candidates, explicit environment contracts, scalar execution, reusable proof rules, and shared-allocation vector-add correctness/existence with trace-derived relational witnesses are implemented. Complete byte/address/proxy and dependent concurrent semantics, full ISA/target coverage, runtime launch/ABI correspondence and GPU progress remain unimplemented.",
   "links": [
     {
       "kind": "implementation",

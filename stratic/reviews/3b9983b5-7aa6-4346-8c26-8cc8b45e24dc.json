@@ -1,0 +1,193 @@
+{
+  "id": "3b9983b5-7aa6-4346-8c26-8cc8b45e24dc",
+  "base": "c592131f2f5d1835f00707e27ec36432bb2a70e0",
+  "contentTree": "874fbf112ba76ba4cd2e3eaf2a93c7d86b2787b1",
+  "reviewer": "Codex root with independent semantic and proof cross-reviews",
+  "summary": "Prove shared-allocation vector addition and reusable scalar rules",
+  "examined": [
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Original semantics and theorem statements are unchanged; existing audit entries and all old results pass the expanded isolated build."
+    },
+    {
+      "id": "finite-checking",
+      "outcome": "unchanged",
+      "reason": "Checker, reachability and litmus contracts remain unchanged; generic shared graph uses the existing validity/certificate infrastructure."
+    },
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Coverage now includes reusable scalar proof rules and shared-allocation vector addition; full ISA, general dependent memory semantics and downstream network work remain explicitly unimplemented."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "revised",
+      "reason": "Updated implementation status for actual shared instruction traces and relational witnesses. No existing semantic definition was weakened; runtime correspondence and full concurrency remain outside this subset."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "revised",
+      "reason": "Added the reusable-rules responsibility before implementation; generic composition/frame/termination lemmas and shared-kernel proofs now implement it with explicit outcomes."
+    },
+    {
+      "id": "scalar-kernels",
+      "outcome": "revised",
+      "reason": "Distinguished earlier independent views from new shared-allocation instruction interleavings and refined the child description before implementation."
+    },
+    {
+      "id": "scalar-proof-rules",
+      "outcome": "revised",
+      "reason": "New description-first implemented responsibility: exact segment/completed contracts, actual-store frame, invariants, partial correctness and termination from a decreasing measure; examples exercise composition and frame rules."
+    },
+    {
+      "id": "shared-vector-add",
+      "outcome": "revised",
+      "reason": "New description-first implemented responsibility: one allocation, arbitrary finite interleavings, noninterference, correct completed outputs, safe accesses, finite complete schedule and exact trace-derived relational witness. Fixed layout, pointer bounds and scheduling discipline are explicit."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Added pinned-source review of shared-allocation grounding and a documented investigation of byte-source semantics. The byte implementation is deliberately excluded from this first commit; its interpretation issue is recorded rather than resolved by assumption."
+    },
+    {
+      "id": "execution-environment",
+      "outcome": "unchanged",
+      "reason": "The selected tree does not modify existing environment/scoped semantics or descriptors. Scalar shared addresses are checked through explicit extent and 64-bit nonwrapping premises; byte extension changes remain outside this proposal."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "No TorchLean tensor interface is implemented by integer vector addition; existing layout/composition promises remain unimplemented."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "unchanged",
+      "reason": "The shared instruction scheduler is an abstract finite execution discipline, not a CUDA allocator, multi-kernel runtime or hardware launch model."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "No automatic backward or authored PTX backward behavior changes."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Only modular integer arithmetic; no floating point, accuracy or PyTorch numerical claims."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "Foundation studies remain under PTX semantics; no network application example is implemented."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "No Gemma or model-architecture work."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "874fbf112ba76ba4cd2e3eaf2a93c7d86b2787b1",
+      "method": "Clean ./scripts/check.sh --clean in an isolated git-archive extraction of the exact selected Stratic tree; local documentation-link check; Stratic validation; independent source and proof reviews",
+      "outcome": "pass",
+      "environment": "Linux; Lean 4.33.0 d8b18978322de05a8f3dba51ef03cf5461676c17; bundled Std only; selected tree 874fbf112ba76ba4cd2e3eaf2a93c7d86b2787b1 extracted to /tmp/ptx-blockA-checked-874fbf112ba7; byte-model implementation edits excluded from this check",
+      "evidence": "25 build jobs passed; 24 Lean files scanned; 264 declarations audited with only propext, Quot.sound and Classical.choice. Pinned PTX hash/3928316 bytes/23 anchors verified. 149 local documentation links and pinned HTML anchors checked. No compiler warnings, whitespace issues or Stratic validation issues. Before/after selected trees identical. Independent reviewers examined generic segment/frame/termination rules, shared invariants, actual scalar-step correspondence, arbitrary-interleaving trace correspondence, generic graph witness, source uniqueness, and the packaged execution+graph theorem. No blockers; full PTX concurrency, runtime allocation/launch and hardware fairness remain separate.",
+      "tests": [],
+      "id": "0968d859-ec4b-4302-9a8a-fe771be30961",
+      "recordedAt": "2026-09-22T11:11:05.651Z"
+    }
+  ],
+  "recordedAt": "2026-09-22T11:11:36.118Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Imports integrate the new rules, interleaving examples and relational bridge into the ordinary checked library."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "All 74 new public theorem declarations are added to the retained 190-declaration audit; actual dependency output inspected."
+    },
+    {
+      "path": "Ptx/ScalarRules.lean",
+      "reason": "Supporting assertions and segment/frame/invariant proof lemmas support the linked contracts; independent review and complete dependency audits cover the file."
+    },
+    {
+      "path": "Ptx/SharedVector.lean",
+      "reason": "Supporting layout, invariant, scheduling, trace and scalar-correspondence definitions/lemmas support the linked main results; all meaningful actual-execution claims have extent/noWrap bounds, and every public theorem was audited."
+    },
+    {
+      "path": "Ptx/SharedVectorExamples.lean",
+      "reason": "Positive and negative execution examples cover interleavings, modular arithmetic, tail preservation, unfair scheduling, invalid allocation and reuse of segment/frame rules."
+    },
+    {
+      "path": "Ptx/SharedVectorMemory.lean",
+      "reason": "Indexing helpers, finite-slot proofs, initialization grounding and candidate-source correspondence implement the linked generic relational witness; completed graph labels are tied to the actual shared trace."
+    },
+    {
+      "path": "README.md",
+      "reason": "Added the study entry point without changing broader project claims."
+    },
+    {
+      "path": "docs/foundations/blocks12.md",
+      "reason": "Added a forward study link to the shared-allocation extension; previous examples and limitations remain accurately contextualized."
+    },
+    {
+      "path": "docs/foundations/next-source-review.md",
+      "reason": "Independent pinned-source review records shared-kernel grounding, byte semantics and explicitly unresolved observation convention; byte implementation comes in the separate next block."
+    },
+    {
+      "path": "docs/foundations/scalar-rules.md",
+      "reason": "Readable explanation of contracts, proof premises, frame and measure rules, with checked source links."
+    },
+    {
+      "path": "docs/foundations/shared-vector.md",
+      "reason": "Review guide connects layout, invariants, actual instructions, existence, frame and exact trace/graph bridge, explicitly limiting runtime/hardware/dependency claims."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.json",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.json",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.md",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/scalar-kernels.json",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/scalar-kernels.md",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/scalar-proof-rules.json",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/scalar-proof-rules.md",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/shared-vector-add.json",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    },
+    {
+      "path": "stratic/descriptions/shared-vector-add.md",
+      "reason": "Description and metadata changes are examined explicitly above; parent passages, summaries, links and realization statuses were validated against the checked selected tree."
+    }
+  ]
+}

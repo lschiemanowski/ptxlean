@@ -168,3 +168,10 @@ fuel, misalignment, invalid addresses, guarded accesses, and unsupported syntax.
 No hardware execution, external paid model generation, floating point,
 asynchronous instructions, TorchLean integration or Gemma implementation is
 part of this development.
+
+## Continue with shared allocation
+
+The [shared-vector study](shared-vector.md) develops reusable scalar proof rules
+and replaces independent local views with a shared allocation for the vector-add
+example. It proves arbitrary-interleaving invariants and exact per-thread trace
+correspondence, with an explicit completed execution and relational graph.

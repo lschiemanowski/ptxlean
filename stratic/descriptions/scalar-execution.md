@@ -29,3 +29,7 @@ integer computation and bounded traversal. Their contracts identify initial
 register and memory representations, returned values, preserved storage,
 access bounds, and a sufficient execution bound. Any lane-wise composition
 states the ownership and scheduling discipline under which local results apply.
+
+Reusable proof rules compose instruction steps and finite execution segments,
+express loop invariants and termination measures, and preserve memory outside
+the writes of a run.
