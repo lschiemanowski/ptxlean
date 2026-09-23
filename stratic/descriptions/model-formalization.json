@@ -11,7 +11,20 @@
     "Accept generated definitions only after mechanical proof checks and separate semantic review, preserving all missing and unresolved coverage.",
     "Evaluate the frozen workflow on held-out tasks with complete attempt, cost and reviewer-effort records."
   ],
-  "realization": "unimplemented",
-  "remaining": "Task packaging, the instruction coverage ledger, worker execution and repair controls, acceptance automation, and empirical model and reviewer evaluations remain to be implemented. This description states their contracts; it is not evidence that a model has passed evaluation.",
-  "links": []
+  "realization": "partial",
+  "remaining": "The deterministic section inventory, recorded fresh/resumed Luna runs, fresh mechanical replay and two seeded review probes are implemented. One adaptive min/max task is independently reviewed and integrated after repair. Full instruction-form coverage, additional instruction foundations, varied capability evidence, held-out evaluation and cost-effectiveness remain unfinished.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Exploratory evaluation asks which tasks workers can complete and what assistance\nthey need; prompts and feedback may change while those attempts remain recorded.\nA later productivity evaluation asks how much accepted work a fixed workflow\nproduces for the effort spent. It separates tasks used to improve prompts from\nheld-out tasks reserved for measuring the frozen workflow. Closely related forms are grouped to avoid\ntreating near-duplicates as independent evidence. Reports include every assigned\ntask, failed and interrupted attempts, repairs and reviewer interventions. They\nseparate first-attempt proof checking, eventual acceptance, semantic rejection\nand unresolved cases, and do not generalize a narrow sample to the full ISA."
+      },
+      "to": {
+        "path": "formalization/results/minmax-u32/README.md",
+        "passage": {
+          "quote": "This is **one adaptive development task**, not a held-out benchmark. It supports\nthe conclusion that the requested Luna configuration can finish this task after\nfeedback. It does not establish a full-ISA success rate or cost effectiveness."
+        }
+      }
+    }
+  ]
 }

@@ -1,0 +1,11 @@
+name = "ptxlean_torchlean_integration"
+version = "0.1.0"
+defaultTargets = ["PtxTorchLean"]
+
+[[require]]
+name = "TorchLean"
+git = "https://github.com/lean-dojo/TorchLean.git"
+rev = "de3192df4779877ceb65cfe470a4d4ce9d480a5b"
+
+[[lean_lib]]
+name = "PtxTorchLean"

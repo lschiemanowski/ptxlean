@@ -1,5 +1,7 @@
 import Ptx.Scalar
 
+set_option maxHeartbeats 1000000
+
 /-!
 # Typed mnemonic boundary
 
@@ -38,6 +40,8 @@ def binMnemonic : BinOp → String
   | .xor => "xor.b32"
   | .shl => "shl.b32"
   | .shr => "shr.u32"
+  | .minU => "min.u32"
+  | .maxU => "max.u32"
 
 def compareMnemonic : Compare → String
   | .eq => "setp.eq.u32"
@@ -49,7 +53,7 @@ def compareMnemonic : Compare → String
 
 def supportedMnemonic (mnemonic : String) : Bool :=
   mnemonic ∈ ["mov.b32", "add.u32", "sub.u32", "mul.lo.u32", "and.b32", "or.b32", "xor.b32",
-    "shl.b32", "shr.u32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
+    "shl.b32", "shr.u32", "min.u32", "max.u32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
     "setp.lt.u32", "setp.le.u32", "setp.gt.u32", "setp.ge.u32",
     "ld.relaxed.gpu.global.u32", "st.relaxed.gpu.global.u32", "bra", "exit"]
 
@@ -64,6 +68,8 @@ def decodeOp (mnemonic : String) (operands : List Token) : Except DecodeError Op
   | "xor.b32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .xor d a b)
   | "shl.b32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shl d a b)
   | "shr.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shr d a b)
+  | "min.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .minU d a b)
+  | "max.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .maxU d a b)
   | "mov.b64", [.address (.reg d), .address s] => .ok (.mov64 d s)
   | "add.u64", [.address (.reg d), .address a, .address b] => .ok (.add64 d a b)
   | "cvt.u64.u32", [.address (.reg d), .word s] => .ok (.cvt64 d s)
@@ -132,7 +138,7 @@ theorem wrong_destination_rejected : decodeOp "add.u32" [.word (.imm 0), .word (
 
 
 
-/-- Decoding cannot manufacture an unsupported operation or an immediate store. -/
+/- Decoding cannot manufacture an unsupported operation or an immediate store. -/
 theorem decodeOp_supported (h : decodeOp mnemonic operands = .ok op) : SupportedOp op := by
   unfold decodeOp at h
   split at h

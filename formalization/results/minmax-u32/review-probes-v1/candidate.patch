@@ -1,0 +1,224 @@
+diff --git a/Ptx/Scalar.lean b/Ptx/Scalar.lean
+index 62b4102..d5201a7 100644
+--- a/Ptx/Scalar.lean
++++ b/Ptx/Scalar.lean
+@@ -23,7 +23,7 @@ inductive Operand64 where
+   deriving DecidableEq, Repr
+ 
+ inductive BinOp where
+-  | add | sub | mulLo | and | or | xor | shl | shr
++  | add | sub | mulLo | and | or | xor | shl | shr | minU | maxU
+   deriving DecidableEq, Repr
+ 
+ inductive Compare where
+@@ -90,6 +90,8 @@ def BinOp.eval : BinOp → Word → Word → Word
+   | .xor, a, b => a ^^^ b
+   | .shl, a, b => if b.toNat < 32 then a <<< b.toNat else 0
+   | .shr, a, b => if b.toNat < 32 then a >>> b.toNat else 0
++  | .minU, a, b => if a.toNat ≤ b.toNat then a else b
++  | .maxU, a, b => if a.toNat ≥ b.toNat then a else b
+ 
+ def Compare.eval : Compare → Word → Word → Bool
+   | .eq, a, b => a == b
+diff --git a/Ptx/ScalarText.lean b/Ptx/ScalarText.lean
+index 1169f8f..2407226 100644
+--- a/Ptx/ScalarText.lean
++++ b/Ptx/ScalarText.lean
+@@ -1,5 +1,7 @@
+ import Ptx.Scalar
+ 
++set_option maxHeartbeats 1000000
++
+ /-!
+ # Typed mnemonic boundary
+ 
+@@ -38,6 +40,8 @@ def binMnemonic : BinOp → String
+   | .xor => "xor.b32"
+   | .shl => "shl.b32"
+   | .shr => "shr.u32"
++  | .minU => "min.u32"
++  | .maxU => "max.u32"
+ 
+ def compareMnemonic : Compare → String
+   | .eq => "setp.eq.u32"
+@@ -49,7 +53,7 @@ def compareMnemonic : Compare → String
+ 
+ def supportedMnemonic (mnemonic : String) : Bool :=
+   mnemonic ∈ ["mov.b32", "add.u32", "sub.u32", "mul.lo.u32", "and.b32", "or.b32", "xor.b32",
+-    "shl.b32", "shr.u32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
++    "shl.b32", "shr.u32", "min.u32", "max.u32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
+     "setp.lt.u32", "setp.le.u32", "setp.gt.u32", "setp.ge.u32",
+     "ld.relaxed.gpu.global.u32", "st.relaxed.gpu.global.u32", "bra", "exit"]
+ 
+@@ -64,6 +68,8 @@ def decodeOp (mnemonic : String) (operands : List Token) : Except DecodeError Op
+   | "xor.b32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .xor d a b)
+   | "shl.b32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shl d a b)
+   | "shr.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shr d a b)
++  | "min.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .minU d a b)
++  | "max.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .maxU d a b)
+   | "mov.b64", [.address (.reg d), .address s] => .ok (.mov64 d s)
+   | "add.u64", [.address (.reg d), .address a, .address b] => .ok (.add64 d a b)
+   | "cvt.u64.u32", [.address (.reg d), .word s] => .ok (.cvt64 d s)
+@@ -132,7 +138,7 @@ theorem wrong_destination_rejected : decodeOp "add.u32" [.word (.imm 0), .word (
+ 
+ 
+ 
+-/-- Decoding cannot manufacture an unsupported operation or an immediate store. -/
++/- Decoding cannot manufacture an unsupported operation or an immediate store. -/
+ theorem decodeOp_supported (h : decodeOp mnemonic operands = .ok op) : SupportedOp op := by
+   unfold decodeOp at h
+   split at h
+diff --git a/Ptx/IntegerMinMax.lean b/Ptx/IntegerMinMax.lean
+new file mode 100644
+index 0000000..2f19989
+--- /dev/null
++++ b/Ptx/IntegerMinMax.lean
+@@ -0,0 +1,148 @@
++import Ptx.ScalarText
++
++/-! Proofs and boundary examples for the two unsigned 32-bit min/max forms. -/
++namespace Ptx.Scalar.IntegerMinMax
++
++open Ptx.Scalar
++open Ptx.Scalar.Text
++
++theorem min_toNat (a b : Word) : (BinOp.eval .minU a b).toNat = Nat.min a.toNat b.toNat := by
++  by_cases h : a.toNat ≤ b.toNat <;> simp [BinOp.eval, h, Nat.min_def]
++
++theorem max_toNat (a b : Word) : (BinOp.eval .maxU a b).toNat = Nat.max a.toNat b.toNat := by
++  by_cases h : b.toNat ≤ a.toNat <;> simp [BinOp.eval, h, Nat.le_of_not_ge]
++
++theorem min_mem (a b : Word) : BinOp.eval .minU a b = a ∨ BinOp.eval .minU a b = b := by
++  by_cases h : a.toNat ≤ b.toNat
++  · simp [BinOp.eval, h]
++  · simp [BinOp.eval, h]
++
++theorem max_mem (a b : Word) : BinOp.eval .maxU a b = a ∨ BinOp.eval .maxU a b = b := by
++  by_cases h : b.toNat ≤ a.toNat
++  · simp [BinOp.eval, h]
++  · simp [BinOp.eval, h]
++
++theorem min_comm (a b : Word) : BinOp.eval .minU a b = BinOp.eval .minU b a := by
++  apply BitVec.toNat_inj.mp
++  simp [min_toNat, Nat.min_comm]
++
++theorem max_comm (a b : Word) : BinOp.eval .maxU a b = BinOp.eval .maxU b a := by
++  apply BitVec.toNat_inj.mp
++  simp [max_toNat, Nat.max_comm]
++
++theorem min_idem (a : Word) : BinOp.eval .minU a a = a := by
++  unfold BinOp.eval
++  simp
++
++theorem max_idem (a : Word) : BinOp.eval .maxU a a = a := by
++  unfold BinOp.eval
++  simp
++
++theorem min_bounds (a b : Word) :
++    (BinOp.eval .minU a b).toNat ≤ a.toNat ∧ (BinOp.eval .minU a b).toNat ≤ b.toNat := by
++  rw [min_toNat]
++  exact ⟨Nat.min_le_left _ _, Nat.min_le_right _ _⟩
++
++theorem max_bounds (a b : Word) :
++    a.toNat ≤ (BinOp.eval .maxU a b).toNat ∧ b.toNat ≤ (BinOp.eval .maxU a b).toNat := by
++  rw [max_toNat]
++  exact ⟨Nat.le_max_left _ _, Nat.le_max_right _ _⟩
++
++/-- `eval`'s bin32 branch computes both operands from the incoming state, then
++updates only the destination word register. The record equality also exposes
++the unchanged PC successor, address registers, predicates, and memory. -/
++theorem min_exec (guard : Guard) (s : State) (d : Nat) (a b : Operand32)
++    (hg : guard.eval s = true) :
++    eval none ⟨guard, .bin32 .minU d a b⟩ s =
++      .next ⟨s.pc + 1, update s.regs d (BinOp.eval .minU (a.eval s) (b.eval s)),
++        s.addrs, s.preds, s.memory⟩
++        (occurrence s ⟨guard, .bin32 .minU d a b⟩ true) := by
++  simp [eval, hg]
++
++theorem max_exec (guard : Guard) (s : State) (d : Nat) (a b : Operand32)
++    (hg : guard.eval s = true) :
++    eval none ⟨guard, .bin32 .maxU d a b⟩ s =
++      .next ⟨s.pc + 1, update s.regs d (BinOp.eval .maxU (a.eval s) (b.eval s)),
++        s.addrs, s.preds, s.memory⟩
++        (occurrence s ⟨guard, .bin32 .maxU d a b⟩ true) := by
++  simp [eval, hg]
++
++/-- The actual evaluated state leaves every non-destination word register at
++its incoming value. `update_other` is the shared register-update fact used. -/
++theorem min_exec_preserves_other (guard : Guard) (s : State) (d i : Nat)
++    (a b : Operand32) (hg : guard.eval s = true) (hi : i ≠ d) :
++    (match eval none ⟨guard, .bin32 .minU d a b⟩ s with
++      | .next t _ => t.regs i | _ => s.regs i) = s.regs i := by
++  rw [min_exec guard s d a b hg]
++  exact update_other hi
++
++theorem max_exec_preserves_other (guard : Guard) (s : State) (d i : Nat)
++    (a b : Operand32) (hg : guard.eval s = true) (hi : i ≠ d) :
++    (match eval none ⟨guard, .bin32 .maxU d a b⟩ s with
++      | .next t _ => t.regs i | _ => s.regs i) = s.regs i := by
++  rw [max_exec guard s d a b hg]
++  exact update_other hi
++
++theorem min_false (guard : Guard) (s : State) (d : Nat) (a b : Operand32)
++    (hg : guard.eval s = false) :
++    eval none ⟨guard, .bin32 .minU d a b⟩ s =
++      .next ⟨s.pc + 1, s.regs, s.addrs, s.preds, s.memory⟩
++        (occurrence s ⟨guard, .bin32 .minU d a b⟩ false) := by
++  exact eval_skipped hg (by intro spelling; simp)
++
++theorem max_false (guard : Guard) (s : State) (d : Nat) (a b : Operand32)
++    (hg : guard.eval s = false) :
++    eval none ⟨guard, .bin32 .maxU d a b⟩ s =
++      .next ⟨s.pc + 1, s.regs, s.addrs, s.preds, s.memory⟩
++        (occurrence s ⟨guard, .bin32 .maxU d a b⟩ false) := by
++  exact eval_skipped hg (by intro spelling; simp)
++
++-- The high bit is interpreted as an unsigned magnitude, and equality chooses
++-- a value with the same bit pattern, including at ties.
++example : BinOp.eval .minU (BitVec.ofNat 32 0x80000000) (BitVec.ofNat 32 7) =
++    BitVec.ofNat 32 7 := by decide
++example : BinOp.eval .maxU (BitVec.ofNat 32 0x80000000) (BitVec.ofNat 32 7) =
++    BitVec.ofNat 32 0x80000000 := by decide
++example : BinOp.eval .minU (BitVec.ofNat 32 9) (BitVec.ofNat 32 9) = BitVec.ofNat 32 9 := by decide
++example : BinOp.eval .maxU (BitVec.ofNat 32 9) (BitVec.ofNat 32 9) = BitVec.ofNat 32 9 := by decide
++
++example : decodeOp "min.u32" [.word (.reg 3), .word (.reg 1), .word (.imm 7)] =
++    .ok (.bin32 .minU 3 (.reg 1) (.imm 7)) := by rfl
++example : decodeOp "max.u32" [.word (.reg 3), .word (.imm 7), .word (.reg 1)] =
++    .ok (.bin32 .maxU 3 (.imm 7) (.reg 1)) := by rfl
++example : decodeOp "min.s32" [.word (.reg 0), .word (.imm 1), .word (.imm 2)] =
++    .error (.unsupportedMnemonic "min.s32") := by rfl
++example : decodeOp "max.relu.u32" [.word (.reg 0), .word (.imm 1), .word (.imm 2)] =
++    .error (.unsupportedMnemonic "max.relu.u32") := by rfl
++example : decodeOp "min.u32" [.word (.imm 0), .word (.imm 1), .word (.imm 2)] =
++    .error (.invalidOperands "min.u32") := by rfl
++
++def overlapState : State :=
++  ⟨0, fun i => if i = 0 then BitVec.ofNat 32 8 else if i = 1 then BitVec.ofNat 32 5 else 0,
++    fun _ => 0, fun i => i = 1, []⟩
++
++-- Destination overlaps the left source: the right operand is read from the
++-- incoming register file before the destination update.
++example : (match eval none ⟨.always, .bin32 .minU 0 (.reg 0) (.reg 1)⟩ overlapState with
++    | .next s _ => s.regs 0 | _ => 0) = BitVec.ofNat 32 5 := by
++  simp [eval, overlapState, occurrence, Guard.eval, Operand32.eval, BinOp.eval, update]
++
++-- Destination overlaps the right source: the left operand is likewise read
++-- from the incoming register file.
++example : (match eval none ⟨.always, .bin32 .maxU 1 (.reg 0) (.reg 1)⟩ overlapState with
++    | .next s _ => s.regs 1 | _ => 0) = BitVec.ofNat 32 8 := by
++  simp [eval, overlapState, occurrence, Guard.eval, Operand32.eval, BinOp.eval, update]
++
++-- A false positive guard and a false negative guard both skip the instruction.
++example : Guard.eval overlapState (.pred 0 true) = false := by rfl
++example : Guard.eval overlapState (.pred 1 false) = false := by rfl
++example : eval none ⟨.pred 0 true, .bin32 .minU 0 (.imm 1) (.imm 2)⟩ overlapState =
++    .next ⟨1, overlapState.regs, overlapState.addrs, overlapState.preds, overlapState.memory⟩
++      (occurrence overlapState ⟨.pred 0 true, .bin32 .minU 0 (.imm 1) (.imm 2)⟩ false) := by
++  exact min_false _ _ _ _ _ rfl
++example : eval none ⟨.pred 1 false, .bin32 .maxU 0 (.imm 1) (.imm 2)⟩ overlapState =
++    .next ⟨1, overlapState.regs, overlapState.addrs, overlapState.preds, overlapState.memory⟩
++      (occurrence overlapState ⟨.pred 1 false, .bin32 .maxU 0 (.imm 1) (.imm 2)⟩ false) := by
++  exact max_false _ _ _ _ _ rfl
++
++end Ptx.Scalar.IntegerMinMax

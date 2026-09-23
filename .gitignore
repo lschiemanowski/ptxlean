@@ -1,2 +1,5 @@
 # cache and other artifacts produced by Lean's Lake build tool
 .lake/
+# Isolated headless-worker checkouts and full local attempt records
+.formalization-runs/
+__pycache__/

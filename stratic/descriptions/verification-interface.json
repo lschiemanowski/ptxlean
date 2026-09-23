@@ -10,8 +10,8 @@
     "Relate network tensors—multidimensional arrays—and state to their storage in memory, with explicit requirements on layout and numerical values.",
     "Combine the guarantees of individual kernels into correctness of a whole network computation under stated assumptions."
   ],
-  "realization": "unimplemented",
-  "remaining": "Relations between network tensors and memory, kernel contracts, proofs combining their guarantees, and explanations remain to be implemented.",
+  "realization": "partial",
+  "remaining": "An isolated package connects actual pinned TorchLean graph construction to exact backward success and VJP correctness. Tensor/storage relations, combined kernel contracts, stateful orchestration, numerical bounds and PTX backward correspondence remain unfinished.",
   "links": [
     {
       "kind": "depends-on",

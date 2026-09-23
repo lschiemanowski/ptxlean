@@ -1,0 +1,112 @@
+{
+  "id": "computed-publication",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "Reusable execution and safety rules support concrete scalar kernel proofs."
+    }
+  },
+  "summary": [
+    "Publish a scalar-computed sum with release/acquire ordering, proving its observed result for every graph satisfying the necessary memory constraints.",
+    "Construct completed runs, safe accesses and a relaxed stale-result witness while making immutable input grounding and dependent-PTX limitations explicit."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One thread reads two input words that no thread changes, adds them with 32-bit\nunsigned wrapping arithmetic, and writes the computed result to a payload word.\nIt then writes one to a flag using release ordering. A second thread reads the\nflag with acquire ordering and then reads the payload. If it sees flag one, its\npayload register must contain the sum of the initial input words. This guarantee\ncovers every choice of read sources and write order satisfying the represented\nnecessary memory rules, not only one successful example."
+      },
+      "to": {
+        "path": "Ptx/ComputedPublication.lean",
+        "passage": {
+          "quote": "theorem publication_observed (initial left right flag payload source co)\n    (valid : (graph initial .acquire left right flag payload source co).Valid)\n    (seen : (consumerRun initial .acquire flag payload).state.regs 0 = 1) :\n    (consumerRun initial .acquire flag payload).status = .halted \u2227\n    (consumerRun initial .acquire flag payload).state.regs 1 = initial.x + initial.y := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The computation uses actual scalar loads, addition, register stores, and exit.\nA small ordered instruction wrapper attaches relaxed or acquire ordering to a\nload and relaxed or release ordering to a store. Ordering belongs to the fetched\ninstruction. The wrapper reuses scalar state transitions; its memory labels\nretain the value, guard outcome, and original dispatch position. Addresses are\nstored as word indices; four-byte alignment proves exact recovery of the original\nbyte address. A skipped instruction emits no memory event. Typed textual encoding\nmakes the ordering qualifiers explicit; it is not a raw PTX parser."
+      },
+      "to": {
+        "path": "Ptx/ComputedPublicationMachine.lean",
+        "passage": {
+          "quote": "def label (program : List Instr) (thread position : Nat)\n    (occ : Scalar.Occurrence) : Option Ptx.Occurrence :=\n  match program[occ.pc]?, occ.memory with\n  | some instruction, some effect =>\n    if occ.instruction = instruction.erase \u2227 occ.executed = true then\n      match instruction.op, effect.kind with\n      | .load order _ _, .load =>\n        some \u27e8some thread, position, \u27e8.load order, effect.address.toNat / 4, effect.value\u27e9\u27e9\n      | .store order _ _, .store =>\n        some \u27e8some thread, position, \u27e8.store order, effect.address.toNat / 4, effect.value\u27e9\u27e9\n      | _, _ => none"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The computation uses actual scalar loads, addition, register stores, and exit.\nA small ordered instruction wrapper attaches relaxed or acquire ordering to a\nload and relaxed or release ordering to a store. Ordering belongs to the fetched\ninstruction. The wrapper reuses scalar state transitions; its memory labels\nretain the value, guard outcome, and original dispatch position. Addresses are\nstored as word indices; four-byte alignment proves exact recovery of the original\nbyte address. A skipped instruction emits no memory event. Typed textual encoding\nmakes the ordering qualifiers explicit; it is not a raw PTX parser."
+      },
+      "to": {
+        "path": "Ptx/ComputedPublicationMachine.lean",
+        "passage": {
+          "quote": "theorem label_complete (program : List Instr) (thread position : Nat)\n    (instruction : Instr) (s next : State) (occ : Scalar.Occurrence)\n    (override : Option Word) (effect : MemoryEffect)\n    (fetch : program[s.pc]? = some instruction)\n    (step : Scalar.eval override instruction.erase s = .next next occ)\n    (memory : occ.memory = some effect) :\n    \u2203 emitted, label program thread position occ = some emitted := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Inputs, payload and flag occupy four distinct aligned global-memory words at\nbyte addresses zero, four, eight and twelve. The flag is initially zero; other\ninitial words and both threads' registers are arbitrary. Both threads execute\nstraight-line code on one GPU. All memory operations use GPU scope and the\ngeneric access mechanism, called the generic proxy. PTX relaxed, acquire and\nrelease forms require PTX version 6.0 and target sm_70 or newer. No aliases,\nmixed-size accesses, atomics, asynchronous operations or scheduler fairness are\nincluded. Access safety means alignment and bounds within this initialized arena;\nit does not establish allocation ownership or hardware launch validity."
+      },
+      "to": {
+        "path": "Ptx/ComputedPublicationWitness.lean",
+        "passage": {
+          "quote": "theorem graph_memory_safe (initial order left right flag payload source co) (i : Fin 10) :\n    AccessSafe 4 ((graph initial order left right flag payload source co).event i).effect := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The producer's input reads can only obtain values from initialization: no program\ninstruction writes those addresses. The result is then determined by addition,\nand the flag store is a constant moved into a register. The consumer never writes.\nThis explicit ordering of value dependencies prevents a value being justified\nonly by a cycle in this example. It does not settle the general PTX rule against\nsuch circular justification. Graph validity remains a set of necessary memory\nconstraints for dependent programs, not a claimed sufficient general PTX model."
+      },
+      "to": {
+        "path": "Ptx/ComputedPublication.lean",
+        "passage": {
+          "quote": "theorem input_sources (initial order left right flag payload source co)\n    (sources : (graph initial order left right flag payload source co).Sources) :\n    left = initial.x \u2227 right = initial.y := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A constructive witness supplies both completed scalar runs and compatible memory\nsources and write order for every input pair. Replacing only the consumer flag\nload with relaxed ordering also has a witness that sees flag one but the old\npayload. Whenever the old payload differs from the computed sum, that witness\nviolates the acquire result. Separate safety proofs cover every candidate run,\nincluding candidates later rejected by the memory rules. Extended explanations\nshow how instructions generate events and how synchronization forces the result.\n"
+      },
+      "to": {
+        "path": "Ptx/ComputedPublicationWitness.lean",
+        "passage": {
+          "quote": "theorem successful_execution (initial : Initial) :\n    Scalar.Runs (Ordered.erase producer) (reads initial.x initial.y) (start initial 0)\n      (producerRun initial initial.x initial.y) \u2227\n    Scalar.Runs (Ordered.erase (consumer .acquire)) (reads 1 (initial.x+initial.y)) (start initial 1)\n      (consumerRun initial .acquire 1 (initial.x+initial.y)) \u2227\n    (producerRun initial initial.x initial.y).status = .halted \u2227\n    (consumerRun initial .acquire 1 (initial.x+initial.y)).status = .halted \u2227\n    (consumerRun initial .acquire 1 (initial.x+initial.y)).state.regs 0 = 1 \u2227\n    (consumerRun initial .acquire 1 (initial.x+initial.y)).state.regs 1 = initial.x+initial.y \u2227\n    (success initial).Valid \u2227\n    (\u2200 a, \u00acPath (valueEdge (success initial)) a a) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A constructive witness supplies both completed scalar runs and compatible memory\nsources and write order for every input pair. Replacing only the consumer flag\nload with relaxed ordering also has a witness that sees flag one but the old\npayload. Whenever the old payload differs from the computed sum, that witness\nviolates the acquire result. Separate safety proofs cover every candidate run,\nincluding candidates later rejected by the memory rules. Extended explanations\nshow how instructions generate events and how synchronization forces the result.\n"
+      },
+      "to": {
+        "path": "Ptx/ComputedPublicationWitness.lean",
+        "passage": {
+          "quote": "theorem relaxed_counterexample (initial : Initial) (different : initial.old \u2260 initial.x+initial.y) :\n    Scalar.Runs (Ordered.erase producer) (reads initial.x initial.y) (start initial 0)\n      (producerRun initial initial.x initial.y) \u2227\n    Scalar.Runs (Ordered.erase (consumer .relaxed)) (reads 1 initial.old) (start initial 1)\n      (consumerRun initial .relaxed 1 initial.old) \u2227\n    (producerRun initial initial.x initial.y).status = .halted \u2227\n    (consumerRun initial .relaxed 1 initial.old).status = .halted \u2227\n    (consumerRun initial .relaxed 1 initial.old).state.regs 0 = 1 \u2227\n    (consumerRun initial .relaxed 1 initial.old).state.regs 1 \u2260 initial.x+initial.y \u2227\n    (stale initial).Valid \u2227\n    (\u2200 a, \u00acPath (valueEdge (stale initial)) a a) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A constructive witness supplies both completed scalar runs and compatible memory\nsources and write order for every input pair. Replacing only the consumer flag\nload with relaxed ordering also has a witness that sees flag one but the old\npayload. Whenever the old payload differs from the computed sum, that witness\nviolates the acquire result. Separate safety proofs cover every candidate run,\nincluding candidates later rejected by the memory rules. Extended explanations\nshow how instructions generate events and how synchronization forces the result.\n"
+      },
+      "to": {
+        "path": "docs/foundations/computed-publication.md",
+        "passage": {
+          "quote": "The earlier message-passing example writes a fixed payload. This example makes\nthe payload depend on real scalar instructions: two loads feed an addition, and\nits result is stored from a register. It connects scalar computation to memory\nordering without pretending to solve arbitrary dependent concurrent programs."
+        }
+      }
+    }
+  ]
+}

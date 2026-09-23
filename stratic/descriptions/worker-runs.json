@@ -1,0 +1,67 @@
+{
+  "id": "worker-runs",
+  "parent": {
+    "description": "model-formalization",
+    "passage": {
+      "quote": "Each run records its source and repository revisions, task package, requested\nand reported model identity, settings, tool actions, patches, check results and\nreview decisions. Stored outputs can be checked again without another model\ncall; regeneration is not promised to reproduce the same text. Run policies distinguish exploratory work from evaluations with fixed budgets.\nThey record any retry, time or usage limits and campaign check-in points; a\nmissing per-task limit is not invented as an acceptance condition. Spending and review effort are reported\nper accepted task as well as in total, including unsuccessful work and repairs.\nMissing usage or billing data remains unknown rather than counted as zero."
+    }
+  },
+  "summary": [
+    "Run fixed instruction tasks in isolated checkouts with verified source inputs and explicit allowed edits.",
+    "Count each attempted headless invocation before dispatch and preserve failures, output and patches without automatic integration.",
+    "Resume a recorded session with explicit feedback, checked prior state and a new counted attempt while preserving earlier artifacts.",
+    "Separate process completion from proof checking and semantic acceptance."
+  ],
+  "realization": "partial",
+  "remaining": "Fresh-checkout runs and explicit same-session repair are implemented and tested with fake workers. General semantic acceptance and integration remain separate unfinished workflow steps. Live capability results are reported per campaign.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A campaign ledger records a call before the headless process starts. Failed,\ninterrupted and repeated calls all remain counted. Reserving a call is serialized\nso simultaneous launches cannot exceed the campaign checkpoint. The same attempt\nidentifier cannot silently launch twice. A repair is a new recorded attempt\nreferring to the previous result. Exploration imposes no fixed per-task inference\nor repair budget; the runner stops new dispatch at the agreed campaign checkpoint."
+      },
+      "to": {
+        "path": "scripts/worker_run.py",
+        "passage": {
+          "quote": "def reserve(campaign, attempt, task, **context):\n    if not re.fullmatch(r\"[a-z0-9][a-z0-9_-]*\", attempt):\n        raise ValueError(\"Attempt identifier must contain lowercase letters, numbers, - or _\")\n    campaign = Path(campaign)\n    with locked(campaign):\n        path = campaign / \"ledger.json\"\n        ledger = read_json(path) if path.exists() else {\"schema_version\": 1, \"checkpoint\": CHECKPOINT, \"calls\": []}\n        if ledger[\"checkpoint\"] != CHECKPOINT:\n            raise ValueError(\"Campaign checkpoint changed; explicit review required\")\n        if any(c[\"attempt\"] == attempt for c in ledger[\"calls\"]):\n            raise ValueError(\"Attempt already reserved; inspect it or use a new attempt identifier\")\n        if len(ledger[\"calls\"]) >= CHECKPOINT:\n            raise ValueError(\"200 calls reserved: check back with the user before call 201\")\n        entry = {\"call\": len(ledger[\"calls\"]) + 1, \"attempt\": attempt,\n                 \"task\": task[\"id\"], \"task_sha256\": sha(json.dumps(task, sort_keys=True).encode()),\n                 \"base_commit\": task[\"base_commit\"], \"reserved_at\": now(), \"state\": \"reserved\", **context}\n        ledger[\"calls\"].append(entry)\n        atomic_json(path, ledger)\n        return entry"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The selected route runs Codex headless with the requested model and existing\naccount authentication. No API-key fallback is introduced. The runner preserves\nthe exact prompt, command, task input, starting commit, process output, final\nmessage, reported usage and proposed patch. Reported model identity is recorded\nwhen available; the requested model name alone is not proof of the returned model.\nPinned source files cannot be allowed outputs; their hashes are checked against\nthe starting commit and again after the run. Allowed output paths must use their\ncanonical repository spelling. Untracked files are checked even when ignored by\nGit, except named generated artifacts under `.lake` and `__pycache__` directories. Changes outside\nthe assigned paths or a changed checkout commit make the submission ineligible\nfor integration."
+      },
+      "to": {
+        "path": "scripts/worker_run.py",
+        "passage": {
+          "quote": "def dispatch(task, campaign, attempt, directory, worktree, prompt, command, **context):\n    entry = reserve(campaign, attempt, task, worktree=str(worktree), **context)\n    runner_bytes = Path(__file__).read_bytes()\n    (directory / \"runner.py\").write_bytes(runner_bytes)\n    receipt = {**entry, \"requested_model\": MODEL, \"command\": command, \"worktree\": str(worktree),\n               \"prompt_sha256\": sha(prompt.encode()), \"runner_sha256\": sha(runner_bytes),\n               \"started_at\": now(), \"state\": \"started\", **context}\n    atomic_json(directory / \"receipt.json\", receipt)\n    update_call(campaign, attempt, state=\"started\", started_at=receipt[\"started_at\"])\n    environment = dict(os.environ)\n    for key in [\"OPENAI_API_KEY\", \"CODEX_API_KEY\"]:\n        environment.pop(key, None)\n    try:\n        with (directory / \"events.jsonl\").open(\"wb\") as stdout, (directory / \"stderr.log\").open(\"wb\") as stderr:\n            result = subprocess.run(command, input=prompt.encode(), stdout=stdout, stderr=stderr, env=environment, cwd=worktree)\n        receipt.update(exit_code=result.returncode, state=\"completed\" if result.returncode == 0 else \"failed\")\n    except BaseException as error:\n        receipt.update(state=\"interrupted\" if isinstance(error, KeyboardInterrupt) else \"failed\", error=f\"{type(error).__name__}: {error}\")\n        raise\n    finally:\n        receipt[\"finished_at\"] = now()\n        if (directory / \"events.jsonl\").exists():\n            try:\n                receipt.update(event_summary(directory / \"events.jsonl\"))\n            except Exception as error:\n                receipt[\"event_capture_error\"] = str(error)\n        try:\n            patch, boundary = patch_and_boundary(worktree, task[\"base_commit\"], task[\"allowed_paths\"])\n            (directory / \"candidate.patch\").write_bytes(patch)\n            altered_sources = changed_sources(worktree, task)\n            boundary[\"altered_sources\"] = altered_sources\n            boundary[\"eligible_for_review\"] = boundary[\"eligible_for_review\"] and not altered_sources\n            expected_session = context.get(\"resumed_session_id\")\n            if expected_session and receipt.get(\"reported_session_ids\"):\n                matches = receipt[\"reported_session_ids\"] == [expected_session]\n                receipt[\"session_matches_requested\"] = matches\n                boundary[\"eligible_for_review\"] = boundary[\"eligible_for_review\"] and matches\n            receipt.update(boundary=boundary, patch_sha256=sha(patch))\n        except Exception as error:\n            receipt[\"capture_error\"] = str(error)\n        receipt[\"acceptance\"] = \"not_reviewed\"\n        atomic_json(directory / \"receipt.json\", receipt)\n        update_call(campaign, attempt, state=receipt[\"state\"], finished_at=receipt[\"finished_at\"])\n    return receipt"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Process success only means the worker process completed. Mechanical proof checks,\nsource fidelity review and integration are separate steps. A patch is never\napplied to the coordinator checkout automatically. Stored artifacts support later\ninspection and checking without inference. A run left in a started state after\na crash is unresolved and still consumes its reserved call; it is not retried\nwithout a new attempt record. Operational time, usage and assistance records are\nneeded alongside the count because one headless call can contain many turns.\n"
+      },
+      "to": {
+        "path": "docs/formalization/worker-runs.md",
+        "passage": {
+          "quote": "A general semantic-review grader and automatic integration are not yet\nimplemented."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A repair can resume an explicitly selected completed attempt in the same recorded\nCodex session and checkout, with new feedback. It inherits the original task,\nbase commit, allowed edits and pinned sources. Before dispatch, the runner checks\nthat the checkout still has the recorded commit and patch, that source hashes\nstill match, and that the selected attempt is the latest invocation using that\ncheckout. A lock rejects simultaneous resumes of the same checkout. An unresolved\nstarted attempt must be investigated before continuing it. Each resumed invocation\ngets a new call reservation, feedback, prompt, output, receipt and cumulative\npatch; the previous attempt's records remain unchanged. The live checkout is\nshared across those records, so previous patches preserve earlier results."
+      },
+      "to": {
+        "path": "scripts/worker_run.py",
+        "passage": {
+          "quote": "def resume(root, campaign, attempt, resume_from, feedback_file, executable=\"codex\"):\n    root, campaign = Path(root).resolve(), Path(campaign).resolve()\n    if not re.fullmatch(r\"[a-z0-9][a-z0-9_-]*\", resume_from):\n        raise ValueError(\"Invalid prior attempt identifier\")\n    previous_dir = campaign / \"attempts\" / resume_from\n    previous = read_json(previous_dir / \"receipt.json\")\n    task = read_json(previous_dir / \"task.json\")\n    validate_task(task, root)\n    if previous.get(\"task_sha256\") != sha(json.dumps(task, sort_keys=True).encode()):\n        raise ValueError(\"Prior task record changed\")\n    if previous.get(\"state\") not in {\"completed\", \"failed\", \"interrupted\"} or not previous.get(\"finished_at\"):\n        raise ValueError(\"Prior invocation is unresolved; inspect it before resuming\")\n    worktree = Path(previous[\"worktree\"]).resolve()\n    feedback = Path(feedback_file).read_text()\n    if not feedback.strip():\n        raise ValueError(\"Resume feedback must not be empty\")\n    with worktree_locked(campaign, worktree):\n        # The same checkout has one linear invocation history. Reject a stale parent\n        # even if a later run happened to leave identical file contents.\n        with locked(campaign):\n            calls = read_json(campaign / \"ledger.json\")[\"calls\"]\n            related = []\n            for call in calls:\n                recorded_worktree = call.get(\"worktree\")\n                if recorded_worktree is None:\n                    old_receipt = campaign / \"attempts\" / call[\"attempt\"] / \"receipt.json\"\n                    if old_receipt.exists():\n                        recorded_worktree = read_json(old_receipt).get(\"worktree\")\n                if recorded_worktree and Path(recorded_worktree).resolve() == worktree:\n                    related.append(call)\n            if not related or related[-1][\"attempt\"] != resume_from:\n                raise ValueError(\"Resume must select the latest recorded invocation for this worktree\")\n            if related[-1][\"state\"] not in {\"completed\", \"failed\", \"interrupted\"}:\n                raise ValueError(\"Prior ledger entry is unresolved; inspect it before resuming\")\n        saved_patch = (previous_dir / \"candidate.patch\").read_bytes()\n        if sha(saved_patch) != previous.get(\"patch_sha256\"):\n            raise ValueError(\"Prior patch record changed\")\n        actual_patch, boundary = patch_and_boundary(worktree, task[\"base_commit\"], task[\"allowed_paths\"])\n        if actual_patch != saved_patch or not boundary[\"head_unchanged\"]:\n            raise ValueError(\"Worktree does not match the prior recorded patch and commit\")\n        if not boundary[\"eligible_for_review\"] or changed_sources(worktree, task):\n            raise ValueError(\"Prior worktree violates its edit or pinned-source boundary\")\n        sessions = event_summary(previous_dir / \"events.jsonl\")[\"reported_session_ids\"]\n        if len(sessions) != 1:\n            raise ValueError(\"Prior output must identify exactly one Codex session\")\n        session = sessions[0]\n        prompt = (task_prompt(task) + \"\\nContinue the recorded attempt \" + resume_from +\n                  \". Preserve its task obligations and finish the requested repair.\\n\\nFeedback:\\n\" + feedback)\n        directory = new_attempt(campaign, attempt, task, prompt)\n        (directory / \"feedback.md\").write_text(feedback)\n        command = [executable, \"exec\", \"--approve-for-me\", \"--cd\", str(worktree), \"resume\",\n                   \"--ignore-user-config\", \"--model\", MODEL, \"--json\",\n                   \"--output-last-message\", str(directory / \"final.md\"), session, \"-\"]\n        return dispatch(task, campaign, attempt, directory, worktree, prompt, command,\n                        resume_from=resume_from, resumed_session_id=session,\n                        previous_patch_sha256=sha(saved_patch), feedback_sha256=sha(feedback.encode()))"
+        }
+      }
+    }
+  ]
+}

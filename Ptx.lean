@@ -9,3 +9,6 @@ import Ptx.ScalarRules
 import Ptx.SharedVectorExamples
 import Ptx.SharedVectorMemory
 import Ptx.ByteExamples
+import Ptx.Publication
+import Ptx.IntegerMinMax
+import Ptx.ComputedPublicationWitness

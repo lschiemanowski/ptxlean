@@ -1,48 +1,44 @@
 # PTXLean
 
-A Lean formalization of PTX and reusable foundations for neural-network kernel
-verification. The project targets PTX ISA 9.4; **full ISA coverage is not yet
-implemented**.
+A Lean formalization of PTX ISA 9.4 and reusable foundations for neural-network
+kernel verification. **Full ISA coverage and the complete network/kernel
+interface remain unfinished.**
 
-The first completed fragment proves publication between two threads, constructs
-a successful execution and a relaxed stale-read counterexample, and establishes
-aligned arena access safety. It covers only straight-line immediate u32 stores
-and register loads, with fixed global/GPU/generic-proxy restrictions.
+Start with the [Stratic project description](stratic/descriptions/root.md).
+It explains the responsibilities, contracts and current restrictions. The
+[study guides](docs/foundations/guide.md) add worked examples and proof walkthroughs.
 
-An exact finite candidate checker, complete message-passing outcome table, and
-additional memory-order litmus proofs support the same restricted fragment.
+Current checked foundations include:
 
-The next foundation adds explicit topology, allocation/access contracts,
-non-torn scoped-memory candidates, and a scalar machine with register operands,
-predication, branches and bounded loops. A modular-add lane and array-summing
-loop have completed execution, correctness and safety proofs. See
-[from litmus programs to scalar kernels](docs/foundations/blocks12.md) for the
-checked connections and the remaining dependent-concurrency and bytewise-race
-semantics obligations.
+- Whole-word and byte-level memory observations, scoped ordering, message passing
+  and finite candidate checking. The interpretation of mixed-source observations
+  remains explicitly unresolved.
+- Scalar integer execution, predication, branches, reusable proof rules and
+  kernels operating on a shared allocation. A shared allocation here does not
+  mean PTX's distinct `.shared` storage space.
+- [Computed-data publication](docs/foundations/computed-publication.md): actual
+  loads, addition and register stores connected to release/acquire communication,
+  with universal result, restricted execution witnesses and safety proofs.
+- A [recorded Luna workflow](docs/formalization/worker-runs.md), source-section
+  inventory, fresh patch replay and independent semantic checks. Its first
+  accepted instruction forms are `min.u32` and `max.u32`; this is a small
+  exploratory result, not evidence of full-ISA productivity.
+- An [actual pinned TorchLean graph](integration/torchlean/README.md) with a
+  proved forward formula, automatic backward success and mathematical VJP
+  correctness. Numerical accuracy and separately supplied PTX forward/backward
+  correspondence remain separate obligations.
 
-Start with the [foundations study guide](docs/foundations/guide.md), then
-[finite checking and litmus examples](docs/foundations/finite-checking.md). The
-[source ledger](docs/foundations/source-ledger.md) distinguishes checked proofs
-from the interpretation of NVIDIA's documented semantics. This release state
-makes no hardware-conformance or general GPU-progress claim.
-
-With the toolchain in `lean-toolchain` installed through Elan:
+Run the core checks with the toolchain installed through Elan:
 
 ```sh
-./scripts/check.sh
+./scripts/check.sh --clean
 ```
 
-Lean 4.33.0 is pinned; there are no external Lean package dependencies.
-[Stratic descriptions](stratic/descriptions/root.md) record the larger intended
-responsibilities and their implementation status. TorchLean integration,
-numerical verification, and Gemma examples remain unimplemented.
+The core pins Lean 4.33.0 without external Lean packages. The separate TorchLean
+integration pins Lean 4.34.0 and its upstream dependencies; see its README for
+reproduction and the current compatibility boundary.
 
-The [shared-allocation vector-add study](docs/foundations/shared-vector.md)
-adds reusable proof rules, arbitrary instruction interleavings over one memory
-allocation, and a checked connection from completed shared traces to a valid
-relational graph.
-
-The [byte-observation study](docs/foundations/byte-memory.md) adds per-byte read
-sources, qualified atomicity, torn-read examples and checked whole-word
-specialization. Two explicit observation interpretations preserve an unresolved
-source-fidelity question rather than silently selecting one.
+The [source ledger](docs/foundations/source-ledger.md) distinguishes checked
+proofs from interpretation of NVIDIA's documented semantics. Neither the current
+fragments nor the TorchLean example establish hardware conformance, general GPU
+progress, complete numerical verification, or a Gemma implementation.

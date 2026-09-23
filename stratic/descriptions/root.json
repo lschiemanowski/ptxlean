@@ -6,6 +6,6 @@
     "Explain the computing model and the conditions of each correctness claim through source-linked documentation and reproducible examples."
   ],
   "realization": "partial",
-  "remaining": "Restricted memory models, individual-thread execution and reusable proof rules, and kernels sharing one allocation are implemented. Full PTX coverage, the settled meaning of observing a write when a read mixes bytes from different writes, general interactions between threads with data-dependent instructions, TorchLean interfaces, numerical and backward infrastructure, and application examples remain unimplemented.",
+  "remaining": "Restricted memory models, scalar execution and proof rules, computed-data publication, and kernels sharing one allocation are implemented. Delegated instruction expansion has a recorded Luna workflow and its first reviewed forms. An isolated pinned TorchLean graph has exact backward success and VJP proofs. Full PTX coverage, mixed-source observation interpretation, general data-dependent concurrency, the combined tensor/kernel and numerical interfaces, separately supplied backward kernel proofs, and application examples remain unfinished.",
   "links": []
 }

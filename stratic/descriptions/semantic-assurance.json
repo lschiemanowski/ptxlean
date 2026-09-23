@@ -11,7 +11,7 @@
     "Delegate instruction formalization to smaller models on reviewed foundations, evaluating semantic accuracy separately from proof validity and generation cost."
   ],
   "realization": "partial",
-  "remaining": "Reviews against the pinned source and checked connections between formal components cover restricted memory, byte sources for aligned 32-bit reads, execution environments, scalar proof rules and vector addition in shared memory. How mixed-source reads observe writes remains unresolved and explicit. Byte ordering uses separately attributed NVIDIA binary-interface guidance. General correspondence for data-dependent interactions and different access sizes, hardware validation, and infrastructure for model-assisted generation and cost tracking remain unimplemented.",
+  "remaining": "Reviews against the pinned source and checked connections between formal components cover restricted memory, byte sources for aligned 32-bit reads, execution environments, scalar proof rules and vector addition in shared memory. How mixed-source reads observe writes remains unresolved and explicit. Byte ordering uses separately attributed NVIDIA binary-interface guidance. General correspondence for data-dependent interactions and different access sizes, and hardware validation, remain unimplemented. Model-assisted generation now has an instruction-section inventory and recorded headless runs; full form coverage, broader capability evidence and cost-effectiveness evaluation remain unfinished.",
   "links": [
     {
       "kind": "implementation",
@@ -45,7 +45,7 @@
       "to": {
         "path": "scripts/check.sh",
         "passage": {
-          "quote": "python3 scripts/check_sources.py\npython3 scripts/check_proofs.py --scan\nif [[ \"${1:-}\" == --clean ]]; then\n  lake clean\nfi\nlake build\n\naudit_log=$(mktemp)\ntrap 'rm -f -- \"$audit_log\"' EXIT\nlake env lean Ptx/Audit.lean | tee \"$audit_log\"\npython3 scripts/check_proofs.py --audit \"$audit_log\""
+          "quote": "python3 scripts/check_sources.py\npython3 scripts/coverage_inventory.py\npython3 scripts/check_worker_evidence.py\npython3 scripts/test_coverage_inventory.py\npython3 -m unittest discover -s tests -p 'test_worker*.py'\npython3 scripts/check_proofs.py --scan\nif [[ \"${1:-}\" == --clean ]]; then\n  lake clean\nfi\nlake build\n\naudit_log=$(mktemp)\ntrap 'rm -f -- \"$audit_log\"' EXIT\nlake env lean Ptx/Audit.lean | tee \"$audit_log\"\npython3 scripts/check_proofs.py --audit \"$audit_log\""
         }
       }
     },
@@ -93,7 +93,7 @@
       "to": {
         "path": "docs/foundations/byte-memory.md",
         "passage": {
-          "quote": "One source interpretation remains explicit: the pinned PTX manual does not spell\nout how its observation-order phrase “reads the value written by” applies when a\nread combines bytes from different writes. `ObservationPolicy` represents two\ninterpretations, `anyByte` and `wholeSource`. The specialization and examples are\nproved for both. This does not establish which interpretation uniquely matches\nPTX. See the [source review](next-source-review.md) for that precise remaining\nsemantic-fidelity obligation and the separate endianness source."
+          "quote": "One source interpretation remains explicit: the pinned PTX manual does not spell\nout how its observation-order phrase \u201creads the value written by\u201d applies when a\nread combines bytes from different writes. `ObservationPolicy` represents two\ninterpretations, `anyByte` and `wholeSource`. The specialization and examples are\nproved for both. This does not establish which interpretation uniquely matches\nPTX. See the [source review](next-source-review.md) for that precise remaining\nsemantic-fidelity obligation and the separate endianness source."
         }
       }
     }

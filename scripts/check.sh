@@ -21,6 +21,10 @@ if [[ -z "$expected" || "$actual" != "Lean (version $expected,"* ]]; then
 fi
 echo "$actual"
 python3 scripts/check_sources.py
+python3 scripts/coverage_inventory.py
+python3 scripts/check_worker_evidence.py
+python3 scripts/test_coverage_inventory.py
+python3 -m unittest discover -s tests -p 'test_worker*.py'
 python3 scripts/check_proofs.py --scan
 if [[ "${1:-}" == --clean ]]; then
   lake clean

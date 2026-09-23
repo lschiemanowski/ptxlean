@@ -1,0 +1,76 @@
+{
+  "id": "coverage-inventory",
+  "parent": {
+    "description": "model-formalization",
+    "passage": {
+      "quote": "A coverage ledger lists the instruction families and their forms against the\npinned manual. It distinguishes missing prerequisites, unassigned work, generated\nsubmissions, checked proofs, completed semantic review and integrated results.\nA missing form remains visible; accounting for it does not implement it. Updates\nto a shared foundation invalidate dependent results until the required checks\nand reviews are repeated."
+    }
+  },
+  "summary": [
+    "Inventory every section of the pinned instruction chapter with exact source locations and hashes, separating instruction sections from explanatory material.",
+    "Keep instruction forms, proof validity and semantic acceptance unassessed until separate evidence establishes them."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Before instruction formalization is delegated, the project records which parts\nof the pinned PTX 9.4 manual describe instructions. Each entry identifies a\nsection by its stable HTML anchor, heading and parent, and locates its exact\nsource bytes. A cryptographic hash identifies the source document and each\nsection, so a worker's assignment can be tied to the text that was actually\nreviewed. Rebuilding the inventory from the same source produces identical data."
+      },
+      "to": {
+        "path": "scripts/coverage_inventory.py",
+        "passage": {
+          "quote": "def inventory(raw, manifest):\n    require(manifest['isa_version'] == '9.4', 'wrong source ISA version')\n    require(manifest['artifact'] == 'index.html', 'unexpected source artifact')\n    digest = hashlib.sha256(raw).hexdigest()\n    require(digest == manifest['sha256'], 'source SHA-256 mismatch')\n    require(len(raw) == manifest['bytes'], 'source byte count mismatch')\n    sections = SectionParser(raw).parse()\n    by_id = {s['id']: s for s in sections}\n    require(CHAPTER in by_id, 'missing Instructions chapter')\n    chapter = by_id[CHAPTER]\n    require(chapter.get('heading') == '9.7. Instructions', 'unexpected Instructions chapter heading')\n    selected = [s for s in sections if chapter['start_byte'] <= s['start_byte'] < chapter['end_byte_exclusive']]\n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every section within the manual's Instructions chapter remains visible. Sections\nthat specify instructions are distinguished from headings that group them,\nbackground explanations and language constructs such as conditional execution.\nOnly instruction sections enter the instruction-section count. Multiple sections\nmay describe the same instruction name, and one section may describe several\nnames. Neither section counts nor name counts measure supported instruction forms."
+      },
+      "to": {
+        "path": "scripts/coverage_inventory.py",
+        "passage": {
+          "quote": "def classify(heading, has_children):\n    \"\"\"Classify the pinned manual's heading convention, never infer supportedness.\n\n    A spelling-like suffix after Instruction(s): marks an instruction section.\n    The enclosing mbarrier section and async copy headings are groups, not forms.\n    Unknown leaf headings remain visible as context, with explicit reasons.\n    \"\"\"\n    match = re.search(r'\\bInstructions?:\\s*(.+)$', heading, re.IGNORECASE)\n    if match:\n        suffix = match.group(1)\n        if suffix in ('{}', '@'):\n            return 'language_construct', 'Block syntax or predication, not a standalone instruction.', []\n        if not has_children:\n            spelling = re.sub(r'\\s*\\(deprecated\\)$', '', suffix)\n            names = re.split(r'\\s*[,/]\\s*', spelling)\n            if all(re.fullmatch(r'[a-z][a-z0-9_.]*(?:::[a-z0-9_]+)?', n) for n in names):\n                return 'instruction', 'Instruction heading with explicit mnemonic spelling(s).', names\n            raise ValueError(f'unrecognized instruction-heading suffix: {suffix}')\n    if has_children:\n        return 'group', 'Organizes nested sections; excluded from instruction-section counts.', []\n    return 'context', 'Explanatory material; excluded from instruction-section counts.', []\n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An instruction form combines the instruction name with operand types, options,\nversion requirements and hardware conditions. Those combinations require a\nseparate source review before work is assigned. The inventory marks every\ninstruction section as needing that elaboration and makes no claim that its\nforms have been implemented, proved or accepted. Existing restricted instruction\nsupport is not promoted to full-section coverage by matching names."
+      },
+      "to": {
+        "path": "coverage/ptx-isa-9.4-sections.json",
+        "passage": {
+          "quote": "\"denominator_warning\": \"Instruction sections are not unique mnemonics or complete instruction forms. No supportedness or semantic-fidelity claims are inferred.\""
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The inventory checks that the source matches its pinned manifest, that section\nidentities and headings are unambiguous, and that every section in scope is\naccounted for exactly once. Tests exercise classification boundaries and reject\nmissing, duplicate or malformed source structure. These checks establish the\nprovenance and completeness of the extracted section list relative to this HTML\nchapter; they do not establish completeness of the PTX formalization or fidelity\nof instruction semantics. Computing-model chapters outside this inventory remain\nindependent semantic obligations."
+      },
+      "to": {
+        "path": "scripts/test_coverage_inventory.py",
+        "passage": {
+          "quote": "class PinnedSourceTests(unittest.TestCase):"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An instruction form combines the instruction name with operand types, options,\nversion requirements and hardware conditions. Those combinations require a\nseparate source review before work is assigned. The inventory marks every\ninstruction section as needing that elaboration and makes no claim that its\nforms have been implemented, proved or accepted. Existing restricted instruction\nsupport is not promoted to full-section coverage by matching names."
+      },
+      "to": {
+        "path": "docs/formalization/coverage.md",
+        "passage": {
+          "quote": "Every instruction entry starts with `form_coverage: not_elaborated` and\n`implementation_coverage: not_assessed`. The latter does not mean the project has\nno existing restricted instruction support. It means this inventory has not\nmapped that support to the complete source section. Name matching would give\nmisleading credit, so the extractor does not inspect Lean names at all."
+        }
+      }
+    }
+  ]
+}

@@ -24,8 +24,10 @@ need assessment against instruction contracts, resources, and useful error bound
 - Extend the [pinned-source scalar foundation](foundations/guide.md) with a
   representation of targets, undefined behavior, scheduling assumptions, and
   execution premises for broader PTX coverage.
-- Select the TorchLean revision and inspect the derivative and correspondence
-  theorems applicable to the required operations and execution paths.
+- Extend the [pinned TorchLean integration](../integration/torchlean/README.md)
+  to the required operations and connect its exact graph proofs to numerical and
+  PTX contracts. The selected upstream revision and first backward-success
+  results are recorded in its package and source audit.
 - Select the Gemma checkpoint/configuration and PyTorch reference; identify the
   exact transformer-block parameter boundary, including parameter sharing.
 - Specify the loss variant, targets, masking, normalization, and reduction.
@@ -34,13 +36,13 @@ need assessment against instruction contracts, resources, and useful error bound
   kernel organization, and performance goals.
 - Establish domains, norms, and accuracy criteria for useful forward and
   backward error bounds; no global numerical tolerance has been selected.
-- Select model-assisted formalization tooling, provider/model, evaluation cases,
-  review procedures, and cost budget. DeepSeek V4.1 Flash was suggested as a
-  candidate, not selected or evaluated.
+- Broaden the recorded Codex headless GPT-6 Luna capability study across
+  instruction families once their foundations are ready. Keep adaptive pilot
+  evidence separate from a later frozen productivity evaluation; observe the
+  campaign check-in before call 201.
 - Determine concrete release artifacts, study-guide organization, and coverage
   reporting conventions.
 
 The [scalar message-passing fragment](foundations/guide.md) has checked
-implementation and proofs. The broader features discussed here remain
-unimplemented. These notes preserve unresolved design choices without treating
+implementation and proofs. The remaining design questions above are not settled by those proofs. These notes preserve unresolved design choices without treating
 discussion history as a permanent responsibility.

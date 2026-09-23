@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task": "minmax-u32-v1",
+  "selected_forms": [
+    "min.u32",
+    "max.u32"
+  ],
+  "interface_restriction": "32-bit word-register destination and 32-bit register/immediate sources; typed operands, not raw declarations or arbitrary PTX syntax.",
+  "base_commit": "90e3ef657b6b336ad4c8a915930ec33a521f82f7",
+  "accepted_patch_sha256": "d82a8ed6d4be8384c257afeeed4135478fbe38fde51676b16726467f65936b99",
+  "worker_attempt": "minmax-003",
+  "mechanical_replay": "replays/minmax-003-v3/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "root source, build and 353-declaration audit passed",
+  "source_conditions": {
+    "ptx_minimum": "1.0",
+    "targets": "all for selected forms",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "integer-arithmetic-instructions-min",
+      "integer-arithmetic-instructions-max"
+    ]
+  },
+  "campaign_calls": 3,
+  "separate_inference_attempts": 2,
+  "initial_substantive_attempt_passed": false,
+  "repair_invocations": 1,
+  "review_probes": "review-probes-v2/report.json",
+  "qualification": "One adaptive development task; no held-out productivity or general semantic-detection rate claim."
+}

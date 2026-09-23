@@ -122,8 +122,10 @@ lake env lean Ptx/Audit.lean
 Proof checking establishes these statements relative to the definitions. The
 ledger and independent source review support semantic fidelity; they do not
 turn this bounded fragment into full PTX coverage or a hardware-conformance
-result. No floating point, asynchronous instructions, TorchLean integration,
-or Gemma implementation is included.
+result. This first fragment includes no floating point, asynchronous instructions,
+TorchLean integration or Gemma implementation. The separate
+[TorchLean package](../../integration/torchlean/README.md) has its own exact
+backward construction results and boundaries.
 
 ## Continue with finite checking
 
@@ -139,3 +141,12 @@ chosen examples.
 storage contracts, the scalar interpreter and proved integer kernels. It explains
 which new pieces have checked bridges, and why dependent concurrent execution
 and bytewise raced observations remain separate semantic obligations.
+
+## Continue with computed-data publication
+
+[Computed-data publication](computed-publication.md) replaces the producer's
+normalized literal payload with an actual load/load/add/register-store sequence.
+It shows how the generated memory events retain computed values and instruction
+qualifiers, how immutable inputs prevent circular value justification in this
+example, and why correctness, execution witnesses and safety remain distinct.
+The reusable ordering argument is in [`Ptx/Publication.lean`](../../Ptx/Publication.lean).

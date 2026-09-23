@@ -23,7 +23,7 @@ inductive Operand64 where
   deriving DecidableEq, Repr
 
 inductive BinOp where
-  | add | sub | mulLo | and | or | xor | shl | shr
+  | add | sub | mulLo | and | or | xor | shl | shr | minU | maxU
   deriving DecidableEq, Repr
 
 inductive Compare where
@@ -90,6 +90,8 @@ def BinOp.eval : BinOp → Word → Word → Word
   | .xor, a, b => a ^^^ b
   | .shl, a, b => if b.toNat < 32 then a <<< b.toNat else 0
   | .shr, a, b => if b.toNat < 32 then a >>> b.toNat else 0
+  | .minU, a, b => if a.toNat ≤ b.toNat then a else b
+  | .maxU, a, b => if a.toNat ≥ b.toNat then a else b
 
 def Compare.eval : Compare → Word → Word → Bool
   | .eq, a, b => a == b

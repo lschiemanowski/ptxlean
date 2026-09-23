@@ -1,0 +1,40 @@
+{
+  "id": "publication-rules",
+  "parent": {
+    "description": "whole-word-memory",
+    "passage": {
+      "quote": "Communication combines write-to-read source links, coherence links between\nwrites, and links from a read to writes later than its source. The validity\nrules require compatible sources and coherent write ordering, exclude cycles\nin base causality, and make write ordering respect causality. A read cannot\nchoose a causally future source or a source made obsolete by a causally prior\nwrite. Cycles combining same-address program order and morally strong\ncommunication are also forbidden. These are checks on the proposed graph,\nnot assumptions that its result is correct."
+    }
+  },
+  "summary": [
+    "Derive source and value correspondence when release/acquire orders a data write before a read and all alternative sources are earlier writes.",
+    "Keep graph-level ordering conclusions separate from actual instruction linkage, memory safety and execution existence."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "If the read can take its value only from initialization or from the published\nwrite, causality rules out initialization: initialization precedes that write in\ncoherence. The conclusion identifies the source write, and then its exact value.\nThe same reasoning applies with more writes when every alternative source is\nproved to precede the published write in coherence. The rules do not assume the\nvalue that the read should return."
+      },
+      "to": {
+        "path": "Ptx/Publication.lean",
+        "passage": {
+          "quote": "theorem source_of_latest (g : Graph n) (valid : g.Valid) (w r : Fin n)\n    (written : g.write w) (readAt : g.read r) (same : g.sameAddress w r)\n    (ordered : g.cause w r)\n    (latest : \u2200 v, g.write v \u2192 g.sameAddress v r \u2192 v \u2260 w \u2192 g.coherence v w) :\n    g.source r = w := by\n  by_cases h : g.source r = w\n  \u00b7 exact h\n  \u00b7 have compatible := valid.sources.compatible r readAt\n    exact False.elim (valid.no_stale w r written readAt same ordered\n      (latest (g.source r) compatible.1 compatible.2.1 h))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "These rules operate on the whole-word memory graph. All participating program\naccesses use the generic proxy, global storage, GPU scope and one device, with\nmatching aligned four-byte accesses. The graph records which write supplies each\nread, and a separate order of writes to each location, called coherence. Program\norder and release/acquire synchronization give a path between the producer's\ndata write and the consumer's data read. Their matching address turns that path\ninto the causality relation used by the memory rules."
+      },
+      "to": {
+        "path": "Ptx/Publication.lean",
+        "passage": {
+          "quote": "theorem direct_sync (g : Graph n) (w r : Fin n)\n    (different : (g.event w).thread \u2260 (g.event r).thread)\n    (released : g.release w) (acquired : g.acquire r)\n    (source : g.source r = w) (same : g.sameAddress w r) : g.sync w r := by\n  have hw : (g.event w).effect.op = .store .release := released\n  have hr : (g.event r).effect.op = .load .acquire := acquired\n  have strong : g.morallyStrong w r := by\n    simp [morallyStrong, initial, hw, hr, same]\n  exact \u27e8different, w, r, Or.inl \u27e8rfl, released\u27e9,\n    Or.inl \u27e8rfl, acquired\u27e9, \u27e8\u27e8by simp [read, hr], source\u27e9, strong\u27e9, strong\u27e9\n\n/-- Publication first constructs a path across addresses, then applies the\nsame-address restriction at its data endpoints. No closure of cause is added. -/\ntheorem publication_cause (g : Graph n) (dataWrite releaseWrite flagRead dataRead : Fin n)\n    (before : g.po dataWrite releaseWrite) (after : g.po flagRead dataRead)\n    (synchronizes : g.sync releaseWrite flagRead)\n    (same : g.sameAddress dataWrite dataRead) : g.cause dataWrite dataRead := by\n  exact Or.inl \u27e8.join (.edge (Or.inl before))\n    (.join (.edge (Or.inr synchronizes)) (.edge (Or.inl after))), same\u27e9"
+        }
+      }
+    }
+  ]
+}

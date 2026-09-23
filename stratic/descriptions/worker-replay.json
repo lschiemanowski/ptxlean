@@ -1,0 +1,52 @@
+{
+  "id": "worker-replay",
+  "parent": {
+    "description": "model-formalization",
+    "passage": {
+      "quote": "Mechanical checks establish that the submission builds with the pinned Lean\nversion, has no proof placeholders or new unchecked axioms, obeys its edit\nboundary, and preserves required interfaces and previous results. Theorem\nassumptions are inspected: a proof that assumes the desired result does not\nsatisfy the task. Tests and examples exercise ordinary behavior, exceptional\ncases and rejected forms."
+    }
+  },
+  "summary": [
+    "Recheck saved worker patches in fresh checkouts using pinned builds, independent contract examples and explicit theorem-dependency audits.",
+    "Preserve command evidence and reject source drift while keeping mechanical checking distinct from semantic acceptance."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A generated patch must be checked from its recorded source commit in a fresh\ncheckout. The replay uses the saved patch, not the worker's live files or compiled\nartifacts. It verifies the task, patch and source hashes and checks the output\nfile boundary again before running the pinned project's existing checks."
+      },
+      "to": {
+        "path": "scripts/worker_replay.py",
+        "passage": {
+          "quote": "def validate_attempt(attempt, root):\n    task = read_json(attempt / \"task.json\")\n    receipt = read_json(attempt / \"receipt.json\")\n    patch = (attempt / \"candidate.patch\").read_bytes()\n    validate_task(task, root)\n    if receipt.get(\"task_sha256\") != sha(json.dumps(task, sort_keys=True).encode()):\n        raise ValueError(\"Recorded task hash differs\")\n    if receipt.get(\"base_commit\") != task[\"base_commit\"]:\n        raise ValueError(\"Recorded base differs\")\n    if receipt.get(\"patch_sha256\") != sha(patch):\n        raise ValueError(\"Recorded patch hash differs\")\n    if not receipt.get(\"finished_at\") or receipt.get(\"state\") not in {\"completed\", \"failed\", \"interrupted\"}:\n        raise ValueError(\"Attempt is unresolved\")\n    if not receipt.get(\"boundary\", {}).get(\"eligible_for_review\"):\n        raise ValueError(\"Attempt is outside the review boundary\")\n    return task, receipt, patch"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Additional modules must build explicitly even when the base project's main import\ndoes not include them yet. Coordinator-owned acceptance drivers check required\ninterfaces and independently chosen examples; their exact contents are copied\nand hashed into the replay record. An explicit list of declarations is inspected\nfor logical dependencies, permitting only the project's standard Lean axioms.\nThe source guard also rejects proof placeholders and unchecked declarations."
+      },
+      "to": {
+        "path": "scripts/worker_replay.py",
+        "passage": {
+          "quote": "def audit_dependencies(log, declarations):\n    reports = re.findall(\n        r\"'([^']+)' (?:depends on axioms:\\s*\\[([^]]*)\\]|does not depend on any axioms)\", log)\n    if Counter(n for n, _ in reports) != Counter(declarations):\n        raise ValueError(\"Missing, duplicate or unexpected dependency report\")\n    for name, dependencies in reports:\n        used = {d.strip() for d in dependencies.split(\",\") if d.strip()}\n        if used - ALLOWED_AXIOMS:\n            raise ValueError(f\"Disallowed dependencies for {name}: {sorted(used - ALLOWED_AXIOMS)}\")\n\n\ndef scan(paths):\n    for path in paths:\n        match = FORBIDDEN.search(code_only(path.read_text()))\n        if match:\n            raise ValueError(f\"Forbidden proof token in {path}: {match.group()}\")"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every command's output and result remain recorded, including failures. Checking\nmust leave the submitted source patch unchanged. A successful replay establishes\nthese mechanical checks only. Independent comparison with the PTX source and\nreview of theorem assumptions remain necessary before integration. Replaying a\npatch makes no model call and does not apply it to the coordinator's checkout."
+      },
+      "to": {
+        "path": "scripts/worker_replay.py",
+        "passage": {
+          "quote": "        record[\"mechanical\"] = \"pass\"\n    except Exception as error:\n        record.update(mechanical=\"fail\", error=f\"{type(error).__name__}: {error}\")\n    finally:\n        if record[\"mechanical\"] == \"running\":\n            record[\"mechanical\"] = \"interrupted\"\n        record[\"finished_at\"] = now()\n        atomic_json(destination / \"result.json\", record)\n    return record"
+        }
+      }
+    }
+  ]
+}

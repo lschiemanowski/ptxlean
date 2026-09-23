@@ -1,0 +1,20 @@
+/home/lothar/workspace/ptxlean/formalization/results/minmax-u32/review-probes-v1/acceptance.lean:122:60: error: failed to synthesize
+  Decidable
+    (decodeOp "max.u32" [Token.word (Operand32.reg 0), Token.address (Operand64.reg 1), Token.word (Operand32.imm 7)] =
+      Except.error (DecodeError.invalidOperands "max.u32"))
+
+Hint: Additional diagnostic information may be available using the `set_option diagnostics true` command.
+/home/lothar/workspace/ptxlean/formalization/results/minmax-u32/review-probes-v1/acceptance.lean:126:60: error: failed to synthesize
+  Decidable
+    (decodeOp "max.u32"
+        [Token.word (Operand32.reg 0), Token.word (Operand32.reg 1), Token.word (Operand32.imm 7),
+          Token.word (Operand32.imm 8)] =
+      Except.error (DecodeError.invalidOperands "max.u32"))
+
+Hint: Additional diagnostic information may be available using the `set_option diagnostics true` command.
+'Ptx.Scalar.IntegerMinMaxAcceptance.min_signature' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMaxAcceptance.max_signature' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMaxAcceptance.actual_eval_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMaxAcceptance.actual_eval_skipped' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Text.decode_encode' depends on axioms: [propext]
+'Ptx.Scalar.Text.decodeOp_supported' depends on axioms: [propext]

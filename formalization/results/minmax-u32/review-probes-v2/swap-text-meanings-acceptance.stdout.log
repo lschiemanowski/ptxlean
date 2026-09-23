@@ -1,0 +1,27 @@
+/home/lothar/workspace/ptxlean/formalization/results/minmax-u32/review-probes-v2/acceptance.lean:113:78: error: Tactic `decide` proved that the proposition
+  decode
+      { guard := Guard.pred 1 false, mnemonic := "min.u32",
+        operands := [Token.word (Operand32.reg 0), Token.word (Operand32.reg 1), Token.word (Operand32.imm 7)] } =
+    Except.ok { guard := Guard.pred 1 false, op := Op.bin32 BinOp.minU 0 (Operand32.reg 1) (Operand32.imm 7) }
+is false
+/home/lothar/workspace/ptxlean/formalization/results/minmax-u32/review-probes-v2/acceptance.lean:115:72: error: Tactic `decide` proved that the proposition
+  decodeOp "max.u32"
+      [Token.word (Operand32.reg 0), Token.word (Operand32.imm 4294967295), Token.word (Operand32.reg 1)] =
+    Except.ok (Op.bin32 BinOp.maxU 0 (Operand32.imm 4294967295) (Operand32.reg 1))
+is false
+/home/lothar/workspace/ptxlean/formalization/results/minmax-u32/review-probes-v2/acceptance.lean:117:95: error: Tactic `decide` proved that the proposition
+  encode (Instr.plain (Op.bin32 BinOp.minU 0 (Operand32.reg 1) (Operand32.imm 7))) =
+    { mnemonic := "min.u32",
+      operands := [Token.word (Operand32.reg 0), Token.word (Operand32.reg 1), Token.word (Operand32.imm 7)] }
+is false
+/home/lothar/workspace/ptxlean/formalization/results/minmax-u32/review-probes-v2/acceptance.lean:119:95: error: Tactic `decide` proved that the proposition
+  encode (Instr.plain (Op.bin32 BinOp.maxU 0 (Operand32.imm 7) (Operand32.reg 1))) =
+    { mnemonic := "max.u32",
+      operands := [Token.word (Operand32.reg 0), Token.word (Operand32.imm 7), Token.word (Operand32.reg 1)] }
+is false
+'Ptx.Scalar.IntegerMinMaxAcceptance.min_signature' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMaxAcceptance.max_signature' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMaxAcceptance.actual_eval_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMaxAcceptance.actual_eval_skipped' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Text.decode_encode' depends on axioms: [propext]
+'Ptx.Scalar.Text.decodeOp_supported' depends on axioms: [propext]

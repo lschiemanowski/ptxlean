@@ -10,8 +10,8 @@
     "Automatically construct TorchLean computations of weighted output derivatives, justify them mathematically and verify separately authored PTX backward implementations.",
     "Keep derivative correctness, numerical accuracy and guarantees about kernel execution separate."
   ],
-  "realization": "unimplemented",
-  "remaining": "The TorchLean backward bridge, supplied kernel proofs, and explanatory examples remain to be implemented.",
+  "realization": "partial",
+  "remaining": "An isolated actual TorchLean graph with differentiable input, weight and bias tensors has checked backward-success and VJP theorems. Broader graph/model coverage, the combined PTX dependency build, numerical error, separately authored PTX backward implementations and their execution/correctness proofs remain unfinished.",
   "links": [
     {
       "kind": "depends-on",

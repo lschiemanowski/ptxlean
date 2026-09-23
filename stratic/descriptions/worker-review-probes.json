@@ -1,0 +1,65 @@
+{
+  "id": "worker-review-probes",
+  "parent": {
+    "description": "model-formalization",
+    "passage": {
+      "quote": "Deliberately faulty submissions\ncheck whether the review process detects important mistakes. Such checks measure\nreview quality; they do not prove all semantic errors impossible."
+    }
+  },
+  "summary": [
+    "Require proof-preserving faulty candidates to fail independently prepared semantic checks, alongside a passing unchanged control.",
+    "Preserve exact offline mutations and diagnostics, distinguishing targeted detection from unrelated failure and limiting conclusions to the probed defects."
+  ],
+  "realization": "implemented",
+  "remaining": "Broader defect families and a general reviewer-quality evaluation remain outside these two bounded offline probes.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Independent acceptance checks should reject a definition that proves its own\nclaims but gives the wrong instruction meaning. Offline probes deliberately\nintroduce a known defect into a recorded candidate, compile its definitions and\nown proofs, and then run the coordinator's independent checks. A defect counts\nas detected only when the candidate still builds and the independent check fails\nat the expected distinguishing assertion. A build failure, unrelated diagnostic,\nmissing dependency or interrupted process is inconclusive, not semantic detection."
+      },
+      "to": {
+        "path": "scripts/check_minmax_mutations.py",
+        "passage": {
+          "quote": "def expected_rejection(output, driver_path, expected):\n    pattern = re.compile(re.escape(str(driver_path)) + r\":(\\d+):(\\d+): error:([^\\n]*)\")\n    matches = list(pattern.finditer(output))\n    errors = []\n    detected = set()\n    valid = bool(matches)\n    # All error diagnostics, including ones in unexpected files, must be explained.\n    if len(re.findall(r\":\\d+:\\d+: error:\", output)) != len(matches):\n        valid = False\n    for i, match in enumerate(matches):\n        line = int(match[1])\n        end = matches[i + 1].start() if i + 1 < len(matches) else len(output)\n        diagnostic = output[match.end():end]\n        checks = [r[\"id\"] for r in expected if r[\"start_line\"] <= line <= r[\"end_line\"]]\n        # Compilation/proof-consistency failures and unrelated elaboration errors\n        # do not satisfy this deliberately narrow rejection criterion.\n        false_decision = \"decide\" in (match[3] + diagnostic) and \"false\" in (match[3] + diagnostic)\n        valid = valid and len(checks) == 1 and false_decision\n        detected.update(checks)\n        errors.append({\"line\": line, \"column\": int(match[2]), \"checks\": checks,\n                       \"header\": match[3].strip(), \"false_decision\": false_decision})\n    required = {r[\"id\"] for r in expected}\n    return valid and detected == required, errors\n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The min/max probes cover two specific defects. One removes a supported instruction\nname from the malformed-input classification while retaining its successful\ndecoder. The other exchanges the minimum and maximum textual meanings while\nchanging the encoder and the worker's own examples consistently. Their successful\ncompilation shows why internal proof consistency and round trips alone cannot\nestablish agreement with PTX. An unchanged positive control must pass both stages."
+      },
+      "to": {
+        "path": "formalization/results/minmax-u32/review-probes.md",
+        "passage": {
+          "quote": "The final run detected both deliberately planted defects while the unchanged\ncandidate passed. Every faulty candidate first compiled its own instruction\nmodule and proofs. Detection then required failure of the independent driver at\nexactly the expected assertions, with Lean reporting that the asserted proposition\nis false. No model calls were made."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each probe starts from the recorded candidate's pinned base and saved patch in\nan isolated checkout. It preserves exact input hashes, mutation diffs, commands,\nexit statuses and diagnostic locations. It makes no model calls and leaves the\ncandidate and main checkout unchanged. The replay command uses the stored patch\nand independent driver, so evaluation can be repeated without regeneration."
+      },
+      "to": {
+        "path": "scripts/check_minmax_mutations.py",
+        "passage": {
+          "quote": "if output.exists() or worktree.exists():\n        parser.error(\"Output and worktree must be fresh; prior evidence is never overwritten\")"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Detecting these two seeded defects is evidence about these checks and these\nerrors. It is not a general reviewer-quality score, an unbiased sample of model\nmistakes, or proof that every semantic error will be detected. Further families\nneed their own independently prepared obligations and distinguishing cases.\n"
+      },
+      "to": {
+        "path": "formalization/results/minmax-u32/review-probes-v2/report.json",
+        "passage": {
+          "quote": "\"limits\": \"Two hand-designed defects in one candidate; no general detection-rate or semantic-completeness claim.\""
+        }
+      }
+    }
+  ]
+}

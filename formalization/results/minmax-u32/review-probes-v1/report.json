@@ -1,0 +1,195 @@
+{
+  "schema": "ptxlean.minmax-review-probes/v1",
+  "started_at": "2026-09-23T19:25:37.112653+00:00",
+  "base_commit": "90e3ef657b6b336ad4c8a915930ec33a521f82f7",
+  "worktree": "/home/lothar/workspace/ptxlean/.formalization-runs/review-probes/review-probes-v1",
+  "model_calls": 0,
+  "script_sha256": "06626351877c8fb304209a4799b693a4d393b82d9ac1a6936dfd9b66e6ff0b5d",
+  "candidate_patch_sha256": "d82a8ed6d4be8384c257afeeed4135478fbe38fde51676b16726467f65936b99",
+  "task_sha256": "2efa1722acec45932d1dd802d462e861be8189e9a8ac9f1be5061460b4b5b23e",
+  "driver_sha256": "4003cb45bc04b849df1fee0483ff2905e55d015c2aafbe7cc02aaa8dd5e6ba5d",
+  "sources": [
+    {
+      "path": "references/nvidia/ptx-isa-9.4/index.html",
+      "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed"
+    }
+  ],
+  "commands": [
+    {
+      "name": "setup-worktree",
+      "argv": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/home/lothar/workspace/ptxlean/.formalization-runs/review-probes/review-probes-v1",
+        "90e3ef657b6b336ad4c8a915930ec33a521f82f7"
+      ],
+      "cwd": "/home/lothar/workspace/ptxlean",
+      "started_at": "2026-09-23T19:25:37.127843+00:00",
+      "finished_at": "2026-09-23T19:25:37.154040+00:00",
+      "returncode": 0,
+      "stdout": "setup-worktree.stdout.log",
+      "stderr": "setup-worktree.stderr.log"
+    },
+    {
+      "name": "setup-apply",
+      "argv": [
+        "git",
+        "apply",
+        "/home/lothar/workspace/ptxlean/formalization/results/minmax-u32/review-probes-v1/candidate.patch"
+      ],
+      "cwd": "/home/lothar/workspace/ptxlean/.formalization-runs/review-probes/review-probes-v1",
+      "started_at": "2026-09-23T19:25:37.154183+00:00",
+      "finished_at": "2026-09-23T19:25:37.156766+00:00",
+      "returncode": 0,
+      "stdout": "setup-apply.stdout.log",
+      "stderr": "setup-apply.stderr.log"
+    },
+    {
+      "name": "control-build",
+      "argv": [
+        "lake",
+        "build",
+        "Ptx.IntegerMinMax"
+      ],
+      "cwd": "/home/lothar/workspace/ptxlean/.formalization-runs/review-probes/review-probes-v1",
+      "started_at": "2026-09-23T19:25:37.162558+00:00",
+      "finished_at": "2026-09-23T19:25:55.225176+00:00",
+      "returncode": 0,
+      "stdout": "control-build.stdout.log",
+      "stderr": "control-build.stderr.log"
+    },
+    {
+      "name": "control-acceptance",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/minmax-u32/review-probes-v1/acceptance.lean"
+      ],
+      "cwd": "/home/lothar/workspace/ptxlean/.formalization-runs/review-probes/review-probes-v1",
+      "started_at": "2026-09-23T19:25:55.225395+00:00",
+      "finished_at": "2026-09-23T19:25:56.134989+00:00",
+      "returncode": 0,
+      "stdout": "control-acceptance.stdout.log",
+      "stderr": "control-acceptance.stderr.log"
+    },
+    {
+      "name": "remove-supported-max-build",
+      "argv": [
+        "lake",
+        "build",
+        "Ptx.IntegerMinMax"
+      ],
+      "cwd": "/home/lothar/workspace/ptxlean/.formalization-runs/review-probes/review-probes-v1",
+      "started_at": "2026-09-23T19:25:56.135945+00:00",
+      "finished_at": "2026-09-23T19:26:11.594459+00:00",
+      "returncode": 0,
+      "stdout": "remove-supported-max-build.stdout.log",
+      "stderr": "remove-supported-max-build.stderr.log"
+    },
+    {
+      "name": "remove-supported-max-acceptance",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/minmax-u32/review-probes-v1/acceptance.lean"
+      ],
+      "cwd": "/home/lothar/workspace/ptxlean/.formalization-runs/review-probes/review-probes-v1",
+      "started_at": "2026-09-23T19:26:11.594749+00:00",
+      "finished_at": "2026-09-23T19:26:12.688960+00:00",
+      "returncode": 1,
+      "stdout": "remove-supported-max-acceptance.stdout.log",
+      "stderr": "remove-supported-max-acceptance.stderr.log"
+    }
+  ],
+  "cases": [
+    {
+      "id": "control",
+      "mutation_patch": "control.mutation.patch",
+      "mutation_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "changed_files": {},
+      "outcome": "pass",
+      "module_build_returncode": 0,
+      "acceptance_returncode": 0
+    },
+    {
+      "id": "remove-supported-max",
+      "mutation_patch": "remove-supported-max.mutation.patch",
+      "mutation_sha256": "bf30c3392429f861a564805f00b05e45b51d627fa886db5d91fcbdd6d31aaa5e",
+      "changed_files": {
+        "Ptx/ScalarText.lean": {
+          "before": "f9e14f54dbbf0fd4feedc6457fc3d329e47ad5cc07397c957c4da8aa210f8a34",
+          "after": "5186b5a6ed47470422b3b9f9ccb21b0639448b8e61daa64c95a81dba3ebbc552"
+        }
+      },
+      "outcome": "inconclusive",
+      "module_build_returncode": 0,
+      "acceptance_returncode": 1,
+      "expected_checks": [
+        {
+          "id": "max-invalid-category",
+          "start_line": 121,
+          "end_line": 134
+        },
+        {
+          "id": "max-invalid-arity",
+          "start_line": 125,
+          "end_line": 134
+        }
+      ],
+      "diagnostics": [
+        {
+          "line": 122,
+          "column": 60,
+          "checks": [
+            "max-invalid-category"
+          ],
+          "header": "failed to synthesize",
+          "false_decision": false
+        },
+        {
+          "line": 126,
+          "column": 60,
+          "checks": [
+            "max-invalid-category",
+            "max-invalid-arity"
+          ],
+          "header": "failed to synthesize",
+          "false_decision": false
+        }
+      ]
+    }
+  ],
+  "outcome": "fail",
+  "limits": "Two hand-designed defects in one candidate; no general detection-rate or semantic-completeness claim.",
+  "candidate_files": {
+    "Ptx/Scalar.lean": "84ba68d940e788ead9bfb8258a7bb0ada807ddecdb04f2d037d6e38bb11577d4",
+    "Ptx/ScalarText.lean": "f9e14f54dbbf0fd4feedc6457fc3d329e47ad5cc07397c957c4da8aa210f8a34",
+    "Ptx/IntegerMinMax.lean": "b821226d079b1c4ee8f5b7bf2d700cdf5fc74702823e28f30bb95d58035b3e42"
+  },
+  "error": "remove-supported-max: missing expected false-proposition rejection or unexpected errors",
+  "finished_at": "2026-09-23T19:26:12.689662+00:00",
+  "artifacts": {
+    "acceptance.lean": "4003cb45bc04b849df1fee0483ff2905e55d015c2aafbe7cc02aaa8dd5e6ba5d",
+    "candidate.patch": "d82a8ed6d4be8384c257afeeed4135478fbe38fde51676b16726467f65936b99",
+    "control-acceptance.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "control-acceptance.stdout.log": "c268e31c9d882aaa4367e70a1e3948b52b157e28f14cf45d2400d9f9d4bec800",
+    "control-build.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "control-build.stdout.log": "656b57c03ce29c38bf9653efe185a4bcc2a4321f43653d5736121b2e9ecc16bc",
+    "control.mutation.patch": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "remove-supported-max-acceptance.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "remove-supported-max-acceptance.stdout.log": "6f050b4967b01ecf763c35269c2cec5874291cb2f94c32f6e20376a3b557b1b9",
+    "remove-supported-max-build.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "remove-supported-max-build.stdout.log": "7f5917bc6935937356c65d7abf998c2558777ae0ee4ebcfdb4aa4564f6f2087c",
+    "remove-supported-max.mutation.patch": "bf30c3392429f861a564805f00b05e45b51d627fa886db5d91fcbdd6d31aaa5e",
+    "setup-apply.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "setup-apply.stdout.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "setup-worktree.stderr.log": "ee68f4579977815e322de7eedecd8042af5842320942c35ea6d7404bc7531451",
+    "setup-worktree.stdout.log": "893cbc2d23856f555693f696cbce0582c65be3851f86769350d58610c38aa959",
+    "task.json": "2efa1722acec45932d1dd802d462e861be8189e9a8ac9f1be5061460b4b5b23e",
+    "harness.py": "06626351877c8fb304209a4799b693a4d393b82d9ac1a6936dfd9b66e6ff0b5d"
+  }
+}

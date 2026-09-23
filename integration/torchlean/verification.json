@@ -1,0 +1,25 @@
+{
+  "schema_version": 1,
+  "checked_date": "2026-09-23",
+  "commands": [
+    {
+      "command": "lake build PtxTorchLean",
+      "exit_code": 0
+    },
+    {
+      "command": "lake env lean PtxTorchLean.lean",
+      "exit_code": 0
+    }
+  ],
+  "upstream": "https://github.com/lean-dojo/TorchLean.git",
+  "upstream_revision": "de3192df4779877ceb65cfe470a4d4ce9d480a5b",
+  "files_sha256": {
+    "PtxTorchLean.lean": "685adfdba6078f66a6dd95deb1f61184c3c389fccd847a3640c3928cf4cf4676",
+    "lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+    "lakefile.toml": "5d3996e3a8533bfec6961e9e45b2f303363015b187279d2c03b3f0f85f4b0b08",
+    "lake-manifest.json": "8383030cc150105ca389ad5af27eca6603c02a954c76b0d3f0281aca2c3a588b"
+  },
+  "axiom_audit": "proof-audit.txt",
+  "scope": "Exact real-valued generated graph/tape semantics. No compiled numerical execution, PTX integration, or hardware conformance.",
+  "forward_correspondence": "forward_polynomial checks every coordinate of the selected graph output against (input * weight + bias)^2 for arbitrary tensor shape and real inputs."
+}

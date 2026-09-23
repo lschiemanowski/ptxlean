@@ -14,11 +14,13 @@ kernel proof; a valid graph alone does not establish that a program produced it.
 
 The current models cover aligned four-byte values, called words, in global
 memory. Alignment means that each starting address is divisible by four.
-Program addresses and stored values are fixed in the restricted language.
-The simplified stores use literal constants internally; legal PTX stores instead
-obtain their data from registers. General programs whose reads determine later
-stores, addresses or branches need further justification, including exclusion
-of values supported solely by circular dependencies.
+The original restricted language fixes program addresses and stored values.
+Its simplified stores use literal constants internally; legal PTX stores instead
+obtain their data from registers. A separate computed-publication example now
+connects actual input loads, addition and register stores to these memory rules.
+Its inputs cannot be changed by another thread, which prevents circular value
+justification in that example. General programs whose reads determine later
+stores, addresses or branches still need further justification.
 
 ## What thread scope contributes
 

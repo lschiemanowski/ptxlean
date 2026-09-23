@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "archive": "worker-evidence.tar.gz",
+  "archive_sha256": "0416483b08d9ed02516313aa334ea463dddbf9a776682bb795bebe855f799b05",
+  "members": {
+    "attempts/minmax-001/candidate.patch": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "attempts/minmax-001/prompt.md": {
+      "sha256": "385dd3619bd74035dc701e13455264fe6a401228688b6522e51f05a7a6b28d19",
+      "bytes": 3122
+    },
+    "attempts/minmax-001/receipt.json": {
+      "sha256": "b7fbb6a9e3f2bb3c7dd767dc893e404b34791f27ca289eb893b09a2a2e2e34b2",
+      "bytes": 1567
+    },
+    "attempts/minmax-001/stderr.log": {
+      "sha256": "a4579eae6ed0babd16921d1d981b791d153330ecd6040053025a71a3cbab52ab",
+      "bytes": 206
+    },
+    "attempts/minmax-001/task.json": {
+      "sha256": "2efa1722acec45932d1dd802d462e861be8189e9a8ac9f1be5061460b4b5b23e",
+      "bytes": 3096
+    },
+    "attempts/minmax-002/candidate.patch": {
+      "sha256": "df7ae6896de8e58733f265df563585aa5d17af973b729ce83a80031c6e902545",
+      "bytes": 3344
+    },
+    "attempts/minmax-002/final.md": {
+      "sha256": "4949ffde259a71ee650fda003a2c5c66d0555bea2a48b6f6ca4b91a800d66167",
+      "bytes": 741
+    },
+    "attempts/minmax-002/prompt.md": {
+      "sha256": "385dd3619bd74035dc701e13455264fe6a401228688b6522e51f05a7a6b28d19",
+      "bytes": 3122
+    },
+    "attempts/minmax-002/receipt.json": {
+      "sha256": "b7c11ce90e77818d50e80e34a01f536ccf641658a070abf375464127fa9a1d4a",
+      "bytes": 1807
+    },
+    "attempts/minmax-002/stderr.log": {
+      "sha256": "76e1ce2cdef04cad588e4e0c5e6943f55144a21c0dbab8f0006a9c979a1ea266",
+      "bytes": 166
+    },
+    "attempts/minmax-002/task.json": {
+      "sha256": "2efa1722acec45932d1dd802d462e861be8189e9a8ac9f1be5061460b4b5b23e",
+      "bytes": 3096
+    },
+    "attempts/minmax-003/candidate.patch": {
+      "sha256": "d82a8ed6d4be8384c257afeeed4135478fbe38fde51676b16726467f65936b99",
+      "bytes": 10486
+    },
+    "attempts/minmax-003/feedback.md": {
+      "sha256": "7cd43baad26bd0b081ae47e3b3f48d189f3702ab3ffe32bb887bbcd19a4470da",
+      "bytes": 1476
+    },
+    "attempts/minmax-003/final.md": {
+      "sha256": "39ac4e981971b7f79dfbc5ac5b5585c28756a71ea52d6875efa08a9ab4b3ca41",
+      "bytes": 1883
+    },
+    "attempts/minmax-003/prompt.md": {
+      "sha256": "f36557eda557d37b2e9fb869ae503032b66cbc3b518f90e00d2a1fd2068cd67f",
+      "bytes": 4715
+    },
+    "attempts/minmax-003/receipt.json": {
+      "sha256": "bcb4f2ff66c7aced0b0fe968b3a7de5a4eb604fb053165d59374b4031c94936d",
+      "bytes": 2260
+    },
+    "attempts/minmax-003/stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "attempts/minmax-003/task.json": {
+      "sha256": "2efa1722acec45932d1dd802d462e861be8189e9a8ac9f1be5061460b4b5b23e",
+      "bytes": 3096
+    },
+    "current-checkers/check_proofs.py": {
+      "sha256": "15f138e83abe8cf809d6e5883203b5612c01db1ef598dcf533d15545b6bd71bc",
+      "bytes": 3857
+    },
+    "current-checkers/worker_replay.py": {
+      "sha256": "46da0bcab94c54cf985fc165d5bb097eb78191839861349868339bc1aac997cd",
+      "bytes": 7939
+    },
+    "current-checkers/worker_run.py": {
+      "sha256": "501650aeea7f059a2ce6ec8300ac6760091a7d9dabea86ceb7584c59525630a3",
+      "bytes": 17673
+    },
+    "ledger.json": {
+      "sha256": "1895eb818563cd18d21d957a5c04561b3fadc636e20455811f926fc93d047474",
+      "bytes": 1791
+    },
+    "replays/minmax-003-v2/apply.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "replays/minmax-003-v2/audit.lean": {
+      "sha256": "2c47df40b42571ad1b3cf4d82e50a32a07314bff36ce8c886b159039cdcc19a4",
+      "bytes": 924
+    },
+    "replays/minmax-003-v2/audit.log": {
+      "sha256": "982f36aa970e867fb1455a64f2e91af528e36401fa3ec58e312c9f8ba69d1045",
+      "bytes": 1397
+    },
+    "replays/minmax-003-v2/baseline.log": {
+      "sha256": "9cb274474310560218f1b150e4e27cb646e6a85ae2d4e6ab531987abda4dc45b",
+      "bytes": 24669
+    },
+    "replays/minmax-003-v2/candidate.patch": {
+      "sha256": "d82a8ed6d4be8384c257afeeed4135478fbe38fde51676b16726467f65936b99",
+      "bytes": 10486
+    },
+    "replays/minmax-003-v2/driver-0.lean": {
+      "sha256": "4003cb45bc04b849df1fee0483ff2905e55d015c2aafbe7cc02aaa8dd5e6ba5d",
+      "bytes": 8252
+    },
+    "replays/minmax-003-v2/driver-0.log": {
+      "sha256": "c268e31c9d882aaa4367e70a1e3948b52b157e28f14cf45d2400d9f9d4bec800",
+      "bytes": 505
+    },
+    "replays/minmax-003-v2/modules.log": {
+      "sha256": "7a80ceb5b1020159d6c28965a0cc42ef2435f3058d8fb54f8af2b0da15082f74",
+      "bytes": 81
+    },
+    "replays/minmax-003-v2/result.json": {
+      "sha256": "19f898b62a57887352970aab33939826477fd177ea4cf6bce2a160aa5fddaafb",
+      "bytes": 3639
+    },
+    "replays/minmax-003-v2/task.json": {
+      "sha256": "2efa1722acec45932d1dd802d462e861be8189e9a8ac9f1be5061460b4b5b23e",
+      "bytes": 3096
+    },
+    "replays/minmax-003-v3/apply.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "replays/minmax-003-v3/audit.lean": {
+      "sha256": "2c47df40b42571ad1b3cf4d82e50a32a07314bff36ce8c886b159039cdcc19a4",
+      "bytes": 924
+    },
+    "replays/minmax-003-v3/audit.log": {
+      "sha256": "982f36aa970e867fb1455a64f2e91af528e36401fa3ec58e312c9f8ba69d1045",
+      "bytes": 1397
+    },
+    "replays/minmax-003-v3/baseline.log": {
+      "sha256": "32bb790fd12d73e547fdc58c097ffbfccc6e25b9e342148c9fcf06c04e051419",
+      "bytes": 24669
+    },
+    "replays/minmax-003-v3/candidate.patch": {
+      "sha256": "d82a8ed6d4be8384c257afeeed4135478fbe38fde51676b16726467f65936b99",
+      "bytes": 10486
+    },
+    "replays/minmax-003-v3/driver-0.lean": {
+      "sha256": "81aa65def0f3326eba448e9a9082cfa650a6e0eab714631bf99b4ef821f29e65",
+      "bytes": 8416
+    },
+    "replays/minmax-003-v3/driver-0.log": {
+      "sha256": "c268e31c9d882aaa4367e70a1e3948b52b157e28f14cf45d2400d9f9d4bec800",
+      "bytes": 505
+    },
+    "replays/minmax-003-v3/modules.log": {
+      "sha256": "41dff9db33b6028725c271ed9e9866ca022bc765daa59a066969589185aa92d8",
+      "bytes": 81
+    },
+    "replays/minmax-003-v3/result.json": {
+      "sha256": "750c70eaf1ab0b70f488bc7c9f2a3b789a87e6928cf02a8df3d0f2aa6ffe122a",
+      "bytes": 3639
+    },
+    "replays/minmax-003-v3/task.json": {
+      "sha256": "2efa1722acec45932d1dd802d462e861be8189e9a8ac9f1be5061460b4b5b23e",
+      "bytes": 3096
+    },
+    "replays/minmax-003/apply.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "replays/minmax-003/baseline.log": {
+      "sha256": "aa9c2c3ef94f1d526ad69d512d8ab93ca3a5628261719968c509856fa237b768",
+      "bytes": 24669
+    },
+    "replays/minmax-003/candidate.patch": {
+      "sha256": "d82a8ed6d4be8384c257afeeed4135478fbe38fde51676b16726467f65936b99",
+      "bytes": 10486
+    },
+    "replays/minmax-003/driver-0.lean": {
+      "sha256": "bc383863c5806ff9c7da5ef4265e5062b53e67930312b7d7f4b3dba94d42ebea",
+      "bytes": 7902
+    },
+    "replays/minmax-003/driver-0.log": {
+      "sha256": "25ea0c75c7dcf7ff3185ca531b9ec1890cbc90f48a7d4af56eeefaca021f9369",
+      "bytes": 7873
+    },
+    "replays/minmax-003/modules.log": {
+      "sha256": "0535ec87cae62198bc0d908aa6b993d204db2fbb242af432f0dc26ca3c7dfdc1",
+      "bytes": 81
+    },
+    "replays/minmax-003/result.json": {
+      "sha256": "abd8bbb591ad4037816c56bcd006daa733ff5120f14f8d848e27b0e5a07e7710",
+      "bytes": 3320
+    },
+    "replays/minmax-003/task.json": {
+      "sha256": "2efa1722acec45932d1dd802d462e861be8189e9a8ac9f1be5061460b4b5b23e",
+      "bytes": 3096
+    }
+  },
+  "scope": "First three campaign calls and all three mechanical checker runs. Generation receipts are immutable; acceptance is recorded separately.",
+  "runner_provenance_limit": "Initial three runs recorded runner hashes but not runner source copies; current-checkers preserves the final coordinator implementations, not a claim of byte equality to those earlier runner versions. Future invocations preserve runner.py.",
+  "distribution": {
+    "policy": "omit-raw-model-transcripts",
+    "reason": "Raw tool/model event transcripts may reproduce NVIDIA documentation and are not distributed. Retained members are byte-identical to the original archive.",
+    "original_archive_sha256": "d619c9001e99c7e5397439b1e4fd17b1e5e3ba479f1158115c6a649cc0c67924",
+    "omitted_members": {
+      "attempts/minmax-001/events.jsonl": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "attempts/minmax-002/events.jsonl": {
+        "sha256": "5092a9826fc7ab90b60e19a164540ed1bc8670c3cb092255bf4021f4ad4990cc",
+        "bytes": 98234
+      },
+      "attempts/minmax-003/events.jsonl": {
+        "sha256": "e0f28169bf9b9983dce7059b23155781b6f540439602b97ac6580b588fbaf612",
+        "bytes": 54415
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+--- a/Ptx/ScalarText.lean
++++ b/Ptx/ScalarText.lean
+@@ -53,7 +53,7 @@
+ 
+ def supportedMnemonic (mnemonic : String) : Bool :=
+   mnemonic ∈ ["mov.b32", "add.u32", "sub.u32", "mul.lo.u32", "and.b32", "or.b32", "xor.b32",
+-    "shl.b32", "shr.u32", "min.u32", "max.u32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
++    "shl.b32", "shr.u32", "min.u32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
+     "setp.lt.u32", "setp.le.u32", "setp.gt.u32", "setp.ge.u32",
+     "ld.relaxed.gpu.global.u32", "st.relaxed.gpu.global.u32", "bra", "exit"]
+ 

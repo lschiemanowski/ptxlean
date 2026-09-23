@@ -1,0 +1,40 @@
+{
+  "id": "integer-minmax",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "The scalar machine describes instructions operating on individual values in one\nthread. It handles integers and their bits, registers, memory reads (loads),\nmemory writes (stores), and choices of the next instruction (branches). An\ninstruction's input values are its operands; a true/false condition controlling\nwhether it executes is its predicate. Memory values are 32-bit words. Unsigned\n32-bit arithmetic, abbreviated `u32`, keeps results modulo `2^32`, so overflowing\nresults wrap into the range from zero to `2^32 - 1`. The record of steps taken is\na trace; it retains the actual values and addresses used by loads and stores."
+    }
+  },
+  "summary": [
+    "Select the unsigned smaller or larger 32-bit operand through actual scalar instructions and typed text forms.",
+    "Prove arbitrary-input numerical meaning, execution behavior and unchanged state, keeping wider instruction families unimplemented."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Proofs characterize both results for arbitrary operands as the mathematical\nunsigned minimum or maximum. They also establish operand selection,\ncommutativity, repeated-input behavior and bounds, and connect these value facts\nto actual scalar execution and state preservation. Boundary examples distinguish\nunsigned from signed comparison. The source requires PTX 1.0 and supports all\ntargets for these selected forms; this source condition is distinct from the\nexisting memory-only instruction eligibility checker."
+      },
+      "to": {
+        "path": "Ptx/IntegerMinMax.lean",
+        "passage": {
+          "quote": "theorem min_toNat (a b : Word) : (BinOp.eval .minU a b).toNat = Nat.min a.toNat b.toNat := by\n  by_cases h : a.toNat \u2264 b.toNat <;> simp [BinOp.eval, h, Nat.min_def]\n\ntheorem max_toNat (a b : Word) : (BinOp.eval .maxU a b).toNat = Nat.max a.toNat b.toNat := by\n  by_cases h : b.toNat \u2264 a.toNat <;> simp [BinOp.eval, h, Nat.le_of_not_ge]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "These instructions use the existing scalar binary-operation interface. Both\noperands are read from the incoming state before writing the destination, even\nwhen a source and destination are the same register. Execution preserves other\nregisters and memory and advances to the next instruction. A false predicate\nskips the write. The instruction emits no memory event. The typed text interface\naccepts a word-register destination and register or immediate word sources,\nrejects malformed operand lists, and preserves guarded encode/decode round trips.\nIt does not validate declarations in raw PTX source."
+      },
+      "to": {
+        "path": "Ptx/IntegerMinMax.lean",
+        "passage": {
+          "quote": "theorem min_exec (guard : Guard) (s : State) (d : Nat) (a b : Operand32)\n    (hg : guard.eval s = true) :\n    eval none \u27e8guard, .bin32 .minU d a b\u27e9 s =\n      .next \u27e8s.pc + 1, update s.regs d (BinOp.eval .minU (a.eval s) (b.eval s)),\n        s.addrs, s.preds, s.memory\u27e9\n        (occurrence s \u27e8guard, .bin32 .minU d a b\u27e9 true) := by\n  simp [eval, hg]\n\ntheorem max_exec (guard : Guard) (s : State) (d : Nat) (a b : Operand32)\n    (hg : guard.eval s = true) :\n    eval none \u27e8guard, .bin32 .maxU d a b\u27e9 s =\n      .next \u27e8s.pc + 1, update s.regs d (BinOp.eval .maxU (a.eval s) (b.eval s)),\n        s.addrs, s.preds, s.memory\u27e9\n        (occurrence s \u27e8guard, .bin32 .maxU d a b\u27e9 true) := by\n  simp [eval, hg]"
+        }
+      }
+    }
+  ]
+}

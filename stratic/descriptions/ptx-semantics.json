@@ -12,7 +12,7 @@
     "Distinguish safe execution, correct completed results, existence of a run and guarantees of progress; justify the definitions against the PTX manual."
   ],
   "realization": "partial",
-  "remaining": "Implemented fragments cover aligned 32-bit memory accesses, modeled either as whole words or byte by byte; individual-thread execution and proof rules; and vector addition in a shared allocation. How a read that mixes bytes from different writes counts as observing a write remains an explicit choice. General data-dependent interactions between threads, accesses of different sizes, multiple addresses naming the same storage, additional memory-access mechanisms, the full instruction set and hardware restrictions, connections to actual launches and binary interfaces, and GPU progress remain unimplemented.",
+  "remaining": "Implemented fragments cover aligned 32-bit memory accesses modeled as whole words or byte by byte, individual-thread execution and proof rules, vector addition in a shared allocation, and actual register-computed data publication with restricted noncircular witnesses. Mixed-source observation remains an explicit choice. General data-dependent concurrency, different access sizes, aliases, additional proxies, full instruction/target coverage, runtime/ABI connections and GPU progress remain unimplemented.",
   "links": [
     {
       "kind": "implementation",

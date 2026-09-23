@@ -50,8 +50,8 @@ trace still records the skipped step. Unknown operations are rejected even
 under a false predicate.
 
 The subset includes 32/64-bit copies, wrapping `u32` addition and subtraction,
-multiplication retaining its low 32 bits, operations on individual bits, shifts,
-and unsigned comparisons. Address arithmetic uses unsigned 64-bit values (`u64`);
+multiplication retaining its low 32 bits, unsigned minimum and maximum,
+operations on individual bits, shifts, and unsigned comparisons. Address arithmetic uses unsigned 64-bit values (`u64`);
 converting `u32` to `u64` fills the new upper bits with zeros (zero extension).
 Loads and stores access globally shared memory using relaxed ordering at GPU
 scope: they cover threads on that GPU but do not themselves provide a

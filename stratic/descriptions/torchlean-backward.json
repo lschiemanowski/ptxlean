@@ -1,0 +1,77 @@
+{
+  "id": "torchlean-backward",
+  "parent": {
+    "description": "backward",
+    "passage": {
+      "quote": "TorchLean constructs the backward computation automatically. Checked theorems\nconnect it to the mathematical VJP under explicit assumptions. Each use identifies\nthe supported operations and the conditions needed by their derivative rules."
+    }
+  },
+  "summary": [
+    "Construct backward computations using actual TorchLean graphs and proved local derivatives.",
+    "Prove exact evaluation success and mathematical weighted-output derivatives separately from floating-point and PTX guarantees."
+  ],
+  "realization": "partial",
+  "remaining": "The isolated Lean 4.34 example checks exact graph and tape success and mathematical VJP correspondence. Joint compatibility with the Lean 4.33 PTX foundation, broader model lowering, numerical bounds and PTX implementation proofs remain open.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first example computes a pointwise affine transformation followed by squaring:\neach output coordinate is `(input * weight + bias)^2` at that coordinate.\nIts weight and bias values are differentiable inputs rather than fixed graph\ndata. The input shape and the output-weight shape are explicit. It uses actual\nupstream graph constructors and derivative proofs, so that an independently\nrecreated toy language cannot satisfy this example."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTorchLean.lean",
+        "passage": {
+          "quote": "def affineSquare (s : Shape) : DGraph [s, s, s] [s, s, s] :=\n  let x : Idx ([s, s, s] ++ []) s := \u27e8\u27e80, by simp\u27e9, rfl\u27e9\n  let w : Idx ([s, s, s] ++ []) s := \u27e8\u27e81, by simp\u27e9, rfl\u27e9\n  let product := DGraph.nil.snoc (TapeNodes.mul x w) (TapeNodes.mulFderiv x w)\n  let p : Idx ([s, s, s] ++ [s]) s := \u27e8\u27e83, by simp\u27e9, rfl\u27e9\n  let b : Idx ([s, s, s] ++ [s]) s := \u27e8\u27e82, by simp\u27e9, rfl\u27e9\n  let affine := product.snoc (TapeNodes.add p b) (TapeNodes.addFderiv p b)\n  let a : Idx ([s, s, s] ++ [s, s]) s := \u27e8\u27e84, by simp\u27e9, rfl\u27e9\n  affine.snoc (TapeNodes.square a) (TapeNodes.squareFderiv a)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For an arbitrary tensor of output weights, the bridge establishes both that the\nchosen exact backward computation succeeds and that its returned input and\nparameter sensitivities are the mathematical vector-Jacobian product. A theorem\nthat assumes successful evaluation supplies correctness conditional on success;\na separate proof must establish that success under the stated input conditions.\nThe lower-level exact tape, which stores forward values and local backward rules,\nand the checked application interface can have different success conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTorchLean.lean",
+        "passage": {
+          "quote": "theorem checked_success (s : Shape) (inputs : TensorPack \u211d [s, s, s])\n    (seed : Tensor \u211d s) :\n    let g := (affineSquare s).toTypedGraph (output s)\n    g.vjpChecked inputs () seed = .ok (g.vjpWithSeed inputs seed, g.forward inputs) := by\n  apply Runtime.Autograd.Torch.TypedGraphWithData.vjpChecked_eq\n  rfl"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For an arbitrary tensor of output weights, the bridge establishes both that the\nchosen exact backward computation succeeds and that its returned input and\nparameter sensitivities are the mathematical vector-Jacobian product. A theorem\nthat assumes successful evaluation supplies correctness conditional on success;\na separate proof must establish that success under the stated input conditions.\nThe lower-level exact tape, which stores forward values and local backward rules,\nand the checked application interface can have different success conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTorchLean.lean",
+        "passage": {
+          "quote": "theorem checked_success_vjp (s : Shape) (inputs : TensorPack \u211d [s, s, s])\n    (seed : Tensor \u211d s) :\n    let g := (affineSquare s).toTypedGraph (output s)\n    flattenCtx (g.vjpWithSeed inputs seed) =\n      (fderiv \u211d (fun x => tensorToVec (g.forward (unflattenCtx x)))\n        (flattenCtx inputs)).adjoint (tensorToVec seed) := by\n  exact checked_vjp s inputs seed _ (checked_success s inputs seed)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For an arbitrary tensor of output weights, the bridge establishes both that the\nchosen exact backward computation succeeds and that its returned input and\nparameter sensitivities are the mathematical vector-Jacobian product. A theorem\nthat assumes successful evaluation supplies correctness conditional on success;\na separate proof must establish that success under the stated input conditions.\nThe lower-level exact tape, which stores forward values and local backward rules,\nand the checked application interface can have different success conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTorchLean.lean",
+        "passage": {
+          "quote": "theorem exact_tape_success_vjp (s : Shape) (inputs : TensorPack \u211d [s, s, s])\n    (seed : Tensor \u211d s) :\n    let g := (affineSquare s).g.toAlgebra\n    let gradients := Algebra.Graph.backpropAllCtx g inputs () (TensorPack.single (output s) seed)\n    Runtime.Autograd.Tape.backwardDenseAll\n        (Algebra.Graph.lowerGraphToTape g inputs ()).1 (output s).i.1\n        (Spec.SomeTensor.ofTensor seed) =\n      .ok (TensorPack.toShapeErasedArray gradients)\n    \u2227 flattenCtx (Algebra.TensorPack.takeLeft gradients) =\n      (fderiv \u211d (Graph.evalVec (g.toReal ())) (flattenCtx inputs)).adjoint\n        (flattenCtx (TensorPack.single (output s) seed)) := by\n  apply Algebra.Graph.backwardDenseAll_lowerGraphToTape_adjoint_fderiv_at\n  rw [Algebra.Graph.toAlgebra_toReal]\n  exact DGraph.graphFDerivCorrectAtOfCorrect (affineSquare s).hg (flattenCtx inputs)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first example computes a pointwise affine transformation followed by squaring:\neach output coordinate is `(input * weight + bias)^2` at that coordinate.\nIts weight and bias values are differentiable inputs rather than fixed graph\ndata. The input shape and the output-weight shape are explicit. It uses actual\nupstream graph constructors and derivative proofs, so that an independently\nrecreated toy language cannot satisfy this example."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTorchLean.lean",
+        "passage": {
+          "quote": "theorem forward_polynomial (s : Shape) (x w b : Tensor \u211d s) (i : Fin (Spec.Shape.size s)) :\n    tensorToVec (((affineSquare s).toTypedGraph (output s)).forward\n      (.cons x (.cons w (.cons b .nil)))) i =\n    (tensorToVec x i * tensorToVec w i + tensorToVec b i) ^ 2 := by\n  simp [Runtime.Autograd.Torch.TypedGraph.forward,\n    Runtime.Autograd.Torch.TypedGraphWithData.forward, DGraph.toTypedGraph,\n    affineSquare, DGraph.snoc, DGraph.nil, Graph.toAlgebra, Algebra.Graph.toData,\n    Algebra.GraphData.eval, Node.toAlgebra, TapeNodes.square, TapeNodes.add,\n    TapeNodes.mul, Node.ofFn, output, CtxVec.get_flattenCtx, getIdx, TensorPack.snoc,\n    Tensor.castShape, vecOfFun, pow_two,\n    get_3_0, get_3_1, get_4_2, get_4_3, get_5_4, get_6_5]"
+        }
+      }
+    }
+  ]
+}

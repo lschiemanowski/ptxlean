@@ -1,0 +1,38 @@
+--- a/Ptx/ScalarText.lean
++++ b/Ptx/ScalarText.lean
+@@ -40,8 +40,8 @@
+   | .xor => "xor.b32"
+   | .shl => "shl.b32"
+   | .shr => "shr.u32"
+-  | .minU => "min.u32"
+-  | .maxU => "max.u32"
++  | .minU => "max.u32"
++  | .maxU => "min.u32"
+ 
+ def compareMnemonic : Compare → String
+   | .eq => "setp.eq.u32"
+@@ -68,8 +68,8 @@
+   | "xor.b32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .xor d a b)
+   | "shl.b32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shl d a b)
+   | "shr.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shr d a b)
+-  | "min.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .minU d a b)
+-  | "max.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .maxU d a b)
++  | "min.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .maxU d a b)
++  | "max.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .minU d a b)
+   | "mov.b64", [.address (.reg d), .address s] => .ok (.mov64 d s)
+   | "add.u64", [.address (.reg d), .address a, .address b] => .ok (.add64 d a b)
+   | "cvt.u64.u32", [.address (.reg d), .word s] => .ok (.cvt64 d s)
+--- a/Ptx/IntegerMinMax.lean
++++ b/Ptx/IntegerMinMax.lean
+@@ -107,9 +107,9 @@
+ example : BinOp.eval .maxU (BitVec.ofNat 32 9) (BitVec.ofNat 32 9) = BitVec.ofNat 32 9 := by decide
+ 
+ example : decodeOp "min.u32" [.word (.reg 3), .word (.reg 1), .word (.imm 7)] =
+-    .ok (.bin32 .minU 3 (.reg 1) (.imm 7)) := by rfl
++    .ok (.bin32 .maxU 3 (.reg 1) (.imm 7)) := by rfl
+ example : decodeOp "max.u32" [.word (.reg 3), .word (.imm 7), .word (.reg 1)] =
+-    .ok (.bin32 .maxU 3 (.imm 7) (.reg 1)) := by rfl
++    .ok (.bin32 .minU 3 (.imm 7) (.reg 1)) := by rfl
+ example : decodeOp "min.s32" [.word (.reg 0), .word (.imm 1), .word (.imm 2)] =
+     .error (.unsupportedMnemonic "min.s32") := by rfl
+ example : decodeOp "max.relu.u32" [.word (.reg 0), .word (.imm 1), .word (.imm 2)] =

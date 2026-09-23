@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "id": "minmax-u32-v1",
+  "model": "gpt-6-luna",
+  "base_commit": "90e3ef657b6b336ad4c8a915930ec33a521f82f7",
+  "allowed_paths": [
+    "Ptx/Scalar.lean",
+    "Ptx/ScalarText.lean",
+    "Ptx/IntegerMinMax.lean"
+  ],
+  "sources": [
+    {
+      "path": "references/nvidia/ptx-isa-9.4/index.html",
+      "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed"
+    }
+  ],
+  "prompt": "Implement exactly PTX min.u32 and max.u32 on the existing scalar foundation. Read the pinned manual sections integer-arithmetic-instructions-min and integer-arithmetic-instructions-max (around HTML lines 9521-9684), plus the relevant integer operands/predication clauses. Do not treat other min/max types or modifiers as supported.\n\nExtend Ptx.Scalar.BinOp with minU and maxU and the actual BinOp.eval cases. Extend the typed ScalarText mnemonics, decoder and encoder. Preserve all existing theorem statements, semantics of old operations, and typed-interface restrictions. Use the existing binary-operation/guard/register machinery; don't invent a second execution model. No unsigned-domain exclusions: all Word values, including the high bit, are covered. PTX1.0/all targets for these exact forms is a source condition; the existing eligibility checker covers memory only, do not pretend it validates arithmetic.\n\nCreate Ptx/IntegerMinMax.lean importing Ptx.ScalarText. In namespace Ptx.Scalar.IntegerMinMax prove min_toNat (a b : Word) : (BinOp.eval .minU a b).toNat = Nat.min a.toNat b.toNat and max_toNat analogously using Nat.max. Also prove general operand-membership, commutativity, idempotence and unsigned result bounds for both actual eval cases. Include at least one general execution theorem connecting the instruction to its destination for arbitrary state/operands and true guard; prove which components remain unchanged, false-guard behavior and correct use of incoming operands when source/destination overlap. Existing reusable facts may be used, but identify the exact facts rather than merely claiming coverage.\n\nInclude kernel-checked examples for high-bit unsigned comparisons, ties, register/immediate decoding, both source/destination overlap positions, false positive/negative guards, and malformed/unsupported text variants. Preserve decode_encode and decodeOp_supported for the expanded constructors. No sorry, admit, new axioms, native_decide, or assumptions of desired results. Do not modify Ptx.lean, Ptx/Audit.lean, scripts, descriptions or any other file. Coordinator integrates those. You may run lake build and lake env lean Ptx/IntegerMinMax.lean; include #print axioms for your public theorems in a temporary /tmp driver if needed. Toolchain is pinned. At end report exact definitions/theorems, checks run and source qualifications, including any uncompleted obligations. Do not call external models or commit.\n\nThis is exploratory capability evaluation. Take the repair steps needed; there is no fixed retry limit. A missing foundation or genuine source ambiguity must be reported instead of silently weakening the task."
+}
