@@ -36,3 +36,12 @@ conditions force the original input values. Full memory validity has a separate
 constructive witness with labels matching the execution. This bridge does not
 claim arbitrary dependent PTX programs, device behavior, PyTorch correspondence,
 or support for other tensor layouts and numerical formats.
+
+
+A separate gradient observation keeps three exact binary32 words in input,
+weight and bias sensitivity order. Finite words decode to an actual TorchLean
+pack of scalar tensors; any nonfinite word makes that view fail. Three absolute
+error bounds compare this decoded pack with the actual generated backward.
+The kernel's layout and execution proof must establish which stored words are
+being observed. Equal real values need not have equal encodings: positive and
+negative zero remain distinct words.

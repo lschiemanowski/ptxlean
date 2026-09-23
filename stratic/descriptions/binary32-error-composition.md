@@ -42,6 +42,13 @@ These guards and budgets depend only on initial real inputs and their error
 bounds. The arithmetic theorem joins the actual intermediate word across the
 two result relations; memory handoff between kernels requires its own proof.
 
+A separately specified backward sequence can propagate an incoming output
+weight and a saved forward value into input and parameter sensitivities. Its
+bounds retain the saved-value error, shared rounded intermediates and every
+explicit multiply/add rounding. The numerical layer accepts the saved-value
+error as an input promise; a preceding actual forward or recomputation proof
+must establish that promise and the word's memory provenance.
+
 These are scalar numerical composition rules for nearest-even binary32 with
 gradual underflow. They are not floating-point instruction execution, a complete
 neural-network error analysis, a GPU correctness claim, or a selected Gemma

@@ -11,7 +11,7 @@
     "Keep derivative correctness, numerical accuracy and guarantees about kernel execution separate."
   ],
   "realization": "partial",
-  "remaining": "The joint pinned PTX/TorchLean package proves actual generated backward success, derivative correspondence and explicit scalar input/weight/bias sensitivities. Broader graph/model coverage, backward numerical bounds, separately authored PTX backward implementations and their execution/correctness proofs remain unfinished.",
+  "remaining": "The joint pinned package proves generated exact backward success and derivative correspondence. A separately selected scalar backward recomputes its saved affine value, then executes four actual kernels, with existence, stored-gradient error and actual TorchLean VJP proofs. Broader model/operation coverage, general numerical policies and network-scale PTX backward implementations remain unfinished.",
   "links": [
     {
       "kind": "depends-on",

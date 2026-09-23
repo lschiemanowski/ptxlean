@@ -38,7 +38,11 @@ Current checked foundations include:
   execution existence, storage lifetimes and a composed rounding-error bound.
   The same graph's [generated real backward](docs/foundations/affine-square-vjp.md)
   has checked success and explicit input/parameter derivatives. Concrete runtime
-  visibility and a separately authored PTX backward kernel remain open.
+  visibility remains a separate obligation.
+- A [separately authored recomputing backward](docs/foundations/recomputed-affine-backward.md):
+  five actual launches, including recomputation of the saved value, with
+  execution existence and stored-gradient error against the actual generated
+  TorchLean VJP. This is a scalar example, with general networks still open.
 
 Run the core checks with the toolchain installed through Elan:
 

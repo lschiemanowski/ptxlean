@@ -40,6 +40,16 @@ COUNTS.update({
 })
 TARGETS.update({"PtxBinary32.SquareError", "PtxBinary32.Sequential", "PtxAffineSquareVJP", "PtxAffineSquareKernel"})
 
+# Separately authored backward execution and its actual generated-VJP observation.
+COUNTS.update({
+    "Ptx.Binary32.BackwardError": 13,
+    "Ptx.GradientView": 18,
+    "Ptx.Scalar.BackwardPipeline": 23,
+    "Ptx.Scalar.BackwardPipeline.Data": 4,
+    "PtxTorchLean.AffineBackward": 21
+})
+TARGETS.update({"PtxBinary32.BackwardError", "PtxBinary32.BackwardPipeline", "PtxGradientView", "PtxAffineBackward"})
+
 
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()

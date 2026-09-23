@@ -8,7 +8,8 @@
   },
   "summary": [
     "Relate logical tensor coordinates to a bounded interleaved global-memory allocation and prove unsigned vector addition modulo 2^32.",
-    "Connect the actual execution to exact real-valued TorchLean addition when every input sum fits, keeping finite execution, memory validity and numerical interpretation distinct."
+    "Connect the actual execution to exact real-valued TorchLean addition when every input sum fits, keeping finite execution, memory validity and numerical interpretation distinct.",
+    "Interpret three actual finite binary32 gradient words as TorchLean scalar tensors and compare their components with the generated backward while preserving the distinction between real and bitwise agreement."
   ],
   "realization": "implemented",
   "links": [
@@ -20,7 +21,7 @@
       "to": {
         "path": "integration/torchlean/PtxTensorBridge.lean",
         "passage": {
-          "quote": "def view {\u03b1 : Type} [Storage \u03b1] (decode : Word \u2192 \u03b1) (memory : List Word)\n    (layout : Fin n \u2192 Nat) : Tensor \u03b1 [n] :=\n  Tensor.ofFn fun i => decode memory[layout i]!"
+          "quote": "def view {α : Type} [Storage α] (decode : Word → α) (memory : List Word)\n    (layout : Fin n → Nat) : Tensor α [n] :=\n  Tensor.ofFn fun i => decode memory[layout i]!"
         }
       }
     },
@@ -32,7 +33,7 @@
       "to": {
         "path": "integration/torchlean/PtxTensorBridge.lean",
         "passage": {
-          "quote": "theorem view_bounded_apply {\u03b1 : Type} [Storage \u03b1] (decode : Word \u2192 \u03b1)\n    (memory : List Word) (layout : Fin n \u2192 Nat) (i : Fin n)\n    (bound : layout i < memory.length) :\n    view decode memory layout (i, PUnit.unit) = decode memory[layout i] := by\n  simp [view, bound]"
+          "quote": "theorem view_bounded_apply {α : Type} [Storage α] (decode : Word → α)\n    (memory : List Word) (layout : Fin n → Nat) (i : Fin n)\n    (bound : layout i < memory.length) :\n    view decode memory layout (i, PUnit.unit) = decode memory[layout i] := by\n  simp [view, bound]"
         }
       }
     },
@@ -44,7 +45,7 @@
       "to": {
         "path": "integration/torchlean/PtxTensorBridge.lean",
         "passage": {
-          "quote": "theorem completed_unsigned_tensor (memory : List Word) (registers : Fin n \u2192 Nat \u2192 Word)\n    (extent : 3*n \u2264 memory.length) (dispatches : List (Fin n))\n    (completed : SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers))) :\n    unsignedView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory SharedVector.output =\n      Tensor.map (fun v : Nat => v % 2^32) (unsignedView memory SharedVector.left + unsignedView memory SharedVector.right) := by\n  apply Tensor.Internal.Rep.ext\n  intro i\n  obtain \u27e8i, \u27e8\u27e9\u27e9 := i\n  simpa only [Tensor.map, Tensor.Internal.Rep.map_apply, Tensor.add_apply] using\n    completed_unsigned memory registers extent dispatches completed i"
+          "quote": "theorem completed_unsigned_tensor (memory : List Word) (registers : Fin n → Nat → Word)\n    (extent : 3*n ≤ memory.length) (dispatches : List (Fin n))\n    (completed : SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers))) :\n    unsignedView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory SharedVector.output =\n      Tensor.map (fun v : Nat => v % 2^32) (unsignedView memory SharedVector.left + unsignedView memory SharedVector.right) := by\n  apply Tensor.Internal.Rep.ext\n  intro i\n  obtain ⟨i, ⟨⟩⟩ := i\n  simpa only [Tensor.map, Tensor.Internal.Rep.map_apply, Tensor.add_apply] using\n    completed_unsigned memory registers extent dispatches completed i"
         }
       }
     },
@@ -56,7 +57,7 @@
       "to": {
         "path": "integration/torchlean/PtxTensorBridge.lean",
         "passage": {
-          "quote": "theorem completed_real_add (memory : List Word) (registers : Fin n \u2192 Nat \u2192 Word)\n    (extent : 3*n \u2264 memory.length) (dispatches : List (Fin n))\n    (completed : SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers)))\n    (fits : NoOverflow n memory) :\n    realView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory SharedVector.output =\n      realView memory SharedVector.left + realView memory SharedVector.right := by\n  apply Tensor.Internal.Rep.ext\n  intro i\n  obtain \u27e8i, \u27e8\u27e9\u27e9 := i\n  simp only [realView, view, Tensor.ofFn_apply, Tensor.add_apply]\n  rw [SharedVector.completed_correct memory registers extent dispatches completed i]\n  simp only [SharedVector.sum, BitVec.toNat_add, Nat.mod_eq_of_lt (fits i), Nat.cast_add]"
+          "quote": "theorem completed_real_add (memory : List Word) (registers : Fin n → Nat → Word)\n    (extent : 3*n ≤ memory.length) (dispatches : List (Fin n))\n    (completed : SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers)))\n    (fits : NoOverflow n memory) :\n    realView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory SharedVector.output =\n      realView memory SharedVector.left + realView memory SharedVector.right := by\n  apply Tensor.Internal.Rep.ext\n  intro i\n  obtain ⟨i, ⟨⟩⟩ := i\n  simp only [realView, view, Tensor.ofFn_apply, Tensor.add_apply]\n  rw [SharedVector.completed_correct memory registers extent dispatches completed i]\n  simp only [SharedVector.sum, BitVec.toNat_add, Nat.mod_eq_of_lt (fits i), Nat.cast_add]"
         }
       }
     },
@@ -68,7 +69,7 @@
       "to": {
         "path": "integration/torchlean/PtxTensorBridge.lean",
         "passage": {
-          "quote": "theorem execution_exists (memory : List Word) (registers : Fin n \u2192 Nat \u2192 Word)\n    (extent : 3*n \u2264 memory.length) (noWrap : 12*n < 2^64) :\n    \u2203 dispatches : List (Fin n),\n      dispatches.length = 5*n \u2227\n      SharedVector.Execution dispatches (SharedVector.initial memory registers)\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)) \u2227\n      SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers)) \u2227\n      unsignedView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory\n          SharedVector.output =\n        Tensor.map (fun v : Nat => v % 2^32)\n          (unsignedView memory SharedVector.left + unsignedView memory SharedVector.right) \u2227\n      (\u2200 index, (\u2200 lane : Fin n, SharedVector.output lane \u2260 index) \u2192\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory[index]? = memory[index]?) \u2227\n      (\u2200 event \u2208 SharedVector.trace dispatches (SharedVector.initial memory registers),\n        AccessSafe memory.length event.effect) \u2227\n      (SharedVectorMemory.witness (n:=n) memory).Valid \u2227\n      (\u2200 lane : Fin n, SharedVector.laneTrace lane\n        (SharedVector.trace dispatches (SharedVector.initial memory registers)) =\n        [(SharedVectorMemory.witness memory).event (SharedVectorMemory.indexOf lane 3),\n         (SharedVectorMemory.witness memory).event (SharedVectorMemory.indexOf lane 4),\n         (SharedVectorMemory.witness memory).event (SharedVectorMemory.indexOf lane 5)]) := by\n  obtain \u27e8dispatches, length, faithful, complete, _, valid, labels\u27e9 :=\n    SharedVectorMemory.verified_shared_execution memory registers extent noWrap\n  refine \u27e8dispatches, length, faithful, complete,\n    completed_unsigned_tensor memory registers extent dispatches complete, ?_, ?_, valid, labels\u27e9\n  \u00b7 exact fun index apart => SharedVector.execute_frame _ dispatches index apart\n  \u00b7 exact fun event member => SharedVector.trace_access_safe memory _ dispatches extent noWrap\n      (SharedVector.initial_invariant ..) event member"
+          "quote": "theorem execution_exists (memory : List Word) (registers : Fin n → Nat → Word)\n    (extent : 3*n ≤ memory.length) (noWrap : 12*n < 2^64) :\n    ∃ dispatches : List (Fin n),\n      dispatches.length = 5*n ∧\n      SharedVector.Execution dispatches (SharedVector.initial memory registers)\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)) ∧\n      SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers)) ∧\n      unsignedView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory\n          SharedVector.output =\n        Tensor.map (fun v : Nat => v % 2^32)\n          (unsignedView memory SharedVector.left + unsignedView memory SharedVector.right) ∧\n      (∀ index, (∀ lane : Fin n, SharedVector.output lane ≠ index) →\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory[index]? = memory[index]?) ∧\n      (∀ event ∈ SharedVector.trace dispatches (SharedVector.initial memory registers),\n        AccessSafe memory.length event.effect) ∧\n      (SharedVectorMemory.witness (n:=n) memory).Valid ∧\n      (∀ lane : Fin n, SharedVector.laneTrace lane\n        (SharedVector.trace dispatches (SharedVector.initial memory registers)) =\n        [(SharedVectorMemory.witness memory).event (SharedVectorMemory.indexOf lane 3),\n         (SharedVectorMemory.witness memory).event (SharedVectorMemory.indexOf lane 4),\n         (SharedVectorMemory.witness memory).event (SharedVectorMemory.indexOf lane 5)]) := by\n  obtain ⟨dispatches, length, faithful, complete, _, valid, labels⟩ :=\n    SharedVectorMemory.verified_shared_execution memory registers extent noWrap\n  refine ⟨dispatches, length, faithful, complete,\n    completed_unsigned_tensor memory registers extent dispatches complete, ?_, ?_, valid, labels⟩\n  · exact fun index apart => SharedVector.execute_frame _ dispatches index apart\n  · exact fun event member => SharedVector.trace_access_safe memory _ dispatches extent noWrap\n      (SharedVector.initial_invariant ..) event member"
         }
       }
     },
@@ -80,7 +81,7 @@
       "to": {
         "path": "integration/torchlean/PtxTensorBridge.lean",
         "passage": {
-          "quote": "theorem completed_bounds (memory : List Word) (registers : Fin n \u2192 Nat \u2192 Word)\n    (extent : 3*n \u2264 memory.length) (dispatches : List (Fin n)) (i : Fin n) :\n    SharedVector.left i < (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory.length \u2227\n    SharedVector.right i < (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory.length \u2227\n    SharedVector.output i < (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory.length := by\n  rw [(SharedVector.execute_invariant memory _ extent (SharedVector.initial_invariant ..) dispatches).length]\n  exact layout_bounds memory extent i"
+          "quote": "theorem completed_bounds (memory : List Word) (registers : Fin n → Nat → Word)\n    (extent : 3*n ≤ memory.length) (dispatches : List (Fin n)) (i : Fin n) :\n    SharedVector.left i < (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory.length ∧\n    SharedVector.right i < (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory.length ∧\n    SharedVector.output i < (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory.length := by\n  rw [(SharedVector.execute_invariant memory _ extent (SharedVector.initial_invariant ..) dispatches).length]\n  exact layout_bounds memory extent i"
         }
       }
     },
@@ -92,7 +93,7 @@
       "to": {
         "path": "integration/torchlean/PtxTensorBridge.lean",
         "passage": {
-          "quote": "theorem candidate_unsigned_tensor (memory : List Word) (left right : Fin n \u2192 Word) (source co)\n    (sources : (SharedVectorMemory.graph memory left right source co).Sources) :\n    candidateOutput memory left right source co =\n      Tensor.map (fun v : Nat => v % 2^32)\n        (unsignedView memory SharedVector.left + unsignedView memory SharedVector.right) := by\n  apply Tensor.Internal.Rep.ext\n  intro i\n  obtain \u27e8i, \u27e8\u27e9\u27e9 := i\n  simp only [candidateOutput, Tensor.ofFn_apply, Tensor.map,\n    Tensor.Internal.Rep.map_apply, Tensor.add_apply, unsignedView, view]\n  rw [SharedVectorMemory.candidate_output memory left right source co sources i]\n  exact BitVec.toNat_add _ _"
+          "quote": "theorem candidate_unsigned_tensor (memory : List Word) (left right : Fin n → Word) (source co)\n    (sources : (SharedVectorMemory.graph memory left right source co).Sources) :\n    candidateOutput memory left right source co =\n      Tensor.map (fun v : Nat => v % 2^32)\n        (unsignedView memory SharedVector.left + unsignedView memory SharedVector.right) := by\n  apply Tensor.Internal.Rep.ext\n  intro i\n  obtain ⟨i, ⟨⟩⟩ := i\n  simp only [candidateOutput, Tensor.ofFn_apply, Tensor.map,\n    Tensor.Internal.Rep.map_apply, Tensor.add_apply, unsignedView, view]\n  rw [SharedVectorMemory.candidate_output memory left right source co sources i]\n  exact BitVec.toNat_add _ _"
         }
       }
     },
@@ -104,7 +105,7 @@
       "to": {
         "path": "integration/torchlean/PtxTensorBridge.lean",
         "passage": {
-          "quote": "theorem candidate_execution_agree (memory : List Word) (left right : Fin n \u2192 Word) (source co)\n    (sources : (SharedVectorMemory.graph memory left right source co).Sources)\n    (registers : Fin n \u2192 Nat \u2192 Word) (extent : 3*n \u2264 memory.length)\n    (dispatches : List (Fin n))\n    (completed : SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers))) :\n    candidateOutput memory left right source co =\n      unsignedView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory\n        SharedVector.output := by\n  rw [candidate_unsigned_tensor memory left right source co sources,\n    completed_unsigned_tensor memory registers extent dispatches completed]"
+          "quote": "theorem candidate_execution_agree (memory : List Word) (left right : Fin n → Word) (source co)\n    (sources : (SharedVectorMemory.graph memory left right source co).Sources)\n    (registers : Fin n → Nat → Word) (extent : 3*n ≤ memory.length)\n    (dispatches : List (Fin n))\n    (completed : SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers))) :\n    candidateOutput memory left right source co =\n      unsignedView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory\n        SharedVector.output := by\n  rw [candidate_unsigned_tensor memory left right source co sources,\n    completed_unsigned_tensor memory registers extent dispatches completed]"
         }
       }
     }

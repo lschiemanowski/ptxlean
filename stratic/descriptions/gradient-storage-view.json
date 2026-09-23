@@ -1,0 +1,90 @@
+{
+  "id": "gradient-storage-view",
+  "parent": {
+    "description": "tensor-layout",
+    "passage": {
+      "quote": "A tensor names values by logical coordinates. A memory layout tells us which\nstored word supplies each coordinate."
+    }
+  },
+  "summary": [
+    "Interpret three exact binary32 gradient words as an optional actual TorchLean scalar-tensor pack.",
+    "Characterize componentwise error against arbitrary reference packs and specialize it to the actual generated affine-square backward result.",
+    "Reject nonfinite encodings and keep numerical agreement distinct from bitwise equality and memory-layout correctness."
+  ],
+  "realization": "implemented",
+  "remaining": "The three-scalar observation contract is complete. Selecting words from an allocation, proving execution and numerical bounds, and tensor-wide gradient layouts are separate obligations.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each word is interpreted as binary32 only when it represents a finite number.\nIf any word is an infinity or a NaN, meaning a nonnumeric floating-point result,\nthe whole real-valued view fails. Otherwise it returns an actual TorchLean pack\nof three scalar tensors. A scalar tensor contains one real number and has no\narray dimensions. The approximation contract retains these exact words as its input;\nthe real view does not replace their bit patterns."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGradientView.lean",
+        "passage": {
+          "quote": "theorem decode_some_iff (words : Words) (observed : Triple) :\n    decode words = some observed \u2194 \u2203 x w b : \u211d,\n      finiteReal words.dx = some x \u2227 finiteReal words.dw = some w \u2227\n      finiteReal words.db = some b \u2227 observed = inputs x w b :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each word is interpreted as binary32 only when it represents a finite number.\nIf any word is an infinity or a NaN, meaning a nonnumeric floating-point result,\nthe whole real-valued view fails. Otherwise it returns an actual TorchLean pack\nof three scalar tensors. A scalar tensor contains one real number and has no\narray dimensions. The approximation contract retains these exact words as its input;\nthe real view does not replace their bit patterns."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGradientView.lean",
+        "passage": {
+          "quote": "theorem nonfinite_rejected (words : Words)\n    (bad : isFinite words.dx = false \u2228 isFinite words.dw = false \u2228\n      isFinite words.db = false) : decode words = none :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Componentwise approximation means that each of the three decoded real numbers\ndiffers from the corresponding reference sensitivity by at most its specified\nabsolute-error bound. The reference may be any three-scalar TorchLean pack.\nThe contract is equivalent to the three individual numerical inequalities;\nthere is no default value for a missing finite interpretation and no assumed\nsuccessful backward call."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGradientView.lean",
+        "passage": {
+          "quote": "theorem componentwise_iff (observed reference : Triple) (ex ew eb : \u211d) :\n    Componentwise observed reference ex ew eb \u2194\n      |component observed 0 - component reference 0| \u2264 ex \u2227\n      |component observed 1 - component reference 1| \u2264 ew \u2227\n      |component observed 2 - component reference 2| \u2264 eb :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Componentwise approximation means that each of the three decoded real numbers\ndiffers from the corresponding reference sensitivity by at most its specified\nabsolute-error bound. The reference may be any three-scalar TorchLean pack.\nThe contract is equivalent to the three individual numerical inequalities;\nthere is no default value for a missing finite interpretation and no assumed\nsuccessful backward call."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGradientView.lean",
+        "passage": {
+          "quote": "theorem approximates_iff (words : Words) (x w b : \u211d) (reference : Triple)\n    (ex ew eb : \u211d) (hx : finiteReal words.dx = some x)\n    (hw : finiteReal words.dw = some w) (hb : finiteReal words.db = some b) :\n    Approximates words reference ex ew eb \u2194\n      |x - component reference 0| \u2264 ex \u2227 |w - component reference 1| \u2264 ew \u2227\n      |b - component reference 2| \u2264 eb :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For the existing graph computing `(x*w+b)^2`, the reference is the actual\nTorchLean-generated backward result with real output seed d. A seed weights the\noutput sensitivity propagated backward. The checked call succeeds, and its\nthree reference values are `2*d*(x*w+b)*w`, `2*d*(x*w+b)*x` and `2*d*(x*w+b)`.\nGiven finite interpretations of the stored words and numerical bounds against\nthese formulas, the interface proves approximation of that actual generated\nresult and exposes the checked call's successful return."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGradientView.lean",
+        "passage": {
+          "quote": "theorem generated_of_bounds_checked (words : Words) (rx rw rb x w b d ex ew eb : \u211d)\n    (hx : finiteReal words.dx = some rx) (hw : finiteReal words.dw = some rw)\n    (hb : finiteReal words.db = some rb)\n    (bx : |rx - 2*d*(x*w+b)*w| \u2264 ex) (bw : |rw - 2*d*(x*w+b)*x| \u2264 ew)\n    (bb : |rb - 2*d*(x*w+b)| \u2264 eb) :\n    Approximates words (graph.vjpWithSeed (inputs x w b) (Tensor.scalar d)) ex ew eb \u2227\n    graph.vjpChecked (inputs x w b) () (Tensor.scalar d) =\n      .ok (sensitivities x w b d, Tensor.scalar ((x*w+b)^2)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Agreement within an error bound is distinct from equality of stored bits.\nPositive and negative zero have different encodings but the same real value;\nreal decoding is not claimed to be injective. This interface proves no rounding\nbound, kernel execution, allocation safety, tensor-wide layout or PTX backward\ncorrectness by itself. Those proofs supply the selected words and numerical\ninequalities to this observation interface."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGradientView.lean",
+        "passage": {
+          "quote": "theorem signed_zero_same_view :\n    (Words.mk 0 0 0) \u2260 (Words.mk 0x80000000 0 0) \u2227\n    decode (Words.mk 0 0 0) = some (inputs 0 0 0) \u2227\n    decode (Words.mk 0x80000000 0 0) = some (inputs 0 0 0) :="
+        }
+      }
+    }
+  ]
+}

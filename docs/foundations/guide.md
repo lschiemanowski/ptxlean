@@ -162,3 +162,12 @@ for argument binding, exact writeback and the external runtime visibility contra
 The [generated-backward example](affine-square-vjp.md) explains the same graph's
 exact real sensitivities and checked success. Forward kernel error, mathematical
 backward correctness and a future PTX backward implementation are distinct results.
+
+
+The [separately authored recomputing backward](recomputed-affine-backward.md)
+closes the corresponding scalar implementation example: five actual launches
+recompute the needed forward value and store the three gradients. Its numerical
+proof accounts for that recomputation's error, and the [gradient observation](gradient-storage-view.md)
+connects the actual finite codewords to the generated real backward. This remains
+one restricted scalar example, with runtime visibility and general network
+coverage separate.

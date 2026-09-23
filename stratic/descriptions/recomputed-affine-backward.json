@@ -1,0 +1,165 @@
+{
+  "id": "recomputed-affine-backward",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "Examples range from small kernels that exercise one reusable contract to concrete\nnetwork implementations that combine the contracts. A small kernel makes the\nconnection between instructions, stored values and checked guarantees easier to\nfollow. A network example reaches from its specified computation to the stated\nkernel behavior, giving an end-to-end verification result. Each example identifies\nits computation, inputs, state kept between calls, number-format and approximation\nchoices, and execution assumptions. Network examples also identify their\narchitecture: the arrangement of network operations."
+    }
+  },
+  "summary": [
+    "Verify a separately selected five-launch PTX backward that recomputes its saved affine value before computing input, weight and bias sensitivities.",
+    "Derive actual stored-gradient error against TorchLean's generated backward from initial input and seed conditions, without assuming a correct saved value.",
+    "Prove instruction execution and existence separately from real derivative correctness and external runtime visibility."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The implementation first recomputes A=x*weight+bias, with separate binary32\nmultiplication and addition. It then computes q=2*d+0, db=q*A+0, dx=db*weight+0\nand dw=db*x+0 using four more affine-kernel launches. The initial bias word can\nbe reused for the saved A word because its load precedes the first store. The\nfinal three gradient words represent input, weight and bias sensitivities, in\nthat order. Each addition of zero remains an actual rounded instruction.\nThis is a simple recomputing backward implementation, not an optimized kernel\nor a complete forward invocation returning the squared output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineBackward.lean",
+        "passage": {
+          "quote": "def requests (target : Target) (thread : ThreadLocation) (allocation : Nat)\n    (recomputeSeed : Seed) (backwardSeeds : Fin 4 → Seed) : List Request :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The implementation first recomputes A=x*weight+bias, with separate binary32\nmultiplication and addition. It then computes q=2*d+0, db=q*A+0, dx=db*weight+0\nand dw=db*x+0 using four more affine-kernel launches. The initial bias word can\nbe reused for the saved A word because its load precedes the first store. The\nfinal three gradient words represent input, weight and bias sensitivities, in\nthat order. Each addition of zero remains an actual rounded instruction.\nThis is a simple recomputing backward implementation, not an optimized kernel\nor a complete forward invocation returning the squared output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineBackward.lean",
+        "passage": {
+          "quote": "theorem recompute_correct\n    (present : before.cells allocation = some ⟨thread.device, data.words⟩)\n    (eligible : Mixed.Eligible target)\n    (launch : SuccessfulLaunch (recomputeRequest target thread allocation registers) before after final events) :\n    ∃ product saved, Binary32.Error.AffineResults data.x data.w data.saved product saved ∧\n      after.cells allocation = some ⟨thread.device, (withSaved data saved).words⟩ ∧\n      final = Affine.finish (recomputeStart data allocation registers) product saved ∧\n      events = Affine.trace (recomputeStart data allocation registers) product saved :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The ten initial words are input, weight, bias, incoming output weight, positive\ntwo, positive zero, arbitrary old input/weight/bias-gradient bits, and arbitrary\nold q bits. Extra words remain unchanged. All five launches use one live\ndevice-owned allocation and each has independently supplied initial registers.\nA valid completed chain must follow the five actual instruction traces and write\nexactly the characterized intermediate and gradient words. Such a chain exists\nfor arbitrary encoded initial inputs under the target and storage conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineBackward.lean",
+        "passage": {
+          "quote": "theorem pipeline_correct\n    (present : before.cells allocation = some ⟨thread.device, data.words⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before (requests target thread allocation registers backwardSeeds) after) :\n    ∃ product saved pQ q pDb db pDx dx pDw dw,\n      Binary32.Error.AffineResults data.x data.w data.saved product saved ∧\n      Binary32.BackwardError.Results data.x data.w saved data.seed pQ q pDb db pDx dx pDw dw ∧\n      after.cells allocation = some ⟨thread.device,\n        (BackwardPipeline.outputData (withSaved data saved) q db dx dw).words⟩ :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The ten initial words are input, weight, bias, incoming output weight, positive\ntwo, positive zero, arbitrary old input/weight/bias-gradient bits, and arbitrary\nold q bits. Extra words remain unchanged. All five launches use one live\ndevice-owned allocation and each has independently supplied initial registers.\nA valid completed chain must follow the five actual instruction traces and write\nexactly the characterized intermediate and gradient words. Such a chain exists\nfor arbitrary encoded initial inputs under the target and storage conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineBackward.lean",
+        "passage": {
+          "quote": "theorem pipeline_exists\n    (present : before.cells allocation = some ⟨thread.device, data.words⟩)\n    (eligible : Mixed.Eligible target) :\n    ∃ after, Chain before (requests target thread allocation registers backwardSeeds) after :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The ten initial words are input, weight, bias, incoming output weight, positive\ntwo, positive zero, arbitrary old input/weight/bias-gradient bits, and arbitrary\nold q bits. Extra words remain unchanged. All five launches use one live\ndevice-owned allocation and each has independently supplied initial registers.\nA valid completed chain must follow the five actual instruction traces and write\nexactly the characterized intermediate and gradient words. Such a chain exists\nfor arbitrary encoded initial inputs under the target and storage conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineBackward.lean",
+        "passage": {
+          "quote": "theorem pipeline_other_allocation\n    (chain : Chain before (requests target thread allocation registers backwardSeeds) after)\n    (other : Nat) (different : other ≠ allocation) : after.cells other = before.cells other :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The ten initial words are input, weight, bias, incoming output weight, positive\ntwo, positive zero, arbitrary old input/weight/bias-gradient bits, and arbitrary\nold q bits. Extra words remain unchanged. All five launches use one live\ndevice-owned allocation and each has independently supplied initial registers.\nA valid completed chain must follow the five actual instruction traces and write\nexactly the characterized intermediate and gradient words. Such a chain exists\nfor arbitrary encoded initial inputs under the target and storage conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineBackward.lean",
+        "passage": {
+          "quote": "theorem five_launch_example (old : Word) (registers : Seed) (backwardSeeds : Fin 4 → Seed) :\n    ∃ after, Chain (reserve empty 0 (fixture old).words).2\n      (requests ⟨94,70⟩ ⟨0,0,0,0,0⟩ 0 registers backwardSeeds) after ∧\n      after.cells 0 = some ⟨0,\n        (BackwardPipeline.outputData (withSaved (fixture old) 0x40e00000)\n          0x40800000 0x41e00000 0x42a80000 0x42600000).words⟩ :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical guarantee starts with finite interpretations and representation\nerrors for input, weight, bias and the incoming output weight. Initial-value range\nguards establish finite results in the recomputation and the backward stages.\nThe saved A value and its error are derived from the recomputation; they are not\nsupplied as assumptions about a forward result. The final error bounds apply to\nthe words actually stored by the last three stages and compare their decoded\nreal values with TorchLean's actual generated backward."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineBackward.lean",
+        "passage": {
+          "quote": "theorem results_approximate\n    (data : Data) (product saved pQ q pDb db pDx dx pDw dw : Word)\n    (xh wh bh dh x w b d ex ew eb ed : ℝ)\n    (xReal : Binary32.finiteReal data.x = some xh)\n    (wReal : Binary32.finiteReal data.w = some wh)\n    (bReal : Binary32.finiteReal data.saved = some bh)\n    (dReal : Binary32.finiteReal data.seed = some dh)\n    (multiplyRange : |xh*wh| ≤ Binary32.Bounds.maxFinite)\n    (additionRange : |xh*wh| + TorchLean.Floats.eps32 (xh*wh) + |bh| ≤ Binary32.Bounds.maxFinite)\n    (backwardRange : Binary32.BackwardError.Guards xh wh (Binary32.SquareError.roundedAffine xh wh bh) dh)\n    (xError : |xh-x| ≤ ex) (wError : |wh-w| ≤ ew)\n    (bError : |bh-b| ≤ eb) (dError : |dh-d| ≤ ed)\n    (recomputed : Binary32.Error.AffineResults data.x data.w data.saved product saved)\n    (backward : Binary32.BackwardError.Results data.x data.w saved data.seed pQ q pDb db pDx dx pDw dw) :\n    GradientView.Approximates ⟨dx,dw,db⟩\n      (graph.vjpWithSeed (inputs x w b) (TorchLean.Tensor.scalar d))\n      (budgetX xh wh bh dh x w b d ex ew eb ed)\n      (budgetW xh wh bh dh x w b d ex ew eb ed)\n      (budgetB xh wh bh dh x w b d ex ew eb ed) ∧\n    graph.vjpChecked (inputs x w b) () (TorchLean.Tensor.scalar d) =\n      .ok (sensitivities x w b d, TorchLean.Tensor.scalar ((x*w+b)^2)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical guarantee starts with finite interpretations and representation\nerrors for input, weight, bias and the incoming output weight. Initial-value range\nguards establish finite results in the recomputation and the backward stages.\nThe saved A value and its error are derived from the recomputation; they are not\nsupplied as assumptions about a forward result. The final error bounds apply to\nthe words actually stored by the last three stages and compare their decoded\nreal values with TorchLean's actual generated backward."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineBackward.lean",
+        "passage": {
+          "quote": "theorem stored_backward_approximation\n    (present : before.cells allocation = some ⟨thread.device, data.words⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before (requests target thread allocation registers backwardSeeds) after)\n    (xh wh bh dh x w b d ex ew eb ed : ℝ)\n    (xReal : Binary32.finiteReal data.x = some xh)\n    (wReal : Binary32.finiteReal data.w = some wh)\n    (bReal : Binary32.finiteReal data.saved = some bh)\n    (dReal : Binary32.finiteReal data.seed = some dh)\n    (multiplyRange : |xh*wh| ≤ Binary32.Bounds.maxFinite)\n    (additionRange : |xh*wh| + TorchLean.Floats.eps32 (xh*wh) + |bh| ≤ Binary32.Bounds.maxFinite)\n    (backwardRange : Binary32.BackwardError.Guards xh wh (Binary32.SquareError.roundedAffine xh wh bh) dh)\n    (xError : |xh-x| ≤ ex) (wError : |wh-w| ≤ ew)\n    (bError : |bh-b| ≤ eb) (dError : |dh-d| ≤ ed) :\n    ∃ saved q db dx dw,\n      after.cells allocation = some ⟨thread.device,\n        (BackwardPipeline.outputData (withSaved data saved) q db dx dw).words⟩ ∧\n      GradientView.Approximates ⟨dx,dw,db⟩\n        (graph.vjpWithSeed (inputs x w b) (TorchLean.Tensor.scalar d))\n        (budgetX xh wh bh dh x w b d ex ew eb ed)\n        (budgetW xh wh bh dh x w b d ex ew eb ed)\n        (budgetB xh wh bh dh x w b d ex ew eb ed) ∧\n      graph.vjpChecked (inputs x w b) () (TorchLean.Tensor.scalar d) =\n        .ok (sensitivities x w b d, TorchLean.Tensor.scalar ((x*w+b)^2)) :="
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The implementation first recomputes A=x*weight+bias, with separate binary32\nmultiplication and addition. It then computes q=2*d+0, db=q*A+0, dx=db*weight+0\nand dw=db*x+0 using four more affine-kernel launches. The initial bias word can\nbe reused for the saved A word because its load precedes the first store. The\nfinal three gradient words represent input, weight and bias sensitivities, in\nthat order. Each addition of zero remains an actual rounded instruction.\nThis is a simple recomputing backward implementation, not an optimized kernel\nor a complete forward invocation returning the squared output."
+      },
+      "to": {
+        "description": "backward-affine-kernels",
+        "passage": {
+          "quote": "This implementation computes the three sensitivities for a scalar squared-affine\nnetwork from an encoded input x, weight w, saved affine value A and incoming\noutput weight d. The saved value belongs to a cache-free forward computation;\nthis execution layer accepts its word as input. A later numerical connection must\nrelate it to the ideal real value x*w+b. No desired gradient or correct saved-value\npredicate is assumed to obtain the execution results here."
+        }
+      },
+      "reason": "Use the four actual launch contracts after separately proving the saved affine value's recomputation."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The numerical guarantee starts with finite interpretations and representation\nerrors for input, weight, bias and the incoming output weight. Initial-value range\nguards establish finite results in the recomputation and the backward stages.\nThe saved A value and its error are derived from the recomputation; they are not\nsupplied as assumptions about a forward result. The final error bounds apply to\nthe words actually stored by the last three stages and compare their decoded\nreal values with TorchLean's actual generated backward."
+      },
+      "to": {
+        "description": "backward-affine-errors",
+        "passage": {
+          "quote": "For the real scalar network `(x*weight+bias)^2`, an incoming output weight d\nrequests sensitivities of the input, weight and bias. Write A=x*weight+bias.\nThe exact target values are `2*d*A*weight`, `2*d*A*x` and `2*d*A`. TorchLean's\nactual automatically generated backward is proved to have these values. A\nseparate implementation must still establish its own numerical correspondence."
+        }
+      },
+      "reason": "Discharge the saved-value error promise from the prefix and retain all initial-value guards and actual rounded stages."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The conclusion gives componentwise absolute errors: one explicit bound for each\nof the three sensitivities. Exceptional encodings have no invented real value;\nall-bit execution existence is separate from this finite accuracy theorem.\nThe reference checked backward succeeds by its own proof, rather than an assumed\nsuccess premise. Bitwise PyTorch agreement and differentiation of a rounded\nmachine execution are different claims and are not supplied here."
+      },
+      "to": {
+        "description": "gradient-storage-view",
+        "passage": {
+          "quote": "A stored gradient is still an exact 32-bit word. This view keeps three words\nin the order input sensitivity, weight sensitivity and bias sensitivity. The\ncaller selects those words from memory; the view itself neither invents\naddresses nor checks whether an allocation can be read. Execution and layout\nproofs must establish that the selected words are the actual stored outputs."
+        }
+      },
+      "reason": "Interpret the three actual gradient words through finite-only decoding and compare their components with the actual generated TorchLean VJP."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The model uses serialized, single-thread affine kernels with initialized aligned\nwhole-word global storage, nearest-even binary32 arithmetic, gradual underflow\nand the existing ISA 9.4 numeric sm_70+ feature boundary. Concrete runtime\ncompletion, visibility and interference exclusion remain external obligations.\nNo PTX backward code is generated from TorchLean's automatic derivative, and no\ngeneral neural-network lowering, optimizer, loss, asynchronous stream or Gemma\nimplementation is claimed by this scalar example.\n"
+      },
+      "to": {
+        "description": "serialized-launches",
+        "passage": {
+          "quote": "A serialized launch runs one kernel to completion before another command uses\nits stored results. Each launch selects one live global allocation: a named\nregion of device memory containing initialized 32-bit words. Every supplied\nmemory argument carries that same allocation identity and a 64-bit byte offset.\nThe launch rejects a missing allocation, a different device owner, or an argument\nnaming another allocation, even when its numeric offset would fit."
+        }
+      },
+      "reason": "Compose real completed instruction runs with exact persistent memory while retaining the external runtime visibility contract."
+    }
+  ]
+}

@@ -8,7 +8,7 @@
   },
   "summary": [
     "Propagate incoming operand errors through finite encoded binary32 addition and multiplication, including every admitted output.",
-    "Compose actual rounded multiply-then-add and squared-affine results with input-only range guards and all rounding and propagated-error contributions.",
+    "Compose actual rounded affine, squared-affine and separately specified backward stages with initial-value range guards, shared intermediates and all propagated-error contributions.",
     "Keep scalar error composition separate from instruction execution, whole-network bounds and precision-policy choices."
   ],
   "realization": "implemented",

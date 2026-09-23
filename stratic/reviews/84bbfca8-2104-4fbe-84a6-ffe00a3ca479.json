@@ -1,0 +1,266 @@
+{
+  "id": "84bbfca8-2104-4fbe-84a6-ffe00a3ca479",
+  "base": "e9b879156d98a85e7f1ca9c19fb5414f79790efa",
+  "contentTree": "1da6339ec6617809dc440fd1c740794674c2a5a6",
+  "reviewer": "Codex coordinator with independent arithmetic, gradient-view, actual-pipeline and recomputing-backward reviewers",
+  "summary": "Verify a separately authored recomputing PTX backward against the actual generated TorchLean VJP",
+  "examined": [
+    {
+      "id": "backward",
+      "outcome": "revised",
+      "reason": "A separately authored recomputing scalar backward now has actual execution, all-bit existence and actual stored-gradient error versus generated VJP; broader network and policy work remains unfinished."
+    },
+    {
+      "id": "binary32-error-composition",
+      "outcome": "revised",
+      "reason": "Add independently specified backward stages, retaining explicit seed/saved-value errors and all multiply/add roundings."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Record the five-launch recomputing backward alongside scalar forward examples; general networks and Gemma remain unfinished."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Only the linked guide adds a separate backward walkthrough; the message-passing instructions, memory rules and proofs are unchanged."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "revised",
+      "reason": "Add scalar backward stored-word bounds and derived saved-value recomputation error without claiming a global network accuracy policy."
+    },
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Current implementation coverage now includes separately authored scalar backward correspondence; full PTX, broad network and concrete runtime goals remain explicit."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The same exact pin/source/audit checking contract applies; new public audit coverage and independent reviews preserve the distinction between proof validity, source semantics and external runtime conformance."
+    },
+    {
+      "id": "tensor-layout",
+      "outcome": "revised",
+      "reason": "Explain the new finite binary32 gradient observation alongside the existing integer layout bridge, without claiming general layout inference or bitwise/real injectivity."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "revised",
+      "reason": "The stored-gradient interface and five-launch scalar example connect actual codewords to actual generated TorchLean VJP while broader layouts/policies remain open."
+    },
+    {
+      "id": "backward-affine-errors",
+      "outcome": "revised",
+      "reason": "Description-first arithmetic implements all8 operations, shared q/db words and initial-only range guards with exact+2 interpretation; independent numerical review and all13public audits pass."
+    },
+    {
+      "id": "backward-affine-kernels",
+      "outcome": "revised",
+      "reason": "Description-first four-stage contract is implemented using actual fetched runs and exact writebacks, with all-bit existence, traces, safety, frames and release rejection; independent review and27public audits pass."
+    },
+    {
+      "id": "gradient-storage-view",
+      "outcome": "revised",
+      "reason": "Description-first finite-only exact-word view maps into real TorchLean packs and actualVJP component bounds; nonfinite rejection and signedzero distinction proved, independent18endpoint review passed."
+    },
+    {
+      "id": "recomputed-affine-backward",
+      "outcome": "revised",
+      "reason": "Description-first prefix recomputes the saved affine value with safe bias/output alias, then composes4backward launches; public stored theorem derives saved error/provenance and ADsuccess from initial conditions and actualchain; independent21endpoint review passed."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Reuses existing accepted binary32 operations, actual Affine.program and Mixed runs unchanged; no new memory or instruction rule is smuggled into backward correctness."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "The scalar recomputing example does not implement Gemma or settle its architecture, loss, precision policy or parameter coverage; Gemma remains explicitly deferred."
+    },
+    {
+      "id": "affine-memory-kernel",
+      "outcome": "unchanged",
+      "reason": "The seven-instruction kernel and its existing numerical/execution contracts are unchanged; the backward proof selects new arguments and composes actual runs using those contracts."
+    },
+    {
+      "id": "serialized-launches",
+      "outcome": "unchanged",
+      "reason": "The actual halted-run and exact writeback definition is reused unchanged with five explicit requests. Runtime completion/visibility and interference exclusion are not derived from thread exit."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "1da6339ec6617809dc440fd1c740794674c2a5a6",
+      "method": "./scripts/check.sh; ./integration/torchlean/check.sh; stratic validate; independent semantic/proof review and fresh exact-public audits of BackwardError, GradientView, BackwardPipeline and AffineBackward",
+      "outcome": "pass",
+      "environment": "Pinned Lean4.34.0, dependency-free PTX root and exact clean manifest-pinned TorchLean/FloatLib/mathlib integration; no model calls for this milestone",
+      "evidence": "Before/after content tree identical 1da6339ec6617809dc440fd1c740794674c2a5a6. Strict root checks pass:642 exact dependency reports, source guard, coverage,6 accepted instruction forms,4 evidence archives and checker regressions. Joint17default targets build,363exact dependency reports match registered names and permit only propext, Classical.choice, Quot.sound. Independent reviews cover all13+18+27+21new public declarations, actual state/store continuity, input-only range/error guards, derived saved-value provenance and exact upstreamVJP connection. Logs /tmp/ptx-backward-root-final.log and /tmp/ptx-backward-joint-final.log. Runtime visibility and general network coverage remain explicit. Campaign inspected:9 total headless calls, no unresolved call.",
+      "tests": [],
+      "id": "3131603f-b61c-4a46-b7cb-67849e4b8fa2",
+      "recordedAt": "2026-09-23T23:15:11.566Z"
+    }
+  ],
+  "recordedAt": "2026-09-23T23:15:22.283Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Study and reproduction text reconciled with the self-contained Stratic contracts, including scalar/numerical/runtime and code-generation boundaries."
+    },
+    {
+      "path": "docs/foundations/backward-affine-errors-audit.txt",
+      "reason": "Independent source/proof review and exact logical dependency evidence for this slice, reviewed as supporting evidence rather than another implementation."
+    },
+    {
+      "path": "docs/foundations/backward-affine-errors-review.md",
+      "reason": "Independent source/proof review and exact logical dependency evidence for this slice, reviewed as supporting evidence rather than another implementation."
+    },
+    {
+      "path": "docs/foundations/backward-affine-errors.md",
+      "reason": "Study and reproduction text reconciled with the self-contained Stratic contracts, including scalar/numerical/runtime and code-generation boundaries."
+    },
+    {
+      "path": "docs/foundations/backward-affine-kernels-audit.txt",
+      "reason": "Independent source/proof review and exact logical dependency evidence for this slice, reviewed as supporting evidence rather than another implementation."
+    },
+    {
+      "path": "docs/foundations/backward-affine-kernels-review.md",
+      "reason": "Independent source/proof review and exact logical dependency evidence for this slice, reviewed as supporting evidence rather than another implementation."
+    },
+    {
+      "path": "docs/foundations/backward-affine-kernels.md",
+      "reason": "Study and reproduction text reconciled with the self-contained Stratic contracts, including scalar/numerical/runtime and code-generation boundaries."
+    },
+    {
+      "path": "docs/foundations/gradient-storage-view-audit.txt",
+      "reason": "Independent source/proof review and exact logical dependency evidence for this slice, reviewed as supporting evidence rather than another implementation."
+    },
+    {
+      "path": "docs/foundations/gradient-storage-view-review.md",
+      "reason": "Independent source/proof review and exact logical dependency evidence for this slice, reviewed as supporting evidence rather than another implementation."
+    },
+    {
+      "path": "docs/foundations/gradient-storage-view.md",
+      "reason": "Study and reproduction text reconciled with the self-contained Stratic contracts, including scalar/numerical/runtime and code-generation boundaries."
+    },
+    {
+      "path": "docs/foundations/guide.md",
+      "reason": "Study and reproduction text reconciled with the self-contained Stratic contracts, including scalar/numerical/runtime and code-generation boundaries."
+    },
+    {
+      "path": "docs/foundations/recomputed-affine-backward-audit.txt",
+      "reason": "Independent source/proof review and exact logical dependency evidence for this slice, reviewed as supporting evidence rather than another implementation."
+    },
+    {
+      "path": "docs/foundations/recomputed-affine-backward-review.md",
+      "reason": "Independent source/proof review and exact logical dependency evidence for this slice, reviewed as supporting evidence rather than another implementation."
+    },
+    {
+      "path": "docs/foundations/recomputed-affine-backward.md",
+      "reason": "Study and reproduction text reconciled with the self-contained Stratic contracts, including scalar/numerical/runtime and code-generation boundaries."
+    },
+    {
+      "path": "integration/torchlean/PtxAffineBackward.lean",
+      "reason": "Linked public contracts and remaining definitions/proof bodies reviewed together; all explicit public declarations included in exact independent and routine audits."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/BackwardError.lean",
+      "reason": "Linked public contracts and remaining definitions/proof bodies reviewed together; all explicit public declarations included in exact independent and routine audits."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+      "reason": "Linked public contracts and remaining definitions/proof bodies reviewed together; all explicit public declarations included in exact independent and routine audits."
+    },
+    {
+      "path": "integration/torchlean/PtxGradientView.lean",
+      "reason": "Linked public contracts and remaining definitions/proof bodies reviewed together; all explicit public declarations included in exact independent and routine audits."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Independent source/proof review and exact logical dependency evidence for this slice, reviewed as supporting evidence rather than another implementation."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Study and reproduction text reconciled with the self-contained Stratic contracts, including scalar/numerical/runtime and code-generation boundaries."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Build and audit wiring extends explicit default targets and namespace counts; pinned dependencies, accepted instruction forms and checker semantics remain unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Build and audit wiring extends explicit default targets and namespace counts; pinned dependencies, accepted instruction forms and checker semantics remain unchanged."
+    },
+    {
+      "path": "stratic/descriptions/backward-affine-errors.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/backward-affine-errors.md",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/backward-affine-kernels.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/backward-affine-kernels.md",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/backward.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/binary32-error-composition.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/binary32-error-composition.md",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/gradient-storage-view.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/gradient-storage-view.md",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/recomputed-affine-backward.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/recomputed-affine-backward.md",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/tensor-layout.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/tensor-layout.md",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/verification-interface.json",
+      "reason": "Description, summary, realization and passage-link metadata reviewed with the completed responsibility; metadata is not itself an implementation passage."
+    }
+  ]
+}

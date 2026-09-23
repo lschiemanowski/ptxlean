@@ -35,7 +35,7 @@ hardware values, certify floating-point error, or prove a PTX implementation.
 The mathematical VJP endpoint differentiates the actual graph forward map;
 `forward_polynomial` establishes its correspondence to the displayed polynomial.
 The current graph has no state updates, masks, parameter sharing or nonsmooth
-operations. General model lowering and backward floating-point/kernel correspondence remain open.
+operations. General model lowering and network-scale numerical/kernel correspondence remain open.
 The serialized scalar forward bridge below establishes one restricted numerical
 correspondence for this actual graph.
 
@@ -93,7 +93,30 @@ The proof does not derive these obligations from a PTX thread's exit.
 backward result for arbitrary real scalar inputs and an arbitrary output weight.
 It proves checked success, the three explicit sensitivities, and mathematical
 derivative correspondence. The [backward guide](../../docs/foundations/affine-square-vjp.md)
-explains this exact-real result. No PTX backward kernel is supplied or proved here.
+explains this exact-real result. These exact-real proofs remain distinct from the independently authored
+backward implementation below.
+
+## Separately authored recomputing backward
+
+`PtxAffineBackward.lean` selects five actual affine-program launches by hand.
+The first recomputes the affine value in the bias slot after reading it. Four
+more stages scale the incoming output weight and produce bias, input and weight
+sensitivities. The [walkthrough](../../docs/foundations/recomputed-affine-backward.md)
+shows the exact layout, request sequence and checked (84,56,28) example.
+
+`PtxBinary32/BackwardPipeline.lean` proves the four-stage execution, trace, safety,
+frame and all-bit existence contracts. `BackwardError.lean` retains every rounding
+and propagates seed, operand and saved-value errors. The final stored-gradient
+theorem derives the saved value and its error from the actual recomputation,
+then uses `PtxGradientView.lean` to compare the actual stored words with TorchLean's
+actual generated VJP. No desired output, correct saved value or successful AD
+call is assumed. The observation interface rejects nonfinite encodings and
+explicitly distinguishes same real value from same bits.
+
+This is one scalar implementation under the serialized runtime contract, not an
+automatic backward-code generator or a general network/PTX lowering result.
+Its separately checked numerical and execution proofs do not certify host/runtime
+visibility, physical ABI, hardware conformance or bitwise PyTorch agreement.
 
 ## Reproduce
 
@@ -113,11 +136,12 @@ desired, their compatible mathlib cache before running it; do not use
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 13 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 284
+All 17 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 363
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
-forward bridge and scalar generated backward. `check.py` fixes the endpoint
+forward bridge, scalar generated backward and independently authored backward
+implementation with a stored-gradient observation interface. `check.py` fixes the endpoint
 counts by namespace, and the audit driver lists every name. Only the three
 standard Lean axioms listed below are permitted.
 

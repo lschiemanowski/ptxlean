@@ -6,6 +6,6 @@
     "Explain the computing model and the conditions of each correctness claim through source-linked documentation and reproducible examples."
   ],
   "realization": "partial",
-  "remaining": "Restricted memory and collective models, scalar proofs, encoded binary32 arithmetic, actual affine kernels, serialized logical storage and launch chains are implemented. A two-kernel scalar example connects stored outputs to the real TorchLean graph; automatic real backward success and VJP proofs remain distinct from PTX backward. Reviewed Luna tasks establish bounded instruction-formalization capability. Full PTX coverage, mixed-source observations, general data-dependent concurrency, broader tensor/numerical interfaces, concrete runtime and PyTorch correspondence, separately authored backward kernels and Gemma remain unfinished.",
+  "remaining": "Restricted memory/collective models, integer and binary32 scalar execution, serialized storage and actual numerical kernels are implemented. A two-kernel scalar forward and a separately authored recomputing backward connect stored words to an actual pinned TorchLean graph and generated VJP, with existence and explicit numerical bounds. Reviewed Luna tasks establish bounded instruction capability. Full PTX coverage, mixed-source observations, general data-dependent concurrency, broader tensors/precision policies, concrete runtime/PyTorch correspondence and Gemma remain unfinished.",
   "links": []
 }

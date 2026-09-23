@@ -1,0 +1,149 @@
+{
+  "id": "backward-affine-kernels",
+  "parent": {
+    "description": "backward",
+    "passage": {
+      "quote": "The PTX backward implementation is authored separately, together with its\ncorrectness proof. Reusable lemmas, proof-automation procedures called tactics,\nand model assistance can help construct that proof. Automatic differentiation\nof the TorchLean specification does not generate the PTX implementation or prove\nthat implementation correct."
+    }
+  },
+  "summary": [
+    "Run four independently authored affine kernels for encoded squared-affine sensitivities, passing q and db through actual persistent storage.",
+    "Derive all actual arithmetic results, final stored words, stage traces and safety for every completed chain; construct execution for all bit patterns.",
+    "Keep the later saved-forward and real-VJP numerical bridge separate from this execution contract and from TorchLean automatic differentiation."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The initialized arena contains x, w, saved A, d, positive-two bits, positive-zero\nbits, old dx, old dw, old db and old q, followed by arbitrary extra words. The\nfour argument lists use byte offsets [16,12,20,36], [36,8,20,32], [32,4,20,24] and\n[32,0,20,28]. Intermediate values therefore pass through actual memory between\nlaunches. Old output words are arbitrary. Each launch has its own independently\nsupplied register and predicate state; only the allocation's stored contents\npersist automatically."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "def Data.words (data : Data) : List Word :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The initialized arena contains x, w, saved A, d, positive-two bits, positive-zero\nbits, old dx, old dw, old db and old q, followed by arbitrary extra words. The\nfour argument lists use byte offsets [16,12,20,36], [36,8,20,32], [32,4,20,24] and\n[32,0,20,28]. Intermediate values therefore pass through actual memory between\nlaunches. Old output words are arbitrary. Each launch has its own independently\nsupplied register and predicate state; only the allocation's stored contents\npersist automatically."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "def arguments (allocation : Nat) (stage index : Fin 4) : Argument :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction sequence is chosen manually, separately from TorchLean's\nautomatic differentiation. It launches the existing seven-instruction affine\nprogram four times: q=2*d+0, db=q*A+0, dx=db*w+0, and dw=db*x+0. Every stage\nperforms three bit-preserving loads, one nearest-even multiplication, one\nnearest-even addition, one store and explicit exit. Positive-zero additions\nremain actual instructions. Each multiplication and addition has its own result\nword admitted by the original binary32 relation."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "def requests (target : Target) (thread : ThreadLocation) (allocation : Nat)\n    (registers : Fin 4 → Seed) : List Request :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every admitted completed four-launch chain must produce the original four\naffine result relations, with the actual q feeding db and the actual db feeding\nboth dx and dw. Its final allocation contains the exact four stored output words;\ninputs, constants and the extra words are preserved. Other allocations are also\npreserved. Each stage's final state and seven-event trace follow from its actual\nfetched run, and every emitted memory access passes the live allocation checks.\nA chain exists for all initial input bit patterns and all four register seeds,\nwithout finite-value or final-output assumptions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "theorem stage_run_iff (eligible : Mixed.Eligible target) :\n    Mixed.Run target Affine.program (stageStart data allocation stage registers) final .halted events ↔\n      ∃ product out, Binary32.Error.AffineResults (data.left stage) (data.right stage) 0 product out ∧\n        final = Affine.finish (stageStart data allocation stage registers) product out ∧\n        events = Affine.trace (stageStart data allocation stage registers) product out :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every admitted completed four-launch chain must produce the original four\naffine result relations, with the actual q feeding db and the actual db feeding\nboth dx and dw. Its final allocation contains the exact four stored output words;\ninputs, constants and the extra words are preserved. Other allocations are also\npreserved. Each stage's final state and seven-event trace follow from its actual\nfetched run, and every emitted memory access passes the live allocation checks.\nA chain exists for all initial input bit patterns and all four register seeds,\nwithout finite-value or final-output assumptions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "theorem launches_correct\n    (present : before.cells allocation = some ⟨thread.device, data.words⟩)\n    (eligible : Mixed.Eligible target)\n    (hQ : SuccessfulLaunch (request target thread allocation 0 (seeds 0)) before sQ fQ tQ)\n    (hDb : SuccessfulLaunch (request target thread allocation 1 (seeds 1)) sQ sDb fDb tDb)\n    (hDx : SuccessfulLaunch (request target thread allocation 2 (seeds 2)) sDb sDx fDx tDx)\n    (hDw : SuccessfulLaunch (request target thread allocation 3 (seeds 3)) sDx after fDw tDw) :\n    ∃ pQ q pDb db pDx dx pDw dw,\n      Results data.x data.w data.saved data.seed pQ q pDb db pDx dx pDw dw ∧\n      sQ.cells allocation = some ⟨thread.device, (data.update 0 q).words⟩ ∧\n      sDb.cells allocation = some ⟨thread.device, ((data.update 0 q).update 1 db).words⟩ ∧\n      sDx.cells allocation = some ⟨thread.device, (((data.update 0 q).update 1 db).update 2 dx).words⟩ ∧\n      after.cells allocation = some ⟨thread.device, (outputData data q db dx dw).words⟩ ∧\n      fQ = Affine.finish (stageStart data allocation 0 (seeds 0)) pQ q ∧\n      tQ = Affine.trace (stageStart data allocation 0 (seeds 0)) pQ q ∧\n      fDb = Affine.finish (stageStart (data.update 0 q) allocation 1 (seeds 1)) pDb db ∧\n      tDb = Affine.trace (stageStart (data.update 0 q) allocation 1 (seeds 1)) pDb db ∧\n      fDx = Affine.finish (stageStart ((data.update 0 q).update 1 db) allocation 2 (seeds 2)) pDx dx ∧\n      tDx = Affine.trace (stageStart ((data.update 0 q).update 1 db) allocation 2 (seeds 2)) pDx dx ∧\n      fDw = Affine.finish (stageStart (((data.update 0 q).update 1 db).update 2 dx) allocation 3 (seeds 3)) pDw dw ∧\n      tDw = Affine.trace (stageStart (((data.update 0 q).update 1 db).update 2 dx) allocation 3 (seeds 3)) pDw dw :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every admitted completed four-launch chain must produce the original four\naffine result relations, with the actual q feeding db and the actual db feeding\nboth dx and dw. Its final allocation contains the exact four stored output words;\ninputs, constants and the extra words are preserved. Other allocations are also\npreserved. Each stage's final state and seven-event trace follow from its actual\nfetched run, and every emitted memory access passes the live allocation checks.\nA chain exists for all initial input bit patterns and all four register seeds,\nwithout finite-value or final-output assumptions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "theorem pipeline_correct\n    (present : before.cells allocation = some ⟨thread.device, data.words⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before (requests target thread allocation seeds) after) :\n    ∃ pQ q pDb db pDx dx pDw dw,\n      Results data.x data.w data.saved data.seed pQ q pDb db pDx dx pDw dw ∧\n      after.cells allocation = some ⟨thread.device, (outputData data q db dx dw).words⟩ :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every admitted completed four-launch chain must produce the original four\naffine result relations, with the actual q feeding db and the actual db feeding\nboth dx and dw. Its final allocation contains the exact four stored output words;\ninputs, constants and the extra words are preserved. Other allocations are also\npreserved. Each stage's final state and seven-event trace follow from its actual\nfetched run, and every emitted memory access passes the live allocation checks.\nA chain exists for all initial input bit patterns and all four register seeds,\nwithout finite-value or final-output assumptions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "theorem pipeline_exists\n    (present : before.cells allocation = some ⟨thread.device, data.words⟩)\n    (eligible : Mixed.Eligible target) :\n    ∃ after, Chain before (requests target thread allocation seeds) after :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every admitted completed four-launch chain must produce the original four\naffine result relations, with the actual q feeding db and the actual db feeding\nboth dx and dw. Its final allocation contains the exact four stored output words;\ninputs, constants and the extra words are preserved. Other allocations are also\npreserved. Each stage's final state and seven-event trace follow from its actual\nfetched run, and every emitted memory access passes the live allocation checks.\nA chain exists for all initial input bit patterns and all four register seeds,\nwithout finite-value or final-output assumptions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "theorem stage_trace_safe\n    (present : before.cells allocation = some ⟨thread.device, data.words⟩)\n    (eligible : Mixed.Eligible target)\n    (launch : SuccessfulLaunch (request target thread allocation stage registers) before after final events) :\n    events.length = 7 ∧ events.map Mixed.Event.pc = [0,1,2,3,4,5,6] ∧\n      events.map Mixed.Event.instruction = Affine.program ∧\n      ∀ event ∈ events, ∀ effect, event.memory = some effect →\n        (environment before).accessible thread\n          (match effect.kind with | .load => .read | .store => .write)\n          (address allocation effect.address) 4 :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every admitted completed four-launch chain must produce the original four\naffine result relations, with the actual q feeding db and the actual db feeding\nboth dx and dw. Its final allocation contains the exact four stored output words;\ninputs, constants and the extra words are preserved. Other allocations are also\npreserved. Each stage's final state and seven-event trace follow from its actual\nfetched run, and every emitted memory access passes the live allocation checks.\nA chain exists for all initial input bit patterns and all four register seeds,\nwithout finite-value or final-output assumptions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "theorem pipeline_memory_frame\n    (present : before.cells allocation = some ⟨thread.device, data.words⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before (requests target thread allocation seeds) after) :\n    ∃ cell, after.cells allocation = some cell ∧\n      cell.words.take 6 = data.words.take 6 ∧ cell.words.drop 10 = data.tail :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every admitted completed four-launch chain must produce the original four\naffine result relations, with the actual q feeding db and the actual db feeding\nboth dx and dw. Its final allocation contains the exact four stored output words;\ninputs, constants and the extra words are preserved. Other allocations are also\npreserved. Each stage's final state and seven-event trace follow from its actual\nfetched run, and every emitted memory access passes the live allocation checks.\nA chain exists for all initial input bit patterns and all four register seeds,\nwithout finite-value or final-output assumptions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "theorem pipeline_other_allocation\n    (chain : Chain before (requests target thread allocation seeds) after)\n    (other : Nat) (different : other ≠ allocation) : after.cells other = before.cells other :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scope is the serialized one-thread, one-allocation global word arena, PTX\nISA 9.4 and the numeric sm_70-or-later feature condition. Accesses are initialized,\naligned and whole-word, with no interfering host, thread or asynchronous work.\nA real runtime must establish completion, visibility, lifetime and argument\ncorrespondence. Thread exit alone does not prove those obligations. This is no\nclaim about general cross-kernel PTX memory graphs, GPU progress, hardware NaN\nrealizability, a TorchLean-generated PTX backward, or a full transformer backward.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardPipeline.lean",
+        "passage": {
+          "quote": "theorem stage_after_release_rejected\n    (released : release before allocation = some freed) (history : History freed last) :\n    ¬ SuccessfulLaunch (request target thread allocation stage registers) last after final events :="
+        }
+      }
+    }
+  ]
+}

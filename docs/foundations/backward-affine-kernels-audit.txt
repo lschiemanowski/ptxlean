@@ -1,0 +1,40 @@
+Independent BackwardPipeline audit
+Source: integration/torchlean/PtxBinary32/BackwardPipeline.lean
+SHA256: 6173bf79baa3a8898c5245bb1122d24ad395a31fd39c2edde1723e840be8c582
+Fresh source elaboration: exit 0; empty diagnostics
+Public declarations: 27; exact list independently matched to source declarations
+Commands (cwd integration/torchlean):
+  lake env lean PtxBinary32/BackwardPipeline.lean
+  lake env lean /tmp/ptx-backward-pipeline-independent.lean
+Driver: import PtxBinary32.BackwardPipeline followed by #print axioms for each name below
+Both commands exited 0. Source SHA rechecked unchanged after execution.
+Only permitted standard axioms: propext, Classical.choice, Quot.sound.
+No source sorry, new axiom or native_decide declaration found.
+
+'Ptx.Scalar.BackwardPipeline.Data' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.Data.words' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.Data.left' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.Data.right' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.Data.update' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.outputData' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.arguments' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.stageStart' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.request' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.requests' depends on axioms: [propext]
+'Ptx.Scalar.BackwardPipeline.Results' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.stage_initial' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.stage_run_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.finish_words' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.stage_launch_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.stage_of_results' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.stage_trace_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.results_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.four_launches_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.launches_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.pipeline_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.pipeline_of_results' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.pipeline_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.pipeline_other_allocation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.words_tail' does not depend on any axioms
+'Ptx.Scalar.BackwardPipeline.pipeline_memory_frame' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.BackwardPipeline.stage_after_release_rejected' depends on axioms: [propext, Classical.choice, Quot.sound]

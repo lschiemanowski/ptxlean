@@ -1,0 +1,77 @@
+{
+  "id": "backward-affine-errors",
+  "parent": {
+    "description": "binary32-error-composition",
+    "passage": {
+      "quote": "These are scalar numerical composition rules for nearest-even binary32 with\ngradual underflow. They are not floating-point instruction execution, a complete\nneural-network error analysis, a GPU correctness claim, or a selected Gemma\nprecision policy. Larger programs must supply their own finite input/range and\nincoming-error proofs and preserve their actual operation order."
+    }
+  },
+  "summary": [
+    "Propagate incoming input, seed and saved-forward-value errors through four separately specified rounded affine stages for the three scalar sensitivities.",
+    "Derive intermediate finiteness from initial-value range guards and retain every rounding and propagated-error term.",
+    "Separate saved-forward provenance, actual instruction execution and TorchLean backward correspondence from the arithmetic proof."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical contract follows four explicitly selected rounded affine stages:\nq=2*d+0, db=q*savedA+0, dx=db*weight+0 and dw=db*x+0. Each stage multiplies and\nrounds before adding positive zero and rounding again. The saved forward word\nis shared by the two input/weight sensitivities through the actual bias-gradient\nword db. No ideal derivative is substituted for a machine intermediate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardError.lean",
+        "passage": {
+          "quote": "def Results (x w saved seed pQ q pDb db pDx dx pDw dw : Word) : Prop :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Finite interpretations of the initial encoded x, weight, savedA and d are\nsupplied together with absolute errors relative to their ideal values. The\nsaved-value error is a separate premise: a forward-kernel theorem can supply it.\nThe backward theorem does not establish that an arbitrary supplied word came\nfrom a forward execution. Its stage range guards are expressions calculated\nfrom the initial finite values using the explicitly specified rounding order;\nno guard assumes an intermediate or gradient output is finite or correct."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardError.lean",
+        "passage": {
+          "quote": "def Guards (xh wh ah dh : ℝ) : Prop :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Finite interpretations of the initial encoded x, weight, savedA and d are\nsupplied together with absolute errors relative to their ideal values. The\nsaved-value error is a separate premise: a forward-kernel theorem can supply it.\nThe backward theorem does not establish that an arbitrary supplied word came\nfrom a forward execution. Its stage range guards are expressions calculated\nfrom the initial finite values using the explicitly specified rounding order;\nno guard assumes an intermediate or gradient output is finite or correct."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardError.lean",
+        "passage": {
+          "quote": "theorem stage_error (left right product output : Word) (lh rh l r el er : ℝ)\n    (leftReal : finiteReal left = some lh) (rightReal : finiteReal right = some rh)\n    (range : StageRange lh rh) (leftError : |lh-l| ≤ el) (rightError : |rh-r| ≤ er)\n    (allowed : Error.AffineResults left right 0 product output) :\n    finiteReal output = some (roundedProduct lh rh) ∧\n      |roundedProduct lh rh-l*r| ≤ stageBudget lh rh l r el er :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each multiplication's error combines its own rounding with both incoming errors,\nincluding their product. Every explicit zero addition retains its rounding\ncontribution. The q bound feeds the db bound; that bound feeds both dx and dw.\nThe result applies to all outputs permitted by the original encoded arithmetic\nrelations. Existence of those relations is proved separately for arbitrary bits,\nwithout any finite-range hypothesis."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardError.lean",
+        "passage": {
+          "quote": "theorem results_error (x w saved seed pQ q pDb db pDx dx pDw dw : Word)\n    (xh wh ah dh idealX idealW idealA d ex ew ea ed : ℝ)\n    (xReal : finiteReal x = some xh) (wReal : finiteReal w = some wh)\n    (savedReal : finiteReal saved = some ah) (seedReal : finiteReal seed = some dh)\n    (guards : Guards xh wh ah dh)\n    (xError : |xh-idealX| ≤ ex) (wError : |wh-idealW| ≤ ew)\n    (savedError : |ah-idealA| ≤ ea) (seedError : |dh-d| ≤ ed)\n    (allowed : Results x w saved seed pQ q pDb db pDx dx pDw dw) :\n    finiteReal q = some (roundedProduct 2 dh) ∧\n    finiteReal db = some (roundedBase ah dh) ∧\n    finiteReal dx = some (roundedProduct (roundedBase ah dh) wh) ∧\n    finiteReal dw = some (roundedProduct (roundedBase ah dh) xh) ∧\n    |roundedProduct (roundedBase ah dh) wh - 2*d*idealA*idealW| ≤\n      parameterBudget wh ah dh idealW idealA d ew ea ed ∧\n    |roundedProduct (roundedBase ah dh) xh - 2*d*idealA*idealX| ≤\n      parameterBudget xh ah dh idealX idealA d ex ea ed ∧\n    |roundedBase ah dh - 2*d*idealA| ≤ baseBudget ah dh idealA d ea ed :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each multiplication's error combines its own rounding with both incoming errors,\nincluding their product. Every explicit zero addition retains its rounding\ncontribution. The q bound feeds the db bound; that bound feeds both dx and dw.\nThe result applies to all outputs permitted by the original encoded arithmetic\nrelations. Existence of those relations is proved separately for arbitrary bits,\nwithout any finite-range hypothesis."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardError.lean",
+        "passage": {
+          "quote": "theorem results_exists (x w saved seed : Word) :\n    ∃ pQ q pDb db pDx dx pDw dw, Results x w saved seed pQ q pDb db pDx dx pDw dw :="
+        }
+      }
+    }
+  ]
+}
