@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "modules": [
+    "PtxBinary32.Instructions",
+    "PtxBinary32Bounds"
+  ],
+  "checks": [
+    "formalization/checks/binary32-instructions-v2.lean"
+  ],
+  "checks_sha256": {
+    "formalization/checks/binary32-instructions-v2.lean": "41332b7e362168bb9c60cfb0dec101a7a05d75935741a7f12ccd03bb1472ab6d"
+  },
+  "declarations": [
+    "Ptx.Scalar.Binary32.eval_true_iff",
+    "Ptx.Scalar.Binary32.eval_false_iff",
+    "Ptx.Scalar.Binary32.eval_destination",
+    "Ptx.Scalar.Binary32.eval_frame",
+    "Ptx.Scalar.Binary32.eval_other",
+    "Ptx.Scalar.Binary32.eval_event",
+    "Ptx.Scalar.Binary32.eval_exists",
+    "Ptx.Scalar.Binary32.step_origin",
+    "Ptx.Scalar.Binary32.step_exists",
+    "Ptx.Scalar.Binary32.step_no_fetch",
+    "Ptx.Scalar.Binary32.step_unsupported_target",
+    "Ptx.Scalar.Binary32.Text.decode_encode",
+    "Ptx.Scalar.Binary32.Text.decode_iff",
+    "Ptx.Scalar.Binary32.occurrence",
+    "Ptx.Scalar.Binary32.SupportedTarget",
+    "Ptx.Scalar.Binary32.Step",
+    "Ptx.Scalar.Binary32.Text.decode",
+    "Ptx.Scalar.Binary32.Text.encode"
+  ],
+  "scope": "Independent encoded arithmetic, typed decoding, fetch, predicate, alias and frame checks; NaN envelope membership is not hardware realizability.",
+  "revision_note": "Coordinator evaluator correction: build the existing PtxBinary32Bounds prerequisite and make the instruction argument explicit in two alias proof applications. Acceptance theorem statements and all other proof text are unchanged. The original missing-module error and two elaboration timeouts are preserved; no candidate semantic defect is inferred from them."
+}

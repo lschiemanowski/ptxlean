@@ -1,0 +1,436 @@
+{
+  "id": "65243395-b229-4308-8d20-d737409a1188",
+  "base": "e00a9e51b4ab54649ce087be724f683e547f6789",
+  "contentTree": "bb5e4dcea2d6af1aaaf8e795614af8264fd11052",
+  "reviewer": "Codex coordinator with independent semantic and proof reviewers",
+  "summary": "Verify delegated binary32 instructions and alias-safe affine kernel execution.",
+  "examined": [
+    {
+      "id": "binary32-results",
+      "outcome": "revised",
+      "reason": "The arithmetic contract is unchanged; its separate fetched-instruction connection is now implemented and linked."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Small reusable kernel examples are explicit responsibilities; the alias-safe affine example is implemented while network applications remain unfinished."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "Six selected forms now have exact accepted patch/replay/source provenance; nested namespace sites and explicit unsupported siblings are checked."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Only the shared audit aggregator gains unrelated declarations; original message-passing semantics and all proof statements are unchanged."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "A third guided Luna task exercises a pinned integration project and genuine binary32 instruction proofs; capability evidence remains adaptive and bounded."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "revised",
+      "reason": "Existing finite range and two-rounding bounds now apply to the actual affine kernel output; no new numerical policy or desired-result assumption."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "revised",
+      "reason": "Mixed fetched execution and an alias-safe isolated affine fragment extend implemented coverage, with broader concurrent PTX admission explicitly unfinished."
+    },
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Top-level implementation metadata now reflects numerical, instruction and affine examples without claiming full PTX, network or runtime completion."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "revised",
+      "reason": "Separate binary32 leaves and a tagged mixed executor reuse the original state and scalar rules, with actual fetch and explicit exit."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Independent source/proof reviews, exact dependency audits and a compile-preserving metadata probe substantiate the new restricted fragment."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "revised",
+      "reason": "Implemented numerical and kernel pieces are recorded while general tensor, orchestration, PyTorch and backward correspondence remain unfinished."
+    },
+    {
+      "id": "worker-replay",
+      "outcome": "revised",
+      "reason": "A real fresh subproject replay and a separately labeled zero-model-call smoke preserve failures, pinned dependencies and deferred candidate ledger checks."
+    },
+    {
+      "id": "worker-review-probes",
+      "outcome": "revised",
+      "reason": "An omitted floating-point operand-read trace still compiles but is rejected at the exact independent assertion; failed setup and earlier harness retained."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "revised",
+      "reason": "Archive verification covers both model trials and synthetic plumbing evidence; nine campaign calls are recorded without summing resumed usage."
+    },
+    {
+      "id": "affine-memory-kernel",
+      "outcome": "revised",
+      "reason": "Every terminal run has exact fetched trace, real stored word, alias-safe frames and input-only error bound; existence, six-step prefix bound and concrete examples checked."
+    },
+    {
+      "id": "affine-memory-observations",
+      "outcome": "revised",
+      "reason": "Full graph validity and initialization-source forcing cover arbitrary whole-word aliases; actual trace labels are connected separately without general no-thin-air claims."
+    },
+    {
+      "id": "binary32-instructions",
+      "outcome": "revised",
+      "reason": "Exact Luna patch preserves prestate operands, guards, target feature check, typed decoder and original conservative numerical relation; all proofs complete."
+    },
+    {
+      "id": "mixed-scalar-execution",
+      "outcome": "revised",
+      "reason": "Tagged dispatch lifts Scalar.eval none and Binary32.Eval exactly, with finite paths separate from terminal runs, origin, safety and frame proofs."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "The source-section census remains unchanged; six selected accepted spellings are explicitly separate from assessment of whole sections."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "Backward mathematical and separately authored PTX obligations are unchanged; no automatic PTX construction or derivative-kernel proof is inferred from an affine forward kernel."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "Gemma remains deferred and unimplemented; no architecture, precision or application verification claim is introduced."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "unchanged",
+      "reason": "The affine example is one isolated launch; ordering, visibility, lifetime and combined-kernel promises remain unchanged and unfinished."
+    },
+    {
+      "id": "binary32-error-composition",
+      "outcome": "unchanged",
+      "reason": "The existing two-rounding error theorem is consumed unchanged with its exact finite-input/range/error assumptions; no specification weakening."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "bb5e4dcea2d6af1aaaf8e795614af8264fd11052",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; independent source/proof reviews and exact candidate replay/probe review",
+      "outcome": "pass",
+      "environment": "Pinned Lean4.34.0; Python3;16 clean pinned TorchLean/FloatLib/mathlib Git dependencies; Luna via recorded account-authenticated Codex headless.",
+      "evidence": "Exact before/after tree identical. Strict six-form ledger and four evidence archives (542 members) pass; worker54 and ledger26 regression tests pass. Root604 and integration204 exact dependency reports permit only standard Lean axioms. Fresh binary32 candidate003 replay, all28 instruction reports,44 mixed-execution reports,30 affine-memory reports and47 affine-kernel reports reviewed; concrete disjoint/all-alias runs pass. The compile-preserving omitted-read probe fails exactly the intended assertion. Logs /tmp/ptxlean-affine-root-final.log and /tmp/ptxlean-affine-joint-final.log; detailed reviews and immutable trial evidence in proposal. NaN realizability, runtime conformance and general concurrent PTX admission remain outside this result.",
+      "tests": [],
+      "id": "6f6eb042-e31e-49ed-b01b-ddb178b80e02",
+      "recordedAt": "2026-09-23T22:17:33.603Z"
+    }
+  ],
+  "recordedAt": "2026-09-23T22:17:58.365Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Root import aggregator includes the independently reviewed affine memory graph; no preexisting semantics or theorem assumptions changed."
+    },
+    {
+      "path": "Ptx/AffineMemory.lean",
+      "reason": "Independent review and root checking cover graph construction, full validity certificate, arbitrary-alias read-source forcing and all 30 public dependencies; shared audit aggregator adds these completed declarations."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Independent review and root checking cover graph construction, full validity certificate, arbitrary-alias read-source forcing and all 30 public dependencies; shared audit aggregator adds these completed declarations."
+    },
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Selected six-form ledger pins reviewed source sites and exact accepted replay/patch evidence; sibling limitations remain explicit and no whole-ISA coverage inferred."
+    },
+    {
+      "path": "docs/formalization/binary32-instructions-proof-review.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/formalization/binary32-instructions-source-review.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/formalization/worker-runs.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/foundations/affine-kernel-audit.txt",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/foundations/affine-kernel-proof-review.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/foundations/affine-memory-audit.txt",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/foundations/affine-memory-observations.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/foundations/affine-memory-proof-review.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/foundations/binary32-instructions.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/foundations/mixed-affine.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/foundations/mixed-scalar-audit.txt",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "docs/foundations/mixed-scalar-proof-review.md",
+      "reason": "Reviewed pedagogical account or independent source/proof audit evidence, including actual trace, alias, numerical, runtime and NaN-envelope boundaries; no unsupported result inferred from documentation."
+    },
+    {
+      "path": "formalization/checks/binary32-instructions-v1.json",
+      "reason": "Reviewed frozen task/source boundary, exact instruction contract, assertion-identical evaluator repairs and narrowly scoped worker feedback; source/proof reviews and fresh replay substantiate the accepted patch."
+    },
+    {
+      "path": "formalization/checks/binary32-instructions-v1.lean",
+      "reason": "Reviewed frozen task/source boundary, exact instruction contract, assertion-identical evaluator repairs and narrowly scoped worker feedback; source/proof reviews and fresh replay substantiate the accepted patch."
+    },
+    {
+      "path": "formalization/checks/binary32-instructions-v2.json",
+      "reason": "Reviewed frozen task/source boundary, exact instruction contract, assertion-identical evaluator repairs and narrowly scoped worker feedback; source/proof reviews and fresh replay substantiate the accepted patch."
+    },
+    {
+      "path": "formalization/checks/binary32-instructions-v2.lean",
+      "reason": "Reviewed frozen task/source boundary, exact instruction contract, assertion-identical evaluator repairs and narrowly scoped worker feedback; source/proof reviews and fresh replay substantiate the accepted patch."
+    },
+    {
+      "path": "formalization/contracts/binary32-instructions-v1.md",
+      "reason": "Reviewed frozen task/source boundary, exact instruction contract, assertion-identical evaluator repairs and narrowly scoped worker feedback; source/proof reviews and fresh replay substantiate the accepted patch."
+    },
+    {
+      "path": "formalization/feedback/binary32-instructions-repair-1.md",
+      "reason": "Reviewed frozen task/source boundary, exact instruction contract, assertion-identical evaluator repairs and narrowly scoped worker feedback; source/proof reviews and fresh replay substantiate the accepted patch."
+    },
+    {
+      "path": "formalization/feedback/binary32-instructions-repair-2.md",
+      "reason": "Reviewed frozen task/source boundary, exact instruction contract, assertion-identical evaluator repairs and narrowly scoped worker feedback; source/proof reviews and fresh replay substantiate the accepted patch."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/README.md",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/acceptance.json",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/evidence-manifest.json",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/integration/ptxlean-fp-joint-precheck.log",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/integration/ptxlean-fp-root-precheck.log",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/review-probe-result.json",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/review-probes.md",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/worker-evidence.tar.gz",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/integration-replay-smoke/README.md",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/integration-replay-smoke/evidence-manifest.json",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/integration-replay-smoke/result.json",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/results/integration-replay-smoke/smoke-evidence.tar.gz",
+      "reason": "Preserved bounded-trial or synthetic-smoke evidence, immutable replay provenance and failed evaluation history; archive hashes and strict selected-form references are checked without executing archived contents."
+    },
+    {
+      "path": "formalization/tasks/binary32-instructions-v1.json",
+      "reason": "Reviewed frozen task/source boundary, exact instruction contract, assertion-identical evaluator repairs and narrowly scoped worker feedback; source/proof reviews and fresh replay substantiate the accepted patch."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Affine.lean",
+      "reason": "Reviewed exact scalar/FP lifting, actual fetch and termination, alias-safe affine execution, actual stored-word numerical bound, concrete examples and all public dependency reports; dependency pins remain unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+      "reason": "Reviewed exact scalar/FP lifting, actual fetch and termination, alias-safe affine execution, actual stored-word numerical bound, concrete examples and all public dependency reports; dependency pins remain unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+      "reason": "Reviewed exact scalar/FP lifting, actual fetch and termination, alias-safe affine execution, actual stored-word numerical bound, concrete examples and all public dependency reports; dependency pins remain unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed exact scalar/FP lifting, actual fetch and termination, alias-safe affine execution, actual stored-word numerical bound, concrete examples and all public dependency reports; dependency pins remain unchanged."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed exact scalar/FP lifting, actual fetch and termination, alias-safe affine execution, actual stored-word numerical bound, concrete examples and all public dependency reports; dependency pins remain unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed exact scalar/FP lifting, actual fetch and termination, alias-safe affine execution, actual stored-word numerical bound, concrete examples and all public dependency reports; dependency pins remain unchanged."
+    },
+    {
+      "path": "scripts/check_implemented_forms.py",
+      "reason": "Reviewed bounded namespace-aware source-site checker and archive checker wording; regression tests exercise distinct qualified names, unsupported syntax, provenance failure and archived fixtures."
+    },
+    {
+      "path": "scripts/check_worker_evidence.py",
+      "reason": "Reviewed bounded namespace-aware source-site checker and archive checker wording; regression tests exercise distinct qualified names, unsupported syntax, provenance failure and archived fixtures."
+    },
+    {
+      "path": "stratic/descriptions/affine-memory-kernel.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/affine-memory-kernel.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/affine-memory-observations.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/affine-memory-observations.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/binary32-instructions.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/binary32-instructions.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/binary32-results.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/examples.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/mixed-scalar-execution.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/mixed-scalar-execution.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/verification-interface.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/worker-replay.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/worker-replay.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/worker-review-probes.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/worker-review-probes.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.json",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.md",
+      "reason": "Reviewed description, summary, hierarchy and remaining-scope metadata; exact passage links validate and implementation gaps remain explicit."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed bounded namespace-aware source-site checker and archive checker wording; regression tests exercise distinct qualified names, unsupported syntax, provenance failure and archived fixtures."
+    },
+    {
+      "path": "tests/test_worker_evidence.py",
+      "reason": "Reviewed bounded namespace-aware source-site checker and archive checker wording; regression tests exercise distinct qualified names, unsupported syntax, provenance failure and archived fixtures."
+    }
+  ]
+}

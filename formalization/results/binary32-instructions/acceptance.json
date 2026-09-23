@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "task": "binary32-instructions-v1",
+  "selected_forms": [
+    "add.rn.f32",
+    "mul.rn.f32"
+  ],
+  "interface_restriction": "FP-only fetched leaf over supplied Scalar.State; compatible b32/f32 registers or already-decoded exact 0f/0F literal operands; ISA=94 and numeric SM>=20; exact non-NaN reference bits with conservative all-NaN envelope; no whole-kernel claim.",
+  "base_commit": "e00a9e51b4ab54649ce087be724f683e547f6789",
+  "accepted_patch_sha256": "5280b4c9504f4aad4eb232819651fbd9a8d8479498652d6cafb67970631488a6",
+  "worker_attempt": "binary32-003",
+  "mechanical_replay": "replays/binary32-003/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "pass: exact accepted instruction patch integrated; prearchive core check passed with 604 audited declarations and joint integration check passed with 204 reports. These logs precede adding the six-form ledger/archive; final full strict checks are recorded separately by the coordinator.",
+  "review_probes": "review-probe-result.json",
+  "source_conditions": {
+    "ptx_minimum": "1.0",
+    "target_minimum": "sm_20 for selected gradual-underflow semantics",
+    "selected_isa": "9.4",
+    "enforced_target_predicate": "target.isa = 94 and 20 <= target.sm; numeric feature slice, not target-name validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "floating-point-instructions-add",
+      "floating-point-instructions-mul"
+    ]
+  },
+  "campaign_call_numbers": [
+    7,
+    8,
+    9
+  ],
+  "trial_invocations": 3,
+  "repair_invocations": 2,
+  "initial_attempt_passed": false,
+  "evaluator_versions": {
+    "v1": "Preserved missing Bounds build prerequisite and two alias-proof inference timeouts; no semantic counterexample inferred.",
+    "v2": "Builds Bounds and supplies the explicit instruction argument in the two alias applications. Every assertion is unchanged. Fresh final replay passed."
+  },
+  "additional_dependency_review": {
+    "named_theorems": 18,
+    "definitions_and_types": 10,
+    "anonymous_examples": 28,
+    "total_reports": 56,
+    "method": "Original public declarations audited directly; anonymous examples audited via a temporary copy changing only example commands into named theorems. Unchanged core plus final five appended examples checked independently."
+  },
+  "usage_policy": "Raw reported counters retained per invocation; resumed-session counters may be cumulative, so do not sum. No billing amount or immutable served-model revision reported.",
+  "qualification": "Third adaptive development task with coordinator-supplied source contract, exact API, proof obligations, checks, repair feedback and dependency provisioning. Not a held-out success-rate, broad PTX competence, productivity, or cost-effectiveness estimate.",
+  "review_probe_result": "pass: final strict probe control and omitted-read mutant both compile and audit; independent checker rejects exactly the mutated operand-read expectation. Earlier setup failure and less strict successful probe retained.",
+  "review_probe_archive_member": "review-probes-003/report.json",
+  "integration_evidence": {
+    "core": {
+      "command": "./scripts/check.sh",
+      "log": "integration/ptxlean-fp-root-precheck.log",
+      "log_sha256": "9e3ca1d1c277664b177170cba3e13a23b65bc40509ef2efd4cbacff82f46e1b5",
+      "audited_declarations": 604,
+      "scope": "Prearchive check; core ledger still contains four accepted forms at this snapshot. The final six-form ledger is checked after archive finalization."
+    },
+    "joint": {
+      "command": "./integration/torchlean/check.sh",
+      "log": "integration/ptxlean-fp-joint-precheck.log",
+      "log_sha256": "d72e536df30bdeb425fbd5a9082b5c8aec9aa8e6caea4c740e0d878d78ed6d66",
+      "audited_declarations": 204,
+      "scope": "Prearchive check; core ledger still contains four accepted forms at this snapshot. The final six-form ledger is checked after archive finalization."
+    }
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "id": "binary32-instructions",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "The instruction representation has a documented relationship to textual PTX.\nUnsupported syntax and features cannot silently execute as supported operations."
+    }
+  },
+  "summary": [
+    "Execute explicitly rounded binary32 addition and multiplication over the existing scalar state, preserving aliases, predicates and unaffected storage.",
+    "Retain actual fetch and floating-point instruction identity, with exact register effects and no memory event.",
+    "Accept only the two typed instruction forms and preserve the reviewed conservative NaN result contract."
+  ],
+  "realization": "implemented",
+  "remaining": "Raw parsing, declaration and initialization checking, general GPU target validation, other arithmetic forms and hardware NaN-output realizability remain outside this layer. Whole-kernel termination and numerical bounds require separate execution and range proofs.",
+  "links": [
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The arithmetic result is any word admitted by the encoded binary32 result\ncontract. Ordinary results keep the reference bits, including signed zero and\ninfinity. If the reference is a NaN, meaning “not a number,” every NaN encoding\nis included conservatively. This freedom must not be replaced by one chosen\npayload, the bits distinguishing NaNs. Membership in this result set does not\nestablish that every included NaN can occur on hardware. A signaling NaN is marked\nto request an invalid-arithmetic signal in the floating-point standard; a quiet\nNaN is not. Which output encodings PTX can produce remains a source question.\nExisting numerical bounds apply once their finite-input and range conditions\nare established."
+      },
+      "to": {
+        "description": "binary32-results",
+        "passage": {
+          "quote": "The first reference arithmetic is addition and multiplication rounded to nearest,\nwith ties choosing the result whose last significant bit is even. This supplies\nthe numerical foundation for explicit `add.rn.f32` and `mul.rn.f32` on targets\nat least `sm_20`. Subnormal inputs and outputs are retained. Flushing small values to\nzero, saturation, other rounding modes, multiply-add fusion and approximate\ninstructions require their own contracts. These are reference arithmetic and\nresult rules; a separate instruction layer supplies fetch, operands, predicates\nand register updates and connects their outcomes to this arithmetic contract."
+        }
+      },
+      "reason": "Executed instructions use the encoded result relation, including its NaN freedom; finite range and error conclusions require the numerical layer’s separate premises."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Instructions use the existing scalar state: a program counter identifying the\nnext instruction, value registers, address registers, predicates and memory.\nAn optional predicate is a true/false guard, which can also be negated. A true\nguard reads both operands from the incoming state and writes only the destination\nvalue register. This remains true when either input register is also the\ndestination. A false guard preserves every register. Both cases advance the\nprogram counter by one and preserve all memory, addresses and predicates."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem eval_true_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (enabled : i.guard.eval s = true) :\n    Eval i s next event ↔ ∃ value,\n      Ptx.Binary32.Results i.operation (i.left.eval s) (i.right.eval s) value ∧\n      next = {{s with pc :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Instructions use the existing scalar state: a program counter identifying the\nnext instruction, value registers, address registers, predicates and memory.\nAn optional predicate is a true/false guard, which can also be negated. A true\nguard reads both operands from the incoming state and writes only the destination\nvalue register. This remains true when either input register is also the\ndestination. A false guard preserves every register. Both cases advance the\nprogram counter by one and preserve all memory, addresses and predicates."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem eval_false_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (disabled : i.guard.eval s = false) :\n    Eval i s next event ↔ next = {s with pc :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Instructions use the existing scalar state: a program counter identifying the\nnext instruction, value registers, address registers, predicates and memory.\nAn optional predicate is a true/false guard, which can also be negated. A true\nguard reads both operands from the incoming state and writes only the destination\nvalue register. This remains true when either input register is also the\ndestination. A false guard preserves every register. Both cases advance the\nprogram counter by one and preserve all memory, addresses and predicates."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem eval_frame (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) :\n    next.pc = s.pc + 1 ∧ next.memory = s.memory ∧ next.addrs = s.addrs ∧ next.preds = s.preds :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Instructions use the existing scalar state: a program counter identifying the\nnext instruction, value registers, address registers, predicates and memory.\nAn optional predicate is a true/false guard, which can also be negated. A true\nguard reads both operands from the incoming state and writes only the destination\nvalue register. This remains true when either input register is also the\ndestination. A false guard preserves every register. Both cases advance the\nprogram counter by one and preserve all memory, addresses and predicates."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem eval_other (i : Instr) (s next : Scalar.State) (event : Occurrence) (other : Nat)\n    (hEval : Eval i s next event) (different : other ≠ i.destination) :\n    next.regs other = s.regs other :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The arithmetic result is any word admitted by the encoded binary32 result\ncontract. Ordinary results keep the reference bits, including signed zero and\ninfinity. If the reference is a NaN, meaning “not a number,” every NaN encoding\nis included conservatively. This freedom must not be replaced by one chosen\npayload, the bits distinguishing NaNs. Membership in this result set does not\nestablish that every included NaN can occur on hardware. A signaling NaN is marked\nto request an invalid-arithmetic signal in the floating-point standard; a quiet\nNaN is not. Which output encodings PTX can produce remains a source question.\nExisting numerical bounds apply once their finite-input and range conditions\nare established."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem eval_destination (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) (enabled : i.guard.eval s = true) :\n    Ptx.Binary32.Results i.operation (i.left.eval s) (i.right.eval s)\n      (next.regs i.destination) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The arithmetic result is any word admitted by the encoded binary32 result\ncontract. Ordinary results keep the reference bits, including signed zero and\ninfinity. If the reference is a NaN, meaning “not a number,” every NaN encoding\nis included conservatively. This freedom must not be replaced by one chosen\npayload, the bits distinguishing NaNs. Membership in this result set does not\nestablish that every included NaN can occur on hardware. A signaling NaN is marked\nto request an invalid-arithmetic signal in the floating-point standard; a quiet\nNaN is not. Which output encodings PTX can produce remains a source question.\nExisting numerical bounds apply once their finite-input and range conditions\nare established."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem eval_exists (i : Instr) (s : Scalar.State) : ∃ next event, Eval i s next event :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The step record retains the actual floating-point instruction and its position.\nIt lists the guard register and, only when the instruction executes, its operand\nregisters and destination write. It records no memory effect. Fetch must obtain\nthat same instruction from the current program position, and the selected target\ncondition must hold. A missing instruction admits no step. A list of these two\ninstruction forms has no exit operation: reaching its end does not establish\nkernel completion. Existence means that the specified instruction relation has\na next state, without a hardware progress or scheduling claim."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem eval_event (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) : event = occurrence s i (i.guard.eval s) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The step record retains the actual floating-point instruction and its position.\nIt lists the guard register and, only when the instruction executes, its operand\nregisters and destination write. It records no memory effect. Fetch must obtain\nthat same instruction from the current program position, and the selected target\ncondition must hold. A missing instruction admits no step. A list of these two\ninstruction forms has no exit operation: reaching its end does not establish\nkernel completion. Existence means that the specified instruction relation has\na next state, without a hardware progress or scheduling claim."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem step_origin (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence)\n    (hStep : Step target program s next event) :\n    SupportedTarget target ∧ ∃ i,\n      program[s.pc]? = some i ∧ event.instruction = i ∧ Eval i s next event :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The step record retains the actual floating-point instruction and its position.\nIt lists the guard register and, only when the instruction executes, its operand\nregisters and destination write. It records no memory effect. Fetch must obtain\nthat same instruction from the current program position, and the selected target\ncondition must hold. A missing instruction admits no step. A list of these two\ninstruction forms has no exit operation: reaching its end does not establish\nkernel completion. Existence means that the specified instruction relation has\na next state, without a hardware progress or scheduling claim."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem step_exists (target : Ptx.Target) (program : List Instr)\n    (s : Scalar.State) (i : Instr) (supported : SupportedTarget target)\n    (fetch : program[s.pc]? = some i) : ∃ next event, Step target program s next event :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The step record retains the actual floating-point instruction and its position.\nIt lists the guard register and, only when the instruction executes, its operand\nregisters and destination write. It records no memory effect. Fetch must obtain\nthat same instruction from the current program position, and the selected target\ncondition must hold. A missing instruction admits no step. A list of these two\ninstruction forms has no exit operation: reaching its end does not establish\nkernel completion. Existence means that the specified instruction relation has\na next state, without a hardware progress or scheduling claim."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem step_no_fetch (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (missing : program[s.pc]? = none) :\n    ¬ Step target program s next event :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The step record retains the actual floating-point instruction and its position.\nIt lists the guard register and, only when the instruction executes, its operand\nregisters and destination write. It records no memory effect. Fetch must obtain\nthat same instruction from the current program position, and the selected target\ncondition must hold. A missing instruction admits no step. A list of these two\ninstruction forms has no exit operation: reaching its end does not establish\nkernel completion. Existence means that the specified instruction relation has\na next state, without a hardware progress or scheduling claim."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem step_unsupported_target (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (unsupported : ¬ SupportedTarget target) :\n    ¬ Step target program s next event :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The text boundary accepts already classified operands with exactly the two\nexplicitly rounded instruction names above. Each destination is a value register;\neach source is a value register or an already decoded exact binary32 bit literal,\nas written `0f` or `0F` followed by eight hexadecimal digits. These bits are not\nconverted from an integer value. Value registers here represent `.b32` bit\nregisters or compatible `.f32` floating-point registers, not arbitrary declared\n`.u32` or `.s32` registers. Checking declarations and initialization is a separate\nfrontend obligation. Decoding and encoding agree in both directions. Wrong\noperands for a supported name are distinguished from an unsupported name."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem decode_encode (i : Instr) : decode (encode i) = .ok i :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The text boundary accepts already classified operands with exactly the two\nexplicitly rounded instruction names above. Each destination is a value register;\neach source is a value register or an already decoded exact binary32 bit literal,\nas written `0f` or `0F` followed by eight hexadecimal digits. These bits are not\nconverted from an integer value. Value registers here represent `.b32` bit\nregisters or compatible `.f32` floating-point registers, not arbitrary declared\n`.u32` or `.s32` registers. Checking declarations and initialization is a separate\nfrontend obligation. Decoding and encoding agree in both directions. Wrong\noperands for a supported name are distinguished from an unsupported name."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+        "passage": {
+          "quote": "theorem decode_iff (statement : Scalar.Text.Statement) (i : Instr) :\n    decode statement = .ok i ↔ statement = encode i :="
+        }
+      }
+    }
+  ]
+}

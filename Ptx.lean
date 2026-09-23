@@ -25,3 +25,5 @@ import Ptx.CollectiveMemory
 
 import Ptx.IntegerBitCount
 import Ptx.SharedBarrier
+
+import Ptx.AffineMemory

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Only four reviewed integer forms are listed. This is not a census of all existing implementation, complete mnemonics, or PTX sections. Historical replay and current file-site integrity are distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Six reviewed forms: four integer forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": "references/nvidia/ptx-isa-9.4/index.html",
@@ -50,6 +50,26 @@
     "bitcount_review": {
       "path": "docs/formalization/bitcount-source-review.md",
       "sha256": "863e98ca59ca0745b110b6d01092af76d827ccb0ee449e2d6805ef3cc996c323"
+    },
+    "binary32_instructions": {
+      "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+      "sha256": "dfa76383c0500eac5752873a59dc337443c3fa81c0f1000d7ce76599deafad6b"
+    },
+    "binary32_results": {
+      "path": "integration/torchlean/PtxBinary32.lean",
+      "sha256": "652adf5073b937101b6f1f187719fd14dd9208f1105d39d0e72743916ecd5e13"
+    },
+    "binary32_acceptance": {
+      "path": "formalization/results/binary32-instructions/acceptance.json",
+      "sha256": "aebf8265cfdbd599aec23dc6e5f88e44fabc1cca6933b4bbb92645014d0fe2a4"
+    },
+    "binary32_evidence": {
+      "path": "formalization/results/binary32-instructions/evidence-manifest.json",
+      "sha256": "841b85be647810ea54815fcfbc017012d929d2f504bf906898a4cf1f77b8e934"
+    },
+    "binary32_review": {
+      "path": "docs/formalization/binary32-instructions-source-review.md",
+      "sha256": "bc8a3d73c04be0ca5486bd9851b2e15838dffcdb1e72b6332cb8a1a0bcadab21"
     }
   },
   "source": {
@@ -64,14 +84,21 @@
       "integer-arithmetic-instructions-min": "a9ce7fb6368d2ec29f4f4ff171e57f234b1f8908c7da69f0dcc91b16de1ee5f2",
       "integer-arithmetic-instructions-max": "44e15ff2f0031099a1a4cdb8d7601e21689dfb7976e243550b1a6f3777989eb3",
       "integer-arithmetic-instructions-popc": "4cd6b4fa00a0c759b48eea31a542110b24d7d700f58e2be3ed265f0ddffacf34",
-      "integer-arithmetic-instructions-clz": "92368bc63958d21152caf074871d1b235df84c8fbfb12e5b6140eb853f42063f"
+      "integer-arithmetic-instructions-clz": "92368bc63958d21152caf074871d1b235df84c8fbfb12e5b6140eb853f42063f",
+      "floating-point-instructions": "ccc376eb8415b2cc1843108416c8cc7079334cda54084bd7361e85ad8036dff3",
+      "floating-point-instructions-add": "08ca68d6d71da8e3efba319f7ca07c4e60aed99d6b7952013ef85b6bab4abb01",
+      "floating-point-instructions-mul": "be57ecb14198d60386617a258dbe3a113d58e2355810cdc31d44d5679a0f92cb",
+      "floating-point-constants": "18bc1c6df31458d6cf5482b57f1f11bbf62e3ae6b79ee53b29d0828986e44ad6",
+      "fundamental-types": "737b66557cb0faeb38be8db19ba958bfeb0c0fbc9b50cdef002c9916a8551964",
+      "instruction-statements": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a"
     },
     "common_operand_guard_anchors": [
-      "integer-arithmetic-instructions",
       "operand-type-information",
       "source-operands",
       "destination-operands",
-      "predicated-execution"
+      "predicated-execution",
+      "fundamental-types",
+      "instruction-statements"
     ]
   },
   "trials": {
@@ -90,6 +117,14 @@
       "patch_member": "attempts/bitcount-003/candidate.patch",
       "replay_member": "replays/bitcount-003/result.json",
       "patch_sha256": "23f275350ed3b1a94aebd39c3ab9d3123cd9641151188e1c247ecdc17fa395d2"
+    },
+    "binary32": {
+      "acceptance": "binary32_acceptance",
+      "evidence": "binary32_evidence",
+      "source_review": "binary32_review",
+      "patch_member": "attempts/binary32-003/candidate.patch",
+      "replay_member": "replays/binary32-003/result.json",
+      "patch_sha256": "5280b4c9504f4aad4eb232819651fbd9a8d8479498652d6cafb67970631488a6"
     }
   },
   "forms": [
@@ -530,6 +565,290 @@
           "name": "decodeOp_supported"
         }
       ]
+    },
+    {
+      "spelling": "add.rn.f32",
+      "status": "accepted",
+      "trial": "binary32",
+      "source_anchor": "floating-point-instructions-add",
+      "ptx_minimum": "1.0",
+      "target": "sm_20 for selected gradual-underflow semantics",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 20 <= target.sm",
+      "operands": {
+        "destination": "compatible b32/f32 word register",
+        "sources": [
+          "compatible b32/f32 word register or already-decoded exact 0f/0F bit literal",
+          "compatible b32/f32 word register or already-decoded exact 0f/0F bit literal"
+        ],
+        "aliasing": "Every source is read from the incoming state; source/destination overlap is unrestricted."
+      },
+      "guard": "Unconditional, positive predicate or negated predicate; false guard preserves all data and advances PC, with guard-only read metadata.",
+      "meaning": "Nearest-even binary32 sum preserving subnormal values. All non-NaN output bits equal the reviewed reference; all-NaN envelope conservatively preserves unspecified payload freedom without claiming every NaN bit pattern is realizable.",
+      "boundary": "Typed FP-only fetched leaf over supplied state, not raw PTX parsing, declaration checking, integer-to-float conversion, recognized-target validation, complete kernel execution, hardware or PyTorch conformance. Exact ISA94/SM>=20 feature condition checked on Step. No FTZ, saturation, other rounding, packed or f64 forms.",
+      "semantics": [
+        {
+          "file": "binary32_results",
+          "namespace": "Ptx.Binary32",
+          "name": "Results"
+        },
+        {
+          "file": "binary32_results",
+          "namespace": "Ptx.Binary32",
+          "name": "reference"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "Eval"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "Step"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "occurrence"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "mnemonic"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "decode"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "encode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_other"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_event"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "step_origin"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "step_exists"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "decode_iff"
+        }
+      ]
+    },
+    {
+      "spelling": "mul.rn.f32",
+      "status": "accepted",
+      "trial": "binary32",
+      "source_anchor": "floating-point-instructions-mul",
+      "ptx_minimum": "1.0",
+      "target": "sm_20 for selected gradual-underflow semantics",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 20 <= target.sm",
+      "operands": {
+        "destination": "compatible b32/f32 word register",
+        "sources": [
+          "compatible b32/f32 word register or already-decoded exact 0f/0F bit literal",
+          "compatible b32/f32 word register or already-decoded exact 0f/0F bit literal"
+        ],
+        "aliasing": "Every source is read from the incoming state; source/destination overlap is unrestricted."
+      },
+      "guard": "Unconditional, positive predicate or negated predicate; false guard preserves all data and advances PC, with guard-only read metadata.",
+      "meaning": "Nearest-even binary32 product preserving subnormal values. All non-NaN output bits equal the reviewed reference; all-NaN envelope conservatively preserves unspecified payload freedom without claiming every NaN bit pattern is realizable.",
+      "boundary": "Typed FP-only fetched leaf over supplied state, not raw PTX parsing, declaration checking, integer-to-float conversion, recognized-target validation, complete kernel execution, hardware or PyTorch conformance. Exact ISA94/SM>=20 feature condition checked on Step. No FTZ, saturation, other rounding, packed or f64 forms.",
+      "semantics": [
+        {
+          "file": "binary32_results",
+          "namespace": "Ptx.Binary32",
+          "name": "Results"
+        },
+        {
+          "file": "binary32_results",
+          "namespace": "Ptx.Binary32",
+          "name": "reference"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "Eval"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "Step"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "occurrence"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "mnemonic"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "decode"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "encode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_other"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_event"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "step_origin"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "step_exists"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "binary32_instructions",
+          "namespace": "Ptx.Scalar.Binary32.Text",
+          "name": "decode_iff"
+        }
+      ]
     }
   ],
   "uncovered_siblings": [
@@ -614,6 +933,36 @@
       ],
       "status": "unimplemented",
       "reason": "64-bit input with a u32 destination, not a 64-bit result; PTX 2.0, sm_20 or later."
+    },
+    {
+      "source_anchor": "floating-point-instructions-add",
+      "status": "unimplemented",
+      "spellings": [
+        "add.f32",
+        "add.rz.f32",
+        "add.rm.f32",
+        "add.rp.f32",
+        "add.rn.ftz.f32",
+        "add.rn.sat.f32",
+        "add.rn.f64",
+        "add.rn.f32x2"
+      ],
+      "reason": "Only explicit nearest-even scalar f32 without FTZ/saturation is accepted. Other spellings may be valid PTX but are not implemented by this leaf; implicit rounding also has distinct optimizer latitude."
+    },
+    {
+      "source_anchor": "floating-point-instructions-mul",
+      "status": "unimplemented",
+      "spellings": [
+        "mul.f32",
+        "mul.rz.f32",
+        "mul.rm.f32",
+        "mul.rp.f32",
+        "mul.rn.ftz.f32",
+        "mul.rn.sat.f32",
+        "mul.rn.f64",
+        "mul.rn.f32x2"
+      ],
+      "reason": "Only explicit nearest-even scalar f32 without FTZ/saturation is accepted. Other spellings may be valid PTX but are not implemented by this leaf; implicit rounding also has distinct optimizer latitude."
     }
   ]
 }

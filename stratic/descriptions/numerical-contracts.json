@@ -12,6 +12,6 @@
     "Distinguish numerical accuracy from exact bitwise agreement or agreement within a stated error bound with PyTorch."
   ],
   "realization": "partial",
-  "remaining": "A bit-preserving binary32 adapter, conservative NaN envelope, nearest-even add/multiply finite-real/error bridges and sufficient input-range guards are implemented. Instruction execution, composed network/derivative error bounds, other formats and rounding/approximation policies, and concrete PyTorch correspondence remain unfinished. Exact signaling-versus-quiet NaN realizability remains unresolved.",
+  "remaining": "Bit-preserving binary32 encoding, a conservative NaN envelope, nearest-even add/multiply instructions, sufficient input-range guards and arithmetic error propagation are implemented, including a bound on an actual affine-kernel store. Network/derivative error bounds, other formats and rounding/approximation policies, general range analysis and concrete PyTorch correspondence remain unfinished. Exact signaling-versus-quiet NaN output realizability remains unresolved.",
   "links": []
 }

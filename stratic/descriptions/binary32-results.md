@@ -33,8 +33,8 @@ the numerical foundation for explicit `add.rn.f32` and `mul.rn.f32` on targets
 at least `sm_20`. Subnormal inputs and outputs are retained. Flushing small values to
 zero, saturation, other rounding modes, multiply-add fusion and approximate
 instructions require their own contracts. These are reference arithmetic and
-result rules; instruction fetch, operands, predicates and register updates still
-need a separately checked instruction connection.
+result rules; a separate instruction layer supplies fetch, operands, predicates
+and register updates and connects their outcomes to this arithmetic contract.
 
 When the encoded reference result is finite, every output in the envelope has
 the same finite encoding. The adapter connects it to one rounding of the exact real

@@ -97,21 +97,22 @@ output, failures, duplicate attempts and concurrent checkpoint reservations.
 
 Each completed trial has its own evidence archive and hash manifest under
 `formalization/results/`. `python3 scripts/check_worker_evidence.py` verifies
-all such manifests by default; positional manifest paths select particular
-trials. It reads and hashes regular archive members without extracting or
+all such manifests by default, including separately labelled synthetic smoke
+archives; positional manifest paths select particular archives. It reads and hashes regular archive members without extracting or
 executing them. Byte integrity is separate from each trial's recorded mechanical,
 source, proof and integration decisions.
 
-The [min/max trial](../../formalization/results/minmax-u32/README.md) and
-[bit-count trial](../../formalization/results/bitcount-u32/README.md) retain their failed attempts
+The [min/max trial](../../formalization/results/minmax-u32/README.md),
+[bit-count trial](../../formalization/results/bitcount-u32/README.md), and
+[binary32 instruction trial](../../formalization/results/binary32-instructions/README.md) retain their failed attempts
 and evaluator repairs as well as accepted candidates. Resumed-session usage is
 preserved exactly as reported and must not be summed without evidence that the
-counters are independent. Neither these two adaptive tasks nor individual
+counters are independent. Neither these three adaptive tasks nor individual
 mutation probes establish a general formalization success rate.
 
 ## Replaying a pinned integration package
 
-A future task may set `"replay_project": "integration/torchlean"`. Omission or
+A task may set `"replay_project": "integration/torchlean"`. Omission or
 `"."` retains root-project replay. This selects the working directory for module
 builds, acceptance drivers and theorem-dependency inspection, not the worker's
 starting directory. Worker prompts must give explicit subproject commands.
@@ -151,3 +152,28 @@ normal source compilation may continue. Requested modules and changed candidate
 sources are built in the fresh checkout. No model call or API-key fallback is
 introduced. Record a failed prerequisite or build honestly; dependency availability
 is not evidence of a completed integration replay.
+
+## Tested integration replay plumbing
+
+A [preserved synthetic integration smoke](../../formalization/results/integration-replay-smoke/README.md)
+passed on commit `e00a9e51b4ab54649ce087be724f683e547f6789`, including pristine
+root checks, sixteen independent source checkouts, the official mathlib cache,
+a new module importing `PtxBinary32`, its immutable driver and a standard-axiom
+audit. It consumed **zero model calls and zero campaign calls**. Its proof merely
+reuses the imported encoding roundtrip; this is infrastructure evidence, not an
+instruction-formalization trial or a productivity result. The archive
+preserves receipts/logs/scripts while excluding worktrees and caches. Candidate
+ledger deferral remains explicit and requires coordinator revalidation.
+
+The common evidence checker calls its entries archives: actual instruction
+trials and this separate synthetic smoke have different meanings. The binary32
+trial additionally exercises this replay route with genuine instruction
+semantics, predicates, operand aliases and numerical-result connections.
+
+The three trials used nine headless invocations in total, including failures
+and repairs. The floating-point trial reused coordinator-supplied arithmetic
+semantics and exact interface contracts; Luna supplied the instruction layer and
+proofs. This establishes bounded capability under substantial guidance, not an
+autonomous PTX-specification discovery result or a cost/productivity estimate.
+Independent review, prerequisite provisioning and repairs to the coordinator
+evaluator are material parts of the observed effort.

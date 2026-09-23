@@ -1,0 +1,254 @@
+Pinned dependencies: 16; integration Lean source guard: 12 files.
+Lean (version 4.34.0, x86_64-unknown-linux-gnu, commit 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b, Release)
+⚠ [21/369] Replayed Ptx.SharedVector
+warning: Ptx/SharedVector.lean:240:15: `if_neg` has been deprecated: Use `ite_eq_right` instead
+warning: Ptx/SharedVector.lean:383:25: `if_neg` has been deprecated: Use `ite_eq_right` instead
+warning: Ptx/SharedVector.lean:407:10: `if_neg` has been deprecated: Use `ite_eq_right` instead
+⚠ [3156/3162] Replayed PtxBinary32.Mixed
+warning: PtxBinary32/Mixed.lean:153:56: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: PtxBinary32/Mixed.lean:198:26: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: PtxBinary32/Mixed.lean:198:26: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [3158/3162] Replayed PtxBinary32.Affine
+warning: PtxBinary32/Affine.lean:233:28: This simp argument is unused:
+  List.getElem?_cons_succ
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [program, hp, List.getElem?_cons_zero] at step
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+ℹ [3159/3162] Built PtxTensorBridge (1.6s)
+info: PtxTensorBridge.lean:220:0: 'PtxTorchLean.TensorBridge.view_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:221:0: 'PtxTorchLean.TensorBridge.view_map' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:222:0: 'PtxTorchLean.TensorBridge.layout_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:223:0: 'PtxTorchLean.TensorBridge.realView_eq_map' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:224:0: 'PtxTorchLean.TensorBridge.completed_unsigned' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:225:0: 'PtxTorchLean.TensorBridge.completed_unsigned_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:226:0: 'PtxTorchLean.TensorBridge.completed_real_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:227:0: 'PtxTorchLean.TensorBridge.completed_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:228:0: 'PtxTorchLean.TensorBridge.candidate_unsigned_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:229:0: 'PtxTorchLean.TensorBridge.candidate_execution_agree' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:230:0: 'PtxTorchLean.TensorBridge.execution_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:231:0: 'PtxTorchLean.TensorBridge.real_execution_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:232:0: 'PtxTorchLean.TensorBridge.view_bounded_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:233:0: 'PtxTorchLean.TensorBridge.wraparound_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTensorBridge.lean:234:0: 'PtxTorchLean.TensorBridge.wraparound_not_fitting' depends on axioms: [propext, Classical.choice, Quot.sound]
+ℹ [3161/3162] Built PtxTorchLean (17s)
+info: PtxTorchLean.lean:115:0: 'PtxTorchLean.affineSquare' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTorchLean.lean:116:0: 'PtxTorchLean.forward_polynomial' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTorchLean.lean:117:0: 'PtxTorchLean.checked_vjp' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTorchLean.lean:118:0: 'PtxTorchLean.exact_tape_success_vjp' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTorchLean.lean:119:0: 'PtxTorchLean.checked_success' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTorchLean.lean:120:0: 'PtxTorchLean.checked_success_vjp' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: PtxTorchLean.lean:121:0: 'PtxTorchLean.unsigned_min_scalar_embedding' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (3162 jobs).
+'PtxTorchLean.affineSquare' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.forward_polynomial' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.checked_vjp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.exact_tape_success_vjp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.checked_success' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.checked_success_vjp' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.unsigned_min_scalar_embedding' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.view_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.view_map' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.layout_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.realView_eq_map' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.completed_unsigned' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.completed_unsigned_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.completed_real_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.completed_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.candidate_unsigned_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.candidate_execution_agree' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.execution_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.real_execution_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.view_bounded_apply' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.wraparound_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'PtxTorchLean.TensorBridge.wraparound_not_fitting' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.encode_decode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.decode_encode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.finiteReal_none' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.finiteReal_some' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.finiteReal_isSome' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.finite_not_nan' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.envelope_self' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.envelope_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.envelope_nan' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.envelope_non_nan' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.envelope_finite_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.envelope_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.results_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.reference_round' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.results_round' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.results_abs_error' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.decode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.encode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.isNaN' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.isFinite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.finiteReal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Envelope' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.reference' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Results' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.exact' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.signed_zero_bits_distinct' does not depend on any axioms
+'Ptx.Binary32.Examples.zero_signs_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.smallest_subnormal' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.normal_boundary' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.ordinary_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.tie_even_down' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.tie_odd_up' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.subnormal_add_preserved' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.negative_zero_product' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.zero_sign_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.finite_inputs_overflow' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.infinity_opposite_invalid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.infinity_times_zero_invalid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.nan_payload_freedom' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.signaling_nan_envelope' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Examples.exceptional_not_real' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.maxFinite_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.finiteReal_spec' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.reference_finite' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.round_of_range' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.results_error' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.finite_result_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.add_range_of_magnitudes' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.mul_range_of_magnitudes' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.unit_range' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.positive_one_real' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.negative_one_real' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Bounds.one_negative_one_results' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.budget_nonnegative' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.add_propagation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.mul_propagation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.add_results' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.mul_results' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.add_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.mul_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.rounded_add_range' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.affine_results' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Binary32.Error.affine_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.Instr' does not depend on any axioms
+'Ptx.Scalar.Binary32.Occurrence' does not depend on any axioms
+'Ptx.Scalar.Binary32.occurrence' does not depend on any axioms
+'Ptx.Scalar.Binary32.SupportedTarget' does not depend on any axioms
+'Ptx.Scalar.Binary32.Eval' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.Step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.eval_true_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.eval_false_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.eval_destination' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.eval_frame' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.eval_other' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.eval_event' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.eval_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.step_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.step_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.step_no_fetch' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.step_unsupported_target' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.Text.mnemonic' does not depend on any axioms
+'Ptx.Scalar.Binary32.Text.supportedMnemonic' does not depend on any axioms
+'Ptx.Scalar.Binary32.Text.decode' depends on axioms: [propext]
+'Ptx.Scalar.Binary32.Text.encode' does not depend on any axioms
+'Ptx.Scalar.Binary32.Text.decode_encode' depends on axioms: [propext]
+'Ptx.Scalar.Binary32.Text.decode_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.signed_zero_bits' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.subnormal_bits' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.negative_guard_exec' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.negative_guard_skip' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Binary32.alias_add_bits' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Instr' does not depend on any axioms
+'Ptx.Scalar.Mixed.Event' does not depend on any axioms
+'Ptx.Scalar.Mixed.Event.memory' does not depend on any axioms
+'Ptx.Scalar.Mixed.Event.pc' does not depend on any axioms
+'Ptx.Scalar.Mixed.Event.instruction' does not depend on any axioms
+'Ptx.Scalar.Mixed.Outcome' does not depend on any axioms
+'Ptx.Scalar.Mixed.liftScalar' does not depend on any axioms
+'Ptx.Scalar.Mixed.Eval' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Eligible' does not depend on any axioms
+'Ptx.Scalar.Mixed.Dispatch' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.eligible_binary32' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Mixed.eval_scalar_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.eval_binary32_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.dispatch_fetch' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.dispatch_missing' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.dispatch_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Path' does not depend on any axioms
+'Ptx.Scalar.Mixed.Advances' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Path.append' does not depend on any axioms
+'Ptx.Scalar.Mixed.Path.invariant' does not depend on any axioms
+'Ptx.Scalar.Mixed.Path.event_origin' depends on axioms: [propext]
+'Ptx.Scalar.Mixed.Run' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Run.not_exhausted' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.scalar_next_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.scalar_halted_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.eval_event_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.dispatch_event_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.eval_next_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.eval_halted' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.dispatch_next_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.dispatch_halted' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Path.memory_length' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Path.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Run.memory_length' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Run.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.StoresTo' does not depend on any axioms
+'Ptx.Scalar.Mixed.eval_frame' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.dispatch_frame' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Path.frame' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Run.frame' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Run.unfold' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Run.scalar_next_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Run.scalar_halted_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Mixed.Run.binary32_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.load' does not depend on any axioms
+'Ptx.Scalar.Affine.multiply' does not depend on any axioms
+'Ptx.Scalar.Affine.addition' does not depend on any axioms
+'Ptx.Scalar.Affine.store' does not depend on any axioms
+'Ptx.Scalar.Affine.exit' does not depend on any axioms
+'Ptx.Scalar.Affine.program' does not depend on any axioms
+'Ptx.Scalar.Affine.Initial' does not depend on any axioms
+'Ptx.Scalar.Affine.input' depends on axioms: [propext]
+'Ptx.Scalar.Affine.outputIndex' does not depend on any axioms
+'Ptx.Scalar.Affine.afterLeft' depends on axioms: [propext]
+'Ptx.Scalar.Affine.afterRight' depends on axioms: [propext]
+'Ptx.Scalar.Affine.afterBias' depends on axioms: [propext]
+'Ptx.Scalar.Affine.afterMultiply' depends on axioms: [propext]
+'Ptx.Scalar.Affine.afterAdd' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish' depends on axioms: [propext]
+'Ptx.Scalar.Affine.loadEvent' depends on axioms: [propext]
+'Ptx.Scalar.Affine.trace' depends on axioms: [propext]
+'Ptx.Scalar.Affine.run_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.run_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.trace_length' depends on axioms: [propext]
+'Ptx.Scalar.Affine.trace_positions' depends on axioms: [propext]
+'Ptx.Scalar.Affine.trace_instructions' depends on axioms: [propext]
+'Ptx.Scalar.Affine.trace_memory' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish_frame' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish_registers' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish_other_register' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Affine.finish_output' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish_other_memory' depends on axioms: [propext]
+'Ptx.Scalar.Affine.run_completed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.stored_error' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.advance_pc' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.path_control' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.path_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.memoryProjection' does not depend on any axioms
+'Ptx.Scalar.Affine.memoryWitness' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Affine.memoryWitness_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.trace_memory_witness' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Affine.run_memory_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.eventAt' depends on axioms: [propext]
+'Ptx.Scalar.Affine.RegisterDependency' depends on axioms: [propext]
+'Ptx.Scalar.Affine.register_dependency_forward' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.register_dependency_acyclic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.run_grounded' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.disjointFixture' does not depend on any axioms
+'Ptx.Scalar.Affine.disjoint_example' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.aliasFixture' does not depend on any axioms
+'Ptx.Scalar.Affine.all_alias_example' depends on axioms: [propext, Classical.choice, Quot.sound]
+Integration check passed: 204 exact dependency reports, only standard Lean axioms.

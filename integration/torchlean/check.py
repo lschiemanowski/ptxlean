@@ -22,9 +22,12 @@ from worker_replay import audit_dependencies
 
 COUNTS = {"PtxTorchLean": 7, "PtxTorchLean.TensorBridge": 15,
           "Ptx.Binary32": 25, "Ptx.Binary32.Examples": 16,
-          "Ptx.Binary32.Bounds": 12, "Ptx.Binary32.Error": 10}
+          "Ptx.Binary32.Bounds": 12, "Ptx.Binary32.Error": 10,
+          "Ptx.Scalar.Binary32": 22, "Ptx.Scalar.Binary32.Text": 6,
+          "Ptx.Scalar.Mixed": 27, "Ptx.Scalar.Mixed.Event": 3, "Ptx.Scalar.Mixed.Path": 6, "Ptx.Scalar.Mixed.Run": 8, "Ptx.Scalar.Affine": 47}
 TARGETS = {"PtxTorchLean", "PtxTensorBridge", "PtxBinary32",
-           "PtxBinary32Examples", "PtxBinary32Bounds", "PtxBinary32Error"}
+           "PtxBinary32Examples", "PtxBinary32Bounds", "PtxBinary32Error",
+           "PtxBinary32.Instructions", "PtxBinary32.Mixed", "PtxBinary32.Affine"}
 
 
 def git(directory, *args):

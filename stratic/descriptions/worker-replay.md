@@ -35,3 +35,12 @@ An accepted-form ledger in the pristine base must pass before patch application.
 Candidate root checks defer only that ledger's current-file validation and record
 the deferral for coordinator revalidation. Ordinary project checks remain strict;
 a successful candidate replay cannot claim renewed ledger acceptance.
+
+A preserved synthetic smoke has exercised this path on the committed binary32
+foundation in `integration/torchlean`: pristine root checks, sixteen independent
+dependency checkouts, the official mathlib cache, a newly added module, an
+immutable contract driver and a standard-axiom audit all passed. The new theorem
+only reuses the imported encoding roundtrip. This tests replay plumbing, not a
+model's ability to formalize an instruction, and consumed no model or campaign
+calls. Its archive omits worktrees and compiled caches. The candidate ledger
+deferral remains visible; the smoke does not confer instruction acceptance.

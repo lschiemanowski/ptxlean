@@ -9,6 +9,7 @@ import tarfile
 
 from coverage_inventory import SectionParser, require
 from check_worker_evidence import verify as verify_archive
+from check_proofs import code_only
 
 ROOT = Path(__file__).resolve().parents[1]
 LEDGER = Path('coverage/implemented-forms.json')
@@ -16,6 +17,62 @@ LEDGER = Path('coverage/implemented-forms.json')
 
 def sha(raw):
     return hashlib.sha256(raw).hexdigest()
+
+
+# Bounded source-site grammar, not Lean parsing or proof checking.
+IDENT = r"[A-Za-z_][A-Za-z_0-9']*(?:\.[A-Za-z_][A-Za-z_0-9']*)*"
+
+
+def declaration_sites(content):
+    """Return public (fully qualified name, kind, line) sites in supported scopes."""
+    scopes = []
+    namespace = ''
+    sites = []
+    for number, raw in enumerate(code_only(content).splitlines(), 1):
+        line = raw.strip()
+        # Attributes on the same line as a declaration need not affect its name.
+        line = re.sub(r'^(?:@\[[^]\n]*\]\s*)+', '', line)
+        start = re.fullmatch(rf'(namespace|(?:noncomputable\s+)?section)(?:\s+({IDENT}))?', line)
+        if start:
+            kind, name = start.groups()
+            require(kind != 'namespace' or name, f'unnamed namespace at line {number}')
+            scopes.append((name, namespace))
+            if kind == 'namespace':
+                namespace = (name.removeprefix('_root_.') if name.startswith('_root_.')
+                             else '.'.join(filter(None, [namespace, name])))
+            continue
+        end = re.fullmatch(rf'end(?:\s+({IDENT}))?', line)
+        if end:
+            require(bool(scopes), f'unmatched end at line {number}')
+            name, previous = scopes.pop()
+            require(end[1] is None or end[1] == name, f'mismatched end at line {number}')
+            namespace = previous
+            continue
+        require(not re.match(r'(?:namespace|section|end|noncomputable\s+section)\b', line),
+                f'unsupported scope syntax at line {number}')
+        header = re.match(rf'((?:(?:noncomputable|protected|private)\s+)*)'
+                          rf'(def|inductive|structure|theorem)\s+({IDENT})(?=[\s:({{]|$)', line)
+        if header:
+            modifiers, kind, name = header.groups()
+            if 'private' in modifiers.split():
+                continue
+            full = (name.removeprefix('_root_.') if name.startswith('_root_.')
+                    else '.'.join(filter(None, [namespace, name])))
+            sites.append((full, kind, number))
+        elif re.match(r'(?:(?:noncomputable|protected|private)\s+)*(?:def|inductive|structure|theorem)\b', line):
+            raise ValueError(f'unsupported declaration header at line {number}')
+    require(not scopes, 'unclosed namespace or section')
+    return sites
+
+
+def locate_declaration(content, namespace, name, proof=False):
+    require(re.fullmatch(IDENT, namespace) and re.fullmatch(IDENT, name),
+            'unsupported ledger declaration name')
+    expected = namespace + '.' + name
+    matches = [(kind, line) for full, kind, line in declaration_sites(content) if full == expected]
+    require(len(matches) == 1, f'missing or ambiguous declaration: {expected}')
+    require(not proof or matches[0][0] == 'theorem', f'not a theorem declaration: {expected}')
+    return expected
 
 
 def verify(root=ROOT, ledger=LEDGER):
@@ -83,16 +140,7 @@ def verify(root=ROOT, ledger=LEDGER):
         trials[key] = acceptance, replay
 
     def declaration(ref, proof=False):
-        content = text(ref['file'])
-        # A deliberately small locator for the current single-namespace modules.
-        # It checks sites, not Lean syntax or theorem validity; the build does that.
-        namespaces = re.findall(r'^namespace ([\w.]+)\s*$', content, re.M)
-        require(namespaces == [ref['namespace']], f'namespace/site mismatch: {ref["name"]}')
-        kind = 'theorem' if proof else r'(?:def|inductive|structure|theorem)'
-        pattern = rf'^{kind} {re.escape(ref["name"])}(?=[\s:({{])'
-        require(len(re.findall(pattern, content, re.M)) == 1,
-                f'missing or ambiguous declaration: {ref["name"]}')
-        return ref['namespace'] + '.' + ref['name']
+        return locate_declaration(text(ref['file']), ref['namespace'], ref['name'], proof)
 
     seen = set()
     trial_forms = {key: set() for key in trials}

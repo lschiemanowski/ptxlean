@@ -1,0 +1,163 @@
+{
+  "schema": "ptxlean.binary32-review-probes/v1",
+  "model_calls": 0,
+  "started_at": "2026-09-23T22:05:52.659181+00:00",
+  "replay": "/tmp/ptxlean-binary32-replay-003",
+  "replay_result_sha256": "cf9415453c97214276b7d4815c01ad5473042503a576d40fc9192f53a15c28fc",
+  "candidate_patch_sha256": "5280b4c9504f4aad4eb232819651fbd9a8d8479498652d6cafb67970631488a6",
+  "source_sha256": "dfa76383c0500eac5752873a59dc337443c3fa81c0f1000d7ce76599deafad6b",
+  "driver_sha256": "41332b7e362168bb9c60cfb0dec101a7a05d75935741a7f12ccd03bb1472ab6d",
+  "script_sha256": "91ba15550befbd21e9ffff1b8a5614f134936e149b32aed5ce3e4fd6fdf87add",
+  "audit_declarations": [
+    "Ptx.Scalar.Binary32.Instr",
+    "Ptx.Scalar.Binary32.Occurrence",
+    "Ptx.Scalar.Binary32.occurrence",
+    "Ptx.Scalar.Binary32.SupportedTarget",
+    "Ptx.Scalar.Binary32.Eval",
+    "Ptx.Scalar.Binary32.Step",
+    "Ptx.Scalar.Binary32.eval_true_iff",
+    "Ptx.Scalar.Binary32.eval_false_iff",
+    "Ptx.Scalar.Binary32.eval_destination",
+    "Ptx.Scalar.Binary32.eval_frame",
+    "Ptx.Scalar.Binary32.eval_other",
+    "Ptx.Scalar.Binary32.eval_event",
+    "Ptx.Scalar.Binary32.eval_exists",
+    "Ptx.Scalar.Binary32.step_origin",
+    "Ptx.Scalar.Binary32.step_exists",
+    "Ptx.Scalar.Binary32.step_no_fetch",
+    "Ptx.Scalar.Binary32.step_unsupported_target",
+    "Ptx.Scalar.Binary32.Text.mnemonic",
+    "Ptx.Scalar.Binary32.Text.supportedMnemonic",
+    "Ptx.Scalar.Binary32.Text.decode",
+    "Ptx.Scalar.Binary32.Text.encode",
+    "Ptx.Scalar.Binary32.Text.decode_encode",
+    "Ptx.Scalar.Binary32.Text.decode_iff",
+    "Ptx.Scalar.Binary32.signed_zero_bits",
+    "Ptx.Scalar.Binary32.subnormal_bits",
+    "Ptx.Scalar.Binary32.negative_guard_exec",
+    "Ptx.Scalar.Binary32.negative_guard_skip",
+    "Ptx.Scalar.Binary32.alias_add_bits"
+  ],
+  "commands": [
+    {
+      "name": "environment",
+      "argv": [
+        "lake",
+        "env",
+        "printenv",
+        "LEAN_PATH"
+      ],
+      "cwd": "/tmp/ptxlean-binary32-replay-003/worktree/integration/torchlean",
+      "returncode": 0,
+      "started_at": "2026-09-23T22:05:52.659313+00:00",
+      "finished_at": "2026-09-23T22:05:56.586191+00:00",
+      "stdout": "environment.stdout.log",
+      "stderr": "environment.stderr.log"
+    },
+    {
+      "name": "compiler",
+      "argv": [
+        "lake",
+        "env",
+        "which",
+        "lean"
+      ],
+      "cwd": "/tmp/ptxlean-binary32-replay-003/worktree/integration/torchlean",
+      "returncode": 0,
+      "started_at": "2026-09-23T22:05:56.586303+00:00",
+      "finished_at": "2026-09-23T22:06:00.613199+00:00",
+      "stdout": "compiler.stdout.log",
+      "stderr": "compiler.stderr.log"
+    },
+    {
+      "name": "control-build",
+      "argv": [
+        "/home/lothar/.elan/toolchains/leanprover--lean4---v4.34.0/bin/lean",
+        "-o",
+        "PtxBinary32/Instructions.olean",
+        "PtxBinary32/Instructions.lean"
+      ],
+      "cwd": "/tmp/ptxlean-binary32-probe-003/control",
+      "returncode": 0,
+      "started_at": "2026-09-23T22:06:00.617006+00:00",
+      "finished_at": "2026-09-23T22:06:03.962019+00:00",
+      "stdout": "control-build.stdout.log",
+      "stderr": "control-build.stderr.log"
+    },
+    {
+      "name": "control-audit",
+      "argv": [
+        "/home/lothar/.elan/toolchains/leanprover--lean4---v4.34.0/bin/lean",
+        "/tmp/ptxlean-binary32-probe-003/audit.lean"
+      ],
+      "cwd": "/tmp/ptxlean-binary32-probe-003/control",
+      "returncode": 0,
+      "started_at": "2026-09-23T22:06:03.962156+00:00",
+      "finished_at": "2026-09-23T22:06:06.464366+00:00",
+      "stdout": "control-audit.stdout.log",
+      "stderr": "control-audit.stderr.log"
+    },
+    {
+      "name": "control-acceptance",
+      "argv": [
+        "/home/lothar/.elan/toolchains/leanprover--lean4---v4.34.0/bin/lean",
+        "/tmp/ptxlean-binary32-probe-003/acceptance.lean"
+      ],
+      "cwd": "/tmp/ptxlean-binary32-probe-003/control",
+      "returncode": 0,
+      "started_at": "2026-09-23T22:06:06.464771+00:00",
+      "finished_at": "2026-09-23T22:06:09.335646+00:00",
+      "stdout": "control-acceptance.stdout.log",
+      "stderr": "control-acceptance.stderr.log"
+    },
+    {
+      "name": "omit-operand-reads-build",
+      "argv": [
+        "/home/lothar/.elan/toolchains/leanprover--lean4---v4.34.0/bin/lean",
+        "-o",
+        "PtxBinary32/Instructions.olean",
+        "PtxBinary32/Instructions.lean"
+      ],
+      "cwd": "/tmp/ptxlean-binary32-probe-003/omit-operand-reads",
+      "returncode": 0,
+      "started_at": "2026-09-23T22:06:09.336847+00:00",
+      "finished_at": "2026-09-23T22:06:12.629733+00:00",
+      "stdout": "omit-operand-reads-build.stdout.log",
+      "stderr": "omit-operand-reads-build.stderr.log"
+    },
+    {
+      "name": "omit-operand-reads-audit",
+      "argv": [
+        "/home/lothar/.elan/toolchains/leanprover--lean4---v4.34.0/bin/lean",
+        "/tmp/ptxlean-binary32-probe-003/audit.lean"
+      ],
+      "cwd": "/tmp/ptxlean-binary32-probe-003/omit-operand-reads",
+      "returncode": 0,
+      "started_at": "2026-09-23T22:06:12.630010+00:00",
+      "finished_at": "2026-09-23T22:06:15.118057+00:00",
+      "stdout": "omit-operand-reads-audit.stdout.log",
+      "stderr": "omit-operand-reads-audit.stderr.log"
+    },
+    {
+      "name": "omit-operand-reads-acceptance",
+      "argv": [
+        "/home/lothar/.elan/toolchains/leanprover--lean4---v4.34.0/bin/lean",
+        "/tmp/ptxlean-binary32-probe-003/acceptance.lean"
+      ],
+      "cwd": "/tmp/ptxlean-binary32-probe-003/omit-operand-reads",
+      "returncode": 1,
+      "started_at": "2026-09-23T22:06:15.118506+00:00",
+      "finished_at": "2026-09-23T22:06:18.047878+00:00",
+      "stdout": "omit-operand-reads-acceptance.stdout.log",
+      "stderr": "omit-operand-reads-acceptance.stderr.log"
+    }
+  ],
+  "qualification": "One omitted-operand-read metadata defect; not completeness of the evaluator. Builds reuse coordinator fresh-replay dependencies, not worker artifacts.",
+  "detected_assertion": {
+    "line": 50,
+    "kind": "executed duplicate source-register reads",
+    "error_count": 1
+  },
+  "outcome": "pass: unchanged control and mutated source both compile with standard dependency reports; independent driver accepts control and rejects omitted operand reads.",
+  "finished_at": "2026-09-23T22:06:18.048779+00:00"
+}

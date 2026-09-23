@@ -1,0 +1,47 @@
+'Ptx.Scalar.Affine.load' does not depend on any axioms
+'Ptx.Scalar.Affine.multiply' does not depend on any axioms
+'Ptx.Scalar.Affine.addition' does not depend on any axioms
+'Ptx.Scalar.Affine.store' does not depend on any axioms
+'Ptx.Scalar.Affine.exit' does not depend on any axioms
+'Ptx.Scalar.Affine.program' does not depend on any axioms
+'Ptx.Scalar.Affine.Initial' does not depend on any axioms
+'Ptx.Scalar.Affine.input' depends on axioms: [propext]
+'Ptx.Scalar.Affine.outputIndex' does not depend on any axioms
+'Ptx.Scalar.Affine.afterLeft' depends on axioms: [propext]
+'Ptx.Scalar.Affine.afterRight' depends on axioms: [propext]
+'Ptx.Scalar.Affine.afterBias' depends on axioms: [propext]
+'Ptx.Scalar.Affine.afterMultiply' depends on axioms: [propext]
+'Ptx.Scalar.Affine.afterAdd' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish' depends on axioms: [propext]
+'Ptx.Scalar.Affine.loadEvent' depends on axioms: [propext]
+'Ptx.Scalar.Affine.trace' depends on axioms: [propext]
+'Ptx.Scalar.Affine.run_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.run_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.trace_length' depends on axioms: [propext]
+'Ptx.Scalar.Affine.trace_positions' depends on axioms: [propext]
+'Ptx.Scalar.Affine.trace_instructions' depends on axioms: [propext]
+'Ptx.Scalar.Affine.trace_memory' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish_frame' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish_registers' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish_other_register' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Affine.finish_output' depends on axioms: [propext]
+'Ptx.Scalar.Affine.finish_other_memory' depends on axioms: [propext]
+'Ptx.Scalar.Affine.run_completed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.stored_error' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.advance_pc' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.path_control' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.path_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.memoryProjection' does not depend on any axioms
+'Ptx.Scalar.Affine.memoryWitness' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Affine.memoryWitness_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.trace_memory_witness' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Affine.run_memory_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.eventAt' depends on axioms: [propext]
+'Ptx.Scalar.Affine.RegisterDependency' depends on axioms: [propext]
+'Ptx.Scalar.Affine.register_dependency_forward' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.register_dependency_acyclic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.run_grounded' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.disjointFixture' does not depend on any axioms
+'Ptx.Scalar.Affine.disjoint_example' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Affine.aliasFixture' does not depend on any axioms
+'Ptx.Scalar.Affine.all_alias_example' depends on axioms: [propext, Classical.choice, Quot.sound]

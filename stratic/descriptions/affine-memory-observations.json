@@ -1,0 +1,90 @@
+{
+  "id": "affine-memory-observations",
+  "parent": {
+    "description": "affine-memory-kernel",
+    "passage": {
+      "quote": "All three inputs are loaded before the only store, so input and output addresses\nmay coincide. Input values always refer to the initial memory snapshot. An input\nslot that is also the output slot need not retain its initial value."
+    }
+  },
+  "summary": [
+    "Preserve unrestricted full-word input/output aliases in a three-load, one-store memory graph with one initialization per location.",
+    "Derive initial load values from graph validity and construct a valid witness without assuming source identity or acyclicity.",
+    "Keep the abstract memory-rule proof separate from the affine kernel’s actual trace connection and the unresolved general no-thin-air semantics."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Three loads followed by one store can use the same memory word without allowing\nan earlier load to read from that later store. This graph describes that bounded\nmemory pattern. The caller supplies an initial list of 32-bit words and four\nvalid, four-byte-aligned addresses. Any input or output addresses may coincide.\nEach memory location has one initialization event, even when several arguments\nname it. The graph then contains three relaxed loads at dispatch positions zero,\none and two, and a relaxed store at position five, all from one thread."
+      },
+      "to": {
+        "path": "Ptx/AffineMemory.lean",
+        "passage": {
+          "quote": "def graph (memory : List Word) (inputs : Fin 3 → Fin memory.length)\n    (output : Fin memory.length) (reads : Fin 3 → Word) (stored : Word)\n    (source : Index memory → Index memory) (co : Index memory → Index memory → Bool) :\n    Graph (memory.length + 4) := ⟨event memory inputs output reads stored, source, co⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For arbitrary proposed load values, store value, source choices and write order,\nthe graph's validity rules force every load to observe its location's initial\nword. A source choice identifies the write supplying a read. A load cannot choose\nthe final store: their actual position labels place that write causally after the\nload at an overlapping address. The only remaining write is the unique matching\ninitialization. This reasoning retains output/input aliases and does not assume\nthe desired load values."
+      },
+      "to": {
+        "path": "Ptx/AffineMemory.lean",
+        "passage": {
+          "quote": "theorem valid_reads_initial\n    (valid : (graph memory inputs output reads stored source co).Valid) :\n    reads = initialReads memory inputs := by\n  funext slot\n  let r := programIndex memory slot.castSucc\n  have isRead : (graph memory inputs output reads stored source co).read r := by\n    simp only [Graph.read, graph, r, event_read]\n  have before : (graph memory inputs output reads stored source co).po r\n      (programIndex memory 3) := by\n    simp only [Graph.po, graph, r, event_read]\n    simp [programEvent]\n    omega\n  obtain ⟨a, sourceEq⟩ := source_initial_of_before_store valid r isRead before\n  have compatible := valid.sources.compatible r isRead\n  change Graph.write _ _ ∧\n    (event memory inputs output reads stored (source r)).effect.address =\n      (event memory inputs output reads stored r).effect.address ∧\n    (event memory inputs output reads stored (source r)).effect.value =\n      (event memory inputs output reads stored r).effect.value at compatible\n  rw [sourceEq] at compatible\n  simp only [r, event_init, event_read] at compatible\n  have addressEq : a = inputs slot := Fin.ext compatible.2.1\n  simpa [initialReads, addressEq] using compatible.2.2.symm"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A valid witness is constructed for those initial load values and any store word.\nEach load selects its own initialization event. The output word's initialization\nprecedes the sole store in write order; there are no other ordered write pairs.\nAll required ordering and source rules are proved. Strictly increasing event\nindices rule out forbidden cycles, including when every address is the same.\nThe ordering proof does not assert that the arbitrary store word is arithmetically\ncorrect; the local execution must establish that separately."
+      },
+      "to": {
+        "path": "Ptx/AffineMemory.lean",
+        "passage": {
+          "quote": "theorem witness_valid (memory : List Word) (inputs : Fin 3 → Fin memory.length)\n    (output : Fin memory.length) (stored : Word) : (witness memory inputs output stored).Valid := by\n  apply Graph.valid_of_certificate (upper := upper) (rank := Fin.val)\n  refine {\n    sources := ⟨?_⟩\n    co := ⟨?_, ?_, ?_, ?_, ?_⟩\n    edge_included := ?_\n    upper_trans := ?_\n    upper_irrefl := ?_\n    coherence_cause := ?_\n    no_future := ?_\n    no_stale := ?_\n    location_rank := ?_ }\n  · intro r; cases_event r <;> reduce_graph\n  · intro a b; cases_event a <;> cases_event b <;> reduce_graph\n  · intro a; cases_event a <;> reduce_graph\n  · intro a b c; cases_event a <;> cases_event b <;> cases_event c <;> reduce_graph\n  · intro a b; cases_event a <;> cases_event b <;> reduce_graph\n  · intro a b; cases_event a <;> cases_event b <;> reduce_graph\n  · intro a b; cases_event a <;> cases_event b <;> reduce_graph\n  · intro a b c; unfold upper; omega\n  · intro a; unfold upper; omega\n  · intro a b; cases_event a <;> cases_event b <;> reduce_graph\n  · intro a b; cases_event a <;> cases_event b <;> reduce_graph\n  · intro a b hw hr _ hc\n    have hu : upper a b := by\n      exact (by simpa only [Graph.upperCause, witness_no_observation, false_and,\n        exists_const, or_false] using hc : upper a b ∧ _).1\n    cases_event a <;> cases_event b <;>\n      simp [Graph.write, Graph.read, witness, graph, programEvent] at hw hr\n    all_goals simp only [upper, initIndex, programIndex] at hu\n    all_goals omega\n  · intro a b; cases_event a <;> cases_event b <;> reduce_graph"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This is an abstract memory graph for the prescribed event shape. The affine\nkernel separately connects its labels to all four memory events projected from\nan actual fetched mixed arithmetic trace, with initialization supplied by the\ninitial arena. That kernel also establishes the arithmetic value stored and\nforward register dataflow. Graph validity alone is not a general no-thin-air\nformalization. A proved absence of cycles in this particular graph's program-order\nand read-source edges is useful evidence, not an additional axiom imposed on all\nPTX executions."
+      },
+      "to": {
+        "path": "Ptx/AffineMemory.lean",
+        "passage": {
+          "quote": "theorem witness_grounding_acyclic (a : Index memory) :\n    ¬Path (fun a b => (witness memory inputs output stored).po a b ∨\n      (witness memory inputs output stored).rf a b) a a := by\n  intro path\n  exact Nat.lt_irrefl _ (Path.rank_increases Fin.val witness_grounding_rank path)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The source interpretation is the pinned PTX 9.4 aligned scalar u32 global-memory\nfragment, with explicit relaxed GPU scope, one issuing thread, ordinary generic\nmemory access and a target of sm_70 or later. Arena addresses are resolved byte\noffsets, not a runtime pointer-translation proof. Isolation excludes accesses by\nother threads, hosts and asynchronous operations. Full-word aliases are allowed;\npartial overlaps, distinct virtual aliases and mixed-width accesses are excluded.\nOne initial event groups the four bytes of an existing word; this reuses the\nrestricted memory model's normalization, not a new proof of general byte adequacy.\n"
+      },
+      "to": {
+        "path": "Ptx/AffineMemory.lean",
+        "passage": {
+          "quote": "theorem witnessAt_valid (memory : List Word) (inputs : Fin 3 → Scalar.Address)\n    (output : Scalar.Address) (validInputs : ∀ i, Scalar.ValidAddress memory (inputs i))\n    (validOutput : Scalar.ValidAddress memory output) (stored : Word) :\n    (witnessAt memory inputs output validInputs validOutput stored).Valid :=\n  witness_valid _ _ _ _"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This is an abstract memory graph for the prescribed event shape. The affine\nkernel separately connects its labels to all four memory events projected from\nan actual fetched mixed arithmetic trace, with initialization supplied by the\ninitial arena. That kernel also establishes the arithmetic value stored and\nforward register dataflow. Graph validity alone is not a general no-thin-air\nformalization. A proved absence of cycles in this particular graph's program-order\nand read-source edges is useful evidence, not an additional axiom imposed on all\nPTX executions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem trace_memory_witness (s : State) (h : Initial s) (mid out : Word) :\n    (trace s mid out).filterMap memoryProjection =\n      List.ofFn (fun slot : Fin 4 => (memoryWitness s h out).event\n        (Ptx.AffineMemory.programIndex s.memory slot)) := by"
+        }
+      }
+    }
+  ],
+  "remaining": "The abstract graph and its alias-safe initial-source witness are proved; the affine kernel separately supplies actual trace correspondence and arithmetic grounding. General dependent PTX sufficiency, mixed-width/virtual-alias adequacy and runtime pointer or hardware correspondence remain outside this fragment."
+}

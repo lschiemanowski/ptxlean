@@ -46,7 +46,7 @@ class MultiTrialEvidenceTests(unittest.TestCase):
              mock.patch("sys.argv", ["check_worker_evidence.py"]), \
              mock.patch("sys.stdout", new_callable=io.StringIO) as output:
             evidence.main()
-        self.assertIn("2 archived files across 2 trials", output.getvalue())
+        self.assertIn("2 archived files across 2 archives", output.getvalue())
 
     def test_default_run_rejects_corrupt_second_trial(self):
         first, second = self.trial("first"), self.trial("second")

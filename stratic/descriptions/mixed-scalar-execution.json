@@ -1,0 +1,223 @@
+{
+  "id": "mixed-scalar-execution",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "A floating-point instruction layer reuses the scalar register and memory state.\nIts arithmetic results follow the numerical contracts, while its instruction\nrules account for operands, predicates, destination writes and actual instruction\nfetch. The record of a floating-point step retains that floating-point instruction.\nAn arithmetic result relation alone does not establish a kernel execution."
+    }
+  },
+  "summary": [
+    "Combine scalar and binary32 instructions over one existing state, retaining actual fetch and distinct instruction events.",
+    "Keep finite advancing paths, explicit exit and fault outcomes distinct while lifting memory safety and frame guarantees.",
+    "Use isolated concrete arena reads and preserve every admitted numerical result without claiming general concurrent PTX execution."
+  ],
+  "realization": "implemented",
+  "remaining": "The tagged concrete-arena dispatch, finite paths, terminal runs and lifting proofs are implemented. General concurrent admission, a mixed raw-text frontend, fuel runner, runtime storage validation and hardware conformance remain outside this component.",
+  "links": [
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Each dispatch reads the instruction at the current program counter. A scalar\ninstruction uses the existing scalar evaluation, including its predicates,\nbranches, faults and explicit exit. A floating-point instruction uses the\nbinary32 instruction relation, including every result admitted by its numerical\ncontract. Its optional predicate controls execution exactly as in that relation.\nA missing instruction reports the scalar invalid-program-counter fault. Unknown\nscalar operations remain unsupported even under a false predicate. Each event\nretains the instruction actually fetched, its position and its original effects."
+      },
+      "to": {
+        "description": "binary32-instructions",
+        "passage": {
+          "quote": "Instructions use the existing scalar state: a program counter identifying the\nnext instruction, value registers, address registers, predicates and memory.\nAn optional predicate is a true/false guard, which can also be negated. A true\nguard reads both operands from the incoming state and writes only the destination\nvalue register. This remains true when either input register is also the\ndestination. A false guard preserves every register. Both cases advance the\nprogram counter by one and preserve all memory, addresses and predicates."
+        }
+      },
+      "reason": "The mixed floating-point arm relies on the original predicate, operand, result and register-update contract; it does not reimplement that arithmetic."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A kernel can move encoded numbers between memory and registers, perform\nfloating-point arithmetic, then store the result. This execution layer puts\nthose instructions in one program while reusing the scalar state. Every\ninstruction and recorded step carries a tag identifying whether it uses the\nexisting integer and memory rules or binary32 arithmetic. A\nfloating-point step is never represented by an integer instruction with a\nsubstituted result."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "inductive Instr where\n  | scalar (instruction : Scalar.Instr)\n  | binary32 (instruction : Scalar.Binary32.Instr)\n  deriving DecidableEq, Repr"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A kernel can move encoded numbers between memory and registers, perform\nfloating-point arithmetic, then store the result. This execution layer puts\nthose instructions in one program while reusing the scalar state. Every\ninstruction and recorded step carries a tag identifying whether it uses the\nexisting integer and memory rules or binary32 arithmetic. A\nfloating-point step is never represented by an integer instruction with a\nsubstituted result."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "inductive Event where\n  | scalar (event : Scalar.Occurrence)\n  | binary32 (event : Scalar.Binary32.Occurrence)\n  deriving DecidableEq, Repr"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each dispatch reads the instruction at the current program counter. A scalar\ninstruction uses the existing scalar evaluation, including its predicates,\nbranches, faults and explicit exit. A floating-point instruction uses the\nbinary32 instruction relation, including every result admitted by its numerical\ncontract. Its optional predicate controls execution exactly as in that relation.\nA missing instruction reports the scalar invalid-program-counter fault. Unknown\nscalar operations remain unsupported even under a false predicate. Each event\nretains the instruction actually fetched, its position and its original effects."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "inductive Eval : Instr → State → Outcome → Prop\n  | scalar : Eval (.scalar i) s (liftScalar (Scalar.eval none i s))\n  | binary32 : Scalar.Binary32.Eval i s next event →\n      Eval (.binary32 i) s (.next next (.binary32 event))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each dispatch reads the instruction at the current program counter. A scalar\ninstruction uses the existing scalar evaluation, including its predicates,\nbranches, faults and explicit exit. A floating-point instruction uses the\nbinary32 instruction relation, including every result admitted by its numerical\ncontract. Its optional predicate controls execution exactly as in that relation.\nA missing instruction reports the scalar invalid-program-counter fault. Unknown\nscalar operations remain unsupported even under a false predicate. Each event\nretains the instruction actually fetched, its position and its original effects."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "def Dispatch (target : Ptx.Target) (program : List Instr)\n    (s : State) (outcome : Outcome) : Prop :=\n  Eligible target ∧ match program[s.pc]? with\n    | none => outcome = .fault (.invalidPC s.pc)\n    | some i => Eval i s outcome"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each dispatch reads the instruction at the current program counter. A scalar\ninstruction uses the existing scalar evaluation, including its predicates,\nbranches, faults and explicit exit. A floating-point instruction uses the\nbinary32 instruction relation, including every result admitted by its numerical\ncontract. Its optional predicate controls execution exactly as in that relation.\nA missing instruction reports the scalar invalid-program-counter fault. Unknown\nscalar operations remain unsupported even under a false predicate. Each event\nretains the instruction actually fetched, its position and its original effects."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "theorem dispatch_event_origin\n    (h : Dispatch target program s (.next next event) ∨\n      Dispatch target program s (.halted next event)) :\n    event.pc = s.pc ∧ program[s.pc]? = some event.instruction := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This slice uses PTX ISA 9.4 with a numeric target requirement of at least sm_70.\nThe floating-point operations alone need only sm_20, but the scalar memory\ninstructions use relaxed ordering and GPU scope, whose qualifiers require\nsm_70. The numeric condition selects features; it does not validate complete\nGPU target names. Unsupported targets have no admitted dispatch, rather than\nan invented hardware fault."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "def Eligible (target : Ptx.Target) : Prop := target.isa = 94 ∧ 70 ≤ target.sm"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This slice uses PTX ISA 9.4 with a numeric target requirement of at least sm_70.\nThe floating-point operations alone need only sm_20, but the scalar memory\ninstructions use relaxed ordering and GPU scope, whose qualifiers require\nsm_70. The numeric condition selects features; it does not validate complete\nGPU target names. Unsupported targets have no admitted dispatch, rather than\nan invented hardware fault."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "theorem eligible_binary32 (h : Eligible target) : Scalar.Binary32.SupportedTarget target :=\n  ⟨h.1, by have := h.2; omega⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite path is a sequence of advancing steps. It can stop before the program\nfinishes and therefore proves no termination by itself. A completed run follows\na finite path with an actual exit instruction. Faults and unsupported operations\nare separate terminal outcomes. Exit retains its own event; faults and unsupported\noperations retain the current state without inventing an instruction event.\nThis interface describes finite executions. It does not introduce a fuel-bounded\nrunner or treat an empty path as successful completion."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "inductive Path (advance : S → E → S → Prop) : S → List E → S → Prop where\n  | nil : Path advance s [] s\n  | cons : advance s event next → Path advance next rest final →\n      Path advance s (event :: rest) final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite path is a sequence of advancing steps. It can stop before the program\nfinishes and therefore proves no termination by itself. A completed run follows\na finite path with an actual exit instruction. Faults and unsupported operations\nare separate terminal outcomes. Exit retains its own event; faults and unsupported\noperations retain the current state without inventing an instruction event.\nThis interface describes finite executions. It does not introduce a fuel-bounded\nrunner or treat an empty path as successful completion."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "inductive Run (target : Ptx.Target) (program : List Instr) :\n    State → State → Scalar.Stop → List Event → Prop where\n  | next : Dispatch target program s (.next next event) →\n      Run target program next final status rest →\n      Run target program s final status (event :: rest)\n  | halted : Dispatch target program s (.halted final event) →\n      Run target program s final .halted [event]\n  | fault : Dispatch target program s (.fault reason) →\n      Run target program s s (.fault reason) []\n  | unsupported : Dispatch target program s (.unsupported spelling) →\n      Run target program s s (.unsupported spelling) []"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite path is a sequence of advancing steps. It can stop before the program\nfinishes and therefore proves no termination by itself. A completed run follows\na finite path with an actual exit instruction. Faults and unsupported operations\nare separate terminal outcomes. Exit retains its own event; faults and unsupported\noperations retain the current state without inventing an instruction event.\nThis interface describes finite executions. It does not introduce a fuel-bounded\nrunner or treat an empty path as successful completion."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "theorem Run.not_exhausted (run : Run target program s final status trace) :\n    status ≠ .exhausted := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite path is a sequence of advancing steps. It can stop before the program\nfinishes and therefore proves no termination by itself. A completed run follows\na finite path with an actual exit instruction. Faults and unsupported operations\nare separate terminal outcomes. Exit retains its own event; faults and unsupported\noperations retain the current state without inventing an instruction event.\nThis interface describes finite executions. It does not introduce a fuel-bounded\nrunner or treat an empty path as successful completion."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "theorem Run.unfold : Run target program s final status trace ↔\n    (∃ next event rest, Dispatch target program s (.next next event) ∧\n      Run target program next final status rest ∧ trace = event :: rest) ∨\n    (∃ event, Dispatch target program s (.halted final event) ∧ status = .halted ∧ trace = [event]) ∨\n    (∃ reason, Dispatch target program s (.fault reason) ∧ final = s ∧\n      status = .fault reason ∧ trace = []) ∨\n    (∃ spelling, Dispatch target program s (.unsupported spelling) ∧ final = s ∧\n      status = .unsupported spelling ∧ trace = []) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every successful memory access retains the scalar alignment and whole-access\nbounds checks. Floating-point steps have no memory effect. Advancing steps\npreserve arena length, so safety applies to every event in a finite path or run,\nincluding paths that later stop with a fault. Memory not targeted by any recorded\nstore remains unchanged. These are lifted properties of the original instruction\nrules, rather than new arithmetic or memory definitions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "theorem Path.memory_safe (path : Path (Advances target program) s trace final)\n    (member : event ∈ trace) (memory : event.memory = some effect) :\n    ValidAddress s.memory effect.address := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every successful memory access retains the scalar alignment and whole-access\nbounds checks. Floating-point steps have no memory effect. Advancing steps\npreserve arena length, so safety applies to every event in a finite path or run,\nincluding paths that later stop with a fault. Memory not targeted by any recorded\nstore remains unchanged. These are lifted properties of the original instruction\nrules, rather than new arithmetic or memory definitions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "theorem Run.memory_safe (run : Run target program s final status trace)\n    (member : event ∈ trace) (memory : event.memory = some effect) :\n    ValidAddress s.memory effect.address := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every successful memory access retains the scalar alignment and whole-access\nbounds checks. Floating-point steps have no memory effect. Advancing steps\npreserve arena length, so safety applies to every event in a finite path or run,\nincluding paths that later stop with a fault. Memory not targeted by any recorded\nstore remains unchanged. These are lifted properties of the original instruction\nrules, rather than new arithmetic or memory definitions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "theorem Path.frame (path : Path (Advances target program) s trace final)\n    (untouched : ∀ event ∈ trace, ¬ StoresTo event index) :\n    final.memory[index]? = s.memory[index]? := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every successful memory access retains the scalar alignment and whole-access\nbounds checks. Floating-point steps have no memory effect. Advancing steps\npreserve arena length, so safety applies to every event in a finite path or run,\nincluding paths that later stop with a fault. Memory not targeted by any recorded\nstore remains unchanged. These are lifted properties of the original instruction\nrules, rather than new arithmetic or memory definitions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "theorem Run.frame (run : Run target program s final status trace)\n    (untouched : ∀ event ∈ trace, ¬ StoresTo event index) :\n    final.memory[index]? = s.memory[index]? := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every eligible state has a dispatch outcome, but that does not mean every\nprogram terminates. Constructing a floating-point next state uses existence in\nthe numerical result set. Universal run properties must cover all members of\nthat set, including its conservative freedom for NaNs, special “not a number”\nresults. A chosen numerical reference can witness existence but cannot replace\nthe allowed execution relation. Hardware progress and exact NaN realizability\nremain separate questions.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+        "passage": {
+          "quote": "theorem dispatch_exists (target : Ptx.Target) (program : List Instr) (s : State)\n    (eligible : Eligible target) : ∃ outcome, Dispatch target program s outcome := by"
+        }
+      }
+    }
+  ]
+}

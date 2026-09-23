@@ -60,10 +60,11 @@ Loads and stores access globally shared memory using relaxed ordering at GPU
 scope: they cover threads on that GPU but do not themselves provide a
 release/acquire synchronization pair. Branches and explicit exit are included.
 Shifts use the full unsigned count; counts at least 32 produce zero. Excluded
-operations include floating-point arithmetic, indivisible read/update operations
-(atomics), thread-rendezvous instructions (barriers), work initiated for later
-completion (asynchronous operations), and collective operations on hardware
-thread groups called warps.
+operations in this integer-and-memory subset include floating-point arithmetic,
+indivisible read/update operations (atomics), thread-rendezvous instructions
+(barriers), work initiated for later completion (asynchronous operations), and
+collective operations on hardware thread groups called warps. Floating-point
+arithmetic has a separate instruction layer sharing the same state.
 
 One attempt to execute the next instruction is a dispatch. It can advance,
 execute exit, report an invalid operation or access (a fault), or encounter
@@ -102,3 +103,9 @@ passes arguments and uses storage when called. An internal store of a literal
 constant is excluded from supported PTX text: PTX store data must be in a register.
 The simple arena and typed interface keep instruction proofs manageable while
 leaving these frontend and runtime obligations explicit.
+
+A floating-point instruction layer reuses the scalar register and memory state.
+Its arithmetic results follow the numerical contracts, while its instruction
+rules account for operands, predicates, destination writes and actual instruction
+fetch. The record of a floating-point step retains that floating-point instruction.
+An arithmetic result relation alone does not establish a kernel execution.

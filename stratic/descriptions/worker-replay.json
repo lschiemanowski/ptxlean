@@ -9,7 +9,8 @@
   "summary": [
     "Recheck saved worker patches in fresh checkouts using pinned builds, independent contract examples and explicit theorem-dependency audits.",
     "Preserve command evidence and reject source drift while keeping mechanical checking distinct from semantic acceptance.",
-    "Run selected subproject checks after root checks with independent pinned dependency sources and recorded working directories."
+    "Run selected subproject checks after root checks with independent pinned dependency sources and recorded working directories.",
+    "Preserve a successful zero-model-call integration smoke separately from instruction-formalization trials and acceptance."
   ],
   "realization": "implemented",
   "links": [
@@ -70,6 +71,18 @@
         "path": "tests/test_worker_project.py",
         "passage": {
           "quote": "    def test_pristine_ledger_failure_blocks_patch_and_builds(self):"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A preserved synthetic smoke has exercised this path on the committed binary32\nfoundation in `integration/torchlean`: pristine root checks, sixteen independent\ndependency checkouts, the official mathlib cache, a newly added module, an\nimmutable contract driver and a standard-axiom audit all passed. The new theorem\nonly reuses the imported encoding roundtrip. This tests replay plumbing, not a\nmodel's ability to formalize an instruction, and consumed no model or campaign\ncalls. Its archive omits worktrees and compiled caches. The candidate ledger\ndeferral remains visible; the smoke does not confer instruction acceptance."
+      },
+      "to": {
+        "path": "formalization/results/integration-replay-smoke/README.md",
+        "passage": {
+          "quote": "**Passed, with zero model calls and zero campaign calls.** This is a\ncoordinator-authored infrastructure test, not a third Luna instruction trial."
         }
       }
     }

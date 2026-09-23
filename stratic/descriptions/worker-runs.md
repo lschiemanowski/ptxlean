@@ -48,7 +48,7 @@ needed alongside the count because one headless call can contain many turns.
 Completed evaluation trials can be preserved as separate evidence archives. Each
 manifest lists the exact bytes and hashes of all archived attempts, feedback,
 ledger snapshots and replay/checker records, including failures and evaluator
-repairs. The evidence checker verifies every archived trial by default, or the
+repairs. The evidence checker verifies every evidence archive by default, or the
 explicitly selected manifests. It checks bytes without extracting or executing
 archive contents. An archive's integrity does not itself establish semantic
 acceptance. Usage counters from resumed sessions remain raw; potentially

@@ -7,16 +7,17 @@
     }
   },
   "summary": [
-    "Record exact accepted integer instruction forms, their typed boundaries, source conditions, proofs and historical acceptance evidence.",
+    "Record six exact accepted integer and binary32 instruction forms with their typed boundaries, source conditions, proofs and historical evidence.",
     "Keep uncovered sibling forms explicit without promoting selected support to instruction-section coverage.",
-    "Reject stale source, declaration and provenance references while leaving proof checking and semantic review separate."
+    "Reject stale source, declaration and provenance references, following nested name scopes without replacing proof checking or semantic review.",
+    "Keep floating NaN freedom conservative and require ISA 9.4 with SM at least 20 for fetched floating steps, without claiming complete target validation or kernel execution."
   ],
   "realization": "implemented",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "An accepted form is a particular spelling and operand contract, not an entire\ninstruction name. This ledger records only the four independently reviewed\nforms `min.u32`, `max.u32`, `clz.b32` and `popc.b32`. Minimum and maximum compare\ntwo unsigned 32-bit values. Population count counts one bits; leading-zero count\nstarts at bit 31. Their results are exact for all input bit patterns, including\nzero. The broader instruction-section inventory remains unassessed."
+        "quote": "An accepted form is a particular spelling and operand contract, not an entire\ninstruction name. This ledger records six independently reviewed forms:\n`min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32` and `mul.rn.f32`.\nThe integer forms compare unsigned words or count bits, with exact results for\nall input patterns. The floating forms add or multiply encoded binary32 values\nwith nearest-even rounding and preserved subnormal values. Their result relation\nkeeps every non-NaN reference bit, including zero signs, and conservatively\nadmits NaN encodings; it does not assert that every such encoding is realizable.\nThe broader instruction-section inventory remains unassessed."
       },
       "to": {
         "path": "coverage/implemented-forms.json",
@@ -28,7 +29,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Each record says which typed operands and predicate guards are represented,\nwhich PTX version and hardware targets the manual permits, and where the actual\nvalue definition, instruction execution, text conversion and universal proofs\nlive. A typed operand is an already classified register or value: this boundary\ndoes not parse a complete PTX file or validate its register declarations. The\nversion and target conditions are reviewed source facts; the arithmetic decoder\ndoes not enforce architecture eligibility. Source and destination may name the\nsame register because source values are read before the destination is written."
+        "quote": "Each record says which typed operands and predicate guards are represented,\nwhich PTX version and hardware targets the manual permits, and where the actual\nvalue definition, instruction execution, text conversion and universal proofs\nlive. A typed operand is an already classified register or value: this boundary\ndoes not parse a complete PTX file or validate its register declarations. The\ninteger version and target conditions are reviewed source facts, not checks in\nthe arithmetic decoder. The floating fetched-step interface additionally requires\nPTX ISA 9.4 and a numeric SM value of at least 20, preserving the source's\nsubnormal behavior; this does not validate target spellings or architecture\nsuffixes. Floating operands denote compatible `.b32`/`.f32` registers or exact\nalready-decoded `0f`/`0F` bit literals, not numeric conversions of integer operands.\nSource and destination may name the same register because both sources are read\nbefore the destination is written. A floating leaf step does not prove complete\nkernel execution."
       },
       "to": {
         "path": "coverage/implemented-forms.json",
@@ -40,7 +41,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The ledger also lists uncovered sibling forms from the same four integer\ninstruction sections. A sibling is another type, width or modifier combination\nfor the same instruction. These entries explain missing signed comparisons,\npacked values, saturation and 64-bit bit counts; they are not implementation\nclaims. Floating-point instruction sections and all other families lie outside\nthis selected ledger. No percentage or whole-section coverage follows from it."
+        "quote": "The ledger also lists uncovered sibling forms from the selected integer and\nfloating instruction sections. A sibling is another type, width or modifier combination\nfor the same instruction. These entries explain missing signed comparisons,\npacked values, saturation and 64-bit bit counts; they are not implementation\nclaims. Other floating rounding modes, flush-to-zero, saturation, packed and\n64-bit forms remain outside the accepted floating slice. No percentage or\nwhole-section coverage follows from this ledger."
       },
       "to": {
         "path": "coverage/implemented-forms.json",
@@ -82,6 +83,18 @@
         "path": "docs/formalization/implemented-forms.md",
         "passage": {
           "quote": "A hash\nrefresh alone does not renew semantic acceptance."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Declaration locations use a bounded source scan that follows nested namespaces\n(groups of Lean names), named or unnamed sections (local scopes), and their\nmatching ends. Relative qualified names are joined to the active namespace;\nexplicit root-qualified names start at the root. Comments and strings do not\ncreate declarations. Missing or duplicate fully qualified sites and unsupported\nscope syntax are rejected. This does not resolve aliases, expand macros or\nidentify generated declarations; private declarations are not public ledger sites."
+      },
+      "to": {
+        "path": "scripts/check_implemented_forms.py",
+        "passage": {
+          "quote": "def declaration_sites(content):"
         }
       }
     }

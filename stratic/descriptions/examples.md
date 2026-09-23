@@ -1,11 +1,13 @@
 # Examples
 
-Examples connect a particular network specification to its kernel implementation
-and checked correctness results through the reusable PTX semantics and
-verification interface. This is end-to-end verification: the proof reaches from
-the specified network to the stated kernel behavior. Each example identifies
-its architecture (the arrangement of network operations), inputs, state kept
-between calls, number-format and approximation choices, and execution assumptions.
+Examples range from small kernels that exercise one reusable contract to concrete
+network implementations that combine the contracts. A small kernel makes the
+connection between instructions, stored values and checked guarantees easier to
+follow. A network example reaches from its specified computation to the stated
+kernel behavior, giving an end-to-end verification result. Each example identifies
+its computation, inputs, state kept between calls, number-format and approximation
+choices, and execution assumptions. Network examples also identify their
+architecture: the arrangement of network operations.
 
 The Gemma example verifies text-only Gemma 4 12B. Its forward inference, which
 computes outputs, retains attention keys and values from earlier tokens in a

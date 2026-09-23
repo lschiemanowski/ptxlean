@@ -1,6 +1,6 @@
 name = "ptxlean_torchlean_integration"
 version = "0.1.0"
-defaultTargets = ["PtxTorchLean", "PtxTensorBridge", "PtxBinary32", "PtxBinary32Bounds", "PtxBinary32Examples", "PtxBinary32Error"]
+defaultTargets = ["PtxTorchLean", "PtxTensorBridge", "PtxBinary32", "PtxBinary32Bounds", "PtxBinary32Examples", "PtxBinary32Error", "PtxBinary32.Instructions", "PtxBinary32.Mixed", "PtxBinary32.Affine"]
 
 [[require]]
 name = "ptxlean"

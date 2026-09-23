@@ -11,7 +11,7 @@
     "Preserve exact offline mutations and diagnostics, distinguishing targeted detection from unrelated failure and limiting conclusions to the probed defects."
   ],
   "realization": "implemented",
-  "remaining": "Broader defect families and a general reviewer-quality evaluation remain outside these two bounded offline probes.",
+  "remaining": "Further defect families and a general reviewer-quality evaluation remain outside these bounded offline probes.",
   "links": [
     {
       "kind": "implementation",
@@ -40,7 +40,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Each probe starts from the recorded candidate's pinned base and saved patch in\nan isolated checkout. It preserves exact input hashes, mutation diffs, commands,\nexit statuses and diagnostic locations. It makes no model calls and leaves the\ncandidate and main checkout unchanged. The replay command uses the stored patch\nand independent driver, so evaluation can be repeated without regeneration."
+        "quote": "Each probe uses the recorded candidate's pinned base and saved patch in an\nisolated checkout or source overlay over a completed fresh replay. An overlay\nplaces rebuilt candidate modules ahead of the unchanged replay dependencies.\nThe probe preserves exact input hashes, mutation diffs, commands, exit statuses\nand diagnostic locations. It makes no model calls and leaves the candidate and\nmain checkout unchanged. Stored inputs allow repetition without regeneration."
       },
       "to": {
         "path": "scripts/check_minmax_mutations.py",
@@ -52,12 +52,24 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Detecting these two seeded defects is evidence about these checks and these\nerrors. It is not a general reviewer-quality score, an unbiased sample of model\nmistakes, or proof that every semantic error will be detected. Further families\nneed their own independently prepared obligations and distinguishing cases.\n"
+        "quote": "Detecting these seeded defects is evidence about these checks and these\nerrors. It is not a general reviewer-quality score, an unbiased sample of model\nmistakes, or proof that every semantic error will be detected. Further families\nneed their own independently prepared obligations and distinguishing cases.\n"
       },
       "to": {
         "path": "formalization/results/minmax-u32/review-probes-v2/report.json",
         "passage": {
           "quote": "\"limits\": \"Two hand-designed defects in one candidate; no general detection-rate or semantic-completeness claim.\""
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Register-read probes cover information that arithmetic-only proofs can miss.\nRemoving a bit-count source read, or both binary32 operand reads, leaves the\nstate computation and the candidate's own proofs intact. Independent expected\nevent records must still reject the missing reads. Repeated reads of the same\nregister remain repeated in the record; a predicate read is separate from the\noperand reads. An unchanged candidate must pass, and the mutant must both compile\nand pass dependency inspection before the exact intended trace assertion fails."
+      },
+      "to": {
+        "path": "formalization/results/binary32-instructions/review-probes.md",
+        "passage": {
+          "quote": "The unchanged final candidate passed the independent driver. A copy with both\noperand-register reads removed from executed instruction events still compiled\nall its definitions, proofs and examples, and all 28 public dependency reports\nused only standard Lean axioms. The same driver rejected that copy at exactly\nline 50: the expected event reads predicate 5 and word register 3 twice, while\nthe mutant omits both word reads. Arithmetic and register updates were unchanged."
         }
       }
     }

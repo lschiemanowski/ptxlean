@@ -7,16 +7,16 @@
     }
   },
   "summary": [
-    "Demonstrate reproducible verification from concrete network specifications through their kernel implementations, using reusable contracts.",
+    "Demonstrate reproducible verification with small kernel examples and complete network examples, making reusable contracts and their boundaries concrete.",
     "Explain assumptions specific to each application and distinguish proved guarantees from experimental evidence."
   ],
-  "realization": "unimplemented",
-  "remaining": "Concrete example implementations, proofs, and reproduction instructions remain to be developed.",
+  "realization": "partial",
+  "remaining": "The scalar affine memory example supplies actual mixed instruction execution, unrestricted full-word aliases, safety, finite completion and an input-only numerical error bound. Full-network examples, including Gemma, and their application-specific implementation/proof connections remain to be developed.",
   "links": [
     {
       "kind": "depends-on",
       "from": {
-        "quote": "Examples connect a particular network specification to its kernel implementation\nand checked correctness results through the reusable PTX semantics and\nverification interface. This is end-to-end verification: the proof reaches from\nthe specified network to the stated kernel behavior. Each example identifies\nits architecture (the arrangement of network operations), inputs, state kept\nbetween calls, number-format and approximation choices, and execution assumptions."
+        "quote": "Examples range from small kernels that exercise one reusable contract to concrete\nnetwork implementations that combine the contracts. A small kernel makes the\nconnection between instructions, stored values and checked guarantees easier to\nfollow. A network example reaches from its specified computation to the stated\nkernel behavior, giving an end-to-end verification result. Each example identifies\nits computation, inputs, state kept between calls, number-format and approximation\nchoices, and execution assumptions. Network examples also identify their\narchitecture: the arrangement of network operations."
       },
       "to": {
         "description": "verification-interface",

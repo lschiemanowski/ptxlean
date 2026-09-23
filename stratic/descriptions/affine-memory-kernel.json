@@ -1,0 +1,382 @@
+{
+  "id": "affine-memory-kernel",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "Examples illustrate both the\nuse of reusable contracts and the application-specific obligations that remain."
+    }
+  },
+  "summary": [
+    "Load three arbitrary encoded inputs, execute separately rounded multiplication and addition, store the actual result and exit.",
+    "Allow valid input/output addresses to alias while proving exact traces, memory framing, safety and finite completion.",
+    "Bound every completed run’s stored real value using only input finiteness, range and deviation premises.",
+    "Connect actual memory events to the checked initial-source graph and prove actual register dependencies move forward, without claiming general PTX sufficiency."
+  ],
+  "realization": "implemented",
+  "remaining": "The affine program, all terminal-run characterization, finite existence, advancing-path bound, input-only numerical corollary and actual trace memory/dependency connections are proved. General concurrent PTX sufficiency, runtime allocation and launch validation, full networks and hardware/PyTorch conformance remain outside this example.",
+  "links": [
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The trace records exactly seven fetched instructions at positions zero through\nsix. It includes three loads with their actual addresses and values, the two\nfloating-point steps, the actual output store, and explicit exit. Floating-point\nevents retain their own instruction identity and have no memory effect. Exit\nleaves the program counter at six. Under the initial address conditions, a\ncompleted run exists for every encoded input, including exceptional values.\nThere are exactly six advancing steps before exit: arbitrary admitted numerical\nchoices cannot create a longer advancing path or a fault. Shorter finite paths\nare still incomplete, not evidence of termination."
+      },
+      "to": {
+        "description": "mixed-scalar-execution",
+        "passage": {
+          "quote": "A finite path is a sequence of advancing steps. It can stop before the program\nfinishes and therefore proves no termination by itself. A completed run follows\na finite path with an actual exit instruction. Faults and unsupported operations\nare separate terminal outcomes. Exit retains its own event; faults and unsupported\noperations retain the current state without inventing an instruction event.\nThis interface describes finite executions. It does not introduce a fuel-bounded\nrunner or treat an empty path as successful completion."
+        }
+      },
+      "reason": "The example uses actual tagged fetched paths and explicit exit, so a prefix cannot be mistaken for completion."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Every completed run satisfying those conditions stores a finite value whose\nabsolute difference from x*y+b is bounded by both rounding contributions and\nthe propagated input errors. The multiplication contribution includes the effect\nof perturbing both inputs together. The bound uses the existing numerical\ncomposition contract without choosing a special execution or replacing the\nintermediate word by an exact real product. Encoded equality and closeness to\nthe ideal real value remain distinct claims."
+      },
+      "to": {
+        "description": "binary32-error-composition",
+        "passage": {
+          "quote": "A two-stage affine expression first multiplies and rounds, then adds a finite\nbias and rounds again. Its bound includes both rounding contributions, the two\nmultiplicand input errors and the bias input error. The second stage's range\ncan be established conservatively from the exact product magnitude, its local\nrounding bound and the actual bias magnitude. The intermediate word is an actual\noutput of the first result relation and an actual input of the second. This\noperation order is distinct from a fused multiply-add, which rounds only once."
+        }
+      },
+      "reason": "The stored word’s numerical error follows from two actual result relations sharing the encoded intermediate and input-only range/deviation conditions."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program executes seven instructions: load the left input, load the right\ninput, load the bias, multiply with nearest-even rounding, add the bias with\nnearest-even rounding, store the output, then exit. Binary32 is the 32-bit\nsingle-precision format. Nearest-even rounding chooses the closest representable\nresult and resolves an exact tie by choosing an even last bit. Multiplication\nand addition are separate instructions with separate rounding; this is not a\nfused multiply-add, which would round only once."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "def program : List Mixed.Instr :=\n  [.scalar (load 0), .scalar (load 1), .scalar (load 2),\n    .binary32 multiply, .binary32 addition, .scalar store, .scalar exit]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The caller supplies initialized memory and four valid addresses: three inputs\nand an output. Each address is four-byte aligned and its entire four-byte access\nfits within the arena, the modeled list of memory words. Address registers hold\nthose modeled addresses and the program counter starts at the first instruction. Initial\nvalue registers, predicates and surrounding memory are otherwise arbitrary.\nAll three inputs are loaded before the only store, so input and output addresses\nmay coincide. Input values always refer to the initial memory snapshot. An input\nslot that is also the output slot need not retain its initial value."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "def Initial (s : State) : Prop :=\n  s.pc = 0 ∧ ∀ i : Fin 4, ValidAddress s.memory (s.addrs i.val)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The caller supplies initialized memory and four valid addresses: three inputs\nand an output. Each address is four-byte aligned and its entire four-byte access\nfits within the arena, the modeled list of memory words. Address registers hold\nthose modeled addresses and the program counter starts at the first instruction. Initial\nvalue registers, predicates and surrounding memory are otherwise arbitrary.\nAll three inputs are loaded before the only store, so input and output addresses\nmay coincide. Input values always refer to the initial memory snapshot. An input\nslot that is also the output slot need not retain its initial value."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "def input (s : State) (i : Nat) : Word := s.memory[(s.addrs i).toNat / 4]!\ndef outputIndex (s : State) : Nat := (s.addrs 3).toNat / 4"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed run must produce actual intermediate and output words admitted\nby the numerical multiplication and addition relations. The intermediate word\nwritten by multiplication is the word read by addition. Final memory is exactly\nthe initial arena with the output slot replaced by that output word. The five\nworking value registers contain the three loaded inputs, intermediate and final\nresult; every other value register, all address registers and all predicates are\npreserved. Every non-output memory slot is preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem run_iff (s : State) (target : Ptx.Target) (h : Initial s)\n    (eligible : Mixed.Eligible target) (final : State) (status : Scalar.Stop)\n    (events : List Mixed.Event) :\n    Mixed.Run target program s final status events ↔\n      ∃ mid out, Ptx.Binary32.Error.AffineResults (input s 0) (input s 1) (input s 2) mid out ∧\n        final = finish s mid out ∧ status = .halted ∧ events = trace s mid out := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed run must produce actual intermediate and output words admitted\nby the numerical multiplication and addition relations. The intermediate word\nwritten by multiplication is the word read by addition. Final memory is exactly\nthe initial arena with the output slot replaced by that output word. The five\nworking value registers contain the three loaded inputs, intermediate and final\nresult; every other value register, all address registers and all predicates are\npreserved. Every non-output memory slot is preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem finish_registers (s : State) (mid out : Word) :\n    (finish s mid out).regs 0 = input s 0 ∧\n    (finish s mid out).regs 1 = input s 1 ∧\n    (finish s mid out).regs 2 = input s 2 ∧\n    (finish s mid out).regs 3 = mid ∧ (finish s mid out).regs 4 = out := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed run must produce actual intermediate and output words admitted\nby the numerical multiplication and addition relations. The intermediate word\nwritten by multiplication is the word read by addition. Final memory is exactly\nthe initial arena with the output slot replaced by that output word. The five\nworking value registers contain the three loaded inputs, intermediate and final\nresult; every other value register, all address registers and all predicates are\npreserved. Every non-output memory slot is preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem finish_other_register (s : State) (mid out : Word) (index : Nat)\n    (other : 5 ≤ index) : (finish s mid out).regs index = s.regs index := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed run must produce actual intermediate and output words admitted\nby the numerical multiplication and addition relations. The intermediate word\nwritten by multiplication is the word read by addition. Final memory is exactly\nthe initial arena with the output slot replaced by that output word. The five\nworking value registers contain the three loaded inputs, intermediate and final\nresult; every other value register, all address registers and all predicates are\npreserved. Every non-output memory slot is preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem finish_other_memory (s : State) (mid out : Word) (index : Nat)\n    (other : index ≠ outputIndex s) :\n    (finish s mid out).memory[index]? = s.memory[index]? := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed run must produce actual intermediate and output words admitted\nby the numerical multiplication and addition relations. The intermediate word\nwritten by multiplication is the word read by addition. Final memory is exactly\nthe initial arena with the output slot replaced by that output word. The five\nworking value registers contain the three loaded inputs, intermediate and final\nresult; every other value register, all address registers and all predicates are\npreserved. Every non-output memory slot is preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem finish_output (s : State) (mid out : Word) (h : Initial s) :\n    (finish s mid out).memory[outputIndex s]? = some out := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The trace records exactly seven fetched instructions at positions zero through\nsix. It includes three loads with their actual addresses and values, the two\nfloating-point steps, the actual output store, and explicit exit. Floating-point\nevents retain their own instruction identity and have no memory effect. Exit\nleaves the program counter at six. Under the initial address conditions, a\ncompleted run exists for every encoded input, including exceptional values.\nThere are exactly six advancing steps before exit: arbitrary admitted numerical\nchoices cannot create a longer advancing path or a fault. Shorter finite paths\nare still incomplete, not evidence of termination."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem trace_positions (s : State) (mid out : Word) :\n    (trace s mid out).map Mixed.Event.pc = [0, 1, 2, 3, 4, 5, 6] := rfl"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The trace records exactly seven fetched instructions at positions zero through\nsix. It includes three loads with their actual addresses and values, the two\nfloating-point steps, the actual output store, and explicit exit. Floating-point\nevents retain their own instruction identity and have no memory effect. Exit\nleaves the program counter at six. Under the initial address conditions, a\ncompleted run exists for every encoded input, including exceptional values.\nThere are exactly six advancing steps before exit: arbitrary admitted numerical\nchoices cannot create a longer advancing path or a fault. Shorter finite paths\nare still incomplete, not evidence of termination."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem trace_instructions (s : State) (mid out : Word) :\n    (trace s mid out).map Mixed.Event.instruction = program := rfl"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The trace records exactly seven fetched instructions at positions zero through\nsix. It includes three loads with their actual addresses and values, the two\nfloating-point steps, the actual output store, and explicit exit. Floating-point\nevents retain their own instruction identity and have no memory effect. Exit\nleaves the program counter at six. Under the initial address conditions, a\ncompleted run exists for every encoded input, including exceptional values.\nThere are exactly six advancing steps before exit: arbitrary admitted numerical\nchoices cannot create a longer advancing path or a fault. Shorter finite paths\nare still incomplete, not evidence of termination."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem trace_memory (s : State) (mid out : Word) :\n    (trace s mid out).filterMap Mixed.Event.memory =\n      [⟨.load, s.addrs 0, input s 0⟩, ⟨.load, s.addrs 1, input s 1⟩,\n       ⟨.load, s.addrs 2, input s 2⟩, ⟨.store, s.addrs 3, out⟩] := rfl"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The trace records exactly seven fetched instructions at positions zero through\nsix. It includes three loads with their actual addresses and values, the two\nfloating-point steps, the actual output store, and explicit exit. Floating-point\nevents retain their own instruction identity and have no memory effect. Exit\nleaves the program counter at six. Under the initial address conditions, a\ncompleted run exists for every encoded input, including exceptional values.\nThere are exactly six advancing steps before exit: arbitrary admitted numerical\nchoices cannot create a longer advancing path or a fault. Shorter finite paths\nare still incomplete, not evidence of termination."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem run_exists (s : State) (target : Ptx.Target) (h : Initial s)\n    (eligible : Mixed.Eligible target) :\n    ∃ final events, Mixed.Run target program s final .halted events := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The trace records exactly seven fetched instructions at positions zero through\nsix. It includes three loads with their actual addresses and values, the two\nfloating-point steps, the actual output store, and explicit exit. Floating-point\nevents retain their own instruction identity and have no memory effect. Exit\nleaves the program counter at six. Under the initial address conditions, a\ncompleted run exists for every encoded input, including exceptional values.\nThere are exactly six advancing steps before exit: arbitrary admitted numerical\nchoices cannot create a longer advancing path or a fault. Shorter finite paths\nare still incomplete, not evidence of termination."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem run_completed (s : State) (target : Ptx.Target) (h : Initial s)\n    (eligible : Mixed.Eligible target) (run : Mixed.Run target program s final status events) :\n    status = .halted ∧ final.pc = 6 ∧ events.length = 7 ∧\n      events.map Mixed.Event.pc = [0, 1, 2, 3, 4, 5, 6] := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The trace records exactly seven fetched instructions at positions zero through\nsix. It includes three loads with their actual addresses and values, the two\nfloating-point steps, the actual output store, and explicit exit. Floating-point\nevents retain their own instruction identity and have no memory effect. Exit\nleaves the program counter at six. Under the initial address conditions, a\ncompleted run exists for every encoded input, including exceptional values.\nThere are exactly six advancing steps before exit: arbitrary admitted numerical\nchoices cannot create a longer advancing path or a fault. Shorter finite paths\nare still incomplete, not evidence of termination."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem advance_pc (step : Mixed.Advances target program s event next) (bounded : s.pc ≤ 6) :\n    next.pc = s.pc + 1 ∧ s.pc < 6 := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The trace records exactly seven fetched instructions at positions zero through\nsix. It includes three loads with their actual addresses and values, the two\nfloating-point steps, the actual output store, and explicit exit. Floating-point\nevents retain their own instruction identity and have no memory effect. Exit\nleaves the program counter at six. Under the initial address conditions, a\ncompleted run exists for every encoded input, including exceptional values.\nThere are exactly six advancing steps before exit: arbitrary admitted numerical\nchoices cannot create a longer advancing path or a fault. Shorter finite paths\nare still incomplete, not evidence of termination."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem path_control (path : Mixed.Path (Mixed.Advances target program) s events final)\n    (bounded : s.pc ≤ 6) : final.pc = s.pc + events.length ∧ final.pc ≤ 6 := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The trace records exactly seven fetched instructions at positions zero through\nsix. It includes three loads with their actual addresses and values, the two\nfloating-point steps, the actual output store, and explicit exit. Floating-point\nevents retain their own instruction identity and have no memory effect. Exit\nleaves the program counter at six. Under the initial address conditions, a\ncompleted run exists for every encoded input, including exceptional values.\nThere are exactly six advancing steps before exit: arbitrary admitted numerical\nchoices cannot create a longer advancing path or a fault. Shorter finite paths\nare still incomplete, not evidence of termination."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem path_bound (path : Mixed.Path (Mixed.Advances target program) s events final)\n    (initialPC : s.pc = 0) : events.length ≤ 6 := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For an accuracy bound, the encoded inputs must represent finite real values xh,\nyh and bh. Their differences from the ideal real inputs x, y and b are bounded\nby nonnegative budgets ex, ey and eb. The exact product magnitude must not exceed\nthe largest finite binary32 value. The sum of that product magnitude, its local\nrounding-error allowance and the actual bias magnitude must also fit that limit.\nThese conservative conditions concern only the original inputs. They establish\nfiniteness of both arithmetic stages; they do not assume a correct or finite\noutput as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem stored_error (s : State) (target : Ptx.Target) (h : Initial s)\n    (eligible : Mixed.Eligible target) (run : Mixed.Run target program s final status events)\n    (xh yh bh x y b ex ey eb : ℝ)\n    (leftReal : Ptx.Binary32.finiteReal (input s 0) = some xh)\n    (rightReal : Ptx.Binary32.finiteReal (input s 1) = some yh)\n    (biasReal : Ptx.Binary32.finiteReal (input s 2) = some bh)\n    (multiplyRange : |xh*yh| ≤ Ptx.Binary32.Bounds.maxFinite)\n    (additionRange : |xh*yh| + TorchLean.Floats.eps32 (xh*yh) + |bh| ≤ Ptx.Binary32.Bounds.maxFinite)\n    (leftError : |xh-x| ≤ ex) (rightError : |yh-y| ≤ ey) (biasError : |bh-b| ≤ eb) :\n    status = .halted ∧ ∃ out z,\n      final.memory[outputIndex s]? = some out ∧ Ptx.Binary32.isFinite out = true ∧\n      Ptx.Binary32.finiteReal out = some z ∧\n      |z-(x*y+b)| ≤ Ptx.Binary32.Error.affineBudget xh yh bh x y ex ey eb := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The four memory events projected from the actual trace match a separately checked\nmemory graph: three loads at instruction positions zero, one and two, followed\nby the store at position five. Initialization events come from the supplied\ninitial arena, once per word. Each load reads its initial value, including when\nall pointers coincide. The graph satisfies the existing necessary memory rules;\nthat fact alone is not a general sufficiency theorem for dependent PTX programs."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "def memoryProjection (event : Mixed.Event) : Option Ptx.Occurrence :=\n  event.memory.map fun effect =>\n    ⟨some 0, event.pc, ⟨match effect.kind with\n      | .load => .load .relaxed | .store => .store .relaxed,\n      effect.address.toNat / 4, effect.value⟩⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The four memory events projected from the actual trace match a separately checked\nmemory graph: three loads at instruction positions zero, one and two, followed\nby the store at position five. Initialization events come from the supplied\ninitial arena, once per word. Each load reads its initial value, including when\nall pointers coincide. The graph satisfies the existing necessary memory rules;\nthat fact alone is not a general sufficiency theorem for dependent PTX programs."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "def memoryWitness (s : State) (h : Initial s) (out : Word) : Ptx.Graph (s.memory.length + 4) :=\n  Ptx.AffineMemory.witnessAt s.memory (fun i => s.addrs i.val) (s.addrs 3)\n    (fun i => h.2 i.castSucc) (h.2 3) out"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The four memory events projected from the actual trace match a separately checked\nmemory graph: three loads at instruction positions zero, one and two, followed\nby the store at position five. Initialization events come from the supplied\ninitial arena, once per word. Each load reads its initial value, including when\nall pointers coincide. The graph satisfies the existing necessary memory rules;\nthat fact alone is not a general sufficiency theorem for dependent PTX programs."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem trace_memory_witness (s : State) (h : Initial s) (mid out : Word) :\n    (trace s mid out).filterMap memoryProjection =\n      List.ofFn (fun slot : Fin 4 => (memoryWitness s h out).event\n        (Ptx.AffineMemory.programIndex s.memory slot)) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The four memory events projected from the actual trace match a separately checked\nmemory graph: three loads at instruction positions zero, one and two, followed\nby the store at position five. Initialization events come from the supplied\ninitial arena, once per word. Each load reads its initial value, including when\nall pointers coincide. The graph satisfies the existing necessary memory rules;\nthat fact alone is not a general sufficiency theorem for dependent PTX programs."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem run_memory_witness (s : State) (target : Ptx.Target) (h : Initial s)\n    (eligible : Mixed.Eligible target) (run : Mixed.Run target program s final status events) :\n    ∃ mid out, Ptx.Binary32.Error.AffineResults (input s 0) (input s 1) (input s 2) mid out ∧\n      final.memory[outputIndex s]? = some out ∧ (memoryWitness s h out).Valid ∧\n      events.filterMap memoryProjection = List.ofFn (fun slot : Fin 4 =>\n        (memoryWitness s h out).event (Ptx.AffineMemory.programIndex s.memory slot)) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The actual register read/write records also show that every computed-value\ndependency goes forward in instruction order: inputs loaded from the initial\narena feed multiplication and addition, whose output feeds the store. This\nfragment-specific grounding excludes a value justified only by a cycle in this\nprogram. It does not replace the general PTX rule against circular justification\nwith an assumption that all dependency graphs must be acyclic.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "def RegisterDependency (s : State) (mid out : Word) (writer reader : Fin 7) : Prop :=\n  ∃ register, register ∈ eventWrites (eventAt s mid out writer) ∧\n    register ∈ eventReads (eventAt s mid out reader)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The actual register read/write records also show that every computed-value\ndependency goes forward in instruction order: inputs loaded from the initial\narena feed multiplication and addition, whose output feeds the store. This\nfragment-specific grounding excludes a value justified only by a cycle in this\nprogram. It does not replace the general PTX rule against circular justification\nwith an assumption that all dependency graphs must be acyclic.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem register_dependency_forward (s : State) (mid out : Word) (writer reader : Fin 7)\n    (dependency : RegisterDependency s mid out writer reader) : writer.val < reader.val := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The actual register read/write records also show that every computed-value\ndependency goes forward in instruction order: inputs loaded from the initial\narena feed multiplication and addition, whose output feeds the store. This\nfragment-specific grounding excludes a value justified only by a cycle in this\nprogram. It does not replace the general PTX rule against circular justification\nwith an assumption that all dependency graphs must be acyclic.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem register_dependency_acyclic (s : State) (mid out : Word) (position : Fin 7) :\n    ¬ Ptx.Path (RegisterDependency s mid out) position position := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The actual register read/write records also show that every computed-value\ndependency goes forward in instruction order: inputs loaded from the initial\narena feed multiplication and addition, whose output feeds the store. This\nfragment-specific grounding excludes a value justified only by a cycle in this\nprogram. It does not replace the general PTX rule against circular justification\nwith an assumption that all dependency graphs must be acyclic.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem run_grounded (s : State) (target : Ptx.Target) (h : Initial s)\n    (eligible : Mixed.Eligible target) (run : Mixed.Run target program s final status events) :\n    ∃ mid out, Ptx.Binary32.Error.AffineResults (input s 0) (input s 1) (input s 2) mid out ∧\n      events = trace s mid out ∧\n      (∀ writer reader, RegisterDependency s mid out writer reader → writer.val < reader.val) ∧\n      (memoryWitness s h out).Valid := by"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The four memory events projected from the actual trace match a separately checked\nmemory graph: three loads at instruction positions zero, one and two, followed\nby the store at position five. Initialization events come from the supplied\ninitial arena, once per word. Each load reads its initial value, including when\nall pointers coincide. The graph satisfies the existing necessary memory rules;\nthat fact alone is not a general sufficiency theorem for dependent PTX programs."
+      },
+      "to": {
+        "description": "affine-memory-observations",
+        "passage": {
+          "quote": "Three loads followed by one store can use the same memory word without allowing\nan earlier load to read from that later store. This graph describes that bounded\nmemory pattern. The caller supplies an initial list of 32-bit words and four\nvalid, four-byte-aligned addresses. Any input or output addresses may coincide.\nEach memory location has one initialization event, even when several arguments\nname it. The graph then contains three relaxed loads at dispatch positions zero,\none and two, and a relaxed store at position five, all from one thread."
+        }
+      },
+      "reason": "The concrete trace projection supplies the abstract witness’s exact load/store labels; initial arena events and no-future source reasoning allow all aligned full-word aliases."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The caller supplies initialized memory and four valid addresses: three inputs\nand an output. Each address is four-byte aligned and its entire four-byte access\nfits within the arena, the modeled list of memory words. Address registers hold\nthose modeled addresses and the program counter starts at the first instruction. Initial\nvalue registers, predicates and surrounding memory are otherwise arbitrary.\nAll three inputs are loaded before the only store, so input and output addresses\nmay coincide. Input values always refer to the initial memory snapshot. An input\nslot that is also the output slot need not retain its initial value."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem disjoint_example :\n    Mixed.Run ⟨94, 70⟩ program disjointFixture\n      (finish disjointFixture 0x40400000 0x40500000) .halted\n      (trace disjointFixture 0x40400000 0x40500000) ∧\n    (finish disjointFixture 0x40400000 0x40500000).memory =\n      [0x3fc00000, 0x40000000, 0x3e800000, 0x40500000] := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The caller supplies initialized memory and four valid addresses: three inputs\nand an output. Each address is four-byte aligned and its entire four-byte access\nfits within the arena, the modeled list of memory words. Address registers hold\nthose modeled addresses and the program counter starts at the first instruction. Initial\nvalue registers, predicates and surrounding memory are otherwise arbitrary.\nAll three inputs are loaded before the only store, so input and output addresses\nmay coincide. Input values always refer to the initial memory snapshot. An input\nslot that is also the output slot need not retain its initial value."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Affine.lean",
+        "passage": {
+          "quote": "theorem all_alias_example :\n    Mixed.Run ⟨94, 70⟩ program aliasFixture\n      (finish aliasFixture 0x3f800000 0x40000000) .halted\n      (trace aliasFixture 0x3f800000 0x40000000) ∧\n    (finish aliasFixture 0x3f800000 0x40000000).memory = [0x40000000] := by"
+        }
+      }
+    }
+  ]
+}
