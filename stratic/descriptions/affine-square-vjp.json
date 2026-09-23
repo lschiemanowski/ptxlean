@@ -1,0 +1,66 @@
+{
+  "id": "affine-square-vjp",
+  "parent": {
+    "description": "torchlean-backward",
+    "passage": {
+      "quote": "The first example computes a pointwise affine transformation followed by squaring:\neach output coordinate is `(input * weight + bias)^2` at that coordinate.\nIts weight and bias values are differentiable inputs rather than fixed graph\ndata. The input shape and the output-weight shape are explicit. It uses actual\nupstream graph constructors and derivative proofs, so that an independently\nrecreated toy language cannot satisfy this example."
+    }
+  },
+  "summary": [
+    "Give the exact three input sensitivities returned by the actual generated scalar affine-square backward computation for every real input and seed.",
+    "Establish checked success and forward output without assuming either success or the desired gradient.",
+    "Preserve the exact-real derivative meaning separately from a future supplied PTX backward implementation."
+  ],
+  "realization": "implemented",
+  "remaining": "The scalar exact-real generated backward contract is complete. Tensor-wide closed forms, floating-point backward errors and a separately supplied PTX backward remain outside this component.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A seed is a real weight applied to the output when propagating sensitivity\nbackward. For any real x, w, b and seed d, TorchLean's checked backward call\nsucceeds and returns the three input sensitivities in order: `2*d*(x*w+b)*w`\nfor x, `2*d*(x*w+b)*x` for w, and `2*d*(x*w+b)` for b. Its returned forward\nvalue is `(x*w+b)^2`. Taking d=1 gives the usual scalar gradient; arbitrary d\nretains the general vector-Jacobian interface, which propagates a weighted\noutput change back to the inputs."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareVJP.lean",
+        "passage": {
+          "quote": "theorem checked_result (x w b d : \u211d) :\n    graph.vjpChecked (inputs x w b) () (Tensor.scalar d) =\n      .ok (sensitivities x w b d, Tensor.scalar ((x*w+b)^2)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "These formulas are conclusions about the actual automatically generated\nbackward computation. Neither the desired gradient nor successful execution\nis assumed. The square node uses the same input twice, so reverse accumulation\nmust include both contributions. The generated result also retains the existing\nproof that it is the adjoint derivative of the actual graph's forward map."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareVJP.lean",
+        "passage": {
+          "quote": "theorem generated_vjp (x w b d : \u211d) :\n    graph.vjpWithSeed (inputs x w b) (Tensor.scalar d) = sensitivities x w b d :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "These formulas are conclusions about the actual automatically generated\nbackward computation. Neither the desired gradient nor successful execution\nis assumed. The square node uses the same input twice, so reverse accumulation\nmust include both contributions. The generated result also retains the existing\nproof that it is the adjoint derivative of the actual graph's forward map."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareVJP.lean",
+        "passage": {
+          "quote": "theorem sensitivities_adjoint (x w b d : \u211d) :\n    flattenCtx (sensitivities x w b d) =\n      (fderiv \u211d (fun v => tensorToVec (graph.forward (unflattenCtx v)))\n        (flattenCtx (inputs x w b))).adjoint (tensorToVec (Tensor.scalar d)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar example computes `(x*w+b)^2`, where x is the input, w is a variable\nweight and b is a variable bias. Scalar here means a tensor containing one\nnumber, with no dimensions. The forward graph is the existing TorchLean graph;\nthis component does not replace it with a separately invented computation."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareVJP.lean",
+        "passage": {
+          "quote": "theorem forward_value (x w b : \u211d) :\n    Tensor.item (graph.forward (inputs x w b)) = (x*w+b)^2 :="
+        }
+      }
+    }
+  ]
+}

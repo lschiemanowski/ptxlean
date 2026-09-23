@@ -11,7 +11,7 @@
     "Combine the guarantees of individual kernels into correctness of a whole network computation under stated assumptions."
   ],
   "realization": "partial",
-  "remaining": "Implemented pieces include exact TorchLean backward success and VJP correctness, an interleaved global-memory u32 vector-add layout bridge, encoded binary32 range/error adapters and a mixed affine kernel whose actual stored word satisfies a real error bound. General tensor/storage relations, mixed-precision and network contracts, stateful multi-kernel orchestration, concrete PyTorch correspondence and separately authored PTX backward proofs remain unfinished.",
+  "remaining": "Implemented pieces include actual TorchLean backward success and VJP correctness, an integer vector-add tensor bridge, binary32 range/error adapters, actual affine kernels and a serialized two-kernel squared-affine forward bridge through persistent live storage. General tensor/storage and mixed-precision contracts, concurrent orchestration, runtime/PyTorch correspondence and separately authored PTX backward proofs remain unfinished.",
   "links": [
     {
       "kind": "depends-on",

@@ -1,0 +1,149 @@
+{
+  "id": "affine-square-kernel",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "Examples range from small kernels that exercise one reusable contract to concrete\nnetwork implementations that combine the contracts. A small kernel makes the\nconnection between instructions, stored values and checked guarantees easier to\nfollow. A network example reaches from its specified computation to the stated\nkernel behavior, giving an end-to-end verification result. Each example identifies\nits computation, inputs, state kept between calls, number-format and approximation\nchoices, and execution assumptions. Network examples also identify their\narchitecture: the arrangement of network operations."
+    }
+  },
+  "summary": [
+    "Connect two actual affine kernel launches through live intermediate storage to the pinned TorchLean squared-affine scalar graph.",
+    "Derive final stored-word accuracy from initial input ranges and errors, retaining every explicit rounding and all numerical choices.",
+    "Keep runtime completion and visibility, exact automatic backward and separately authored PTX backward obligations distinct."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The five initial arena words hold x, weight, bias, arbitrary old intermediate\nbits, and positive-zero bits. The first launch uses byte offsets 0, 4, 8 and 12.\nThe second uses 12, 12, 16 and 16: its two inputs alias the saved intermediate,\nand its bias aliases its output. Both loads precede the final store. Extra arena\nwords remain unchanged. Each launch starts at program counter zero with its own\narbitrary supplied registers and predicates and explicit address arguments.\nOnly the live memory snapshot is carried between launches."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "def firstStart (seed : Seed) (allocation : Nat) (x w b old : Word) (tail : List Word) : State :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The five initial arena words hold x, weight, bias, arbitrary old intermediate\nbits, and positive-zero bits. The first launch uses byte offsets 0, 4, 8 and 12.\nThe second uses 12, 12, 16 and 16: its two inputs alias the saved intermediate,\nand its bias aliases its output. Both loads precede the final store. Extra arena\nwords remain unchanged. Each launch starts at program counter zero with its own\narbitrary supplied registers and predicates and explicit address arguments.\nOnly the live memory snapshot is carried between launches."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "def secondStart (seed : Seed) (allocation : Nat) (x w b intermediate : Word) (tail : List Word) : State :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The five initial arena words hold x, weight, bias, arbitrary old intermediate\nbits, and positive-zero bits. The first launch uses byte offsets 0, 4, 8 and 12.\nThe second uses 12, 12, 16 and 16: its two inputs alias the saved intermediate,\nand its bias aliases its output. Both loads precede the final store. Extra arena\nwords remain unchanged. Each launch starts at program counter zero with its own\narbitrary supplied registers and predicates and explicit address arguments.\nOnly the live memory snapshot is carried between launches."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "theorem first_memory :\n    (Affine.finish (firstStart seed allocation x w b old tail) product intermediate).memory =\n      memory x w b intermediate tail :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The five initial arena words hold x, weight, bias, arbitrary old intermediate\nbits, and positive-zero bits. The first launch uses byte offsets 0, 4, 8 and 12.\nThe second uses 12, 12, 16 and 16: its two inputs alias the saved intermediate,\nand its bias aliases its output. Both loads precede the final store. Extra arena\nwords remain unchanged. Each launch starts at program counter zero with its own\narbitrary supplied registers and predicates and explicit address arguments.\nOnly the live memory snapshot is carried between launches."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "theorem second_memory :\n    (Affine.finish (secondStart seed allocation x w b intermediate tail) square output).memory =\n      outputMemory x w b intermediate output tail :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every successful serialized two-launch execution must have the two actual\nseven-instruction traces and the corresponding intermediate and final words.\nThose words satisfy the original binary32 result relations at every arithmetic\nstep. An execution exists for all initial input bit patterns, under the stated\nlive-allocation, device, argument and target conditions. Finite-input accuracy\nhas stronger input-only range and representation-error conditions; existence\ndoes not imply a finite numerical answer."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "theorem launches_correct\n    (present : before.cells allocation = some ⟨thread.device, memory x w b old tail⟩)\n    (eligible : Mixed.Eligible target)\n    (first : SuccessfulLaunch (firstRequest target thread allocation firstSeed)\n      before middle firstFinal firstTrace)\n    (second : SuccessfulLaunch (secondRequest target thread allocation secondSeed)\n      middle after secondFinal secondTrace) :\n    ∃ product intermediate square output,\n      Binary32.SquareError.Results x w b product intermediate square output ∧\n      middle.cells allocation = some ⟨thread.device, memory x w b intermediate tail⟩ ∧\n      after.cells allocation = some ⟨thread.device, outputMemory x w b intermediate output tail⟩ ∧\n      firstFinal = Affine.finish (firstStart firstSeed allocation x w b old tail) product intermediate ∧\n      firstTrace = Affine.trace (firstStart firstSeed allocation x w b old tail) product intermediate ∧\n      secondFinal = Affine.finish (secondStart secondSeed allocation x w b intermediate tail) square output ∧\n      secondTrace = Affine.trace (secondStart secondSeed allocation x w b intermediate tail) square output :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every successful serialized two-launch execution must have the two actual\nseven-instruction traces and the corresponding intermediate and final words.\nThose words satisfy the original binary32 result relations at every arithmetic\nstep. An execution exists for all initial input bit patterns, under the stated\nlive-allocation, device, argument and target conditions. Finite-input accuracy\nhas stronger input-only range and representation-error conditions; existence\ndoes not imply a finite numerical answer."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "theorem pipeline_correct\n    (present : before.cells allocation = some ⟨thread.device, memory x w b old tail⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before [firstRequest target thread allocation firstSeed,\n      secondRequest target thread allocation secondSeed] after) :\n    ∃ product intermediate square output,\n      Binary32.SquareError.Results x w b product intermediate square output ∧\n      after.cells allocation = some ⟨thread.device, outputMemory x w b intermediate output tail⟩ :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every successful serialized two-launch execution must have the two actual\nseven-instruction traces and the corresponding intermediate and final words.\nThose words satisfy the original binary32 result relations at every arithmetic\nstep. An execution exists for all initial input bit patterns, under the stated\nlive-allocation, device, argument and target conditions. Finite-input accuracy\nhas stronger input-only range and representation-error conditions; existence\ndoes not imply a finite numerical answer."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "theorem pipeline_exists\n    (present : before.cells allocation = some ⟨thread.device, memory x w b old tail⟩)\n    (eligible : Mixed.Eligible target) :\n    ∃ after, Chain before [firstRequest target thread allocation firstSeed,\n      secondRequest target thread allocation secondSeed] after :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every successful serialized two-launch execution must have the two actual\nseven-instruction traces and the corresponding intermediate and final words.\nThose words satisfy the original binary32 result relations at every arithmetic\nstep. An execution exists for all initial input bit patterns, under the stated\nlive-allocation, device, argument and target conditions. Finite-input accuracy\nhas stronger input-only range and representation-error conditions; existence\ndoes not imply a finite numerical answer."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "theorem two_launch_example (firstSeed secondSeed : Seed) :\n    ∃ after, Chain\n      (reserve empty 0 (memory 0x3fc00000 0x40000000 0x3e800000 0xdeadbeef [])).2\n      [firstRequest ⟨94,70⟩ ⟨0,0,0,0,0⟩ 0 firstSeed,\n       secondRequest ⟨94,70⟩ ⟨0,0,0,0,0⟩ 0 secondSeed] after ∧\n      after.cells 0 = some ⟨0, [0x3fc00000,0x40000000,0x3e800000,0x40500000,0x41290000]⟩ :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical guarantee concerns the actual output word in final memory and\ncompares its finite real value with the output of the actual pinned TorchLean\ngraph. It derives the rounded intermediate from the initial operands, propagates\nits error through squaring, and accounts for all four explicit roundings.\nIt does not assume that either kernel returned a desired value or that a\nsecond-stage output was finite. Bitwise agreement with PyTorch and derivatives\nof a rounded machine execution are different claims."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "theorem stored_forward_error\n    (present : before.cells allocation = some ⟨thread.device, memory x w b old tail⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before [firstRequest target thread allocation firstSeed,\n      secondRequest target thread allocation secondSeed] after)\n    (xh wh bh idealX idealW idealB ex ew eb : ℝ)\n    (leftReal : Binary32.finiteReal x = some xh)\n    (weightReal : Binary32.finiteReal w = some wh)\n    (biasReal : Binary32.finiteReal b = some bh)\n    (multiplyRange : |xh*wh| ≤ Binary32.Bounds.maxFinite)\n    (additionRange : |xh*wh| + TorchLean.Floats.eps32 (xh*wh) + |bh| ≤ Binary32.Bounds.maxFinite)\n    (squareRange : |Binary32.SquareError.roundedAffine xh wh bh *\n      Binary32.SquareError.roundedAffine xh wh bh| ≤ Binary32.Bounds.maxFinite)\n    (finalRange : |Binary32.SquareError.roundedAffine xh wh bh *\n      Binary32.SquareError.roundedAffine xh wh bh| +\n      TorchLean.Floats.eps32 (Binary32.SquareError.roundedAffine xh wh bh *\n        Binary32.SquareError.roundedAffine xh wh bh) ≤ Binary32.Bounds.maxFinite)\n    (leftError : |xh-idealX| ≤ ex) (weightError : |wh-idealW| ≤ ew) (biasError : |bh-idealB| ≤ eb) :\n    ∃ intermediate output z,\n      after.cells allocation = some ⟨thread.device, outputMemory x w b intermediate output tail⟩ ∧\n      Binary32.finiteReal output = some z ∧\n      |z-TorchLean.Tensor.item (AffineSquareVJP.graph.forward\n        (AffineSquareVJP.inputs idealX idealW idealB))| ≤\n        Binary32.SquareError.budget xh wh bh idealX idealW idealB ex ew eb :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The serialized launch contract supplies allocation identity, lifetime and the\nhandoff of completed memory to the next launch. Correspondence to a real runtime\nrequires completion, visibility and exclusion of interfering accesses; PTX thread\nexit alone does not prove that contract. Each kernel's local memory witness uses\nits own entry snapshot. This does not construct a combined cross-kernel PTX\nmemory graph. The example uses initialized, aligned, whole-word global storage,\nexplicit nearest-even binary32 arithmetic and ISA 9.4 with the numeric sm_70+\nfeature boundary. It has no asynchronous work, host-pointer translation or\nlaunch-ABI implementation."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "theorem pipeline_frame\n    (chain : Chain before [firstRequest target thread allocation firstSeed,\n      secondRequest target thread allocation secondSeed] after)\n    (other : Nat) (different : other ≠ allocation) : after.cells other = before.cells other :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The serialized launch contract supplies allocation identity, lifetime and the\nhandoff of completed memory to the next launch. Correspondence to a real runtime\nrequires completion, visibility and exclusion of interfering accesses; PTX thread\nexit alone does not prove that contract. Each kernel's local memory witness uses\nits own entry snapshot. This does not construct a combined cross-kernel PTX\nmemory graph. The example uses initialized, aligned, whole-word global storage,\nexplicit nearest-even binary32 arithmetic and ISA 9.4 with the numeric sm_70+\nfeature boundary. It has no asynchronous work, host-pointer translation or\nlaunch-ABI implementation."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+        "passage": {
+          "quote": "theorem second_launch_after_release_rejected\n    (released : release middle allocation = some freed) (history : History freed last) :\n    ¬ SuccessfulLaunch (secondRequest target thread allocation secondSeed) last after final events :="
+        }
+      }
+    }
+  ]
+}

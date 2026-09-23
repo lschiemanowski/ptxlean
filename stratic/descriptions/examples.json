@@ -11,7 +11,7 @@
     "Explain assumptions specific to each application and distinguish proved guarantees from experimental evidence."
   ],
   "realization": "partial",
-  "remaining": "The scalar affine memory example supplies actual mixed instruction execution, unrestricted full-word aliases, safety, finite completion and an input-only numerical error bound. Full-network examples, including Gemma, and their application-specific implementation/proof connections remain to be developed.",
+  "remaining": "The scalar affine example and serialized squared-affine example supply actual instruction execution, storage handoff, existence, safety and initial-input numerical bounds; the latter targets the pinned TorchLean forward graph. Full-network examples including Gemma, general layouts and separately authored backward kernels remain to be developed.",
   "links": [
     {
       "kind": "depends-on",

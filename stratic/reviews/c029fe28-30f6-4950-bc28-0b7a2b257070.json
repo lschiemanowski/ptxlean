@@ -1,0 +1,290 @@
+{
+  "id": "c029fe28-30f6-4950-bc28-0b7a2b257070",
+  "base": "7f479b4283c4ed9a58d749a917600e673475bbd0",
+  "contentTree": "15a271320a5b8dcc5c9ac2e4254c5c4e6053992d",
+  "reviewer": "Codex coordinator with independent numerical, launch, pipeline and upstream-generated-backward reviewers",
+  "summary": "Verify serialized storage and two-kernel TorchLean forward/backward correspondence",
+  "examined": [
+    {
+      "id": "binary32-error-composition",
+      "outcome": "revised",
+      "reason": "Add actual four-operation squared-affine composition, derived finite intermediate value and initial-only range guards; independent arithmetic review and public dependency audit pass."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Record the actual serialized two-kernel TorchLean example while retaining unfinished general/network examples."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Root audit gains separate storage endpoints and the guide gains a separate two-kernel walkthrough; the existing message-passing semantics, theorems and linked passages are unchanged."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "revised",
+      "reason": "Current coverage includes final stored two-kernel error against the real TorchLean graph; no general network, gradient-error or PyTorch claim added."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "revised",
+      "reason": "Description-first logical lifetimes and actual serialized launches now implement a restricted finite-chain contract; external runtime completion/visibility and concurrency remain explicit."
+    },
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Update realized coverage for logical storage, exact launch handoff and actual scalar forward/backward links, without promoting the restricted results to full PTX/network completion."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Existing exact pin, source-snapshot and standard-axiom checking contract applies unchanged; public audited coverage is extended, and independent reviews separate formal results from source/runtime correspondence."
+    },
+    {
+      "id": "torchlean-backward",
+      "outcome": "revised",
+      "reason": "Add an explicit scalar characterization of the actual generated backward and unconditional checked success; mathematical derivative, numerical error and PTX backward remain distinct."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "revised",
+      "reason": "The actual TorchLean scalar forward graph now has a two-kernel stored-word bound and persistent-storage example; broader layouts, state, policies and runtime correspondence remain unfinished."
+    },
+    {
+      "id": "affine-square-kernel",
+      "outcome": "revised",
+      "reason": "Description-first example implemented with two actual seven-instruction runs, exact store handoff, all-bit execution existence, universal arithmetic result relation and actual stored-output TorchLean error; independently reviewed."
+    },
+    {
+      "id": "affine-square-vjp",
+      "outcome": "revised",
+      "reason": "The actual pinned generated reverse computation returns the displayed three sensitivities for arbitrary inputs and seed, with checked success and a derivative-adjoint proof; independent upstream/proof review passed."
+    },
+    {
+      "id": "serialized-launches",
+      "outcome": "revised",
+      "reason": "Description-first interface implemented with checked identities/device owner, arbitrary supplied fresh register state, actual halted runs, exact writeback, safety and lifetime/finite-chain proofs; independent review passed."
+    },
+    {
+      "id": "storage-lifetimes",
+      "outcome": "revised",
+      "reason": "Description-first storage uses supplied contents, fresh logical IDs and checked fixed-extent writeback; permanent release invalidation across arbitrary valid histories and access correspondence independently reviewed."
+    },
+    {
+      "id": "affine-memory-kernel",
+      "outcome": "unchanged",
+      "reason": "The single-kernel program, trace, memory safety and numerical statement are unchanged; the new pipeline reuses them twice without weakening preconditions or modifying accepted instructions."
+    },
+    {
+      "id": "backward",
+      "outcome": "revised",
+      "reason": "Reconcile stale remaining-work metadata with the completed joint dependency build and explicit generated scalar sensitivities; preserve separate derivative, numerical, independently authored PTX implementation and execution obligations."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "Gemma implementation and proofs remain deferred. Restricted scalar storage and numerical examples neither select its precision policy nor satisfy its architecture/backward requirements."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "No PTX instruction, memory-order or concurrent-admission semantics changed. Serialized runtime transitions are an explicit external contract over existing actual runs, not an added PTX guarantee."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "15a271320a5b8dcc5c9ac2e4254c5c4e6053992d",
+      "method": "./scripts/check.sh; ./integration/torchlean/check.sh; stratic validate; independent full-public dependency and semantic/proof reviews of storage, serialized launches, four-operation numerical composition, actual two-kernel bridge and upstream generated backward",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; dependency-free root; integration exact manifest with TorchLean de3192df4779877ceb65cfe470a4d4ce9d480a5b and clean pinned dependencies; no model calls during this milestone",
+      "evidence": "Before/after snapshot identical 15a271320a5b8dcc5c9ac2e4254c5c4e6053992d. Strict root:642 exact dependency reports, source guard, coverage, six accepted instruction forms, preserved evidence archives and checker regression suites pass. Joint:13 default targets build and284 exact dependency reports pass with only propext, Classical.choice, Quot.sound. Independent reviews and audit outputs committed under docs/foundations. Final logs /tmp/ptx-serialized-root-final.log and /tmp/ptx-serialized-joint-final.log. Real runtime completion/visibility, hardware conformance and PTX backward not claimed.",
+      "tests": [],
+      "id": "28b18c8f-d4b4-4a18-845f-0372081e4b68",
+      "recordedAt": "2026-09-23T22:51:22.024Z"
+    }
+  ],
+  "recordedAt": "2026-09-23T22:51:44.132Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Build/import/audit wiring includes the new modules and all public endpoints under the existing pinned checker; no semantic definition or instruction acceptance rule is changed here."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "Ptx/SequentialStorage.lean",
+      "reason": "Implementation passages identify public contracts; remaining declarations and proof bodies are reviewed as their typed definitions, construction and preservation proofs, with all explicit public declarations included in dependency audits."
+    },
+    {
+      "path": "README.md",
+      "reason": "Readability, reproduction and extended teaching material reconciled with the authoritative Stratic contracts, keeping runtime and backward-kernel limitations explicit."
+    },
+    {
+      "path": "docs/foundations/affine-square-kernel.md",
+      "reason": "Readability, reproduction and extended teaching material reconciled with the authoritative Stratic contracts, keeping runtime and backward-kernel limitations explicit."
+    },
+    {
+      "path": "docs/foundations/affine-square-vjp-audit.txt",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "docs/foundations/affine-square-vjp-review.md",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "docs/foundations/affine-square-vjp.md",
+      "reason": "Readability, reproduction and extended teaching material reconciled with the authoritative Stratic contracts, keeping runtime and backward-kernel limitations explicit."
+    },
+    {
+      "path": "docs/foundations/guide.md",
+      "reason": "Readability, reproduction and extended teaching material reconciled with the authoritative Stratic contracts, keeping runtime and backward-kernel limitations explicit."
+    },
+    {
+      "path": "docs/foundations/serialized-launches-audit.txt",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "docs/foundations/serialized-launches-review.md",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "docs/foundations/serialized-launches.md",
+      "reason": "Readability, reproduction and extended teaching material reconciled with the authoritative Stratic contracts, keeping runtime and backward-kernel limitations explicit."
+    },
+    {
+      "path": "docs/foundations/squared-affine-error-audit.txt",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "docs/foundations/squared-affine-error-review.md",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "docs/foundations/storage-lifetimes-audit.txt",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "docs/foundations/storage-lifetimes-review.md",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "docs/foundations/storage-lifetimes.md",
+      "reason": "Readability, reproduction and extended teaching material reconciled with the authoritative Stratic contracts, keeping runtime and backward-kernel limitations explicit."
+    },
+    {
+      "path": "integration/torchlean/PtxAffineSquareKernel.lean",
+      "reason": "Implementation passages identify public contracts; remaining declarations and proof bodies are reviewed as their typed definitions, construction and preservation proofs, with all explicit public declarations included in dependency audits."
+    },
+    {
+      "path": "integration/torchlean/PtxAffineSquareVJP.lean",
+      "reason": "Implementation passages identify public contracts; remaining declarations and proof bodies are reviewed as their typed definitions, construction and preservation proofs, with all explicit public declarations included in dependency audits."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Sequential.lean",
+      "reason": "Implementation passages identify public contracts; remaining declarations and proof bodies are reviewed as their typed definitions, construction and preservation proofs, with all explicit public declarations included in dependency audits."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SquareError.lean",
+      "reason": "Implementation passages identify public contracts; remaining declarations and proof bodies are reviewed as their typed definitions, construction and preservation proofs, with all explicit public declarations included in dependency audits."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Supporting exact dependency evidence or independent semantic/proof review for the described restricted slice; reviewed as evidence, not an additional behavioral implementation."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Readability, reproduction and extended teaching material reconciled with the authoritative Stratic contracts, keeping runtime and backward-kernel limitations explicit."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Build/import/audit wiring includes the new modules and all public endpoints under the existing pinned checker; no semantic definition or instruction acceptance rule is changed here."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Build/import/audit wiring includes the new modules and all public endpoints under the existing pinned checker; no semantic definition or instruction acceptance rule is changed here."
+    },
+    {
+      "path": "stratic/descriptions/affine-square-kernel.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/affine-square-kernel.md",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/affine-square-vjp.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/affine-square-vjp.md",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/binary32-error-composition.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/binary32-error-composition.md",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/orchestration.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/orchestration.md",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/serialized-launches.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/serialized-launches.md",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/storage-lifetimes.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/storage-lifetimes.md",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/torchlean-backward.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/verification-interface.json",
+      "reason": "Description and summary/realization/link metadata explicitly reviewed for this responsibility; metadata is not itself an implementation passage."
+    },
+    {
+      "path": "docs/foundations/affine-square-kernel-review.md",
+      "reason": "Durable independent source/proof review or exact dependency evidence for the corresponding restricted contract; reviewed as supporting evidence."
+    },
+    {
+      "path": "docs/foundations/affine-square-kernel-audit.txt",
+      "reason": "Durable independent source/proof review or exact dependency evidence for the corresponding restricted contract; reviewed as supporting evidence."
+    },
+    {
+      "path": "stratic/descriptions/backward.json",
+      "reason": "Reconciled parent remaining-work metadata; the behavioral separation of backward obligations is unchanged."
+    }
+  ]
+}

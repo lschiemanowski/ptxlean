@@ -1,0 +1,40 @@
+'Ptx.SequentialStorage.Cell' does not depend on any axioms
+'Ptx.SequentialStorage.Store' does not depend on any axioms
+'Ptx.SequentialStorage.empty' does not depend on any axioms
+'Ptx.SequentialStorage.live_lt' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.release' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve_id' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve_counter' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve_contents' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve_fresh' does not depend on any axioms
+'Ptx.SequentialStorage.reserve_other' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.release_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback_properties' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.release_absent' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback_absent' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.Step' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.History' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.Step.counter_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.Step.old_absent' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.History.old_absent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.released_never_live' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.Cell.allocation' does not depend on any axioms
+'Ptx.SequentialStorage.environment' does not depend on any axioms
+'Ptx.SequentialStorage.address' does not depend on any axioms
+'Ptx.SequentialStorage.access_absent' depends on axioms: [propext]
+'Ptx.SequentialStorage.access_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.released_access_fails' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.release_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback_wrong_extent' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.History.counter_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.History.append' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.released_reallocated' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.writeback_environment' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reallocation_example' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.resize_rejected' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.foreign_device_rejected' depends on axioms: [propext, Quot.sound]
+Ptx.SequentialStorage.Step : Ptx.SequentialStorage.Store → Ptx.SequentialStorage.Store → Prop
+Ptx.SequentialStorage.History : Ptx.SequentialStorage.Store → Ptx.SequentialStorage.Store → Prop

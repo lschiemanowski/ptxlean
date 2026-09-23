@@ -8,45 +8,32 @@
   },
   "summary": [
     "Propagate incoming operand errors through finite encoded binary32 addition and multiplication, including every admitted output.",
-    "Compose two actual rounded stages for multiply-then-add with explicit range guards and both rounding contributions.",
+    "Compose actual rounded multiply-then-add and squared-affine results with input-only range guards and all rounding and propagated-error contributions.",
     "Keep scalar error composition separate from instruction execution, whole-network bounds and precision-policy choices."
   ],
   "realization": "implemented",
-  "remaining": "The scalar nearest-even add/multiply and two-stage affine bounds are proved. Whole-program range/deviation analysis, other arithmetic policies, FMA, instruction execution and network guarantees remain outside this component.",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "Suppose the actual finite input values are xh and yh, while the ideal values are\nx and y. Bounds ex and ey satisfy `|xh-x| \u2264 ex` and `|yh-y| \u2264 ey`. Addition\nintroduces at most its own absolute rounding bound plus ex+ey. Multiplication\nintroduces at most its own rounding bound plus `|x|*ey + |y|*ex + ex*ey`.\nThe product term accounts for both inputs being perturbed simultaneously; it is\nnot discarded as negligible. The deviation premises already imply nonnegative\nerror bounds."
+        "quote": "Suppose the actual finite input values are xh and yh, while the ideal values are\nx and y. Bounds ex and ey satisfy `|xh-x| ≤ ex` and `|yh-y| ≤ ey`. Addition\nintroduces at most its own absolute rounding bound plus ex+ey. Multiplication\nintroduces at most its own rounding bound plus `|x|*ey + |y|*ex + ex*ey`.\nThe product term accounts for both inputs being perturbed simultaneously; it is\nnot discarded as negligible. The deviation premises already imply nonnegative\nerror bounds."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32Error.lean",
         "passage": {
-          "quote": "theorem add_propagation (xh yh x y ex ey : \u211d)\n    (left : |xh-x| \u2264 ex) (right : |yh-y| \u2264 ey) :\n    |(xh+yh)-(x+y)| \u2264 ex+ey :="
+          "quote": "theorem add_propagation (xh yh x y ex ey : ℝ)\n    (left : |xh-x| ≤ ex) (right : |yh-y| ≤ ey) :\n    |(xh+yh)-(x+y)| ≤ ex+ey :="
         }
       }
     },
     {
       "kind": "implementation",
       "from": {
-        "quote": "Suppose the actual finite input values are xh and yh, while the ideal values are\nx and y. Bounds ex and ey satisfy `|xh-x| \u2264 ex` and `|yh-y| \u2264 ey`. Addition\nintroduces at most its own absolute rounding bound plus ex+ey. Multiplication\nintroduces at most its own rounding bound plus `|x|*ey + |y|*ex + ex*ey`.\nThe product term accounts for both inputs being perturbed simultaneously; it is\nnot discarded as negligible. The deviation premises already imply nonnegative\nerror bounds."
+        "quote": "Suppose the actual finite input values are xh and yh, while the ideal values are\nx and y. Bounds ex and ey satisfy `|xh-x| ≤ ex` and `|yh-y| ≤ ey`. Addition\nintroduces at most its own absolute rounding bound plus ex+ey. Multiplication\nintroduces at most its own rounding bound plus `|x|*ey + |y|*ex + ex*ey`.\nThe product term accounts for both inputs being perturbed simultaneously; it is\nnot discarded as negligible. The deviation premises already imply nonnegative\nerror bounds."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32Error.lean",
         "passage": {
-          "quote": "theorem mul_propagation (xh yh x y ex ey : \u211d)\n    (left : |xh-x| \u2264 ex) (right : |yh-y| \u2264 ey) :\n    |xh*yh-x*y| \u2264 |x| *ey + |y| *ex + ex*ey :="
-        }
-      }
-    },
-    {
-      "kind": "implementation",
-      "from": {
-        "quote": "Each encoded operation must pass the existing input-range guard on its actual\nfinite operands. The guard proves finite output before the absolute-error\nbridge is used. Every admitted output then satisfies the composed error bound,\nand an admitted finite output exists. The numerical proof does not assume the\noutput is close to the ideal value as a premise."
-      },
-      "to": {
-        "path": "integration/torchlean/PtxBinary32Error.lean",
-        "passage": {
-          "quote": "theorem add_results (left right output : Word) (xh yh x y ex ey : \u211d)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (range : |xh+yh| \u2264 Bounds.maxFinite)\n    (leftError : |xh-x| \u2264 ex) (rightError : |yh-y| \u2264 ey)\n    (allowed : Results .add left right output) :\n    isFinite output = true \u2227 \u2203 z : \u211d, finiteReal output = some z \u2227\n      |z-(x+y)| \u2264 eps32 (xh+yh)+ex+ey :="
+          "quote": "theorem mul_propagation (xh yh x y ex ey : ℝ)\n    (left : |xh-x| ≤ ex) (right : |yh-y| ≤ ey) :\n    |xh*yh-x*y| ≤ |x| *ey + |y| *ex + ex*ey :="
         }
       }
     },
@@ -58,7 +45,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32Error.lean",
         "passage": {
-          "quote": "theorem mul_results (left right output : Word) (xh yh x y ex ey : \u211d)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (range : |xh*yh| \u2264 Bounds.maxFinite)\n    (leftError : |xh-x| \u2264 ex) (rightError : |yh-y| \u2264 ey)\n    (allowed : Results .mul left right output) :\n    isFinite output = true \u2227 \u2203 z : \u211d, finiteReal output = some z \u2227\n      |z-x*y| \u2264 eps32 (xh*yh)+|x| *ey+|y| *ex+ex*ey :="
+          "quote": "theorem add_results (left right output : Word) (xh yh x y ex ey : ℝ)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (range : |xh+yh| ≤ Bounds.maxFinite)\n    (leftError : |xh-x| ≤ ex) (rightError : |yh-y| ≤ ey)\n    (allowed : Results .add left right output) :\n    isFinite output = true ∧ ∃ z : ℝ, finiteReal output = some z ∧\n      |z-(x+y)| ≤ eps32 (xh+yh)+ex+ey :="
         }
       }
     },
@@ -70,7 +57,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32Error.lean",
         "passage": {
-          "quote": "theorem add_exists (left right : Word) (xh yh x y ex ey : \u211d)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (range : |xh+yh| \u2264 Bounds.maxFinite)\n    (leftError : |xh-x| \u2264 ex) (rightError : |yh-y| \u2264 ey) :\n    \u2203 output, Results .add left right output \u2227 isFinite output = true \u2227\n      \u2203 z : \u211d, finiteReal output = some z \u2227 |z-(x+y)| \u2264 eps32 (xh+yh)+ex+ey :="
+          "quote": "theorem mul_results (left right output : Word) (xh yh x y ex ey : ℝ)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (range : |xh*yh| ≤ Bounds.maxFinite)\n    (leftError : |xh-x| ≤ ex) (rightError : |yh-y| ≤ ey)\n    (allowed : Results .mul left right output) :\n    isFinite output = true ∧ ∃ z : ℝ, finiteReal output = some z ∧\n      |z-x*y| ≤ eps32 (xh*yh)+|x| *ey+|y| *ex+ex*ey :="
         }
       }
     },
@@ -82,7 +69,19 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32Error.lean",
         "passage": {
-          "quote": "theorem mul_exists (left right : Word) (xh yh x y ex ey : \u211d)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (range : |xh*yh| \u2264 Bounds.maxFinite)\n    (leftError : |xh-x| \u2264 ex) (rightError : |yh-y| \u2264 ey) :\n    \u2203 output, Results .mul left right output \u2227 isFinite output = true \u2227\n      \u2203 z : \u211d, finiteReal output = some z \u2227 |z-x*y| \u2264 eps32 (xh*yh)+|x| *ey+|y| *ex+ex*ey :="
+          "quote": "theorem add_exists (left right : Word) (xh yh x y ex ey : ℝ)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (range : |xh+yh| ≤ Bounds.maxFinite)\n    (leftError : |xh-x| ≤ ex) (rightError : |yh-y| ≤ ey) :\n    ∃ output, Results .add left right output ∧ isFinite output = true ∧\n      ∃ z : ℝ, finiteReal output = some z ∧ |z-(x+y)| ≤ eps32 (xh+yh)+ex+ey :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each encoded operation must pass the existing input-range guard on its actual\nfinite operands. The guard proves finite output before the absolute-error\nbridge is used. Every admitted output then satisfies the composed error bound,\nand an admitted finite output exists. The numerical proof does not assume the\noutput is close to the ideal value as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32Error.lean",
+        "passage": {
+          "quote": "theorem mul_exists (left right : Word) (xh yh x y ex ey : ℝ)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (range : |xh*yh| ≤ Bounds.maxFinite)\n    (leftError : |xh-x| ≤ ex) (rightError : |yh-y| ≤ ey) :\n    ∃ output, Results .mul left right output ∧ isFinite output = true ∧\n      ∃ z : ℝ, finiteReal output = some z ∧ |z-x*y| ≤ eps32 (xh*yh)+|x| *ey+|y| *ex+ex*ey :="
         }
       }
     },
@@ -94,7 +93,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32Error.lean",
         "passage": {
-          "quote": "theorem rounded_add_range (product bias : \u211d)\n    (range : |product| + eps32 product + |bias| \u2264 Bounds.maxFinite) :\n    |fp32Round product + bias| \u2264 Bounds.maxFinite :="
+          "quote": "theorem rounded_add_range (product bias : ℝ)\n    (range : |product| + eps32 product + |bias| ≤ Bounds.maxFinite) :\n    |fp32Round product + bias| ≤ Bounds.maxFinite :="
         }
       }
     },
@@ -106,7 +105,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32Error.lean",
         "passage": {
-          "quote": "theorem affine_results (left right bias intermediate output : Word)\n    (xh yh bh x y b ex ey eb : \u211d)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (biasReal : finiteReal bias = some bh)\n    (multiplyRange : |xh*yh| \u2264 Bounds.maxFinite)\n    (additionRange : |xh*yh| + eps32 (xh*yh) + |bh| \u2264 Bounds.maxFinite)\n    (leftError : |xh-x| \u2264 ex) (rightError : |yh-y| \u2264 ey) (biasError : |bh-b| \u2264 eb)\n    (allowed : AffineResults left right bias intermediate output) :\n    isFinite intermediate = true \u2227 isFinite output = true \u2227\n      \u2203 z : \u211d, finiteReal output = some z \u2227 |z-(x*y+b)| \u2264 affineBudget xh yh bh x y ex ey eb :="
+          "quote": "theorem affine_results (left right bias intermediate output : Word)\n    (xh yh bh x y b ex ey eb : ℝ)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (biasReal : finiteReal bias = some bh)\n    (multiplyRange : |xh*yh| ≤ Bounds.maxFinite)\n    (additionRange : |xh*yh| + eps32 (xh*yh) + |bh| ≤ Bounds.maxFinite)\n    (leftError : |xh-x| ≤ ex) (rightError : |yh-y| ≤ ey) (biasError : |bh-b| ≤ eb)\n    (allowed : AffineResults left right bias intermediate output) :\n    isFinite intermediate = true ∧ isFinite output = true ∧\n      ∃ z : ℝ, finiteReal output = some z ∧ |z-(x*y+b)| ≤ affineBudget xh yh bh x y ex ey eb :="
         }
       }
     },
@@ -118,7 +117,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32Error.lean",
         "passage": {
-          "quote": "theorem affine_exists (left right bias : Word) (xh yh bh x y b ex ey eb : \u211d)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (biasReal : finiteReal bias = some bh)\n    (multiplyRange : |xh*yh| \u2264 Bounds.maxFinite)\n    (additionRange : |xh*yh| + eps32 (xh*yh) + |bh| \u2264 Bounds.maxFinite)\n    (leftError : |xh-x| \u2264 ex) (rightError : |yh-y| \u2264 ey) (biasError : |bh-b| \u2264 eb) :\n    \u2203 intermediate output, AffineResults left right bias intermediate output \u2227\n      isFinite intermediate = true \u2227 isFinite output = true \u2227\n        \u2203 z : \u211d, finiteReal output = some z \u2227 |z-(x*y+b)| \u2264 affineBudget xh yh bh x y ex ey eb :="
+          "quote": "theorem affine_exists (left right bias : Word) (xh yh bh x y b ex ey eb : ℝ)\n    (leftReal : finiteReal left = some xh) (rightReal : finiteReal right = some yh)\n    (biasReal : finiteReal bias = some bh)\n    (multiplyRange : |xh*yh| ≤ Bounds.maxFinite)\n    (additionRange : |xh*yh| + eps32 (xh*yh) + |bh| ≤ Bounds.maxFinite)\n    (leftError : |xh-x| ≤ ex) (rightError : |yh-y| ≤ ey) (biasError : |bh-b| ≤ eb) :\n    ∃ intermediate output, AffineResults left right bias intermediate output ∧\n      isFinite intermediate = true ∧ isFinite output = true ∧\n        ∃ z : ℝ, finiteReal output = some z ∧ |z-(x*y+b)| ≤ affineBudget xh yh bh x y ex ey eb :="
         }
       }
     },
@@ -131,6 +130,54 @@
         "path": "docs/foundations/binary32-error-composition.md",
         "passage": {
           "quote": "There are two rounding contributions because the multiplication is rounded\nbefore the addition reads its encoded result. This is not the formula for an\nFMA, which combines the exact product and addend before one rounding.\n`affine_exists` constructs both encoded reference stages and proves the same\nfiniteness and error conclusion. It requires no externally supplied intermediate\nor final result premise."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A rounded affine result can then be squared by a second multiply-then-add\ncalculation whose two inputs are that actual result and whose bias is positive\nzero. Let R be the nearest-even rounded real expression\n`round(round(xh*yh)+bh)`, calculated from the initial finite inputs. The first\nstage's range guards establish that the intermediate word represents R; this\nis a conclusion, not an assumed intermediate value. Additional guards on\n`|R*R|` and its rounding allowance ensure that the second calculation remains\nfinite. If the first error bound is E and the ideal affine value is A, the\npropagated input error of squaring is `2*|A|*E + E*E`. Both second-stage\nrounding contributions are retained, including the explicit addition of zero.\nThese guards and budgets depend only on initial real inputs and their error\nbounds. The arithmetic theorem joins the actual intermediate word across the\ntwo result relations; memory handoff between kernels requires its own proof."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SquareError.lean",
+        "passage": {
+          "quote": "theorem affine_value (left weight bias product intermediate : Word) (xh wh bh : ℝ)\n    (leftReal : finiteReal left = some xh) (weightReal : finiteReal weight = some wh)\n    (biasReal : finiteReal bias = some bh)\n    (multiplyRange : |xh*wh| ≤ Bounds.maxFinite)\n    (additionRange : |xh*wh| + eps32 (xh*wh) + |bh| ≤ Bounds.maxFinite)\n    (allowed : Error.AffineResults left weight bias product intermediate) :\n    finiteReal intermediate = some (roundedAffine xh wh bh) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A rounded affine result can then be squared by a second multiply-then-add\ncalculation whose two inputs are that actual result and whose bias is positive\nzero. Let R be the nearest-even rounded real expression\n`round(round(xh*yh)+bh)`, calculated from the initial finite inputs. The first\nstage's range guards establish that the intermediate word represents R; this\nis a conclusion, not an assumed intermediate value. Additional guards on\n`|R*R|` and its rounding allowance ensure that the second calculation remains\nfinite. If the first error bound is E and the ideal affine value is A, the\npropagated input error of squaring is `2*|A|*E + E*E`. Both second-stage\nrounding contributions are retained, including the explicit addition of zero.\nThese guards and budgets depend only on initial real inputs and their error\nbounds. The arithmetic theorem joins the actual intermediate word across the\ntwo result relations; memory handoff between kernels requires its own proof."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SquareError.lean",
+        "passage": {
+          "quote": "theorem budget_expansion (xh wh bh x w b ex ew eb : ℝ) :\n    let r :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A rounded affine result can then be squared by a second multiply-then-add\ncalculation whose two inputs are that actual result and whose bias is positive\nzero. Let R be the nearest-even rounded real expression\n`round(round(xh*yh)+bh)`, calculated from the initial finite inputs. The first\nstage's range guards establish that the intermediate word represents R; this\nis a conclusion, not an assumed intermediate value. Additional guards on\n`|R*R|` and its rounding allowance ensure that the second calculation remains\nfinite. If the first error bound is E and the ideal affine value is A, the\npropagated input error of squaring is `2*|A|*E + E*E`. Both second-stage\nrounding contributions are retained, including the explicit addition of zero.\nThese guards and budgets depend only on initial real inputs and their error\nbounds. The arithmetic theorem joins the actual intermediate word across the\ntwo result relations; memory handoff between kernels requires its own proof."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SquareError.lean",
+        "passage": {
+          "quote": "theorem results_error (left weight bias product intermediate square output : Word)\n    (xh wh bh x w b ex ew eb : ℝ)\n    (leftReal : finiteReal left = some xh) (weightReal : finiteReal weight = some wh)\n    (biasReal : finiteReal bias = some bh)\n    (multiplyRange : |xh*wh| ≤ Bounds.maxFinite)\n    (additionRange : |xh*wh| + eps32 (xh*wh) + |bh| ≤ Bounds.maxFinite)\n    (squareRange : |roundedAffine xh wh bh * roundedAffine xh wh bh| ≤ Bounds.maxFinite)\n    (finalRange : |roundedAffine xh wh bh * roundedAffine xh wh bh| +\n      eps32 (roundedAffine xh wh bh * roundedAffine xh wh bh) ≤ Bounds.maxFinite)\n    (leftError : |xh-x| ≤ ex) (weightError : |wh-w| ≤ ew) (biasError : |bh-b| ≤ eb)\n    (allowed : Results left weight bias product intermediate square output) :\n    isFinite intermediate = true ∧ isFinite output = true ∧\n      ∃ z, finiteReal output = some z ∧\n        |z-(x*w+b)^2| ≤ budget xh wh bh x w b ex ew eb :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A rounded affine result can then be squared by a second multiply-then-add\ncalculation whose two inputs are that actual result and whose bias is positive\nzero. Let R be the nearest-even rounded real expression\n`round(round(xh*yh)+bh)`, calculated from the initial finite inputs. The first\nstage's range guards establish that the intermediate word represents R; this\nis a conclusion, not an assumed intermediate value. Additional guards on\n`|R*R|` and its rounding allowance ensure that the second calculation remains\nfinite. If the first error bound is E and the ideal affine value is A, the\npropagated input error of squaring is `2*|A|*E + E*E`. Both second-stage\nrounding contributions are retained, including the explicit addition of zero.\nThese guards and budgets depend only on initial real inputs and their error\nbounds. The arithmetic theorem joins the actual intermediate word across the\ntwo result relations; memory handoff between kernels requires its own proof."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SquareError.lean",
+        "passage": {
+          "quote": "theorem results_exists (left weight bias : Word) :\n    ∃ product intermediate square output, Results left weight bias product intermediate square output :="
         }
       }
     }

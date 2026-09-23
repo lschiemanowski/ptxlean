@@ -7,11 +7,12 @@
     }
   },
   "summary": [
-    "Combine kernels using explicit rules for reserving memory, starting execution, waiting for other computations and keeping stored values available until their last use.",
-    "Distinguish these formal coordination guarantees from correspondence with the software that actually allocates memory and launches kernels."
+    "Compose actual completed single-thread kernel runs through persistent live storage, checking device ownership and argument identities at every launch.",
+    "Preserve allocation size, untouched storage and lifetime validity across finite serialized chains; released logical identities cannot be revived.",
+    "Keep real-runtime completion, visibility, physical allocation and concurrent orchestration as explicit remaining obligations."
   ],
-  "realization": "unimplemented",
-  "remaining": "The model of kernel coordination, contracts for the software that launches kernels, proofs combining their guarantees, and examples remain to be implemented.",
+  "realization": "partial",
+  "remaining": "Serialized single-thread, single-arena launch chains and persistent logical storage are proved. Physical runtime completion/visibility and allocation conformance, overlapping or asynchronous launches, multi-arena kernels and general resource guarantees remain unimplemented.",
   "links": [
     {
       "kind": "depends-on",

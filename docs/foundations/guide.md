@@ -150,3 +150,15 @@ It shows how the generated memory events retain computed values and instruction
 qualifiers, how immutable inputs prevent circular value justification in this
 example, and why correctness, execution witnesses and safety remain distinct.
 The reusable ordering argument is in [`Ptx/Publication.lean`](../../Ptx/Publication.lean).
+
+
+## Values passed between kernels
+
+The [two-kernel squared-affine walkthrough](affine-square-kernel.md) follows
+encoded inputs through two actual instruction executions and persistent storage
+to the real TorchLean graph. Read the [logical storage guide](storage-lifetimes.md)
+for allocation identities and release, then [serialized launches](serialized-launches.md)
+for argument binding, exact writeback and the external runtime visibility contract.
+The [generated-backward example](affine-square-vjp.md) explains the same graph's
+exact real sensitivities and checked success. Forward kernel error, mathematical
+backward correctness and a future PTX backward implementation are distinct results.

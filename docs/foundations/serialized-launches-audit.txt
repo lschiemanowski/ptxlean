@@ -1,0 +1,43 @@
+'Ptx.Scalar.Sequential.Argument' does not depend on any axioms
+'Ptx.Scalar.Sequential.Seed' does not depend on any axioms
+'Ptx.Scalar.Sequential.start' does not depend on any axioms
+'Ptx.Scalar.Sequential.start_pc' does not depend on any axioms
+'Ptx.Scalar.Sequential.start_regs' does not depend on any axioms
+'Ptx.Scalar.Sequential.start_preds' does not depend on any axioms
+'Ptx.Scalar.Sequential.start_memory' does not depend on any axioms
+'Ptx.Scalar.Sequential.start_argument' depends on axioms: [propext]
+'Ptx.Scalar.Sequential.start_other' depends on axioms: [propext]
+'Ptx.Scalar.Sequential.Request' does not depend on any axioms
+'Ptx.Scalar.Sequential.SuccessfulLaunch' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.cell' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.present' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.owner' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.identities' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.run' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.writeback' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.launch_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.exact_writeback' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.run_from' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.writeback_lookup' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.environment_unchanged' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.other_cell' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.environment_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.final_environment_safe' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.word_frame' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.SuccessfulLaunch.storage_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.no_launch_absent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.no_launch_wrong_owner' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.no_launch_wrong_identity' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.no_launch_after_release' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.Chain' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.Chain.append' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.Chain.cons_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.Chain.nil_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.Chain.two_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.Chain.storage_history' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.Chain.invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Sequential.Chain.old_absent' depends on axioms: [propext, Classical.choice, Quot.sound]

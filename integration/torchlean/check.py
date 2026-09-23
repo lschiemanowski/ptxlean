@@ -29,6 +29,17 @@ TARGETS = {"PtxTorchLean", "PtxTensorBridge", "PtxBinary32",
            "PtxBinary32Examples", "PtxBinary32Bounds", "PtxBinary32Error",
            "PtxBinary32.Instructions", "PtxBinary32.Mixed", "PtxBinary32.Affine"}
 
+# Explicit public coverage for the serialized two-kernel and exact VJP slice.
+COUNTS.update({
+    "Ptx.Scalar.Sequential": 17,
+    "Ptx.Scalar.Sequential.SuccessfulLaunch": 15,
+    "Ptx.Scalar.Sequential.Chain": 7,
+    "PtxTorchLean.AffineSquareVJP": 10,
+    "Ptx.Binary32.SquareError": 8,
+    "PtxTorchLean.AffineSquareKernel": 23,
+})
+TARGETS.update({"PtxBinary32.SquareError", "PtxBinary32.Sequential", "PtxAffineSquareVJP", "PtxAffineSquareKernel"})
+
 
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()

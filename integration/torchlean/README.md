@@ -35,7 +35,9 @@ hardware values, certify floating-point error, or prove a PTX implementation.
 The mathematical VJP endpoint differentiates the actual graph forward map;
 `forward_polynomial` establishes its correspondence to the displayed polynomial.
 The current graph has no state updates, masks, parameter sharing or nonsmooth
-operations. General model lowering and floating-point numerical/kernel correspondence remain open.
+operations. General model lowering and backward floating-point/kernel correspondence remain open.
+The serialized scalar forward bridge below establishes one restricted numerical
+correspondence for this actual graph.
 
 ## Global-memory integer tensor bridge
 
@@ -63,9 +65,35 @@ exceptional encodings have no finite real interpretation. The
 [range proofs](../../docs/foundations/binary32-ranges.md) derive finite results
 from input bounds. The [composition proofs](../../docs/foundations/binary32-error-composition.md)
 carry incoming errors through addition, multiplication and a separately rounded
-multiply-then-add expression. These numerical foundations do not yet fetch or
-execute floating-point PTX instructions. The NaN envelope does not establish
+multiply-then-add expression. The reviewed `PtxBinary32/Instructions.lean`
+connects the numerical relations to fetched, predicated instruction occurrences.
+`Mixed.lean` and `Affine.lean` connect actual global-memory loads and stores to
+those instructions; the [walkthrough](../../docs/foundations/mixed-affine.md)
+states their target, typing and memory restrictions. The NaN envelope does not establish
 that every included NaN encoding can occur on hardware.
+
+## Two serialized kernels and the same graph's generated backward
+
+`PtxAffineSquareKernel.lean` reuses the actual affine instruction program twice.
+The first launch stores x*weight+bias; the second loads that same stored word
+twice and squares it, with an explicit zero addition. `PtxBinary32/Sequential.lean`
+checks live logical allocation identities and device ownership, assembles each
+launch from its own supplied registers and arguments, and writes back the actual
+completed run's memory. The root storage module proves permanent invalidation
+after release, including after later reservations and writes.
+
+The [two-kernel guide](../../docs/foundations/affine-square-kernel.md) follows
+both traces, the existence proof for arbitrary input bits, and the final stored
+output's error relative to the actual TorchLean graph. Its conditions constrain
+initial inputs, not desired intermediate/output values. A real runtime must
+establish completion, visibility and absence of interference between launches.
+The proof does not derive these obligations from a PTX thread's exit.
+
+`PtxAffineSquareVJP.lean` separately expands the upstream graph's actual generated
+backward result for arbitrary real scalar inputs and an arbitrary output weight.
+It proves checked success, the three explicit sensitivities, and mathematical
+derivative correspondence. The [backward guide](../../docs/foundations/affine-square-vjp.md)
+explains this exact-real result. No PTX backward kernel is supplied or proved here.
 
 ## Reproduce
 
@@ -85,12 +113,13 @@ desired, their compatible mathlib cache before running it; do not use
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All six registered integration targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 85
-distinct dependency reports: seven graph endpoints (including the graph
-definition), 15 tensor bridge theorems, 16 binary32 core theorems, 16 encoded
-examples, 12 input-bound theorems, ten error-composition theorems, and nine
-binary32 adapter/reference definitions. Only the three standard Lean axioms listed below are permitted.
+All 13 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 284
+distinct dependency reports, covering the graph, tensor bridge, numerical
+adapters, instruction and execution layers, serialized launches, two-kernel
+forward bridge and scalar generated backward. `check.py` fixes the endpoint
+counts by namespace, and the audit driver lists every name. Only the three
+standard Lean axioms listed below are permitted.
 
 The same command scans this package's own Lean sources, including its audit
 drivers, for proof placeholders, new unchecked axioms, and `native_decide`.

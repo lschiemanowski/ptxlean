@@ -11,7 +11,7 @@
     "Keep derivative correctness, numerical accuracy and guarantees about kernel execution separate."
   ],
   "realization": "partial",
-  "remaining": "An isolated actual TorchLean graph with differentiable input, weight and bias tensors has checked backward-success and VJP theorems. Broader graph/model coverage, the combined PTX dependency build, numerical error, separately authored PTX backward implementations and their execution/correctness proofs remain unfinished.",
+  "remaining": "The joint pinned PTX/TorchLean package proves actual generated backward success, derivative correspondence and explicit scalar input/weight/bias sensitivities. Broader graph/model coverage, backward numerical bounds, separately authored PTX backward implementations and their execution/correctness proofs remain unfinished.",
   "links": [
     {
       "kind": "depends-on",

@@ -27,3 +27,5 @@ import Ptx.IntegerBitCount
 import Ptx.SharedBarrier
 
 import Ptx.AffineMemory
+
+import Ptx.SequentialStorage

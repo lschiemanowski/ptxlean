@@ -21,8 +21,8 @@ Current checked foundations include:
   with universal result, restricted execution witnesses and safety proofs.
 - A [recorded Luna workflow](docs/formalization/worker-runs.md), source-section
   inventory, fresh patch replay and independent semantic checks. Its first
-  accepted instruction forms include `min.u32`, `max.u32`, `clz.b32` and
-  `popc.b32`; these are small
+  accepted instruction forms include `min.u32`, `max.u32`, `clz.b32`,
+  `popc.b32`, `add.rn.f32` and `mul.rn.f32`; these are small
   exploratory results, not evidence of full-ISA productivity.
 - [Shared-memory barrier publication](docs/foundations/shared-barrier.md): actual
   `.shared` instructions, waiting and completion, universal results for completed
@@ -33,6 +33,12 @@ Current checked foundations include:
   correspondence remain separate obligations. A [tensor-layout bridge](docs/foundations/tensor-layout-bridge.md)
   connects actual unsigned vector-add execution to TorchLean tensors, with an
   exact-real corollary when input sums do not overflow.
+- [Two serialized numerical kernels](docs/foundations/affine-square-kernel.md):
+  actual stored-word correspondence with a scalar TorchLean forward graph,
+  execution existence, storage lifetimes and a composed rounding-error bound.
+  The same graph's [generated real backward](docs/foundations/affine-square-vjp.md)
+  has checked success and explicit input/parameter derivatives. Concrete runtime
+  visibility and a separately authored PTX backward kernel remain open.
 
 Run the core checks with the toolchain installed through Elan:
 

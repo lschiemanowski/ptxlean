@@ -12,7 +12,7 @@
     "Use PTX and pinned TorchLean definitions in one checked package while keeping exact tensor embeddings separate from kernel correspondence."
   ],
   "realization": "partial",
-  "remaining": "The joint Lean 4.34 package checks the exact graph and tape success, forward polynomial correspondence and mathematical VJP. Broader model lowering, numerical bounds and PTX implementation correspondence remain open.",
+  "remaining": "The joint package proves actual graph and tape success, forward polynomial correspondence and mathematical VJP, including an explicit scalar generated-backward result for arbitrary inputs and output seed. Broader graph lowering, backward numerical bounds and independently authored PTX backward correspondence remain open.",
   "links": [
     {
       "kind": "implementation",
@@ -22,7 +22,7 @@
       "to": {
         "path": "integration/torchlean/PtxTorchLean.lean",
         "passage": {
-          "quote": "def affineSquare (s : Shape) : DGraph [s, s, s] [s, s, s] :=\n  let x : Idx ([s, s, s] ++ []) s := \u27e8\u27e80, by simp\u27e9, rfl\u27e9\n  let w : Idx ([s, s, s] ++ []) s := \u27e8\u27e81, by simp\u27e9, rfl\u27e9\n  let product := DGraph.nil.snoc (TapeNodes.mul x w) (TapeNodes.mulFderiv x w)\n  let p : Idx ([s, s, s] ++ [s]) s := \u27e8\u27e83, by simp\u27e9, rfl\u27e9\n  let b : Idx ([s, s, s] ++ [s]) s := \u27e8\u27e82, by simp\u27e9, rfl\u27e9\n  let affine := product.snoc (TapeNodes.add p b) (TapeNodes.addFderiv p b)\n  let a : Idx ([s, s, s] ++ [s, s]) s := \u27e8\u27e84, by simp\u27e9, rfl\u27e9\n  affine.snoc (TapeNodes.square a) (TapeNodes.squareFderiv a)"
+          "quote": "def affineSquare (s : Shape) : DGraph [s, s, s] [s, s, s] :=\n  let x : Idx ([s, s, s] ++ []) s := ⟨⟨0, by simp⟩, rfl⟩\n  let w : Idx ([s, s, s] ++ []) s := ⟨⟨1, by simp⟩, rfl⟩\n  let product := DGraph.nil.snoc (TapeNodes.mul x w) (TapeNodes.mulFderiv x w)\n  let p : Idx ([s, s, s] ++ [s]) s := ⟨⟨3, by simp⟩, rfl⟩\n  let b : Idx ([s, s, s] ++ [s]) s := ⟨⟨2, by simp⟩, rfl⟩\n  let affine := product.snoc (TapeNodes.add p b) (TapeNodes.addFderiv p b)\n  let a : Idx ([s, s, s] ++ [s, s]) s := ⟨⟨4, by simp⟩, rfl⟩\n  affine.snoc (TapeNodes.square a) (TapeNodes.squareFderiv a)"
         }
       }
     },
@@ -34,7 +34,7 @@
       "to": {
         "path": "integration/torchlean/PtxTorchLean.lean",
         "passage": {
-          "quote": "theorem checked_success (s : Shape) (inputs : TensorPack \u211d [s, s, s])\n    (seed : Tensor \u211d s) :\n    let g := (affineSquare s).toTypedGraph (output s)\n    g.vjpChecked inputs () seed = .ok (g.vjpWithSeed inputs seed, g.forward inputs) := by\n  apply Runtime.Autograd.Torch.TypedGraphWithData.vjpChecked_eq\n  rfl"
+          "quote": "theorem checked_success (s : Shape) (inputs : TensorPack ℝ [s, s, s])\n    (seed : Tensor ℝ s) :\n    let g := (affineSquare s).toTypedGraph (output s)\n    g.vjpChecked inputs () seed = .ok (g.vjpWithSeed inputs seed, g.forward inputs) := by\n  apply Runtime.Autograd.Torch.TypedGraphWithData.vjpChecked_eq\n  rfl"
         }
       }
     },
@@ -46,7 +46,7 @@
       "to": {
         "path": "integration/torchlean/PtxTorchLean.lean",
         "passage": {
-          "quote": "theorem checked_success_vjp (s : Shape) (inputs : TensorPack \u211d [s, s, s])\n    (seed : Tensor \u211d s) :\n    let g := (affineSquare s).toTypedGraph (output s)\n    flattenCtx (g.vjpWithSeed inputs seed) =\n      (fderiv \u211d (fun x => tensorToVec (g.forward (unflattenCtx x)))\n        (flattenCtx inputs)).adjoint (tensorToVec seed) := by\n  exact checked_vjp s inputs seed _ (checked_success s inputs seed)"
+          "quote": "theorem checked_success_vjp (s : Shape) (inputs : TensorPack ℝ [s, s, s])\n    (seed : Tensor ℝ s) :\n    let g := (affineSquare s).toTypedGraph (output s)\n    flattenCtx (g.vjpWithSeed inputs seed) =\n      (fderiv ℝ (fun x => tensorToVec (g.forward (unflattenCtx x)))\n        (flattenCtx inputs)).adjoint (tensorToVec seed) := by\n  exact checked_vjp s inputs seed _ (checked_success s inputs seed)"
         }
       }
     },
@@ -58,7 +58,7 @@
       "to": {
         "path": "integration/torchlean/PtxTorchLean.lean",
         "passage": {
-          "quote": "theorem exact_tape_success_vjp (s : Shape) (inputs : TensorPack \u211d [s, s, s])\n    (seed : Tensor \u211d s) :\n    let g := (affineSquare s).g.toAlgebra\n    let gradients := Algebra.Graph.backpropAllCtx g inputs () (TensorPack.single (output s) seed)\n    Runtime.Autograd.Tape.backwardDenseAll\n        (Algebra.Graph.lowerGraphToTape g inputs ()).1 (output s).i.1\n        (Spec.SomeTensor.ofTensor seed) =\n      .ok (TensorPack.toShapeErasedArray gradients)\n    \u2227 flattenCtx (Algebra.TensorPack.takeLeft gradients) =\n      (fderiv \u211d (Graph.evalVec (g.toReal ())) (flattenCtx inputs)).adjoint\n        (flattenCtx (TensorPack.single (output s) seed)) := by\n  apply Algebra.Graph.backwardDenseAll_lowerGraphToTape_adjoint_fderiv_at\n  rw [Algebra.Graph.toAlgebra_toReal]\n  exact DGraph.graphFDerivCorrectAtOfCorrect (affineSquare s).hg (flattenCtx inputs)"
+          "quote": "theorem exact_tape_success_vjp (s : Shape) (inputs : TensorPack ℝ [s, s, s])\n    (seed : Tensor ℝ s) :\n    let g := (affineSquare s).g.toAlgebra\n    let gradients := Algebra.Graph.backpropAllCtx g inputs () (TensorPack.single (output s) seed)\n    Runtime.Autograd.Tape.backwardDenseAll\n        (Algebra.Graph.lowerGraphToTape g inputs ()).1 (output s).i.1\n        (Spec.SomeTensor.ofTensor seed) =\n      .ok (TensorPack.toShapeErasedArray gradients)\n    ∧ flattenCtx (Algebra.TensorPack.takeLeft gradients) =\n      (fderiv ℝ (Graph.evalVec (g.toReal ())) (flattenCtx inputs)).adjoint\n        (flattenCtx (TensorPack.single (output s) seed)) := by\n  apply Algebra.Graph.backwardDenseAll_lowerGraphToTape_adjoint_fderiv_at\n  rw [Algebra.Graph.toAlgebra_toReal]\n  exact DGraph.graphFDerivCorrectAtOfCorrect (affineSquare s).hg (flattenCtx inputs)"
         }
       }
     },
@@ -70,7 +70,7 @@
       "to": {
         "path": "integration/torchlean/PtxTorchLean.lean",
         "passage": {
-          "quote": "theorem forward_polynomial (s : Shape) (x w b : Tensor \u211d s) (i : Fin (Spec.Shape.size s)) :\n    tensorToVec (((affineSquare s).toTypedGraph (output s)).forward\n      (.cons x (.cons w (.cons b .nil)))) i =\n    (tensorToVec x i * tensorToVec w i + tensorToVec b i) ^ 2 := by\n  simp [Runtime.Autograd.Torch.TypedGraph.forward,\n    Runtime.Autograd.Torch.TypedGraphWithData.forward, DGraph.toTypedGraph,\n    affineSquare, DGraph.snoc, DGraph.nil, Graph.toAlgebra, Algebra.Graph.toData,\n    Algebra.GraphData.eval, Node.toAlgebra, TapeNodes.square, TapeNodes.add,\n    TapeNodes.mul, Node.ofFn, output, CtxVec.get_flattenCtx, getIdx, TensorPack.snoc,\n    Tensor.castShape, vecOfFun, pow_two,\n    get_3_0, get_3_1, get_4_2, get_4_3, get_5_4, get_6_5]"
+          "quote": "theorem forward_polynomial (s : Shape) (x w b : Tensor ℝ s) (i : Fin (Spec.Shape.size s)) :\n    tensorToVec (((affineSquare s).toTypedGraph (output s)).forward\n      (.cons x (.cons w (.cons b .nil)))) i =\n    (tensorToVec x i * tensorToVec w i + tensorToVec b i) ^ 2 := by\n  simp [Runtime.Autograd.Torch.TypedGraph.forward,\n    Runtime.Autograd.Torch.TypedGraphWithData.forward, DGraph.toTypedGraph,\n    affineSquare, DGraph.snoc, DGraph.nil, Graph.toAlgebra, Algebra.Graph.toData,\n    Algebra.GraphData.eval, Node.toAlgebra, TapeNodes.square, TapeNodes.add,\n    TapeNodes.mul, Node.ofFn, output, CtxVec.get_flattenCtx, getIdx, TensorPack.snoc,\n    Tensor.castShape, vecOfFun, pow_two,\n    get_3_0, get_3_1, get_4_2, get_4_3, get_5_4, get_6_5]"
         }
       }
     },
@@ -82,7 +82,7 @@
       "to": {
         "path": "integration/torchlean/PtxTorchLean.lean",
         "passage": {
-          "quote": "theorem unsigned_min_scalar_embedding (a b : Ptx.Word) :\n    Tensor.item (Tensor.scalar ((Ptx.Scalar.BinOp.eval .minU a b).toNat : \u211d)) =\n      (Nat.min a.toNat b.toNat : \u211d) := by\n  rw [Tensor.item_scalar, Ptx.Scalar.IntegerMinMax.min_toNat]"
+          "quote": "theorem unsigned_min_scalar_embedding (a b : Ptx.Word) :\n    Tensor.item (Tensor.scalar ((Ptx.Scalar.BinOp.eval .minU a b).toNat : ℝ)) =\n      (Nat.min a.toNat b.toNat : ℝ) := by\n  rw [Tensor.item_scalar, Ptx.Scalar.IntegerMinMax.min_toNat]"
         }
       }
     }

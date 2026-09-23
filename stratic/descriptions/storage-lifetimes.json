@@ -1,0 +1,65 @@
+{
+  "id": "storage-lifetimes",
+  "parent": {
+    "description": "orchestration",
+    "passage": {
+      "quote": "Orchestration coordinates work split across several GPU kernels. It describes\nwhich memory regions are reserved (allocations), when kernels begin (launches),\nand which earlier results must be ready before later work can use them\n(dependencies). Storage lifetime is the interval during which a region remains\navailable. The model connects each kernel argument to the intended memory buffer, a region\nholding its data, and establishes both the required execution order and the reader's ability to\nobserve earlier writes. It covers values retained across calls as well as\ntemporary intermediate results."
+    }
+  },
+  "summary": [
+    "Use fresh logical allocation identities for initialized device-owned word arenas, with checked live release and fixed-size writeback.",
+    "Prove that a released identity stays absent through later valid operations and derive access checks from the live storage contents.",
+    "Keep physical allocation, runtime identity mapping and launch completion as explicit separate obligations."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Storage is a collection of initialized word arenas, each owned by one device.\nAn arena is a list of 32-bit words. Reserving one supplies its initial words and\nreturns a fresh logical allocation identity. Releasing it removes that identity\nfrom live storage. Writing a completed kernel's memory back requires the identity\nto be live and the word count to remain unchanged. Other allocations, the owner\nand the allocation's size are preserved."
+      },
+      "to": {
+        "path": "Ptx/SequentialStorage.lean",
+        "passage": {
+          "quote": "theorem writeback_properties (done : writeback s id words = some next) :\n    ∃ cell, s.cells id = some cell ∧ words.length = cell.words.length ∧\n      next.nextId = s.nextId ∧ next.cells id = some {cell with words := words} ∧\n      ∀ other, other ≠ id → next.cells other = s.cells other := by\n  unfold writeback at done\n  split at done\n  · contradiction\n  · rename_i cell present\n    split at done\n    · rename_i extent\n      cases done\n      exact ⟨cell, present, extent, rfl, by simp [replace], fun other h => by simp [replace, h]⟩\n    · contradiction"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An identity names one allocation lifetime, not a physical GPU address. The store\ncarries a counter larger than every live identity. Reservation advances that\ncounter; release and writeback never move it backwards. An old identity remains\nabsent after release throughout every later valid sequence of these operations,\neven when an equally sized arena is reserved. A replacement receives a different\nidentity. This prevents a stale handle from becoming valid merely because storage\nwas reserved again. A real allocator may reuse physical memory; relating that\nreuse to distinct logical identities is an external correspondence obligation."
+      },
+      "to": {
+        "path": "Ptx/SequentialStorage.lean",
+        "passage": {
+          "quote": "theorem released_reallocated (released : release s id = some next)\n    (history : History next last) (device : Nat) (words : List Word) :\n    (reserve last device words).1 ≠ id ∧\n      (reserve last device words).2.cells id = none ∧\n      (reserve last device words).2.cells (reserve last device words).1 = some ⟨device, words⟩ := by\n  obtain ⟨cell, present, counter, _, _⟩ := (release_iff ..).mp released\n  have old : id < last.nextId := by\n    have before := live_lt s present\n    have later := history.counter_mono\n    omega\n  refine ⟨by simp only [reserve_id]; omega, ?_, reserve_contents _ _ _⟩\n  exact released_never_live released (history.append (.cons (.reserve last device words) .nil))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The allocation access environment is derived from the live word lists, rather\nthan maintained as a second independent table. Each live arena is global memory,\nfour-byte aligned, readable, writable and fully initialized by its supplied word\nlist. Its owner is the recorded device. A four-byte access succeeds precisely\nwhen its logical identity is live, the issuing thread belongs to that device,\nand its byte offset is aligned and within the arena. Releasing storage makes\naccess through its old identity fail as unallocated."
+      },
+      "to": {
+        "path": "Ptx/SequentialStorage.lean",
+        "passage": {
+          "quote": "theorem access_iff (present : s.cells id = some cell) :\n    (environment s).accessible thread kind (address id offset) 4 ↔\n      cell.device = thread.device ∧ Scalar.ValidAddress cell.words offset := by\n  by_cases owner : cell.device = thread.device\n  · have checks : (environment s).checkAccess thread kind (address id offset) 4 =\n        (Scalar.arenaEnvironment cell.words thread id).checkAccess thread kind\n          (Scalar.arenaAddress id offset) 4 := by\n      simp [Environment.checkAccess, environment, address, present,\n        Scalar.arenaEnvironment, Scalar.arenaAddress, Cell.allocation, owner]\n    unfold Environment.accessible\n    rw [checks]\n    simpa [Environment.accessible, owner] using Scalar.arena_access_iff cell.words thread id offset kind\n  · have reverse : thread.device ≠ cell.device := Ne.symm owner\n    simp [Environment.accessible, Environment.checkAccess, environment, address,\n      Scalar.arenaAddress, Cell.allocation, present, Allocation.ownerAllows, owner, reverse]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The lifetime theorem follows a valid transition history. Arbitrarily replacing\nthe whole store with an unrelated freshly constructed state is not a valid\ntransition and carries no identity-continuity guarantee. The model has no\nin-flight launches: launch composition must keep storage live through execution\nand commit only after its explicit synchronous completion boundary.\n"
+      },
+      "to": {
+        "path": "Ptx/SequentialStorage.lean",
+        "passage": {
+          "quote": "theorem History.old_absent (history : History s last) (issued : id < s.nextId)\n    (absent : s.cells id = none) : last.cells id = none := by\n  induction history with\n  | nil => exact absent\n  | cons step _ ih => exact ih (by have := step.counter_mono; omega) (step.old_absent issued absent)"
+        }
+      }
+    }
+  ]
+}

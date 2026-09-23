@@ -28,6 +28,20 @@ rounding bound and the actual bias magnitude. The intermediate word is an actual
 output of the first result relation and an actual input of the second. This
 operation order is distinct from a fused multiply-add, which rounds only once.
 
+A rounded affine result can then be squared by a second multiply-then-add
+calculation whose two inputs are that actual result and whose bias is positive
+zero. Let R be the nearest-even rounded real expression
+`round(round(xh*yh)+bh)`, calculated from the initial finite inputs. The first
+stage's range guards establish that the intermediate word represents R; this
+is a conclusion, not an assumed intermediate value. Additional guards on
+`|R*R|` and its rounding allowance ensure that the second calculation remains
+finite. If the first error bound is E and the ideal affine value is A, the
+propagated input error of squaring is `2*|A|*E + E*E`. Both second-stage
+rounding contributions are retained, including the explicit addition of zero.
+These guards and budgets depend only on initial real inputs and their error
+bounds. The arithmetic theorem joins the actual intermediate word across the
+two result relations; memory handoff between kernels requires its own proof.
+
 These are scalar numerical composition rules for nearest-even binary32 with
 gradual underflow. They are not floating-point instruction execution, a complete
 neural-network error analysis, a GPU correctness claim, or a selected Gemma
