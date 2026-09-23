@@ -1,0 +1,17 @@
+{
+  "id": "model-formalization",
+  "parent": {
+    "description": "semantic-assurance",
+    "passage": {
+      "quote": "Model-assisted formalization delegates instruction definitions and proof\ncandidates to smaller models using shared, reviewed semantic foundations.\nEach task supplies the source passages, fixed interfaces and acceptance obligations\nfor a bounded instruction family. The coordinator develops those foundations,\nmaintains coverage, and evaluates the generation and review workflow; routine\ninstruction-by-instruction expansion belongs to the delegated workers.\nLean checks submitted proofs, while source review and\nindependent checks address whether their definitions describe the intended\nbehavior. Generation records identify the inputs, outputs, checking results,\nand costs needed to assess reproducibility and cost effectiveness. A generator\nagreeing with its own definitions does not establish semantic fidelity."
+    }
+  },
+  "summary": [
+    "Delegate bounded instruction families to smaller models against fixed semantic foundations and source-derived obligations.",
+    "Accept generated definitions only after mechanical proof checks and separate semantic review, preserving all missing and unresolved coverage.",
+    "Evaluate the frozen workflow on held-out tasks with complete attempt, cost and reviewer-effort records."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Task packaging, the instruction coverage ledger, worker execution and repair controls, acceptance automation, and empirical model and reviewer evaluations remain to be implemented. This description states their contracts; it is not evidence that a model has passed evaluation.",
+  "links": []
+}

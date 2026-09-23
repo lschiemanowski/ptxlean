@@ -3,20 +3,20 @@
   "parent": {
     "description": "ptx-semantics",
     "passage": {
-      "quote": "Semantic fidelity is supported by source-linked interpretations, internal adequacy results, and independent evidence, separately from Lean proof checking."
+      "quote": "Lean checks that proofs follow from our definitions. Semantic fidelity asks a\nseparate question: do those definitions express NVIDIA's documented behavior?\nSource review, proofs connecting parts of the model, and independent evidence\naddress that question."
     }
   },
   "summary": [
-    "Connect formal semantics to versioned source passages, reviewed interpretations, and independent evidence.",
-    "Separate proof validity from semantic fidelity in cost-conscious model-assisted formalization."
+    "Justify formal definitions using versioned source passages, reviewed interpretations and independent evidence.",
+    "Delegate instruction formalization to smaller models on reviewed foundations, evaluating semantic accuracy separately from proof validity and generation cost."
   ],
   "realization": "partial",
-  "remaining": "Pinned source reviews and checked internal bridges cover restricted memory, aligned-u32 byte sources, environments, scalar rules and shared vector addition. The torn-read observation interpretation is unresolved and exposed explicitly; endianness uses separately attributed NVIDIA ABI guidance. Full dependent/mixed-size semantic correspondence, hardware validation and model-assisted generation/cost infrastructure remain unimplemented.",
+  "remaining": "Reviews against the pinned source and checked connections between formal components cover restricted memory, byte sources for aligned 32-bit reads, execution environments, scalar proof rules and vector addition in shared memory. How mixed-source reads observe writes remains unresolved and explicit. Byte ordering uses separately attributed NVIDIA binary-interface guidance. General correspondence for data-dependent interactions and different access sizes, hardware validation, and infrastructure for model-assisted generation and cost tracking remain unimplemented.",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "The source and evidence records allow the interpretation to be reviewed\nand reproduced independently of its author."
+        "quote": "Semantic fidelity means that the formal definitions express the behavior NVIDIA\ndocuments. Each interpretation connects a passage from a specified version of\nthe manual, including its qualifications, to a plain-language explanation, formal\nrules, and permitted and forbidden examples. Ambiguities and choices remain\nvisible so that another reader can review and reproduce the interpretation."
       },
       "to": {
         "path": "references/nvidia/ptx-isa-9.4/README.md",
@@ -40,7 +40,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Lean checks submitted proofs, while source review and\nindependent checks address whether their definitions describe the intended\nbehavior."
+        "quote": "Model-assisted formalization delegates instruction definitions and proof\ncandidates to smaller models using shared, reviewed semantic foundations.\nEach task supplies the source passages, fixed interfaces and acceptance obligations\nfor a bounded instruction family. The coordinator develops those foundations,\nmaintains coverage, and evaluates the generation and review workflow; routine\ninstruction-by-instruction expansion belongs to the delegated workers.\nLean checks submitted proofs, while source review and\nindependent checks address whether their definitions describe the intended\nbehavior. Generation records identify the inputs, outputs, checking results,\nand costs needed to assess reproducibility and cost effectiveness. A generator\nagreeing with its own definitions does not establish semantic fidelity."
       },
       "to": {
         "path": "scripts/check.sh",
@@ -52,7 +52,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The source and evidence records allow the interpretation to be reviewed\nand reproduced independently of its author."
+        "quote": "Semantic fidelity means that the formal definitions express the behavior NVIDIA\ndocuments. Each interpretation connects a passage from a specified version of\nthe manual, including its qualifications, to a plain-language explanation, formal\nrules, and permitted and forbidden examples. Ambiguities and choices remain\nvisible so that another reader can review and reproduce the interpretation."
       },
       "to": {
         "path": "docs/foundations/blocks12-source-review.md",
@@ -69,14 +69,14 @@
       "to": {
         "path": "docs/foundations/blocks12.md",
         "passage": {
-          "quote": "Two source-level issues prevent treating these pieces as a finished general\nPTX execution model:"
+          "quote": "The following obligations remain after the shared-allocation and bytewise\nextensions; their checked examples do not establish a general PTX execution model:"
         }
       }
     },
     {
       "kind": "implementation",
       "from": {
-        "quote": "The source and evidence records allow the interpretation to be reviewed\nand reproduced independently of its author."
+        "quote": "Semantic fidelity means that the formal definitions express the behavior NVIDIA\ndocuments. Each interpretation connects a passage from a specified version of\nthe manual, including its qualifications, to a plain-language explanation, formal\nrules, and permitted and forbidden examples. Ambiguities and choices remain\nvisible so that another reader can review and reproduce the interpretation."
       },
       "to": {
         "path": "docs/foundations/next-source-review.md",

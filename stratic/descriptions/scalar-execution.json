@@ -3,22 +3,22 @@
   "parent": {
     "description": "ptx-semantics",
     "passage": {
-      "quote": "Scalar execution\nconnects register and predicate state, control flow, addresses, and memory effects\nto complete kernel proofs with stated execution and memory-model boundaries."
+      "quote": "For one thread, an instruction might add two register values, read a value from\nmemory (a load), write one (a store), choose the next instruction (a branch), or\nfinish. Scalar execution describes steps operating on individual values. It\ntracks registers and control flow, the choice of which instruction runs next,\nand connects these steps to proofs about complete kernel computations."
     }
   },
   "summary": [
-    "Execute fixed-width scalar instructions with explicit register, predicate, control and memory state.",
-    "Distinguish supported syntax, invalid execution, bounded evaluation and actual termination.",
-    "Support complete kernel proofs with explicit dependency and memory-model boundaries.",
-    "Reusable proof rules compose instruction steps and finite execution segments, express loop invariants and termination measures, and preserve memory outside the writes of a run."
+    "Execute instructions on individual fixed-width values, recording each thread’s registers, next instruction and memory accesses from a supplied initial state.",
+    "Distinguish supported program text, invalid execution, reaching a step limit and finishing through an exit instruction.",
+    "Distinguish reads from a concrete memory state from proposed read results that need justification under the rules for interacting threads.",
+    "Provide reusable proof rules for restricted kernels, with explicit conditions for connecting their executions to the memory model."
   ],
   "realization": "partial",
-  "remaining": "The scalar instruction subset, typed text boundary, candidate/concrete runs, reusable proof rules and shared-allocation kernel proofs are implemented. General dependent concurrent semantics, arbitrary trace-to-PTX refinement and full raw module/ABI/launch support remain unimplemented.",
+  "remaining": "Implemented: a subset of scalar instructions, conversion between supported internal instructions and text forms whose operands already have types, proposed and concrete runs, reusable proof rules and kernels sharing one allocation. General data-dependent interactions between threads, proofs connecting arbitrary recorded executions to PTX, and full support for raw program modules, binary interfaces and kernel launches remain unimplemented.",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "The scalar machine executes a specified subset of integer and bit instructions,\npredicates, register operands, address calculations, loads, stores, branches,\nand explicit termination."
+        "quote": "The scalar machine describes instructions operating on individual values in one\nthread. It handles integers and their bits, registers, memory reads (loads),\nmemory writes (stores), and choices of the next instruction (branches). An\ninstruction's input values are its operands; a true/false condition controlling\nwhether it executes is its predicate. Memory values are 32-bit words. Unsigned\n32-bit arithmetic, abbreviated `u32`, keeps results modulo `2^32`, so overflowing\nresults wrap into the range from zero to `2^32 - 1`. The record of steps taken is\na trace; it retains the actual values and addresses used by loads and stores."
       },
       "to": {
         "path": "Ptx/Scalar.lean",
@@ -30,7 +30,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Word arithmetic has fixed-width PTX behavior."
+        "quote": "The scalar machine describes instructions operating on individual values in one\nthread. It handles integers and their bits, registers, memory reads (loads),\nmemory writes (stores), and choices of the next instruction (branches). An\ninstruction's input values are its operands; a true/false condition controlling\nwhether it executes is its predicate. Memory values are 32-bit words. Unsigned\n32-bit arithmetic, abbreviated `u32`, keeps results modulo `2^32`, so overflowing\nresults wrap into the range from zero to `2^32 - 1`. The record of steps taken is\na trace; it retains the actual values and addresses used by loads and stores."
       },
       "to": {
         "path": "Ptx/Scalar.lean",
@@ -42,7 +42,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Dynamic\ninstruction occurrences retain control and memory effects; executed register\nvalues determine store operands and computed addresses."
+        "quote": "The scalar machine describes instructions operating on individual values in one\nthread. It handles integers and their bits, registers, memory reads (loads),\nmemory writes (stores), and choices of the next instruction (branches). An\ninstruction's input values are its operands; a true/false condition controlling\nwhether it executes is its predicate. Memory values are 32-bit words. Unsigned\n32-bit arithmetic, abbreviated `u32`, keeps results modulo `2^32`, so overflowing\nresults wrap into the range from zero to `2^32 - 1`. The record of steps taken is\na trace; it retains the actual values and addresses used by loads and stores."
       },
       "to": {
         "path": "Ptx/Scalar.lean",
@@ -126,12 +126,12 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Any sufficient execution discipline or\nunimplemented general dependency semantics is distinguished from a complete\ncharacterization of PTX executions."
+        "quote": "A read value may determine data written later, a later memory address, or which\ninstructions run next. These are data, address, and control dependencies. Their\nrole in permitted memory behavior must be justified when combining threads.\nKernel proofs state their memory and scheduling assumptions and distinguish a\nsufficient restricted way to execute a kernel from a model of every PTX execution."
       },
       "to": {
         "path": "docs/foundations/blocks12.md",
         "passage": {
-          "quote": "Two source-level issues prevent treating these pieces as a finished general\nPTX execution model:"
+          "quote": "The following obligations remain after the shared-allocation and bytewise\nextensions; their checked examples do not establish a general PTX execution model:"
         }
       }
     },
@@ -144,6 +144,30 @@
         "path": "docs/foundations/scalar-machine.md",
         "passage": {
           "quote": "The scalar machine executes integer instructions with registers, predicates,\ncomputed addresses, branches, and explicit thread termination. Its concrete\nmemory mode is a sequential arena interpreter. This supplies a useful execution\ndiscipline for kernels whose accessed memory is owned or otherwise suitably\nisolated. It is not a replacement for PTX's weak-memory model."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A state records everything needed for the next step: a program counter identifying\nthe next instruction, separate groups of 32-bit value and 64-bit address registers,\ntrue/false predicate registers, and a list of memory words. These register groups\nare called banks. Initial registers, predicates, and memory are caller inputs,\nnot assumed zero. Instructions read operands from the incoming state. A false\npredicate skips a supported operation and advances the program counter; the\ntrace still records the skipped step. Unknown operations are rejected even\nunder a false predicate."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "structure State where\n  pc : Nat\n  regs : Nat → Word\n  addrs : Nat → Address\n  preds : Nat → Bool\n  memory : List Word"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The subset includes 32/64-bit copies, wrapping `u32` addition and subtraction,\nmultiplication retaining its low 32 bits, operations on individual bits, shifts,\nand unsigned comparisons. Address arithmetic uses unsigned 64-bit values (`u64`);\nconverting `u32` to `u64` fills the new upper bits with zeros (zero extension).\nLoads and stores access globally shared memory using relaxed ordering at GPU\nscope: they cover threads on that GPU but do not themselves provide a\nrelease/acquire synchronization pair. Branches and explicit exit are included.\nShifts use the full unsigned count; counts at least 32 produce zero. Excluded\noperations include floating-point arithmetic, indivisible read/update operations\n(atomics), thread-rendezvous instructions (barriers), work initiated for later\ncompletion (asynchronous operations), and collective operations on hardware\nthread groups called warps."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "inductive Operand32 where\n  | reg (index : Nat)\n  | imm (value : Word)\n  deriving DecidableEq, Repr"
         }
       }
     }

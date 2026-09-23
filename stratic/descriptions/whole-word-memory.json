@@ -1,0 +1,163 @@
+{
+  "id": "whole-word-memory",
+  "parent": {
+    "description": "memory-ordering",
+    "passage": {
+      "quote": "Whole-word observations choose one source write for each entire read. This is a\nsimple representation when every byte of a read comes from the same write. If\nthat condition is not established, it describes only the outcomes with a single\nsource and can omit other permitted results."
+    }
+  },
+  "summary": [
+    "Choose one source write for each complete four-byte read and check scope-aware ordering constraints.",
+    "Connect fixed-address, constant-store executions to these graphs with explicit memory bounds and distinct thread identities.",
+    "Explain when byte-level validity justifies the single-source representation and when it omits mixed-byte outcomes."
+  ],
+  "realization": "partial",
+  "remaining": "The restricted scoped whole-word rules, execution connection, message-passing examples and conditional byte-model equivalence are implemented. General dependent programs and byte-mixing outcomes outside the single-source condition are not covered by this representation.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The represented memory instructions use relaxed, release, or acquire ordering.\nRelease and acquire are options used by a writer and reader to establish ordering\nbetween threads; relaxed accesses do not by themselves provide that pair of\nsynchronization endpoints. In the flag-and-result example, observing a released\nflag with an acquire read guarantees the new result under the model's memory\nconstraints and mutual scope condition. With the threads in different CTAs and\nboth operations using CTA scope, a permitted execution can read the flag yet\nstill observe the old result."
+      },
+      "to": {
+        "path": "Ptx/ScopedExamples.lean",
+        "passage": {
+          "quote": "theorem publication (payload : Word) (source co) (topology : Nat → ThreadLocation)\n    (scopes : Fin 6 → Scope)\n    (valid : (candidate 1 payload source co topology scopes).Valid)\n    (included : (candidate 1 payload source co topology scopes).mutualScope b c = true) :\n    payload = 7 := by\n  let g := candidate 1 payload source co topology scopes\n  have flagSource : source c = b := by\n    have h := valid.sources.compatible c (by trivial)\n    change g.graph.write (source c) ∧ g.graph.sameAddress (source c) c ∧\n      (g.graph.event (source c)).effect.value = 1 at h\n    have cases : source c = 0 ∨ source c = 1 ∨ source c = 2 ∨\n        source c = 3 ∨ source c = 4 ∨ source c = 5 := by omega\n    rcases cases with h' | h' | h' | h' | h' | h'\n    · rw [h'] at h\n      have bad : (0 : Word) = 1 := h.2.2\n      contradiction\n    · rw [h'] at h\n      have bad : (0 : Word) = 1 := h.2.2\n      contradiction\n    · rw [h'] at h\n      have bad : (0 : Nat) = 1 := h.2.1\n      omega\n    · exact h'\n    · rw [h'] at h; exact False.elim h.1\n    · rw [h'] at h; exact False.elim h.1\n  have moral : g.morallyStrong b c :=\n    ⟨(by intro h; cases h), (by intro h; cases h), rfl, Or.inr (Or.inr included)⟩\n  have synchronizes : g.sync b c :=\n    ⟨by change some 0 ≠ some 1; decide,\n      b,c,Or.inl ⟨rfl,rfl⟩,Or.inl ⟨rfl,rfl⟩,⟨⟨by trivial,flagSource⟩,moral⟩,moral⟩\n  have poab : g.graph.po a b := ⟨(by intro h; cases h),rfl,Nat.zero_lt_one⟩\n  have pocd : g.graph.po c d := ⟨(by intro h; cases h),rfl,Nat.zero_lt_one⟩\n  have ordered : g.base a d :=\n    .join (.edge (Or.inl poab))\n      (.join (.edge (Or.inr synchronizes))\n        (.edge (Or.inl pocd)))\n  have causes : g.cause a d := Or.inl ⟨ordered,rfl⟩\n  have notInitial : source d ≠ ip := by\n    intro hs\n    have hc := valid.co.initFirst ip a rfl (by trivial) rfl (by decide)\n    exact valid.no_stale a d (by trivial) (by trivial) rfl causes\n      (by change g.graph.coherence (source d) a; rw [hs]; exact hc)\n  have h := valid.sources.compatible d (by trivial)\n  change g.graph.write (source d) ∧ g.graph.sameAddress (source d) d ∧\n    (g.graph.event (source d)).effect.value = payload at h\n  have cases : source d = 0 ∨ source d = 1 ∨ source d = 2 ∨\n      source d = 3 ∨ source d = 4 ∨ source d = 5 := by omega\n  rcases cases with h' | h' | h' | h' | h' | h'\n  · exact False.elim (notInitial h')\n  · rw [h'] at h\n    have bad : (1 : Nat) = 0 := h.2.1\n    omega\n  · rw [h'] at h; exact h.2.2.symm\n  · rw [h'] at h\n    have bad : (1 : Nat) = 0 := h.2.1\n    omega\n  · rw [h'] at h; exact False.elim h.1\n  · rw [h'] at h; exact False.elim h.1"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The represented memory instructions use relaxed, release, or acquire ordering.\nRelease and acquire are options used by a writer and reader to establish ordering\nbetween threads; relaxed accesses do not by themselves provide that pair of\nsynchronization endpoints. In the flag-and-result example, observing a released\nflag with an acquire read guarantees the new result under the model's memory\nconstraints and mutual scope condition. With the threads in different CTAs and\nboth operations using CTA scope, a permitted execution can read the flag yet\nstill observe the old result."
+      },
+      "to": {
+        "path": "Ptx/ScopedExamples.lean",
+        "passage": {
+          "quote": "theorem outside_scope_execution_exists :\n    (program .acquire).ScopedAdmitted registers (oracle 1 0) staleSource witnessCo\n      separateCTA (uniform .cta) ∧ result .acquire 1 0 = (1,0) := by\n  refine ⟨⟨?_, ?_, ?_⟩,rfl⟩\n  · simp [Program.Bounded, program, producer, consumer, Instr.address]\n  · intro i _ j _ h; exact congrArg ThreadLocation.cta h\n  · change (candidate 1 0 staleSource witnessCo separateCTA (uniform .cta)).Valid\n    decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The whole-word model chooses one write as the source of each complete read.\nWhen scopes exclude one another, this represents only reads that do not mix\nbytes from different writes; such mixed reads are called torn reads. It does\nnot enumerate every bytewise outcome. When all non-initial operations mutually\ninclude one another in scope, a theorem identifies this model's validity rules\nwith those of the original restricted GPU-scoped model."
+      },
+      "to": {
+        "path": "Ptx/ScopedMemory.lean",
+        "passage": {
+          "quote": "theorem valid_legacy (h : g.AllInScope) : g.Valid ↔ g.graph.Valid := by\n  constructor\n  · intro hv\n    exact {\n      sources := hv.sources\n      co := (coherent_legacy h).mp hv.co\n      base_irrefl := fun a ha => hv.base_irrefl a ((base_legacy h).mpr ha)\n      coherence_cause := fun a b ha hb hab hc => hv.coherence_cause a b ha hb hab ((cause_legacy h).mpr hc)\n      no_future := fun a b ha hb hab hc => hv.no_future a b ha hb hab ((cause_legacy h).mpr hc)\n      no_stale := fun a b ha hb hab hc => hv.no_stale a b ha hb hab ((cause_legacy h).mpr hc)\n      sc_per_location := fun a ha => hv.sc_per_location a ((location_legacy h).mpr ha)\n    }\n  · intro hv\n    exact {\n      sources := hv.sources\n      co := (coherent_legacy h).mpr hv.co\n      base_irrefl := fun a ha => hv.base_irrefl a ((base_legacy h).mp ha)\n      coherence_cause := fun a b ha hb hab hc => hv.coherence_cause a b ha hb hab ((cause_legacy h).mp hc)\n      no_future := fun a b ha hb hab hc => hv.no_future a b ha hb hab ((cause_legacy h).mp hc)\n      no_stale := fun a b ha hb hab hc => hv.no_stale a b ha hb hab ((cause_legacy h).mp hc)\n      sc_per_location := fun a ha => hv.sc_per_location a ((location_legacy h).mp ha)\n    }"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The whole-word model chooses one write as the source of each complete read.\nWhen scopes exclude one another, this represents only reads that do not mix\nbytes from different writes; such mixed reads are called torn reads. It does\nnot enumerate every bytewise outcome. When all non-initial operations mutually\ninclude one another in scope, a theorem identifies this model's validity rules\nwith those of the original restricted GPU-scoped model."
+      },
+      "to": {
+        "path": "Ptx/ScopedMemory.lean",
+        "passage": {
+          "quote": "structure Valid (g : ScopedGraph n) : Prop where\n  sources : g.graph.Sources\n  co : g.Coherent\n  base_irrefl : ∀ a, ¬g.base a a\n  coherence_cause : ∀ a b, g.graph.write a → g.graph.write b → g.graph.sameAddress a b →\n    g.cause a b → g.graph.coherence a b\n  no_future : ∀ r w, g.graph.read r → g.graph.write w → g.graph.sameAddress r w →\n    g.cause r w → g.graph.source r ≠ w\n  no_stale : ∀ w r, g.graph.write w → g.graph.read r → g.graph.sameAddress w r →\n    g.cause w r → ¬g.graph.coherence (g.graph.source r) w\n  sc_per_location : ∀ a, ¬Path g.locationEdge a a"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The whole-word model chooses one write as the source of each complete read.\nWhen scopes exclude one another, this represents only reads that do not mix\nbytes from different writes; such mixed reads are called torn reads. It does\nnot enumerate every bytewise outcome. When all non-initial operations mutually\ninclude one another in scope, a theorem identifies this model's validity rules\nwith those of the original restricted GPU-scoped model."
+      },
+      "to": {
+        "path": "docs/foundations/environment.md",
+        "passage": {
+          "quote": "The outside-scope result has an additional coverage boundary: whole-word read\nsources restrict this model to **non-torn candidates**. PTX's single-copy\nguarantee for morally strong pairs does not justify imposing that restriction\non all out-of-scope races. The stale candidate remains a useful witness of the\nlost publication guarantee; this extension is not a complete classification of\nthe byte-level results of raced PTX accesses. Mixed-size overlap remains absent."
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The separate scoped memory model checks proposed thread executions against rules\nfor their reads and writes. To accept a proposed execution, it checks that accesses fit the supplied list\nof memory words, that thread identities are distinct, and that the memory rules hold. It does not automatically\ninclude the general allocation checker or instruction-eligibility checker;\ncombining them requires an explicit proof."
+      },
+      "to": {
+        "description": "storage-access",
+        "passage": {
+          "quote": "The caller also states who may access the allocation, whether reading and writing\nare allowed, and whether its initial contents are known. Together these supplied\nfacts form an access contract. The checker verifies that the allocation exists\nand matches the requested kind of storage, the thread is allowed to use it,\nthe requested positive number of bytes fits,\nalignment is established, and the requested read or write has permission.\nReads additionally require known initial contents. Missing that knowledge is a\nfailure to satisfy this contract, not a claim that PTX forbids every read of\nunknown contents. The model never silently replaces unknown contents with zero."
+        }
+      },
+      "reason": "Accepting a scoped candidate includes its restricted memory-list bounds, not every general allocation check; an application must separately connect these contracts."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The separate scoped memory model checks proposed thread executions against rules\nfor their reads and writes. To accept a proposed execution, it checks that accesses fit the supplied list\nof memory words, that thread identities are distinct, and that the memory rules hold. It does not automatically\ninclude the general allocation checker or instruction-eligibility checker;\ncombining them requires an explicit proof."
+      },
+      "to": {
+        "path": "Ptx/ScopedMemory.lean",
+        "passage": {
+          "quote": "def Program.ScopedAdmitted (p : Program) (registers : Nat → Registers) (oracle : Nat → Nat → Word)\n    (source : Fin (p.events registers oracle).length → Fin (p.events registers oracle).length)\n    (co : Fin (p.events registers oracle).length → Fin (p.events registers oracle).length → Bool)\n    (topology : Nat → ThreadLocation) (scope : Fin (p.events registers oracle).length → Scope) : Prop :=\n  p.Bounded ∧ p.TopologyWellFormed topology ∧\n    (p.scopedGraph registers oracle source co topology scope).Valid"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Communication combines write-to-read source links, coherence links between\nwrites, and links from a read to writes later than its source. The validity\nrules require compatible sources and coherent write ordering, exclude cycles\nin base causality, and make write ordering respect causality. A read cannot\nchoose a causally future source or a source made obsolete by a causally prior\nwrite. Cycles combining same-address program order and morally strong\ncommunication are also forbidden. These are checks on the proposed graph,\nnot assumptions that its result is correct."
+      },
+      "to": {
+        "path": "Ptx/ScopedMemory.lean",
+        "passage": {
+          "quote": "structure Valid (g : ScopedGraph n) : Prop where\n  sources : g.graph.Sources\n  co : g.Coherent\n  base_irrefl : ∀ a, ¬g.base a a\n  coherence_cause : ∀ a b, g.graph.write a → g.graph.write b → g.graph.sameAddress a b →\n    g.cause a b → g.graph.coherence a b\n  no_future : ∀ r w, g.graph.read r → g.graph.write w → g.graph.sameAddress r w →\n    g.cause r w → g.graph.source r ≠ w\n  no_stale : ∀ w r, g.graph.write w → g.graph.read r → g.graph.sameAddress w r →\n    g.cause w r → ¬g.graph.coherence (g.graph.source r) w\n  sc_per_location : ∀ a, ¬Path g.locationEdge a a"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Synchronization connects qualifying release and acquire patterns between\nthreads. Paths through program order and synchronization form base causality.\nKeeping paths whose endpoints have the same address gives the proxy-preserved\nbase for this fragment. Causality consists of such a path or an observation\nfollowed by such a path; it does not automatically include arbitrary chains\nof causality edges."
+      },
+      "to": {
+        "path": "Ptx/ScopedMemory.lean",
+        "passage": {
+          "quote": "def baseEdge (g : ScopedGraph n) (a b : Fin n) : Prop := g.graph.po a b ∨ g.sync a b\ndef base (g : ScopedGraph n) : Fin n → Fin n → Prop := Path g.baseEdge\ndef proxyBase (g : ScopedGraph n) (a b : Fin n) : Prop := g.base a b ∧ g.graph.sameAddress a b\ndef cause (g : ScopedGraph n) (a b : Fin n) : Prop :=\n  g.proxyBase a b ∨ ∃ z, g.observation a z ∧ g.proxyBase z b"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Repeating each whole-word source for all four bytes gives a byte-level graph\nwith exactly the same validity. Conversely, if every byte of each read in a\nbyte-level graph selects the same write, selecting that write recovers the\nwhole-word validity conditions. Equality of byte values alone is insufficient:\nthe source write identities must agree."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem ofScoped_valid_iff (policy : ObservationPolicy) (g : ScopedGraph n) :\n    (ofScoped policy g).Valid ↔ g.Valid"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Repeating each whole-word source for all four bytes gives a byte-level graph\nwith exactly the same validity. Conversely, if every byte of each read in a\nbyte-level graph selects the same write, selecting that write recovers the\nwhole-word validity conditions. Equality of byte values alone is insufficient:\nthe source write identities must agree."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem projection_valid_iff (uniform : g.Uniform) : g.Valid ↔ g.toScoped.Valid"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Mutual scope coverage of all non-initial events makes valid byte-level reads\nchoose one source for the entire word. Under that condition, the whole-word\nrepresentation loses no valid byte-source choices within this fragment. The\nproofs also connect it to the original restricted GPU-scoped message-passing\nmodel. They establish relationships between formal models; they do not remove\nthe stated instruction restrictions or prove hardware conformance.\n"
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem uniform_of_all_in_scope (valid : g.Valid) (inScope : g.toScoped.AllInScope) :\n    g.Uniform"
+        }
+      }
+    }
+  ]
+}

@@ -3,21 +3,21 @@
   "parent": {
     "description": "root",
     "passage": {
-      "quote": "The PTX foundation describes permitted executions of the instruction set and computing model, with an explicit relationship to NVIDIA's documented semantics."
+      "quote": "The PTX foundation defines the executions that NVIDIA's documented semantics\npermit."
     }
   },
   "summary": [
-    "Describe permitted PTX executions through operational instruction rules and axiomatic memory constraints.",
-    "Preserve documented behavior and distinguish safety, existence, and termination guarantees.",
-    "Make environment eligibility and scalar control, data and address behavior explicit in kernel proofs."
+    "Define the executions and outcomes that PTX permits, including cases with several possible results.",
+    "Connect individual thread instructions with rules for how threads read and write memory.",
+    "Distinguish safe execution, correct completed results, existence of a run and guarantees of progress; justify the definitions against the PTX manual."
   ],
   "realization": "partial",
-  "remaining": "Restricted whole-word and bytewise aligned-u32 memory models, scalar execution/rules and shared-allocation vector-add proofs are implemented. The byte observation interpretation for torn reads remains explicit rather than settled. General dependent concurrency, mixed-size/alias/proxy semantics, full ISA/target coverage, runtime launch/ABI correspondence and GPU progress remain unimplemented.",
+  "remaining": "Implemented fragments cover aligned 32-bit memory accesses, modeled either as whole words or byte by byte; individual-thread execution and proof rules; and vector addition in a shared allocation. How a read that mixes bytes from different writes counts as observing a write remains an explicit choice. General data-dependent interactions between threads, accesses of different sizes, multiple addresses naming the same storage, additional memory-access mechanisms, the full instruction set and hardware restrictions, connections to actual launches and binary interfaces, and GPU progress remain unimplemented.",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "Explanations relate the formal rules to the programming and computing model in\n[NVIDIA's PTX manual](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html)."
+        "quote": "Definitions and their explanations are tied to passages of NVIDIA's PTX manual."
       },
       "to": {
         "path": "docs/foundations/message-passing.md",
@@ -29,7 +29,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Explanations relate the formal rules to the programming and computing model in\n[NVIDIA's PTX manual](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html)."
+        "quote": "Definitions and their explanations are tied to passages of NVIDIA's PTX manual."
       },
       "to": {
         "path": "docs/foundations/representation.md",
@@ -41,12 +41,12 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "An explicit execution environment represents thread topology, memory scopes,\naddress spaces, storage ownership, and instruction eligibility."
+        "quote": "The execution environment describes which threads are grouped together, which\nmemory each can access, and which participants a synchronization operation can\ncoordinate. It also states the GPU and PTX-version requirements of instructions."
       },
       "to": {
         "path": "docs/foundations/blocks12.md",
         "passage": {
-          "quote": "The foundation now has explicit topology and allocation contracts, scoped\nmemory examples, a scalar interpreter, and instruction-level integer kernel\nproofs. These are useful, checked pieces of a PTX formalization. They do not yet\nform a complete concurrent semantics for programs with data-dependent stores,\ncomputed addresses, and branches."
+          "quote": "The foundation has explicit topology and allocation contracts, scoped whole-word\nand bytewise memory models, a scalar interpreter, reusable proof rules, and\ninstruction-level integer kernel proofs, including vector addition over one\nshared allocation. These are checked pieces of a PTX formalization. They do not\nyet form a complete concurrent semantics for arbitrary programs with\ndata-dependent stores, computed addresses, and branches."
         }
       }
     }

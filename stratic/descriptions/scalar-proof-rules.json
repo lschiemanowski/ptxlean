@@ -3,19 +3,20 @@
   "parent": {
     "description": "scalar-execution",
     "passage": {
-      "quote": "Reusable proof rules compose instruction steps and finite execution segments,\nexpress loop invariants and termination measures, and preserve memory outside\nthe writes of a run."
+      "quote": "Reusable proof rules combine instruction steps and finite runs, use properties\npreserved by execution (invariants), prove termination with a decreasing\nnonnegative quantity, and preserve memory that the run never writes."
     }
   },
   "summary": [
-    "Compose checked execution segments and invariant arguments with explicit outcomes.",
-    "Prove preservation outside actual writes rather than assuming a final memory frame."
+    "Distinguish runs that reach a step limit, runs that finish within a fixed limit, correctness if execution finishes and guarantees that it finishes.",
+    "Combine proofs about successive execution segments and show that memory outside their writes remains unchanged.",
+    "Prove termination using a nonnegative integer that decreases at every step; this does not guarantee that a scheduler gives every thread a chance to run."
   ],
   "realization": "implemented",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "Reusable rules connect local instruction transitions, sequential execution\nsegments, invariants, and completed runs. A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+        "quote": "The rules let proofs for individual instructions and finite execution segments\nbe combined into proofs about a run. A segment is a sequence of steps within one\nprogram. The contract states whether it proves a property of completed results,\nsafety of an initial part of a run, or termination. Composition retains the\nprogram counter and stopping status; consuming the evaluator's step budget is\nnot treated as successful completion."
       },
       "to": {
         "path": "Ptx/ScalarRules.lean",
@@ -27,7 +28,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+        "quote": "The rules let proofs for individual instructions and finite execution segments\nbe combined into proofs about a run. A segment is a sequence of steps within one\nprogram. The contract states whether it proves a property of completed results,\nsafety of an initial part of a run, or termination. Composition retains the\nprogram counter and stopping status; consuming the evaluator's step budget is\nnot treated as successful completion."
       },
       "to": {
         "path": "Ptx/ScalarRules.lean",
@@ -39,7 +40,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+        "quote": "The rules let proofs for individual instructions and finite execution segments\nbe combined into proofs about a run. A segment is a sequence of steps within one\nprogram. The contract states whether it proves a property of completed results,\nsafety of an initial part of a run, or termination. Composition retains the\nprogram counter and stopping status; consuming the evaluator's step budget is\nnot treated as successful completion."
       },
       "to": {
         "path": "Ptx/ScalarRules.lean",
@@ -51,7 +52,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Memory preservation is expressed through actual store effects and disjoint\nlocations. Frame arguments cannot assume the desired final memory or ignore\ninterference. The rules support branching loops and instruction-level kernel\nproofs while retaining the scalar machine's concrete/candidate distinction."
+        "quote": "A frame argument proves that certain storage remains unchanged. It uses the\nstores that actually occurred and the locations they can affect, rather than\nassuming the desired final memory. Writes by other threads require a separate\ninterference argument. These rules support branching loops and kernel proofs\nwhile distinguishing reads from concrete memory from proposed candidate values."
       },
       "to": {
         "path": "Ptx/ScalarRules.lean",
@@ -63,7 +64,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The rules support branching loops and instruction-level kernel\nproofs while retaining the scalar machine's concrete/candidate distinction."
+        "quote": "A frame argument proves that certain storage remains unchanged. It uses the\nstores that actually occurred and the locations they can affect, rather than\nassuming the desired final memory. Writes by other threads require a separate\ninterference argument. These rules support branching loops and kernel proofs\nwhile distinguishing reads from concrete memory from proposed candidate values."
       },
       "to": {
         "path": "Ptx/ScalarRules.lean",
@@ -75,7 +76,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Reusable rules connect local instruction transitions, sequential execution\nsegments, invariants, and completed runs. A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+        "quote": "The rules let proofs for individual instructions and finite execution segments\nbe combined into proofs about a run. A segment is a sequence of steps within one\nprogram. The contract states whether it proves a property of completed results,\nsafety of an initial part of a run, or termination. Composition retains the\nprogram counter and stopping status; consuming the evaluator's step budget is\nnot treated as successful completion."
       },
       "to": {
         "path": "Ptx/SharedVectorExamples.lean",
@@ -87,7 +88,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Memory preservation is expressed through actual store effects and disjoint\nlocations. Frame arguments cannot assume the desired final memory or ignore\ninterference. The rules support branching loops and instruction-level kernel\nproofs while retaining the scalar machine's concrete/candidate distinction."
+        "quote": "A frame argument proves that certain storage remains unchanged. It uses the\nstores that actually occurred and the locations they can affect, rather than\nassuming the desired final memory. Writes by other threads require a separate\ninterference argument. These rules support branching loops and kernel proofs\nwhile distinguishing reads from concrete memory from proposed candidate values."
       },
       "to": {
         "path": "Ptx/SharedVectorExamples.lean",
@@ -99,12 +100,96 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Reusable rules connect local instruction transitions, sequential execution\nsegments, invariants, and completed runs. A rule states whether it establishes\npartial correctness, finite-prefix safety, or termination. Composition preserves\nexplicit program-counter and outcome conditions; fuel exhaustion is never\nsilently promoted to termination."
+        "quote": "The rules let proofs for individual instructions and finite execution segments\nbe combined into proofs about a run. A segment is a sequence of steps within one\nprogram. The contract states whether it proves a property of completed results,\nsafety of an initial part of a run, or termination. Composition retains the\nprogram counter and stopping status; consuming the evaluator's step budget is\nnot treated as successful completion."
       },
       "to": {
         "path": "docs/foundations/scalar-rules.md",
         "passage": {
           "quote": "[`ScalarRules.lean`](../../Ptx/ScalarRules.lean) packages composition, preservation,\nand termination arguments for the existing scalar instruction interpreter. The\nrules do not change instruction semantics. Read the\n[scalar machine guide](scalar-machine.md) first for its concrete arena, candidate\nread, fault, and fuel conventions."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "| Contract | Guarantee |\n| --- | --- |\n| `Segment program fuel pre post` | Exactly that budget is consumed, status is exhausted, and the intermediate state satisfies `post`. |\n| `Completed program fuel pre post` | That budget reaches an explicit exit with `post`; it need not consume the entire budget. |\n| `PartialCorrect program pre post` | Every run that halts satisfies `post`; it need not halt. |\n| `TotalCorrect program pre post` | Some finite budget reaches exit with `post`; the budget may depend on the initial state. |"
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "def Segment (program : List Instr) (fuel : Nat) (pre post : Assertion) : Prop :=\n  ∀ s, pre s → (run fuel program s).status = .exhausted ∧ post (run fuel program s).state"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "| Contract | Guarantee |\n| --- | --- |\n| `Segment program fuel pre post` | Exactly that budget is consumed, status is exhausted, and the intermediate state satisfies `post`. |\n| `Completed program fuel pre post` | That budget reaches an explicit exit with `post`; it need not consume the entire budget. |\n| `PartialCorrect program pre post` | Every run that halts satisfies `post`; it need not halt. |\n| `TotalCorrect program pre post` | Some finite budget reaches exit with `post`; the budget may depend on the initial state. |"
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "def Completed (program : List Instr) (fuel : Nat) (pre post : Assertion) : Prop :=\n  ∀ s, pre s → (run fuel program s).status = .halted ∧ post (run fuel program s).state"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "| Contract | Guarantee |\n| --- | --- |\n| `Segment program fuel pre post` | Exactly that budget is consumed, status is exhausted, and the intermediate state satisfies `post`. |\n| `Completed program fuel pre post` | That budget reaches an explicit exit with `post`; it need not consume the entire budget. |\n| `PartialCorrect program pre post` | Every run that halts satisfies `post`; it need not halt. |\n| `TotalCorrect program pre post` | Some finite budget reaches exit with `post`; the budget may depend on the initial state. |"
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "def PartialCorrect (program : List Instr) (pre post : Assertion) : Prop :=\n  ∀ s, pre s → ∀ fuel, (run fuel program s).status = .halted → post (run fuel program s).state"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "| Contract | Guarantee |\n| --- | --- |\n| `Segment program fuel pre post` | Exactly that budget is consumed, status is exhausted, and the intermediate state satisfies `post`. |\n| `Completed program fuel pre post` | That budget reaches an explicit exit with `post`; it need not consume the entire budget. |\n| `PartialCorrect program pre post` | Every run that halts satisfies `post`; it need not halt. |\n| `TotalCorrect program pre post` | Some finite budget reaches exit with `post`; the budget may depend on the initial state. |"
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "def TotalCorrect (program : List Instr) (pre post : Assertion) : Prop :=\n  ∀ s, pre s → ∃ fuel, (run fuel program s).status = .halted ∧ post (run fuel program s).state"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Segment composition adds budgets and passes the actual intermediate state,\nincluding its program counter, to the next segment. An exhausted segment can\nalso precede a completed or total-correct suffix. These rules apply to one\ninstruction list; they do not concatenate separately addressed programs or\nrelocate branch targets. Halted and faulted prefixes are never restarted as if\nthey were exhausted segments."
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "theorem segment_then_total (first : Segment program firstFuel pre middle)\n    (second : TotalCorrect program middle post) : TotalCorrect program pre post := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The frame assumption says that no occurrence in the actual trace stores to the\nword under consideration. Predicate-false stores emit no memory effect. From\nthat premise, the frame theorem derives equality of the initial and final word\nlookups, including absence outside the arena. It holds for completed, exhausted,\nand faulted runs, and also for candidate reads. It does not assume final-memory\nequality or justify those candidates under the memory model. Other threads'\nstores require a separate interference argument."
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "theorem runWith_frame (fuel : Nat) (oracle : Nat → Option Word) (program : List Instr)\n    (s : State) (index : Nat)\n    (untouched : TraceAvoids (runWith fuel oracle program s).trace index) :\n    (runWith fuel oracle program s).state.memory[index]? = s.memory[index]? := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An invariant is a property that holds initially and is preserved by every successful transition.\nTogether with an exit case establishing the postcondition, it proves partial\ncorrectness. Termination additionally requires that every invariant state either\nexecutes exit with the postcondition or takes a successful step preserving the\ninvariant and strictly decreasing a measure, a nonnegative integer assigned to the state. This progress premise\nexcludes faults and unsupported outcomes. The measure decreases on each dispatch,\nincluding branches and predicate-false instructions, not merely once per loop\niteration. Induction constructs a terminating budget instead of assuming a\ncompleted run. None of these scalar rules supplies scheduler fairness, the assumption that\nthreads are not indefinitely denied opportunities to run.\n"
+      },
+      "to": {
+        "path": "Ptx/ScalarRules.lean",
+        "passage": {
+          "quote": "theorem terminates_of_decreasing_measure (program : List Instr) (invariant post : Assertion)\n    (measure : State → Nat)\n    (progress : ∀ s, invariant s →\n      (∃ final event, step program s = .halted final event ∧ post final) ∨\n      (∃ next event, step program s = .next next event ∧ invariant next ∧\n        measure next < measure s)) :\n    TotalCorrect program invariant post := by"
         }
       }
     }

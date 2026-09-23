@@ -1,39 +1,62 @@
 # Scalar message passing
 
-The fragment gives operational and relational meaning to finite straight-line
-programs of immediate u32 stores and register loads over aligned, disjoint global
-words. All program accesses use the generic proxy at GPU scope on a single
-device. Release and acquire qualifiers, including their multi-instruction
-patterns, determine synchronization; reading a write alone does not establish it.
+This fragment studies a producer that writes data and a flag, and a consumer
+that reads the flag before reading the data. Its programs are finite instruction
+lists without branches, called straight-line programs. They store literal
+32-bit unsigned integers (`u32`) and load into registers. A four-byte value is a
+word; word locations do not overlap, and each begins at an address divisible by
+four (alignment). All accesses use global memory on one GPU and GPU scope, which
+includes its threads. They use the ordinary memory-access mechanism PTX calls
+the generic proxy. Release and acquire are ordering options on stores and loads;
+their qualifying instruction patterns establish synchronization. Merely reading
+a value written by another thread does not establish it. Literal stores are a
+simplified internal representation; actual PTX store data comes from a register.
 
-Instruction execution produces the events used by memory validity. Program
-order, observation, synchronization, base causality, proxy-preserved base
-causality, causality, coherence, and communication retain separate definitions.
-Initial word events group byte initialization and precede program writes at the
-same location. Read sources and coherence choices must satisfy the restricted
-memory constraints; a conclusion about publication is not itself a validity
-condition.
+Executing instructions produces records of reads and writes, called memory
+events. A memory graph contains these events, a proposed write supplying each
+read's value, and ordering relations. The proposed source must write the same
+location and value. The memory-validity rules check this graph; they do not
+assume that the consumer sees the desired data.
 
-The acquire publication program guarantees that observing its flag implies
-observing the published payload. A complete successful execution witnesses
-non-vacuity. Weakening the consumer's acquire to relaxed admits a complete stale
-payload witness. The same instruction-level allocation premises establish safe
-aligned accesses for both variants.
+Several relations express different parts of the check. Program order follows
+one thread's instruction sequence. Observation links a qualifying source write to the
+read that observes it. Synchronization connects qualifying release/acquire patterns
+between threads. Paths combining program order and synchronization form base
+causality. Restricting those paths to equal endpoint addresses gives the
+proxy-preserved base in this fragment. Causality is either such a restricted
+path or an observation followed by one; arbitrary chains of these causality
+edges are not silently added. Coherence orders writes to a location.
+Communication collects write-to-read source links, coherence links, and links
+from a read to writes later than its source. Initial events represent the
+starting contents, group the four bytes of each word, and precede program writes
+to that location.
 
-Checked proofs expose their logical dependencies. Source correspondence records
-explain the restrictions under which whole-word read sources and constant-store
-value grounding represent the applicable PTX requirements. There are no fences,
-RMW operations, load-dependent stores or addresses, branches, asynchronous
-operations, or claims about hardware scheduling in this fragment.
+Publication means making the written data available to the reader through this
+flag protocol. With an acquire flag read, observing the flag guarantees the new
+data. A constructed completed execution shows that the rules actually admit a
+run; the theorem is not true merely because no run exists. Changing the consumer's
+acquire to relaxed ordering admits a completed run that sees the flag but reads
+old data, called a stale read. Both variants have safe, aligned accesses under
+the same explicit allocation assumptions.
+
+The proof audit lists the axioms and other declarations on which results depend.
+The source account explains why one source write per whole word is justified
+under these scope restrictions and why fixed literal stores do not depend on
+read values to justify their data. Excluded features include separate memory-ordering
+instructions (fences), indivisible read-modify-write operations (RMWs), stores or
+addresses computed from loads, branches, and operations initiated for later
+completion. No hardware scheduling guarantee is claimed.
 
 The guide connects source clauses to definitions and proof steps, distinguishes
 formal guarantees from semantic interpretation, and gives reproducible checks.
 Finite local execution and admitted completed candidates are distinct from a
 general progress theorem for GPU executions.
 
-A finite candidate checker accepts exactly the executions satisfying the
-restricted memory-validity predicate, including its unbounded path constraints.
-The message-passing outcome classification is complete for both acquire and
-relaxed consumers. Source-reviewed litmus examples exercise store buffering,
-same-location ordering, and multi-instruction synchronization patterns through
-admitted executions and universal exclusion results.
+A finite candidate checker accepts exactly the graphs satisfying these restricted
+memory rules, including ordering-path conditions with no fixed path-length limit.
+For the message-passing program, a separate result classifies all read outcomes
+for both acquire and relaxed consumers. Small programs designed to distinguish
+memory rules are called litmus tests. These exercise two threads each storing
+before reading the other's location (store buffering), ordering at one location,
+and release/acquire patterns spanning several instructions. The proofs construct
+permitted outcomes and exclude forbidden ones for all relevant candidates.

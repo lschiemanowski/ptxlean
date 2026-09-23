@@ -1,27 +1,49 @@
 # Scalar kernel proofs
 
-The examples connect supported scalar instructions to concrete integer results.
-An elementwise computation reads its inputs from an explicit memory view and
-writes the modular u32 result while preserving other storage. A bounded loop
-uses actual predicate and branch instructions; a decreasing measure or explicit
-execution theorem establishes termination rather than treating fuel exhaustion
-as success.
+The examples connect scalar instructions to concrete integer results. Elementwise
+computation applies an operation to corresponding array elements. It reads them
+from specified memory locations and writes the `u32` result, wrapping modulo
+`2^32`, while preserving other storage. A bounded loop uses actual conditional
+and branch instructions. A decreasing quantity or an explicit execution proof
+establishes that it finishes; exhausting the evaluator's step budget does not.
 
-The kernel contracts expose all initial-register, pointer, extent, and aliasing
-conditions. Completed execution, returned values, memory safety, and preservation
-are proved separately where they are independent. Constructed witnesses make
-execution existence explicit. Lane-wise local results over independent owned memory views are distinguished
-from the shared-allocation and scheduling theorems.
+The contracts state initial register values, pointer addresses, available memory
+size, and conditions on addresses that refer to the same storage (aliasing).
+Completion, results, safe accesses, and unchanged memory are proved separately
+where they are independent. A constructed execution proves existence. Per-thread
+results over independent memory lists are distinguished from results for threads
+sharing one allocation under a scheduler.
 
-The source and text representations identify which PTX instruction variants the
-examples use. Explanations distinguish local concrete execution from general
-weak-memory execution and do not claim an unproved concurrent refinement.
+The source and text representations identify the instruction forms used.
+Explanations distinguish a concrete local run from the wider range of memory
+observations PTX can permit across threads, often called weak-memory behavior.
+A proof for the former is not silently treated as a proof covering the latter.
 
-A constructive relational witness links the lane example's actual memory effects
-to initialized values and memory-order constraints. Register-valued store data
-comes from the scalar execution. This witness is distinguished from a general
-adequacy theorem for dependent concurrent programs or all hardware executions.
+For the addition example, a constructed memory graph records the actual reads
+and writes, their initial values, and the proposed source and ordering relations.
+A proof connects this graph to the instructions that ran. Store data comes from
+the computed registers. This does not establish that the combined model captures
+every dependent concurrent program or every hardware execution.
 
-A shared-allocation vector-add example executes distinct threads against one
-memory state. Disjoint output ownership supports noninterference, correct
-completed results, and an explicit completed execution witness.
+The shared-allocation vector-add example runs distinct threads against one memory
+state. Each thread has its own output location, so their writes cannot interfere
+with one another. The proofs establish correct completed results and construct
+an execution that finishes.
+
+## The bounded sum contract
+
+The sum kernel repeatedly tests a count, loads one word, adds it to a running total called an accumulator,
+advances a byte pointer by four, decrements the count, and branches back. Zero
+count branches to explicit exit. The reference result adds the requested contiguous portion of memory (the slice)
+one word at a time modulo `2^32`, starting from the supplied accumulator.
+For example, the slice `[2, 3]` with accumulator `10` yields `15`; overflow wraps.
+
+Execution begins at instruction zero with the count in value register 0, the
+accumulator in value register 1, and byte pointer `4*start` in address register 0.
+The required bounds are `start + count ≤ memory.length`, `count < 2^32`, and
+`4*(start + count) < 2^64`. The last is a sufficient bound that also covers the
+pointer immediately after the last word, even though it is not read. The theorem proves explicit halt and the reference result in
+`7*count + 3` dispatches with unchanged memory. More fuel preserves the same
+completed result. Access safety is proved separately; it alone would also hold
+for a safe prefix that later faults. This loop's result is sequential and has no
+general theorem connecting its traces to all permitted concurrent PTX behavior.

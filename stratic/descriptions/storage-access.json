@@ -1,0 +1,102 @@
+{
+  "id": "storage-access",
+  "parent": {
+    "description": "execution-environment",
+    "passage": {
+      "quote": "Storage and valid memory accesses describe which regions have been reserved,\nwho may read or write them, and which addresses fit. They also state which byte positions are allowed as starting addresses\n(alignment) and what is known about initial contents. A checked\nconnection shows how the scalar interpreter's memory accesses satisfy a\nparticular allocation contract."
+    }
+  },
+  "summary": [
+    "Check that each memory access fits a supplied allocation, has permission and ownership access, and meets alignment and known-content requirements.",
+    "Relate scalar execution accesses to one initialized global allocation while keeping physical address resolution, lifetime and cross-thread observations separate."
+  ],
+  "realization": "partial",
+  "remaining": "Supplied-allocation checks and the scalar memory connection are implemented. Creating and releasing allocations, peer-CTA lifetime, physical address resolution and multiple pointers naming the same storage need separate contracts.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The caller also states who may access the allocation, whether reading and writing\nare allowed, and whether its initial contents are known. Together these supplied\nfacts form an access contract. The checker verifies that the allocation exists\nand matches the requested kind of storage, the thread is allowed to use it,\nthe requested positive number of bytes fits,\nalignment is established, and the requested read or write has permission.\nReads additionally require known initial contents. Missing that knowledge is a\nfailure to satisfy this contract, not a claim that PTX forbids every read of\nunknown contents. The model never silently replaces unknown contents with zero."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "def Environment.checkAccess (environment : Environment) (thread : ThreadLocation)\n    (kind : AccessKind) (address : Address) (width : Nat)\n    (clusterAccess : Bool := false) : Except AccessError Unit :=\n  match environment.allocations address.allocation with\n  | none => .error .unallocated\n  | some allocation =>\n    if allocation.space != address.space then .error .wrongSpace\n    else if !allocation.ownerAllows thread clusterAccess then .error .inaccessible\n    else if width == 0 then .error .invalidWidth\n    else if address.offset + width > allocation.bytes then .error .outOfBounds\n    else if allocation.alignment % width != 0 || allocation.alignment == 0 ||\n        address.offset % width != 0 then .error .misaligned\n    else if kind == .read then\n      if !allocation.readable then .error .permission\n      else if !allocation.initialized then .error .uninitialized\n      else .ok ()\n    else if !allocation.writable || address.space == .param then .error .permission\n    else .ok ()"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The caller also states who may access the allocation, whether reading and writing\nare allowed, and whether its initial contents are known. Together these supplied\nfacts form an access contract. The checker verifies that the allocation exists\nand matches the requested kind of storage, the thread is allowed to use it,\nthe requested positive number of bytes fits,\nalignment is established, and the requested read or write has permission.\nReads additionally require known initial contents. Missing that knowledge is a\nfailure to satisfy this contract, not a claim that PTX forbids every read of\nunknown contents. The model never silently replaces unknown contents with zero."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "theorem Environment.accessible_contract (environment : Environment) (thread : ThreadLocation)\n    (kind : AccessKind) (address : Address) (width : Nat) (clusterAccess : Bool)\n    (h : environment.accessible thread kind address width clusterAccess) :\n    ∃ allocation, environment.allocations address.allocation = some allocation ∧\n      allocation.space = address.space ∧ allocation.ownerAllows thread clusterAccess = true ∧\n      0 < width ∧ address.offset + width ≤ allocation.bytes ∧\n      0 < allocation.alignment ∧ allocation.alignment % width = 0 ∧ address.offset % width = 0 := by\n  unfold Environment.accessible Environment.checkAccess at h\n  cases ha : environment.allocations address.allocation with\n  | none => simp [ha] at h\n  | some allocation =>\n    simp only [ha] at h\n    simp at h\n    repeat' (first | split at h | contradiction)\n    all_goals refine ⟨allocation,rfl,?_,?_,?_,?_,?_,?_,?_⟩\n    all_goals first | assumption | omega | simp_all"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar interpreter executes individual thread instructions over a list of\nfour-byte values, called words. This list is its memory arena. A theorem relates\nits alignment and bounds checks to the access contract for one global allocation\nwith known initial contents. Every memory access recorded by an interpreter run\nsatisfies that allocation's contract. This does not establish how other threads observe\nits writes or how an actual runtime launches the kernel."
+      },
+      "to": {
+        "path": "Ptx/ScalarEnvironment.lean",
+        "passage": {
+          "quote": "theorem run_environment_safe (fuel : Nat) (program : List Instr) (s : State)\n    (thread : ThreadLocation) (allocationId : Nat)\n    (event : Occurrence) (member : event ∈ (run fuel program s).trace)\n    (effect : MemoryEffect) (memory : event.memory = some effect) :\n    (arenaEnvironment s.memory thread allocationId).accessible thread\n      (match effect.kind with | .load => .read | .store => .write)\n      (arenaAddress allocationId effect.address) 4 := by\n  exact (arena_access_iff ..).mpr (run_trace_safe _ _ _ event member effect memory)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar interpreter executes individual thread instructions over a list of\nfour-byte values, called words. This list is its memory arena. A theorem relates\nits alignment and bounds checks to the access contract for one global allocation\nwith known initial contents. Every memory access recorded by an interpreter run\nsatisfies that allocation's contract. This does not establish how other threads observe\nits writes or how an actual runtime launches the kernel."
+      },
+      "to": {
+        "path": "Ptx/ScalarEnvironment.lean",
+        "passage": {
+          "quote": "theorem arena_access_iff (memory : List Word) (thread : ThreadLocation)\n    (allocationId : Nat) (pointer : Address) (kind : AccessKind) :\n    (arenaEnvironment memory thread allocationId).accessible thread kind\n      (arenaAddress allocationId pointer) 4 ↔ ValidAddress memory pointer := by\n  have division := Nat.mod_add_div pointer.toNat 4\n  cases kind <;>\n    simp [Environment.accessible, Environment.checkAccess, arenaEnvironment,\n      arenaAddress, Allocation.ownerAllows, ValidAddress] <;>\n    (repeat' split) <;> simp_all <;> omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "| State space | Who may use it |\n| --- | --- |\n| Global | Threads allowed by the allocation's system-wide or single-device ownership |\n| Shared | Threads of the owning CTA; an explicitly requested access can also reach a peer CTA in the same cluster |\n| Local | The owning thread only |\n| Entry parameters | Threads of the grid receiving these read-only kernel arguments |"
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "def Allocation.ownerAllows (allocation : Allocation) (thread : ThreadLocation)\n    (clusterAccess : Bool := false) : Bool :=\n  match allocation.space, allocation.owner with\n  | .global, .system => true\n  | .global, .device device => thread.device == device\n  | .shared, .cta owner =>\n      if clusterAccess then thread.sameCluster owner else thread.sameCTA owner\n  | .local, .thread owner => thread == owner\n  | .param, .grid device grid => thread.device == device && thread.grid == grid\n  | _, _ => false"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Reaching a peer CTA's shared storage also requires that the peer remain active\nfor the access; the checker does not establish this. A resolved address names\nthe state space, the allocation, and a byte offset within it. Determining that\naddress from a physical GPU pointer remains outside the model, as do creating\nand releasing allocations and handling different pointers to the same storage\n(aliases). These assumptions must be justified when connecting to the software\nthat manages allocations and launches kernels, called the runtime."
+      },
+      "to": {
+        "description": "thread-groups",
+        "passage": {
+          "quote": "The model identifies each thread by its device, grid, cluster, CTA, and position\nwithin the CTA. This arrangement is called the thread topology. Two threads must\nhave different complete identities, even if their position numbers within their\nown CTAs are equal. CTA identifiers are names within this hierarchy, not raw\nhardware register values."
+        }
+      },
+      "reason": "Allocation ownership and peer-cluster access depend on the complete thread identity and its grouping."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The allocation connection also covers recorded accesses in runs that later fail\nor reach their step limit. It is a safety guarantee, not a proof of termination.\nDifferent allocation identifiers name different storage in the resolved-address\nmodel; relating these identifiers to physical addresses is a separate obligation.\n"
+      },
+      "to": {
+        "path": "Ptx/ScalarEnvironment.lean",
+        "passage": {
+          "quote": "theorem separate_arenas (left right : Nat) (different : left ≠ right)\n    (a b : Address) : arenaAddress left a ≠ arenaAddress right b := by\n  intro equality\n  exact different (congrArg Ptx.Address.allocation equality)"
+        }
+      }
+    }
+  ]
+}

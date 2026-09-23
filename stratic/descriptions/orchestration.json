@@ -3,25 +3,25 @@
   "parent": {
     "description": "verification-interface",
     "passage": {
-      "quote": "Orchestration contracts account for allocations, launches, dependencies, storage lifetime, and observable results across kernels."
+      "quote": "Orchestration means coordinating several kernels. Its contracts describe reserving\nmemory, launching kernels, ensuring that inputs are ready before use, keeping\nstorage alive while needed, and identifying the resulting observable values."
     }
   },
   "summary": [
-    "Compose kernels through explicit allocation, launch, dependency, and lifetime contracts.",
-    "Distinguish abstract orchestration guarantees from concrete runtime correspondence."
+    "Combine kernels using explicit rules for reserving memory, starting execution, waiting for other computations and keeping stored values available until their last use.",
+    "Distinguish these formal coordination guarantees from correspondence with the software that actually allocates memory and launches kernels."
   ],
   "realization": "unimplemented",
-  "remaining": "The orchestration model, runtime contracts, composition proofs, and examples remain to be implemented.",
+  "remaining": "The model of kernel coordination, contracts for the software that launches kernels, proofs combining their guarantees, and examples remain to be implemented.",
   "links": [
     {
       "kind": "depends-on",
       "from": {
-        "quote": "The orchestration layer composes permitted kernel executions while preserving their safety and execution premises."
+        "quote": "The orchestration layer combines permitted kernel executions while preserving\nthe assumptions needed for their safety and execution guarantees."
       },
       "to": {
         "description": "ptx-semantics",
         "passage": {
-          "quote": "Safety, correctness of completed executions, execution existence, and progress\nor termination have separate statements with explicit scheduling, fairness,\nresource, and environment premises."
+          "quote": "These guarantees are stated separately, with their required assumptions. For\nexample, constructing one schedule that finishes does not prove that every\nschedule finishes. A stronger progress claim may need a scheduling assumption\nthat threads are not indefinitely denied execution opportunities."
         }
       },
       "reason": "Composition must preserve the premises and meaning of the kernel execution guarantees."

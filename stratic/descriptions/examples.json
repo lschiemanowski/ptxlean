@@ -3,12 +3,12 @@
   "parent": {
     "description": "root",
     "passage": {
-      "quote": "Examples demonstrate how the reusable semantics and verification interfaces establish correctness of concrete neural-network implementations."
+      "quote": "Examples show how these foundations fit together to verify concrete\nneural-network implementations. They make the reusable interfaces tangible and\nexpose the additional assumptions and proofs required by each application."
     }
   },
   "summary": [
-    "Demonstrate reproducible end-to-end verification of concrete neural networks using reusable contracts.",
-    "Explain application-specific assumptions and distinguish proved guarantees from experimental evidence."
+    "Demonstrate reproducible verification from concrete network specifications through their kernel implementations, using reusable contracts.",
+    "Explain assumptions specific to each application and distinguish proved guarantees from experimental evidence."
   ],
   "realization": "unimplemented",
   "remaining": "Concrete example implementations, proofs, and reproduction instructions remain to be developed.",
@@ -16,12 +16,12 @@
     {
       "kind": "depends-on",
       "from": {
-        "quote": "Examples demonstrate end-to-end verification by connecting a concrete network\nspecification, its kernel implementation, and checked correctness results through\nthe reusable PTX semantics and verification interface."
+        "quote": "Examples connect a particular network specification to its kernel implementation\nand checked correctness results through the reusable PTX semantics and\nverification interface. This is end-to-end verification: the proof reaches from\nthe specified network to the stated kernel behavior. Each example identifies\nits architecture (the arrangement of network operations), inputs, state kept\nbetween calls, number-format and approximation choices, and execution assumptions."
       },
       "to": {
         "description": "verification-interface",
         "passage": {
-          "quote": "Composition requires a producer's guarantees to satisfy its consumer's\nrequirements, including ownership, lifetime, synchronization, and numerical\nconditions."
+          "quote": "When one kernel produces data for another, its guarantees must satisfy the next\nkernel's preconditions. This includes which threads may use the storage, how\nlong it remains allocated, the ordering needed to observe the writes, and the\nnumerical accuracy promised. Network-level proofs combine these contracts\nwithout repeating instruction-level reasoning for every kernel connection."
         }
       },
       "reason": "Examples rely on sound contract composition to establish network-level guarantees."

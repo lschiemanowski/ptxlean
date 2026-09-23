@@ -3,12 +3,12 @@
   "parent": {
     "description": "examples",
     "passage": {
-      "quote": "The Gemma example verifies text-only Gemma 4 12B implementations for KV-cached forward inference and cache-free forward/backward computation."
+      "quote": "The Gemma example verifies text-only Gemma 4 12B. Its forward inference, which\ncomputes outputs, retains attention keys and values from earlier tokens in a\nkey/value (KV) cache. Its backward computation, which computes derivatives,\nuses a forward computation without that cache."
     }
   },
   "summary": [
-    "Verify text-only Gemma 4 12B with KV-cached forward and cache-free backward.",
-    "Cover all transformer-block parameter VJPs and a concrete loss with explicit numerical and execution contracts."
+    "Verify text-only Gemma 4 12B, reusing saved attention keys and values in forward execution but using a cache-free forward computation for backward verification.",
+    "Cover weighted output derivatives for every transformer-block parameter and provide a concrete training loss, with explicit numerical and execution guarantees."
   ],
   "realization": "unimplemented",
   "remaining": "The model specification, kernels, correctness proofs, and explanatory material remain to be implemented.",
@@ -16,12 +16,12 @@
     {
       "kind": "depends-on",
       "from": {
-        "quote": "KV-cached forward inference verifies cache updates and their relationship to\nthe cache-free network, including positions, masks, and architecture-specific\nstate behavior."
+        "quote": "Forward inference computes network outputs. A key/value (KV) cache stores\nattention keys and values from earlier tokens for reuse on later calls. The\nproof relates cache updates to a forward computation without the cache, including\ntoken positions, masks that exclude particular attention connections, and the\narchitecture's specific rules for state changes."
       },
       "to": {
         "description": "orchestration",
         "passage": {
-          "quote": "It supports persistent state across calls as well as\ntemporary values shared between computations."
+          "quote": "Orchestration coordinates work split across several GPU kernels. It describes\nwhich memory regions are reserved (allocations), when kernels begin (launches),\nand which earlier results must be ready before later work can use them\n(dependencies). Storage lifetime is the interval during which a region remains\navailable. The model connects each kernel argument to the intended memory buffer, a region\nholding its data, and establishes both the required execution order and the reader's ability to\nobserve earlier writes. It covers values retained across calls as well as\ntemporary intermediate results."
         }
       },
       "reason": "Cache state must remain valid across composed launches and calls."
@@ -29,12 +29,12 @@
     {
       "kind": "depends-on",
       "from": {
-        "quote": "TorchLean constructs the backward specification, while the PTX implementation\nand its correctness proof are developed separately."
+        "quote": "The example exposes a vector-Jacobian product (VJP) interface: given weights on\nthe network outputs, backward returns the derivatives of their weighted sum.\nIt also provides a particular scalar objective, or loss, such as cross entropy,\nwhich penalizes assigning low probability to the target token. Contracts specify\nthe targets, which positions count, and how terms are scaled and combined into\na single loss. TorchLean constructs the backward specification; PTX code and\nits correctness proof are developed separately."
       },
       "to": {
         "description": "backward",
         "passage": {
-          "quote": "TorchLean constructs the backward computation automatically, with checked\ncorrectness results connecting it to the mathematical VJP under explicit\nhypotheses."
+          "quote": "TorchLean constructs the backward computation automatically. Checked theorems\nconnect it to the mathematical VJP under explicit assumptions. Each use identifies\nthe supported operations and the conditions needed by their derivative rules."
         }
       },
       "reason": "The example instantiates the justified VJP construction for its block parameters."
@@ -42,12 +42,12 @@
     {
       "kind": "depends-on",
       "from": {
-        "quote": "The implementation uses an explicit mixed-precision policy."
+        "quote": "The implementation specifies which number format each part uses; using different\nformats within one computation is mixed precision. Contracts state tensor and\ncache layouts, operation-level precision, permitted approximations, error bounds,\nand execution properties. PyTorch correspondence identifies the concrete reference\nand configuration, including choices that change numerical results."
       },
       "to": {
         "description": "numerical-contracts",
         "passage": {
-          "quote": "Numerical contracts are precision-parametric."
+          "quote": "The numerical contracts allow the number formats to be chosen for each\nimplementation; they do not prescribe one precision policy. That policy states\nhow values are stored, which formats instruction inputs use, and which format\nholds a running sum during accumulation. It also specifies rounding to a\nrepresentable value, conversions between formats, operation order, and the\nallowed error or range of results for approximate instructions. Every result\nallowed by the documented instruction behavior must remain represented."
         }
       },
       "reason": "Gemma instantiates explicit precision contracts and their numerical guarantees."

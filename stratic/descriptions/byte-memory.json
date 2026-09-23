@@ -1,23 +1,23 @@
 {
   "id": "byte-memory",
   "parent": {
-    "description": "execution-environment",
+    "description": "memory-ordering",
     "passage": {
-      "quote": "A byte-level scoped memory model records the source of each observed byte and\nthe applicable atomicity constraints. Checked relationships identify when a\nwhole-word representation is justified and distinguish permitted torn reads\nfrom forbidden observations."
+      "quote": "Byte-level observations choose a source write separately for each byte. A read\nmay then mix bytes from different writes, producing a torn value, subject to\nordering and atomicity restrictions. The instructions still access aligned\nfour-byte words: byte-level tracking does not add arbitrary byte-sized or\npartially overlapping instructions."
     }
   },
   "summary": [
-    "Represent bytewise read sources with qualified atomicity and byte-derived scoped ordering.",
-    "Prove whole-word specialization and derive source uniformity under mutual scope coverage.",
-    "Check torn and forbidden examples under both explicit observation interpretations, retaining the unresolved source-fidelity boundary."
+    "Record which write supplies each byte of an aligned 32-bit read, including the possibility that different bytes come from different writes.",
+    "Explain when thread-group coverage and memory ordering forbid such mixed results, while keeping two possible interpretations of observing a write explicit.",
+    "Recover the whole-word model when each read gets all its bytes from one write, and prove when mutual thread-group coverage forces that condition."
   ],
   "realization": "partial",
-  "remaining": "Aligned-u32 byte sources, qualified atomicity, fixed-width scoped relations, torn/forbidden examples and whole-word specialization are implemented. A uniquely justified PTX observation relation for torn reads remains unsettled; both named interpretations are explicit and the reported core examples/specializations cover both. Mixed-size overlap, aliases, additional proxies and general dependent concurrency are outside this fragment.",
+  "remaining": "Implemented: sources for each byte of aligned 32-bit reads, conditions for indivisible reads, ordering based on which threads each access includes, mixed-source and forbidden-result examples, and correspondence with whole-word reads. How a mixed-source read counts as observing a write is not yet uniquely justified by PTX; both interpretations remain explicit, and the reported core examples and correspondence results cover both. Overlapping accesses of different sizes, multiple addresses naming the same storage, additional memory-access mechanisms and general data-dependent interactions between threads are outside this fragment.",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "Each byte read records a compatible source write and the corresponding byte\nvalue. Access widths, overlap, endianness, initialization and scope membership\nare explicit. The first model retains aligned fixed-size accesses and excludes\nmixed-size overlap and additional proxies."
+        "quote": "A read can combine bytes from different writes, producing a torn value. This\nmodel records which write supplies each byte and checks whether the combination\nis permitted. A memory event is the record of one read or write. Events here\naccess aligned four-byte words in global memory, using thread identities and scopes supplied by the execution environment.\nAllocation and instruction-support checks are separate contracts. Partial overlaps between\ndifferent access sizes and additional memory-access mechanisms are excluded."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -29,7 +29,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Access widths, overlap, endianness, initialization and scope membership\nare explicit. The first model retains aligned fixed-size accesses and excludes\nmixed-size overlap and additional proxies."
+        "quote": "A read can combine bytes from different writes, producing a torn value. This\nmodel records which write supplies each byte and checks whether the combination\nis permitted. A memory event is the record of one read or write. Events here\naccess aligned four-byte words in global memory, using thread identities and scopes supplied by the execution environment.\nAllocation and instruction-support checks are separate contracts. Partial overlaps between\ndifferent access sizes and additional memory-access mechanisms are excluded."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -41,7 +41,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The source-reviewed single-copy constraints apply exactly to their qualified\noperation pairs. Out-of-scope races are not forced to observe an entire word\nfrom one write. Examples construct permitted torn candidates and prove rejection\nwhere the relevant atomicity and ordering requirements forbid them."
+        "quote": "PTX's single-copy atomicity rule governs whether a read may mix bytes from\ndifferent writes; it applies only to qualifying pairs of operations. Accesses whose scopes exclude\none another are not forced to take the entire word from one write. Examples\nconstruct permitted combinations and prove rejection when the applicable\nordering and atomicity conditions forbid them."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -53,7 +53,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Out-of-scope races are not forced to observe an entire word\nfrom one write. Examples construct permitted torn candidates and prove rejection\nwhere the relevant atomicity and ordering requirements forbid them."
+        "quote": "PTX's single-copy atomicity rule governs whether a read may mix bytes from\ndifferent writes; it applies only to qualifying pairs of operations. Accesses whose scopes exclude\none another are not forced to take the entire word from one write. Examples\nconstruct permitted combinations and prove rejection when the applicable\nordering and atomicity conditions forbid them."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -65,7 +65,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Examples construct permitted torn candidates and prove rejection\nwhere the relevant atomicity and ordering requirements forbid them."
+        "quote": "PTX's single-copy atomicity rule governs whether a read may mix bytes from\ndifferent writes; it applies only to qualifying pairs of operations. Accesses whose scopes exclude\none another are not forced to take the entire word from one write. Examples\nconstruct permitted combinations and prove rejection when the applicable\nordering and atomicity conditions forbid them."
       },
       "to": {
         "path": "Ptx/ByteExamples.lean",
@@ -77,7 +77,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Examples construct permitted torn candidates and prove rejection\nwhere the relevant atomicity and ordering requirements forbid them."
+        "quote": "PTX's single-copy atomicity rule governs whether a read may mix bytes from\ndifferent writes; it applies only to qualifying pairs of operations. Accesses whose scopes exclude\none another are not forced to take the entire word from one write. Examples\nconstruct permitted combinations and prove rejection when the applicable\nordering and atomicity conditions forbid them."
       },
       "to": {
         "path": "Ptx/ByteExamples.lean",
@@ -89,7 +89,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A checked specialization explains the relationship to the existing whole-word\nmodel. Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+        "quote": "A whole-word description is justified when all bytes of a read choose one write\nevent, called uniform sources. Proofs distinguish conditions ensuring this from\nthe weaker fact that the byte values happen to agree. They state when the two\nmodels have exactly the same valid candidates. General programs where reads\ninfluence later writes still need a separate no-thin-air argument: values must\nnot be supported solely by circular justifications. An arbitrary ban on dependency\ncycles is not substituted for that obligation."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -101,7 +101,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A checked specialization explains the relationship to the existing whole-word\nmodel. Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+        "quote": "A whole-word description is justified when all bytes of a read choose one write\nevent, called uniform sources. Proofs distinguish conditions ensuring this from\nthe weaker fact that the byte values happen to agree. They state when the two\nmodels have exactly the same valid candidates. General programs where reads\ninfluence later writes still need a separate no-thin-air argument: values must\nnot be supported solely by circular justifications. An arbitrary ban on dependency\ncycles is not substituted for that obligation."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -113,7 +113,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+        "quote": "A whole-word description is justified when all bytes of a read choose one write\nevent, called uniform sources. Proofs distinguish conditions ensuring this from\nthe weaker fact that the byte values happen to agree. They state when the two\nmodels have exactly the same valid candidates. General programs where reads\ninfluence later writes still need a separate no-thin-air argument: values must\nnot be supported solely by circular justifications. An arbitrary ban on dependency\ncycles is not substituted for that obligation."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -125,7 +125,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+        "quote": "A whole-word description is justified when all bytes of a read choose one write\nevent, called uniform sources. Proofs distinguish conditions ensuring this from\nthe weaker fact that the byte values happen to agree. They state when the two\nmodels have exactly the same valid candidates. General programs where reads\ninfluence later writes still need a separate no-thin-air argument: values must\nnot be supported solely by circular justifications. An arbitrary ban on dependency\ncycles is not substituted for that obligation."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -137,7 +137,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+        "quote": "A whole-word description is justified when all bytes of a read choose one write\nevent, called uniform sources. Proofs distinguish conditions ensuring this from\nthe weaker fact that the byte values happen to agree. They state when the two\nmodels have exactly the same valid candidates. General programs where reads\ninfluence later writes still need a separate no-thin-air argument: values must\nnot be supported solely by circular justifications. An arbitrary ban on dependency\ncycles is not substituted for that obligation."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -149,7 +149,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Sufficient conditions for uniform sources are distinguished from mere\nvalue equality and from an unconditional claim of equivalence. The scope and\nlimits of any completeness claim are explicit. Dependent concurrent no-thin-air\nsemantics is a separate obligation, not an invented syntactic cycle condition."
+        "quote": "A whole-word description is justified when all bytes of a read choose one write\nevent, called uniform sources. Proofs distinguish conditions ensuring this from\nthe weaker fact that the byte values happen to agree. They state when the two\nmodels have exactly the same valid candidates. General programs where reads\ninfluence later writes still need a separate no-thin-air argument: values must\nnot be supported solely by circular justifications. An arbitrary ban on dependency\ncycles is not substituted for that obligation."
       },
       "to": {
         "path": "Ptx/ByteExamples.lean",
@@ -161,7 +161,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Where source wording leaves the observation relation for torn reads unsettled,\nnamed interpretations remain explicit. Results claimed independent of that\nchoice are proved for each interpretation; no chosen convention is presented\nas a settled translation of PTX."
+        "quote": "The manual leaves a question about observation order, the relation connecting\nqualifying source writes and reads for synchronization, when a read mixes sources.\nThe model exposes alternative interpretations. A result claimed independent of\nthat choice is proved under each; no convention is silently declared to be the\nuniquely correct interpretation of PTX."
       },
       "to": {
         "path": "Ptx/ByteMemory.lean",
@@ -173,7 +173,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Where source wording leaves the observation relation for torn reads unsettled,\nnamed interpretations remain explicit. Results claimed independent of that\nchoice are proved for each interpretation; no chosen convention is presented\nas a settled translation of PTX."
+        "quote": "The manual leaves a question about observation order, the relation connecting\nqualifying source writes and reads for synchronization, when a read mixes sources.\nThe model exposes alternative interpretations. A result claimed independent of\nthat choice is proved under each; no convention is silently declared to be the\nuniquely correct interpretation of PTX."
       },
       "to": {
         "path": "docs/foundations/byte-memory.md",
@@ -181,6 +181,115 @@
           "quote": "One source interpretation remains explicit: the pinned PTX manual does not spell\nout how its observation-order phrase “reads the value written by” applies when a\nread combines bytes from different writes. `ObservationPolicy` represents two\ninterpretations, `anyByte` and `wholeSource`. The specialization and examples are\nproved for both. This does not establish which interpretation uniquely matches\nPTX. See the [source review](next-source-review.md) for that precise remaining\nsemantic-fidelity obligation and the separate endianness source."
         }
       }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each event accesses an aligned four-byte unsigned value, abbreviated `u32`, in\nthe global memory arena, a list of four-byte words. Equal word addresses overlap completely; different word\naddresses do not overlap. A source map records a write event for each of a read's\nfour byte offsets. Compatibility requires a write to the same word with the same\nvalue for that byte. Numerically equal writes can still be different events.\n\nThe byte containing the lowest-value bits has offset zero, the lowest address.\nThis is little-endian layout; endianness names the order in which a value's bytes\nare stored. The choice follows NVIDIA's supplemental application binary interface\n(ABI) guidance about data representation, not a layout statement attributed to\nthe pinned PTX instruction-set manual's memory chapter."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "structure Sources (g : ByteGraph n) : Prop where\n  compatible : ∀ r, g.read r → ∀ offset,\n    g.write (g.source r offset) ∧ g.sameAddress (g.source r offset) r ∧\n      wordByte (g.event (g.source r offset)).effect.value offset =\n        wordByte (g.event r).effect.value offset"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Coherence orders writes to the same word without requiring every pair to be\nordered. As explained by the parent, it is transitive and no write precedes\nitself; these properties make it a strict partial order. Initialization comes\nfirst. For the represented instructions using the generic access mechanism, moral strength requires two\nnon-initial accesses to the same word and either local program order or mutual\nscope inclusion. If a read R is morally strong with write W and takes a byte\nfrom W, single-copy atomicity forbids taking another byte from a write that precedes W in coherence\n(a coherence predecessor). This does not unconditionally require one source: writes left unordered by coherence or writes outside the relevant scope need separate consideration."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "def SingleCopy (g : ByteGraph n) : Prop :=\n  ∀ r w, g.read r → g.write w → g.morallyStrong r w →\n    ∀ offset, g.source r offset = w → ∀ other, ¬g.coherence (g.source r other) w"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Initialize a word to `0x00000000`; one CTA writes `0xffffffff`, and another CTA\non the same device reads. With CTA scopes, the read can take low-address bytes `00,00` from\ninitialization and high-address bytes `ff,ff` from the program write, yielding\n`0xffff0000`. The example constructs local execution and verifies all represented\nmemory constraints, not just atomicity. Changing only the scopes to GPU forbids\nthat source assignment: the read and program write become morally strong, while\ninitialization is a coherence predecessor. Both results hold under either\nobservation policy. They are model results, not GPU measurements."
+      },
+      "to": {
+        "path": "Ptx/ByteExamples.lean",
+        "passage": {
+          "quote": "theorem torn_execution_exists (policy : ObservationPolicy) :\n    (program 4294967295).ByteAdmitted registers (oracle 4294901760) mixedSource coherence\n      topology (scope .cta) policy ∧ result 4294967295 4294901760 = 4294901760 := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Initialize a word to `0x00000000`; one CTA writes `0xffffffff`, and another CTA\non the same device reads. With CTA scopes, the read can take low-address bytes `00,00` from\ninitialization and high-address bytes `ff,ff` from the program write, yielding\n`0xffff0000`. The example constructs local execution and verifies all represented\nmemory constraints, not just atomicity. Changing only the scopes to GPU forbids\nthat source assignment: the read and program write become morally strong, while\ninitialization is a coherence predecessor. Both results hold under either\nobservation policy. They are model results, not GPU measurements."
+      },
+      "to": {
+        "path": "Ptx/ByteExamples.lean",
+        "passage": {
+          "quote": "theorem in_scope_torn_forbidden (policy : ObservationPolicy) :\n    ¬(candidate 4294967295 4294901760 .gpu policy).Valid := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "- `anyByte`: at least one byte of R chooses W, and W and R are morally strong.\n- `wholeSource`: every byte of R chooses W, and W and R are morally strong."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "def observation (g : ByteGraph n) (w r : Fin n) : Prop :=\n  (match g.observationPolicy with\n   | .anyByte => g.rf w r\n   | .wholeSource => g.readsWhole w r) ∧ g.morallyStrong w r"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Uniformity means that every byte of each read chooses the same write event.\nUnder that condition, byte validity is equivalent to validity of the scoped\nwhole-word projection, obtained by selecting the first byte's source for the read. Conversely, repeating an existing whole-word source at\nall offsets preserves validity. Both policies agree on uniform sources."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem projection_valid_iff (uniform : g.Uniform) : g.Valid ↔ g.toScoped.Valid := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "In a valid candidate, uniformity follows when the selected source writes are ordered one way or the other\nin coherence for every distinct pair and the read is morally strong with each non-initial source.\nTwo different sources would have a later one, and atomicity against that write\nwould exclude the earlier one. Initialization's earliest position handles the\ninitial-source case without assigning initialization an issuing thread.\nMutual scope coverage of all non-initial events supplies the needed conditions:\nbyte validity is then exactly uniformity together with validity in the original\nwhole-word graph. This is a theorem under that scope restriction, not a new\natomic-read assumption. Equal byte values alone never establish uniformity.\n"
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem sources_uniform_at (valid : g.Valid) (r : Fin n) (hr : g.read r)\n    (moral : ∀ offset, ¬g.initial (g.source r offset) → g.morallyStrong r (g.source r offset))\n    (comparable : ∀ first second, g.source r first ≠ g.source r second →\n      g.coherence (g.source r first) (g.source r second) ∨\n      g.coherence (g.source r second) (g.source r first)) :\n    ∀ offset, g.source r offset = g.source r 0 := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "In a valid candidate, uniformity follows when the selected source writes are ordered one way or the other\nin coherence for every distinct pair and the read is morally strong with each non-initial source.\nTwo different sources would have a later one, and atomicity against that write\nwould exclude the earlier one. Initialization's earliest position handles the\ninitial-source case without assigning initialization an issuing thread.\nMutual scope coverage of all non-initial events supplies the needed conditions:\nbyte validity is then exactly uniformity together with validity in the original\nwhole-word graph. This is a theorem under that scope restriction, not a new\natomic-read assumption. Equal byte values alone never establish uniformity.\n"
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem all_in_scope_valid_iff (inScope : g.toScoped.AllInScope) :\n    g.Valid ↔ g.Uniform ∧ g.toScoped.graph.Valid := by"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "A read can combine bytes from different writes, producing a torn value. This\nmodel records which write supplies each byte and checks whether the combination\nis permitted. A memory event is the record of one read or write. Events here\naccess aligned four-byte words in global memory, using thread identities and scopes supplied by the execution environment.\nAllocation and instruction-support checks are separate contracts. Partial overlaps between\ndifferent access sizes and additional memory-access mechanisms are excluded."
+      },
+      "to": {
+        "description": "thread-groups",
+        "passage": {
+          "quote": "For the cross-thread scope condition, both operations must include the other\nthread. This is mutual scope inclusion. For example, a writer using GPU scope\nincludes a reader in another CTA on that GPU. But if the reader uses CTA scope,\nit excludes that writer. This pair does not satisfy the condition merely because\nthe writer chose the wider scope. Other instruction and ordering conditions are\nalso needed for synchronization.\n"
+        }
+      },
+      "reason": "Byte-source ordering and atomicity use the same mutual scope-inclusion condition as the whole-word model."
     }
   ]
 }

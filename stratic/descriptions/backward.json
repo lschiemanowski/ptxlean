@@ -3,12 +3,12 @@
   "parent": {
     "description": "verification-interface",
     "passage": {
-      "quote": "Backward specifications are constructed automatically in TorchLean; PTX backward implementations and their correctness proofs are supplied separately."
+      "quote": "A backward computation propagates sensitivities of a network's outputs back to\nits inputs and parameters: it computes derivatives needed, for example, in\ntraining. TorchLean constructs the backward specification automatically; the\nPTX backward implementation and its correctness proof are supplied separately."
     }
   },
   "summary": [
-    "Construct justified TorchLean VJPs automatically and verify independently authored PTX backward implementations.",
-    "Keep derivative correctness, numerical accuracy, and kernel execution guarantees separate."
+    "Automatically construct TorchLean computations of weighted output derivatives, justify them mathematically and verify separately authored PTX backward implementations.",
+    "Keep derivative correctness, numerical accuracy and guarantees about kernel execution separate."
   ],
   "realization": "unimplemented",
   "remaining": "The TorchLean backward bridge, supplied kernel proofs, and explanatory examples remain to be implemented.",
@@ -16,7 +16,7 @@
     {
       "kind": "depends-on",
       "from": {
-        "quote": "Mathematical differentiability and backward correctness, numerical accuracy,\nkernel correspondence, and execution existence, safety, and termination have\nseparate proof obligations."
+        "quote": "There are separate obligations to show that the mathematical derivative exists,\nthat the backward computation computes it, that numerical errors are bounded,\nand that the PTX implementation corresponds to that computation. Execution\nexistence, safety, and termination also need their own proofs. Constructing a\nbackward specification does not establish that its GPU implementation finishes."
       },
       "to": {
         "description": "numerical-contracts",
@@ -29,12 +29,12 @@
     {
       "kind": "depends-on",
       "from": {
-        "quote": "The PTX backward implementation is authored separately, together with its\ncorrectness proof."
+        "quote": "The PTX backward implementation is authored separately, together with its\ncorrectness proof. Reusable lemmas, proof-automation procedures called tactics,\nand model assistance can help construct that proof. Automatic differentiation\nof the TorchLean specification does not generate the PTX implementation or prove\nthat implementation correct."
       },
       "to": {
         "description": "ptx-semantics",
         "passage": {
-          "quote": "The authoritative semantics describes permitted PTX executions."
+          "quote": "The PTX semantics defines which executions of a PTX program are permitted."
         }
       },
       "reason": "The implementation proof must apply to permitted PTX behavior."

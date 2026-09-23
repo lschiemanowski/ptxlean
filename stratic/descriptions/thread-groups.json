@@ -1,0 +1,53 @@
+{
+  "id": "thread-groups",
+  "parent": {
+    "description": "execution-environment",
+    "passage": {
+      "quote": "Thread groups and scopes describe who can cooperate. A cooperative thread array\n(CTA) is a group of threads that can use shared memory and synchronization;\nCTAs launched together form a grid. A scope specifies which participants an\noperation includes. The thread-group description explains these relationships,\nincluding groups of CTAs called clusters and cooperation across a GPU."
+    }
+  },
+  "summary": [
+    "Identify each thread within its device, grid, cluster and cooperative thread array.",
+    "Define which participants each scope includes and require mutual inclusion where cross-thread rules need it."
+  ],
+  "realization": "partial",
+  "remaining": "Thread identities, group comparisons and CTA, cluster, GPU and system scope inclusion are implemented. Host CPU thread execution and physical register or launch mappings are outside this representation.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The model identifies each thread by its device, grid, cluster, CTA, and position\nwithin the CTA. This arrangement is called the thread topology. Two threads must\nhave different complete identities, even if their position numbers within their\nown CTAs are equal. CTA identifiers are names within this hierarchy, not raw\nhardware register values."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "structure ThreadLocation where\n  device : Nat\n  grid : Nat\n  cluster : Nat\n  cta : Nat\n  thread : Nat\n  deriving DecidableEq, Repr"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A synchronization operation specifies which participants it can coordinate with.\nThis set of participants is its scope:"
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "def Scope.includes (scope : Scope) (issuer participant : ThreadLocation) : Bool :=\n  match scope with\n  | .cta => issuer.sameCTA participant\n  | .cluster => issuer.sameCluster participant\n  | .gpu => issuer.device == participant.device\n  | .sys => true"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "| Scope | Included participants in this model |\n| --- | --- |\n| CTA | Threads in the same CTA |\n| Cluster | Threads in the same cluster |\n| GPU | Threads on the same GPU, including other grids |\n| System | All represented GPU threads belonging to the host program |"
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "def Scope.includes (scope : Scope) (issuer participant : ThreadLocation) : Bool :=\n  match scope with\n  | .cta => issuer.sameCTA participant\n  | .cluster => issuer.sameCluster participant\n  | .gpu => issuer.device == participant.device\n  | .sys => true"
+        }
+      }
+    }
+  ]
+}

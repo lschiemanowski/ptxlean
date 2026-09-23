@@ -1,32 +1,32 @@
 # Execution environment
 
-The environment assigns threads to compute devices, clusters, and CTAs and
-interprets scope membership and mutual inclusion. Scope and storage ownership
-are distinct: synchronization scope cannot make inaccessible storage accessible.
+The execution environment describes the setting in which thread instructions
+run: where each thread belongs, which memory it may use, and which instruction
+forms the selected GPU and PTX version support. These are separate requirements.
+An instruction may be supported but use an invalid address; an allowed memory
+access may still need synchronization before another thread can observe its data.
 
-Addresses identify a state space and storage location. Allocated extents,
-alignment, access permissions, initialization, and private or shared ownership
-constrain scalar memory accesses. The supported instruction forms carry explicit
-ISA-version and target requirements. Unsupported features and illegal uses are
-reported distinctly from valid executions with nondeterministic results.
+Thread groups and scopes describe who can cooperate. A cooperative thread array
+(CTA) is a group of threads that can use shared memory and synchronization;
+CTAs launched together form a grid. A scope specifies which participants an
+operation includes. The thread-group description explains these relationships,
+including groups of CTAs called clusters and cooperation across a GPU.
 
-Local execution provides memory events for scoped relational constraints.
-Source-reviewed examples establish permitted synchronization within scope and
-its absence outside scope. Checked specialization results explain the relation
-to the existing global, GPU-scoped message-passing fragment. Interpretive limits,
-particularly byte overlap, proxies, and dependent execution, remain explicit.
+Storage and valid memory accesses describe which regions have been reserved,
+who may read or write them, and which addresses fit. They also state which byte positions are allowed as starting addresses
+(alignment) and what is known about initial contents. A checked
+connection shows how the scalar interpreter's memory accesses satisfy a
+particular allocation contract.
 
-The scoped relational extension retains whole-word sources. For accesses that are
-not mutually in scope, this selects non-torn candidates; it does not enumerate
-all bytewise outcomes permitted by PTX. Constructed out-of-scope witnesses and
-within-scope publication results retain this distinction.
+Instruction and hardware requirements describe which combinations of instruction
+form, PTX version and GPU capability are supported. A form outside the implemented
+checker is distinguished from an illegal use of a represented form. Passing this
+check establishes neither a valid memory address nor correct kernel execution.
 
-The scalar arena has a checked embedding into an allocated global-memory view.
-Successful emitted accesses satisfy that view's ownership, initialization,
-alignment, and full byte-extent contract. This bridge does not by itself supply
-concurrent ordering, launch behavior, or a weak-memory refinement.
-
-A byte-level scoped memory model records the source of each observed byte and
-the applicable atomicity constraints. Checked relationships identify when a
-whole-word representation is justified and distinguish permitted torn reads
-from forbidden observations.
+Memory observations and ordering is a separate responsibility: it determines
+which writes may supply read values and what synchronization guarantees. It uses
+the thread identities and scopes supplied here. Its whole-word and byte-level
+models are two representations of observations, not two modes of this environment.
+Their conditions for accepting executions do not automatically include the full
+allocation or hardware checks. Combining these guarantees requires explicit
+proofs, with the assumptions of each check retained.

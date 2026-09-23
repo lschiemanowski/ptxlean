@@ -1,0 +1,79 @@
+{
+  "id": "memory-ordering",
+  "parent": {
+    "description": "ptx-semantics",
+    "passage": {
+      "quote": "The model combines two kinds of rules. Instruction rules describe a thread's\nindividual steps. Memory observations and ordering describe how reads and writes across threads\nfit together: which write supplies a read's value, and which accesses must be ordered.\nA proposed collection of thread steps and read values is called a candidate\nexecution. Evaluating its individual instructions does not establish that its\nmemory behavior is permitted."
+    }
+  },
+  "summary": [
+    "Constrain which writes supply read values and how instruction order, scope and synchronization restrict observations.",
+    "Relate whole-word and byte-level representations through proved single-source conditions rather than treating them as execution modes.",
+    "Keep access checks, instruction support, general data-dependent execution and unresolved mixed-byte observation semantics explicit."
+  ],
+  "realization": "partial",
+  "remaining": "Restricted whole-word and aligned four-byte observation models, their relationships and examples are implemented. The mixed-source observation interpretation remains unresolved. Different access sizes, additional memory-access mechanisms and general data-dependent concurrent semantics remain outside these fragments.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The two representations agree when every read has one source for all its bytes.\nUnder mutual scope coverage of all non-initial operations, a theorem derives\nthat condition from byte-level validity. Without such a justification, choosing\nthe simpler representation is an explicit restriction, not a program setting.\nThe byte-level account keeps unresolved how a mixed-source read counts as\nobserving a write. It states two interpretations and identifies results proved\nunder both; Lean checking does not settle which interpretation matches PTX."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "structure ByteGraph (n : Nat) where\n  event : Fin n → Occurrence\n  source : Fin n → Fin 4 → Fin n\n  co : Fin n → Fin n → Bool\n  topology : Nat → ThreadLocation\n  scope : Fin n → Scope\n  observationPolicy : ObservationPolicy"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The two representations agree when every read has one source for all its bytes.\nUnder mutual scope coverage of all non-initial operations, a theorem derives\nthat condition from byte-level validity. Without such a justification, choosing\nthe simpler representation is an explicit restriction, not a program setting.\nThe byte-level account keeps unresolved how a mixed-source read counts as\nobserving a write. It states two interpretations and identifies results proved\nunder both; Lean checking does not settle which interpretation matches PTX."
+      },
+      "to": {
+        "path": "Ptx/ByteMemory.lean",
+        "passage": {
+          "quote": "theorem all_in_scope_valid_iff (inScope : g.toScoped.AllInScope) :\n    g.Valid ↔ g.Uniform ∧ g.toScoped.graph.Valid := by\n  constructor\n  · intro valid\n    have uniform := uniform_of_all_in_scope valid inScope\n    exact ⟨uniform,(ScopedGraph.valid_legacy inScope).mp ((projection_valid_iff uniform).mp valid)⟩\n  · rintro ⟨uniform,valid⟩\n    exact (projection_valid_iff uniform).mpr ((ScopedGraph.valid_legacy inScope).mpr valid)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This model uses four-byte accesses and the generic proxy, PTX's term for the\nmemory-access mechanism used by these ordinary loads and stores. Other access\nmechanisms and accesses of differing sizes are outside this fragment. For these\ninstructions, PTX calls a pair morally strong when they access the same word\nand either occur in the same thread's instruction order or mutually include each\nother in scope. Initial writes, which represent memory's starting contents,\nhave no issuing thread and are excluded from this qualification. Moral strength\ndetermines which ordering and atomicity rules apply; atomicity here concerns\nrestrictions on combining bytes from different writes in one read."
+      },
+      "to": {
+        "path": "Ptx/ScopedMemory.lean",
+        "passage": {
+          "quote": "def morallyStrong (g : ScopedGraph n) (a b : Fin n) : Prop :=\n  ¬g.graph.initial a ∧ ¬g.graph.initial b ∧ g.graph.sameAddress a b ∧\n    (g.graph.po a b ∨ g.graph.po b a ∨ g.mutualScope a b = true)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Coherence is an ordering of writes to the same word. A write cannot precede itself;\nif one write precedes a second and the second precedes a third, the first precedes\nthe third. Some pairs may remain unordered. Morally strong writes must be ordered\none way or the other, and initial writes come first. The order must also respect\ncausality, the ordering constraints derived from instruction order, observations,\nand synchronization. Unrelated competing writes cannot be arbitrarily ordered\nto make a proposed execution pass the checks."
+      },
+      "to": {
+        "path": "Ptx/ScopedMemory.lean",
+        "passage": {
+          "quote": "structure Coherent (g : ScopedGraph n) : Prop where\n  typed : ∀ a b, g.graph.coherence a b →\n    g.graph.write a ∧ g.graph.write b ∧ g.graph.sameAddress a b\n  irrefl : ∀ a, ¬g.graph.coherence a a\n  trans : ∀ a b c, g.graph.coherence a b → g.graph.coherence b c → g.graph.coherence a c\n  total : ∀ a b, g.graph.write a → g.graph.write b → g.morallyStrong a b → a ≠ b →\n    g.graph.coherence a b ∨ g.graph.coherence b a\n  initFirst : ∀ a b, g.graph.initial a → g.graph.write b → g.graph.sameAddress a b → a ≠ b →\n    g.graph.coherence a b\n  justified : ∀ a b, g.graph.coherence a b →\n    g.graph.initial a ∨ g.graph.initial b ∨ g.morallyStrong a b ∨ g.cause a b ∨ g.cause b a"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "An operation's scope identifies the participants it includes. CTA scope includes\nits cooperative thread array, a group of threads that can share storage and\nsynchronize; GPU scope includes threads on the same device. Mutual scope inclusion\nmeans each operation includes the other operation's thread. Cluster scope covers a group of CTAs within one grid, the collection launched\ntogether. System scope covers the represented GPU threads of the host program,\nthe CPU program launching the work; CPU thread execution itself is not modeled. Scope controls which ordering guarantees\napply; it does not grant permission to access storage."
+      },
+      "to": {
+        "description": "thread-groups",
+        "passage": {
+          "quote": "For the cross-thread scope condition, both operations must include the other\nthread. This is mutual scope inclusion. For example, a writer using GPU scope\nincludes a reader in another CTA on that GPU. But if the reader uses CTA scope,\nit excludes that writer. This pair does not satisfy the condition merely because\nthe writer chose the wider scope. Other instruction and ordering conditions are\nalso needed for synchronization.\n"
+        }
+      },
+      "reason": "Memory ordering uses the defined participants and mutual inclusion, without interpreting a wider scope as additional storage permission."
+    }
+  ]
+}

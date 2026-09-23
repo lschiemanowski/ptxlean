@@ -3,21 +3,21 @@
   "parent": {
     "description": "ptx-semantics",
     "passage": {
-      "quote": "A scalar message-passing fragment connects straight-line instruction execution to scoped memory relations and proves publication and counterexample results under explicit restrictions."
+      "quote": "This small example is called message passing;\nit demonstrates when the reader must see the new result and when an old value\nremains possible."
     }
   },
   "summary": [
-    "Connect normalized literal u32 stores and register loads to restricted PTX memory relations; distinguish normalized instructions from legal PTX assembly.",
-    "Prove acquire publication, construct successful and relaxed stale-read executions, and establish aligned arena access safety.",
-    "Expose source interpretations, logical dependencies, and fragment restrictions in a reproducible study guide.",
-    "Decide finite candidate validity exactly and classify message-passing outcomes, with source-reviewed memory-order litmus proofs."
+    "Model a thread writing data and a flag, and another reading them, using a restricted set of 32-bit loads and stores.",
+    "Prove when synchronization makes the new data visible, construct successful and stale-read executions, and prove the accesses stay within suitably aligned memory.",
+    "Explain the source interpretation, proof assumptions and fragment restrictions, including the distinction between simplified instructions and legal PTX program text.",
+    "Check proposed finite memory graphs exactly and classify the outcomes of small programs that distinguish memory-ordering rules."
   ],
   "realization": "implemented",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "Instruction execution produces the events used by memory validity."
+        "quote": "Executing instructions produces records of reads and writes, called memory\nevents. A memory graph contains these events, a proposed write supplying each\nread's value, and ordering relations. The proposed source must write the same\nlocation and value. The memory-validity rules check this graph; they do not\nassume that the consumer sees the desired data.\n\nSeveral relations express different parts of the check. Program order follows\none thread's instruction sequence. Observation links a qualifying source write to the\nread that observes it. Synchronization connects qualifying release/acquire patterns\nbetween threads. Paths combining program order and synchronization form base\ncausality. Restricting those paths to equal endpoint addresses gives the\nproxy-preserved base in this fragment. Causality is either such a restricted\npath or an observation followed by one; arbitrary chains of these causality\nedges are not silently added. Coherence orders writes to a location.\nCommunication collects write-to-read source links, coherence links, and links\nfrom a read to writes later than its source. Initial events represent the\nstarting contents, group the four bytes of each word, and precede program writes\nto that location."
       },
       "to": {
         "path": "Ptx/Language.lean",
@@ -29,7 +29,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Instruction execution produces the events used by memory validity."
+        "quote": "Executing instructions produces records of reads and writes, called memory\nevents. A memory graph contains these events, a proposed write supplying each\nread's value, and ordering relations. The proposed source must write the same\nlocation and value. The memory-validity rules check this graph; they do not\nassume that the consumer sees the desired data.\n\nSeveral relations express different parts of the check. Program order follows\none thread's instruction sequence. Observation links a qualifying source write to the\nread that observes it. Synchronization connects qualifying release/acquire patterns\nbetween threads. Paths combining program order and synchronization form base\ncausality. Restricting those paths to equal endpoint addresses gives the\nproxy-preserved base in this fragment. Causality is either such a restricted\npath or an observation followed by one; arbitrary chains of these causality\nedges are not silently added. Coherence orders writes to a location.\nCommunication collects write-to-read source links, coherence links, and links\nfrom a read to writes later than its source. Initial events represent the\nstarting contents, group the four bytes of each word, and precede program writes\nto that location."
       },
       "to": {
         "path": "Ptx/Program.lean",
@@ -41,7 +41,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Read sources and coherence choices must satisfy the restricted\nmemory constraints; a conclusion about publication is not itself a validity\ncondition."
+        "quote": "Executing instructions produces records of reads and writes, called memory\nevents. A memory graph contains these events, a proposed write supplying each\nread's value, and ordering relations. The proposed source must write the same\nlocation and value. The memory-validity rules check this graph; they do not\nassume that the consumer sees the desired data.\n\nSeveral relations express different parts of the check. Program order follows\none thread's instruction sequence. Observation links a qualifying source write to the\nread that observes it. Synchronization connects qualifying release/acquire patterns\nbetween threads. Paths combining program order and synchronization form base\ncausality. Restricting those paths to equal endpoint addresses gives the\nproxy-preserved base in this fragment. Causality is either such a restricted\npath or an observation followed by one; arbitrary chains of these causality\nedges are not silently added. Coherence orders writes to a location.\nCommunication collects write-to-read source links, coherence links, and links\nfrom a read to writes later than its source. Initial events represent the\nstarting contents, group the four bytes of each word, and precede program writes\nto that location."
       },
       "to": {
         "path": "Ptx/Memory.lean",
@@ -53,7 +53,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The acquire publication program guarantees that observing its flag implies\nobserving the published payload."
+        "quote": "Publication means making the written data available to the reader through this\nflag protocol. With an acquire flag read, observing the flag guarantees the new\ndata. A constructed completed execution shows that the rules actually admit a\nrun; the theorem is not true merely because no run exists. Changing the consumer's\nacquire to relaxed ordering admits a completed run that sees the flag but reads\nold data, called a stale read. Both variants have safe, aligned accesses under\nthe same explicit allocation assumptions."
       },
       "to": {
         "path": "Ptx/MessagePassing.lean",
@@ -65,7 +65,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A complete successful execution witnesses\nnon-vacuity."
+        "quote": "Publication means making the written data available to the reader through this\nflag protocol. With an acquire flag read, observing the flag guarantees the new\ndata. A constructed completed execution shows that the rules actually admit a\nrun; the theorem is not true merely because no run exists. Changing the consumer's\nacquire to relaxed ordering admits a completed run that sees the flag but reads\nold data, called a stale read. Both variants have safe, aligned accesses under\nthe same explicit allocation assumptions."
       },
       "to": {
         "path": "Ptx/MessagePassing.lean",
@@ -77,7 +77,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Weakening the consumer's acquire to relaxed admits a complete stale\npayload witness."
+        "quote": "Publication means making the written data available to the reader through this\nflag protocol. With an acquire flag read, observing the flag guarantees the new\ndata. A constructed completed execution shows that the rules actually admit a\nrun; the theorem is not true merely because no run exists. Changing the consumer's\nacquire to relaxed ordering admits a completed run that sees the flag but reads\nold data, called a stale read. Both variants have safe, aligned accesses under\nthe same explicit allocation assumptions."
       },
       "to": {
         "path": "Ptx/MessagePassing.lean",
@@ -89,7 +89,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The same instruction-level allocation premises establish safe\naligned accesses for both variants."
+        "quote": "Publication means making the written data available to the reader through this\nflag protocol. With an acquire flag read, observing the flag guarantees the new\ndata. A constructed completed execution shows that the rules actually admit a\nrun; the theorem is not true merely because no run exists. Changing the consumer's\nacquire to relaxed ordering admits a completed run that sees the flag but reads\nold data, called a stale read. Both variants have safe, aligned accesses under\nthe same explicit allocation assumptions."
       },
       "to": {
         "path": "Ptx/MessagePassing.lean",
@@ -113,7 +113,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Checked proofs expose their logical dependencies."
+        "quote": "The proof audit lists the axioms and other declarations on which results depend.\nThe source account explains why one source write per whole word is justified\nunder these scope restrictions and why fixed literal stores do not depend on\nread values to justify their data. Excluded features include separate memory-ordering\ninstructions (fences), indivisible read-modify-write operations (RMWs), stores or\naddresses computed from loads, branches, and operations initiated for later\ncompletion. No hardware scheduling guarantee is claimed."
       },
       "to": {
         "path": "Ptx/Audit.lean",
@@ -125,7 +125,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Source correspondence records\nexplain the restrictions under which whole-word read sources and constant-store\nvalue grounding represent the applicable PTX requirements."
+        "quote": "The proof audit lists the axioms and other declarations on which results depend.\nThe source account explains why one source write per whole word is justified\nunder these scope restrictions and why fixed literal stores do not depend on\nread values to justify their data. Excluded features include separate memory-ordering\ninstructions (fences), indivisible read-modify-write operations (RMWs), stores or\naddresses computed from loads, branches, and operations initiated for later\ncompletion. No hardware scheduling guarantee is claimed."
       },
       "to": {
         "path": "docs/foundations/source-ledger.md",
@@ -137,7 +137,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The message-passing outcome classification is complete for both acquire and\nrelaxed consumers."
+        "quote": "A finite candidate checker accepts exactly the graphs satisfying these restricted\nmemory rules, including ordering-path conditions with no fixed path-length limit.\nFor the message-passing program, a separate result classifies all read outcomes\nfor both acquire and relaxed consumers. Small programs designed to distinguish\nmemory rules are called litmus tests. These exercise two threads each storing\nbefore reading the other's location (store buffering), ordering at one location,\nand release/acquire patterns spanning several instructions. The proofs construct\npermitted outcomes and exclude forbidden ones for all relevant candidates."
       },
       "to": {
         "path": "Ptx/MessagePassingOutcomes.lean",
@@ -149,7 +149,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The message-passing outcome classification is complete for both acquire and\nrelaxed consumers."
+        "quote": "A finite candidate checker accepts exactly the graphs satisfying these restricted\nmemory rules, including ordering-path conditions with no fixed path-length limit.\nFor the message-passing program, a separate result classifies all read outcomes\nfor both acquire and relaxed consumers. Small programs designed to distinguish\nmemory rules are called litmus tests. These exercise two threads each storing\nbefore reading the other's location (store buffering), ordering at one location,\nand release/acquire patterns spanning several instructions. The proofs construct\npermitted outcomes and exclude forbidden ones for all relevant candidates."
       },
       "to": {
         "path": "Ptx/MessagePassingOutcomes.lean",
@@ -161,7 +161,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Source-reviewed litmus examples exercise store buffering,\nsame-location ordering, and multi-instruction synchronization patterns through\nadmitted executions and universal exclusion results."
+        "quote": "A finite candidate checker accepts exactly the graphs satisfying these restricted\nmemory rules, including ordering-path conditions with no fixed path-length limit.\nFor the message-passing program, a separate result classifies all read outcomes\nfor both acquire and relaxed consumers. Small programs designed to distinguish\nmemory rules are called litmus tests. These exercise two threads each storing\nbefore reading the other's location (store buffering), ordering at one location,\nand release/acquire patterns spanning several instructions. The proofs construct\npermitted outcomes and exclude forbidden ones for all relevant candidates."
       },
       "to": {
         "path": "Ptx/Litmus.lean",
@@ -173,7 +173,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Source-reviewed litmus examples exercise store buffering,\nsame-location ordering, and multi-instruction synchronization patterns through\nadmitted executions and universal exclusion results."
+        "quote": "A finite candidate checker accepts exactly the graphs satisfying these restricted\nmemory rules, including ordering-path conditions with no fixed path-length limit.\nFor the message-passing program, a separate result classifies all read outcomes\nfor both acquire and relaxed consumers. Small programs designed to distinguish\nmemory rules are called litmus tests. These exercise two threads each storing\nbefore reading the other's location (store buffering), ordering at one location,\nand release/acquire patterns spanning several instructions. The proofs construct\npermitted outcomes and exclude forbidden ones for all relevant candidates."
       },
       "to": {
         "path": "Ptx/Litmus.lean",
@@ -185,7 +185,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Source-reviewed litmus examples exercise store buffering,\nsame-location ordering, and multi-instruction synchronization patterns through\nadmitted executions and universal exclusion results."
+        "quote": "A finite candidate checker accepts exactly the graphs satisfying these restricted\nmemory rules, including ordering-path conditions with no fixed path-length limit.\nFor the message-passing program, a separate result classifies all read outcomes\nfor both acquire and relaxed consumers. Small programs designed to distinguish\nmemory rules are called litmus tests. These exercise two threads each storing\nbefore reading the other's location (store buffering), ordering at one location,\nand release/acquire patterns spanning several instructions. The proofs construct\npermitted outcomes and exclude forbidden ones for all relevant candidates."
       },
       "to": {
         "path": "Ptx/Litmus.lean",
@@ -197,7 +197,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Source-reviewed litmus examples exercise store buffering,\nsame-location ordering, and multi-instruction synchronization patterns through\nadmitted executions and universal exclusion results."
+        "quote": "A finite candidate checker accepts exactly the graphs satisfying these restricted\nmemory rules, including ordering-path conditions with no fixed path-length limit.\nFor the message-passing program, a separate result classifies all read outcomes\nfor both acquire and relaxed consumers. Small programs designed to distinguish\nmemory rules are called litmus tests. These exercise two threads each storing\nbefore reading the other's location (store buffering), ordering at one location,\nand release/acquire patterns spanning several instructions. The proofs construct\npermitted outcomes and exclude forbidden ones for all relevant candidates."
       },
       "to": {
         "path": "docs/foundations/finite-checking.md",

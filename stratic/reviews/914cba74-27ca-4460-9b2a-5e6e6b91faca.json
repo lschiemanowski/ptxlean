@@ -1,0 +1,332 @@
+{
+  "id": "914cba74-27ca-4460-9b2a-5e6e6b91faca",
+  "base": "b7028c79568ba49efb61672d195ca8e6b094ac75",
+  "contentTree": "aec08d25dc6e2ab9662312254b2eb23380c0eee0",
+  "reviewer": "Codex",
+  "summary": "Clarify capability-first Luna evaluation via Codex headless, removing an initial productivity gate and arbitrary per-task repair limits. Record a cumulative check-in before call 201. Preserve the full release target and earlier Stratic/documentation changes. No model calls or Lean changes.",
+  "examined": [
+    {
+      "id": "backward",
+      "outcome": "revised",
+      "reason": "Explained Jacobian, VJP, incoming cotangent, loss and tactics; preserved differentiability conditions, automatic TorchLean construction, separately authored PTX and distinct execution obligations. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "byte-memory",
+      "outcome": "revised",
+      "reason": "Moved the stable byte-memory description under Memory observations and ordering, clarified inherited terminology and separate access contracts, and preserved all byte-source conditions and unresolved policies. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Explained end-to-end claims, architecture and KV caching; retained application-specific assumptions and separation of examples from general PTX scope. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "execution-environment",
+      "outcome": "revised",
+      "reason": "Replaced the combined environment and memory-model account with an overview of thread grouping, storage access and instruction eligibility, explicitly separating observation rules. Preserved its implementation limits. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "finite-checking",
+      "outcome": "revised",
+      "reason": "Explained graph checking, nonempty reachability, soundness and completeness; retained one-candidate scope and the distinction from execution enumeration and semantic fidelity. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "gemma",
+      "outcome": "revised",
+      "reason": "Explained checkpoint, KV cache, transformer blocks, embeddings, activations, VJP, loss and cache invariants; preserved text-only coverage, cache-free backward and the exact parameter-gradient boundary. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "instruction-requirements",
+      "outcome": "revised",
+      "reason": "Extracted instruction eligibility and explained the implemented forms, version/GPU checks and supported/illegal/unsupported distinction; verified new detail against Environment.lean and ScalarEnvironment.lean. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "memory-ordering",
+      "outcome": "revised",
+      "reason": "Added the shared account of memory events, scope, causality, coherence and the conditional relationship between whole-word and byte-level observations, preserving fragment restrictions. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "revised",
+      "reason": "Defined words, instruction forms, events, ordering relations, publication and litmus tests; retained the exact causality construction and restricted source account. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "revised",
+      "reason": "Explained precision policy, accumulation, VJP, checkpoints, derivative conventions, logits, loss, gradients and error measures; retained every-result quantification and the undecided precision policy. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "revised",
+      "reason": "Explained allocation, launch, dependencies, lifetime, buffers and runtime; preserved visibility, ownership and concrete-runtime obligations. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "revised",
+      "reason": "Added an explicit entry into Memory observations and ordering alongside Execution environment, preserving the original semantics responsibility. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Clarified PTX, GPU, registers, tensors and the roles of Lean and TorchLean; retained the full intended scope and all distinctions between kinds of correctness. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "revised",
+      "reason": "Defined operands, predicates, words, traces, dependencies, state, dispatch and fuel; preserved the instruction subset, stopping conditions and text-interface boundary. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "scalar-kernels",
+      "outcome": "revised",
+      "reason": "Explained elementwise computation, aliasing, weak memory and the bounded sum; retained initial states, numeric bounds, step budget and concurrent-model limits. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "scalar-proof-rules",
+      "outcome": "revised",
+      "reason": "Explained assertions, preconditions, framing, invariants and termination measures; retained all four contracts and their quantification. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Clarified the division of work: reviewed shared foundations and coordination, smaller-model instruction workers, and independent evaluation. Existing source and proof evidence is preserved; the summary and unimplemented workflow status were reviewed."
+    },
+    {
+      "id": "shared-vector-add",
+      "outcome": "revised",
+      "reason": "Explained lanes, interleavings, invariants, scope and memory events; retained layout, bounds, schedule quantifiers and the execution-to-graph connection. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "storage-access",
+      "outcome": "revised",
+      "reason": "Extracted allocation checks and scalar-execution connections, preserving alignment, ownership, known-content and lifetime qualifications. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "thread-groups",
+      "outcome": "revised",
+      "reason": "Extracted thread identity, grouping, scope membership and mutual inclusion, preserving exclusions for host execution and physical launch mappings. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "revised",
+      "reason": "Introduced tensors, layouts, mixed precision, contracts, fusion and orchestration; retained numerical and memory obligations and separate PTX backward proofs. Reviewed its summary and scope note, and reconciled affected passage selectors. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "whole-word-memory",
+      "outcome": "revised",
+      "reason": "Extracted whole-word observations into a sibling of byte-level observations; explained source identity, ordering checks, program admission and conditional equivalence, with direct existing proof links. Summary and scope note reviewed; evidence and dependency passages checked."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Separate adaptive capability exploration from later frozen productivity evaluation. Keep strict artifact correctness while making run limits and check-in points explicit policies rather than invented acceptance conditions. Summary remains accurate; responsibility is still unimplemented."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "aec08d25dc6e2ab9662312254b2eb23380c0eee0",
+      "method": "Manual policy and contract review; preservation and local-link assertions; stratic validate; git diff --check; exact snapshot comparison.",
+      "outcome": "pass",
+      "environment": "Documentation-only PTXLean proposal, existing Stratic CLI and system Python 3. No headless inference calls; no Lean compilation required for this edit.",
+      "evidence": "Reviewed the distinction between accepted-artifact correctness and exploratory productivity, selected Codex headless route, no arbitrary per-task caps, and cumulative checkpoint before call 201 including retries/resumes/reviewers. Confirmed all other description bodies and all metadata remain unchanged from the prior prepared proposal, local draft links resolve, Stratic is valid and whitespace checks pass. Exact before/after snapshots match. No inference or Lean implementation changes.",
+      "tests": [],
+      "id": "18c6f1b4-7f9a-4d45-ac9b-7fdffd09209f",
+      "recordedAt": "2026-09-23T18:36:28.996Z"
+    }
+  ],
+  "recordedAt": "2026-09-23T18:36:33.552Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/blocks12.md",
+      "reason": "Previously reviewed foundations guide correction retained."
+    },
+    {
+      "path": "docs/release/non-gemma-contract.md",
+      "reason": "Draft release and evaluation criteria, not implemented behavior or a report of completed work; manually checked against current Stratic contracts and source-checking boundaries."
+    },
+    {
+      "path": "stratic/descriptions/backward.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/backward.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/byte-memory.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/byte-memory.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/examples.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/execution-environment.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/execution-environment.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/finite-checking.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/finite-checking.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/gemma.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/gemma.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/instruction-requirements.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/instruction-requirements.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/memory-ordering.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/memory-ordering.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/message-passing.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/message-passing.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/orchestration.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/orchestration.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/root.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-kernels.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-kernels.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-proof-rules.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/scalar-proof-rules.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/shared-vector-add.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/shared-vector-add.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/storage-access.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/storage-access.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/thread-groups.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/thread-groups.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/verification-interface.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/verification-interface.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/whole-word-memory.json",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    },
+    {
+      "path": "stratic/descriptions/whole-word-memory.md",
+      "reason": "Description prose, summary, scope and passage metadata reviewed, including preserved earlier hierarchy changes; contextual prose does not itself assert new implementation."
+    }
+  ]
+}

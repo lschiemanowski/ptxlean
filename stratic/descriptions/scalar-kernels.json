@@ -3,20 +3,20 @@
   "parent": {
     "description": "scalar-execution",
     "passage": {
-      "quote": "The scalar kernel examples execute concrete instruction lists for elementwise\ninteger computation and bounded traversal."
+      "quote": "The kernel examples compute on corresponding array elements and traverse a\nbounded part of an array using actual instructions. Their contracts state the\ninitial registers and memory layout, the results and unchanged storage, valid\naccess ranges, and enough execution steps to finish. Combining per-thread results\nrequires explicit conditions on who can write which locations and how the\nthreads may be scheduled."
     }
   },
   "summary": [
-    "Verify instruction-level integer kernels with explicit input, memory and execution contracts.",
-    "Prove actual bounded-loop termination, functional results, and memory preservation under a stated ownership discipline.",
-    "A shared-allocation vector-add example executes distinct threads against one memory state. Disjoint output ownership supports noninterference, correct completed results, and an explicit completed execution witness."
+    "Verify integer kernels instruction by instruction under explicit conditions on initial registers, memory and address calculations.",
+    "Prove that a bounded sum over an array slice finishes with the expected 32-bit result and preserves memory, using seven instruction steps per word plus three.",
+    "Distinguish proofs for isolated workers from proofs about workers whose steps are interleaved in one shared allocation."
   ],
   "realization": "implemented",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "An elementwise computation reads its inputs from an explicit memory view and\nwrites the modular u32 result while preserving other storage."
+        "quote": "The examples connect scalar instructions to concrete integer results. Elementwise\ncomputation applies an operation to corresponding array elements. It reads them\nfrom specified memory locations and writes the `u32` result, wrapping modulo\n`2^32`, while preserving other storage. A bounded loop uses actual conditional\nand branch instructions. A decreasing quantity or an explicit execution proof\nestablishes that it finishes; exhausting the evaluator's step budget does not."
       },
       "to": {
         "path": "Ptx/ScalarKernels.lean",
@@ -28,7 +28,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A bounded loop\nuses actual predicate and branch instructions; a decreasing measure or explicit\nexecution theorem establishes termination rather than treating fuel exhaustion\nas success."
+        "quote": "The examples connect scalar instructions to concrete integer results. Elementwise\ncomputation applies an operation to corresponding array elements. It reads them\nfrom specified memory locations and writes the `u32` result, wrapping modulo\n`2^32`, while preserving other storage. A bounded loop uses actual conditional\nand branch instructions. A decreasing quantity or an explicit execution proof\nestablishes that it finishes; exhausting the evaluator's step budget does not."
       },
       "to": {
         "path": "Ptx/ScalarKernels.lean",
@@ -40,7 +40,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The kernel contracts expose all initial-register, pointer, extent, and aliasing\nconditions."
+        "quote": "The contracts state initial register values, pointer addresses, available memory\nsize, and conditions on addresses that refer to the same storage (aliasing).\nCompletion, results, safe accesses, and unchanged memory are proved separately\nwhere they are independent. A constructed execution proves existence. Per-thread\nresults over independent memory lists are distinguished from results for threads\nsharing one allocation under a scheduler."
       },
       "to": {
         "path": "Ptx/ScalarKernels.lean",
@@ -52,7 +52,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Constructed witnesses make\nexecution existence explicit."
+        "quote": "The contracts state initial register values, pointer addresses, available memory\nsize, and conditions on addresses that refer to the same storage (aliasing).\nCompletion, results, safe accesses, and unchanged memory are proved separately\nwhere they are independent. A constructed execution proves existence. Per-thread\nresults over independent memory lists are distinguished from results for threads\nsharing one allocation under a scheduler."
       },
       "to": {
         "path": "Ptx/ScalarKernels.lean",
@@ -64,7 +64,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Completed execution, returned values, memory safety, and preservation\nare proved separately where they are independent."
+        "quote": "The contracts state initial register values, pointer addresses, available memory\nsize, and conditions on addresses that refer to the same storage (aliasing).\nCompletion, results, safe accesses, and unchanged memory are proved separately\nwhere they are independent. A constructed execution proves existence. Per-thread\nresults over independent memory lists are distinguished from results for threads\nsharing one allocation under a scheduler."
       },
       "to": {
         "path": "Ptx/ScalarKernels.lean",
@@ -76,7 +76,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Lane-wise local results over independent owned memory views are distinguished\nfrom the shared-allocation and scheduling theorems."
+        "quote": "The contracts state initial register values, pointer addresses, available memory\nsize, and conditions on addresses that refer to the same storage (aliasing).\nCompletion, results, safe accesses, and unchanged memory are proved separately\nwhere they are independent. A constructed execution proves existence. Per-thread\nresults over independent memory lists are distinguished from results for threads\nsharing one allocation under a scheduler."
       },
       "to": {
         "path": "Ptx/ScalarKernels.lean",
@@ -88,7 +88,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The source and text representations identify which PTX instruction variants the\nexamples use."
+        "quote": "The source and text representations identify the instruction forms used.\nExplanations distinguish a concrete local run from the wider range of memory\nobservations PTX can permit across threads, often called weak-memory behavior.\nA proof for the former is not silently treated as a proof covering the latter."
       },
       "to": {
         "path": "Ptx/ScalarExamples.lean",
@@ -100,7 +100,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A constructive relational witness links the lane example's actual memory effects\nto initialized values and memory-order constraints."
+        "quote": "For the addition example, a constructed memory graph records the actual reads\nand writes, their initial values, and the proposed source and ordering relations.\nA proof connects this graph to the instructions that ran. Store data comes from\nthe computed registers. This does not establish that the combined model captures\nevery dependent concurrent program or every hardware execution."
       },
       "to": {
         "path": "Ptx/ScalarMemoryWitness.lean",
@@ -112,7 +112,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A constructive relational witness links the lane example's actual memory effects\nto initialized values and memory-order constraints."
+        "quote": "For the addition example, a constructed memory graph records the actual reads\nand writes, their initial values, and the proposed source and ordering relations.\nA proof connects this graph to the instructions that ran. Store data comes from\nthe computed registers. This does not establish that the combined model captures\nevery dependent concurrent program or every hardware execution."
       },
       "to": {
         "path": "Ptx/ScalarMemoryWitness.lean",
@@ -124,7 +124,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Register-valued store data\ncomes from the scalar execution."
+        "quote": "For the addition example, a constructed memory graph records the actual reads\nand writes, their initial values, and the proposed source and ordering relations.\nA proof connects this graph to the instructions that ran. Store data comes from\nthe computed registers. This does not establish that the combined model captures\nevery dependent concurrent program or every hardware execution."
       },
       "to": {
         "path": "Ptx/ScalarMemoryWitness.lean",
@@ -136,12 +136,36 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Explanations distinguish local concrete execution from general\nweak-memory execution and do not claim an unproved concurrent refinement."
+        "quote": "The source and text representations identify the instruction forms used.\nExplanations distinguish a concrete local run from the wider range of memory\nobservations PTX can permit across threads, often called weak-memory behavior.\nA proof for the former is not silently treated as a proof covering the latter."
       },
       "to": {
         "path": "docs/foundations/blocks12.md",
         "passage": {
           "quote": "The argument has both directions needed for a useful example. `candidate_correct`\nquantifies over arbitrary candidate input reads and source/coherence choices.\nSource compatibility forces each load to read its input's unique initialization\nwrite, so the completed result is the desired sum. This premise is an actual\nmemory source constraint; it does not assume the output is correct.\n`witness_valid` constructs compatible source and coherence choices for every\ninput. `candidate_eq_concrete` equates the grounded candidate with the concrete\ninterpreter run, and `witness_events_from_run` connects the labels to that run.\n`constructive_execution` packages the halted derivation, final memory and graph\nwitness."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Execution begins at instruction zero with the count in value register 0, the\naccumulator in value register 1, and byte pointer `4*start` in address register 0.\nThe required bounds are `start + count ≤ memory.length`, `count < 2^32`, and\n`4*(start + count) < 2^64`. The last is a sufficient bound that also covers the\npointer immediately after the last word, even though it is not read. The theorem proves explicit halt and the reference result in\n`7*count + 3` dispatches with unchanged memory. More fuel preserves the same\ncompleted result. Access safety is proved separately; it alone would also hold\nfor a safe prefix that later faults. This loop's result is sequential and has no\ngeneral theorem connecting its traces to all permitted concurrent PTX behavior.\n"
+      },
+      "to": {
+        "path": "Ptx/ScalarKernels.lean",
+        "passage": {
+          "quote": "theorem sum_loop_correct (count : Nat) (s : State) (start : Nat)\n    (pc : s.pc = 0) (counter : s.regs 0 = BitVec.ofNat 32 count)\n    (pointer : s.addrs 0 = BitVec.ofNat 64 (4 * start))\n    (extent : start + count ≤ s.memory.length)\n    (countFits : count < 2^32) (addressFits : 4 * (start + count) < 2^64) :\n    let final := outcome (7 * count + 3) sumLoop s\n    final.1 = .halted ∧ final.2.memory = s.memory ∧\n      final.2.regs 1 = sliceSum s.memory start count (s.regs 1) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The sum kernel repeatedly tests a count, loads one word, adds it to a running total called an accumulator,\nadvances a byte pointer by four, decrements the count, and branches back. Zero\ncount branches to explicit exit. The reference result adds the requested contiguous portion of memory (the slice)\none word at a time modulo `2^32`, starting from the supplied accumulator.\nFor example, the slice `[2, 3]` with accumulator `10` yields `15`; overflow wraps."
+      },
+      "to": {
+        "path": "Ptx/ScalarKernels.lean",
+        "passage": {
+          "quote": "def sumLoop : List Instr := [\n  .plain (.setp .eq 0 (.reg 0) (.imm 0)),\n  ⟨.pred 0 true, .bra 7⟩,\n  .plain (.load 2 (.reg 0)),\n  .plain (.bin32 .add 1 (.reg 1) (.reg 2)),\n  .plain (.add64 0 (.reg 0) (.imm 4)),\n  .plain (.bin32 .sub 0 (.reg 0) (.imm 1)),\n  .plain (.bra 0),\n  .plain .exit]"
         }
       }
     }

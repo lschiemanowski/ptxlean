@@ -1,20 +1,26 @@
 # Semantic fidelity
 
-Each semantic interpretation connects a versioned source passage and its
-qualifications to a plain-language explanation, formal rules, and examples of
-permitted and forbidden behavior. Ambiguities and interpretive choices remain
-visible. The source and evidence records allow the interpretation to be reviewed
-and reproduced independently of its author.
+Semantic fidelity means that the formal definitions express the behavior NVIDIA
+documents. Each interpretation connects a passage from a specified version of
+the manual, including its qualifications, to a plain-language explanation, formal
+rules, and permitted and forbidden examples. Ambiguities and choices remain
+visible so that another reader can review and reproduce the interpretation.
 
-Document review addresses fidelity to NVIDIA's promises, exceptions, undefined
-behavior, version requirements, and target restrictions. Internal adequacy
-results establish that semantic components fit together, suitable programs
-admit executions, and derived rules follow from the foundation. External
-examples, litmus tests, and hardware experiments provide evidence for detecting
-errors without being presented as general proofs of hardware conformance.
+Source review checks NVIDIA's guarantees, exceptions, cases where it leaves
+behavior undefined, PTX-version requirements, and restrictions on supported GPUs.
+Internal adequacy results prove that pieces of the formal model fit together,
+that suitable programs have executions, and that derived proof rules follow from
+the foundation. Small programs designed to distinguish memory behaviors, called
+litmus tests, and hardware experiments provide additional evidence for finding
+mistakes. Such experiments are not general proofs that hardware obeys the model.
 
-Model-assisted formalization uses inexpensive models for generating definitions
-and proof candidates. Lean checks submitted proofs, while source review and
+Model-assisted formalization delegates instruction definitions and proof
+candidates to smaller models using shared, reviewed semantic foundations.
+Each task supplies the source passages, fixed interfaces and acceptance obligations
+for a bounded instruction family. The coordinator develops those foundations,
+maintains coverage, and evaluates the generation and review workflow; routine
+instruction-by-instruction expansion belongs to the delegated workers.
+Lean checks submitted proofs, while source review and
 independent checks address whether their definitions describe the intended
 behavior. Generation records identify the inputs, outputs, checking results,
 and costs needed to assess reproducibility and cost effectiveness. A generator

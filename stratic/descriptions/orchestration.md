@@ -1,17 +1,23 @@
 # Multi-kernel orchestration
 
-The orchestration model describes allocations, kernel launches, dependencies,
-storage lifetime, and observable results. It accounts for argument and buffer
-correspondence and establishes the ordering and visibility required by consumers
-of intermediate results. It supports persistent state across calls as well as
-temporary values shared between computations.
+Orchestration coordinates work split across several GPU kernels. It describes
+which memory regions are reserved (allocations), when kernels begin (launches),
+and which earlier results must be ready before later work can use them
+(dependencies). Storage lifetime is the interval during which a region remains
+available. The model connects each kernel argument to the intended memory buffer, a region
+holding its data, and establishes both the required execution order and the reader's ability to
+observe earlier writes. It covers values retained across calls as well as
+temporary intermediate results.
 
-The orchestration layer composes permitted kernel executions while preserving their safety and execution premises.
+The orchestration layer combines permitted kernel executions while preserving
+the assumptions needed for their safety and execution guarantees.
 
-Correctness of individual kernels is composed under explicit runtime contracts.
-Correspondence between those contracts and a concrete runtime, allocator, or
-launch API is a separate obligation. Ownership, aliasing, and resource premises
-remain visible in the resulting composition theorem.
+Individual kernel proofs are combined under contracts for the runtime, the
+software that reserves memory and launches GPU work. Showing that a particular
+runtime, memory allocator, or launch interface obeys those contracts is a
+separate proof obligation. The combined theorem retains its assumptions about
+who may access storage, pointers that name the same storage (aliasing), and
+available resources.
 
 Explanations follow data from allocation through producer and consumer launches
 to its final observation or release. They show where ordering, visibility, and

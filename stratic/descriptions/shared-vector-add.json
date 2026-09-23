@@ -3,19 +3,20 @@
   "parent": {
     "description": "scalar-kernels",
     "passage": {
-      "quote": "A shared-allocation vector-add example executes distinct threads against one\nmemory state. Disjoint output ownership supports noninterference, correct\ncompleted results, and an explicit completed execution witness."
+      "quote": "The shared-allocation vector-add example runs distinct threads against one memory\nstate. Each thread has its own output location, so their writes cannot interfere\nwith one another. The proofs establish correct completed results and construct\nan execution that finishes."
     }
   },
   "summary": [
-    "Verify scalar vector addition over one allocation under instruction-level interleaving.",
-    "Prove noninterference, correct completed results, access safety and constructive completion with explicit relational boundaries."
+    "Verify 32-bit vector addition in one memory allocation, with separate input and output words and explicit memory-size and address bounds.",
+    "Prove that workers cannot disturb one another’s data and that all completed results are correct, however their steps are interleaved; construct a run using five steps per worker.",
+    "Connect the recorded accesses to a valid restricted memory graph and constrain all compatible proposed outputs, without claiming to cover every PTX execution."
   ],
   "realization": "implemented",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "All lanes execute their scalar load, load, add, store, and exit instructions\nagainst one explicit memory allocation. Each lane reads designated input words\nand owns its output word; input/output separation and output uniqueness are\npart of the representation or proved premises. Initial registers and memory\nare explicit inputs."
+        "quote": "Each lane is one logical worker, modeled as a distinct thread, computing one\noutput element; it is not a claim about a hardware warp position. Every lane\nexecutes load, load, add, store, and exit against one shared memory allocation.\nA word is a four-byte value. Each lane reads designated input words and is the\nonly writer of its output word. Input/output separation and distinct outputs\nare built into the representation or proved. Initial registers and memory are\nsupplied inputs."
       },
       "to": {
         "path": "Ptx/SharedVector.lean",
@@ -27,7 +28,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Each lane reads designated input words\nand owns its output word; input/output separation and output uniqueness are\npart of the representation or proved premises. Initial registers and memory\nare explicit inputs."
+        "quote": "Each lane is one logical worker, modeled as a distinct thread, computing one\noutput element; it is not a claim about a hardware warp position. Every lane\nexecutes load, load, add, store, and exit against one shared memory allocation.\nA word is a four-byte value. Each lane reads designated input words and is the\nonly writer of its output word. Input/output separation and distinct outputs\nare built into the representation or proved. Initial registers and memory are\nsupplied inputs."
       },
       "to": {
         "path": "Ptx/SharedVector.lean",
@@ -39,7 +40,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A thread-step semantics permits instruction-level interleavings. Invariants\nestablish that other lanes cannot change a lane's inputs or overwrite its\noutput, that completed lanes return the modular sum, and that every actual\naccess remains in bounds. An explicit schedule constructs a completed execution;\nno unrestricted scheduler fairness or hardware progress is inferred."
+        "quote": "The scheduler chooses one lane to execute one instruction at a time. Different\nchoices produce different interleavings of the lanes' steps. Properties preserved\nby every step, called invariants, show that a lane cannot change another lane's\ninputs or output, that completed lanes return the sum modulo `2^32`, and that\naccesses remain within the allocation. A particular schedule is constructed to\nfinish. This does not prove scheduler fairness, meaning that no lane is forever\ndenied execution opportunities, or progress of physical GPU hardware."
       },
       "to": {
         "path": "Ptx/SharedVector.lean",
@@ -51,7 +52,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Invariants\nestablish that other lanes cannot change a lane's inputs or overwrite its\noutput, that completed lanes return the modular sum, and that every actual\naccess remains in bounds. An explicit schedule constructs a completed execution;\nno unrestricted scheduler fairness or hardware progress is inferred."
+        "quote": "The scheduler chooses one lane to execute one instruction at a time. Different\nchoices produce different interleavings of the lanes' steps. Properties preserved\nby every step, called invariants, show that a lane cannot change another lane's\ninputs or output, that completed lanes return the sum modulo `2^32`, and that\naccesses remain within the allocation. A particular schedule is constructed to\nfinish. This does not prove scheduler fairness, meaning that no lane is forever\ndenied execution opportunities, or progress of physical GPU hardware."
       },
       "to": {
         "path": "Ptx/SharedVector.lean",
@@ -63,7 +64,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Invariants\nestablish that other lanes cannot change a lane's inputs or overwrite its\noutput, that completed lanes return the modular sum, and that every actual\naccess remains in bounds. An explicit schedule constructs a completed execution;\nno unrestricted scheduler fairness or hardware progress is inferred."
+        "quote": "The scheduler chooses one lane to execute one instruction at a time. Different\nchoices produce different interleavings of the lanes' steps. Properties preserved\nby every step, called invariants, show that a lane cannot change another lane's\ninputs or output, that completed lanes return the sum modulo `2^32`, and that\naccesses remain within the allocation. A particular schedule is constructed to\nfinish. This does not prove scheduler fairness, meaning that no lane is forever\ndenied execution opportunities, or progress of physical GPU hardware."
       },
       "to": {
         "path": "Ptx/SharedVector.lean",
@@ -75,7 +76,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "An explicit schedule constructs a completed execution;\nno unrestricted scheduler fairness or hardware progress is inferred."
+        "quote": "The scheduler chooses one lane to execute one instruction at a time. Different\nchoices produce different interleavings of the lanes' steps. Properties preserved\nby every step, called invariants, show that a lane cannot change another lane's\ninputs or output, that completed lanes return the sum modulo `2^32`, and that\naccesses remain within the allocation. A particular schedule is constructed to\nfinish. This does not prove scheduler fairness, meaning that no lane is forever\ndenied execution opportunities, or progress of physical GPU hardware."
       },
       "to": {
         "path": "Ptx/SharedVector.lean",
@@ -87,7 +88,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Memory events come from actual local instruction execution. A checked connection\nto the restricted relational memory constraints supplies compatible observations\nand ordering, with all scope, address, initialization, and dependency restrictions\nstated. The interleaving machine itself is not declared to be all PTX behavior."
+        "quote": "Records of reads and writes, called memory events, come from the actual executed\ninstructions. A proof connects these records to a graph satisfying the restricted\nmemory rules, including its proposed source writes and ordering. Scope, address,\ninitial-value, and dependency restrictions remain explicit. The machine that\ninterleaves these steps is not asserted to describe every PTX behavior."
       },
       "to": {
         "path": "Ptx/SharedVectorMemory.lean",
@@ -99,7 +100,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A checked connection\nto the restricted relational memory constraints supplies compatible observations\nand ordering, with all scope, address, initialization, and dependency restrictions\nstated. The interleaving machine itself is not declared to be all PTX behavior."
+        "quote": "Records of reads and writes, called memory events, come from the actual executed\ninstructions. A proof connects these records to a graph satisfying the restricted\nmemory rules, including its proposed source writes and ordering. Scope, address,\ninitial-value, and dependency restrictions remain explicit. The machine that\ninterleaves these steps is not asserted to describe every PTX behavior."
       },
       "to": {
         "path": "Ptx/SharedVectorMemory.lean",
@@ -111,7 +112,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A checked connection\nto the restricted relational memory constraints supplies compatible observations\nand ordering, with all scope, address, initialization, and dependency restrictions\nstated. The interleaving machine itself is not declared to be all PTX behavior."
+        "quote": "Records of reads and writes, called memory events, come from the actual executed\ninstructions. A proof connects these records to a graph satisfying the restricted\nmemory rules, including its proposed source writes and ordering. Scope, address,\ninitial-value, and dependency restrictions remain explicit. The machine that\ninterleaves these steps is not asserted to describe every PTX behavior."
       },
       "to": {
         "path": "Ptx/SharedVectorMemory.lean",
@@ -123,12 +124,72 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The interleaving machine itself is not declared to be all PTX behavior."
+        "quote": "Records of reads and writes, called memory events, come from the actual executed\ninstructions. A proof connects these records to a graph satisfying the restricted\nmemory rules, including its proposed source writes and ordering. Scope, address,\ninitial-value, and dependency restrictions remain explicit. The machine that\ninterleaves these steps is not asserted to describe every PTX behavior."
       },
       "to": {
         "path": "docs/foundations/shared-vector.md",
         "passage": {
           "quote": "There is also a separate universal relational statement. `input_sources` proves\nthat every source-compatible candidate graph must choose the original input\nvalues, across all lanes and arbitrary coherence choices. `candidate_output`\nthen derives the correct register-store value. Input/output separation supplies\na concrete grounding argument; it does not solve general dependent concurrent\nno-thin-air semantics. The candidate graph family fixes this kernel's memory\nevent structure, so it is not a general characterization of all PTX executions."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For `n` lanes, lane `i` reads words `3*i` and `3*i+1` and writes word `3*i+2`.\nWord `j` has byte address `4*j`. This interleaved layout makes ownership and\ninput/output separation immediate; it is not an optimized tensor layout.\nThe instruction sequence loads into registers 0 and 1, adds modulo `2^32` into\nregister 2, stores that register, and exits. All accesses use global memory and relaxed ordering at GPU scope, including\nthreads on that device without a release/acquire synchronization pair. They use\nthe ordinary memory-access mechanism called the generic proxy. Addresses are fixed for each lane; initial\nmemory and register values are arbitrary supplied inputs."
+      },
+      "to": {
+        "path": "Ptx/SharedVector.lean",
+        "passage": {
+          "quote": "def program (lane : Fin n) : List Instr := [\n  .plain (.load 0 (.imm (pointer (left lane)))),\n  .plain (.load 1 (.imm (pointer (right lane)))),\n  .plain (.bin32 .add 2 (.reg 0) (.reg 1)),\n  .plain (.store (.imm (pointer (output lane))) (.reg 2)),\n  .plain .exit]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The execution-level bounds are `3*n ≤ memory.length` and `12*n < 2^64`.\nThey ensure that all accessed words exist and their byte addresses do not wrap.\nThey are sufficient conditions, not a characterization of every legal allocation.\nThere is one memory list and, for each lane, its own register values and an\ninstruction cursor recording how far it has advanced. Scheduling a lane advances one instruction; scheduling a completed lane\nleaves the state unchanged. A cursor reaches completion only after exit executes."
+      },
+      "to": {
+        "path": "Ptx/SharedVector.lean",
+        "passage": {
+          "quote": "theorem completed_execution_exists (memory : List Word) (registers : Fin n → Nat → Word)\n    (extent : 3 * n ≤ memory.length) (noWrap : 12 * n < 2^64) :\n    ∃ (dispatches : List (Fin n)) (final : State n),\n      dispatches.length = 5 * n ∧ Execution dispatches (initial memory registers) final ∧\n      Complete final ∧ (∀ lane : Fin n, final.memory[output lane]! = sum memory lane) ∧\n      (∀ index, (∀ lane : Fin n, output lane ≠ index) → final.memory[index]? = memory[index]?) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every output location differs from every input location, and distinct lanes have\ndistinct outputs. Thus a store cannot change anyone's input or another lane's\noutput. The invariant records unchanged inputs, the original values after each\nload, their modular sum after addition, and the stored result after the store.\nThese facts are derived step by step; the final answer is not assumed at entry.\nAll finite schedules preserve the invariant and non-output words. Completed\nschedules have every correct output. The bounds additionally justify that the\nspecialized steps are actual scalar-instruction steps and that accesses are safe."
+      },
+      "to": {
+        "path": "Ptx/SharedVector.lean",
+        "passage": {
+          "quote": "structure Invariant (memory : List Word) (s : State n) : Prop where\n  length : s.memory.length = memory.length\n  cursor : ∀ lane, s.cursor lane ≤ 5\n  inputs : ∀ lane : Fin n, s.memory[left lane]! = memory[left lane]! ∧\n    s.memory[right lane]! = memory[right lane]!\n  first : ∀ lane, 1 ≤ s.cursor lane → s.regs lane 0 = memory[left lane]!\n  second : ∀ lane, 2 ≤ s.cursor lane → s.regs lane 1 = memory[right lane]!\n  added : ∀ lane, 3 ≤ s.cursor lane → s.regs lane 2 = sum memory lane\n  stored : ∀ lane, 4 ≤ s.cursor lane → s.memory[output lane]! = sum memory lane"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The central result, `verified_shared_execution`, constructs one schedule with an\nactual scalar execution, completed lanes, correct outputs, a valid restricted\nmemory graph, and matching per-lane event descriptions from the trace, the record of executed\ninstructions.\nEach lane contributes two loads and one store at instruction positions 0, 1,\nand 3. The graph also contains the three initialized words accessed by each lane, its memory footprint,\nwhose values are tied to actual allocation cells. Initial events for unused memory after the footprint\nare omitted from the graph; preservation of non-output storage is proved for the\nexecution separately."
+      },
+      "to": {
+        "path": "Ptx/SharedVectorMemory.lean",
+        "passage": {
+          "quote": "theorem verified_shared_execution (memory : List Word) (registers : Fin n → Nat → Word)\n    (extent : 3*n ≤ memory.length) (noWrap : 12*n < 2^64) :\n    ∃ dispatches : List (Fin n),\n      dispatches.length = 5*n ∧\n      SharedVector.Execution dispatches (SharedVector.initial memory registers)\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)) ∧\n      SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers)) ∧\n      (∀ lane : Fin n,\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory[SharedVector.output lane]! =\n          SharedVector.sum memory lane) ∧\n      (witness (n:=n) memory).Valid ∧\n      ∀ lane : Fin n, SharedVector.laneTrace lane (SharedVector.trace dispatches\n        (SharedVector.initial memory registers)) =\n        [(witness memory).event (indexOf lane 3),\n         (witness memory).event (indexOf lane 4),\n         (witness memory).event (indexOf lane 5)] := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A separate universal statement constrains the fixed candidate family: compatible\nread sources force both inputs to come from initialization, since no program\nstore targets an input. The register addition then forces the output sum for\nany such candidate, without assuming that answer. Outputs are never read, so\nthese stores cannot circularly justify input values. This grounds the read values in memory contents that exist independently of\nthe computed outputs. It does not characterize arbitrary dependent PTX\nprograms, establish all hardware executions, or supply a runtime launch mapping.\n"
+      },
+      "to": {
+        "path": "Ptx/SharedVectorMemory.lean",
+        "passage": {
+          "quote": "theorem candidate_output (memory : List Word) (left right : Fin n → Word) (source co)\n    (sources : (graph memory left right source co).Sources) (lane : Fin n) :\n    ((graph memory left right source co).event (indexOf lane 5)).effect.value =\n      SharedVector.sum memory lane := by"
         }
       }
     }

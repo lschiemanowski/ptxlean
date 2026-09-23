@@ -1,0 +1,65 @@
+{
+  "id": "instruction-requirements",
+  "parent": {
+    "description": "execution-environment",
+    "passage": {
+      "quote": "Instruction and hardware requirements describe which combinations of instruction\nform, PTX version and GPU capability are supported. A form outside the implemented\nchecker is distinguished from an illegal use of a represented form. Passing this\ncheck establishes neither a valid memory address nor correct kernel execution."
+    }
+  },
+  "summary": [
+    "Check represented load/store forms against PTX-version and GPU requirements, distinguishing supported, illegal and unsupported cases.",
+    "Keep instruction eligibility separate from valid addresses, complete-program validation and hardware execution."
+  ],
+  "realization": "partial",
+  "remaining": "A restricted scalar 32-bit load/store eligibility checker and a PTX 9.4/sm_90 example are implemented. Full instruction coverage, parameter calling conventions, parsing and full program or target validation remain outside this checker.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Instruction eligibility asks whether a particular instruction and its options\nare supported by the selected PTX version and GPU. It is checked separately\nfrom storage access and from ordering between threads. A supported instruction\ncan still be given an invalid address. An unimplemented form is reported\nseparately from an illegal use of a represented form."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "def memoryEligibility (target : Target) (form : MemoryForm) : Eligibility :=\n  if target.isa > 94 then .unsupported \"ISA versions after pinned PTX 9.4\"\n  else if target.isa < 10 || target.sm < 10 then .illegal \"scalar ld/st require PTX 1.0\"\n  else if form.sharedCluster && form.space != .shared then .illegal \"::cluster requires shared space\"\n  else if form.scope.isSome && form.space != .global && form.space != .shared then\n    .illegal \"scoped relaxed/acquire/release require global or shared space\"\n  else if form.scope.isSome && (target.isa < 60 || target.sm < 70) then\n    .illegal \"scoped relaxed/acquire/release require PTX 6.0 and sm_70\"\n  else if (form.scope == some .cluster || form.sharedCluster) &&\n      (target.isa < 78 || target.sm < 90) then\n    .illegal \"cluster scope/addressing require PTX 7.8 and sm_90\"\n  else if form.space == .param && form.kind == .write then\n    .unsupported \"device-function parameter ABI and st.param are not modeled\"\n  else .supported"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For the represented forms, the checker requires PTX 6.0 and `sm_70` or later for\nexplicitly scoped relaxed, acquire or release accesses. Cluster scope or cluster\nshared-memory addressing requires PTX 7.8 and `sm_90` or later. Scoped forms use\nglobal or shared memory, and cluster addressing uses shared memory. An absent\nscope represents the default form with no explicit ordering qualifier, called\nweak; it is not an explicit `.weak` spelling.\nWhich ordering direction applies is supplied by the load or store syntax."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "def memoryEligibility (target : Target) (form : MemoryForm) : Eligibility :=\n  if target.isa > 94 then .unsupported \"ISA versions after pinned PTX 9.4\"\n  else if target.isa < 10 || target.sm < 10 then .illegal \"scalar ld/st require PTX 1.0\"\n  else if form.sharedCluster && form.space != .shared then .illegal \"::cluster requires shared space\"\n  else if form.scope.isSome && form.space != .global && form.space != .shared then\n    .illegal \"scoped relaxed/acquire/release require global or shared space\"\n  else if form.scope.isSome && (target.isa < 60 || target.sm < 70) then\n    .illegal \"scoped relaxed/acquire/release require PTX 6.0 and sm_70\"\n  else if (form.scope == some .cluster || form.sharedCluster) &&\n      (target.isa < 78 || target.sm < 90) then\n    .illegal \"cluster scope/addressing require PTX 7.8 and sm_90\"\n  else if form.space == .param && form.kind == .write then\n    .unsupported \"device-function parameter ABI and st.param are not modeled\"\n  else .supported"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The checker distinguishes three results: supported, illegal with a reason, and\nunsupported with a reason. PTX versions beyond the pinned 9.4 version are\nunsupported. Stores to device-function parameters, arguments passed to a GPU function,\nare also unsupported here; they require calling and storage conventions outside\nthis fragment. A result of\nsupported is qualified by the restricted input forms the checker represents.\nIt does not establish support for unrepresented instructions or options."
+      },
+      "to": {
+        "path": "Ptx/Environment.lean",
+        "passage": {
+          "quote": "inductive Eligibility where\n  | supported\n  | illegal (reason : String)\n  | unsupported (reason : String)\n  deriving DecidableEq, Repr"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A checked example establishes eligibility of the relaxed GPU-scoped global loads\nand stores used by the scalar text interface on PTX 9.4 with `sm_90`. That result\ndoes not establish compilation, address safety or correspondence with a physical\nGPU. Connections to execution retain these as separate obligations.\n"
+      },
+      "to": {
+        "path": "Ptx/ScalarEnvironment.lean",
+        "passage": {
+          "quote": "theorem arena_forms_eligible :\n    memoryEligibility ⟨94, 90⟩ ⟨.read, .global, some .gpu, false⟩ = .supported ∧\n    memoryEligibility ⟨94, 90⟩ ⟨.write, .global, some .gpu, false⟩ = .supported := by decide"
+        }
+      }
+    }
+  ]
+}

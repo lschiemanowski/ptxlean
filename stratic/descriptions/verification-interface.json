@@ -3,25 +3,25 @@
   "parent": {
     "description": "root",
     "passage": {
-      "quote": "The verification interface connects TorchLean specifications to tensor representations, orchestrated kernels, and PTX executions."
+      "quote": "The verification interface connects a TorchLean network specification to the\nkernels that implement it. It relates the network's multidimensional arrays of values, called tensors, to\ntheir arrangement in memory and combines the guarantees of individual kernels into a result for the\nwhole computation."
     }
   },
   "summary": [
-    "Relate logical tensors and state to concrete storage with separate layout and numerical obligations.",
-    "Compose kernel guarantees into network-level correctness under explicit assumptions."
+    "Relate network tensors—multidimensional arrays—and state to their storage in memory, with explicit requirements on layout and numerical values.",
+    "Combine the guarantees of individual kernels into correctness of a whole network computation under stated assumptions."
   ],
   "realization": "unimplemented",
-  "remaining": "Tensor representation relations, kernel contracts, composition proofs, and explanations remain to be implemented.",
+  "remaining": "Relations between network tensors and memory, kernel contracts, proofs combining their guarantees, and explanations remain to be implemented.",
   "links": [
     {
       "kind": "depends-on",
       "from": {
-        "quote": "Kernel contracts state input representations and preconditions, the specified\ncomputation, and output representations and guarantees."
+        "quote": "Two separate proofs are needed: that memory holds the intended tensor elements,\nand that the numbers computed meet the accuracy requirements. A kernel contract\nstates what must hold on entry (its preconditions), the computation to perform,\nand what is guaranteed on return. Different layouts, execution schedules, or\nfusion choices can implement that contract. Fusion means combining computations\nthat could otherwise run in separate kernels."
       },
       "to": {
         "description": "ptx-semantics",
         "passage": {
-          "quote": "The authoritative semantics describes permitted PTX executions."
+          "quote": "The PTX semantics defines which executions of a PTX program are permitted."
         }
       },
       "reason": "Kernel contracts are interpreted over the executions admitted by PTX semantics."
