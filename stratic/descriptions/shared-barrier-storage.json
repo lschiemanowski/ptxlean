@@ -1,0 +1,53 @@
+{
+  "id": "shared-barrier-storage",
+  "parent": {
+    "description": "shared-barrier",
+    "passage": {
+      "quote": "The arena contains one initialized word per participant, belongs to the configured\nCTA, and satisfies the explicit bound four times the participant count is less\nthan 2^32. This prevents address wrapping. Accesses check ownership, four-byte\nalignment and arena bounds."
+    }
+  },
+  "summary": [
+    "Map actual shared-arena accesses to the general allocation checker, retaining byte bounds, alignment and CTA ownership.",
+    "Keep access permission separate from memory visibility and external launch/allocation guarantees."
+  ],
+  "realization": "implemented",
+  "remaining": "External allocation and launch correspondence, cluster-peer access and outside interference remain excluded; visibility is established separately.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each instruction's 32-bit address is an offset in bytes within this allocation.\nA successful emitted access passed the machine's ownership, divisibility-by-four\nand word-index bound checks. These imply that all four accessed bytes lie inside\nthe allocation, so the ordinary environment checker accepts the corresponding\nread or write. The connection covers every emitted access, not only the final\nsuccessful execution witness."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierEnvironment.lean",
+        "passage": {
+          "quote": "theorem emitted_accessible (config : Config n) (override : Option Word) (thread : Fin n)\n    (state : State n) (effect : MemoryEvent n)\n    (member : Event.memory effect ∈ (stepWith config override thread state).events) :\n    state.arena.environment.accessible (location effect.cta effect.thread.val)\n      effect.kind.accessKind (sharedAddress effect.address) 4 false"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each instruction's 32-bit address is an offset in bytes within this allocation.\nA successful emitted access passed the machine's ownership, divisibility-by-four\nand word-index bound checks. These imply that all four accessed bytes lie inside\nthe allocation, so the ordinary environment checker accepts the corresponding\nread or write. The connection covers every emitted access, not only the final\nsuccessful execution witness."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem trace_accessible (config : Config n) (reads : Fin n → Option Word)\n    (state : State n) (dispatches : List (Fin n)) (effect : MemoryEvent n)\n    (member : Event.memory effect ∈ (runWith config reads state dispatches).trace) :\n    state.arena.environment.accessible (location effect.cta effect.thread.val)\n      effect.kind.accessKind (sharedAddress effect.address) 4 false"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each instruction's 32-bit address is an offset in bytes within this allocation.\nA successful emitted access passed the machine's ownership, divisibility-by-four\nand word-index bound checks. These imply that all four accessed bytes lie inside\nthe allocation, so the ordinary environment checker accepts the corresponding\nread or write. The connection covers every emitted access, not only the final\nsuccessful execution witness."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem step_environment (config : Config n) (override : Option Word) (thread : Fin n)\n    (state : State n) :\n    (stepWith config override thread state).state.arena.environment = state.arena.environment"
+        }
+      }
+    }
+  ]
+}

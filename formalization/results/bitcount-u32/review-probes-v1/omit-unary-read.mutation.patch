@@ -1,0 +1,11 @@
+--- a/Ptx/Scalar.lean
++++ b/Ptx/Scalar.lean
+@@ -138,7 +138,7 @@
+ def Op.reads : Op → List Register
+   | .mov32 _ source | .cvt64 _ source => source.reads
+   | .bin32 _ _ left right | .setp _ _ left right => left.reads ++ right.reads
+-  | .unary32 _ _ source => source.reads
++  | .unary32 _ _ _source => []
+   | .mov64 _ source => source.reads
+   | .add64 _ left right => left.reads ++ right.reads
+   | .load _ address => address.reads

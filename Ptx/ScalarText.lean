@@ -43,6 +43,10 @@ def binMnemonic : BinOp → String
   | .minU => "min.u32"
   | .maxU => "max.u32"
 
+def unaryMnemonic : UnaryOp → String
+  | .clz => "clz.b32"
+  | .popc => "popc.b32"
+
 def compareMnemonic : Compare → String
   | .eq => "setp.eq.u32"
   | .ne => "setp.ne.u32"
@@ -53,7 +57,7 @@ def compareMnemonic : Compare → String
 
 def supportedMnemonic (mnemonic : String) : Bool :=
   mnemonic ∈ ["mov.b32", "add.u32", "sub.u32", "mul.lo.u32", "and.b32", "or.b32", "xor.b32",
-    "shl.b32", "shr.u32", "min.u32", "max.u32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
+    "shl.b32", "shr.u32", "min.u32", "max.u32", "clz.b32", "popc.b32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
     "setp.lt.u32", "setp.le.u32", "setp.gt.u32", "setp.ge.u32",
     "ld.relaxed.gpu.global.u32", "st.relaxed.gpu.global.u32", "bra", "exit"]
 
@@ -70,6 +74,8 @@ def decodeOp (mnemonic : String) (operands : List Token) : Except DecodeError Op
   | "shr.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shr d a b)
   | "min.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .minU d a b)
   | "max.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .maxU d a b)
+  | "clz.b32", [.word (.reg d), .word a] => .ok (.unary32 .clz d a)
+  | "popc.b32", [.word (.reg d), .word a] => .ok (.unary32 .popc d a)
   | "mov.b64", [.address (.reg d), .address s] => .ok (.mov64 d s)
   | "add.u64", [.address (.reg d), .address a, .address b] => .ok (.add64 d a b)
   | "cvt.u64.u32", [.address (.reg d), .word s] => .ok (.cvt64 d s)
@@ -92,6 +98,7 @@ def decode (statement : Statement) : Except DecodeError Instr :=
 def encodeOp : Op → String × List Token
   | .mov32 d s => ("mov.b32", [.word (.reg d), .word s])
   | .bin32 operation d a b => (binMnemonic operation, [.word (.reg d), .word a, .word b])
+  | .unary32 operation d a => (unaryMnemonic operation, [.word (.reg d), .word a])
   | .mov64 d s => ("mov.b64", [.address (.reg d), .address s])
   | .add64 d a b => ("add.u64", [.address (.reg d), .address a, .address b])
   | .cvt64 d s => ("cvt.u64.u32", [.address (.reg d), .word s])
@@ -118,6 +125,7 @@ theorem decode_encode (instruction : Instr) (supported : Supported instruction) 
   rcases instruction with ⟨guard, op⟩
   cases op with
   | bin32 operation d a b => cases operation <;> rfl
+  | unary32 operation d a => cases operation <;> rfl
   | setp comparison d a b => cases comparison <;> rfl
   | store address source =>
       cases source with

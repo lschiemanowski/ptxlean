@@ -1,0 +1,345 @@
+diff --git a/Ptx/Scalar.lean b/Ptx/Scalar.lean
+index d5201a7..b72771f 100644
+--- a/Ptx/Scalar.lean
++++ b/Ptx/Scalar.lean
+@@ -26,6 +26,10 @@ inductive BinOp where
+   | add | sub | mulLo | and | or | xor | shl | shr | minU | maxU
+   deriving DecidableEq, Repr
+ 
++inductive UnaryOp where
++  | clz | popc
++  deriving DecidableEq, Repr
++
+ inductive Compare where
+   | eq | ne | lt | le | gt | ge
+   deriving DecidableEq, Repr
+@@ -38,6 +42,7 @@ inductive Guard where
+ inductive Op where
+   | mov32 (destination : Nat) (source : Operand32)
+   | bin32 (operation : BinOp) (destination : Nat) (left right : Operand32)
++  | unary32 (operation : UnaryOp) (destination : Nat) (source : Operand32)
+   | mov64 (destination : Nat) (source : Operand64)
+   | add64 (destination : Nat) (left right : Operand64)
+   | cvt64 (destination : Nat) (source : Operand32)
+@@ -93,6 +98,13 @@ def BinOp.eval : BinOp → Word → Word → Word
+   | .minU, a, b => if a.toNat ≤ b.toNat then a else b
+   | .maxU, a, b => if a.toNat ≥ b.toNat then a else b
+ 
++/-- PTX 9.4 `clz.b32` and `popc.b32`; their result register is u32. -/
++def UnaryOp.eval : UnaryOp → Word → Word
++  | .clz, a => BitVec.ofNat 32 ((List.range 32).reverse.takeWhile
++      (fun i => !a.getLsbD i)).length
++  | .popc, a => BitVec.ofNat 32 ((List.range 32).filter
++      (fun i => a.getLsbD i)).length
++
+ def Compare.eval : Compare → Word → Word → Bool
+   | .eq, a, b => a == b
+   | .ne, a, b => !(a == b)
+@@ -126,6 +138,7 @@ def Guard.reads : Guard → List Register
+ def Op.reads : Op → List Register
+   | .mov32 _ source | .cvt64 _ source => source.reads
+   | .bin32 _ _ left right | .setp _ _ left right => left.reads ++ right.reads
++  | .unary32 _ _ source => source.reads
+   | .mov64 _ source => source.reads
+   | .add64 _ left right => left.reads ++ right.reads
+   | .load _ address => address.reads
+@@ -133,7 +146,7 @@ def Op.reads : Op → List Register
+   | .bra _ | .exit | .unsupported _ => []
+ 
+ def Op.writes : Op → List Register
+-  | .mov32 destination _ | .bin32 _ destination _ _ | .load destination _ => [.word destination]
++  | .mov32 destination _ | .bin32 _ destination _ _ | .unary32 _ destination _ | .load destination _ => [.word destination]
+   | .mov64 destination _ | .add64 destination _ _ | .cvt64 destination _ => [.address destination]
+   | .setp _ destination _ _ => [.predicate destination]
+   | .store _ _ | .bra _ | .exit | .unsupported _ => []
+@@ -211,6 +224,8 @@ def eval (readOverride : Option Word) (instruction : Instr) (s : State) : StepRe
+             .next {advance with regs := update s.regs destination (source.eval s)} event
+         | .bin32 operation destination left right =>
+             .next {advance with regs := update s.regs destination (operation.eval (left.eval s) (right.eval s))} event
++        | .unary32 operation destination source =>
++            .next {advance with regs := update s.regs destination (operation.eval (source.eval s))} event
+         | .mov64 destination source =>
+             .next {advance with addrs := update s.addrs destination (source.eval s)} event
+         | .add64 destination left right =>
+@@ -342,6 +357,31 @@ theorem shift_left_clamped (value count : Word) (h : 32 ≤ count.toNat) :
+ theorem shift_right_clamped (value count : Word) (h : 32 ≤ count.toNat) :
+     BinOp.eval .shr value count = 0 := by simp [BinOp.eval, Nat.not_lt.mpr h]
+ 
++theorem unary_exec (s : State) (operation : UnaryOp) (destination : Nat)
++    (source : Operand32) (guard : Guard) (h : guard.eval s = true)
++    (readOverride : Option Word) :
++    eval readOverride ⟨guard, .unary32 operation destination source⟩ s =
++      .next {({s with pc := s.pc + 1}) with
++        regs := update s.regs destination (operation.eval (source.eval s))}
++        (occurrence s ⟨guard, .unary32 operation destination source⟩ true) := by
++  simp [eval, h]
++
++theorem unary_false (s : State) (operation : UnaryOp) (destination : Nat)
++    (source : Operand32) (guard : Guard) (h : guard.eval s = false)
++    (readOverride : Option Word) :
++    eval readOverride ⟨guard, .unary32 operation destination source⟩ s =
++      .next {s with pc := s.pc + 1}
++        (occurrence s ⟨guard, .unary32 operation destination source⟩ false) := by
++  simp [eval, h]
++
++theorem unary_preserves_other (s : State) (operation : UnaryOp) (destination other : Nat)
++    (source : Operand32) (guard : Guard) (h : guard.eval s = true)
++    (different : other ≠ destination) (readOverride : Option Word) :
++    (match eval readOverride ⟨guard, .unary32 operation destination source⟩ s with
++      | .next next _ => next.regs other | _ => s.regs other) = s.regs other := by
++  rw [unary_exec s operation destination source guard h readOverride]
++  simp [update, different]
++
+ 
+ 
+ @[simp] theorem run_succ (fuel : Nat) (program : List Instr) (s : State) :
+diff --git a/Ptx/ScalarText.lean b/Ptx/ScalarText.lean
+index 2407226..d5ecd20 100644
+--- a/Ptx/ScalarText.lean
++++ b/Ptx/ScalarText.lean
+@@ -43,6 +43,10 @@ def binMnemonic : BinOp → String
+   | .minU => "min.u32"
+   | .maxU => "max.u32"
+ 
++def unaryMnemonic : UnaryOp → String
++  | .clz => "clz.b32"
++  | .popc => "popc.b32"
++
+ def compareMnemonic : Compare → String
+   | .eq => "setp.eq.u32"
+   | .ne => "setp.ne.u32"
+@@ -53,7 +57,7 @@ def compareMnemonic : Compare → String
+ 
+ def supportedMnemonic (mnemonic : String) : Bool :=
+   mnemonic ∈ ["mov.b32", "add.u32", "sub.u32", "mul.lo.u32", "and.b32", "or.b32", "xor.b32",
+-    "shl.b32", "shr.u32", "min.u32", "max.u32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
++    "shl.b32", "shr.u32", "min.u32", "max.u32", "clz.b32", "popc.b32", "mov.b64", "add.u64", "cvt.u64.u32", "setp.eq.u32", "setp.ne.u32",
+     "setp.lt.u32", "setp.le.u32", "setp.gt.u32", "setp.ge.u32",
+     "ld.relaxed.gpu.global.u32", "st.relaxed.gpu.global.u32", "bra", "exit"]
+ 
+@@ -70,6 +74,8 @@ def decodeOp (mnemonic : String) (operands : List Token) : Except DecodeError Op
+   | "shr.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .shr d a b)
+   | "min.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .minU d a b)
+   | "max.u32", [.word (.reg d), .word a, .word b] => .ok (.bin32 .maxU d a b)
++  | "clz.b32", [.word (.reg d), .word a] => .ok (.unary32 .clz d a)
++  | "popc.b32", [.word (.reg d), .word a] => .ok (.unary32 .popc d a)
+   | "mov.b64", [.address (.reg d), .address s] => .ok (.mov64 d s)
+   | "add.u64", [.address (.reg d), .address a, .address b] => .ok (.add64 d a b)
+   | "cvt.u64.u32", [.address (.reg d), .word s] => .ok (.cvt64 d s)
+@@ -92,6 +98,7 @@ def decode (statement : Statement) : Except DecodeError Instr :=
+ def encodeOp : Op → String × List Token
+   | .mov32 d s => ("mov.b32", [.word (.reg d), .word s])
+   | .bin32 operation d a b => (binMnemonic operation, [.word (.reg d), .word a, .word b])
++  | .unary32 operation d a => (unaryMnemonic operation, [.word (.reg d), .word a])
+   | .mov64 d s => ("mov.b64", [.address (.reg d), .address s])
+   | .add64 d a b => ("add.u64", [.address (.reg d), .address a, .address b])
+   | .cvt64 d s => ("cvt.u64.u32", [.address (.reg d), .word s])
+@@ -118,6 +125,7 @@ theorem decode_encode (instruction : Instr) (supported : Supported instruction)
+   rcases instruction with ⟨guard, op⟩
+   cases op with
+   | bin32 operation d a b => cases operation <;> rfl
++  | unary32 operation d a => cases operation <;> rfl
+   | setp comparison d a b => cases comparison <;> rfl
+   | store address source =>
+       cases source with
+diff --git a/Ptx/IntegerBitCount.lean b/Ptx/IntegerBitCount.lean
+new file mode 100644
+index 0000000..bf82da1
+--- /dev/null
++++ b/Ptx/IntegerBitCount.lean
+@@ -0,0 +1,195 @@
++import Ptx.ScalarText
++
++/-! PTX 9.4 §§9.7.1.15–.16: `popc.b32` and `clz.b32` were introduced
++in PTX 2.0 and require sm_20 or newer. Both accept every b32 value and write
++a u32 result. Only these b32 spellings are modeled here; the ISA's b64 forms
++and other widths/modifiers are not. The package's u32 result name is not a
++mnemonic spelling. The separate memory eligibility mechanism does not check
++these arithmetic forms.
++-/
++namespace Ptx.Scalar.IntegerBitCount
++
++open Ptx.Scalar
++
++theorem unary_exec (s : State) (operation : UnaryOp) (destination : Nat)
++    (source : Operand32) (guard : Guard) (h : guard.eval s = true)
++    (readOverride : Option Word) :
++    eval readOverride ⟨guard, .unary32 operation destination source⟩ s =
++      .next {({s with pc := s.pc + 1}) with
++        regs := update s.regs destination (operation.eval (source.eval s))}
++        (occurrence s ⟨guard, .unary32 operation destination source⟩ true) :=
++  Ptx.Scalar.unary_exec s operation destination source guard h readOverride
++
++theorem unary_false (s : State) (operation : UnaryOp) (destination : Nat)
++    (source : Operand32) (guard : Guard) (h : guard.eval s = false)
++    (readOverride : Option Word) :
++    eval readOverride ⟨guard, .unary32 operation destination source⟩ s =
++      .next {s with pc := s.pc + 1}
++        (occurrence s ⟨guard, .unary32 operation destination source⟩ false) :=
++  Ptx.Scalar.unary_false s operation destination source guard h readOverride
++
++theorem unary_preserves_other (s : State) (operation : UnaryOp) (destination other : Nat)
++    (source : Operand32) (guard : Guard) (h : guard.eval s = true)
++    (different : other ≠ destination) (readOverride : Option Word) :
++    (match eval readOverride ⟨guard, .unary32 operation destination source⟩ s with
++      | .next next _ => next.regs other | _ => s.regs other) = s.regs other :=
++  Ptx.Scalar.unary_preserves_other s operation destination other source guard h different readOverride
++
++theorem takeWhile_length_le {α : Type} (p : α → Bool) : ∀ xs : List α,
++    (xs.takeWhile p).length ≤ xs.length
++  | [] => by simp
++  | x :: xs => by
++      cases hp : p x
++      · simp [List.takeWhile, hp]
++      · simp [List.takeWhile, hp, takeWhile_length_le p xs]
++
++theorem takeWhile_length_eq_iff {α : Type} (p : α → Bool) : ∀ xs : List α,
++    (xs.takeWhile p).length = xs.length ↔ ∀ x ∈ xs, p x = true
++  | [] => by simp
++  | x :: xs => by
++      cases hp : p x
++      · simp [List.takeWhile, hp]
++      · simp [List.takeWhile, hp, takeWhile_length_eq_iff p xs]
++
++theorem popc_toNat (a : Word) : (UnaryOp.eval .popc a).toNat =
++    ((List.range 32).filter (fun i => a.getLsbD i)).length := by
++  have : ((List.range 32).filter (fun i => a.getLsbD i)).length ≤ 32 :=
++    by simpa using List.length_filter_le (fun i => a.getLsbD i) (List.range 32)
++  have hlt : ((List.range 32).filter (fun i => a.getLsbD i)).length < 2^32 := by omega
++  simp [UnaryOp.eval, BitVec.toNat_ofNat, Nat.mod_eq_of_lt hlt]
++
++theorem clz_toNat (a : Word) : (UnaryOp.eval .clz a).toNat =
++    ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length := by
++  have h : ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length ≤ 32 := by
++    simpa using takeWhile_length_le (fun i => !a.getLsbD i) (List.range 32).reverse
++  have hlt : ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length < 2^32 := by omega
++  simp [UnaryOp.eval, BitVec.toNat_ofNat, Nat.mod_eq_of_lt hlt]
++
++theorem popc_bound (a : Word) : (UnaryOp.eval .popc a).toNat ≤ 32 := by
++  rw [popc_toNat]
++  simpa using List.length_filter_le (fun i => a.getLsbD i) (List.range 32)
++
++theorem clz_bound (a : Word) : (UnaryOp.eval .clz a).toNat ≤ 32 := by
++  rw [clz_toNat]
++  have h : ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length ≤ 32 := by
++    simpa using takeWhile_length_le (fun i => !a.getLsbD i) (List.range 32).reverse
++  exact h
++
++theorem popc_zero_iff (a : Word) : UnaryOp.eval .popc a = 0 ↔ a = 0 := by
++  constructor
++  · intro h
++    apply BitVec.eq_of_getLsbD_eq
++    intro i hi
++    have hn := popc_toNat a
++    rw [h] at hn
++    have hn : ((List.range 32).filter (fun j => a.getLsbD j)).length = 0 := by simpa using hn.symm
++    have hmem : i ∈ List.range 32 := List.mem_range.mpr hi
++    have hfalse : a.getLsbD i = false := by
++      cases hv : a.getLsbD i
++      · rfl
++      · have hm : i ∈ (List.range 32).filter (fun j => a.getLsbD j) :=
++          List.mem_filter.mpr ⟨hmem, hv⟩
++        have hne : (List.range 32).filter (fun j => a.getLsbD j) ≠ [] := by
++          intro heq
++          have : i ∈ ([] : List Nat) := heq ▸ hm
++          simp at this
++        have hpos : 0 < ((List.range 32).filter (fun j => a.getLsbD j)).length :=
++          List.length_pos_iff.mpr hne
++        omega
++    simpa using hfalse
++  · rintro rfl
++    change BitVec.ofNat 32 ((List.range 32).filter (fun _ => false)).length = 0
++    rfl
++
++theorem clz_width_iff (a : Word) : UnaryOp.eval .clz a = 32 ↔ a = 0 := by
++  rw [← BitVec.toNat_inj]
++  rw [clz_toNat]
++  constructor
++  · intro h
++    have hlen : ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length = 32 := by
++      simpa [BitVec.toNat_ofNat] using h
++    have hall := (takeWhile_length_eq_iff (fun i => !a.getLsbD i)
++      (List.range 32).reverse).mp (by simpa using hlen)
++    apply BitVec.eq_of_getLsbD_eq
++    intro i hi
++    have himem : i ∈ (List.range 32).reverse := List.mem_reverse.mpr (List.mem_range.mpr hi)
++    have hz := hall i himem
++    cases hv : a.getLsbD i <;> simp_all
++  · intro hz
++    subst a
++    have hall : ∀ i ∈ (List.range 32).reverse,
++        Bool.not ((0#32).getLsbD i) = true := by
++      intro i hi
++      have hz : (0#32).getLsbD i = false := by simp
++      simp [hz]
++    have hlen := (takeWhile_length_eq_iff (fun i => Bool.not ((0#32).getLsbD i))
++      (List.range 32).reverse).mpr hall
++    simpa using hlen
++
++/-! Kernel-reduced bit-pattern and interface examples. -/
++example : UnaryOp.eval .popc 0 = 0 ∧ UnaryOp.eval .clz 0 = 32 := by decide
++example : UnaryOp.eval .popc 2147483648 = 1 ∧ UnaryOp.eval .clz 2147483648 = 0 := by decide
++example : UnaryOp.eval .popc 4294967295 = 32 ∧ UnaryOp.eval .clz 4294967295 = 0 := by decide
++example : UnaryOp.eval .popc 1 = 1 ∧ UnaryOp.eval .clz 1 = 31 := by decide
++example : UnaryOp.eval .popc 2147483653 = 3 ∧ UnaryOp.eval .clz 2147483653 = 0 := by decide
++
++open Ptx.Scalar.Text
++
++example : decodeOp "popc.b32" [.word (.reg 2), .word (.reg 2)] =
++    .ok (.unary32 .popc 2 (.reg 2)) := rfl
++example : decodeOp "clz.b32" [.word (.reg 0), .word (.imm 1)] =
++    .ok (.unary32 .clz 0 (.imm 1)) := rfl
++example : decodeOp "popc.b32" [.word (.reg 3), .word (.imm 4294967295)] =
++    .ok (.unary32 .popc 3 (.imm 4294967295)) := rfl
++example : decodeOp "clz.b32" [.word (.reg 4), .word (.reg 5)] =
++    .ok (.unary32 .clz 4 (.reg 5)) := rfl
++example : decodeOp "clz.b32" [.word (.imm 0), .word (.imm 1)] =
++    .error (.invalidOperands "clz.b32") := rfl
++example : decodeOp "popc.u32" [.word (.reg 0), .word (.imm 1)] =
++    .error (.unsupportedMnemonic "popc.u32") := rfl
++example : decodeOp "clz.b64" [.word (.reg 0), .word (.imm 1)] =
++    .error (.unsupportedMnemonic "clz.b64") := rfl
++example : supportedMnemonic "popc.b64" = false ∧ supportedMnemonic "clz.u32" = false := by decide
++
++def sampleState : State :=
++  ⟨7, fun i => if i = 0 then 2147483653 else 9,
++    fun _ => 0, fun i => i = 0, []⟩
++
++example : (eval none ⟨.always, .unary32 .popc 0 (.reg 0)⟩ sampleState) =
++    .next {({sampleState with pc := 8}) with regs := update sampleState.regs 0 3}
++      (occurrence sampleState ⟨.always, .unary32 .popc 0 (.reg 0)⟩ true) := by
++  rw [unary_exec sampleState .popc 0 (.reg 0) .always (by rfl) none]
++  rfl
++example : (eval (some 4294967295) ⟨.always, .unary32 .clz 0 (.reg 0)⟩ sampleState) =
++    .next {({sampleState with pc := 8}) with regs := update sampleState.regs 0 0}
++      (occurrence sampleState ⟨.always, .unary32 .clz 0 (.reg 0)⟩ true) := by
++  rw [unary_exec sampleState .clz 0 (.reg 0) .always (by rfl) (some 4294967295)]
++  rfl
++
++example : (eval none ⟨.pred 0 true, .unary32 .popc 1 (.reg 0)⟩ sampleState) =
++    .next {({sampleState with pc := 8}) with regs := update sampleState.regs 1 3}
++      (occurrence sampleState ⟨.pred 0 true, .unary32 .popc 1 (.reg 0)⟩ true) := by
++  rw [unary_exec sampleState .popc 1 (.reg 0) (.pred 0 true) (by rfl) none]
++  rfl
++example : (eval none ⟨.pred 1 false, .unary32 .clz 1 (.imm 0)⟩ sampleState) =
++    .next {({sampleState with pc := 8}) with regs := update sampleState.regs 1 32}
++      (occurrence sampleState ⟨.pred 1 false, .unary32 .clz 1 (.imm 0)⟩ true) := by
++  rw [unary_exec sampleState .clz 1 (.imm 0) (.pred 1 false) (by rfl) none]
++  rfl
++example : (eval none ⟨.pred 0 false, .unary32 .popc 1 (.imm 7)⟩ sampleState) =
++    .next {sampleState with pc := 8}
++      (occurrence sampleState ⟨.pred 0 false, .unary32 .popc 1 (.imm 7)⟩ false) := by
++  rw [unary_false sampleState .popc 1 (.imm 7) (.pred 0 false) (by rfl) none]
++  rfl
++example : (eval none ⟨.pred 1 true, .unary32 .clz 1 (.reg 0)⟩ sampleState) =
++    .next {sampleState with pc := 8}
++      (occurrence sampleState ⟨.pred 1 true, .unary32 .clz 1 (.reg 0)⟩ false) := by
++  rw [unary_false sampleState .clz 1 (.reg 0) (.pred 1 true) (by rfl) none]
++  rfl
++example : (occurrence sampleState ⟨.pred 0 true, .unary32 .popc 1 (.reg 0)⟩ false).reads =
++    [.predicate 0] := rfl
++example : (occurrence sampleState ⟨.always, .unary32 .clz 0 (.reg 0)⟩ true).memory = none := rfl
++example : (occurrence sampleState ⟨.always, .unary32 .clz 0 (.reg 0)⟩ true).writes =
++    [.word 0] := rfl
++
++end Ptx.Scalar.IntegerBitCount

@@ -1,6 +1,6 @@
 name = "ptxlean_torchlean_integration"
 version = "0.1.0"
-defaultTargets = ["PtxTorchLean"]
+defaultTargets = ["PtxTorchLean", "PtxTensorBridge"]
 
 [[require]]
 name = "ptxlean"
@@ -13,3 +13,6 @@ rev = "de3192df4779877ceb65cfe470a4d4ce9d480a5b"
 
 [[lean_lib]]
 name = "PtxTorchLean"
+
+[[lean_lib]]
+name = "PtxTensorBridge"

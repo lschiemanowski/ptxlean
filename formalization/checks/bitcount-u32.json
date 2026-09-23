@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "modules": [
+    "Ptx.IntegerBitCount"
+  ],
+  "checks": [
+    "formalization/checks/bitcount-u32-v2.lean"
+  ],
+  "declarations": [
+    "Ptx.Scalar.IntegerBitCount.popc_toNat",
+    "Ptx.Scalar.IntegerBitCount.clz_toNat",
+    "Ptx.Scalar.IntegerBitCount.popc_bound",
+    "Ptx.Scalar.IntegerBitCount.clz_bound",
+    "Ptx.Scalar.IntegerBitCount.popc_zero_iff",
+    "Ptx.Scalar.IntegerBitCount.clz_width_iff",
+    "Ptx.Scalar.IntegerBitCount.unary_exec",
+    "Ptx.Scalar.IntegerBitCount.unary_false",
+    "Ptx.Scalar.IntegerBitCount.unary_preserves_other",
+    "Ptx.Scalar.Text.decode_encode",
+    "Ptx.Scalar.Text.decodeOp_supported"
+  ]
+}

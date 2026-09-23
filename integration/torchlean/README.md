@@ -1,4 +1,4 @@
-# Exact TorchLean backward integration
+# TorchLean and PTX integration
 
 This separate Lean package uses real upstream TorchLean at the revision pinned in
 `lakefile.toml`; `lake-manifest.json` fixes its transitive dependencies. Its Lean
@@ -30,20 +30,38 @@ TorchLean composes the existing primitive reverse rules.
 - `exact_tape_success_vjp`: success and the derivative correspondence for the
   lower-level exact tape, including its saved intermediate values.
 
-These are proofs over exact real values. They do not make real numbers executable
+The backward example contains proofs over exact real values. They do not make real numbers executable
 hardware values, certify floating-point error, or prove a PTX implementation.
 The mathematical VJP endpoint differentiates the actual graph forward map;
 `forward_polynomial` establishes its correspondence to the displayed polynomial.
 The current graph has no state updates, masks, parameter sharing or nonsmooth
-operations. General model lowering and the numerical/kernel bridges remain open.
+operations. General model lowering and floating-point numerical/kernel correspondence remain open.
+
+## Global-memory integer tensor bridge
+
+`PtxTensorBridge.lean` connects the existing five-instruction vector-add program
+to actual TorchLean tensors. Its input is a supplied word allocation and arbitrary
+initial register files, using the interleaved layout `[left, right, output]` for
+each coordinate. It proves addition modulo `2^32`, finite instruction execution,
+access safety, unchanged words outside outputs, and a valid relational memory
+witness with matching execution labels. A separate input-only no-overflow
+condition gives exact real-tensor addition for the unsigned integers embedded
+into the reals. This is not a floating-point interpretation.
+
+The [study guide](../../docs/foundations/tensor-layout-bridge.md) explains the
+layout, the direct overflow execution example, the bounds excluding missing-cell
+defaults, and the restricted memory-candidate family. The theorem audit contains
+all 15 bridge declarations. Their exact source snapshot is recorded separately
+in `verification-tensor-bridge.json` and `proof-audit-tensor-bridge.txt`.
 
 ## Reproduce
 
 From this directory:
 
 ```sh
-lake build PtxTorchLean
+lake build PtxTorchLean PtxTensorBridge
 lake env lean PtxTorchLean.lean
+lake env lean PtxTensorBridge.lean
 ```
 
 Elan may download the pinned toolchain on first use. Lake uses the committed

@@ -1,0 +1,17 @@
+/home/lothar/workspace/ptxlean/formalization/results/bitcount-u32/review-probes-v1/acceptance.lean:121:107: error: Tactic `decide` proved that the proposition
+  observation (eval none (Instr.plain (Op.unary32 UnaryOp.clz 0 (Operand32.reg 0))) initial) =
+    expected (Instr.plain (Op.unary32 UnaryOp.clz 0 (Operand32.reg 0))) true [Register.word 0] [Register.word 0] 8
+      4294967295
+is false
+/home/lothar/workspace/ptxlean/formalization/results/bitcount-u32/review-probes-v1/acceptance.lean:123:108: error: Tactic `decide` proved that the proposition
+  observation (eval none (Instr.plain (Op.unary32 UnaryOp.popc 0 (Operand32.reg 0))) initial) =
+    expected (Instr.plain (Op.unary32 UnaryOp.popc 0 (Operand32.reg 0))) true [Register.word 0] [Register.word 0] 5
+      4294967295
+is false
+'Ptx.Scalar.IntegerBitCountAcceptance.popc_signature' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCountAcceptance.clz_signature' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCountAcceptance.execution_signature' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCountAcceptance.skipped_signature' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCountAcceptance.frame_signature' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Text.decode_encode' depends on axioms: [propext]
+'Ptx.Scalar.Text.decodeOp_supported' depends on axioms: [propext]

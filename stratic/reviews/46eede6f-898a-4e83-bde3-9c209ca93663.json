@@ -1,0 +1,508 @@
+{
+  "id": "46eede6f-898a-4e83-bde3-9c209ca93663",
+  "base": "abd21234e3b59ca427bf155bd8a53c6b75369f2e",
+  "contentTree": "6b38e595f8f6bd443b348d6437b622b99a99bb83",
+  "reviewer": "Codex coordinator with independent source and proof reviewers",
+  "summary": "Prove actual shared-memory barrier publication, connect a bounded TorchLean tensor layout, and integrate reviewed Luna bit-count instructions.",
+  "examined": [
+    {
+      "id": "collective-execution",
+      "outcome": "revised",
+      "reason": "Restricted actual fetched shared-memory barrier program now connects control history, completed results, finite existence and allocation safety; general collective coverage remains partial."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "revised",
+      "reason": "Reviewed exact Luna unary constructor, input-read metadata, evaluator and typed decoder extension. Old theorem statements are unchanged; limits and exact links refreshed."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "revised",
+      "reason": "Actual TorchLean tensor layout now connects the existing unsigned vector-add kernel to modular and no-overflow real results. General numerical and orchestration obligations remain separate."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "revised",
+      "reason": "Every archived trial is now hash-verified, including second-task failures, unchanged-v1/corrected-v2 evaluator and resumed usage; mutation demonstrates a compile-preserving metadata error is rejected."
+    },
+    {
+      "id": "integer-bitcount",
+      "outcome": "revised",
+      "reason": "Source and independent proof review accepted exact clz.b32/popc.b32 patch after two repairs, fresh replay and trace-metadata mutation. Architecture eligibility remains documented rather than generally checked."
+    },
+    {
+      "id": "shared-barrier-control-origin",
+      "outcome": "revised",
+      "reason": "Reachable-state invariants derive phase identity, arrival/store/load counts, completion-before-load and actual exit; no desired read values are premises."
+    },
+    {
+      "id": "shared-barrier-memory",
+      "outcome": "revised",
+      "reason": "Source identity yields partner value for arbitrary valid candidates; exact fields, counts and keyed trace subsequences connect every completed schedule. Fresh witness and stale-without-order distinction checked."
+    },
+    {
+      "id": "shared-barrier-storage",
+      "outcome": "revised",
+      "reason": "Actual emitted accesses imply general byte-range, alignment, initialization and CTA ownership checks; descriptor preserved across every finite trace."
+    },
+    {
+      "id": "shared-barrier",
+      "outcome": "revised",
+      "reason": "Typed fixed program fetches shared stores/barrier/loads/exits; arbitrary-schedule frames/history, concrete finite run and exact event projection proved and independently reviewed."
+    },
+    {
+      "id": "tensor-layout",
+      "outcome": "revised",
+      "reason": "Actual pinned TorchLean tensor views use bounded interleaved global storage. Modular result covers overflow; exact-real theorem retains input-only no-overflow condition and concrete counterexample."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Only common audit/import closure changed; original semantics, theorem statements and checks are preserved."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "Full PTX and reusable network verification goals remain incomplete; no Gemma, hardware-conformance or general progress claim added."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Existing permitted-execution, source-fidelity and computing-model responsibilities still hold; new collective child supplies a restricted instance."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "Source provenance, smaller-model handoff and independent semantic checking remain required. Two adaptive tasks are not a held-out productivity estimate."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "Integer tensor layout does not implement PTX backward code or change mathematical derivative obligations."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "No floating-point policy or accuracy theorem introduced; unsigned wraparound and exact integer-real embedding are explicitly distinguished."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "unchanged",
+      "reason": "One allocation and one CTA barrier do not implement runtime launch/lifetime or multi-kernel composition."
+    },
+    {
+      "id": "execution-environment",
+      "outcome": "unchanged",
+      "reason": "Existing topology/allocation conditions reused by an explicit shared-arena adapter; no physical-launch correspondence claimed."
+    },
+    {
+      "id": "storage-access",
+      "outcome": "unchanged",
+      "reason": "Checker meanings unchanged; emitted shared accesses discharge those existing byte-bound and ownership conditions."
+    },
+    {
+      "id": "whole-word-memory",
+      "outcome": "unchanged",
+      "reason": "Existing graph unchanged; new one-CTA uniform shared specialization adds justified barrier edges through separate layer."
+    },
+    {
+      "id": "extended-memory-order",
+      "outcome": "unchanged",
+      "reason": "The existing conservative additional-order layer is instantiated without modifying its eight validity rules."
+    },
+    {
+      "id": "collective-order",
+      "outcome": "unchanged",
+      "reason": "Structural order interface unchanged; actual instruction-origin obligation is now discharged for one program, not for arbitrary phases."
+    },
+    {
+      "id": "barrier-control",
+      "outcome": "unchanged",
+      "reason": "Existing protocol and reuse proof unchanged. New fixed-program wrapper executes one generation and preserves the distinction from general warp operational behavior."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Independent source/proof reviews and exact replay preserve proof-validity versus semantic-fidelity distinction."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "Source-section inventory remains exact and not a complete form-support ledger; accepted selected forms do not promote entire sections."
+    },
+    {
+      "id": "integer-minmax",
+      "outcome": "unchanged",
+      "reason": "Original accepted min/max semantics and archive unchanged; full combined checks preserve its results."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "Examples still exercise reusable contracts and expose limitations; new restricted barrier and integer tensor examples do not implement Gemma or full numerical network verification."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "6b38e595f8f6bd443b348d6437b622b99a99bb83",
+      "method": "./scripts/check.sh; stratic validate; (cd integration/torchlean && lake build PtxTorchLean PtxTensorBridge && lake env lean PtxTorchLean.lean && lake env lean PtxTensorBridge.lean); independent source/proof and exact candidate replay/mutation review",
+      "outcome": "pass",
+      "environment": "Linux; root and integration Lean 4.34.0; actual pinned TorchLean and FloatLib/mathlib dependencies; no new model calls for verification",
+      "evidence": "Before/after selected-content trees identical: 6b38e595f8f6bd443b348d6437b622b99a99bb83. Core: pinned PTX source and inventory checks, 114 archived evidence files across 2 trials, worker tests, complete Lean build and 574-declaration standard-axiom audit pass. Joint build and fresh 22-endpoint TorchLean/tensor audit pass. Independent shared-barrier review covers 8 modules/144 public theorems, actual keyed history for arbitrary schedules, nonvacuous fresh witness and access safety. Exact Luna bitcount patch passed fresh independent replay; trace-metadata-only mutant still builds/proves but fails exactly 2 oracle checks. Stratic validates. Logs: /tmp/ptxlean-shared-final-root.log, /tmp/ptxlean-shared-final-joint.log. Numerical-audit draft and unimported prerequisite audit artifacts excluded and do not affect checked closure.",
+      "tests": [],
+      "id": "746bf4bd-c829-4ae3-8b70-3e26084e7147",
+      "recordedAt": "2026-09-23T20:45:00.755Z"
+    }
+  ],
+  "recordedAt": "2026-09-23T20:45:32.502Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Adds public imports for reviewed bit-count and shared-barrier modules."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Adds every new public theorem plus unary evaluator dependency; fresh exact root audit has 574 declarations and standard axioms only."
+    },
+    {
+      "path": "Ptx/IntegerBitCount.lean",
+      "reason": "Exact allowed worker patch reviewed and replayed; all new proof dependencies checked and old theorem statements preserved; typed metadata mutation detected by independent acceptance."
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "reason": "Exact allowed worker patch reviewed and replayed; all new proof dependencies checked and old theorem statements preserved; typed metadata mutation detected by independent acceptance."
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "reason": "Exact allowed worker patch reviewed and replayed; all new proof dependencies checked and old theorem statements preserved; typed metadata mutation detected by independent acceptance."
+    },
+    {
+      "path": "Ptx/SharedBarrier.lean",
+      "reason": "Reviewed full implementation including unlinked helpers; eight modules have independent 144-public-theorem review, exact source review, origin/count/history/value/safety/existence proofs and explicit restrictions."
+    },
+    {
+      "path": "Ptx/SharedBarrierEnvironment.lean",
+      "reason": "Reviewed full implementation including unlinked helpers; eight modules have independent 144-public-theorem review, exact source review, origin/count/history/value/safety/existence proofs and explicit restrictions."
+    },
+    {
+      "path": "Ptx/SharedBarrierFrame.lean",
+      "reason": "Reviewed full implementation including unlinked helpers; eight modules have independent 144-public-theorem review, exact source review, origin/count/history/value/safety/existence proofs and explicit restrictions."
+    },
+    {
+      "path": "Ptx/SharedBarrierHistory.lean",
+      "reason": "Reviewed full implementation including unlinked helpers; eight modules have independent 144-public-theorem review, exact source review, origin/count/history/value/safety/existence proofs and explicit restrictions."
+    },
+    {
+      "path": "Ptx/SharedBarrierInvariant.lean",
+      "reason": "Reviewed full implementation including unlinked helpers; eight modules have independent 144-public-theorem review, exact source review, origin/count/history/value/safety/existence proofs and explicit restrictions."
+    },
+    {
+      "path": "Ptx/SharedBarrierMachine.lean",
+      "reason": "Reviewed full implementation including unlinked helpers; eight modules have independent 144-public-theorem review, exact source review, origin/count/history/value/safety/existence proofs and explicit restrictions."
+    },
+    {
+      "path": "Ptx/SharedBarrierMemory.lean",
+      "reason": "Reviewed full implementation including unlinked helpers; eight modules have independent 144-public-theorem review, exact source review, origin/count/history/value/safety/existence proofs and explicit restrictions."
+    },
+    {
+      "path": "Ptx/SharedBarrierProgram.lean",
+      "reason": "Reviewed full implementation including unlinked helpers; eight modules have independent 144-public-theorem review, exact source review, origin/count/history/value/safety/existence proofs and explicit restrictions."
+    },
+    {
+      "path": "README.md",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "docs/formalization/bitcount-source-review.md",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "docs/formalization/worker-runs.md",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "docs/foundations/collective-memory.md",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "docs/foundations/shared-barrier-audit.txt",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "docs/foundations/shared-barrier-control-origin.md",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "docs/foundations/shared-barrier-proof-review.md",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "docs/foundations/shared-barrier-source-review.md",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "docs/foundations/shared-barrier.md",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "docs/foundations/tensor-layout-bridge.md",
+      "reason": "Reviewed explanatory/source/proof evidence and examples against checked statements; fixed-schedule witness distinguished from arbitrary completed-schedule correctness, proof validity from fidelity and hardware behavior."
+    },
+    {
+      "path": "formalization/checks/bitcount-u32-v2.lean",
+      "reason": "Reviewed source-pinned task, unchanged required contracts, preserved driver versions and minimal feedback; v2 differs only in whitespace and final fresh replay passes."
+    },
+    {
+      "path": "formalization/checks/bitcount-u32.json",
+      "reason": "Reviewed source-pinned task, unchanged required contracts, preserved driver versions and minimal feedback; v2 differs only in whitespace and final fresh replay passes."
+    },
+    {
+      "path": "formalization/checks/bitcount-u32.lean",
+      "reason": "Reviewed source-pinned task, unchanged required contracts, preserved driver versions and minimal feedback; v2 differs only in whitespace and final fresh replay passes."
+    },
+    {
+      "path": "formalization/feedback/bitcount-u32-repair-1.md",
+      "reason": "Reviewed source-pinned task, unchanged required contracts, preserved driver versions and minimal feedback; v2 differs only in whitespace and final fresh replay passes."
+    },
+    {
+      "path": "formalization/feedback/bitcount-u32-repair-2.md",
+      "reason": "Reviewed source-pinned task, unchanged required contracts, preserved driver versions and minimal feedback; v2 differs only in whitespace and final fresh replay passes."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/README.md",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/acceptance.json",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/evidence-manifest.json",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/integration-check.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/acceptance.lean",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/audit.lean",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/candidate.patch",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/control-acceptance.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/control-acceptance.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/control-audit.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/control-audit.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/control-build.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/control-build.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/harness.py",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/omit-unary-read-acceptance.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/omit-unary-read-acceptance.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/omit-unary-read-audit.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/omit-unary-read-audit.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/omit-unary-read-build.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/omit-unary-read-build.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/omit-unary-read-proof-elaboration.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/omit-unary-read-proof-elaboration.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/omit-unary-read.mutation.patch",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/report.json",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/setup-apply.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/setup-apply.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/setup-lean-version.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/setup-lean-version.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/setup-worktree.stderr.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/setup-worktree.stdout.log",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes-v1/task.json",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/review-probes.md",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/worker-evidence.tar.gz",
+      "reason": "Inspected preserved candidate/failed replay and mutation artifacts, hashes and receipt claims; raw resumed usage is not summed, evaluator defect is candidly retained, one mutant test is not general assurance."
+    },
+    {
+      "path": "formalization/tasks/bitcount-u32-v1.json",
+      "reason": "Reviewed source-pinned task, unchanged required contracts, preserved driver versions and minimal feedback; v2 differs only in whitespace and final fresh replay passes."
+    },
+    {
+      "path": "integration/torchlean/PtxTensorBridge.lean",
+      "reason": "Reviewed actual pinned TorchLean tensor bridge, input-only bounds/no-overflow restrictions and modular counterexample. Joint build and fresh dependency endpoints pass; older receipt remains its explicitly scoped source snapshot."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Reviewed actual pinned TorchLean tensor bridge, input-only bounds/no-overflow restrictions and modular counterexample. Joint build and fresh dependency endpoints pass; older receipt remains its explicitly scoped source snapshot."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual pinned TorchLean tensor bridge, input-only bounds/no-overflow restrictions and modular counterexample. Joint build and fresh dependency endpoints pass; older receipt remains its explicitly scoped source snapshot."
+    },
+    {
+      "path": "integration/torchlean/proof-audit-tensor-bridge.txt",
+      "reason": "Reviewed actual pinned TorchLean tensor bridge, input-only bounds/no-overflow restrictions and modular counterexample. Joint build and fresh dependency endpoints pass; older receipt remains its explicitly scoped source snapshot."
+    },
+    {
+      "path": "integration/torchlean/verification-tensor-bridge.json",
+      "reason": "Reviewed actual pinned TorchLean tensor bridge, input-only bounds/no-overflow restrictions and modular counterexample. Joint build and fresh dependency endpoints pass; older receipt remains its explicitly scoped source snapshot."
+    },
+    {
+      "path": "scripts/check_worker_evidence.py",
+      "reason": "Small multi-trial archive verifier extension checked by four targeted behavior tests and complete worker suite; it verifies bytes without executing/extracting archived worker content."
+    },
+    {
+      "path": "stratic/descriptions/collective-execution.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/integer-bitcount.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/integer-bitcount.md",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.md",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/shared-barrier-control-origin.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/shared-barrier-control-origin.md",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/shared-barrier-memory.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/shared-barrier-memory.md",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/shared-barrier-storage.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/shared-barrier-storage.md",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/shared-barrier.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/shared-barrier.md",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/tensor-layout.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/tensor-layout.md",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/verification-interface.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.json",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.md",
+      "reason": "Reviewed self-contained contract, summary, restrictions, hierarchy and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "tests/test_worker_evidence.py",
+      "reason": "Small multi-trial archive verifier extension checked by four targeted behavior tests and complete worker suite; it verifies bytes without executing/extracting archived worker content."
+    }
+  ]
+}

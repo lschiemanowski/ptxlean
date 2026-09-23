@@ -1,0 +1,202 @@
+{
+  "schema": "ptxlean.bitcount-review-probes/v1",
+  "started_at": "2026-09-23T20:36:27.926784+00:00",
+  "model_calls": 0,
+  "worktree": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+  "commands": [
+    {
+      "name": "setup-worktree",
+      "argv": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+        "abd21234e3b59ca427bf155bd8a53c6b75369f2e"
+      ],
+      "cwd": "/home/lothar/workspace/ptxlean",
+      "started_at": "2026-09-23T20:36:27.927553+00:00",
+      "finished_at": "2026-09-23T20:36:27.959476+00:00",
+      "returncode": 0,
+      "stdout": "setup-worktree.stdout.log",
+      "stderr": "setup-worktree.stderr.log"
+    },
+    {
+      "name": "setup-apply",
+      "argv": [
+        "git",
+        "apply",
+        "--",
+        "/home/lothar/workspace/ptxlean/formalization/results/bitcount-u32/review-probes-v1/candidate.patch"
+      ],
+      "cwd": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+      "started_at": "2026-09-23T20:36:27.959638+00:00",
+      "finished_at": "2026-09-23T20:36:27.961829+00:00",
+      "returncode": 0,
+      "stdout": "setup-apply.stdout.log",
+      "stderr": "setup-apply.stderr.log"
+    },
+    {
+      "name": "setup-lean-version",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "--version"
+      ],
+      "cwd": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+      "started_at": "2026-09-23T20:36:27.961992+00:00",
+      "finished_at": "2026-09-23T20:36:28.047925+00:00",
+      "returncode": 0,
+      "stdout": "setup-lean-version.stdout.log",
+      "stderr": "setup-lean-version.stderr.log"
+    },
+    {
+      "name": "control-build",
+      "argv": [
+        "lake",
+        "build",
+        "Ptx",
+        "Ptx.IntegerBitCount"
+      ],
+      "cwd": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+      "started_at": "2026-09-23T20:36:28.048761+00:00",
+      "finished_at": "2026-09-23T20:37:05.641936+00:00",
+      "returncode": 0,
+      "stdout": "control-build.stdout.log",
+      "stderr": "control-build.stderr.log"
+    },
+    {
+      "name": "control-acceptance",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/bitcount-u32/review-probes-v1/acceptance.lean"
+      ],
+      "cwd": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+      "started_at": "2026-09-23T20:37:05.642239+00:00",
+      "finished_at": "2026-09-23T20:37:07.586405+00:00",
+      "returncode": 0,
+      "stdout": "control-acceptance.stdout.log",
+      "stderr": "control-acceptance.stderr.log"
+    },
+    {
+      "name": "control-audit",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/bitcount-u32/review-probes-v1/audit.lean"
+      ],
+      "cwd": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+      "started_at": "2026-09-23T20:37:07.586952+00:00",
+      "finished_at": "2026-09-23T20:37:07.953016+00:00",
+      "returncode": 0,
+      "stdout": "control-audit.stdout.log",
+      "stderr": "control-audit.stderr.log"
+    },
+    {
+      "name": "omit-unary-read-build",
+      "argv": [
+        "lake",
+        "build",
+        "Ptx",
+        "Ptx.IntegerBitCount"
+      ],
+      "cwd": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+      "started_at": "2026-09-23T20:37:07.959999+00:00",
+      "finished_at": "2026-09-23T20:37:44.844621+00:00",
+      "returncode": 0,
+      "stdout": "omit-unary-read-build.stdout.log",
+      "stderr": "omit-unary-read-build.stderr.log"
+    },
+    {
+      "name": "omit-unary-read-proof-elaboration",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "Ptx/IntegerBitCount.lean"
+      ],
+      "cwd": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+      "started_at": "2026-09-23T20:37:44.845165+00:00",
+      "finished_at": "2026-09-23T20:37:45.747860+00:00",
+      "returncode": 0,
+      "stdout": "omit-unary-read-proof-elaboration.stdout.log",
+      "stderr": "omit-unary-read-proof-elaboration.stderr.log"
+    },
+    {
+      "name": "omit-unary-read-audit",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/bitcount-u32/review-probes-v1/audit.lean"
+      ],
+      "cwd": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+      "started_at": "2026-09-23T20:37:45.748171+00:00",
+      "finished_at": "2026-09-23T20:37:46.120716+00:00",
+      "returncode": 0,
+      "stdout": "omit-unary-read-audit.stdout.log",
+      "stderr": "omit-unary-read-audit.stderr.log"
+    },
+    {
+      "name": "omit-unary-read-acceptance",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/bitcount-u32/review-probes-v1/acceptance.lean"
+      ],
+      "cwd": "/tmp/ptxlean-bitcount-read-metadata-n_jsz0ft/worktree",
+      "started_at": "2026-09-23T20:37:46.121007+00:00",
+      "finished_at": "2026-09-23T20:37:48.170511+00:00",
+      "returncode": 1,
+      "stdout": "omit-unary-read-acceptance.stdout.log",
+      "stderr": "omit-unary-read-acceptance.stderr.log"
+    }
+  ],
+  "mutation": "Omit unary source register from Op.reads; evaluator arithmetic/state update unchanged.",
+  "base_commit": "abd21234e3b59ca427bf155bd8a53c6b75369f2e",
+  "candidate_patch_sha256": "23f275350ed3b1a94aebd39c3ab9d3123cd9641151188e1c247ecdc17fa395d2",
+  "task_sha256": "9fd1fd70b8961490095c1d8784f6f7156a56063da2b74c55351f068aeb0328d9",
+  "driver_sha256": "59bddc3cceb558578f8ace3e71dc2c107a31a0895b4bf649d363296c3a83c27a",
+  "script_sha256": "5c91aba9d2e5468d3c5a5117e9aa99cd995b394cd0102badd4b2af8e7269aa9b",
+  "sources": [
+    {
+      "path": "references/nvidia/ptx-isa-9.4/index.html",
+      "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed"
+    }
+  ],
+  "audit_declarations": [
+    "Ptx.Scalar.IntegerBitCount.unary_exec",
+    "Ptx.Scalar.IntegerBitCount.unary_false",
+    "Ptx.Scalar.IntegerBitCount.unary_preserves_other",
+    "Ptx.Scalar.IntegerBitCount.takeWhile_length_le",
+    "Ptx.Scalar.IntegerBitCount.takeWhile_length_eq_iff",
+    "Ptx.Scalar.IntegerBitCount.popc_toNat",
+    "Ptx.Scalar.IntegerBitCount.clz_toNat",
+    "Ptx.Scalar.IntegerBitCount.popc_bound",
+    "Ptx.Scalar.IntegerBitCount.clz_bound",
+    "Ptx.Scalar.IntegerBitCount.popc_zero_iff",
+    "Ptx.Scalar.IntegerBitCount.clz_width_iff",
+    "Ptx.Scalar.Text.decode_encode",
+    "Ptx.Scalar.Text.decodeOp_supported"
+  ],
+  "control_source_sha256": {
+    "Ptx/Scalar.lean": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5",
+    "Ptx/ScalarText.lean": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91",
+    "Ptx/ScalarRules.lean": "57a0dbf7a370f0d484cfdde5ad7c66963b14d7a9d6c4d4a2b0cd5b4bef236d9f",
+    "Ptx/IntegerBitCount.lean": "bf43bd75dfe28461d2f6f812576fdf2ff07d5e44a399b7507d8096fed8c7be43"
+  },
+  "mutated_source_sha256": {
+    "Ptx/Scalar.lean": "6b42c806241930e863a5ccdb80f37646746716274360f4d2c24de586c14a695e",
+    "Ptx/ScalarText.lean": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91",
+    "Ptx/ScalarRules.lean": "57a0dbf7a370f0d484cfdde5ad7c66963b14d7a9d6c4d4a2b0cd5b4bef236d9f",
+    "Ptx/IntegerBitCount.lean": "bf43bd75dfe28461d2f6f812576fdf2ff07d5e44a399b7507d8096fed8c7be43"
+  },
+  "outcome": "pass: control builds/accepts; metadata-only mutation builds and its proofs/audits pass, but frozen acceptance rejects.",
+  "limitations": "One deliberately injected metadata fault; not a completeness or quantified sensitivity claim for the evaluator.",
+  "finished_at": "2026-09-23T20:37:48.171841+00:00"
+}

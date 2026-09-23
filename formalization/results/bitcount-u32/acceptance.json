@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "task": "bitcount-u32-v1",
+  "selected_forms": [
+    "clz.b32",
+    "popc.b32"
+  ],
+  "interface_restriction": "One b32 register/immediate source and one u32 register destination, typed operands only; no b64 forms, additional modifiers or general architecture eligibility checking.",
+  "base_commit": "abd21234e3b59ca427bf155bd8a53c6b75369f2e",
+  "accepted_patch_sha256": "23f275350ed3b1a94aebd39c3ab9d3123cd9641151188e1c247ecdc17fa395d2",
+  "worker_attempt": "bitcount-003",
+  "mechanical_replay": "replays/bitcount-003/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "pass: exact accepted patch integrated; ./scripts/check.sh passed with 574 audited declarations",
+  "review_probes": "review-probes-v1/report.json",
+  "source_conditions": {
+    "ptx_minimum": "2.0",
+    "target_minimum": "sm_20",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "integer-arithmetic-instructions-clz",
+      "integer-arithmetic-instructions-popc"
+    ]
+  },
+  "campaign_call_numbers": [
+    4,
+    5,
+    6
+  ],
+  "trial_invocations": 3,
+  "repair_invocations": 2,
+  "initial_attempt_passed": false,
+  "evaluator_versions": {
+    "v1": "preserved parser defect in candidate-only record update; failed replay retained",
+    "v2": "only whitespace changed; all assertions and required names unchanged; fresh replay passed"
+  },
+  "additional_dependency_review": {
+    "theorems": 14,
+    "definitions": 3,
+    "archive_log": "review/all-new-dependencies.log"
+  },
+  "usage_policy": "Preserve raw per-invocation counters; resumed-session values may be cumulative and are not summed. No billing data returned.",
+  "qualification": "Second adaptive development task with coordinator-supplied contracts, checks and repair feedback; not a held-out success-rate, productivity or cost-effectiveness estimate.",
+  "integration_evidence": {
+    "command": "./scripts/check.sh",
+    "log": "integration-check.log",
+    "log_sha256": "cedfed041e9f21e0fe0927d9341c3a3f72b92f8f1eb16111c02b8241a4465795",
+    "audited_declarations": 574,
+    "scope": "Core repository checks; joint TorchLean integration is reported separately. Stratic check IDs are assigned by the coordinator, not invented here."
+  },
+  "review_probe_result": "pass: unchanged control accepted; omitted unary read metadata still builds and its proofs/dependency audits pass, while two explicit trace expectations reject"
+}

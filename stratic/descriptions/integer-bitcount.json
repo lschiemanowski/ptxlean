@@ -1,0 +1,64 @@
+{
+  "id": "integer-bitcount",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "The scalar machine describes instructions operating on individual values in one\nthread."
+    }
+  },
+  "summary": [
+    "Count all set bits or leading zero bits of any 32-bit input, using the existing scalar execution and predicate rules.",
+    "Prove exact counts, bounds, zero characterizations and execution/frame behavior for the two supported typed forms, with independently reviewed source conditions and acceptance checks."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The slice supports exactly `popc.b32` and `clz.b32`. Each reads one\n32-bit word from a register or literal and writes a count to a 32-bit destination\nregister. The `b32` suffix describes the input's bits; the result is an unsigned\n32-bit integer. Every input bit pattern is valid. Population count of zero is\nzero; leading-zero count of zero is thirty-two. Both results lie between zero\nand thirty-two, inclusive. These forms require PTX version 2.0 or later and a\ntarget GPU at least `sm_20`."
+      },
+      "to": {
+        "path": "Ptx/Scalar.lean",
+        "passage": {
+          "quote": "/-- PTX 9.4 `clz.b32` and `popc.b32`; their result register is u32. -/\ndef UnaryOp.eval : UnaryOp \u2192 Word \u2192 Word\n  | .clz, a => BitVec.ofNat 32 ((List.range 32).reverse.takeWhile\n      (fun i => !a.getLsbD i)).length\n  | .popc, a => BitVec.ofNat 32 ((List.range 32).filter\n      (fun i => a.getLsbD i)).length\n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The mathematical contracts count true bits at positions zero through thirty-one,\nor the consecutive false bits encountered from position thirty-one down to zero.\nThey apply to every word, not only selected examples. Execution proofs connect\nthose counts to the actual destination and show what remains unchanged. Independent\nchecks cover zero, the highest bit, all-one and mixed patterns, overlapping input\nand output registers, predicates, and the typed text interface."
+      },
+      "to": {
+        "path": "Ptx/IntegerBitCount.lean",
+        "passage": {
+          "quote": "theorem popc_toNat (a : Word) : (UnaryOp.eval .popc a).toNat =\n    ((List.range 32).filter (fun i => a.getLsbD i)).length := by\n  have : ((List.range 32).filter (fun i => a.getLsbD i)).length \u2264 32 :=\n    by simpa using List.length_filter_le (fun i => a.getLsbD i) (List.range 32)\n  have hlt : ((List.range 32).filter (fun i => a.getLsbD i)).length < 2^32 := by omega\n  simp [UnaryOp.eval, BitVec.toNat_ofNat, Nat.mod_eq_of_lt hlt]\n\ntheorem clz_toNat (a : Word) : (UnaryOp.eval .clz a).toNat =\n    ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length := by\n  have h : ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length \u2264 32 := by\n    simpa using takeWhile_length_le (fun i => !a.getLsbD i) (List.range 32).reverse\n  have hlt : ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length < 2^32 := by omega\n  simp [UnaryOp.eval, BitVec.toNat_ofNat, Nat.mod_eq_of_lt hlt]\n\ntheorem popc_bound (a : Word) : (UnaryOp.eval .popc a).toNat \u2264 32 := by\n  rw [popc_toNat]\n  simpa using List.length_filter_le (fun i => a.getLsbD i) (List.range 32)\n\ntheorem clz_bound (a : Word) : (UnaryOp.eval .clz a).toNat \u2264 32 := by\n  rw [clz_toNat]\n  have h : ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length \u2264 32 := by\n    simpa using takeWhile_length_le (fun i => !a.getLsbD i) (List.range 32).reverse\n  exact h\n\ntheorem popc_zero_iff (a : Word) : UnaryOp.eval .popc a = 0 \u2194 a = 0 := by\n  constructor\n  \u00b7 intro h\n    apply BitVec.eq_of_getLsbD_eq\n    intro i hi\n    have hn := popc_toNat a\n    rw [h] at hn\n    have hn : ((List.range 32).filter (fun j => a.getLsbD j)).length = 0 := by simpa using hn.symm\n    have hmem : i \u2208 List.range 32 := List.mem_range.mpr hi\n    have hfalse : a.getLsbD i = false := by\n      cases hv : a.getLsbD i\n      \u00b7 rfl\n      \u00b7 have hm : i \u2208 (List.range 32).filter (fun j => a.getLsbD j) :=\n          List.mem_filter.mpr \u27e8hmem, hv\u27e9\n        have hne : (List.range 32).filter (fun j => a.getLsbD j) \u2260 [] := by\n          intro heq\n          have : i \u2208 ([] : List Nat) := heq \u25b8 hm\n          simp at this\n        have hpos : 0 < ((List.range 32).filter (fun j => a.getLsbD j)).length :=\n          List.length_pos_iff.mpr hne\n        omega\n    simpa using hfalse\n  \u00b7 rintro rfl\n    change BitVec.ofNat 32 ((List.range 32).filter (fun _ => false)).length = 0\n    rfl\n\ntheorem clz_width_iff (a : Word) : UnaryOp.eval .clz a = 32 \u2194 a = 0 := by\n  rw [\u2190 BitVec.toNat_inj]\n  rw [clz_toNat]\n  constructor\n  \u00b7 intro h\n    have hlen : ((List.range 32).reverse.takeWhile (fun i => !a.getLsbD i)).length = 32 := by\n      simpa [BitVec.toNat_ofNat] using h\n    have hall := (takeWhile_length_eq_iff (fun i => !a.getLsbD i)\n      (List.range 32).reverse).mp (by simpa using hlen)\n    apply BitVec.eq_of_getLsbD_eq\n    intro i hi\n    have himem : i \u2208 (List.range 32).reverse := List.mem_reverse.mpr (List.mem_range.mpr hi)\n    have hz := hall i himem\n    cases hv : a.getLsbD i <;> simp_all\n  \u00b7 intro hz\n    subst a\n    have hall : \u2200 i \u2208 (List.range 32).reverse,\n        Bool.not ((0#32).getLsbD i) = true := by\n      intro i hi\n      have hz : (0#32).getLsbD i = false := by simp\n      simp [hz]\n    have hlen := (takeWhile_length_eq_iff (fun i => Bool.not ((0#32).getLsbD i))\n      (List.range 32).reverse).mpr hall\n    simpa using hlen\n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A unary operation has one input. It uses the scalar machine's existing\nincoming-state register reads, destination update, predicates and trace records.\nReading and writing the same register must use its old value as input. Executing\nan instruction changes only its destination value and advances the program\ncounter. Skipping it under a false predicate advances the counter without\nreading the data operand or writing a register. Neither operation accesses memory."
+      },
+      "to": {
+        "path": "Ptx/IntegerBitCount.lean",
+        "passage": {
+          "quote": "theorem unary_exec (s : State) (operation : UnaryOp) (destination : Nat)\n    (source : Operand32) (guard : Guard) (h : guard.eval s = true)\n    (readOverride : Option Word) :\n    eval readOverride \u27e8guard, .unary32 operation destination source\u27e9 s =\n      .next {({s with pc := s.pc + 1}) with\n        regs := update s.regs destination (operation.eval (source.eval s))}\n        (occurrence s \u27e8guard, .unary32 operation destination source\u27e9 true) :=\n  Ptx.Scalar.unary_exec s operation destination source guard h readOverride\n\ntheorem unary_false (s : State) (operation : UnaryOp) (destination : Nat)\n    (source : Operand32) (guard : Guard) (h : guard.eval s = false)\n    (readOverride : Option Word) :\n    eval readOverride \u27e8guard, .unary32 operation destination source\u27e9 s =\n      .next {s with pc := s.pc + 1}\n        (occurrence s \u27e8guard, .unary32 operation destination source\u27e9 false) :=\n  Ptx.Scalar.unary_false s operation destination source guard h readOverride\n\ntheorem unary_preserves_other (s : State) (operation : UnaryOp) (destination other : Nat)\n    (source : Operand32) (guard : Guard) (h : guard.eval s = true)\n    (different : other \u2260 destination) (readOverride : Option Word) :\n    (match eval readOverride \u27e8guard, .unary32 operation destination source\u27e9 s with\n      | .next next _ => next.regs other | _ => s.regs other) = s.regs other :=\n  Ptx.Scalar.unary_preserves_other s operation destination other source guard h different readOverride\n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Only the exact two mnemonics are supported by this slice. The typed interface\nrequires a register destination and one word operand; it distinguishes malformed\noperands from unsupported mnemonics."
+      },
+      "to": {
+        "path": "Ptx/ScalarText.lean",
+        "passage": {
+          "quote": "def unaryMnemonic : UnaryOp \u2192 String\n  | .clz => \"clz.b32\"\n  | .popc => \"popc.b32\"\n"
+        }
+      }
+    }
+  ]
+}

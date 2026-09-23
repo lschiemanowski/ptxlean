@@ -44,3 +44,12 @@ inspection and checking without inference. A run left in a started state after
 a crash is unresolved and still consumes its reserved call; it is not retried
 without a new attempt record. Operational time, usage and assistance records are
 needed alongside the count because one headless call can contain many turns.
+
+Completed evaluation trials can be preserved as separate evidence archives. Each
+manifest lists the exact bytes and hashes of all archived attempts, feedback,
+ledger snapshots and replay/checker records, including failures and evaluator
+repairs. The evidence checker verifies every archived trial by default, or the
+explicitly selected manifests. It checks bytes without extracting or executing
+archive contents. An archive's integrity does not itself establish semantic
+acceptance. Usage counters from resumed sessions remain raw; potentially
+cumulative counters must not be added as though each were an independent bill.

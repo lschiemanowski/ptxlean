@@ -7,11 +7,11 @@
     }
   },
   "summary": [
-    "Relate network tensors—multidimensional arrays—and state to their storage in memory, with explicit requirements on layout and numerical values.",
+    "Relate network tensors\u2014multidimensional arrays\u2014and state to their storage in memory, with explicit requirements on layout and numerical values.",
     "Combine the guarantees of individual kernels into correctness of a whole network computation under stated assumptions."
   ],
   "realization": "partial",
-  "remaining": "An isolated package connects actual pinned TorchLean graph construction to exact backward success and VJP correctness. Tensor/storage relations, combined kernel contracts, stateful orchestration, numerical bounds and PTX backward correspondence remain unfinished.",
+  "remaining": "The pinned integration package establishes exact TorchLean backward success and VJP correctness, and one interleaved global-memory u32 vector-add layout bridge with modular arithmetic and an exact real-addition corollary when inputs do not overflow. General tensor/storage relations, combined kernel contracts, stateful orchestration, floating-point numerical bounds and PTX backward correspondence remain unfinished.",
   "links": [
     {
       "kind": "depends-on",

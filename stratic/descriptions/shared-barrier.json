@@ -1,0 +1,197 @@
+{
+  "id": "shared-barrier",
+  "parent": {
+    "description": "collective-execution",
+    "passage": {
+      "quote": "A shared-memory example must use actual shared-state-space loads and stores,\nvalid addresses inside storage owned by that CTA, and explicit instruction\nordering qualifiers."
+    }
+  },
+  "summary": [
+    "Execute actual typed shared stores, a common CTA barrier, partner loads and exits with checked waiting, provenance and arena access.",
+    "Prove arbitrary-schedule preservation of input values and addresses, and a completed finite concrete execution; keep candidate observations separate from the memory-order proof."
+  ],
+  "realization": "implemented",
+  "remaining": "The fixed fetched program and finite witness are implemented. General barrier reuse in a fetched frontend, divergent/early-exit behavior, count operands, raw PTX parsing and warp-arrival operational refinement remain excluded. Source fidelity and hardware correspondence are distinct from kernel-checked proofs.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every thread stores one input word in its own shared-memory slot, reaches the\nsame full-CTA barrier, reads a selected partner's slot, and exits. The barrier\nis the actual instruction between the store and load. It prevents any thread\nfrom executing that load while peers are still missing. Inputs and the old shared\ncontents are arbitrary. The selected partner is an explicit map between the\nfinite participants; a concrete launch can choose partners in another warp."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierProgram.lean",
+        "passage": {
+          "quote": "def start (config : Config n) (initial : Initial n) : State n :=\n  \u27e8startThread config initial, \u27e8config.cta, initial.old\u27e9, Barrier.initial\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The typed program is `st.relaxed.cta.shared.u32 [a0], r0; bar.sync 0;\nld.relaxed.cta.shared.u32 r1, [a1]; exit`. A program counter selects the instruction\nactually fetched. Shared addresses occupy 32-bit registers: thread i initially\nhas a0 equal to four times i and a1 equal to four times its partner's index.\nThe arena contains one initialized word per participant, belongs to the configured\nCTA, and satisfies the explicit bound four times the participant count is less\nthan 2^32. This prevents address wrapping. Accesses check ownership, four-byte\nalignment and arena bounds. No outside thread accesses this allocation during the\nfragment. CTA ownership alone would not exclude permitted cluster access from\nanother CTA. This does not certify an external allocator or launch."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierMachine.lean",
+        "passage": {
+          "quote": "def program : List Instruction := [.store 0 0, .sync 0, .load 1 1, .exit]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A barrier request is derived from the fetched resource, actual instruction site,\nCTA and current generation. Waiting blocks further dispatch; rescheduling a\nwaiting thread emits no duplicate arrival. The final arrival releases the group\nand advances all participants past the barrier. Reachable-state proofs establish\nthat those participants are at the common barrier site and that none exited\nbefore reaching it. This wrapper has one barrier visit; general reuse belongs\nto the separate control protocol and is not claimed for this program frontend."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierMachine.lean",
+        "passage": {
+          "quote": "def barrierRequest (config : Config n) (state : State n) (thread : Fin n) (resource : Fin 16) :\n    Barrier.Request n :=\n  \u27e8\u27e8config.cta, resource, state.barrier.generation, (state.threads thread).pc\u27e9, thread\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory events preserve the actual fetched shared-state-space instruction, thread,\nsite, 32-bit address, ordering and register-derived value. Barrier arrivals and\ncompletion remain distinct keyed events in the same control trace. Origin and\ncompleteness proofs connect emitted effects to dispatch; an ordinary global load\nor store is not relabeled as shared-memory coverage."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierMachine.lean",
+        "passage": {
+          "quote": "theorem event_origin (config : Config n) (override : Option Word) (thread : Fin n) (state : State n)\n    (member : event \u2208 (stepWith config override thread state).events) :\n    \u2203 instruction, (state.threads thread).halted = false \u2227\n      \u00acBarrier.Waiting state.barrier thread \u2227\n      program[(state.threads thread).pc]? = some instruction \u2227\n      event \u2208 (dispatch config override thread instruction state).events := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory events preserve the actual fetched shared-state-space instruction, thread,\nsite, 32-bit address, ordering and register-derived value. Barrier arrivals and\ncompletion remain distinct keyed events in the same control trace. Origin and\ncompleteness proofs connect emitted effects to dispatch; an ordinary global load\nor store is not relabeled as shared-memory coverage."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierMachine.lean",
+        "passage": {
+          "quote": "theorem event_complete (config : Config n) (override : Option Word) (thread : Fin n) (state : State n)\n    (live : (state.threads thread).halted = false) (runnable : \u00acBarrier.Waiting state.barrier thread)\n    (fetch : program[(state.threads thread).pc]? = some instruction)\n    (member : event \u2208 (dispatch config override thread instruction state).events) :\n    event \u2208 (stepWith config override thread state).events := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every step preserves the input register r0, all shared-address registers and the\narena owner. These frame properties hold for arbitrary scheduling, including\nblocked and unsuccessful dispatches. Consequently a reachable store has the\ninitialized input and own-slot address, and a reachable load has the initialized\npartner-slot address. This connects the data fields to the program independently\nof the particular schedule used to construct a completed witness."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierFrame.lean",
+        "passage": {
+          "quote": "theorem run_frame (cfg : Config n) (reads : Fin n \u2192 Option Word) (state : State n)\n    (schedule : List (Fin n)) : Holds state (runWith cfg reads state schedule).state := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every step preserves the input register r0, all shared-address registers and the\narena owner. These frame properties hold for arbitrary scheduling, including\nblocked and unsuccessful dispatches. Consequently a reachable store has the\ninitialized input and own-slot address, and a reachable load has the initialized\npartner-slot address. This connects the data fields to the program independently\nof the particular schedule used to construct a completed witness."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierFrame.lean",
+        "passage": {
+          "quote": "theorem trace_memory_fields (cfg : Config n) (initial : Initial n)\n    (observations : Fin n \u2192 Word) (schedule : List (Fin n))\n    (member : Event.memory effect \u2208\n      (runWith cfg (fun t => some (observations t)) (start cfg initial) schedule).trace) :\n    Event.memory effect = storeEvent cfg initial effect.thread \u2228\n    Event.memory effect = readEvent cfg initial (fun t => some (observations t)) effect.thread := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Candidate execution permits explicit proposed load observations while retaining\nall control and access checks. Its final result register contains that actual\nobservation. Concrete execution instead reads the current shared arena. A finite\nschedule that stores every input, arrives every participant, reads every partner\nand exits every thread gives a completed concrete witness. Its result, access\nsafety and control completion are separate guarantees; no fairness of arbitrary\nschedules is inferred."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierProgram.lean",
+        "passage": {
+          "quote": "theorem candidate_completed (config : Config n) (initial : Initial n) (observations : Fin n \u2192 Word) :\n    let result := runWith config (fun thread => some (observations thread)) (start config initial) (fullSchedule n)\n    Runs config (fun thread => some (observations thread)) (start config initial) (fullSchedule n) result \u2227\n      (\u2200 thread, (result.state.threads thread).halted = true \u2227\n        (result.state.threads thread).pc = 3 \u2227\n        (result.state.threads thread).registers 1 = observations thread) \u2227\n      result.state.arena.words = initial.inputs \u2227 result.state.barrier = Barrier.reset 1 \u2227\n      result.trace = canonicalTrace config initial (fun thread => some (observations thread)) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Candidate execution permits explicit proposed load observations while retaining\nall control and access checks. Its final result register contains that actual\nobservation. Concrete execution instead reads the current shared arena. A finite\nschedule that stores every input, arrives every participant, reads every partner\nand exits every thread gives a completed concrete witness. Its result, access\nsafety and control completion are separate guarantees; no fairness of arbitrary\nschedules is inferred."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierProgram.lean",
+        "passage": {
+          "quote": "theorem concrete_completed (config : Config n) (initial : Initial n) :\n    let result := run config (start config initial) (fullSchedule n)\n    Runs config (fun _ => none) (start config initial) (fullSchedule n) result \u2227\n      (\u2200 thread, (result.state.threads thread).halted = true \u2227\n        (result.state.threads thread).pc = 3 \u2227\n        (result.state.threads thread).registers 1 = initial.inputs (config.partner thread)) \u2227\n      result.state.arena.words = initial.inputs \u2227 result.state.barrier = Barrier.reset 1 := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Immediate updates in the concrete arena are a way to construct a witness, not a\ncomplete PTX memory model. Universal partner-read correctness requires a separate\nproof connecting actual barrier ordering and shared-memory source choices. This\nwrapper supplies the required instruction effects and control trace rather than\nassuming that reads already obtained the right values. Warp placement, a concrete\nmulti-warp launch, memory-graph correspondence, raw PTX parsing, divergent\nparticipation, early exits, explicit barrier counts, multiple barriers and\nasynchronous operations remain separately stated responsibilities.\n"
+      },
+      "to": {
+        "path": "docs/foundations/shared-barrier.md",
+        "passage": {
+          "quote": "The chosen global order of the constructive schedule is convenient for an\nexistence proof. It is not a requirement on arbitrary scheduling and is not\nscheduler fairness. Likewise, the memory projection's coarse proof levels\n(store, arrival, completion, resumption, load) represent a partial ordering;\nthey are not literal timestamps in the operational trace."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "After any finite candidate schedule, a thread that has completed its load retains\nthat load observation in r1. In particular, every halted thread has that result.\nThis invariant is independent of whether the memory model permits the proposed\nobservations. Completed threads each have exactly one store and one load in the\nactual trace; repeated scheduling cannot create additional accesses."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierFrame.lean",
+        "passage": {
+          "quote": "theorem halted_output (cfg : Config n) (initial : Initial n) (observations : Fin n \u2192 Word)\n    (schedule : List (Fin n)) (thread : Fin n)\n    (halted : ((runWith cfg (fun t => some (observations t)) (start cfg initial) schedule).state.threads thread).halted = true) :\n    ((runWith cfg (fun t => some (observations t)) (start cfg initial) schedule).state.threads thread).registers 1 = observations thread := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "After any finite candidate schedule, a thread that has completed its load retains\nthat load observation in r1. In particular, every halted thread has that result.\nThis invariant is independent of whether the memory model permits the proposed\nobservations. Completed threads each have exactly one store and one load in the\nactual trace; repeated scheduling cannot create additional accesses."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierFrame.lean",
+        "passage": {
+          "quote": "theorem halted_memory_counts (cfg : Config n) (initial : Initial n) (reads : Fin n \u2192 Option Word)\n    (schedule : List (Fin n)) (thread : Fin n)\n    (halted : ((runWith cfg reads (start cfg initial) schedule).state.threads thread).halted = true) :\n    Control.memoryCount .store (runWith cfg reads (start cfg initial) schedule).trace thread = 1 \u2227\n    Control.memoryCount .load (runWith cfg reads (start cfg initial) schedule).trace thread = 1 := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The actual history of every emitted load contains, in order, each producer's\nstore, that producer's arrival, the common completion and the load itself. This\nis proved for arbitrary finite scheduling, with the exact CTA, resource zero,\ngeneration zero and site one retained. It is not inferred from coarse graph\nranks or from the particular schedule chosen for the existence witness."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierHistory.lean",
+        "passage": {
+          "quote": "theorem load_path (cfg : Config n) (initial : Initial n) (observations : Fin n \u2192 Word)\n    (schedule : List (Fin n)) (effect : MemoryEvent n) (kind : effect.kind = .load)\n    (member : Event.memory effect \u2208\n      (runWith cfg (fun t => some (observations t)) (start cfg initial) schedule).trace)\n    (writer : Fin n) :\n    [storeEvent cfg initial writer, arrivalEvent cfg writer, completionEvent cfg,\n      Event.memory effect] <+\n      (runWith cfg (fun t => some (observations t)) (start cfg initial) schedule).trace :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The actual history of every emitted load contains, in order, each producer's\nstore, that producer's arrival, the common completion and the load itself. This\nis proved for arbitrary finite scheduling, with the exact CTA, resource zero,\ngeneration zero and site one retained. It is not inferred from coarse graph\nranks or from the particular schedule chosen for the existence witness."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierHistory.lean",
+        "passage": {
+          "quote": "theorem completed_memory_accounting (cfg : Config n) (initial : Initial n)\n    (observations : Fin n \u2192 Word) (schedule : List (Fin n))\n    (completed : \u2200 thread,\n      ((runWith cfg (fun t => some (observations t)) (start cfg initial) schedule).state.threads thread).halted = true) :\n    (\u2200 thread, Control.memoryCount .store\n      (runWith cfg (fun t => some (observations t)) (start cfg initial) schedule).trace thread = 1 \u2227\n      Control.memoryCount .load\n      (runWith cfg (fun t => some (observations t)) (start cfg initial) schedule).trace thread = 1) \u2227\n    (\u2200 effect, Event.memory effect \u2208\n      (runWith cfg (fun t => some (observations t)) (start cfg initial) schedule).trace \u2192\n      Event.memory effect = storeEvent cfg initial effect.thread \u2228\n      Event.memory effect = readEvent cfg initial (fun t => some (observations t)) effect.thread) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The actual history of every emitted load contains, in order, each producer's\nstore, that producer's arrival, the common completion and the load itself. This\nis proved for arbitrary finite scheduling, with the exact CTA, resource zero,\ngeneration zero and site one retained. It is not inferred from coarse graph\nranks or from the particular schedule chosen for the existence witness."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierHistory.lean",
+        "passage": {
+          "quote": "theorem load_path_general (cfg : Config n) (initial : Initial n) (reads : Fin n \u2192 Option Word)\n    (schedule : List (Fin n)) (effect : MemoryEvent n) (kind : effect.kind = .load)\n    (member : Event.memory effect \u2208\n      (runWith cfg reads (start cfg initial) schedule).trace)\n    (writer : Fin n) :\n    [storeEvent cfg initial writer, arrivalEvent cfg writer, completionEvent cfg,\n      Event.memory effect] <+\n      (runWith cfg reads (start cfg initial) schedule).trace :="
+        }
+      }
+    }
+  ]
+}

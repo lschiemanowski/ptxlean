@@ -1,0 +1,112 @@
+{
+  "id": "tensor-layout",
+  "parent": {
+    "description": "verification-interface",
+    "passage": {
+      "quote": "A tensor is a multidimensional array of values. Its logical indices,\nsuch as row and column, are related to the actual memory locations holding those\nvalues; this relationship is its layout."
+    }
+  },
+  "summary": [
+    "Relate logical tensor coordinates to a bounded interleaved global-memory allocation and prove unsigned vector addition modulo 2^32.",
+    "Connect the actual execution to exact real-valued TorchLean addition when every input sum fits, keeping finite execution, memory validity and numerical interpretation distinct."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A tensor names values by logical coordinates. A memory layout tells us which\nstored word supplies each coordinate. The first bridge uses a one-dimensional\ntensor and three consecutive 32-bit words per coordinate: left input, right\ninput, and output. Every coordinate has its own output word. The allocation is\nglobal memory accessible to the modeled threads; the implementation name\n`SharedVector` refers to one allocation shared by threads, not PTX's separate\nshared-memory address space."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTensorBridge.lean",
+        "passage": {
+          "quote": "def view {\u03b1 : Type} [Storage \u03b1] (decode : Word \u2192 \u03b1) (memory : List Word)\n    (layout : Fin n \u2192 Nat) : Tensor \u03b1 [n] :=\n  Tensor.ofFn fun i => decode memory[layout i]!"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The tensor view reads the supplied allocation and converts each unsigned word\nto its natural-number value, or to the same exact value as a real number.\nThe standalone view has a default for a missing word; the execution contracts\nprove every selected word exists, so that default is never used. The vector-add program loads\nthe two input words, adds them, stores the output, and exits. The arithmetic\nwraps modulo `2^32`: the output coordinate is the remainder of the input sum\nafter division by `2^32`, including when that sum overflows. This correspondence\nuses actual TorchLean tensors and the existing instruction-level execution."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTensorBridge.lean",
+        "passage": {
+          "quote": "theorem view_bounded_apply {\u03b1 : Type} [Storage \u03b1] (decode : Word \u2192 \u03b1)\n    (memory : List Word) (layout : Fin n \u2192 Nat) (i : Fin n)\n    (bound : layout i < memory.length) :\n    view decode memory layout (i, PUnit.unit) = decode memory[layout i] := by\n  simp [view, bound]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The tensor view reads the supplied allocation and converts each unsigned word\nto its natural-number value, or to the same exact value as a real number.\nThe standalone view has a default for a missing word; the execution contracts\nprove every selected word exists, so that default is never used. The vector-add program loads\nthe two input words, adds them, stores the output, and exits. The arithmetic\nwraps modulo `2^32`: the output coordinate is the remainder of the input sum\nafter division by `2^32`, including when that sum overflows. This correspondence\nuses actual TorchLean tensors and the existing instruction-level execution."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTensorBridge.lean",
+        "passage": {
+          "quote": "theorem completed_unsigned_tensor (memory : List Word) (registers : Fin n \u2192 Nat \u2192 Word)\n    (extent : 3*n \u2264 memory.length) (dispatches : List (Fin n))\n    (completed : SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers))) :\n    unsignedView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory SharedVector.output =\n      Tensor.map (fun v : Nat => v % 2^32) (unsignedView memory SharedVector.left + unsignedView memory SharedVector.right) := by\n  apply Tensor.Internal.Rep.ext\n  intro i\n  obtain \u27e8i, \u27e8\u27e9\u27e9 := i\n  simpa only [Tensor.map, Tensor.Internal.Rep.map_apply, Tensor.add_apply] using\n    completed_unsigned memory registers extent dispatches completed i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Under the additional condition that each input sum is less than `2^32`, the\noutput tensor is exactly TorchLean's pointwise addition of the two real-valued\ninput tensors. The condition is a property of the input values, not an assumed\noutput equality. The real-valued view is an exact embedding of unsigned integers;\nit supplies neither a floating-point interpretation nor a numerical error bound."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTensorBridge.lean",
+        "passage": {
+          "quote": "theorem completed_real_add (memory : List Word) (registers : Fin n \u2192 Nat \u2192 Word)\n    (extent : 3*n \u2264 memory.length) (dispatches : List (Fin n))\n    (completed : SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers)))\n    (fits : NoOverflow n memory) :\n    realView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory SharedVector.output =\n      realView memory SharedVector.left + realView memory SharedVector.right := by\n  apply Tensor.Internal.Rep.ext\n  intro i\n  obtain \u27e8i, \u27e8\u27e9\u27e9 := i\n  simp only [realView, view, Tensor.ofFn_apply, Tensor.add_apply]\n  rw [SharedVector.completed_correct memory registers extent dispatches completed i]\n  simp only [SharedVector.sum, BitVec.toNat_add, Nat.mod_eq_of_lt (fits i), Nat.cast_add]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Execution existence is separate from the arithmetic identity. For an allocation\ncontaining all three words per coordinate and addresses that do not wrap at\n64 bits, a finite schedule executes all five instructions of every thread.\nThe allocation bounds and unchanged words outside the outputs remain explicit.\nThis establishes a finite execution, not fairness of a GPU scheduler."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTensorBridge.lean",
+        "passage": {
+          "quote": "theorem execution_exists (memory : List Word) (registers : Fin n \u2192 Nat \u2192 Word)\n    (extent : 3*n \u2264 memory.length) (noWrap : 12*n < 2^64) :\n    \u2203 dispatches : List (Fin n),\n      dispatches.length = 5*n \u2227\n      SharedVector.Execution dispatches (SharedVector.initial memory registers)\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)) \u2227\n      SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers)) \u2227\n      unsignedView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory\n          SharedVector.output =\n        Tensor.map (fun v : Nat => v % 2^32)\n          (unsignedView memory SharedVector.left + unsignedView memory SharedVector.right) \u2227\n      (\u2200 index, (\u2200 lane : Fin n, SharedVector.output lane \u2260 index) \u2192\n        (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory[index]? = memory[index]?) \u2227\n      (\u2200 event \u2208 SharedVector.trace dispatches (SharedVector.initial memory registers),\n        AccessSafe memory.length event.effect) \u2227\n      (SharedVectorMemory.witness (n:=n) memory).Valid \u2227\n      (\u2200 lane : Fin n, SharedVector.laneTrace lane\n        (SharedVector.trace dispatches (SharedVector.initial memory registers)) =\n        [(SharedVectorMemory.witness memory).event (SharedVectorMemory.indexOf lane 3),\n         (SharedVectorMemory.witness memory).event (SharedVectorMemory.indexOf lane 4),\n         (SharedVectorMemory.witness memory).event (SharedVectorMemory.indexOf lane 5)]) := by\n  obtain \u27e8dispatches, length, faithful, complete, _, valid, labels\u27e9 :=\n    SharedVectorMemory.verified_shared_execution memory registers extent noWrap\n  refine \u27e8dispatches, length, faithful, complete,\n    completed_unsigned_tensor memory registers extent dispatches complete, ?_, ?_, valid, labels\u27e9\n  \u00b7 exact fun index apart => SharedVector.execute_frame _ dispatches index apart\n  \u00b7 exact fun event member => SharedVector.trace_access_safe memory _ dispatches extent noWrap\n      (SharedVector.initial_invariant ..) event member"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Execution existence is separate from the arithmetic identity. For an allocation\ncontaining all three words per coordinate and addresses that do not wrap at\n64 bits, a finite schedule executes all five instructions of every thread.\nThe allocation bounds and unchanged words outside the outputs remain explicit.\nThis establishes a finite execution, not fairness of a GPU scheduler."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTensorBridge.lean",
+        "passage": {
+          "quote": "theorem completed_bounds (memory : List Word) (registers : Fin n \u2192 Nat \u2192 Word)\n    (extent : 3*n \u2264 memory.length) (dispatches : List (Fin n)) (i : Fin n) :\n    SharedVector.left i < (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory.length \u2227\n    SharedVector.right i < (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory.length \u2227\n    SharedVector.output i < (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory.length := by\n  rw [(SharedVector.execute_invariant memory _ extent (SharedVector.initial_invariant ..) dispatches).length]\n  exact layout_bounds memory extent i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The relational memory result ranges over the existing restricted vector-add\ncandidate family. Reads must select a write to the same location carrying the\nsame value. Because no thread writes an input location, those read-source\nconditions force the original input values. Full memory validity has a separate\nconstructive witness with labels matching the execution. This bridge does not\nclaim arbitrary dependent PTX programs, device behavior, PyTorch correspondence,\nor support for other tensor layouts and numerical formats."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTensorBridge.lean",
+        "passage": {
+          "quote": "theorem candidate_unsigned_tensor (memory : List Word) (left right : Fin n \u2192 Word) (source co)\n    (sources : (SharedVectorMemory.graph memory left right source co).Sources) :\n    candidateOutput memory left right source co =\n      Tensor.map (fun v : Nat => v % 2^32)\n        (unsignedView memory SharedVector.left + unsignedView memory SharedVector.right) := by\n  apply Tensor.Internal.Rep.ext\n  intro i\n  obtain \u27e8i, \u27e8\u27e9\u27e9 := i\n  simp only [candidateOutput, Tensor.ofFn_apply, Tensor.map,\n    Tensor.Internal.Rep.map_apply, Tensor.add_apply, unsignedView, view]\n  rw [SharedVectorMemory.candidate_output memory left right source co sources i]\n  exact BitVec.toNat_add _ _"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The relational memory result ranges over the existing restricted vector-add\ncandidate family. Reads must select a write to the same location carrying the\nsame value. Because no thread writes an input location, those read-source\nconditions force the original input values. Full memory validity has a separate\nconstructive witness with labels matching the execution. This bridge does not\nclaim arbitrary dependent PTX programs, device behavior, PyTorch correspondence,\nor support for other tensor layouts and numerical formats."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTensorBridge.lean",
+        "passage": {
+          "quote": "theorem candidate_execution_agree (memory : List Word) (left right : Fin n \u2192 Word) (source co)\n    (sources : (SharedVectorMemory.graph memory left right source co).Sources)\n    (registers : Fin n \u2192 Nat \u2192 Word) (extent : 3*n \u2264 memory.length)\n    (dispatches : List (Fin n))\n    (completed : SharedVector.Complete (SharedVector.execute dispatches (SharedVector.initial memory registers))) :\n    candidateOutput memory left right source co =\n      unsignedView (n:=n) (SharedVector.execute dispatches (SharedVector.initial memory registers)).memory\n        SharedVector.output := by\n  rw [candidate_unsigned_tensor memory left right source co sources,\n    completed_unsigned_tensor memory registers extent dispatches completed]"
+        }
+      }
+    }
+  ]
+}

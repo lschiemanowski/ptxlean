@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "checked_date": "2026-09-23",
+  "toolchain": "leanprover/lean4:v4.34.0",
+  "root_git_base": "abd21234e3b59ca427bf155bd8a53c6b75369f2e",
+  "commands": [
+    {
+      "working_directory": "integration/torchlean",
+      "command": "lake build PtxTorchLean PtxTensorBridge",
+      "exit_code": 0,
+      "build_jobs": 2930
+    },
+    {
+      "working_directory": "integration/torchlean",
+      "command": "lake env lean PtxTensorBridge.lean",
+      "exit_code": 0,
+      "audit_declarations": 15
+    },
+    {
+      "working_directory": ".",
+      "command": "stratic --project . validate",
+      "exit_code": 0
+    }
+  ],
+  "dependency_policy": "Existing pins/manifests preserved; no lake update used.",
+  "dependency_revisions": {
+    "TorchLean": "de3192df4779877ceb65cfe470a4d4ce9d480a5b",
+    "mathlib": "5ed2965256430c3649e86755f9576b54eca72435",
+    "\u00abdoc-gen4\u00bb": "a6521b2d0c93dcdf2d640089f95548df5dd8bf46",
+    "floatlib": "c9a051f08f948ce473036b815b0669fafb61f601",
+    "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+    "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+    "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+    "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+    "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+    "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+    "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+    "leansqlite": "f9cdb9eacb5c8b8ecc02ee9fd9e568d7d28c1416",
+    "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+    "UnicodeBasic": "0e569d08b6443ce0908d356884c765397253e2f0",
+    "BibtexQuery": "4d8616fd4870d0a3453d845770833eac7951fe1c",
+    "MD4Lean": "31907cc18f48a95384f99cee5582c00fb39e0f67"
+  },
+  "files_sha256": {
+    "PtxTensorBridge.lean": "de3e10c4b1a1c343866d7b952ddee997214761e960875c32f8f3af017ec064c6",
+    "PtxTorchLean.lean": "8e1d4cd79e82a924e7e10d9903b92cacbdd976e71c0e42c22d9fed94607545d8",
+    "lakefile.toml": "1fd43a7b1ffb9d66be70c2bb02dc74d44addcd9f94d9f6e83aa36dcbcaa751a9",
+    "lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
+    "lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+    "proof-audit-tensor-bridge.txt": "751875be2671f26ec6021ad5723f0385c491696c9306508fd5a1c23d3a2a8b07",
+    "README.md": "e7b1a401a076e2bb5cc1cec35f435399198fe356d0734d288299da21abd24cea"
+  },
+  "description_and_guide_sha256": {
+    "stratic/descriptions/tensor-layout.md": "20c80bf14a4c8f21f7aaa437bf5f065863508c3743096c6fee8309c2df238678",
+    "stratic/descriptions/tensor-layout.json": "e5d2976e8bcfb376969bd93e375b6f05bb1c07a12f580f8ae1fc79f6e69efd81",
+    "stratic/descriptions/verification-interface.json": "d117371784a57dd563f4708c26a45f8f5bf9241ded4c94f023d50530992f18ed",
+    "docs/foundations/tensor-layout-bridge.md": "5e215971b0d7f10588410d58cb97b997c1b4f749352370b52e8a7c700085c3ea"
+  },
+  "root_imported_source_sha256": {
+    "Ptx.lean": "0155949c56a211627b1a43ed2e703272c2b9b9ddc8bfb8a1f91203e07c4a14a3",
+    "Ptx/CollectiveMemory.lean": "cacfed57bc99b25f180b619536161d58544b59707c99537db8525513194137f7",
+    "Ptx/CollectiveOrder.lean": "30b899fc0e33ce6347289390dd1cb490b03db82c8d2014eb66356c49f751cfdd",
+    "Ptx/Memory.lean": "6d23ee35dbf28c730e190c9cb675653caebb88cb21dad06c86edecb9fd358373",
+    "Ptx/Language.lean": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15",
+    "Ptx/OrderedMemory.lean": "decdf796927bee8b5cc2eb78bf1d64f74d4ca6b23f46733927373c0c6fb9946e",
+    "Ptx/Publication.lean": "8a6c7c52996f95a2684199604e9e16e2b5d7a5f5be36ab67ff083a94767c6f68",
+    "Ptx/OrderedMemoryExamples.lean": "193d3bf9576abd373bfaa108276d89122ca5edd58865d41b3b9785072369eabb",
+    "Ptx/Barrier.lean": "070f26fec392d5505611f1321e967ca505ebce4296eaab0982e8b825fdc865ed",
+    "Ptx/ComputedPublicationWitness.lean": "cc00dd30831f03b35fcf28b2af188e079fd06eea92f25a3b2c5cfad4d7baebb8",
+    "Ptx/ComputedPublication.lean": "a762aaacf8b5580df8a2b4cd1d7f5302851a4dee30dc7de23bf43cf7d1c9ef0d",
+    "Ptx/ComputedPublicationMachine.lean": "d2d6bc8c8df7d5a684ba5f80f1b90658e9bb89fdcbb394ff65304c3bd05f1f5c",
+    "Ptx/ScalarMemoryWitness.lean": "2bf71dd05a4e284354edd8e37f8bded72b0d4f269b6e7fc6090a0f4948879aae",
+    "Ptx/Checker.lean": "5cbe81accb2ebb47db7d42f4dddf49c22834f924a71eed49287a808f84159a36",
+    "Ptx/Reachability.lean": "867562036b56fb5a8818f56d46f0feec33f197adf255b8a16c0e45ffbd81b8be",
+    "Ptx/Program.lean": "e1b96249c624c38590da8c62d35bc59d4234df789272a75da27dfd8c59d8ac1c",
+    "Ptx/ScalarKernels.lean": "d7ffcdefcd79ce591e68556a5267bbfaec00a459e3df936a40ceeae5a2803d2f",
+    "Ptx/Scalar.lean": "84ba68d940e788ead9bfb8258a7bb0ada807ddecdb04f2d037d6e38bb11577d4",
+    "Ptx/ScalarText.lean": "f9e14f54dbbf0fd4feedc6457fc3d329e47ad5cc07397c957c4da8aa210f8a34",
+    "Ptx/IntegerMinMax.lean": "b821226d079b1c4ee8f5b7bf2d700cdf5fc74702823e28f30bb95d58035b3e42",
+    "Ptx/ByteExamples.lean": "776c20b110c210d21a24a97d6775c71b66532378f2d7d41656252943eff9f33b",
+    "Ptx/ByteMemory.lean": "0c22fff3fd7d640e19414083fd576497cd04e201e6fb0b42fba77d9b626b6953",
+    "Ptx/ScopedMemory.lean": "d7d330431f415c855ca0d81edf5e4d857ae8dea1da66ed846f6d5af05761aa4d",
+    "Ptx/Environment.lean": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe",
+    "Ptx/SharedVectorMemory.lean": "b1a35a5c3958cb683127c43a63acc473e86b4c7f40c8710c961b8215e6c4f716",
+    "Ptx/SharedVector.lean": "2e0b17b7bc857f7251858e218acb3e21c4f1dfe0259f371b23f68c92dd0e19bc",
+    "Ptx/ScalarEnvironment.lean": "e6799aa2c5e85aaef0343fe8847a94a3a89539c0c3fe32482033cdabd4c77f57",
+    "Ptx/SharedVectorExamples.lean": "35c8903aa0bce60b91fdcd9cd15a14d49de6f99b6c29f58a74429ca3861398cc",
+    "Ptx/ScalarRules.lean": "57a0dbf7a370f0d484cfdde5ad7c66963b14d7a9d6c4d4a2b0cd5b4bef236d9f",
+    "Ptx/ScalarExamples.lean": "c935dd51005184fdb47c9bab7a1d1b317977b69971d3febb8c80a9c5c3b889cd",
+    "Ptx/ScopedExamples.lean": "2ef5d95b9af6f33734fb2b6f2653c60596b5ad4faaf7582df0ccecd7258c726e",
+    "Ptx/MessagePassing.lean": "8428bea332b97ebc4069ab3158f5b75d9236e48e43736d272544cf25243dba92",
+    "Ptx/Litmus.lean": "58c07837ecb7b7c806feb36e7d5a3b5afdeaf82f510d37a63dd05aff90b1a9bc",
+    "Ptx/CheckerExamples.lean": "cb7624ff5b2336813f5bced039adbdad7808bebcb3563c0a99dca62f652f42e1",
+    "Ptx/MessagePassingOutcomes.lean": "7624ae84a765d2479f66091522ca331a6fa88fe608add49164e8869a688e5ca3",
+    "lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+    "lakefile.toml": "0dd5039a9be123956d246a2d0134759ae33bb43c356b3b994b2c97478054e14d",
+    "lake-manifest.json": "01f2e843d09759bcf28da5f401f7ad71f86b08c579e21227dcc076f31d9be719"
+  },
+  "root_imported_sources_unchanged_during_checks": true,
+  "root_source_scope": "Recursive local import closure of Ptx.lean plus root pin and manifests. Concurrent unimported modules are outside this check.",
+  "theorem_axioms": {
+    "PtxTorchLean.TensorBridge.view_apply": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.view_map": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.layout_bounds": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.realView_eq_map": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.completed_unsigned": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.completed_unsigned_tensor": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.completed_real_add": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.completed_bounds": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.candidate_unsigned_tensor": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.candidate_execution_agree": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.execution_exists": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.real_execution_exists": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.view_bounded_apply": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.wraparound_execution": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "PtxTorchLean.TensorBridge.wraparound_not_fitting": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "boundaries": [
+    "Integer word semantics and exact integer-to-real embedding; no floating point, PyTorch or hardware claim.",
+    "Global-memory disjoint vector-add lanes in the existing instruction and memory-candidate families.",
+    "Tensor views alone are total; execution bounds prove selected cells exist.",
+    "Instruction faithfulness requires the explicit 64-bit address no-wrap bound.",
+    "Finite existence is separate from GPU scheduling fairness; relational source compatibility is not replaced by a chosen-source hypothesis."
+  ]
+}

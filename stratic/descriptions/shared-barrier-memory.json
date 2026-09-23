@@ -1,0 +1,161 @@
+{
+  "id": "shared-barrier-memory",
+  "parent": {
+    "description": "collective-execution",
+    "passage": {
+      "quote": "Control coordination and memory visibility need separate proofs. A completed\nbarrier orders participating threads' preceding ordinary accesses before their\nfollowing accesses. The memory account must derive those connections from actual\narrival and completion events; it must not assume that a read already saw the\nrequired value."
+    }
+  },
+  "summary": [
+    "Prove that each post-barrier load observes its partner's single shared-memory store, with arbitrary initial words and input registers.",
+    "Connect memory choices to actual full-participation barrier execution, and keep source validity, finite existence and access safety separate."
+  ],
+  "realization": "implemented",
+  "remaining": "The uniform single-phase fragment is implemented. Mixed state spaces or sizes, aliases, outside interference, competing writes and general dependent concurrency remain outside this contract. Semantic source review is distinct from Lean proof checking.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The supplied allocation starts with arbitrary old words. Inputs come from actual\nregister values, and reads initially have arbitrary candidate values. For each\nslot the memory graph contains its initialization, its single program write,\nand the appropriate reads by any partners. The graph chooses the source of every\nread and an order of writes to a common word. No premise sets a candidate read\nto its desired answer."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierMemory.lean",
+        "passage": {
+          "quote": "theorem source_after_barrier (old inputs reads : Fin n → Word) (partner source co)\n    (valid : Graph.Ordered.Valid (graph old inputs reads partner source co) barrierEdge)\n    (lane : Fin n) : source (indexOf lane 2) = indexOf (partner lane) 1"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The full-participation barrier orders every participating pre-barrier store\nbefore every participating post-barrier load. The graph derives these edges\nthrough the completed phase, retaining CTA, resource, instruction-site and\ngeneration identity in the execution connection. Only after forming these paths\ndoes it restrict causality to matching addresses. Source compatibility and the\nrule excluding obsolete writes then force each read to select its partner's\nprogram write rather than the initial word. Value agreement follows from that\nsource identity."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierMemory.lean",
+        "passage": {
+          "quote": "theorem read_after_phase (old inputs reads : Fin n → Word) (partner source co)\n    (valid : Graph.Ordered.Valid (graph old inputs reads partner source co) (phaseOrder n).cross)\n    (lane : Fin n) : reads lane = inputs (partner lane)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every finite candidate schedule in which all threads exit, each thread has\nexactly one store and one load, and its result register contains its selected\nobservation. The actual trace contains no other memory effects. If the associated\nsource choices and write order satisfy the memory constraints including the\ncompleted barrier edges, every result equals the partner's input. This is\ncorrectness on completion; it does not promise that every schedule completes."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem completed_candidate_publication (config : Config n) (initial : Initial n)\n    (observations : Fin n → Word) (source co) (dispatches : List (Fin n))\n    (valid : Graph.Ordered.Valid\n      (SharedBarrierMemory.graph initial.old initial.inputs observations config.partner source co)\n      (SharedBarrierMemory.phaseOrder n).cross)\n    (completed : ∀ lane,\n      ((runWith config (fun t => some (observations t)) (start config initial) dispatches).state.threads lane).halted = true) :\n    ∀ lane,\n      ((runWith config (fun t => some (observations t)) (start config initial) dispatches).state.threads lane).registers 1 =\n        initial.inputs (config.partner lane) ∧\n      Control.memoryCount .store (runWith config (fun t => some (observations t))\n        (start config initial) dispatches).trace lane = 1 ∧\n      Control.memoryCount .load (runWith config (fun t => some (observations t))\n        (start config initial) dispatches).trace lane = 1"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A separate constructive schedule dispatches every store, then every barrier\narrival, then every load and exit. It takes four dispatches per participant.\nIts concrete execution uses the arena's current values, its graph selects fresh\nsources and satisfies every represented memory rule, and its memory projection\nis exactly the graph's program events. Initial graph writes match the supplied\nold arena. Every access in any finite trace passes the same initial allocation's\nchecker; allocation identity and ownership stay fixed throughout execution."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem verified_execution (config : Config n) (initial : Initial n) :\n    ∃ dispatches : List (Fin n), ∃ result : Execution n,\n      dispatches.length = 4*n ∧\n      Runs config (fun _ => none) (start config initial) dispatches result ∧\n      (∀ thread, (result.state.threads thread).halted = true ∧\n        (result.state.threads thread).pc = 3 ∧\n        (result.state.threads thread).registers 1 = initial.inputs (config.partner thread)) ∧\n      result.state.arena.words = initial.inputs ∧\n      result.state.barrier = Barrier.reset 1 ∧\n      Graph.Ordered.Valid (SharedBarrierMemory.freshGraph initial.old initial.inputs config.partner)\n        (SharedBarrierMemory.phaseOrder n).cross ∧\n      result.trace.filterMap projectMemory =\n        graphTrace config initial (fun t => initial.inputs (config.partner t))\n          (SharedBarrierMemory.witnessSource config.partner true) SharedBarrierMemory.witnessCo ∧\n      (∀ effect, Event.memory effect ∈ result.trace →\n        (start config initial).arena.environment.accessible (location effect.cta effect.thread.val)\n          effect.kind.accessKind (sharedAddress effect.address) 4 false)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A separate constructive schedule dispatches every store, then every barrier\narrival, then every load and exit. It takes four dispatches per participant.\nIts concrete execution uses the arena's current values, its graph selects fresh\nsources and satisfies every represented memory rule, and its memory projection\nis exactly the graph's program events. Initial graph writes match the supplied\nold arena. Every access in any finite trace passes the same initial allocation's\nchecker; allocation identity and ownership stay fixed throughout execution."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem initial_graph_label (config : Config n) (initial : Initial n)\n    (observations : Fin n → Word) (source co) (lane : Fin n) :\n    (SharedBarrierMemory.graph initial.old initial.inputs observations config.partner source co).event\n      (SharedBarrierMemory.indexOf lane 0) =\n      ⟨none, 0, ⟨.init, lane.val, (start config initial).arena.words lane⟩⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A separate constructive schedule dispatches every store, then every barrier\narrival, then every load and exit. It takes four dispatches per participant.\nIts concrete execution uses the arena's current values, its graph selects fresh\nsources and satisfies every represented memory rule, and its memory projection\nis exactly the graph's program events. Initial graph writes match the supplied\nold arena. Every access in any finite trace passes the same initial allocation's\nchecker; allocation identity and ownership stay fixed throughout execution."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem candidate_graph_trace (config : Config n) (initial : Initial n)\n    (observations : Fin n → Word) (source co) :\n    (runWith config (fun t => some (observations t)) (start config initial) (fullSchedule n)).trace.filterMap\n        projectMemory = graphTrace config initial observations source co"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The graph's scope information is also checked: all represented threads belong\nto the configured CTA, and each program access has CTA scope. Therefore every\npair of program accesses includes the other in its scope. The scope-aware\nobservation rule agrees with the whole-word rule used here. This scope result\nsupports the memory interpretation; it does not replace the barrier ordering."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem all_in_scope (config : Config n) (initial : Initial n)\n    (observations : Fin n → Word) (source co) :\n    (scopedGraph config initial observations source co).AllInScope"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The graph's scope information is also checked: all represented threads belong\nto the configured CTA, and each program access has CTA scope. Therefore every\npair of program accesses includes the other in its scope. The scope-aware\nobservation rule agrees with the whole-word rule used here. This scope result\nsupports the memory interpretation; it does not replace the barrier ordering."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem observation_scope (config : Config n) (initial : Initial n)\n    (observations : Fin n → Word) (source co) (a b : Fin (3*n)) :\n    (scopedGraph config initial observations source co).observation a b ↔\n      (SharedBarrierMemory.graph initial.old initial.inputs observations config.partner source co).observation a b"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A fresh-source graph witnesses consistent memory choices. Removing cross-thread\nbarrier ordering also admits a graph reading old values when every reader's\npartner is a different thread. This distinguishes ordering from simply placing\nstores and loads in a program. A graph witness is separate from instruction\nexecution: the complete example must connect its labels to fetched instructions,\nprove arrival and blocking behavior, construct a finite completed run, and\nestablish valid accesses to the supplied allocation."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierMemory.lean",
+        "passage": {
+          "quote": "theorem stale_without_barrier (old inputs : Fin n → Word) (partner : Fin n → Fin n)\n    (other : ∀ lane, partner lane ≠ lane) : (staleGraph old inputs partner).Valid"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A fresh-source graph witnesses consistent memory choices. Removing cross-thread\nbarrier ordering also admits a graph reading old values when every reader's\npartner is a different thread. This distinguishes ordering from simply placing\nstores and loads in a program. A graph witness is separate from instruction\nexecution: the complete example must connect its labels to fetched instructions,\nprove arrival and blocking behavior, construct a finite completed run, and\nestablish valid accesses to the supplied allocation."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrierMemory.lean",
+        "passage": {
+          "quote": "theorem stale_with_barrier_invalid (old inputs : Fin n → Word)\n    (partner : Fin n → Fin n) (lane : Fin n) :\n    ¬Graph.Ordered.Valid (staleGraph old inputs partner) barrierEdge"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each thread writes one input word into its own slot of CTA-owned shared memory.\nAll threads then meet at the same unconditional block barrier. After completion,\neach reads a selected partner's slot. The partner can be in a different warp;\nthe example must not depend on threads in one warp advancing together. A concrete\ninstance uses 64 threads in two warps of 32 and exchanges values between them."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem two_warp_verified (cta : Nat) (initial : Initial 64) :\n    ∃ result : Execution 64,\n      Runs (twoWarpConfig cta) (fun _ => none) (start (twoWarpConfig cta) initial)\n        (fullSchedule 64) result ∧\n      (∀ thread, (result.state.threads thread).halted = true ∧\n        (result.state.threads thread).registers 1 = initial.inputs (SharedBarrierMemory.partner64 thread)) ∧\n      (∀ thread, SharedBarrierMemory.warp32 (SharedBarrierMemory.partner64 thread) ≠\n        SharedBarrierMemory.warp32 thread)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every finite candidate schedule in which all threads exit, each thread has\nexactly one store and one load, and its result register contains its selected\nobservation. The actual trace contains no other memory effects. If the associated\nsource choices and write order satisfy the memory constraints including the\ncompleted barrier edges, every result equals the partner's input. This is\ncorrectness on completion; it does not promise that every schedule completes."
+      },
+      "to": {
+        "path": "Ptx/SharedBarrier.lean",
+        "passage": {
+          "quote": "theorem completed_cross_origin (config : Config n) (initial : Initial n)\n    (observations : Fin n → Word) (dispatches : List (Fin n))\n    (completed : ∀ lane,\n      ((runWith config (fun t => some (observations t)) (start config initial) dispatches).state.threads lane).halted = true)\n    (a b : Fin (3*n)) (edge : (SharedBarrierMemory.phaseOrder n).cross a b) :\n    ∃ writer reader : Fin n,\n      a = SharedBarrierMemory.indexOf writer 1 ∧ b = SharedBarrierMemory.indexOf reader 2 ∧\n      [storeEvent config initial writer, arrivalEvent config writer,\n        completionEvent config, readEvent config initial (fun t => some (observations t)) reader] <+\n        (runWith config (fun t => some (observations t)) (start config initial) dispatches).trace"
+        }
+      }
+    }
+  ]
+}

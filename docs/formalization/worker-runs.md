@@ -92,3 +92,19 @@ implemented. Reviewer-written acceptance drivers and manual independent source
 review supply the initial acceptance checks. The test suite uses fake local
 workers, never a model, to exercise source mismatch, edit violations, malformed
 output, failures, duplicate attempts and concurrent checkpoint reservations.
+
+## Preserved evaluation trials
+
+Each completed trial has its own evidence archive and hash manifest under
+`formalization/results/`. `python3 scripts/check_worker_evidence.py` verifies
+all such manifests by default; positional manifest paths select particular
+trials. It reads and hashes regular archive members without extracting or
+executing them. Byte integrity is separate from each trial's recorded mechanical,
+source, proof and integration decisions.
+
+The [min/max trial](../../formalization/results/minmax-u32/README.md) and
+[bit-count trial](../../formalization/results/bitcount-u32/README.md) retain their failed attempts
+and evaluator repairs as well as accepted candidates. Resumed-session usage is
+preserved exactly as reported and must not be summed without evidence that the
+counters are independent. Neither these two adaptive tasks nor individual
+mutation probes establish a general formalization success rate.

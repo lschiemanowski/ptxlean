@@ -22,3 +22,6 @@ import Ptx.OrderedMemory
 import Ptx.OrderedMemoryExamples
 
 import Ptx.CollectiveMemory
+
+import Ptx.IntegerBitCount
+import Ptx.SharedBarrier

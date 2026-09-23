@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify the frozen first campaign archive without extracting or executing it."""
+"""Verify archived worker trials without extracting or executing their contents."""
 import argparse
 import hashlib
 import json
@@ -29,12 +29,22 @@ def verify(path):
     return len(members)
 
 
+def default_manifests(root=ROOT):
+    """Each archived trial owns one independently verified manifest."""
+    manifests = sorted((root / "formalization/results").glob("*/evidence-manifest.json"))
+    if not manifests:
+        raise ValueError("No archived worker evidence manifests found")
+    return manifests
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("manifest", nargs="?", type=Path,
-                        default=ROOT / "formalization/results/minmax-u32/evidence-manifest.json")
+    parser.add_argument("manifest", nargs="*", type=Path,
+                        help="Explicit manifests; default: every archived trial")
     args = parser.parse_args()
-    print(f"Worker evidence: {verify(args.manifest)} archived files verified.")
+    manifests = args.manifest or default_manifests()
+    total = sum(verify(path) for path in manifests)
+    print(f"Worker evidence: {total} archived files across {len(manifests)} trials verified.")
 
 
 if __name__ == "__main__":

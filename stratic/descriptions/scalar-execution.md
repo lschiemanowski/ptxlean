@@ -51,7 +51,10 @@ under a false predicate.
 
 The subset includes 32/64-bit copies, wrapping `u32` addition and subtraction,
 multiplication retaining its low 32 bits, unsigned minimum and maximum,
-operations on individual bits, shifts, and unsigned comparisons. Address arithmetic uses unsigned 64-bit values (`u64`);
+operations on individual bits, shifts, and unsigned comparisons. It also counts
+the set bits of a 32-bit word, or its leading zero bits starting at the most
+significant end. Both counts range from zero through 32, including the all-zero
+input. Address arithmetic uses unsigned 64-bit values (`u64`);
 converting `u32` to `u64` fills the new upper bits with zeros (zero extension).
 Loads and stores access globally shared memory using relaxed ordering at GPU
 scope: they cover threads on that GPU but do not themselves provide a

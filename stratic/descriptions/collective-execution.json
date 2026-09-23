@@ -11,6 +11,6 @@
     "Connect collective control to memory ordering and separately prove safety, completed results and finite execution existence."
   ],
   "realization": "partial",
-  "remaining": "Full-participation control, a structural completed-phase order projection and a conservative extension of memory constraints are proved. Actual fetched shared-memory/barrier instructions, derivation of the phase certificate from their execution, and a complete shared-memory kernel witness remain unimplemented.",
+  "remaining": "The single unconditional full-CTA shared-memory barrier program has actual fetched execution, control history, universal completed-candidate correctness, finite existence and access safety. General fetched barrier reuse, explicit counts, divergent or early-exit participation, other collectives and asynchronous operations still require semantics.",
   "links": []
 }

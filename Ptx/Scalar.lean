@@ -26,6 +26,10 @@ inductive BinOp where
   | add | sub | mulLo | and | or | xor | shl | shr | minU | maxU
   deriving DecidableEq, Repr
 
+inductive UnaryOp where
+  | clz | popc
+  deriving DecidableEq, Repr
+
 inductive Compare where
   | eq | ne | lt | le | gt | ge
   deriving DecidableEq, Repr
@@ -38,6 +42,7 @@ inductive Guard where
 inductive Op where
   | mov32 (destination : Nat) (source : Operand32)
   | bin32 (operation : BinOp) (destination : Nat) (left right : Operand32)
+  | unary32 (operation : UnaryOp) (destination : Nat) (source : Operand32)
   | mov64 (destination : Nat) (source : Operand64)
   | add64 (destination : Nat) (left right : Operand64)
   | cvt64 (destination : Nat) (source : Operand32)
@@ -93,6 +98,13 @@ def BinOp.eval : BinOp → Word → Word → Word
   | .minU, a, b => if a.toNat ≤ b.toNat then a else b
   | .maxU, a, b => if a.toNat ≥ b.toNat then a else b
 
+/-- PTX 9.4 `clz.b32` and `popc.b32`; their result register is u32. -/
+def UnaryOp.eval : UnaryOp → Word → Word
+  | .clz, a => BitVec.ofNat 32 ((List.range 32).reverse.takeWhile
+      (fun i => !a.getLsbD i)).length
+  | .popc, a => BitVec.ofNat 32 ((List.range 32).filter
+      (fun i => a.getLsbD i)).length
+
 def Compare.eval : Compare → Word → Word → Bool
   | .eq, a, b => a == b
   | .ne, a, b => !(a == b)
@@ -126,6 +138,7 @@ def Guard.reads : Guard → List Register
 def Op.reads : Op → List Register
   | .mov32 _ source | .cvt64 _ source => source.reads
   | .bin32 _ _ left right | .setp _ _ left right => left.reads ++ right.reads
+  | .unary32 _ _ source => source.reads
   | .mov64 _ source => source.reads
   | .add64 _ left right => left.reads ++ right.reads
   | .load _ address => address.reads
@@ -133,7 +146,7 @@ def Op.reads : Op → List Register
   | .bra _ | .exit | .unsupported _ => []
 
 def Op.writes : Op → List Register
-  | .mov32 destination _ | .bin32 _ destination _ _ | .load destination _ => [.word destination]
+  | .mov32 destination _ | .bin32 _ destination _ _ | .unary32 _ destination _ | .load destination _ => [.word destination]
   | .mov64 destination _ | .add64 destination _ _ | .cvt64 destination _ => [.address destination]
   | .setp _ destination _ _ => [.predicate destination]
   | .store _ _ | .bra _ | .exit | .unsupported _ => []
@@ -211,6 +224,8 @@ def eval (readOverride : Option Word) (instruction : Instr) (s : State) : StepRe
             .next {advance with regs := update s.regs destination (source.eval s)} event
         | .bin32 operation destination left right =>
             .next {advance with regs := update s.regs destination (operation.eval (left.eval s) (right.eval s))} event
+        | .unary32 operation destination source =>
+            .next {advance with regs := update s.regs destination (operation.eval (source.eval s))} event
         | .mov64 destination source =>
             .next {advance with addrs := update s.addrs destination (source.eval s)} event
         | .add64 destination left right =>
@@ -341,6 +356,31 @@ theorem shift_left_clamped (value count : Word) (h : 32 ≤ count.toNat) :
 
 theorem shift_right_clamped (value count : Word) (h : 32 ≤ count.toNat) :
     BinOp.eval .shr value count = 0 := by simp [BinOp.eval, Nat.not_lt.mpr h]
+
+theorem unary_exec (s : State) (operation : UnaryOp) (destination : Nat)
+    (source : Operand32) (guard : Guard) (h : guard.eval s = true)
+    (readOverride : Option Word) :
+    eval readOverride ⟨guard, .unary32 operation destination source⟩ s =
+      .next {({s with pc := s.pc + 1}) with
+        regs := update s.regs destination (operation.eval (source.eval s))}
+        (occurrence s ⟨guard, .unary32 operation destination source⟩ true) := by
+  simp [eval, h]
+
+theorem unary_false (s : State) (operation : UnaryOp) (destination : Nat)
+    (source : Operand32) (guard : Guard) (h : guard.eval s = false)
+    (readOverride : Option Word) :
+    eval readOverride ⟨guard, .unary32 operation destination source⟩ s =
+      .next {s with pc := s.pc + 1}
+        (occurrence s ⟨guard, .unary32 operation destination source⟩ false) := by
+  simp [eval, h]
+
+theorem unary_preserves_other (s : State) (operation : UnaryOp) (destination other : Nat)
+    (source : Operand32) (guard : Guard) (h : guard.eval s = true)
+    (different : other ≠ destination) (readOverride : Option Word) :
+    (match eval readOverride ⟨guard, .unary32 operation destination source⟩ s with
+      | .next next _ => next.regs other | _ => s.regs other) = s.regs other := by
+  rw [unary_exec s operation destination source guard h readOverride]
+  simp [update, different]
 
 
 

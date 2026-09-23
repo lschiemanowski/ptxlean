@@ -58,3 +58,8 @@ scope. A separately constructed run must satisfy the resulting constraints.
 In particular, the three-event example is an algebraic distinguishing check. It
 does not provide shared-memory instruction coverage, hardware conformance, a
 general dependent-program memory semantics, or a complete barrier kernel.
+
+The completed [shared-memory barrier example](shared-barrier.md) now supplies
+that actual-instruction connection for one uniform CTA window. Its scope is
+narrower than general dependent concurrency, and its existence proof is separate
+from its universal completed-execution result.
