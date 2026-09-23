@@ -1,0 +1,303 @@
+{
+  "id": "9edcf50a-bbac-4bd9-84a5-0ef7e848915a",
+  "base": "f5dd1e4473f821ea0c96584539a6c15185f394b2",
+  "contentTree": "e88881f75f308d1dd32b152d76c1c11074affc77",
+  "reviewer": "Codex coordinator with independent numerical source and proof reviewers",
+  "summary": "Prove encoded binary32 range and error composition, record accepted instruction forms, and support pinned integration replay.",
+  "examined": [
+    {
+      "id": "numerical-contracts",
+      "outcome": "revised",
+      "reason": "Numerical responsibility now partially realized by exact encoded binary32, finite input guards and error propagation; network, mixed precision and PyTorch obligations remain."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Pinned integration checker audits exact dependencies and stable inputs; independent numerical source and proof reviews keep NaN characterization unresolved."
+    },
+    {
+      "id": "worker-replay",
+      "outcome": "revised",
+      "reason": "Pinned subproject reconstruction, independent dependency clones and pristine-base ledger checks are tested; actual full subproject smoke is deferred until a committed base exists."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "revised",
+      "reason": "Immutable subproject inputs extend task schema without changing Luna-only account route, cumulative six-call history or checkpoint before call 201."
+    },
+    {
+      "id": "binary32-error-composition",
+      "outcome": "revised",
+      "reason": "Addition, product and actual two-stage affine result relations carry input error and both rounding allowances; input-only guards derive finite results."
+    },
+    {
+      "id": "binary32-range",
+      "outcome": "revised",
+      "reason": "Sufficient real input bounds derive finiteness and accuracy for every envelope output; no assumed desired result and no complete range analysis claim."
+    },
+    {
+      "id": "binary32-results",
+      "outcome": "revised",
+      "reason": "Exact bit roundtrips, partial finite interpretation, conservative NaN envelope and conditional real rounding proved and independently reviewed."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "Four selected accepted forms have source/declaration/hash/accepted-replay provenance and explicit unsupported siblings; no full section coverage inferred."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "Scalar bit-preserving numerical contracts implement part of the existing interface; no general kernel-to-network correspondence or mixed-format policy claimed."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "New arithmetic bounds do not alter ideal-real VJP target, cache-free backward or separately developed PTX implementation; derivative error remains separate."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "Gemma implementation and proof remain outside current authorized work and no precision policy is selected by this scalar foundation."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Permitted behavior and semantic-fidelity obligations remain intact; numerical adapter is not yet fetched instruction execution."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "Smaller-model route, independent fidelity review and proof validity separation unchanged; replay support does not establish worker capability before trials."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "All-sections inventory remains a source inventory rather than implementation percentage; selected accepted forms are a separate child ledger."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "e88881f75f308d1dd32b152d76c1c11074affc77",
+      "method": "./scripts/check.sh; ./integration/torchlean/check.sh; stratic validate; coordinator and independent numerical source/proof review",
+      "outcome": "pass",
+      "environment": "Lean 4.34.0; Python3; pinned TorchLean/FloatLib/mathlib;16 clean Git dependencies",
+      "evidence": "Root 574 declaration audit; integration 85 exact dependency reports; only standard Lean axioms. Worker and form-ledger regression suites passed. Before/after Stratic content tree identical. Independent numerical source/proof reviews recorded with NaN-envelope and finite-input boundaries. Logs /tmp/ptxlean-numeric-root.log and /tmp/ptxlean-numeric-joint.log. Full real subproject replay remains next smoke check, not claimed here.",
+      "tests": [],
+      "id": "33045497-4669-4bae-8fca-cafba383ffb6",
+      "recordedAt": "2026-09-23T21:15:17.260Z"
+    }
+  ],
+  "recordedAt": "2026-09-23T21:15:39.689Z",
+  "unmapped": [
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed selected-form provenance or integration configuration, documentation, complete audit list and checker support; root numerical dependencies remain isolated in the integration project."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed explanatory guide or independent review, explicit nonclaims, source pins and reproducible checks beyond directly linked passages."
+    },
+    {
+      "path": "docs/formalization/numerical-foundation-audit.md",
+      "reason": "Reviewed explanatory guide or independent review, explicit nonclaims, source pins and reproducible checks beyond directly linked passages."
+    },
+    {
+      "path": "docs/formalization/worker-runs.md",
+      "reason": "Reviewed explanatory guide or independent review, explicit nonclaims, source pins and reproducible checks beyond directly linked passages."
+    },
+    {
+      "path": "docs/foundations/binary32-error-composition.md",
+      "reason": "Reviewed explanatory guide or independent review, explicit nonclaims, source pins and reproducible checks beyond directly linked passages."
+    },
+    {
+      "path": "docs/foundations/binary32-proof-review.md",
+      "reason": "Reviewed explanatory guide or independent review, explicit nonclaims, source pins and reproducible checks beyond directly linked passages."
+    },
+    {
+      "path": "docs/foundations/binary32-ranges.md",
+      "reason": "Reviewed explanatory guide or independent review, explicit nonclaims, source pins and reproducible checks beyond directly linked passages."
+    },
+    {
+      "path": "docs/foundations/binary32-source-review.md",
+      "reason": "Reviewed explanatory guide or independent review, explicit nonclaims, source pins and reproducible checks beyond directly linked passages."
+    },
+    {
+      "path": "docs/foundations/binary32.md",
+      "reason": "Reviewed explanatory guide or independent review, explicit nonclaims, source pins and reproducible checks beyond directly linked passages."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32.lean",
+      "reason": "Reviewed complete definitions and proof bodies beyond linked theorem signatures; checked named dependency endpoints and finite/exceptional boundaries independently."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32Bounds.lean",
+      "reason": "Reviewed complete definitions and proof bodies beyond linked theorem signatures; checked named dependency endpoints and finite/exceptional boundaries independently."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32Error.lean",
+      "reason": "Reviewed complete definitions and proof bodies beyond linked theorem signatures; checked named dependency endpoints and finite/exceptional boundaries independently."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32Examples.lean",
+      "reason": "Reviewed complete definitions and proof bodies beyond linked theorem signatures; checked named dependency endpoints and finite/exceptional boundaries independently."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed complete definitions and proof bodies beyond linked theorem signatures; checked named dependency endpoints and finite/exceptional boundaries independently."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Reviewed selected-form provenance or integration configuration, documentation, complete audit list and checker support; root numerical dependencies remain isolated in the integration project."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed selected-form provenance or integration configuration, documentation, complete audit list and checker support; root numerical dependencies remain isolated in the integration project."
+    },
+    {
+      "path": "integration/torchlean/check.sh",
+      "reason": "Reviewed selected-form provenance or integration configuration, documentation, complete audit list and checker support; root numerical dependencies remain isolated in the integration project."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed selected-form provenance or integration configuration, documentation, complete audit list and checker support; root numerical dependencies remain isolated in the integration project."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/README.md",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/error-build.stderr.log",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/error-build.stdout.log",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/finite-audit.lean",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/finite-audit.stderr.log",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/finite-audit.stdout.log",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/finite-build.stderr.log",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/finite-build.stdout.log",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/format-error-audit.lean",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/format-error-audit.stderr.log",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/format-error-audit.stdout.log",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/import-closure.json",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "integration/torchlean/numerical-audit/receipt.json",
+      "reason": "Preserved prerequisite build and axiom audit receipts with source/dependency hashes and import closure; these record the earlier prerequisite snapshot, not all later program semantics."
+    },
+    {
+      "path": "scripts/check.sh",
+      "reason": "Reviewed immutable input validation, dependency reconstruction, ledger provenance, source boundary and failure handling; regression tests include real Git isolation and controlled Lean command fixtures."
+    },
+    {
+      "path": "scripts/check_implemented_forms.py",
+      "reason": "Reviewed immutable input validation, dependency reconstruction, ledger provenance, source boundary and failure handling; regression tests include real Git isolation and controlled Lean command fixtures."
+    },
+    {
+      "path": "scripts/worker_replay.py",
+      "reason": "Reviewed immutable input validation, dependency reconstruction, ledger provenance, source boundary and failure handling; regression tests include real Git isolation and controlled Lean command fixtures."
+    },
+    {
+      "path": "scripts/worker_run.py",
+      "reason": "Reviewed immutable input validation, dependency reconstruction, ledger provenance, source boundary and failure handling; regression tests include real Git isolation and controlled Lean command fixtures."
+    },
+    {
+      "path": "stratic/descriptions/binary32-error-composition.json",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/binary32-error-composition.md",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/binary32-range.json",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/binary32-range.md",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/binary32-results.json",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/binary32-results.md",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.json",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.md",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/worker-replay.json",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/worker-replay.md",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.json",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.md",
+      "reason": "Reviewed hierarchy, self-contained descriptions, summaries, explicit remaining scope and exact passage links; structural metadata has no self-link requirement."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed immutable input validation, dependency reconstruction, ledger provenance, source boundary and failure handling; regression tests include real Git isolation and controlled Lean command fixtures."
+    },
+    {
+      "path": "tests/test_worker_project.py",
+      "reason": "Reviewed immutable input validation, dependency reconstruction, ledger provenance, source boundary and failure handling; regression tests include real Git isolation and controlled Lean command fixtures."
+    }
+  ]
+}

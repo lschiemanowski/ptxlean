@@ -53,3 +53,20 @@ explicitly selected manifests. It checks bytes without extracting or executing
 archive contents. An archive's integrity does not itself establish semantic
 acceptance. Usage counters from resumed sessions remain raw; potentially
 cumulative counters must not be added as though each were an independent bill.
+
+A task may select a repository-local replay project for dependencies that belong
+to a separate Lean package. Without that setting the root package is used. A
+selected subproject has a pinned toolchain, package configuration and dependency
+manifest recorded among the immutable task inputs. Its toolchain matches the
+root package, Git dependencies name exact commits and path dependencies stay
+inside the checkout. Workers still start in the repository root and receive
+explicit build commands. Only the selected project's generated `.lake` directory
+is exempted in addition to the root build directory; arbitrary ignored files
+remain part of the edit-boundary check.
+
+When the base includes the accepted-form ledger, replay verifies that pristine
+ledger before applying a candidate. Candidate root checks explicitly defer only
+its current-file hash check, because an allowed instruction extension can change
+a file already recorded there. The receipt exposes this deferral. All other root
+checks still run, and integration requires coordinator review and a refreshed
+ledger passing the ordinary strict checks. Deferral is never final acceptance.

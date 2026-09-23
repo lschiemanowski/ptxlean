@@ -9,7 +9,7 @@ import subprocess
 
 from check_proofs import ALLOWED_AXIOMS, FORBIDDEN, code_only
 from worker_run import (atomic_json, changed_sources, git, now, patch_and_boundary,
-                        read_json, sha, validate_task)
+                        read_json, sha, validate_task, project_inputs, replay_project)
 
 
 def validate_attempt(attempt, root):
@@ -51,6 +51,8 @@ def scan(paths):
 def replay(attempt, root, destination, modules, checks, declarations):
     attempt, root, destination = (Path(p).resolve() for p in (attempt, root, destination))
     task, receipt, patch = validate_attempt(attempt, root)
+    project = replay_project(task)
+    project_info = project_inputs(task, root)
     identifier = r"[A-Za-z_][A-Za-z_0-9']*(?:\.[A-Za-z_][A-Za-z_0-9']*)*"
     if not modules or not declarations or len(set(declarations)) != len(declarations):
         raise ValueError("Provide modules and distinct audited declarations")
@@ -65,6 +67,8 @@ def replay(attempt, root, destination, modules, checks, declarations):
               "task": task["id"], "base_commit": task["base_commit"],
               "patch_sha256": sha(patch), "receipt_sha256": sha((attempt / "receipt.json").read_bytes()),
               "checker_sha256": sha(Path(__file__).read_bytes()), "started_at": now(),
+              "replay_project": project, "project_inputs": project_info,
+              "runner_sha256": sha(Path(__file__).with_name("worker_run.py").read_bytes()),
               "commands": [], "drivers": [], "declarations": declarations,
               "mechanical": "running", "semantic_review": "not_performed",
               "integration": "not_performed"}
@@ -73,14 +77,14 @@ def replay(attempt, root, destination, modules, checks, declarations):
     (destination / "candidate.patch").write_bytes(patch)
     atomic_json(destination / "result.json", record)
 
-    def command(args, stem):
+    def command(args, stem, cwd=worktree, allow_failure=False):
         entry = {"argv": [str(a) for a in args], "started_at": now(),
-                 "log": stem + ".log", "exit_code": None, "state": "running"}
+                 "cwd": str(cwd), "log": stem + ".log", "exit_code": None, "state": "running"}
         record["commands"].append(entry)
         atomic_json(destination / "result.json", record)
         try:
             with (destination / entry["log"]).open("wb") as log:
-                result = subprocess.run(entry["argv"], cwd=worktree, stdout=log, stderr=subprocess.STDOUT)
+                result = subprocess.run(entry["argv"], cwd=cwd, stdout=log, stderr=subprocess.STDOUT)
             entry.update(exit_code=result.returncode, state="completed")
         except BaseException as error:
             entry.update(state="interrupted" if isinstance(error, KeyboardInterrupt) else "launch_failed",
@@ -89,12 +93,12 @@ def replay(attempt, root, destination, modules, checks, declarations):
         finally:
             entry["finished_at"] = now()
             atomic_json(destination / "result.json", record)
-        if result.returncode:
+        if result.returncode and not allow_failure:
             raise ValueError(f"{stem} failed with exit code {result.returncode}")
         return (destination / (stem + ".log")).read_text()
 
     def unchanged():
-        actual, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"])
+        actual, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], project)
         for name in boundary["changed_paths"]:
             path = worktree / name
             if any(p.is_symlink() for p in [path, *path.parents] if p != worktree and worktree in p.parents):
@@ -103,8 +107,26 @@ def replay(attempt, root, destination, modules, checks, declarations):
             raise ValueError("Replayed source differs from the recorded allowed patch")
         return boundary
 
+    def verify_dependencies():
+        for dependency in record.get("dependency_checkouts", []):
+            target = Path(dependency["destination"])
+            if any(p.is_symlink() for p in [target, *target.parents] if p != worktree and worktree in p.parents):
+                raise ValueError("Dependency destination became a symbolic link")
+            if git(target, "rev-parse", "HEAD").decode().strip() != dependency["revision"]:
+                raise ValueError(f"Dependency HEAD changed: {dependency['name']}")
+            if git(target, "status", "--porcelain", "--untracked-files=no").strip():
+                raise ValueError(f"Dependency tracked sources changed: {dependency['name']}")
+
     try:
         git(root, "worktree", "add", "--detach", str(worktree), task["base_commit"])
+        has_form_ledger = (worktree / "coverage/implemented-forms.json").is_file()
+        record["form_ledger"] = {"pristine_base": "pending" if has_form_ledger else "not_present",
+                                "candidate": "not_checked", "integration": "not_performed"}
+        if has_form_ledger:
+            command(["python3", "scripts/check_implemented_forms.py"], "base-form-ledger")
+            record["form_ledger"].update(pristine_base="pass", candidate="deferred_to_coordinator",
+                                        regression_fixture_revision=task["base_commit"])
+            atomic_json(destination / "result.json", record)
         command(["git", "apply", "--", destination / "candidate.patch"], "apply")
         record["boundary"] = unchanged()
         lean_sources = {worktree / "Ptx.lean", *(worktree / "Ptx").rglob("*.lean")}
@@ -112,20 +134,57 @@ def replay(attempt, root, destination, modules, checks, declarations):
                             if p.endswith(".lean") and (worktree / p).is_file())
         scan(sorted(lean_sources))
         # This is the pinned base project's checker, never the worker's build cache.
-        command(["bash", "scripts/check.sh", "--clean"], "baseline")
-        command(["lake", "build", *modules], "modules")
+        root_check = ["bash", "scripts/check.sh", "--clean"]
+        if has_form_ledger:
+            root_check.append("--defer-form-ledger")
+        command(root_check, "baseline")
+        project_cwd = worktree / project
+        if project_info:
+            record["dependency_checkouts"] = []
+            # No source checkout or build artifact from the worker is reused.
+            # Local Git repositories supply objects only; every destination is independent.
+            for dependency in project_info["dependencies"]:
+                name, revision = dependency["name"], dependency["revision"]
+                source = root / project / ".lake/packages" / name
+                if not source.is_dir():
+                    raise ValueError(f"Missing local dependency prerequisite: {source} at {revision}")
+                try:
+                    resolved = git(source, "rev-parse", revision + "^{commit}").decode().strip()
+                except subprocess.CalledProcessError as error:
+                    raise ValueError(f"Missing local dependency revision: {source} at {revision}") from error
+                if resolved != revision:
+                    raise ValueError(f"Dependency revision does not resolve exactly: {name}")
+                target = project_cwd / ".lake/packages" / name
+                if any(p.is_symlink() for p in [target, *target.parents] if p != worktree and worktree in p.parents):
+                    raise ValueError("Dependency destination cannot use symbolic links")
+                target.parent.mkdir(parents=True, exist_ok=True)
+                command(["git", "clone", "--no-hardlinks", "--no-checkout", "--", source, target], "dependency-" + name + "-clone")
+                command(["git", "-C", target, "checkout", "--detach", revision], "dependency-" + name + "-checkout")
+                command(["git", "-C", target, "remote", "set-url", "origin", dependency["url"]], "dependency-" + name + "-remote")
+                record["dependency_checkouts"].append({**dependency, "source_repository": str(source), "destination": str(target)})
+                atomic_json(destination / "result.json", record)
+            verify_dependencies()
+            mathlib = next((d for d in project_info["dependencies"] if d["name"] == "mathlib"), None)
+            if mathlib:
+                record["official_cache"] = {"package": "mathlib", "source_revision": mathlib["revision"],
+                                            "policy": "official Lake cache command; failure permits source build"}
+                command(["lake", "exe", "cache", "get"], "mathlib-cache", cwd=project_cwd, allow_failure=True)
+                record["official_cache"]["exit_code"] = record["commands"][-1]["exit_code"]
+                verify_dependencies()
+        command(["lake", "build", *modules], "modules", cwd=project_cwd)
         for index, (source, data) in enumerate(drivers):
             driver = destination / f"driver-{index}.lean"
             driver.write_bytes(data)
             record["drivers"].append({"source": str(source), "copy": driver.name, "sha256": sha(data)})
             scan([driver])
-            command(["lake", "env", "lean", driver], f"driver-{index}")
+            command(["lake", "env", "lean", driver], f"driver-{index}", cwd=project_cwd)
         audit = destination / "audit.lean"
         audit.write_text("".join(f"import {m}\n" for m in modules) +
                          "".join(f"#print axioms {d}\n" for d in declarations))
-        log = command(["lake", "env", "lean", audit], "audit")
+        log = command(["lake", "env", "lean", audit], "audit", cwd=project_cwd)
         audit_dependencies(log, declarations)
         record["boundary"] = unchanged()
+        verify_dependencies()
         record["mechanical"] = "pass"
     except Exception as error:
         record.update(mechanical="fail", error=f"{type(error).__name__}: {error}")

@@ -108,3 +108,46 @@ and evaluator repairs as well as accepted candidates. Resumed-session usage is
 preserved exactly as reported and must not be summed without evidence that the
 counters are independent. Neither these two adaptive tasks nor individual
 mutation probes establish a general formalization success rate.
+
+## Replaying a pinned integration package
+
+A future task may set `"replay_project": "integration/torchlean"`. Omission or
+`"."` retains root-project replay. This selects the working directory for module
+builds, acceptance drivers and theorem-dependency inspection, not the worker's
+starting directory. Worker prompts must give explicit subproject commands.
+
+For a subproject, list these six committed files and their SHA-256 values in the
+task's immutable `sources`: root and subproject copies of `lean-toolchain`,
+`lakefile.toml` and `lake-manifest.json`. They cannot be allowed outputs. Both
+projects must use the same exact Lean release; this bounded implementation accepts
+a dependency-free root, a TOML subproject, exact Git revisions, and path
+dependencies only back to the repository root. Other dependency arrangements
+are rejected pending an explicit workflow extension.
+
+Replay first reconstructs the base and checks its accepted-form ledger, when
+present. It then applies the saved patch and runs root checks with the explicit
+`--defer-form-ledger` flag. Only current candidate ledger validation is deferred;
+the checker regressions still run using `PTXLEAN_LEDGER_FIXTURE_REV=HEAD` to obtain
+the committed base fixture bytes. Missing requested revision data fails rather
+than falling back. The replay receipt records the pristine-base pass and candidate
+deferral. Ordinary `scripts/check.sh` and normal tests retain strict current-tree
+ledger checks. Coordinator semantic review, updated ledger hashes and a strict
+integration check remain required before acceptance.
+
+Dependencies come from the coordinator's local Git repositories under
+`integration/torchlean/.lake/packages`. Each required revision must already be
+available there; otherwise the receipt reports the exact missing path and commit.
+Fresh clones use `--no-hardlinks`, check out the pinned commit, and restore the
+manifest's upstream origin URL. They copy neither uncommitted working files nor
+compiled artifacts. A source repository may be reached through a read-only
+symlink, but destination checkouts must be independent real directories. Replay
+checks their commits and tracked files before and after builds.
+
+When mathlib is present, replay records `lake exe cache get` and the pinned mathlib
+revision. This is the official compatible artifact-cache route, which may use the
+network; replay is offline with respect to inference, not a promise of zero
+network access for toolchains or caches. Cache-command failure is retained and
+normal source compilation may continue. Requested modules and changed candidate
+sources are built in the fresh checkout. No model call or API-key fallback is
+introduced. Record a failed prerequisite or build honestly; dependency availability
+is not evidence of a completed integration replay.

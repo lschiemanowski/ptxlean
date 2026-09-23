@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "checked_date": "2026-09-23",
+  "scope": "Prerequisite audit of pinned numerical imports, not PTX numerical implementation or accepted numerical policy.",
+  "toolchain": "leanprover/lean4:v4.34.0",
+  "commands": [
+    {
+      "command": "lake build NN.Floats.FP32.Error",
+      "exit_code": 0,
+      "build_jobs": 2121
+    },
+    {
+      "command": "lake build NN.Floats.IEEEExec.Bridge.Finite",
+      "exit_code": 0,
+      "build_jobs": 2508
+    },
+    {
+      "command": "lake env lean numerical-audit/finite-audit.lean",
+      "exit_code": 0,
+      "audited_endpoints": 19,
+      "actual_imported_modules": 4109
+    },
+    {
+      "command": "lake env lean numerical-audit/format-error-audit.lean",
+      "exit_code": 0,
+      "audited_endpoints": 10,
+      "actual_imported_modules": 4111
+    }
+  ],
+  "distinct_audited_endpoints": 26,
+  "endpoint_axioms": {
+    "TorchLean.Floats.IEEE754.IEEE32Exec.toModel_add": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.IEEE754.IEEE32Exec.toModel_mul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.IEEE754.IEEE32Exec.model_isFinite_quietNaN": [
+      "propext",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.IEEE754.IEEE32Exec.model_isFinite_chooseNaN2": [
+      "propext",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.IEEE754.IEEE32Exec.roundAt_binary32": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.IEEE754.IEEE32Exec.toReal_add_eq_fp32Round_of_isFinite": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.IEEE754.IEEE32Exec.toReal_mul_eq_fp32Round_of_isFinite": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.IEEE754.IEEE32Exec.fp32Round_eq_computed": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.IEEE754.IEEE32Exec.toReal_mul_eq_computed_of_isFinite": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.ExecFloat.Binary.toModel_ofModel": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.ExecFloat.Binary.ofModel_toModel": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.ExecFloat.Binary.ofNatBits_toNatBits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.ExecFloat.Binary.toNatBits_ofNatBits_of_lt": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.ExecFloat.Binary.toModel_add": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.ExecFloat.Binary.toModel_mul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.Formats.BinaryInterchange.Model.toReal_add_eq_roundAt": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.Formats.BinaryInterchange.Model.toReal_mul_eq_roundAt": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.ExecFloat.Proof.add_eq_spec": [],
+    "FloatLib.Floats.ExecFloat.Proof.mul_eq_spec": [],
+    "FloatLib.Floats.ExecFloat.Binary.toBits32_ofBits32": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.ExecFloat.Binary.ofBits32_toBits32": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.Formats.BinaryInterchange.Model.Proof.add_eq_spec": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.Formats.BinaryInterchange.Model.Proof.mul_eq_spec": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "FloatLib.Floats.Formats.BinaryInterchange.Model.Proof.fma_eq_spec": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.FP32.round_abs_error": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "TorchLean.Floats.FP32.round_relative_error_of_normal": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "concrete_probes": [
+    "Binary8/23 complete natural-bit word roundtrips, including every BitVec32 input",
+    "Binary8/23 ExecFloat.add_eq_spec specialization"
+  ],
+  "resolved_revisions": {
+    "TorchLean": "de3192df4779877ceb65cfe470a4d4ce9d480a5b",
+    "floatlib": "c9a051f08f948ce473036b815b0669fafb61f601",
+    "mathlib": "5ed2965256430c3649e86755f9576b54eca72435"
+  },
+  "import_closure_by_package": {
+    "LeanSearchClient": 4,
+    "Qq": 14,
+    "TorchLean": 4,
+    "aesop": 132,
+    "batteries": 77,
+    "floatlib": 451,
+    "importGraph": 10,
+    "mathlib": 1777,
+    "plausible": 13,
+    "proofwidgets": 10,
+    "toolchain": 1619
+  },
+  "import_closure_modules": 4111,
+  "import_closure_sha256": "58d3707fec5eb357d30fbfb51ff1526813cea9d8c49b0161699aeebdfca32fff",
+  "ptx_root_imported": false,
+  "files_sha256": {
+    "lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+    "lakefile.toml": "1fd43a7b1ffb9d66be70c2bb02dc74d44addcd9f94d9f6e83aa36dcbcaa751a9",
+    "lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
+    "numerical-audit/finite-audit.lean": "339c1a718ede28c207f1f48bc6be44db656adbf10b33277d08fcfb9ef9365c82",
+    "numerical-audit/format-error-audit.lean": "7a44b54f9e032c49147ae5b0988d03405ee46454f9f85482895022b6084b2417",
+    "numerical-audit/finite-build.stdout.log": "1d931b45b08dcf92a14caf7be214e61b8e9f1679438b9781062d3b1750144a82",
+    "numerical-audit/finite-build.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "numerical-audit/error-build.stdout.log": "5b55775a19f5bed7115b98610aeec3cdb82215344f9cb310db9670011b70e9c5",
+    "numerical-audit/error-build.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "numerical-audit/finite-audit.stdout.log": "22a895067564d3d8db0d0c1b92be35fa01013d0931046cdfcd881eacbe446b0a",
+    "numerical-audit/finite-audit.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "numerical-audit/format-error-audit.stdout.log": "af49e004ab1cbd6b079e0594c95a786854e33548170ea2826747088d9c217365",
+    "numerical-audit/format-error-audit.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "limitations": [
+    "No complete PTX word/UInt32 adapter or PTX result relation implemented.",
+    "Finite real bridges require finite encoded results, not merely finite inputs.",
+    "Rounded real FP32 grid has gradual underflow but no upper exponent bound and merges signed zeros.",
+    "NaN selection is library-specific; PTX payload/result freedom needs independent relation.",
+    "Real bridge audited here is nearest-even; explicit mode refinement is not the same as real-error transfer for every mode.",
+    "No PTX FTZ, approximate instruction, GPU/native execution, or PyTorch correspondence proved.",
+    "Only selected endpoints audited; other declarations in imported modules are not certified by this receipt."
+  ]
+}

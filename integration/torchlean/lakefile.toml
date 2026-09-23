@@ -1,6 +1,6 @@
 name = "ptxlean_torchlean_integration"
 version = "0.1.0"
-defaultTargets = ["PtxTorchLean", "PtxTensorBridge"]
+defaultTargets = ["PtxTorchLean", "PtxTensorBridge", "PtxBinary32", "PtxBinary32Bounds", "PtxBinary32Examples", "PtxBinary32Error"]
 
 [[require]]
 name = "ptxlean"
@@ -16,3 +16,15 @@ name = "PtxTorchLean"
 
 [[lean_lib]]
 name = "PtxTensorBridge"
+
+[[lean_lib]]
+name = "PtxBinary32"
+
+[[lean_lib]]
+name = "PtxBinary32Bounds"
+
+[[lean_lib]]
+name = "PtxBinary32Examples"
+
+[[lean_lib]]
+name = "PtxBinary32Error"

@@ -17,6 +17,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import tomllib
 
 CHECKPOINT = 200
 MODEL = "gpt-6-luna"
@@ -61,6 +62,100 @@ def relative_path(value):
     return str(path)
 
 
+def replay_project(task):
+    """Canonical project directory; old tasks select the root unchanged."""
+    value = task.get("replay_project", ".")
+    if value == ".":
+        return value
+    if not isinstance(value, str):
+        raise ValueError("Replay project must be a relative directory")
+    value = relative_path(value)
+    if any(part in {".git", ".lake", ".formalization-runs"} for part in PurePosixPath(value).parts):
+        raise ValueError("Internal replay project path")
+    return value
+
+
+def project_inputs(task, root):
+    """Validate the narrow TOML subproject layout against immutable base bytes."""
+    project = replay_project(task)
+    if project == ".":
+        return None
+    base = task["base_commit"]
+    sources = {s["path"]: s["sha256"] for s in task["sources"]}
+    pins = {}
+
+    def pinned(path):
+        path = str(path)
+        if path not in sources or path in task["allowed_paths"]:
+            raise ValueError(f"Replay project input must be an immutable task source: {path}")
+        mode = git(root, "ls-tree", base, "--", path).decode().split()
+        if not mode or mode[0] not in {"100644", "100755"}:
+            raise ValueError(f"Replay project input must be a committed regular file: {path}")
+        raw = git(root, "show", base + ":" + path)
+        if sha(raw) != sources[path]:
+            raise ValueError(f"Replay project input hash mismatch: {path}")
+        pins[path] = sha(raw)
+        return raw.decode()
+
+    def load(directory):
+        toolchain = pinned(directory / "lean-toolchain").strip()
+        if not re.fullmatch(r"leanprover/lean4:v[0-9]+\.[0-9]+\.[0-9]+(?:-rc[0-9]+)?", toolchain):
+            raise ValueError("Replay project requires an exact release toolchain")
+        config = tomllib.loads(pinned(directory / "lakefile.toml"))
+        manifest = json.loads(pinned(directory / "lake-manifest.json"))
+        if manifest.get("packagesDir") != ".lake/packages" or manifest.get("lakeDir") != ".lake":
+            raise ValueError("Replay project requires standard local Lake directories")
+        return toolchain, config, manifest
+
+    directory = PurePosixPath(project)
+    toolchain, config, manifest = load(directory)
+    root_toolchain, root_config, root_manifest = load(PurePosixPath("."))
+    if toolchain != root_toolchain:
+        raise ValueError("Replay project and root toolchains differ")
+    if root_manifest["packages"] or root_config.get("require"):
+        raise ValueError("Subproject replay currently requires a dependency-free root package")
+    dependencies = []
+    names = set()
+    for package in manifest["packages"]:
+        name = package["name"]
+        # Lake renders quoted Lean identifiers in its manifest, not directory names.
+        disk_name = name[1:-1] if name.startswith("«") and name.endswith("»") else name
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z_0-9-]*", disk_name) or disk_name in names:
+            raise ValueError("Unsafe or duplicate replay dependency name")
+        names.add(disk_name)
+        if package["type"] == "path":
+            target = Path(project, package["dir"])
+            normalized = Path(os.path.normpath(target))
+            if target.is_absolute() or normalized != Path("."):
+                raise ValueError("Replay path dependencies must refer to the repository root")
+            if package.get("configFile") != "lakefile.toml":
+                raise ValueError("Replay path dependency requires the pinned root TOML config")
+        elif package["type"] == "git":
+            if not re.fullmatch(r"[0-9a-f]{40}", package.get("rev", "")):
+                raise ValueError("Replay Git dependency requires an exact commit")
+            if package.get("subDir") is not None:
+                raise ValueError("Replay Git dependency subdirectories are not supported")
+            if not isinstance(package.get("url"), str) or not package["url"]:
+                raise ValueError("Replay Git dependency URL missing")
+            dependencies.append({"name": disk_name, "revision": package["rev"], "url": package["url"]})
+        else:
+            raise ValueError("Unsupported replay dependency type")
+    by_name = {p["name"]: p for p in manifest["packages"]}
+    for require in config.get("require", []):
+        package = by_name.get(require["name"])
+        if not package:
+            raise ValueError("Replay config dependency missing from manifest")
+        if "path" in require:
+            if package["type"] != "path" or package["dir"] != require["path"]:
+                raise ValueError("Replay config/manifest path mismatch")
+        elif "git" in require:
+            if package["type"] != "git" or package["url"] != require["git"] or require.get("rev") not in {package["rev"], package.get("inputRev")}:
+                raise ValueError("Replay config/manifest Git pin mismatch")
+        else:
+            raise ValueError("Unsupported replay package requirement")
+    return {"path": project, "toolchain": toolchain, "inputs": pins, "dependencies": dependencies}
+
+
 def validate_task(task, root):
     if task.get("schema_version") != 1:
         raise ValueError("Unsupported task schema")
@@ -82,6 +177,7 @@ def validate_task(task, root):
         data = git(root, "show", task["base_commit"] + ":" + path)
         if sha(data) != source["sha256"]:
             raise ValueError(f"Source hash mismatch: {path}")
+    project_inputs(task, root)
     if task.get("model", MODEL) != MODEL:
         raise ValueError("This campaign explicitly selects gpt-6-luna")
 
@@ -125,11 +221,13 @@ def update_call(campaign, attempt, **fields):
         atomic_json(path, ledger)
 
 
-def patch_and_boundary(worktree, base, allowed):
+def patch_and_boundary(worktree, base, allowed, project="."):
     changed = set(filter(None, git(worktree, "diff", "--name-only", "-z", base).decode().split("\0")))
     new = list(filter(None, git(worktree, "ls-files", "--others", "-z").decode().split("\0")))
     # Named generated-artifact exemptions, not arbitrary .gitignore rules.
-    new = [p for p in new if not p.startswith(".lake/") and "__pycache__" not in PurePosixPath(p).parts]
+    build_dirs = {".lake/", str(PurePosixPath(project) / ".lake") + "/"}
+    new = [p for p in new if not any(p.startswith(prefix) for prefix in build_dirs)
+           and "__pycache__" not in PurePosixPath(p).parts]
     changed.update(new)
     patch = git(worktree, "diff", "--binary", base)
     # Include ordinary new files without staging or altering the worker checkout.
@@ -232,7 +330,7 @@ def dispatch(task, campaign, attempt, directory, worktree, prompt, command, **co
             except Exception as error:
                 receipt["event_capture_error"] = str(error)
         try:
-            patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"])
+            patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], replay_project(task))
             (directory / "candidate.patch").write_bytes(patch)
             altered_sources = changed_sources(worktree, task)
             boundary["altered_sources"] = altered_sources
@@ -304,7 +402,7 @@ def resume(root, campaign, attempt, resume_from, feedback_file, executable="code
         saved_patch = (previous_dir / "candidate.patch").read_bytes()
         if sha(saved_patch) != previous.get("patch_sha256"):
             raise ValueError("Prior patch record changed")
-        actual_patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"])
+        actual_patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], replay_project(task))
         if actual_patch != saved_patch or not boundary["head_unchanged"]:
             raise ValueError("Worktree does not match the prior recorded patch and commit")
         if not boundary["eligible_for_review"] or changed_sources(worktree, task):

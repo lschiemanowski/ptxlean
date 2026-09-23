@@ -8,7 +8,8 @@
   },
   "summary": [
     "Recheck saved worker patches in fresh checkouts using pinned builds, independent contract examples and explicit theorem-dependency audits.",
-    "Preserve command evidence and reject source drift while keeping mechanical checking distinct from semantic acceptance."
+    "Preserve command evidence and reject source drift while keeping mechanical checking distinct from semantic acceptance.",
+    "Run selected subproject checks after root checks with independent pinned dependency sources and recorded working directories."
   ],
   "realization": "implemented",
   "links": [
@@ -45,6 +46,30 @@
         "path": "scripts/worker_replay.py",
         "passage": {
           "quote": "        record[\"mechanical\"] = \"pass\"\n    except Exception as error:\n        record.update(mechanical=\"fail\", error=f\"{type(error).__name__}: {error}\")\n    finally:\n        if record[\"mechanical\"] == \"running\":\n            record[\"mechanical\"] = \"interrupted\"\n        record[\"finished_at\"] = now()\n        atomic_json(destination / \"result.json\", record)\n    return record"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For a selected subproject, replay still checks the root package first. It then\nbuilds the requested modules and runs contract drivers and dependency audits\nfrom that subproject, recording each command's working directory. Package\nconfiguration and lockfiles must remain unchanged. Dependency sources are fresh\nindependent Git checkouts at the manifest's exact commits, obtained from local\nsource repositories without reusing their compiled artifacts or writing through\nsymlinks into the original checkout. Missing source revisions or toolchains\nproduce an explicit failed prerequisite rather than a successful result. For mathlib, the normal official cache command is recorded against its pinned\nsource revision; cache failure remains visible and a fresh source build may\ncontinue. Candidate, TorchLean and FloatLib builds use the new checkout. Dependency\ncommits and tracked files are checked after preparation and after the build;\ntheir availability is not inferred from a worker's successful build."
+      },
+      "to": {
+        "path": "scripts/worker_replay.py",
+        "passage": {
+          "quote": "    def verify_dependencies():"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An accepted-form ledger in the pristine base must pass before patch application.\nCandidate root checks defer only that ledger's current-file validation and record\nthe deferral for coordinator revalidation. Ordinary project checks remain strict;\na successful candidate replay cannot claim renewed ledger acceptance."
+      },
+      "to": {
+        "path": "tests/test_worker_project.py",
+        "passage": {
+          "quote": "    def test_pristine_ledger_failure_blocks_patch_and_builds(self):"
         }
       }
     }

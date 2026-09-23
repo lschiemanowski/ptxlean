@@ -29,3 +29,14 @@ agreeing with its own definitions does not establish semantic fidelity.
 The explanation of a rule states which parts of its justification come from
 source interpretation, checked theorems, assumptions, or experiments. These
 explanations also provide material for studying the computing model.
+
+Reproducible integration checks verify the pinned Lean toolchain and the exact
+Git revisions of numerical dependencies, rejecting changed tracked dependency
+files. They build the selected PTX–TorchLean integration targets, reject local
+proof placeholders and unchecked axioms, and freshly inspect the named theorem
+and definition dependencies. The requested audit list must match the reported
+list exactly, and only Lean's standard logical axioms are accepted. Source and
+configuration hashes are checked before and after the run. These checks establish
+what was built and which formal dependencies were used; they do not turn a
+software arithmetic model into a hardware-conformance proof or resolve an
+ambiguous source contract.

@@ -11,7 +11,7 @@
     "Bound the difference between every permitted numerical result and its real-valued target, for both network outputs and weighted output derivatives.",
     "Distinguish numerical accuracy from exact bitwise agreement or agreement within a stated error bound with PyTorch."
   ],
-  "realization": "unimplemented",
-  "remaining": "Concrete numerical contracts, rules for combining error bounds across computations, and their explanations remain to be implemented.",
+  "realization": "partial",
+  "remaining": "A bit-preserving binary32 adapter, conservative NaN envelope, nearest-even add/multiply finite-real/error bridges and sufficient input-range guards are implemented. Instruction execution, composed network/derivative error bounds, other formats and rounding/approximation policies, and concrete PyTorch correspondence remain unfinished. Exact signaling-versus-quiet NaN realizability remains unresolved.",
   "links": []
 }

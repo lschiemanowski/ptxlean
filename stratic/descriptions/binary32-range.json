@@ -1,0 +1,114 @@
+{
+  "id": "binary32-range",
+  "parent": {
+    "description": "binary32-results",
+    "passage": {
+      "quote": "Finiteness of the encoded result is an explicit condition of these numerical\ntheorems, not a consequence of finite inputs alone: large finite inputs can\noverflow to infinity. A consumer must prove its intermediate results finite\nfrom its input domain before using the real bound. TorchLean's rounded-real grid\nhas no upper exponent limit; the encoded-result condition is what makes that\nanalysis applicable to actual binary32 in this contract. This slice does not\nprovide general range analysis, a complete floating-point instruction family,\nPyTorch bitwise agreement, or a hardware-conformance proof.\n"
+    }
+  },
+  "summary": [
+    "Derive finite nearest-even binary32 addition and multiplication from finite operands and a bound on the exact real result.",
+    "Transfer rounding-error bounds to every envelope output and prove a finite witness exists, without assuming result finiteness.",
+    "Offer conservative operand-magnitude conditions while retaining subnormals and leaving whole-program range analysis separate."
+  ],
+  "realization": "implemented",
+  "remaining": "These conservative guards cover nearest-even add/multiply with finite inputs. General range analysis, other rounding/FTZ/saturation policies, instruction execution and all finite-producing boundary cases remain outside this adapter.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite input is an encoded number that represents a real value rather than\ninfinity or NaN. Finite inputs alone can still overflow when added or multiplied.\nThis range adapter prevents that outcome using a bound on the exact real\noperation before rounding: the magnitude of the sum or product must not exceed\nbinary32's largest finite positive value, `(2 - 2^-23) * 2^127`."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32Bounds.lean",
+        "passage": {
+          "quote": "theorem maxFinite_eq : maxFinite = (2 - (2 : \u211d)^(-23 : \u2124)) * (2 : \u211d)^(127 : \u2124) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The check concerns the input real values and their exact sum or product. It does\nnot assume that the encoded result is finite or equal to the desired answer.\nFor nearest-even addition and multiplication with gradual underflow, the bound\nproves that the reference result is finite. Every output in the parent's result\nenvelope then has that same finite encoding, represents the rounded exact real\nresult, and satisfies the existing absolute rounding-error bound. At least one\nsuch output exists because the encoded reference is a witness."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32Bounds.lean",
+        "passage": {
+          "quote": "theorem reference_finite (op : Operation) (left right : Word) (x y : \u211d)\n    (leftReal : finiteReal left = some x) (rightReal : finiteReal right = some y)\n    (range : |exactReal op x y| \u2264 maxFinite) :\n    isFinite (reference op left right) = true :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The check concerns the input real values and their exact sum or product. It does\nnot assume that the encoded result is finite or equal to the desired answer.\nFor nearest-even addition and multiplication with gradual underflow, the bound\nproves that the reference result is finite. Every output in the parent's result\nenvelope then has that same finite encoding, represents the rounded exact real\nresult, and satisfies the existing absolute rounding-error bound. At least one\nsuch output exists because the encoded reference is a witness."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32Bounds.lean",
+        "passage": {
+          "quote": "theorem round_of_range (op : Operation) (left right output : Word) (x y : \u211d)\n    (leftReal : finiteReal left = some x) (rightReal : finiteReal right = some y)\n    (range : |exactReal op x y| \u2264 maxFinite) (allowed : Results op left right output) :\n    finiteReal output = some (fp32Round (exactReal op x y)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The check concerns the input real values and their exact sum or product. It does\nnot assume that the encoded result is finite or equal to the desired answer.\nFor nearest-even addition and multiplication with gradual underflow, the bound\nproves that the reference result is finite. Every output in the parent's result\nenvelope then has that same finite encoding, represents the rounded exact real\nresult, and satisfies the existing absolute rounding-error bound. At least one\nsuch output exists because the encoded reference is a witness."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32Bounds.lean",
+        "passage": {
+          "quote": "theorem results_error (op : Operation) (left right output : Word) (x y : \u211d)\n    (leftReal : finiteReal left = some x) (rightReal : finiteReal right = some y)\n    (range : |exactReal op x y| \u2264 maxFinite) (allowed : Results op left right output) :\n    isFinite output = true \u2227 \u2203 z : \u211d, finiteReal output = some z \u2227\n      |z - exactReal op x y| \u2264 TorchLean.Floats.eps32 (exactReal op x y) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The check concerns the input real values and their exact sum or product. It does\nnot assume that the encoded result is finite or equal to the desired answer.\nFor nearest-even addition and multiplication with gradual underflow, the bound\nproves that the reference result is finite. Every output in the parent's result\nenvelope then has that same finite encoding, represents the rounded exact real\nresult, and satisfies the existing absolute rounding-error bound. At least one\nsuch output exists because the encoded reference is a witness."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32Bounds.lean",
+        "passage": {
+          "quote": "theorem finite_result_exists (op : Operation) (left right : Word) (x y : \u211d)\n    (leftReal : finiteReal left = some x) (rightReal : finiteReal right = some y)\n    (range : |exactReal op x y| \u2264 maxFinite) :\n    \u2203 output, Results op left right output \u2227 isFinite output = true \u2227\n      \u2203 z : \u211d, finiteReal output = some z \u2227\n        |z - exactReal op x y| \u2264 TorchLean.Floats.eps32 (exactReal op x y) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Magnitude bounds can also discharge the condition without evaluating a sum:\nif the operand magnitudes are bounded by A and B, addition uses A+B and\nmultiplication uses A*B, with nonnegative A and B. These are reusable sufficient\nconditions. The adapter does not claim that they describe every finite case;\naddition can cancel, and nearest-even rounding can return a finite value for\nsome exact values just beyond the chosen largest-finite guard."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32Bounds.lean",
+        "passage": {
+          "quote": "theorem add_range_of_magnitudes (x y A B : \u211d) (left : |x| \u2264 A) (right : |y| \u2264 B)\n    (range : A+B \u2264 maxFinite) : |exactReal .add x y| \u2264 maxFinite :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Magnitude bounds can also discharge the condition without evaluating a sum:\nif the operand magnitudes are bounded by A and B, addition uses A+B and\nmultiplication uses A*B, with nonnegative A and B. These are reusable sufficient\nconditions. The adapter does not claim that they describe every finite case;\naddition can cancel, and nearest-even rounding can return a finite value for\nsome exact values just beyond the chosen largest-finite guard."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32Bounds.lean",
+        "passage": {
+          "quote": "theorem mul_range_of_magnitudes (x y A B : \u211d) (left : |x| \u2264 A) (right : |y| \u2264 B)\n    (range : A*B \u2264 maxFinite) : |exactReal .mul x y| \u2264 maxFinite :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Magnitude bounds can also discharge the condition without evaluating a sum:\nif the operand magnitudes are bounded by A and B, addition uses A+B and\nmultiplication uses A*B, with nonnegative A and B. These are reusable sufficient\nconditions. The adapter does not claim that they describe every finite case;\naddition can cancel, and nearest-even rounding can return a finite value for\nsome exact values just beyond the chosen largest-finite guard."
+      },
+      "to": {
+        "path": "docs/foundations/binary32-ranges.md",
+        "passage": {
+          "quote": "The range check is deliberately sufficient rather than necessary. Cancellation\ncan make addition safe even when operand magnitudes are large. Also, some exact\nvalues just beyond M can round back to a finite result. Those cases need other\nproofs if a consumer wants to admit them; this adapter does not redefine them\nas invalid PTX behavior."
+        }
+      }
+    }
+  ]
+}

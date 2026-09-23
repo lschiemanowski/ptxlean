@@ -1,0 +1,89 @@
+{
+  "id": "implemented-forms",
+  "parent": {
+    "description": "coverage-inventory",
+    "passage": {
+      "quote": "An instruction form combines the instruction name with operand types, options,\nversion requirements and hardware conditions."
+    }
+  },
+  "summary": [
+    "Record exact accepted integer instruction forms, their typed boundaries, source conditions, proofs and historical acceptance evidence.",
+    "Keep uncovered sibling forms explicit without promoting selected support to instruction-section coverage.",
+    "Reject stale source, declaration and provenance references while leaving proof checking and semantic review separate."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An accepted form is a particular spelling and operand contract, not an entire\ninstruction name. This ledger records only the four independently reviewed\nforms `min.u32`, `max.u32`, `clz.b32` and `popc.b32`. Minimum and maximum compare\ntwo unsigned 32-bit values. Population count counts one bits; leading-zero count\nstarts at bit 31. Their results are exact for all input bit patterns, including\nzero. The broader instruction-section inventory remains unassessed."
+      },
+      "to": {
+        "path": "coverage/implemented-forms.json",
+        "passage": {
+          "quote": "\"scope\": \"selected_accepted_forms\""
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each record says which typed operands and predicate guards are represented,\nwhich PTX version and hardware targets the manual permits, and where the actual\nvalue definition, instruction execution, text conversion and universal proofs\nlive. A typed operand is an already classified register or value: this boundary\ndoes not parse a complete PTX file or validate its register declarations. The\nversion and target conditions are reviewed source facts; the arithmetic decoder\ndoes not enforce architecture eligibility. Source and destination may name the\nsame register because source values are read before the destination is written."
+      },
+      "to": {
+        "path": "coverage/implemented-forms.json",
+        "passage": {
+          "quote": "\"forms\": ["
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The ledger also lists uncovered sibling forms from the same four integer\ninstruction sections. A sibling is another type, width or modifier combination\nfor the same instruction. These entries explain missing signed comparisons,\npacked values, saturation and 64-bit bit counts; they are not implementation\nclaims. Floating-point instruction sections and all other families lie outside\nthis selected ledger. No percentage or whole-section coverage follows from it."
+      },
+      "to": {
+        "path": "coverage/implemented-forms.json",
+        "passage": {
+          "quote": "\"uncovered_siblings\": ["
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every accepted form points to the exact source section, accepted worker patch,\nretained fresh-check result and independent review record. Local file hashes\npin the current definitions and proof locations as well as historical evidence.\nThe verifier rejects missing or changed referenced files, wrong source hashes or\nanchors, missing declaration sites, duplicate forms and inconsistent acceptance\nor patch references. Changing a referenced implementation requires reviewing and\nrefreshing its ledger entry rather than silently inheriting old evidence."
+      },
+      "to": {
+        "path": "scripts/check_implemented_forms.py",
+        "passage": {
+          "quote": "def verify(root=ROOT, ledger=LEDGER):"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every accepted form points to the exact source section, accepted worker patch,\nretained fresh-check result and independent review record. Local file hashes\npin the current definitions and proof locations as well as historical evidence.\nThe verifier rejects missing or changed referenced files, wrong source hashes or\nanchors, missing declaration sites, duplicate forms and inconsistent acceptance\nor patch references. Changing a referenced implementation requires reviewing and\nrefreshing its ledger entry rather than silently inheriting old evidence."
+      },
+      "to": {
+        "path": "tests/test_implemented_forms.py",
+        "passage": {
+          "quote": "class ImplementedFormTests(unittest.TestCase):"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "These checks establish traceability and detect stale records. They do not parse\nLean generally, rerun its kernel, prove source fidelity, or establish that the\ncurrent implementation equals an old worker patch. The normal Lean build and\ndependency audit and independent semantic review remain separate requirements.\nHistorical replay evidence describes the accepted candidate at its recorded base;\nit is not a new verification of every future foundation change."
+      },
+      "to": {
+        "path": "docs/formalization/implemented-forms.md",
+        "passage": {
+          "quote": "A hash\nrefresh alone does not renew semantic acceptance."
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,619 @@
+{
+  "schema_version": 1,
+  "scope": "selected_accepted_forms",
+  "qualification": "Only four reviewed integer forms are listed. This is not a census of all existing implementation, complete mnemonics, or PTX sections. Historical replay and current file-site integrity are distinct from current kernel checking and semantic fidelity.",
+  "files": {
+    "manual": {
+      "path": "references/nvidia/ptx-isa-9.4/index.html",
+      "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed"
+    },
+    "source_manifest": {
+      "path": "references/nvidia/ptx-isa-9.4/manifest.json",
+      "sha256": "2cb4e54aeb0f85025f15149f18fd16f3aca705968373324dc54ec9659108eb9f"
+    },
+    "scalar": {
+      "path": "Ptx/Scalar.lean",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    "text": {
+      "path": "Ptx/ScalarText.lean",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    "minmax": {
+      "path": "Ptx/IntegerMinMax.lean",
+      "sha256": "b821226d079b1c4ee8f5b7bf2d700cdf5fc74702823e28f30bb95d58035b3e42"
+    },
+    "bitcount": {
+      "path": "Ptx/IntegerBitCount.lean",
+      "sha256": "bf43bd75dfe28461d2f6f812576fdf2ff07d5e44a399b7507d8096fed8c7be43"
+    },
+    "minmax_acceptance": {
+      "path": "formalization/results/minmax-u32/acceptance.json",
+      "sha256": "bc18fa97828c4ee886f42326b1c19594b09e019ad0497abf297ff26b7594499d"
+    },
+    "minmax_evidence": {
+      "path": "formalization/results/minmax-u32/evidence-manifest.json",
+      "sha256": "a0e9949404ce15a5042b91a4d6a5a934fa6f7f56099f8a60de50456a9b9f0935"
+    },
+    "minmax_review": {
+      "path": "docs/formalization/initial-source-review.md",
+      "sha256": "9fd54fbb14abb26cff921a06ebc9a0d734ede39d72ea49088808d3040e2d2212"
+    },
+    "bitcount_acceptance": {
+      "path": "formalization/results/bitcount-u32/acceptance.json",
+      "sha256": "a466e44e0e214d752b7edb11a4fa2a1de777bd738fc6ae818f34581a92f4e447"
+    },
+    "bitcount_evidence": {
+      "path": "formalization/results/bitcount-u32/evidence-manifest.json",
+      "sha256": "e07e749196bfd7627b0fc74023143686d2d5126497f7c132e5237eec328079bd"
+    },
+    "bitcount_review": {
+      "path": "docs/formalization/bitcount-source-review.md",
+      "sha256": "863e98ca59ca0745b110b6d01092af76d827ccb0ee449e2d6805ef3cc996c323"
+    }
+  },
+  "source": {
+    "file": "manual",
+    "manifest": "source_manifest",
+    "sections": {
+      "operand-type-information": "2b4deb7a2de0f26463be8ea631b19d3262067641e45c4ca98261b61ff73945a7",
+      "source-operands": "a981cf489133f764d2b9d621b4653ead71abb7709a83a323eccb55bddb8b6fa2",
+      "destination-operands": "46d9e524f958b92cb45b9d9c7113b315e3b44eaf6a69f5af707bb055c5ee6a70",
+      "predicated-execution": "e3de38b106e96f1ccdd8c7710b2efbaa5ea2bde35959da999d2075a12162dd1f",
+      "integer-arithmetic-instructions": "d7819c8e7926e77d521a9fd00a3b7022477001415666f02e3ea84dc9f4c98457",
+      "integer-arithmetic-instructions-min": "a9ce7fb6368d2ec29f4f4ff171e57f234b1f8908c7da69f0dcc91b16de1ee5f2",
+      "integer-arithmetic-instructions-max": "44e15ff2f0031099a1a4cdb8d7601e21689dfb7976e243550b1a6f3777989eb3",
+      "integer-arithmetic-instructions-popc": "4cd6b4fa00a0c759b48eea31a542110b24d7d700f58e2be3ed265f0ddffacf34",
+      "integer-arithmetic-instructions-clz": "92368bc63958d21152caf074871d1b235df84c8fbfb12e5b6140eb853f42063f"
+    },
+    "common_operand_guard_anchors": [
+      "integer-arithmetic-instructions",
+      "operand-type-information",
+      "source-operands",
+      "destination-operands",
+      "predicated-execution"
+    ]
+  },
+  "trials": {
+    "minmax": {
+      "acceptance": "minmax_acceptance",
+      "evidence": "minmax_evidence",
+      "source_review": "minmax_review",
+      "patch_member": "attempts/minmax-003/candidate.patch",
+      "replay_member": "replays/minmax-003-v3/result.json",
+      "patch_sha256": "d82a8ed6d4be8384c257afeeed4135478fbe38fde51676b16726467f65936b99"
+    },
+    "bitcount": {
+      "acceptance": "bitcount_acceptance",
+      "evidence": "bitcount_evidence",
+      "source_review": "bitcount_review",
+      "patch_member": "attempts/bitcount-003/candidate.patch",
+      "replay_member": "replays/bitcount-003/result.json",
+      "patch_sha256": "23f275350ed3b1a94aebd39c3ab9d3123cd9641151188e1c247ecdc17fa395d2"
+    }
+  },
+  "forms": [
+    {
+      "spelling": "min.u32",
+      "status": "accepted",
+      "trial": "minmax",
+      "source_anchor": "integer-arithmetic-instructions-min",
+      "ptx_minimum": "1.0",
+      "target": "all for selected forms",
+      "operands": {
+        "destination": "u32 word register",
+        "sources": [
+          "u32 word register or 32-bit immediate",
+          "u32 word register or 32-bit immediate"
+        ],
+        "aliasing": "Sources read from incoming state before destination write; source/destination overlap permitted."
+      },
+      "guard": "Unconditional, positive predicate, or negated predicate. False guard skips the write and advances the program counter.",
+      "meaning": "Unsigned minimum of both inputs; every 32-bit input allowed.",
+      "boundary": "Typed operand interface only, not raw PTX parsing or register-declaration validation; version/target facts are not enforced by this arithmetic decoder. Exact values, not floating-point approximation or hardware conformance.",
+      "semantics": [
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "BinOp.eval"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "eval"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "Op.reads"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "Op.writes"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "binMnemonic"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decodeOp"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decode"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "encodeOp"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "min_toNat"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "min_mem"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "min_comm"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "min_idem"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "min_bounds"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "min_exec"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "min_exec_preserves_other"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "min_false"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decodeOp_supported"
+        }
+      ]
+    },
+    {
+      "spelling": "max.u32",
+      "status": "accepted",
+      "trial": "minmax",
+      "source_anchor": "integer-arithmetic-instructions-max",
+      "ptx_minimum": "1.0",
+      "target": "all for selected forms",
+      "operands": {
+        "destination": "u32 word register",
+        "sources": [
+          "u32 word register or 32-bit immediate",
+          "u32 word register or 32-bit immediate"
+        ],
+        "aliasing": "Sources read from incoming state before destination write; source/destination overlap permitted."
+      },
+      "guard": "Unconditional, positive predicate, or negated predicate. False guard skips the write and advances the program counter.",
+      "meaning": "Unsigned maximum of both inputs; every 32-bit input allowed.",
+      "boundary": "Typed operand interface only, not raw PTX parsing or register-declaration validation; version/target facts are not enforced by this arithmetic decoder. Exact values, not floating-point approximation or hardware conformance.",
+      "semantics": [
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "BinOp.eval"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "eval"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "Op.reads"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "Op.writes"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "binMnemonic"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decodeOp"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decode"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "encodeOp"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "max_toNat"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "max_mem"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "max_comm"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "max_idem"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "max_bounds"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "max_exec"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "max_exec_preserves_other"
+        },
+        {
+          "file": "minmax",
+          "namespace": "Ptx.Scalar.IntegerMinMax",
+          "name": "max_false"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decodeOp_supported"
+        }
+      ]
+    },
+    {
+      "spelling": "clz.b32",
+      "status": "accepted",
+      "trial": "bitcount",
+      "source_anchor": "integer-arithmetic-instructions-clz",
+      "ptx_minimum": "2.0",
+      "target": "sm_20",
+      "operands": {
+        "destination": "u32 word register",
+        "sources": [
+          "b32 word register or 32-bit immediate"
+        ],
+        "aliasing": "Sources read from incoming state before destination write; source/destination overlap permitted."
+      },
+      "guard": "Unconditional, positive predicate, or negated predicate. False guard skips the write and advances the program counter.",
+      "meaning": "Count zeros starting at bit 31 through first one; zero input returns 32.",
+      "boundary": "Typed operand interface only, not raw PTX parsing or register-declaration validation; version/target facts are not enforced by this arithmetic decoder. Exact values, not floating-point approximation or hardware conformance.",
+      "semantics": [
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "UnaryOp.eval"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "eval"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "Op.reads"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "Op.writes"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "unaryMnemonic"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decodeOp"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decode"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "encodeOp"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "clz_toNat"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "clz_bound"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "clz_width_iff"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "unary_exec"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "unary_false"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "unary_preserves_other"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decodeOp_supported"
+        }
+      ]
+    },
+    {
+      "spelling": "popc.b32",
+      "status": "accepted",
+      "trial": "bitcount",
+      "source_anchor": "integer-arithmetic-instructions-popc",
+      "ptx_minimum": "2.0",
+      "target": "sm_20",
+      "operands": {
+        "destination": "u32 word register",
+        "sources": [
+          "b32 word register or 32-bit immediate"
+        ],
+        "aliasing": "Sources read from incoming state before destination write; source/destination overlap permitted."
+      },
+      "guard": "Unconditional, positive predicate, or negated predicate. False guard skips the write and advances the program counter.",
+      "meaning": "Count set bits at indices 0 through 31; zero input returns 0.",
+      "boundary": "Typed operand interface only, not raw PTX parsing or register-declaration validation; version/target facts are not enforced by this arithmetic decoder. Exact values, not floating-point approximation or hardware conformance.",
+      "semantics": [
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "UnaryOp.eval"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "eval"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "Op.reads"
+        },
+        {
+          "file": "scalar",
+          "namespace": "Ptx.Scalar",
+          "name": "Op.writes"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "unaryMnemonic"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decodeOp"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decode"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "encodeOp"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "popc_toNat"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "popc_bound"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "popc_zero_iff"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "unary_exec"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "unary_false"
+        },
+        {
+          "file": "bitcount",
+          "namespace": "Ptx.Scalar.IntegerBitCount",
+          "name": "unary_preserves_other"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "text",
+          "namespace": "Ptx.Scalar.Text",
+          "name": "decodeOp_supported"
+        }
+      ]
+    }
+  ],
+  "uncovered_siblings": [
+    {
+      "source_anchor": "integer-arithmetic-instructions-min",
+      "spellings": [
+        "min.u16",
+        "min.u64",
+        "min.s16",
+        "min.s32",
+        "min.s64"
+      ],
+      "status": "unimplemented",
+      "reason": "Other scalar widths and signed comparisons are unimplemented in this family."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-min",
+      "spellings": [
+        "min.u16x2",
+        "min.s16x2",
+        "min.u8x4",
+        "min.s8x4"
+      ],
+      "status": "unimplemented",
+      "reason": "Packed parallel lanes are unimplemented; source lists distinct version and target restrictions."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-min",
+      "spellings": [
+        "min.relu.s32",
+        "min.relu.s16x2",
+        "min.relu.s8x4"
+      ],
+      "status": "unimplemented",
+      "reason": "Signed result clamping to zero is unimplemented; source lists distinct version and target restrictions."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-max",
+      "spellings": [
+        "max.u16",
+        "max.u64",
+        "max.s16",
+        "max.s32",
+        "max.s64"
+      ],
+      "status": "unimplemented",
+      "reason": "Other scalar widths and signed comparisons are unimplemented in this family."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-max",
+      "spellings": [
+        "max.u16x2",
+        "max.s16x2",
+        "max.u8x4",
+        "max.s8x4"
+      ],
+      "status": "unimplemented",
+      "reason": "Packed parallel lanes are unimplemented; source lists distinct version and target restrictions."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-max",
+      "spellings": [
+        "max.relu.s32",
+        "max.relu.s16x2",
+        "max.relu.s8x4"
+      ],
+      "status": "unimplemented",
+      "reason": "Signed result clamping to zero is unimplemented; source lists distinct version and target restrictions."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-clz",
+      "spellings": [
+        "clz.b64"
+      ],
+      "status": "unimplemented",
+      "reason": "64-bit input with a u32 destination, not a 64-bit result; PTX 2.0, sm_20 or later."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-popc",
+      "spellings": [
+        "popc.b64"
+      ],
+      "status": "unimplemented",
+      "reason": "64-bit input with a u32 destination, not a 64-bit result; PTX 2.0, sm_20 or later."
+    }
+  ]
+}

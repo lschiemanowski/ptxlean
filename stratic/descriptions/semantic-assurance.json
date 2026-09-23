@@ -8,10 +8,11 @@
   },
   "summary": [
     "Justify formal definitions using versioned source passages, reviewed interpretations and independent evidence.",
-    "Delegate instruction formalization to smaller models on reviewed foundations, evaluating semantic accuracy separately from proof validity and generation cost."
+    "Delegate instruction formalization to smaller models on reviewed foundations, evaluating semantic accuracy separately from proof validity and generation cost.",
+    "Reproduce selected integration proofs with pinned unchanged dependencies, complete named axiom audits and stable local sources."
   ],
   "realization": "partial",
-  "remaining": "Reviews against the pinned source and checked connections between formal components cover restricted memory, byte sources for aligned 32-bit reads, execution environments, scalar proof rules and vector addition in shared memory. How mixed-source reads observe writes remains unresolved and explicit. Byte ordering uses separately attributed NVIDIA binary-interface guidance. General correspondence for data-dependent interactions and different access sizes, and hardware validation, remain unimplemented. Model-assisted generation now has an instruction-section inventory and recorded headless runs; full form coverage, broader capability evidence and cost-effectiveness evaluation remain unfinished.",
+  "remaining": "Reviews against the pinned source and checked connections between formal components cover restricted memory, byte sources for aligned 32-bit reads, execution environments, scalar proof rules and vector addition in a shared global allocation, actual CTA shared-memory barrier publication, and the encoded binary32 numerical adapter. How mixed-source reads observe writes remains unresolved and explicit, as does exact quiet-versus-signaling NaN output realizability. Byte ordering uses separately attributed NVIDIA binary-interface guidance. General correspondence for data-dependent interactions and different access sizes, and hardware validation, remain unimplemented. Model-assisted generation now has an instruction-section inventory and recorded headless runs; full form coverage, broader capability evidence and cost-effectiveness evaluation remain unfinished.",
   "links": [
     {
       "kind": "implementation",
@@ -45,7 +46,7 @@
       "to": {
         "path": "scripts/check.sh",
         "passage": {
-          "quote": "python3 scripts/check_sources.py\npython3 scripts/coverage_inventory.py\npython3 scripts/check_worker_evidence.py\npython3 scripts/test_coverage_inventory.py\npython3 -m unittest discover -s tests -p 'test_worker*.py'\npython3 scripts/check_proofs.py --scan\nif [[ \"${1:-}\" == --clean ]]; then\n  lake clean\nfi\nlake build\n\naudit_log=$(mktemp)\ntrap 'rm -f -- \"$audit_log\"' EXIT\nlake env lean Ptx/Audit.lean | tee \"$audit_log\"\npython3 scripts/check_proofs.py --audit \"$audit_log\""
+          "quote": "python3 scripts/check_proofs.py --scan\nif [[ \"$clean\" == true ]]; then\n  lake clean\nfi\nlake build\n\naudit_log=$(mktemp)\ntrap 'rm -f -- \"$audit_log\"' EXIT\nlake env lean Ptx/Audit.lean | tee \"$audit_log\"\npython3 scripts/check_proofs.py --audit \"$audit_log\""
         }
       }
     },
@@ -93,7 +94,19 @@
       "to": {
         "path": "docs/foundations/byte-memory.md",
         "passage": {
-          "quote": "One source interpretation remains explicit: the pinned PTX manual does not spell\nout how its observation-order phrase \u201creads the value written by\u201d applies when a\nread combines bytes from different writes. `ObservationPolicy` represents two\ninterpretations, `anyByte` and `wholeSource`. The specialization and examples are\nproved for both. This does not establish which interpretation uniquely matches\nPTX. See the [source review](next-source-review.md) for that precise remaining\nsemantic-fidelity obligation and the separate endianness source."
+          "quote": "One source interpretation remains explicit: the pinned PTX manual does not spell\nout how its observation-order phrase “reads the value written by” applies when a\nread combines bytes from different writes. `ObservationPolicy` represents two\ninterpretations, `anyByte` and `wholeSource`. The specialization and examples are\nproved for both. This does not establish which interpretation uniquely matches\nPTX. See the [source review](next-source-review.md) for that precise remaining\nsemantic-fidelity obligation and the separate endianness source."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Reproducible integration checks verify the pinned Lean toolchain and the exact\nGit revisions of numerical dependencies, rejecting changed tracked dependency\nfiles. They build the selected PTX–TorchLean integration targets, reject local\nproof placeholders and unchecked axioms, and freshly inspect the named theorem\nand definition dependencies. The requested audit list must match the reported\nlist exactly, and only Lean's standard logical axioms are accepted. Source and\nconfiguration hashes are checked before and after the run. These checks establish\nwhat was built and which formal dependencies were used; they do not turn a\nsoftware arithmetic model into a hardware-conformance proof or resolve an\nambiguous source contract."
+      },
+      "to": {
+        "path": "integration/torchlean/check.py",
+        "passage": {
+          "quote": "        audit = subprocess.run([\"lake\", \"--no-cache\", \"env\", \"lean\", driver.name],\n                               cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)\n        print(audit.stdout, end=\"\", flush=True)\n        audit.check_returncode()\n        audit_dependencies(audit.stdout, names)\n    finally:\n        dependencies()\n        if snapshot() != before:\n            raise ValueError(\"Checked sources, pins, configuration, or checker changed during verification\")"
         }
       }
     }

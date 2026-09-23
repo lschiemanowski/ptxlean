@@ -17,3 +17,21 @@ must leave the submitted source patch unchanged. A successful replay establishes
 these mechanical checks only. Independent comparison with the PTX source and
 review of theorem assumptions remain necessary before integration. Replaying a
 patch makes no model call and does not apply it to the coordinator's checkout.
+
+For a selected subproject, replay still checks the root package first. It then
+builds the requested modules and runs contract drivers and dependency audits
+from that subproject, recording each command's working directory. Package
+configuration and lockfiles must remain unchanged. Dependency sources are fresh
+independent Git checkouts at the manifest's exact commits, obtained from local
+source repositories without reusing their compiled artifacts or writing through
+symlinks into the original checkout. Missing source revisions or toolchains
+produce an explicit failed prerequisite rather than a successful result. For mathlib, the normal official cache command is recorded against its pinned
+source revision; cache failure remains visible and a fresh source build may
+continue. Candidate, TorchLean and FloatLib builds use the new checkout. Dependency
+commits and tracked files are checked after preparation and after the build;
+their availability is not inferred from a worker's successful build.
+
+An accepted-form ledger in the pristine base must pass before patch application.
+Candidate root checks defer only that ledger's current-file validation and record
+the deferral for coordinator revalidation. Ordinary project checks remain strict;
+a successful candidate replay cannot claim renewed ledger acceptance.

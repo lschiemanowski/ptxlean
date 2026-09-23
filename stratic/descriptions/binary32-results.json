@@ -1,0 +1,126 @@
+{
+  "id": "binary32-results",
+  "parent": {
+    "description": "numerical-contracts",
+    "passage": {
+      "quote": "An accuracy guarantee covers every permitted result for all inputs satisfying\nits stated conditions."
+    }
+  },
+  "summary": [
+    "Preserve all binary32 bit patterns and conservatively include every NaN encoding when the single-precision reference result is NaN.",
+    "Connect finite outputs in the envelope for addition and multiplication to exact real arithmetic followed by nearest-even rounding, with an absolute error bound.",
+    "Keep encoded-result finiteness, actual PTX instruction execution and hardware or PyTorch correspondence as separate obligations."
+  ],
+  "realization": "implemented",
+  "remaining": "The numerical adapter and conservative envelope are implemented. Exact signaling-versus-quiet NaN output realizability remains unresolved; fetched instruction semantics, other rounding/FTZ/saturation policies and hardware/PyTorch correspondence are separate.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The adapter uses the pinned FloatLib encoded format already depended on by\nTorchLean. Conversion between a PTX word and that format must round-trip exactly.\nIt does not pass through a host floating-point value, which could change NaN\nbits. A finite-value interpretation returns an actual real number only for\nfinite encodings; exceptional values must not silently become real zero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32.lean",
+        "passage": {
+          "quote": "theorem encode_decode (word : Word) : encode (decode word) = word"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The adapter uses the pinned FloatLib encoded format already depended on by\nTorchLean. Conversion between a PTX word and that format must round-trip exactly.\nIt does not pass through a host floating-point value, which could change NaN\nbits. A finite-value interpretation returns an actual real number only for\nfinite encodings; exceptional values must not silently become real zero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32.lean",
+        "passage": {
+          "quote": "theorem decode_encode (value : Value) : decode (encode value) = value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The adapter uses the pinned FloatLib encoded format already depended on by\nTorchLean. Conversion between a PTX word and that format must round-trip exactly.\nIt does not pass through a host floating-point value, which could change NaN\nbits. A finite-value interpretation returns an actual real number only for\nfinite encodings; exceptional values must not silently become real zero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32.lean",
+        "passage": {
+          "quote": "theorem finiteReal_none (word : Word) (h : isFinite word = false) :\n    finiteReal word = none"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A conservative result envelope preserves PTX's freedom in single-precision NaN\nresults. An envelope contains every result the account must consider; it need\nnot claim that every included result can occur. When the selected reference\noperation returns a NaN, any NaN encoding is included. Otherwise the output must have exactly the reference bits, retaining\nsigned zero and infinity. The reference result itself always witnesses a\nresult in this envelope. This does not impose FloatLib's particular NaN payload\non PTX. The pinned manual does not explicitly distinguish quiet and signaling\nNaN outputs while\nalso referring to IEEE 754, the standard for this floating-point arithmetic.\nA signaling NaN is marked to request an invalid-operation signal under that\nstandard; a quiet NaN is not marked that way. Exact realizability of those NaN encodings\nremains unresolved; envelope membership is not a hardware existence theorem."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32.lean",
+        "passage": {
+          "quote": "theorem envelope_nan (reference output : Word) (h : isNaN reference = true) :\n    Envelope reference output ↔ isNaN output = true"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A conservative result envelope preserves PTX's freedom in single-precision NaN\nresults. An envelope contains every result the account must consider; it need\nnot claim that every included result can occur. When the selected reference\noperation returns a NaN, any NaN encoding is included. Otherwise the output must have exactly the reference bits, retaining\nsigned zero and infinity. The reference result itself always witnesses a\nresult in this envelope. This does not impose FloatLib's particular NaN payload\non PTX. The pinned manual does not explicitly distinguish quiet and signaling\nNaN outputs while\nalso referring to IEEE 754, the standard for this floating-point arithmetic.\nA signaling NaN is marked to request an invalid-operation signal under that\nstandard; a quiet NaN is not marked that way. Exact realizability of those NaN encodings\nremains unresolved; envelope membership is not a hardware existence theorem."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32.lean",
+        "passage": {
+          "quote": "theorem envelope_exists (reference : Word) : ∃ output, Envelope reference output"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A conservative result envelope preserves PTX's freedom in single-precision NaN\nresults. An envelope contains every result the account must consider; it need\nnot claim that every included result can occur. When the selected reference\noperation returns a NaN, any NaN encoding is included. Otherwise the output must have exactly the reference bits, retaining\nsigned zero and infinity. The reference result itself always witnesses a\nresult in this envelope. This does not impose FloatLib's particular NaN payload\non PTX. The pinned manual does not explicitly distinguish quiet and signaling\nNaN outputs while\nalso referring to IEEE 754, the standard for this floating-point arithmetic.\nA signaling NaN is marked to request an invalid-operation signal under that\nstandard; a quiet NaN is not marked that way. Exact realizability of those NaN encodings\nremains unresolved; envelope membership is not a hardware existence theorem."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32.lean",
+        "passage": {
+          "quote": "theorem envelope_non_nan (reference output : Word) (h : isNaN reference = false) :\n    Envelope reference output ↔ output = reference"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "When the encoded reference result is finite, every output in the envelope has\nthe same finite encoding. The adapter connects it to one rounding of the exact real\nsum or product and transfers the checked absolute rounding-error bound. The\nbound is half the spacing of the applicable representable-number grid. It\ncontinues to make sense for very small values where a uniform relative-error\nbound would not. Signed zeros have the same real value but retain distinct bits."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32.lean",
+        "passage": {
+          "quote": "theorem results_round (op : Operation) (left right output : Word)\n    (finite : isFinite (reference op left right) = true)\n    (allowed : Results op left right output) :\n    finiteReal output = some (fp32Round (exact op left right))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "When the encoded reference result is finite, every output in the envelope has\nthe same finite encoding. The adapter connects it to one rounding of the exact real\nsum or product and transfers the checked absolute rounding-error bound. The\nbound is half the spacing of the applicable representable-number grid. It\ncontinues to make sense for very small values where a uniform relative-error\nbound would not. Signed zeros have the same real value but retain distinct bits."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32.lean",
+        "passage": {
+          "quote": "theorem results_abs_error (op : Operation) (left right output : Word) (x y : ℝ)\n    (leftReal : finiteReal left = some x) (rightReal : finiteReal right = some y)\n    (finite : isFinite (reference op left right) = true)\n    (allowed : Results op left right output) :\n    ∃ z : ℝ, finiteReal output = some z ∧\n      |z - (match op with | .add => x + y | .mul => x * y)| ≤\n        TorchLean.Floats.eps32 (match op with | .add => x + y | .mul => x * y)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Finiteness of the encoded result is an explicit condition of these numerical\ntheorems, not a consequence of finite inputs alone: large finite inputs can\noverflow to infinity. A consumer must prove its intermediate results finite\nfrom its input domain before using the real bound. TorchLean's rounded-real grid\nhas no upper exponent limit; the encoded-result condition is what makes that\nanalysis applicable to actual binary32 in this contract. This slice does not\nprovide general range analysis, a complete floating-point instruction family,\nPyTorch bitwise agreement, or a hardware-conformance proof."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32Examples.lean",
+        "passage": {
+          "quote": "theorem finite_inputs_overflow : isFinite 0x7f7fffff = true ∧\n    reference .add 0x7f7fffff 0x7f7fffff = 0x7f800000 ∧\n    isFinite (reference .add 0x7f7fffff 0x7f7fffff) = false"
+        }
+      }
+    }
+  ]
+}
