@@ -1,0 +1,52 @@
+{
+  "id": "collective-order",
+  "parent": {
+    "description": "collective-execution",
+    "passage": {
+      "quote": "Control coordination and memory visibility need separate proofs. A completed\nbarrier orders participating threads' preceding ordinary accesses before their\nfollowing accesses. The memory account must derive those connections from actual\narrival and completion events; it must not assume that a read already saw the\nrequired value. Splitting arrival from completion avoids inventing a cycle\nbetween collective operations. Successive generations remain distinct."
+    }
+  },
+  "summary": [
+    "Expand ordering across a completed barrier into an explicit arrival, completion and resumption path without assumptions about memory values.",
+    "Prove that certified control positions rule out cycles, while leaving actual instruction origin and memory validity to separate connections."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A position certificate records the owner of each memory event, the participants\nin each completed use, and natural-number positions for memory events, arrivals,\ncompletion and resumption. Each participant's arrival must precede completion,\nand completion must precede its resumption. Earlier and later accesses are\nselected by ownership and position. No field mentions memory values, read\nsources, or a desired result. The resulting cross-barrier edge expands into the\nfour-step path, and every edge strictly increases position. Both the expanded\npaths and the projected memory paths are acyclic. Other memory-order edges may\nbe included when they too strictly increase these same positions."
+      },
+      "to": {
+        "path": "Ptx/CollectiveOrder.lean",
+        "passage": {
+          "quote": "structure Certificate (Memory Participant Phase : Type) where\n  owner : Memory \u2192 Participant\n  participates : Phase \u2192 Participant \u2192 Prop\n  memoryPos : Memory \u2192 Nat\n  arrivalPos : Phase \u2192 Participant \u2192 Nat\n  completionPos : Phase \u2192 Nat\n  resumePos : Phase \u2192 Participant \u2192 Nat\n  arrival_before_completion : \u2200 p t, participates p t \u2192\n    arrivalPos p t < completionPos p\n  completion_before_resume : \u2200 p t, participates p t \u2192\n    completionPos p < resumePos p t\n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The path has four steps: the earlier access precedes its thread's arrival;\nthat arrival precedes collective completion; completion precedes the other\nthread's resumption; and resumption precedes the later access. Arrival and\nresumption are separate positions even when an implementation records completion\nand release together. They may be placed between machine steps. Treating both\nsides as one mutually ordered barrier node would invent a cycle."
+      },
+      "to": {
+        "path": "Ptx/CollectiveOrder.lean",
+        "passage": {
+          "quote": "theorem edge_increases {a b : Node Memory Participant Phase} (h : c.Edge a b) :\n    c.rank a < c.rank b := by\n  cases h with\n  | before h => exact h.2.2\n  | arrived h => exact c.arrival_before_completion _ _ h\n  | completed h => exact c.completion_before_resume _ _ h\n  | after h => exact h.2.2\n\ntheorem path_increases {a b : Node Memory Participant Phase} (h : Path c.Edge a b) :\n    c.rank a < c.rank b :=\n  Path.rank_increases c.rank (fun _ _ => c.edge_increases) h\n\ntheorem split_acyclic (a : Node Memory Participant Phase) : \u00acPath c.Edge a a := by\n  intro h\n  exact Nat.lt_irrefl _ (c.path_increases h)\n\n/-- Every projected edge has an explicit four-edge witness through one phase. -/\ntheorem cross_path {a b : Memory} (h : c.cross a b) :\n    Path c.Edge (.memory a) (.memory b) := by\n  obtain \u27e8p, ta, tb, before, after\u27e9 := h\n  exact .join (.edge (.before before))\n    (.join (.edge (.arrived before.2.1))\n      (.join (.edge (.completed after.2.1)) (.edge (.after after))))\n\ntheorem cross_increases {a b : Memory} (h : c.cross a b) :\n    c.memoryPos a < c.memoryPos b :=\n  c.path_increases (c.cross_path h)\n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Other memory-order edges may\nbe included when they too strictly increase these same positions."
+      },
+      "to": {
+        "path": "Ptx/CollectiveOrder.lean",
+        "passage": {
+          "quote": "def projected (ordinary : Memory \u2192 Memory \u2192 Prop) (a b : Memory) : Prop :=\n  ordinary a b \u2228 c.cross a b\n\ntheorem projected_path_increases (ordinary : Memory \u2192 Memory \u2192 Prop)\n    (ordered : \u2200 a b, ordinary a b \u2192 c.memoryPos a < c.memoryPos b)\n    {a b : Memory} (h : Path (c.projected ordinary) a b) :\n    c.memoryPos a < c.memoryPos b := by\n  apply Path.rank_increases c.memoryPos (fun a b hab => ?_) h\n  rcases hab with h | h\n  \u00b7 exact ordered a b h\n  \u00b7 exact c.cross_increases h\n\ntheorem projected_acyclic (ordinary : Memory \u2192 Memory \u2192 Prop)\n    (ordered : \u2200 a b, ordinary a b \u2192 c.memoryPos a < c.memoryPos b)\n    (a : Memory) : \u00acPath (c.projected ordinary) a a := by\n  intro h\n  exact Nat.lt_irrefl _ (c.projected_path_increases ordinary ordered h)\n"
+        }
+      }
+    }
+  ]
+}

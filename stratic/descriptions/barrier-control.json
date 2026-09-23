@@ -1,0 +1,113 @@
+{
+  "id": "barrier-control",
+  "parent": {
+    "description": "collective-execution",
+    "passage": {
+      "quote": "Each use has its own generation, a number that advances on completion. Arrivals\nfrom an earlier use cannot release a later one. The barrier belongs to its CTA;\nsharing the numeric resource name with another CTA does not make it the same\nbarrier. Counting a waiting thread again must have no effect. Runnable means\nallowed to execute, not guaranteed immediate execution by a GPU scheduler."
+    }
+  },
+  "summary": [
+    "Record full-CTA arrivals once, block waiting participants, and release/reset exactly when all participants have arrived.",
+    "Keep CTA, resource, site and generation identity explicit; prove reachable-state and warp-completion properties without claiming fetched instruction execution or memory visibility."
+  ],
+  "realization": "implemented",
+  "remaining": "Actual PTX instruction fetch, proof of common-site participation, warp-arrival operational correspondence and barrier memory visibility remain separate later responsibilities.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This protocol records one full-participation barrier in one CTA, a launched\nthread block. Its fixed, nonempty participant set contains every represented\nthread; none exits before completion. Each participant arrives at one common\ninstruction site, identified by a number supplied by the caller. The protocol\nis a foundation for executing a barrier, not yet a fetched PTX instruction:\na later execution layer must prove that each request comes from the actual\nunconditionally reached barrier at that site."
+      },
+      "to": {
+        "path": "Ptx/Barrier.lean",
+        "passage": {
+          "quote": "Full-CTA, no-exit barrier control protocol. Requests identify a common instruction\nsite, but this module does not fetch PTX instructions or prove that threads reach\nthat site. It provides no memory visibility or scheduler fairness semantics."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A barrier key identifies its CTA, its resource number from zero through fifteen,\nits instruction site, and its generation, which counts completed uses. A request\nwith the wrong key leaves the state unchanged and is reported as rejected by the\nprotocol. This includes old-generation requests and requests from another CTA\nusing the same resource number. Such a protocol rejection is not a claim about\nPTX undefined behavior or hardware fault reporting. The intended first fetched\ninstruction remains `bar.sync 0` with no explicit participant count."
+      },
+      "to": {
+        "path": "Ptx/Barrier.lean",
+        "passage": {
+          "quote": "theorem old_generation_unchanged (config : Config n) (state : State n) (request : Request n)\n    (old : request.key.generation < state.generation) :\n    step config state request = \u27e8state, .rejectedWrongKey, []\u27e9 :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each participant has an arrival bit. A clear bit means it may run; a set bit means\nit is waiting and cannot dispatch past this barrier. Arrival records that bit\nonce. Repeated requests from a waiting participant leave all state unchanged and\nemit no additional arrival. A fresh request emits an arrival event with its exact\nkey and participant. When that request completes the whole participant set, the\nsame transition emits a distinct completion event, clears every bit, and advances\nthe generation. All participants then become runnable. No fairness assumption\nsays when a runnable participant will actually be scheduled."
+      },
+      "to": {
+        "path": "Ptx/Barrier.lean",
+        "passage": {
+          "quote": "def step (config : Config n) (state : State n) (request : Request n) : Result n :=\n  if request.key = key config state then\n    if state.arrived request.thread = true then \u27e8state, .waiting, []\u27e9\n    else\n      let next := mark state request.thread\n      if Complete next then\n        \u27e8reset (state.generation + 1), .released,\n          [.arrival request.key request.thread, .completion request.key]\u27e9\n      else \u27e8next, .waiting, [.arrival request.key request.thread]\u27e9\n  else \u27e8state, .rejectedWrongKey, []\u27e9\n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every state reachable from initialization satisfies the invariant that the\ncurrent generation is incomplete: a complete set is immediately released and\nreset by the transition that fills its final missing bit. Arrivals can only grow\nwhile the generation stays the same. Any missing participant prevents completion;\narrivals from an earlier generation cannot fill that gap. A finite sequence\ncontaining each participant once completes a generation and can be repeated for\na second generation. These are existence witnesses, not termination guarantees\nfor every schedule."
+      },
+      "to": {
+        "path": "Ptx/Barrier.lean",
+        "passage": {
+          "quote": "theorem reachable_invariant (config : Config n) (state : State n) (reachable : Reachable config state) :\n    Invariant state :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every state reachable from initialization satisfies the invariant that the\ncurrent generation is incomplete: a complete set is immediately released and\nreset by the transition that fills its final missing bit. Arrivals can only grow\nwhile the generation stays the same. Any missing participant prevents completion;\narrivals from an earlier generation cannot fill that gap. A finite sequence\ncontaining each participant once completes a generation and can be repeated for\na second generation. These are existence witnesses, not termination guarantees\nfor every schedule."
+      },
+      "to": {
+        "path": "Ptx/Barrier.lean",
+        "passage": {
+          "quote": "theorem successive_reuse (config : Config n) (generation : Nat) :\n    \u2203 requests : List (Request n), requests.length = n+n \u2227\n      Runs config (reset generation) requests (reset (generation+2)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An explicit map assigns each thread to a warp, the smaller execution group inside\na CTA. Every reported warp must have an assigned thread. A warp has arrived when\nall its assigned threads have arrived. Under the fixed full-participation,\nno-exit restriction, all threads arriving is equivalent to all such warps\narriving. This proves equivalence of the completion conditions. Connecting the\nindividual arrival bookkeeping to PTX warp arrival remains part of the later\ninstruction-level connection. It does not derive a physical GPU's warp assignment\nor assume a universal warp size."
+      },
+      "to": {
+        "path": "Ptx/Barrier.lean",
+        "passage": {
+          "quote": "theorem complete_iff_all_warps (partition : WarpPartition n w) (state : State n) :\n    Complete state \u2194 \u2200 warp, WarpComplete partition state warp :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Arrival and completion events have different roles and retain the same generation\nkey. Their membership and key properties are proved from the transition that\nemits them. No memory value, visibility relation, shared-memory instruction,\nbarrier parser, dynamic resource selection, early-exit behavior or divergent\nparticipation semantics is implemented here. The later memory account must use\nthese control events and prove its own connection to actual memory accesses.\n"
+      },
+      "to": {
+        "path": "Ptx/Barrier.lean",
+        "passage": {
+          "quote": "theorem completion_event_iff (config : Config n) (state : State n) (request : Request n)\n    (observed : Key) :\n    Event.completion observed \u2208 (step config state request).events \u2194\n      request.key = key config state \u2227 Runnable state request.thread \u2227\n      Complete (mark state request.thread) \u2227 observed = request.key :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Arrival and completion events have different roles and retain the same generation\nkey. Their membership and key properties are proved from the transition that\nemits them. No memory value, visibility relation, shared-memory instruction,\nbarrier parser, dynamic resource selection, early-exit behavior or divergent\nparticipation semantics is implemented here. The later memory account must use\nthese control events and prove its own connection to actual memory accesses.\n"
+      },
+      "to": {
+        "path": "docs/foundations/barrier-control.md",
+        "passage": {
+          "quote": "The generation counter, Boolean arrival set and split event constructors are\nrepresentation choices. The manual does not prescribe these data structures.\nThe independent source review checks their intended correspondence separately\nfrom Lean's proof checking. Memory ordering remains a separate connection: this\nmodule contains no axiom or predicate asserting that a shared-memory read obtained\na writer's value, and no projection from its events to a memory graph is assumed."
+        }
+      }
+    }
+  ]
+}

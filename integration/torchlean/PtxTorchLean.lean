@@ -1,3 +1,4 @@
+import Ptx
 import NN.Proofs.Autograd.Runtime.Link.GraphComposition
 import NN.Proofs.Autograd.Tape.Nodes.Arithmetic
 import NN.Proofs.Autograd.Runtime.Link.BackwardDenseGraph
@@ -103,11 +104,20 @@ theorem exact_tape_success_vjp (s : Shape) (inputs : TensorPack ℝ [s, s, s])
   rw [Algebra.Graph.toAlgebra_toReal]
   exact DGraph.graphFDerivCorrectAtOfCorrect (affineSquare s).hg (flattenCtx inputs)
 
+/-- A narrow joint-library theorem: the unsigned value of the actual modeled
+PTX minimum is the value of a real scalar tensor. This is an embedding identity,
+not a kernel/network correspondence or a floating-point interpretation. -/
+theorem unsigned_min_scalar_embedding (a b : Ptx.Word) :
+    Tensor.item (Tensor.scalar ((Ptx.Scalar.BinOp.eval .minU a b).toNat : ℝ)) =
+      (Nat.min a.toNat b.toNat : ℝ) := by
+  rw [Tensor.item_scalar, Ptx.Scalar.IntegerMinMax.min_toNat]
+
 #print axioms affineSquare
 #print axioms forward_polynomial
 #print axioms checked_vjp
 #print axioms exact_tape_success_vjp
 #print axioms checked_success
 #print axioms checked_success_vjp
+#print axioms unsigned_min_scalar_embedding
 end
 end PtxTorchLean

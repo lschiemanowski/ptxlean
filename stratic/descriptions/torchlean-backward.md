@@ -28,11 +28,13 @@ data. The input shape and the output-weight shape are explicit. It uses actual
 upstream graph constructors and derivative proofs, so that an independently
 recreated toy language cannot satisfy this example.
 
-The upstream revision and its Lean and mathlib dependencies are pinned in an
-isolated integration package until compatibility with the PTX foundation has been
-established. Importing and checking the used upstream theorems, inspecting their
-logical dependencies, and proving the example are separate milestones. A source
-inspection or successful dependency download alone does not establish integration.
+The PTX foundation and integration package use a compatible pinned Lean version.
+The integration imports the actual PTX package together with the pinned upstream
+TorchLean and mathlib packages. A small shared theorem connects the unsigned
+value of the modeled PTX minimum operation to a real scalar tensor; this checks
+that definitions and proofs from both libraries can be used together. It does
+not identify a PTX kernel with a TorchLean network. The generated-backward proofs
+retain their separate exact-real meaning and explicit parameter boundary.
 
 These results concern exact real-valued graph semantics. They do not establish
 floating-point accuracy, correspondence with a concrete PyTorch implementation,

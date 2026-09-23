@@ -9,7 +9,8 @@
   "summary": [
     "Choose one source write for each complete four-byte read and check scope-aware ordering constraints.",
     "Connect fixed-address, constant-store executions to these graphs with explicit memory bounds and distinct thread identities.",
-    "Explain when byte-level validity justifies the single-source representation and when it omits mixed-byte outcomes."
+    "Explain when byte-level validity justifies the single-source representation and when it omits mixed-byte outcomes.",
+    "Preserve existing memory constraints when separately justified collective synchronization adds ordering edges."
   ],
   "realization": "partial",
   "remaining": "The restricted scoped whole-word rules, execution connection, message-passing examples and conditional byte-model equivalence are implemented. General dependent programs and byte-mixing outcomes outside the single-source condition are not covered by this representation.",

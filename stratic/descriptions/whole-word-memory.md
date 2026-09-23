@@ -73,3 +73,13 @@ representation loses no valid byte-source choices within this fragment. The
 proofs also connect it to the original restricted GPU-scoped message-passing
 model. They establish relationships between formal models; they do not remove
 the stated instruction restrictions or prove hardware conformance.
+
+## Additional synchronization order
+
+Collective instructions require ordering beyond release/acquire pairs. An
+extension can add base-order edges justified by a completed collective operation.
+The same memory constraints then apply to the enlarged base relation: same-address
+preservation still happens after building paths, and causality is still not
+arbitrarily closed under chaining. Adding edges does not remove any existing
+validity requirement. Each use must prove where its added edges came from; an
+arbitrary relation supplied by a caller is not a completed PTX semantics.

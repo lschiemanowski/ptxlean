@@ -1,8 +1,8 @@
 # TorchLean integration feasibility audit
 
 Audited 2026-09-23. The initial source inspection was followed by an isolated
-Lean 4.34 integration build described below. The root PTX toolchain was not
-changed. The earlier exploratory project was not used as a design source.
+Lean 4.34 integration build described below. That initial experiment did not change the root PTX toolchain; the subsequent
+joint-package migration is recorded separately below. The earlier exploratory project was not used as a design source.
 
 ## Source and compatibility
 
@@ -12,14 +12,15 @@ The inspected revision is `de3192df4779877ceb65cfe470a4d4ce9d480a5b`, dated
 revision, not a moving branch. A shallow checkout was inspected directly;
 search-engine summaries had older version information and were not used for pins.
 
-| Dependency | Inspected upstream | Current ptxlean baseline |
+| Dependency | Inspected upstream | Initial ptxlean baseline |
 | --- | --- | --- |
 | Lean | `leanprover/lean4:v4.34.0` | `leanprover/lean4:v4.33.0` |
 | mathlib | tag `v4.34.0`; manifest commit `5ed2965256430c3649e86755f9576b54eca72435` | No dependency |
 
 Sources: [toolchain](https://github.com/lean-dojo/TorchLean/blob/de3192df4779877ceb65cfe470a4d4ce9d480a5b/lean-toolchain), [Lake package](https://github.com/lean-dojo/TorchLean/blob/de3192df4779877ceb65cfe470a4d4ce9d480a5b/lakefile.lean#L449),
 [resolved manifest](https://github.com/lean-dojo/TorchLean/blob/de3192df4779877ceb65cfe470a4d4ce9d480a5b/lake-manifest.json). These versions differ. The isolated integration package successfully builds this
-exact upstream revision under Lean 4.34; root PTX compatibility remains untested.
+exact upstream revision under Lean 4.34. At that stage root PTX compatibility
+was untested; the later experiment and joint build are recorded below.
 A joint package must choose and test a common toolchain before changing the main
 project's pin. It could evaluate a ptxlean toolchain migration;
 using an older upstream revision would require a new coverage audit rather than
@@ -125,7 +126,7 @@ connect a concrete model to that graph, or prove the separately supplied PTX cod
 
 The [isolated package](../../integration/torchlean/README.md) now builds against
 the exact revision and transitive manifest above, using Lean 4.34 while the root
-remains on 4.33. It constructs an actual upstream `DGraph` computing a pointwise
+then remained on 4.33. It constructs an actual upstream `DGraph` computing a pointwise
 affine map followed by squaring, with input, weight and bias tensors all variable
 and an arbitrary output seed. This is a diagonal affine example, not a dense
 matrix layer.
@@ -140,12 +141,32 @@ these endpoints contain only `propext`, `Classical.choice` and `Quot.sound`.
 The focused build completed successfully; CUDA and LibTorch were disabled. The
 local dependency/build tree occupied approximately 8.9 GB, and installing Lean
 4.34 added a 2.9 GB toolchain, apart from shared mathlib cache downloads.
-No project-wide toolchain migration or native numerical execution was performed.
-Broader model lowering, combined PTX/TorchLean imports, numerical bounds, and
-separately authored PTX forward/backward implementations remain open obligations.
+No project-wide toolchain migration or native numerical execution was performed
+in that initial experiment.
+At that point broader model lowering, combined PTX/TorchLean imports, numerical
+bounds, and separately authored PTX forward/backward implementations remained
+open obligations. The joint-import obligation is addressed separately below.
 
 The VJP endpoint differentiates the actual graph forward map. The independent
 `forward_polynomial` theorem proves that its selected output has the displayed
 coordinate-polynomial value for every tensor shape, input, weight, bias and
 coordinate. Thus the intended forward computation is connected by proof to the
 graph whose backward pass is certified.
+
+## Joint PTX and TorchLean package
+
+The [toolchain compatibility experiment](toolchain-compatibility.md) was followed
+by a root migration to Lean 4.34 and a joint package build. The integration now
+imports the actual root `Ptx` library through a local Lake dependency, alongside
+the same pinned upstream TorchLean revision and unchanged transitive Git pins.
+The complete root checks passed, as did the combined build and fresh integration
+proof audit. See the [joint receipt](../../integration/torchlean/verification-joint.json)
+for the exact source snapshot and commands.
+
+`unsigned_min_scalar_embedding` proves an equality using the actual PTX minimum
+semantics and TorchLean's real scalar tensor. This is deliberately a small
+joint-library theorem. It neither identifies a kernel with the network nor
+provides a floating-point interpretation. All existing exact graph, forward
+correspondence and backward-success/VJP results continue to check. Broader model
+lowering, numerical bounds and separately supplied PTX network implementations
+remain open.

@@ -34,9 +34,10 @@ Run the core checks with the toolchain installed through Elan:
 ./scripts/check.sh --clean
 ```
 
-The core pins Lean 4.33.0 without external Lean packages. The separate TorchLean
-integration pins Lean 4.34.0 and its upstream dependencies; see its README for
-reproduction and the current compatibility boundary.
+The core and TorchLean integration pin Lean 4.34.0. The core has no external Lean
+packages; the integration depends on the actual core package and pinned upstream
+TorchLean packages. See its README for reproduction and the distinction between
+joint library use and a proved kernel/network correspondence.
 
 The [source ledger](docs/foundations/source-ledger.md) distinguishes checked
 proofs from interpretation of NVIDIA's documented semantics. Neither the current

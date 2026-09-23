@@ -29,6 +29,11 @@ coordinate. It also states the GPU and PTX-version requirements of instructions.
 Permission to access memory and synchronization with another thread are separate
 questions.
 
+Collective execution describes instructions that coordinate a group of threads.
+A block barrier makes arriving threads wait until their peers have arrived, then
+lets them continue with the memory ordering promised by that barrier. Waiting,
+completion, and reuse must follow the actual instructions and participant group.
+
 ## How the formal model represents this
 
 The model combines two kinds of rules. Instruction rules describe a thread's

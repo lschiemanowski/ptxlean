@@ -2,8 +2,8 @@
 
 This separate Lean package uses real upstream TorchLean at the revision pinned in
 `lakefile.toml`; `lake-manifest.json` fixes its transitive dependencies. Its Lean
-4.34 toolchain does not change the root PTX project's Lean 4.33 toolchain. The two
-packages have not yet been linked into one Lean build.
+4.34 toolchain matches the root PTX project. A local path dependency imports the
+actual root `ptxlean` package alongside TorchLean in the same Lean build.
 
 The example computes `(x * weight + bias)^2` independently at each coordinate of
 an arbitrary tensor shape. It is a diagonal affine map followed by squaring, not
@@ -24,6 +24,9 @@ TorchLean composes the existing primitive reverse rules.
 - `checked_success_vjp`: the returned backward values equal the mathematical VJP
   of the selected graph output. The auxiliary `checked_vjp` exposes the general
   upstream success premise; `checked_success_vjp` discharges it.
+- `unsigned_min_scalar_embedding`: a narrow theorem using both libraries. The
+  natural-number value of modeled PTX unsigned minimum embeds into a real scalar
+  tensor. This does not prove any kernel implements the network graph.
 - `exact_tape_success_vjp`: success and the derivative correspondence for the
   lower-level exact tape, including its saved intermediate values.
 
@@ -59,3 +62,11 @@ endpoints. The verified endpoints use only `propext`, `Classical.choice` and
 `Quot.sound`; no `sorryAx` or custom axioms occur in those reports. Logical proofs
 do not certify upstream native/executable replacements. The paths claimed here
 are the proof-visible exact semantics, not compiled numerical execution.
+
+## Verification history
+
+`verification.json` and `proof-audit.txt` preserve the initial isolated TorchLean
+experiment. They identify earlier source hashes and are historical receipts.
+The joint build is recorded separately in `verification-joint.json` and
+`proof-audit-joint.txt`, including the root PTX source snapshot used in that build.
+Neither receipt is a substitute for rerunning checks after changing its inputs.

@@ -1,0 +1,64 @@
+{
+  "id": "extended-memory-order",
+  "parent": {
+    "description": "whole-word-memory",
+    "passage": {
+      "quote": "Collective instructions require ordering beyond release/acquire pairs. An\nextension can add base-order edges justified by a completed collective operation.\nThe same memory constraints then apply to the enlarged base relation: same-address\npreservation still happens after building paths, and causality is still not\narbitrarily closed under chaining. Adding edges does not remove any existing\nvalidity requirement."
+    }
+  },
+  "summary": [
+    "Add separately justified synchronization edges without discarding any original memory constraints.",
+    "Derive source identity before value agreement, retaining the original restricted causality construction."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every valid extended graph is valid in the original model. With no extra edges,\nthe two validity predicates agree. If one set of extra edges includes another,\nvalidity for the larger set implies validity for the smaller set. These results\nshow that an extension adds constraints without silently dropping old ones."
+      },
+      "to": {
+        "path": "Ptx/OrderedMemory.lean",
+        "passage": {
+          "quote": "theorem valid_restrict (g : Graph n) {small large : Fin n → Fin n → Prop}\n    (included : ∀ a b, small a b → large a b) (h : Valid g large) : Valid g small := by\n  exact {\n    sources := h.sources\n    co := h.co\n    base_irrefl := fun a ha => h.base_irrefl a (base_mono g included ha)\n    coherence_cause := fun a b hw hw' hs hc =>\n      h.coherence_cause a b hw hw' hs (cause_mono g included hc)\n    no_future := fun r w hr hw hs hc =>\n      h.no_future r w hr hw hs (cause_mono g included hc)\n    no_stale := fun w r hw hr hs hc =>\n      h.no_stale w r hw hr hs (cause_mono g included hc)\n    sc_per_location := h.sc_per_location\n  }"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A latest-write rule identifies a read's source when the chosen write precedes\nthe read in the extended causality relation and all other compatible writes\nprecede that write in coherence. It obtains the numerical value only after\nidentifying the source. Neither the required output value nor visibility of that\nvalue is an input assumption."
+      },
+      "to": {
+        "path": "Ptx/OrderedMemory.lean",
+        "passage": {
+          "quote": "theorem source_of_latest (g : Graph n) (extra : Fin n → Fin n → Prop)\n    (valid : Valid g extra) (w r : Fin n)\n    (written : g.write w) (readAt : g.read r) (same : g.sameAddress w r)\n    (ordered : cause g extra w r)\n    (latest : ∀ v, g.write v → g.sameAddress v r → v ≠ w → g.coherence v w) :\n    g.source r = w := by\n  by_cases h : g.source r = w\n  · exact h\n  · have compatible := valid.sources.compatible r readAt\n    exact False.elim (valid.no_stale w r written readAt same ordered\n      (latest (g.source r) compatible.1 compatible.2.1 h))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A three-event example distinguishes the new constraint: an initial zero, a\nwrite of one, and a read by another thread. Without cross-thread order, both\nread sources satisfy the original graph rules. Adding a write-to-read order\nedge admits the new value and rejects the initial value. This is an algebraic\ncheck of the extension, not an execution of a barrier instruction."
+      },
+      "to": {
+        "path": "Ptx/OrderedMemoryExamples.lean",
+        "passage": {
+          "quote": "theorem extension_distinguishes :\n    (graph false).Valid ∧ (graph true).Valid ∧\n      ¬Valid (graph false) extra ∧ Valid (graph true) extra :=\n  ⟨unordered_valid false, unordered_valid true, ordered_stale_invalid, ordered_fresh_valid⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A completed-phase order certificate can supply the extra relation: a memory\naccess before a participant's arrival precedes one after a participant's\nresumption in that same phase. The combined rules prove a latest write supplies\na later read. If the original base edges also increase the certificate's event\npositions, the enlarged base relation is acyclic. Event positions alone do not\nestablish the other memory constraints."
+      },
+      "to": {
+        "path": "Ptx/CollectiveMemory.lean",
+        "passage": {
+          "quote": "theorem source_after_phase (valid : Graph.Ordered.Valid g c.cross)\n    (w r : Fin n) (phase : Phase) (tw tr : Participant)\n    (before : c.Before w phase tw) (after : c.After r phase tr)\n    (written : g.write w) (readAt : g.read r) (same : g.sameAddress w r)\n    (latest : ∀ v, g.write v → g.sameAddress v r → v ≠ w → g.coherence v w) :\n    g.source r = w :=\n  Graph.Ordered.source_of_latest g c.cross valid w r written readAt same\n    (cross_cause g c w r phase tw tr before after same) latest"
+        }
+      }
+    }
+  ]
+}

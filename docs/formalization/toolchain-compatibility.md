@@ -3,7 +3,7 @@
 The isolated experiment completed successfully on 2026-09-23. The entire current
 PTX library builds under Lean 4.34 without changing any definition or proof.
 The copied dependency audit reports 353 declarations, all using only the allowed
-standard Lean axioms. The original root toolchain remains Lean 4.33; its source
+standard Lean axioms. During this isolated experiment the root toolchain remained Lean 4.33; its source
 files and build cache were not changed by this experiment.
 
 ## Exact experiment
@@ -96,7 +96,7 @@ Transient artifacts are in `/tmp/ptxlean-lean434-compat-9kdf9vp8` and are not
 required as permanent dependencies. The source manifest above is the durable
 identity of what was tested.
 
-## What this enables and does not establish
+## What the isolated experiment establishes
 
 This removes the source-compatibility obstacle to evaluating a root migration to
 Lean 4.34. It does not itself migrate the root, validate all non-Lean project
@@ -110,3 +110,28 @@ Neither compiler compatibility nor a dependency audit establishes that the PTX
 definitions faithfully represent NVIDIA's semantics, or that a numerical/PTX
 bridge implements the TorchLean graph. Those remain separate proof and review
 obligations.
+
+## Subsequent migration and joint-library check
+
+After the isolated experiment, the root pin was changed to
+`leanprover/lean4:v4.34.0`. No PTX semantic definitions or proofs were changed for
+the migration. The complete `scripts/check.sh` passed before further instruction
+modules were imported: source provenance, coverage inventory, archived worker
+evidence, Python tests, Lean source guard, library build and the 353-declaration
+audit all passed. The same three deprecation warnings remained non-fatal.
+
+The integration then added the actual root package as a local `ptxlean` dependency
+and imported `Ptx` alongside pinned upstream TorchLean. Targeted
+`lake update ptxlean` preserved every previously resolved upstream Git revision.
+The combined `lake build PtxTorchLean` and fresh `lake env lean PtxTorchLean.lean`
+passed. Six existing graph endpoints and the new
+`unsigned_min_scalar_embedding` theorem report only the allowed standard Lean
+axioms. The shared theorem embeds the unsigned value of the actual modeled PTX
+minimum into a real TorchLean scalar. It checks joint elaboration; it is not a
+proof that a PTX kernel implements the neural-network graph.
+
+The separate [joint verification receipt](../../integration/torchlean/verification-joint.json)
+records all tested root and integration source hashes and command outcomes. The
+[initial isolated receipt](../../integration/torchlean/verification.json) and the
+source manifest above remain historical evidence for their original inputs.
+Later changes to either package require new checks.

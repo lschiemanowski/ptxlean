@@ -1,0 +1,256 @@
+{
+  "id": "e325ed0a-1ade-4627-99ad-146ee217f635",
+  "base": "ed9221463d92560cbfddfbe4a9f076aacca6c4d1",
+  "contentTree": "62cf30677d27ef5659d1024af8b006ef19e281ea",
+  "reviewer": "Codex coordinator with independent semantic and proof reviewers",
+  "summary": "Unify Lean toolchains and prove reusable barrier control and memory-order foundations.",
+  "examined": [
+    {
+      "id": "ptx-semantics",
+      "outcome": "revised",
+      "reason": "Introduces collective execution as a separate responsibility; preserves existing permitted-execution and semantic-fidelity boundaries."
+    },
+    {
+      "id": "whole-word-memory",
+      "outcome": "revised",
+      "reason": "Adds a separately justified extra-order layer without changing original graph definitions."
+    },
+    {
+      "id": "torchlean-backward",
+      "outcome": "revised",
+      "reason": "Actual root/PTX and pinned upstream now elaborate together under Lean4.34; scalar embedding is not kernel correspondence."
+    },
+    {
+      "id": "collective-execution",
+      "outcome": "revised",
+      "reason": "New partial responsibility with explicit actual-instruction/shared-memory origin still unfinished."
+    },
+    {
+      "id": "barrier-control",
+      "outcome": "revised",
+      "reason": "New proved protocol with keyed arrivals, reset/reuse and finite schedules; warp result is completion-predicate equivalence only."
+    },
+    {
+      "id": "collective-order",
+      "outcome": "revised",
+      "reason": "New proved structural four-edge projection; actual phase/control origin remains caller obligation."
+    },
+    {
+      "id": "extended-memory-order",
+      "outcome": "revised",
+      "reason": "New conservative order extension and latest-source rules, adapter and fresh/stale distinguishing witnesses."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "Overall PTX/TorchLean goals and Gemma boundary remain unchanged; this milestone supplies foundations rather than declaring full coverage."
+    },
+    {
+      "id": "memory-ordering",
+      "outcome": "unchanged",
+      "reason": "Existing read-source, scoped and bytewise contracts remain valid; added order is explicitly separate."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "Success, mathematicalVJP and suppliedPTX-backward obligations remain distinct."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "Joint imports and scalar embedding do not claim a tensor-layout, numerical or kernel correspondence proof."
+    },
+    {
+      "id": "execution-environment",
+      "outcome": "unchanged",
+      "reason": "No additional shared-memory access or target semantics claimed by the protocol."
+    },
+    {
+      "id": "thread-groups",
+      "outcome": "unchanged",
+      "reason": "Existing CTA/scope identities unchanged; protocol uses a caller-qualified CTA identity."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "Existing instruction semantics and proofs unchanged apart from common toolchain; new collective modules do not extend scalar opcode coverage."
+    },
+    {
+      "id": "publication-rules",
+      "outcome": "unchanged",
+      "reason": "Old graph lemmas unchanged; additional-order counterparts are separate."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Independent reviews and kernel audits preserve existing evidence policy."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "The common audit only adds declarations; original message-passing definitions and statements remain unchanged and pass."
+    },
+    {
+      "id": "orchestration",
+      "outcome": "unchanged",
+      "reason": "No multi-kernel runtime or lifetime guarantee is added; collective control is intra-CTA only."
+    },
+    {
+      "id": "storage-access",
+      "outcome": "unchanged",
+      "reason": "No new actual shared-memory accesses are claimed; existing allocation checker and ownership meanings are unchanged."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "62cf30677d27ef5659d1024af8b006ef19e281ea",
+      "method": "./scripts/check.sh; joint lake build PtxTorchLean and fresh lake env lean PtxTorchLean.lean; stratic validate; git diff --check; independent source/proof reviews; snapshot equality",
+      "outcome": "pass",
+      "environment": "Pinned Lean4.34.0; actual TorchLean de3192df4779877ceb65cfe470a4d4ce9d480a5b; Linux; 62cf30677d27ef5659d1024af8b006ef19e281ea",
+      "evidence": "Full root checks pass: source hashes,451-section inventory,7 extractor tests,37 worker tests,53 archived hashes, Lean source guard/build and415-declaration audit (only standard axioms). Joint build2928jobs and fresh7-endpoint audit pass. Independent control/source review33 proofs; independent memory/order review25 and adapter4 proofs pass. Both snapshots equal. Protocol/certificate are not actual fetched barrier/shared-memory semantics; that remains documented future work.",
+      "tests": [],
+      "id": "59e7280a-5259-4f44-a6ad-285cfe6c6754",
+      "recordedAt": "2026-09-23T19:59:18.826Z"
+    }
+  ],
+  "recordedAt": "2026-09-23T19:59:25.187Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Public imports of five independently reviewed collective/memory modules; no existing import removed."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Adds every public theorem from the five new modules: 62 new declarations, 415 total; exact fresh dependency audit passed."
+    },
+    {
+      "path": "Ptx/Barrier.lean",
+      "reason": "Reviewed complete module definitions and proofs, including helper regions outside selected links; independent review and full kernel checks passed, actual instruction/control origin explicitly not supplied."
+    },
+    {
+      "path": "Ptx/CollectiveMemory.lean",
+      "reason": "Reviewed complete module definitions and proofs, including helper regions outside selected links; independent review and full kernel checks passed, actual instruction/control origin explicitly not supplied."
+    },
+    {
+      "path": "Ptx/CollectiveOrder.lean",
+      "reason": "Reviewed complete module definitions and proofs, including helper regions outside selected links; independent review and full kernel checks passed, actual instruction/control origin explicitly not supplied."
+    },
+    {
+      "path": "Ptx/OrderedMemory.lean",
+      "reason": "Reviewed complete module definitions and proofs, including helper regions outside selected links; independent review and full kernel checks passed, actual instruction/control origin explicitly not supplied."
+    },
+    {
+      "path": "Ptx/OrderedMemoryExamples.lean",
+      "reason": "Reviewed complete module definitions and proofs, including helper regions outside selected links; independent review and full kernel checks passed, actual instruction/control origin explicitly not supplied."
+    },
+    {
+      "path": "README.md",
+      "reason": "Reviewed teaching, audit or compatibility evidence for the corresponding contracts; historical experiment snapshots distinguished from current pin, and missing actual instruction/shared-memory connection explicit."
+    },
+    {
+      "path": "docs/formalization/toolchain-compatibility.md",
+      "reason": "Reviewed teaching, audit or compatibility evidence for the corresponding contracts; historical experiment snapshots distinguished from current pin, and missing actual instruction/shared-memory connection explicit."
+    },
+    {
+      "path": "docs/formalization/torchlean-audit.md",
+      "reason": "Reviewed teaching, audit or compatibility evidence for the corresponding contracts; historical experiment snapshots distinguished from current pin, and missing actual instruction/shared-memory connection explicit."
+    },
+    {
+      "path": "docs/foundations/barrier-control-audit.txt",
+      "reason": "Reviewed teaching, audit or compatibility evidence for the corresponding contracts; historical experiment snapshots distinguished from current pin, and missing actual instruction/shared-memory connection explicit."
+    },
+    {
+      "path": "docs/foundations/barrier-control.md",
+      "reason": "Reviewed teaching, audit or compatibility evidence for the corresponding contracts; historical experiment snapshots distinguished from current pin, and missing actual instruction/shared-memory connection explicit."
+    },
+    {
+      "path": "docs/foundations/collective-memory.md",
+      "reason": "Reviewed teaching, audit or compatibility evidence for the corresponding contracts; historical experiment snapshots distinguished from current pin, and missing actual instruction/shared-memory connection explicit."
+    },
+    {
+      "path": "docs/foundations/collective-order.md",
+      "reason": "Reviewed teaching, audit or compatibility evidence for the corresponding contracts; historical experiment snapshots distinguished from current pin, and missing actual instruction/shared-memory connection explicit."
+    },
+    {
+      "path": "integration/torchlean/PtxTorchLean.lean",
+      "reason": "Actual Ptx import and narrow scalar embedding theorem, with old six graph results preserved; fresh seven-endpoint audit passed, no kernel/network correspondence claimed."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Reviewed teaching, audit or compatibility evidence for the corresponding contracts; historical experiment snapshots distinguished from current pin, and missing actual instruction/shared-memory connection explicit."
+    },
+    {
+      "path": "integration/torchlean/lake-manifest.json",
+      "reason": "Adds only the local root ptxlean dependency; all pinned upstream dependency revisions preserved."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Adds only the local root ptxlean dependency; all pinned upstream dependency revisions preserved."
+    },
+    {
+      "path": "integration/torchlean/proof-audit-joint.txt",
+      "reason": "Preserves exact earlier 353-declaration joint migration snapshot evidence; current expanded 415-declaration tree separately rechecked in this Stratic result."
+    },
+    {
+      "path": "integration/torchlean/verification-joint.json",
+      "reason": "Preserves exact earlier 353-declaration joint migration snapshot evidence; current expanded 415-declaration tree separately rechecked in this Stratic result."
+    },
+    {
+      "path": "lean-toolchain",
+      "reason": "Pinned common Lean4.34 migration supported by isolated compatibility and full root plus actual joint build; no semantic/proof changes required for migration."
+    },
+    {
+      "path": "stratic/descriptions/barrier-control.json",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/barrier-control.md",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/collective-execution.json",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/collective-execution.md",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/collective-order.json",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/collective-order.md",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/extended-memory-order.json",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/extended-memory-order.md",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/ptx-semantics.md",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/torchlean-backward.json",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/torchlean-backward.md",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/whole-word-memory.json",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    },
+    {
+      "path": "stratic/descriptions/whole-word-memory.md",
+      "reason": "Reviewed description/metadata hierarchy, summaries, explicit incomplete integration boundary, and exact links; new structural files need no self-links."
+    }
+  ]
+}

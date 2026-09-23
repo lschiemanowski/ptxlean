@@ -8,10 +8,11 @@
   },
   "summary": [
     "Construct backward computations using actual TorchLean graphs and proved local derivatives.",
-    "Prove exact evaluation success and mathematical weighted-output derivatives separately from floating-point and PTX guarantees."
+    "Prove exact evaluation success and mathematical weighted-output derivatives separately from floating-point and PTX guarantees.",
+    "Use PTX and pinned TorchLean definitions in one checked package while keeping exact tensor embeddings separate from kernel correspondence."
   ],
   "realization": "partial",
-  "remaining": "The isolated Lean 4.34 example checks exact graph and tape success and mathematical VJP correspondence. Joint compatibility with the Lean 4.33 PTX foundation, broader model lowering, numerical bounds and PTX implementation proofs remain open.",
+  "remaining": "The joint Lean 4.34 package checks the exact graph and tape success, forward polynomial correspondence and mathematical VJP. Broader model lowering, numerical bounds and PTX implementation correspondence remain open.",
   "links": [
     {
       "kind": "implementation",
@@ -70,6 +71,18 @@
         "path": "integration/torchlean/PtxTorchLean.lean",
         "passage": {
           "quote": "theorem forward_polynomial (s : Shape) (x w b : Tensor \u211d s) (i : Fin (Spec.Shape.size s)) :\n    tensorToVec (((affineSquare s).toTypedGraph (output s)).forward\n      (.cons x (.cons w (.cons b .nil)))) i =\n    (tensorToVec x i * tensorToVec w i + tensorToVec b i) ^ 2 := by\n  simp [Runtime.Autograd.Torch.TypedGraph.forward,\n    Runtime.Autograd.Torch.TypedGraphWithData.forward, DGraph.toTypedGraph,\n    affineSquare, DGraph.snoc, DGraph.nil, Graph.toAlgebra, Algebra.Graph.toData,\n    Algebra.GraphData.eval, Node.toAlgebra, TapeNodes.square, TapeNodes.add,\n    TapeNodes.mul, Node.ofFn, output, CtxVec.get_flattenCtx, getIdx, TensorPack.snoc,\n    Tensor.castShape, vecOfFun, pow_two,\n    get_3_0, get_3_1, get_4_2, get_4_3, get_5_4, get_6_5]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The PTX foundation and integration package use a compatible pinned Lean version.\nThe integration imports the actual PTX package together with the pinned upstream\nTorchLean and mathlib packages. A small shared theorem connects the unsigned\nvalue of the modeled PTX minimum operation to a real scalar tensor; this checks\nthat definitions and proofs from both libraries can be used together. It does\nnot identify a PTX kernel with a TorchLean network. The generated-backward proofs\nretain their separate exact-real meaning and explicit parameter boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxTorchLean.lean",
+        "passage": {
+          "quote": "theorem unsigned_min_scalar_embedding (a b : Ptx.Word) :\n    Tensor.item (Tensor.scalar ((Ptx.Scalar.BinOp.eval .minU a b).toNat : \u211d)) =\n      (Nat.min a.toNat b.toNat : \u211d) := by\n  rw [Tensor.item_scalar, Ptx.Scalar.IntegerMinMax.min_toNat]"
         }
       }
     }
