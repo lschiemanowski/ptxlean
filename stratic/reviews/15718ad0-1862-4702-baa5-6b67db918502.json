@@ -1,0 +1,143 @@
+{
+  "id": "15718ad0-1862-4702-baa5-6b67db918502",
+  "base": "f514fafdcc52fdec3b981454336da9b495e48c38",
+  "contentTree": "24f20a784316539081f1d7d6eacd94952e57abc6",
+  "reviewer": "Codex coordinator",
+  "summary": "Bound reviewer requests and freeze worker-derived BFI and LOP3 computation contracts.",
+  "examined": [
+    {
+      "id": "model-review",
+      "outcome": "revised",
+      "reason": "Request deadline and failure behavior are tested; computation interfaces and all-input properties are source-derived and preflighted without prescribing a worker computation body. Implementations and reviewer outcomes remain pending."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Request deadline and failure behavior are tested; computation interfaces and all-input properties are source-derived and preflighted without prescribing a worker computation body. Implementations and reviewer outcomes remain pending."
+    },
+    {
+      "id": "bfi32",
+      "outcome": "revised",
+      "reason": "Request deadline and failure behavior are tested; computation interfaces and all-input properties are source-derived and preflighted without prescribing a worker computation body. Implementations and reviewer outcomes remain pending."
+    },
+    {
+      "id": "lop3",
+      "outcome": "revised",
+      "reason": "Request deadline and failure behavior are tested; computation interfaces and all-input properties are source-derived and preflighted without prescribing a worker computation body. Implementations and reviewer outcomes remain pending."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "The existing foundation and acceptance boundary are unchanged. Pending worker tasks do not add accepted forms or hardware claims; exact source and proof review remain separate."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "The existing foundation and acceptance boundary are unchanged. Pending worker tasks do not add accepted forms or hardware claims; exact source and proof review remain separate."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "The existing foundation and acceptance boundary are unchanged. Pending worker tasks do not add accepted forms or hardware claims; exact source and proof review remain separate."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "The existing foundation and acceptance boundary are unchanged. Pending worker tasks do not add accepted forms or hardware claims; exact source and proof review remain separate."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "unchanged",
+      "reason": "The existing foundation and acceptance boundary are unchanged. Pending worker tasks do not add accepted forms or hardware claims; exact source and proof review remain separate."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The existing foundation and acceptance boundary are unchanged. Pending worker tasks do not add accepted forms or hardware claims; exact source and proof review remain separate."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "24f20a784316539081f1d7d6eacd94952e57abc6",
+      "method": "Deadline unit tests; worker regression suite; full reference-fixture preflight with compiling semantic mutations; source and contract review; Stratic validation; whitespace check.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; Linux POSIX main-thread runner; Python standard library; no inference calls yet.",
+      "evidence": "106 worker tests passed, including 16 review tests. Total deadlines interrupt blocked connect and trickling read, restore signal state, and retain failed receipts with unknown cost and no verdict. Both complete fixture drivers and exact dependency audits passed; both compiling wrong definitions were rejected by concrete false assertions. Universal output-bit laws fix behavior without prescribing computation bodies. Preflight hash 5259b3277b2f07b0ee6bc38f58c92c7357766325c4c5f5b0b6102d1ea32cb850. Fixtures excluded from worker checkout. Final snapshot unchanged.",
+      "tests": [],
+      "id": "c3e31cd4-86fd-420e-8040-5568e18bc573",
+      "recordedAt": "2026-09-24T15:18:24.629Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T15:18:40.272Z",
+  "unmapped": [
+    {
+      "path": "formalization/checks/bfi32-concrete-v1.lean",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "formalization/checks/bfi32-v1.lean",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "formalization/checks/lop3-concrete-v1.lean",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "formalization/checks/lop3-v1.lean",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "formalization/contracts/bfi32-v1.md",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "formalization/contracts/derived-v1-protocol.md",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "formalization/contracts/lop3-v1.md",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "stratic/descriptions/bfi32.json",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "stratic/descriptions/bfi32.md",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "stratic/descriptions/lop3.json",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "stratic/descriptions/lop3.md",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "scripts/model_review.py",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.md",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "stratic/descriptions/model-review.json",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "stratic/descriptions/model-review.md",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    },
+    {
+      "path": "tests/test_worker_model_review.py",
+      "reason": "Reviewed deadline behavior and failure receipts, or source-derived interface/property contracts and frozen check drivers. Independent preflight fixtures remain outside worker inputs; no accepted coverage added."
+    }
+  ]
+}

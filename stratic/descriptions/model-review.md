@@ -20,7 +20,11 @@ request parameters. Each invocation is reserved in a durable record before the
 request, and retains its requested and returned model identity, provider when
 reported, exact request and response hashes, timing, token usage and reported
 cost. Missing usage or cost remains unknown. A failed request, truncated answer,
-invalid report or interrupted invocation is not a semantic verdict. There is no
+invalid report or interrupted invocation is not a semantic verdict. A socket inactivity timeout and a separate total wall-clock deadline bound each
+request, including a response that keeps sending small amounts of data. On the
+supported Linux command-line runner, reaching the deadline interrupts the request
+and records a failed attempt without a semantic verdict. It does not establish
+that the provider stopped processing or that billing is zero. There is no
 automatic retry or model substitution. Retrying is a new recorded invocation.
 Credentials are read at execution time and never written into records.
 

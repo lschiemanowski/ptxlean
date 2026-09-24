@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Recorded, read-only OpenRouter semantic review; never proof or integration approval."""
 import argparse
+from contextlib import contextmanager
+import math
+import signal
+import threading
 from datetime import datetime, timezone
 import hashlib
 from html.parser import HTMLParser
@@ -233,7 +237,38 @@ def request_body(context, model, max_tokens=16384):
                 'name':'ptx_semantic_review', 'strict':True, 'schema':schema(context)}}}
 
 
-def run(recipe_path, output, model, root=ROOT, max_tokens=16384, timeout=300, transport=urlopen):
+class ReviewDeadlineExceeded(TimeoutError):
+    """The request exceeded its total wall time; provider billing remains unknown."""
+
+
+def validate_deadline(seconds):
+    if (isinstance(seconds, bool) or not isinstance(seconds, (int, float))
+            or not math.isfinite(seconds) or seconds <= 0):
+        raise ValueError('Total request deadline must be positive and finite')
+    if not hasattr(signal, 'setitimer') or threading.current_thread() is not threading.main_thread():
+        raise ValueError('Total deadline requires a POSIX main-thread runner')
+    if any(signal.getitimer(signal.ITIMER_REAL)):
+        raise ValueError('Cannot replace an existing process alarm')
+
+
+@contextmanager
+def request_deadline(seconds):
+    """Interrupt connect/read even when a peer repeatedly resets socket inactivity."""
+    validate_deadline(seconds)
+    previous = signal.getsignal(signal.SIGALRM)
+    def expired(signum, frame):
+        raise ReviewDeadlineExceeded()
+    signal.signal(signal.SIGALRM, expired)
+    try:
+        signal.setitimer(signal.ITIMER_REAL, seconds)
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, previous)
+
+
+def run(recipe_path, output, model, root=ROOT, max_tokens=16384, timeout=300, transport=urlopen, total_timeout=600):
+    validate_deadline(total_timeout)
     key = os.environ.get('OPENROUTER_API_KEY')
     if not key:
         raise ValueError('OPENROUTER_API_KEY is required; no request sent')
@@ -256,15 +291,17 @@ def run(recipe_path, output, model, root=ROOT, max_tokens=16384, timeout=300, tr
                                ['check_sources.py','coverage_inventory.py','worker_run.py']},
               'runner_sha256':sha(RUNNER_BYTES),
               'reported_model':None, 'provider':None, 'usage':None, 'reported_cost':None,
-              'semantic_acceptance':'not_performed', 'timeout_seconds':timeout}
+              'semantic_acceptance':'not_performed', 'timeout_seconds':timeout,
+              'total_timeout_seconds':total_timeout}
     atomic_json(output/'receipt.json', record)
     start = time.monotonic()
     stage = 'transport'
     try:
         request = Request(ENDPOINT, data=body, headers={
             'Authorization':'Bearer '+key, 'Content-Type':'application/json'})
-        with transport(request, timeout=timeout) as response:
-            raw = response.read()
+        with request_deadline(total_timeout):
+            with transport(request, timeout=timeout) as response:
+                raw = response.read()
         stage = 'response'
         if key.encode() in raw:
             raise ValueError('Response contains credential bytes; content not saved')
@@ -292,7 +329,8 @@ def run(recipe_path, output, model, root=ROOT, max_tokens=16384, timeout=300, tr
     except Exception as error:
         # Error objects can carry request credentials or provider-returned content.
         # Keep only exception type and HTTP status in the durable receipt.
-        record.update(state='failed', failure_stage=stage, error_type=type(error).__name__,
+        record.update(state='failed', failure_stage='deadline' if isinstance(error, ReviewDeadlineExceeded) else stage,
+                      error_type=type(error).__name__,
                       http_status=error.code if isinstance(error, HTTPError) else None)
         raise
     finally:
@@ -327,12 +365,13 @@ def main():
     parser.add_argument('--model', choices=MODELS, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--max-tokens', type=int, default=16384)
-    parser.add_argument('--timeout', type=int, default=300)
+    parser.add_argument('--timeout', type=int, default=300, help='socket inactivity timeout in seconds')
+    parser.add_argument('--total-timeout', type=float, default=600, help='total request deadline in seconds (POSIX main thread)')
     args = parser.parse_args()
     try:
         if args.env_file:
             os.environ['OPENROUTER_API_KEY'] = load_key(args.env_file)
-        record = run(args.recipe, args.output, args.model, args.root, args.max_tokens, args.timeout)
+        record = run(args.recipe, args.output, args.model, args.root, args.max_tokens, args.timeout, total_timeout=args.total_timeout)
         print(json.dumps(record, indent=2))
     except Exception as error:
         # CLI avoids accidentally printing a credential-bearing transport diagnostic.

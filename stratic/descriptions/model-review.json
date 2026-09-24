@@ -10,10 +10,11 @@
     "Review fixed candidates against pinned PTX passages in a separate model invocation, keeping proof checking and coordinator acceptance independent.",
     "Record exact request and response identities, failures, usage and unknown costs without silent retries or model substitution.",
     "Evaluate concrete fault detection and false alarms on blinded cases; retain vendor-bearing requests and responses locally.",
-    "Freeze fresh evaluation cases before requests and keep fixture evidence distinct from actual worker-candidate reviews."
+    "Freeze fresh evaluation cases before requests and keep fixture evidence distinct from actual worker-candidate reviews.",
+    "Bound requests by socket inactivity and total elapsed time; record a deadline failure without inventing a verdict or zero cost."
   ],
   "realization": "partial",
-  "remaining": "Recorded fixed-context OpenRouter review, adjudicated development trials, and an adjudicated frozen six-case fixture suite are implemented. A runner-enforced total wall-time deadline, general reviewer-quality evidence, tool-using repository review and automatic integration remain outside the implemented route.",
+  "remaining": "Recorded fixed-context OpenRouter review, adjudicated development trials, and an adjudicated frozen six-case fixture suite are implemented. The Linux main-thread runner enforces a total request deadline. General reviewer-quality evidence, tool-using repository review and automatic integration remain outside the implemented route.",
   "links": [
     {
       "kind": "implementation",
@@ -60,6 +61,18 @@
         "path": "formalization/review/check_batch_v1.py",
         "passage": {
           "quote": "        assert m.sha(m.encoded(packet)) == case['packet_sha256']"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A socket inactivity timeout and a separate total wall-clock deadline bound each\nrequest, including a response that keeps sending small amounts of data."
+      },
+      "to": {
+        "path": "scripts/model_review.py",
+        "passage": {
+          "quote": "def request_deadline(seconds):"
         }
       }
     }

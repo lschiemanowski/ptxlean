@@ -13,7 +13,11 @@ replacement or assuming its behavior.
 A task package identifies the pinned PTX source passages, instruction forms,
 operand types, options, version and hardware conditions, and permitted files to
 change. It supplies the existing Lean interfaces and the required theorem
-statements. A source-derived obligation lists what a result must preserve,
+statements. A task states whether the coordinator supplied the computation body
+or the worker must derive it from source. In the latter case, independent
+source-derived properties constrain the result without prescribing its
+implementation; checks are frozen before generation. Preparation of those
+properties, reference fixtures and checks remains coordinator work. A source-derived obligation lists what a result must preserve,
 including permitted multiple outcomes and behavior for which the manual gives
 no guarantee. An instruction family is not covered merely because its main
 instruction name appears in a definition.

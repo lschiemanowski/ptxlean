@@ -11,7 +11,8 @@
     "Accept generated definitions only after mechanical proof checks and separate semantic review, preserving all missing and unresolved coverage.",
     "Keep delegated low-cost semantic review independent of generation and evaluate its ability to detect incorrect definitions.",
     "Evaluate the frozen workflow on held-out tasks with complete attempt, cost and reviewer-effort records.",
-    "Validate checking code before dispatch and distinguish checker repairs from worker failures."
+    "Validate checking code before dispatch and distinguish checker repairs from worker failures.",
+    "Distinguish worker-derived computation definitions from coordinator-supplied bodies, and account separately for independent check preparation."
   ],
   "realization": "partial",
   "remaining": "The source-section inventory, recorded fresh/resumed Luna calls, pinned worker provisioning and replay, selected-form provenance and targeted semantic mutation probes are implemented. Reviewed tasks cover selected integer, bitwise and binary32 forms with coordinator-supplied contracts. A three-family batch uses preflighted frozen checkers and preserves first-attempt outcomes separately from earlier repaired trials. A separate fixed-context OpenRouter reviewer route and blinded development cases are implemented. Reliable reviewer-quality evidence, full form coverage, broader capability evidence, held-out evaluation and cost effectiveness remain unfinished.",

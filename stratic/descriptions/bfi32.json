@@ -1,0 +1,16 @@
+{
+  "id": "bfi32",
+  "parent": {
+    "description": "pure-instruction-families",
+    "passage": {
+      "quote": "Family source proofs and text decoders can reuse this\nmechanism without modifying the scalar state or duplicating its transition\nrules."
+    }
+  },
+  "summary": [
+    "Insert low bits of the first source into the second source, starting at the position specified by the low eight bits of the third source, with length specified by the low eight bits of the fourth.",
+    "Preserve guarded state changes and exact typed decoding for ISA 9.4 and SM at least 20."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Source-derived contract and independent preflight are prepared; worker implementation, fresh replay and separate semantic review are pending.",
+  "links": []
+}

@@ -161,3 +161,63 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(fields['anchor']['enum'],['source'])
         self.assertEqual(fields['path']['enum'],['Candidate.lean'])
         self.assertEqual(fields['obligation']['enum'],['meaning'])
+
+    def test_total_deadline_interrupts_trickling_response_without_verdict(self):
+        import signal
+        import time
+        calls = []
+        class Trickle:
+            def __enter__(self): return self
+            def __exit__(self, *args): self.closed = True
+            def read(self):
+                while True: time.sleep(0.005)
+        response = Trickle()
+        previous = signal.getsignal(signal.SIGALRM)
+        def transport(*args, **kwargs):
+            calls.append(1)
+            return response
+        started = time.monotonic()
+        with self.assertRaises(m.ReviewDeadlineExceeded):
+            m.run(self.recipe_path, self.output, m.MODELS[0], self.root,
+                  transport=transport, total_timeout=0.05)
+        self.assertLess(time.monotonic() - started, 3)
+        receipt = json.loads((self.output/'receipt.json').read_text())
+        self.assertEqual(receipt['failure_stage'], 'deadline')
+        self.assertEqual(receipt['state'], 'failed')
+        self.assertEqual(receipt['total_timeout_seconds'], 0.05)
+        self.assertIsNone(receipt['reported_cost'])
+        self.assertNotIn('verdict', receipt)
+        self.assertFalse((self.output/'response.json').exists())
+        self.assertTrue(response.closed)
+        self.assertEqual(calls, [1])
+        self.assertEqual(signal.getsignal(signal.SIGALRM), previous)
+        self.assertEqual(signal.getitimer(signal.ITIMER_REAL), (0, 0))
+
+    def test_total_deadline_also_covers_connection_and_releases_alarm(self):
+        import signal
+        import time
+        def blocked(*args, **kwargs): time.sleep(3)
+        with self.assertRaises(m.ReviewDeadlineExceeded):
+            m.run(self.recipe_path, self.output, m.MODELS[0], self.root,
+                  transport=blocked, total_timeout=0.05)
+        self.assertEqual(signal.getitimer(signal.ITIMER_REAL), (0, 0))
+        self.output = self.output.parent/'after-deadline'
+        self.assertEqual(self.run_fake()['state'], 'completed')
+
+    def test_invalid_deadline_rejected_before_reservation_or_request(self):
+        for invalid in [0, -1, float('inf'), float('nan'), True]:
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                m.run(self.recipe_path, self.output, m.MODELS[0], self.root,
+                      transport=lambda *a, **k: self.fail('request sent'), total_timeout=invalid)
+            self.assertFalse(self.output.exists())
+
+    def test_existing_alarm_is_not_overwritten(self):
+        import signal
+        signal.setitimer(signal.ITIMER_REAL, 30)
+        try:
+            with self.assertRaisesRegex(ValueError, 'existing process alarm'):
+                self.run_fake()
+            self.assertGreater(signal.getitimer(signal.ITIMER_REAL)[0], 20)
+            self.assertFalse(self.output.exists())
+        finally:
+            signal.setitimer(signal.ITIMER_REAL, 0)
