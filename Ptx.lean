@@ -32,3 +32,9 @@ import Ptx.SequentialStorage
 
 import Ptx.Pure32
 import Ptx.Pure32Examples
+
+import Ptx.TraceMemory
+import Ptx.ScalarTraceMemory
+import Ptx.ProjectedPublication
+import Ptx.GraphTransport
+import Ptx.TraceMemoryExamples

@@ -12,15 +12,23 @@ Its validity means that these choices satisfy the represented memory rules.
 Connecting the events to actual instruction execution is a separate part of a
 kernel proof; a valid graph alone does not establish that a program produced it.
 
-The current models cover aligned four-byte values, called words, in global
-memory. Alignment means that each starting address is divisible by four.
-The original restricted language fixes program addresses and stored values.
-Its simplified stores use literal constants internally; legal PTX stores instead
-obtain their data from registers. A separate computed-publication example now
-connects actual input loads, addition and register stores to these memory rules.
-Its inputs cannot be changed by another thread, which prevents circular value
-justification in that example. General programs whose reads determine later
-stores, addresses or branches still need further justification.
+The current concurrency fragments use aligned four-byte values, called words,
+in global memory or in a shared-memory window owned by one cooperative thread
+array (CTA), a group of threads that can coordinate and share storage. Alignment
+means that each starting address is divisible by four. The earliest restricted
+language fixes addresses and stored values; its internal literal stores are a
+simplification, while supported PTX stores obtain data from registers.
+
+The common trace projection connects actual instruction occurrences to memory
+events. It numbers dynamic visits before selecting accesses, so a repeated
+instruction in a loop remains a new occurrence. It retains computed addresses,
+values and ordering qualifiers, and keeps storage identities distinct while
+preserving one thread order across storage spaces. Concrete adapters must prove
+that no actual access disappears and no fabricated access is added. The
+computed-publication example uses that bridge and derives its stored sum from
+input loads and addition. Immutable inputs ground its values. General programs
+whose reads determine later stores, addresses or branches still need further
+justification beyond passing the represented graph constraints.
 
 ## What thread scope contributes
 

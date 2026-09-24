@@ -1,0 +1,91 @@
+{
+  "id": "trace-memory",
+  "parent": {
+    "description": "memory-ordering",
+    "passage": {
+      "quote": "A memory event records one read or write. A candidate memory graph collects\nevents, proposes which writes supply reads, and records required orderings.\nIts validity means that these choices satisfy the represented memory rules.\nConnecting the events to actual instruction execution is a separate part of a\nkernel proof; a valid graph alone does not establish that a program produced it."
+    }
+  },
+  "summary": [
+    "Project complete dynamic memory occurrences while retaining actual trace origin and order, including repeated instruction visits.",
+    "Keep allocation identity and word offsets distinct across storage spaces in a single memory graph.",
+    "Separate structural trace fidelity and necessary graph constraints from actual instruction execution, memory safety and grounded witness construction.",
+    "Recover existing computed publication results by exact label equality and transport graph validity under bijective event numbering and injective address renaming."
+  ],
+  "realization": "partial",
+  "remaining": "Dynamic projection, complete ordered-global scalar adaptation, publication recovery and graph representation transport are implemented. General concurrent instruction adapters and their scope, live-storage, synchronization-origin and grounding proofs remain application obligations; no complete PTX dependent-execution admission rule is claimed.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A projection uses the issuing thread and selects the memory access recorded by\neach occurrence. It retains\nthe original occurrence, its dynamic position, its read or write ordering, its\nvalue, and its storage location. The interface proves both directions: every\nprojected access comes from the trace, and every access identified by the\nprojection appears exactly once at that position. An adapter to an instruction\nmachine must separately prove that its projection identifies exactly the actual\nmemory effects of the fetched instructions. An arbitrary projection function\nalone does not establish that a program ran."
+      },
+      "to": {
+        "path": "Ptx/TraceMemory.lean",
+        "passage": {
+          "quote": "theorem project_member_iff (memory : \u03b1 \u2192 Option (Access k)) (trace : List \u03b1)\n    (p : Projected k \u03b1) : p \u2208 project memory trace \u2194\n    trace[p.position]? = some p.origin \u2227 memory p.origin = some p.access := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A projection uses the issuing thread and selects the memory access recorded by\neach occurrence. It retains\nthe original occurrence, its dynamic position, its read or write ordering, its\nvalue, and its storage location. The interface proves both directions: every\nprojected access comes from the trace, and every access identified by the\nprojection appears exactly once at that position. An adapter to an instruction\nmachine must separately prove that its projection identifies exactly the actual\nmemory effects of the fetched instructions. An arbitrary projection function\nalone does not establish that a program ran."
+      },
+      "to": {
+        "path": "Ptx/ScalarTraceMemory.lean",
+        "passage": {
+          "quote": "theorem run_project_complete (fuel oracle program start)\n    (position : Nat) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atIndex : (run fuel oracle program start).trace[position]? = some occ)\n    (memory : occ.memory = some effect) :\n    \u2203 a, (\u27e8position, occ, a\u27e9 : Projected 1 Scalar.Occurrence) \u2208\n      project (access program) (run fuel oracle program start).trace := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Storage is identified by a catalogue of distinct live allocations. A global\nallocation and a shared allocation owned by a cooperative thread array (CTA)\nare different catalogue entries even when their numeric addresses agree. Shared\nstorage carries the device, grid, cluster and CTA identities, so equal local CTA\nnumbers in different grids cannot accidentally identify the same storage. Each\naccess names one entry and a word offset, the number of four-byte words from its\nstart. The graph address encodes that pair injectively: equal graph addresses\nmean equal entries and equal offsets. Translation from a computed byte address\nmust separately establish alignment, bounds, ownership and a live allocation;\nthe encoding itself grants no permission and resolves no physical aliases."
+      },
+      "to": {
+        "path": "Ptx/TraceMemory.lean",
+        "passage": {
+          "quote": "theorem Location.code_eq_iff (a b : Location k) : a.code = b.code \u2194 a = b :=\n  \u27e8fun h => Location.code_injective h, congrArg Location.code\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Initial writes describe the starting value of each represented word. They precede\nthe concatenated per-thread projections in one event list. Read-source and write-\nordering choices cannot change these event labels. Program order is preserved\nacross storage spaces; accesses to global and shared memory are not split into\nindependent graphs. Initial locations must be unique, and each participating\nthread must appear once when assembling a concrete candidate."
+      },
+      "to": {
+        "path": "Ptx/TraceMemory.lean",
+        "passage": {
+          "quote": "theorem events_unique (initial : List (Initial k)) (threads : List Nat)\n    (trace : Nat \u2192 List \u03b1) (memory : Nat \u2192 \u03b1 \u2192 Option (Access k))\n    (initialUnique : (initial.map Initial.location).Nodup) (threadUnique : threads.Nodup) :\n    ((events initial threads trace memory).map identity).Nodup := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Changing event numbering or injectively renaming storage addresses must preserve\nthe memory rules. Transport proofs provide that guarantee, including read-source\nchoices, write ordering and any separately justified synchronization edges.\nThe ordered global scalar adapter recovers the earlier publication event labels\nexactly, so those existing proofs apply to the common projection."
+      },
+      "to": {
+        "path": "Ptx/GraphTransport.lean",
+        "passage": {
+          "quote": "theorem valid_iff (injective : Function.Injective rename) :\n    (transport g e rename).Valid \u2194 g.Valid := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Changing event numbering or injectively renaming storage addresses must preserve\nthe memory rules. Transport proofs provide that guarantee, including read-source\nchoices, write ordering and any separately justified synchronization edges.\nThe ordered global scalar adapter recovers the earlier publication event labels\nexactly, so those existing proofs apply to the common projection."
+      },
+      "to": {
+        "path": "Ptx/ProjectedPublication.lean",
+        "passage": {
+          "quote": "theorem graph_recover (initial order left right flag payload source co) :\n    graph initial order left right flag payload source co =\n      ComputedPublication.graph initial order left right flag payload source co := by"
+        }
+      }
+    }
+  ]
+}

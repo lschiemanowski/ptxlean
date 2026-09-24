@@ -1,0 +1,54 @@
+'Ptx.TraceMemory.StorageKey' does not depend on any axioms
+'Ptx.TraceMemory.Location' does not depend on any axioms
+'Ptx.TraceMemory.Location.code' does not depend on any axioms
+'Ptx.TraceMemory.Location.code_injective' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.Location.code_eq_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.Catalogue' does not depend on any axioms
+'Ptx.TraceMemory.Catalogue.same_storage' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.Catalogue.different_storage' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.AccessKind' does not depend on any axioms
+'Ptx.TraceMemory.AccessKind.op' does not depend on any axioms
+'Ptx.TraceMemory.Access' does not depend on any axioms
+'Ptx.TraceMemory.Access.effect' does not depend on any axioms
+'Ptx.TraceMemory.Projected' does not depend on any axioms
+'Ptx.TraceMemory.label' does not depend on any axioms
+'Ptx.TraceMemory.project' does not depend on any axioms
+'Ptx.TraceMemory.label_eq_some_iff' depends on axioms: [propext]
+'Ptx.TraceMemory.project_member_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.project_complete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.project_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.project_ordered' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.project_nodup' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.Projected.occurrence' does not depend on any axioms
+'Ptx.TraceMemory.Projected.position_preserved' does not depend on any axioms
+'Ptx.TraceMemory.Projected.value_preserved' does not depend on any axioms
+'Ptx.TraceMemory.Projected.address_preserved' does not depend on any axioms
+'Ptx.TraceMemory.Projected.kind_preserved' does not depend on any axioms
+'Ptx.TraceMemory.Initial' does not depend on any axioms
+'Ptx.TraceMemory.Initial.occurrence' does not depend on any axioms
+'Ptx.TraceMemory.events' does not depend on any axioms
+'Ptx.TraceMemory.graph' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.graph_label' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.po_iff' depends on axioms: [propext]
+'Ptx.TraceMemory.same_address_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.events_member_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.identity' does not depend on any axioms
+'Ptx.TraceMemory.events_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Ordered.access' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.label_recover' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.projection_recover' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Ordered.run_projection' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Ordered.access_origin' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.access_complete' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Ordered.run_access_complete' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Ordered.run_project_complete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.initialWords' depends on axioms: [propext]
+'Ptx.Scalar.ComputedPublication.Projected.events' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.events_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.events_recover' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.graph' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.graph_recover' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.publication' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.successful_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.relaxed_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]

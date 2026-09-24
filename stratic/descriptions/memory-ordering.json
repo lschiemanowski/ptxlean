@@ -9,7 +9,8 @@
   "summary": [
     "Constrain which writes supply read values and how instruction order, scope and synchronization restrict observations.",
     "Relate whole-word and byte-level representations through proved single-source conditions rather than treating them as execution modes.",
-    "Keep access checks, instruction support, general data-dependent execution and unresolved mixed-byte observation semantics explicit."
+    "Keep access checks, instruction support, general data-dependent execution and unresolved mixed-byte observation semantics explicit.",
+    "Connect actual instruction traces to graph events with dynamic occurrence identities and one order across distinct storage spaces."
   ],
   "realization": "partial",
   "remaining": "Restricted whole-word and aligned four-byte observation models, their relationships and examples are implemented. The mixed-source observation interpretation remains unresolved. Different access sizes, additional memory-access mechanisms and general data-dependent concurrent semantics remain outside these fragments.",
@@ -22,7 +23,7 @@
       "to": {
         "path": "Ptx/ByteMemory.lean",
         "passage": {
-          "quote": "structure ByteGraph (n : Nat) where\n  event : Fin n → Occurrence\n  source : Fin n → Fin 4 → Fin n\n  co : Fin n → Fin n → Bool\n  topology : Nat → ThreadLocation\n  scope : Fin n → Scope\n  observationPolicy : ObservationPolicy"
+          "quote": "structure ByteGraph (n : Nat) where\n  event : Fin n \u2192 Occurrence\n  source : Fin n \u2192 Fin 4 \u2192 Fin n\n  co : Fin n \u2192 Fin n \u2192 Bool\n  topology : Nat \u2192 ThreadLocation\n  scope : Fin n \u2192 Scope\n  observationPolicy : ObservationPolicy"
         }
       }
     },
@@ -34,7 +35,7 @@
       "to": {
         "path": "Ptx/ByteMemory.lean",
         "passage": {
-          "quote": "theorem all_in_scope_valid_iff (inScope : g.toScoped.AllInScope) :\n    g.Valid ↔ g.Uniform ∧ g.toScoped.graph.Valid := by\n  constructor\n  · intro valid\n    have uniform := uniform_of_all_in_scope valid inScope\n    exact ⟨uniform,(ScopedGraph.valid_legacy inScope).mp ((projection_valid_iff uniform).mp valid)⟩\n  · rintro ⟨uniform,valid⟩\n    exact (projection_valid_iff uniform).mpr ((ScopedGraph.valid_legacy inScope).mpr valid)"
+          "quote": "theorem all_in_scope_valid_iff (inScope : g.toScoped.AllInScope) :\n    g.Valid \u2194 g.Uniform \u2227 g.toScoped.graph.Valid := by\n  constructor\n  \u00b7 intro valid\n    have uniform := uniform_of_all_in_scope valid inScope\n    exact \u27e8uniform,(ScopedGraph.valid_legacy inScope).mp ((projection_valid_iff uniform).mp valid)\u27e9\n  \u00b7 rintro \u27e8uniform,valid\u27e9\n    exact (projection_valid_iff uniform).mpr ((ScopedGraph.valid_legacy inScope).mpr valid)"
         }
       }
     },
@@ -46,7 +47,7 @@
       "to": {
         "path": "Ptx/ScopedMemory.lean",
         "passage": {
-          "quote": "def morallyStrong (g : ScopedGraph n) (a b : Fin n) : Prop :=\n  ¬g.graph.initial a ∧ ¬g.graph.initial b ∧ g.graph.sameAddress a b ∧\n    (g.graph.po a b ∨ g.graph.po b a ∨ g.mutualScope a b = true)"
+          "quote": "def morallyStrong (g : ScopedGraph n) (a b : Fin n) : Prop :=\n  \u00acg.graph.initial a \u2227 \u00acg.graph.initial b \u2227 g.graph.sameAddress a b \u2227\n    (g.graph.po a b \u2228 g.graph.po b a \u2228 g.mutualScope a b = true)"
         }
       }
     },
@@ -58,7 +59,7 @@
       "to": {
         "path": "Ptx/ScopedMemory.lean",
         "passage": {
-          "quote": "structure Coherent (g : ScopedGraph n) : Prop where\n  typed : ∀ a b, g.graph.coherence a b →\n    g.graph.write a ∧ g.graph.write b ∧ g.graph.sameAddress a b\n  irrefl : ∀ a, ¬g.graph.coherence a a\n  trans : ∀ a b c, g.graph.coherence a b → g.graph.coherence b c → g.graph.coherence a c\n  total : ∀ a b, g.graph.write a → g.graph.write b → g.morallyStrong a b → a ≠ b →\n    g.graph.coherence a b ∨ g.graph.coherence b a\n  initFirst : ∀ a b, g.graph.initial a → g.graph.write b → g.graph.sameAddress a b → a ≠ b →\n    g.graph.coherence a b\n  justified : ∀ a b, g.graph.coherence a b →\n    g.graph.initial a ∨ g.graph.initial b ∨ g.morallyStrong a b ∨ g.cause a b ∨ g.cause b a"
+          "quote": "structure Coherent (g : ScopedGraph n) : Prop where\n  typed : \u2200 a b, g.graph.coherence a b \u2192\n    g.graph.write a \u2227 g.graph.write b \u2227 g.graph.sameAddress a b\n  irrefl : \u2200 a, \u00acg.graph.coherence a a\n  trans : \u2200 a b c, g.graph.coherence a b \u2192 g.graph.coherence b c \u2192 g.graph.coherence a c\n  total : \u2200 a b, g.graph.write a \u2192 g.graph.write b \u2192 g.morallyStrong a b \u2192 a \u2260 b \u2192\n    g.graph.coherence a b \u2228 g.graph.coherence b a\n  initFirst : \u2200 a b, g.graph.initial a \u2192 g.graph.write b \u2192 g.graph.sameAddress a b \u2192 a \u2260 b \u2192\n    g.graph.coherence a b\n  justified : \u2200 a b, g.graph.coherence a b \u2192\n    g.graph.initial a \u2228 g.graph.initial b \u2228 g.morallyStrong a b \u2228 g.cause a b \u2228 g.cause b a"
         }
       }
     },

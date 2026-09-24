@@ -1,0 +1,118 @@
+{
+  "id": "1e93c2df-56f0-4753-ac4c-41a07a2f06f0",
+  "base": "181d7f98e007b5875d0cb9a85269e622125ef269",
+  "contentTree": "4eba0818875af097eb2cd87df6f09d06532256f3",
+  "reviewer": "Codex coordinator with independent source and proof review",
+  "summary": "Connect actual dynamic traces to whole-word memory graphs and recover publication through reusable projection and graph transport.",
+  "examined": [
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Only additional independent audit endpoints were registered; the original message-passing semantics, statements and dependencies are preserved."
+    },
+    {
+      "id": "trace-memory",
+      "outcome": "revised",
+      "reason": "Implemented dynamic-index projection, pertrace and assembled uniqueness, fully qualified storage identity, actual scalar effect completeness, exact publication graph recovery and bidirectional graph transport. Independently reviewed source boundaries and all107 public declarations; examples distinguish repeated PCs and cross-space order."
+    },
+    {
+      "id": "memory-ordering",
+      "outcome": "revised",
+      "reason": "Updated the concrete scope from global-only to existing global/shared fragments and explained actual dynamic trace coupling; original graph axioms and the general dependent-execution limitation remain unchanged."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "The parent already requires actual instruction/memory correspondence and distinguishes correctness, existence and semantic fidelity; no top-level promise changes."
+    },
+    {
+      "id": "thread-groups",
+      "outcome": "unchanged",
+      "reason": "The projection retains the established device/grid/cluster/CTA identity hierarchy and mutual-scope prerequisite; scope never becomes access permission."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "4eba0818875af097eb2cd87df6f09d06532256f3",
+      "method": "Isolated exact selected snapshot: bash scripts/check.sh; stratic validate; independent source and proof reviews; dynamic/cross-space mechanism probes",
+      "outcome": "pass",
+      "environment": "Lean4.34.0 root package; Python standard library; /tmp/ptx-trace-isolated exact selected tree",
+      "evidence": "Full source/provenance/ledger/regression/build checks pass; 73 worker tests pass;795 public dependency endpoints only standard Lean axioms.54 trace/projection/publication declarations separately inventoried and audited;53 transport declarations separately audited. Source and proof reviews retained in docs/foundations. Distinguishing examples check repeated PCs, nonmemory gaps, storage separation and cross-space causality. Stratic validates. Logs /tmp/ptx-trace-check-final.log and /tmp/ptx-trace-validate.json.",
+      "tests": [],
+      "id": "d3fe5b31-ed71-4c7d-a2da-e0b270688d45",
+      "recordedAt": "2026-09-24T07:27:05.592Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T07:27:16.602Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "Ptx/GraphTransport.lean",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "Ptx/ProjectedPublication.lean",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "Ptx/ScalarTraceMemory.lean",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "Ptx/TraceMemory.lean",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "Ptx/TraceMemoryExamples.lean",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "docs/foundations/graph-transport-audit.txt",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "docs/foundations/graph-transport.md",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "docs/foundations/trace-memory-audit.txt",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "docs/foundations/trace-memory-review.md",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "docs/foundations/trace-memory-source-review.md",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "docs/foundations/trace-memory.md",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "stratic/descriptions/trace-memory.json",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "stratic/descriptions/trace-memory.md",
+      "reason": "Reviewed module registration, supporting structural proofs, independent distinguishing examples, source review or exact audit/guide for the trace-memory contract; no additional PTX instruction coverage or general admission claim."
+    },
+    {
+      "path": "stratic/descriptions/memory-ordering.json",
+      "reason": "Reviewed parent description/metadata scope correction for existing global/shared fragments and exact trace bridge; no graph axioms or accepted instruction semantics changed."
+    },
+    {
+      "path": "stratic/descriptions/memory-ordering.md",
+      "reason": "Reviewed parent description/metadata scope correction for existing global/shared fragments and exact trace bridge; no graph axioms or accepted instruction semantics changed."
+    }
+  ]
+}
