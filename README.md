@@ -19,14 +19,22 @@ Current checked foundations include:
 - [Computed-data publication](docs/foundations/computed-publication.md): actual
   loads, addition and register stores connected to release/acquire communication,
   with universal result, restricted execution witnesses and safety proofs.
+- [Reusable dynamic-trace memory projection](docs/foundations/trace-memory.md)
+  retains actual instructions, computed addresses, values and repeated loop
+  occurrences; graph transport preserves the established memory constraints.
 - A [recorded Luna workflow](docs/formalization/worker-runs.md), source-section
   inventory, fresh patch replay and independent semantic checks. Its first
   accepted instruction forms include `min.u32`, `max.u32`, `clz.b32`,
-  `popc.b32`, `add.rn.f32` and `mul.rn.f32`; these are small
+  `popc.b32`, `add.rn.f32`, `mul.rn.f32`, `selp.b32`, `min.s32` and
+  `max.s32`; these are small
   exploratory results, not evidence of full-ISA productivity.
 - [Shared-memory barrier publication](docs/foundations/shared-barrier.md): actual
   `.shared` instructions, waiting and completion, universal results for completed
   schedules, a finite execution witness and a two-warp instance.
+- A [fetched shared-memory integer reduction](docs/foundations/shared-reduction.md):
+  computed addresses, a full barrier and a leader loop, with universal admitted
+  output/final-storage correctness, a grounded complete execution and access
+  safety. A terminating stale-read counterexample is rejected by memory rules.
 - An [actual pinned TorchLean graph](integration/torchlean/README.md) with a
   proved forward formula, automatic backward success and mathematical VJP
   correctness. Numerical accuracy and separately supplied PTX forward/backward

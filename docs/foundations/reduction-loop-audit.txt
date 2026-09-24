@@ -1,0 +1,31 @@
+SharedReductionLoop public dependency audit
+Source SHA256: bce70634731200c8cb37b7e78e21910b158073f7284098d0e96d47a7036e993f
+Command: lake build Ptx.SharedReductionLoop
+Command: lake env lean /tmp/ptx-reduction-loop-audit.lean
+19 public declarations; standard Lean axioms only.
+
+'Ptx.Scalar.SharedReduction.Machine.Loop.remaining' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Loop.progress' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Loop.LaneInvariant' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Loop.Invariant' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Loop.initial' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Loop.step_preserves' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.runWith_preserves' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.reachable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.load_address' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.step_shared_load_address' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.runWith_shared_load_address' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.reachable_shared_load_address' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.TerminalLane' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Loop.TerminalInvariant' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Loop.terminal_initial' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Loop.terminal_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.terminal_runWith' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.terminal_reachable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Loop.halted_leader' depends on axioms: [propext, Classical.choice, Quot.sound]

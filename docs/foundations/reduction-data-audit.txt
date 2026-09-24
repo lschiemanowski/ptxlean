@@ -1,0 +1,31 @@
+Actual reduction data and value provenance dependency audit
+Command: lake env lean /tmp/reduction-data-audit.lean
+Ptx/SharedReductionData.lean SHA256 a66ef55851651d0ed94bf2b2a68b9ccca186658dc6406c555d87e41e82ea5333
+Ptx/SharedReductionValues.lean SHA256 0dbe4f29b30209084f00b253ee348ea75db0f4a879c86cd075b9a9bf80c88b21
+
+'Ptx.Scalar.SharedReduction.Machine.Data.LaneInvariant' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Data.Invariant' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Data.initial' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Data.step_other' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.release_lane_fields' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.step_preserves' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.runWith_preserves' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.reachable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.step_producer_address' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.runWith_producer_address' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.Recorded' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Data.recorded_append' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Data.LaneValueInvariant' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Data.ValueInvariant' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Data.value_initial' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Data.value_extend' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Data.value_step_preserves' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.value_runWith_preserves' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.value_reachable' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.step_shared_store_recorded' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.reachable_shared_store_recorded' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.runWith_shared_store_recorded' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.runWith_shared_store_path' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Data.shared_store_path' depends on axioms: [propext, Quot.sound]

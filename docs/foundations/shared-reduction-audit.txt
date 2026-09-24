@@ -1,0 +1,127 @@
+Four stable modules: SharedReduction, SharedReductionMachine, SharedReductionProgram, SharedReductionTrace.
+All121 explicit public structures/inductives/definitions/abbreviations/theorems audited.
+Command: lake env lean /tmp/shared-reduction-audit.lean
+Build: lake build Ptx.SharedReductionTrace
+Only standard propext, Classical.choice, Quot.sound permitted.
+
+'Ptx.Scalar.SharedReduction.Config' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Seed' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.producerProgram' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.producerStart' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.producer' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.bytePointer' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.producer_correct' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.sharedStore' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.publicationStart' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.publication' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.publication_correct' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.leaderProgram' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.leaderStart' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.leader' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.total' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.leader_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.leader_execution' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.leader_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.producer_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.barrierConfig' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.barrier_round_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Space' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Block' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Block.scope' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Block.memoryForm' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.producerBlock' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.publicationBlock' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.leaderBlock' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Block.project' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.project_origin' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.project_complete' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.halted_unique' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.leader_any_completed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.publishAll' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.publishAll_cons' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.publishAll_length' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.publishAll_lookup' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.publication_all' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.outputProgram' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.outputStart' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.output' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.outputBlock' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.output_correct' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.output_execution' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.output_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.total_publication' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.staged_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.oneWarp' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.twoWarps' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.producer_execution' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.sharedEnvironment' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.sharedAddress' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.shared_access_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.leader_environment_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Block' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Label' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Instruction' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.program' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Lane' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.State' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Event' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Status' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Result' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.setLane' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.barrierConfig' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.barrierRequest' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.scalarStep' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.dispatch' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.step' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Execution' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.runWith' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.run' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.start' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Runs' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.run_sound' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.step_origin' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.setLane_same' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.setLane_other' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.run_append' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.producer_phase' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Ready' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.producerSchedule' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.producer_list' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.producer_round' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.resumed' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.barrierStage' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.barrier_stage_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.barrier_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.barrier_round' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.follower_exit' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.leader_initialize' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.loopNext' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.loop_seven' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.loop_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.loop_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.output_phase' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.leader_phase' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.followers_phase' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.followers' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.fullSchedule' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.full_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Access' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.memoryEvent' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.accesses' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.accesses_append' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.producerAccesses' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.producer_accesses' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.producer_list_accesses' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.loop_seven_accesses' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.loop_zero_accesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.loopAccesses' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.loop_accesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.sync_no_accesses' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.barrier_prefix_accesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.barrier_round_accesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.follower_no_accesses' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.initialize_no_accesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.output_accesses' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.leader_accesses' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.followers_no_accesses' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.full_accesses' depends on axioms: [propext, Classical.choice, Quot.sound]

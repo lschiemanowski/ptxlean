@@ -1,0 +1,40 @@
+Actual reduction accumulation and writeback dependency audit
+Command: lake env lean /tmp/reduction-result-audit.lean
+Ptx/SharedReductionResult.lean SHA256 b792077aac21e72045d84d367df4b75ed03aed06923f234425d2677b25951646
+Ptx/SharedReductionWriteback.lean SHA256 723eaf88f12dc622c19d3e00bfa4bef57098abd5aa6f3cb64b540c0c4355ec2d
+
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.ReadContract' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.readContract_append' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.progress' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.LaneInvariant' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.Invariant' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.initial' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.total_succ' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.observed_value' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.Shape' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.step_preserves' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.step_global_store_sum' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.shape_of_loop' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.runWith_preserves' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.reachable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.runWith_global_store_sum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.ResultProof.global_store_sum' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Writeback.Invariant' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Writeback.initial' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Writeback.step_preserves' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Writeback.runWith_preserves' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Writeback.reachable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Writeback.output_reached' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Writeback.halted_leader' depends on axioms: [propext, Classical.choice, Quot.sound]

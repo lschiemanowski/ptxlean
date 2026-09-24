@@ -1,0 +1,115 @@
+{
+  "id": "shared-reduction",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "Examples range from small kernels that exercise one reusable contract to concrete\nnetwork implementations that combine the contracts. A small kernel makes the\nconnection between instructions, stored values and checked guarantees easier to\nfollow. A network example reaches from its specified computation to the stated\nkernel behavior, giving an end-to-end verification result. Each example identifies\nits computation, inputs, state kept between calls, number-format and approximation\nchoices, and execution assumptions. Network examples also identify their\narchitecture: the arrangement of network operations."
+    }
+  },
+  "summary": [
+    "Execute computed input addresses, shared publication, one full-CTA barrier and an actual leader summation loop.",
+    "For every admitted candidate schedule, prove each output store is the modular sum and leader completion leaves exactly the correct global memory.",
+    "Construct a complete fetched execution with valid read sources, write ordering and no circular value justification.",
+    "Prove every emitted access aligned and in bounds; keep source fidelity, target qualification and hardware limits explicit."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The whole-program runner fetches the producer, shared-store, barrier, leader\nselection, initialization, loop and final-store instructions. Block-qualified\nlabels identify ordinary branch destinations. Cross-block branches are actual\ninstructions; they do not rebind registers. The leader sets its counter,\naccumulator and pointer with actual moves. A finite schedule proves that all\nthreads exit, the global output word contains the modular sum, and scratch\ncontains the published input prefix with its extra words unchanged. Initial\nscratch and output words and all otherwise unused registers remain arbitrary.\nThe exact memory projection of this run contains every producer load/store,\nevery ordered leader load, and its final global store. This constructive result\nis separate from correctness for arbitrary memory-admitted candidate schedules."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMachine.lean",
+        "passage": {
+          "quote": "def program (n : Nat) : Block \u2192 List Instruction\n  | .producer => [\n    .localStep (.plain (.cvt64 0 (.reg 0))),\n    .localStep (.plain (.add64 0 (.reg 0) (.reg 0))),\n    .localStep (.plain (.add64 0 (.reg 0) (.reg 0))),\n    .memory .global (.plain (.load 1 (.reg 0))),\n    .branch .always \u27e8.publish, 0\u27e9]\n  | .publish => [.memory .shared sharedStore, .branch .always \u27e8.barrier,0\u27e9]\n  | .barrier => [.sync 0]\n  | .choose => [\n    .localStep (.plain (.setp .eq 0 (.reg 0) (.imm 0))),\n    .branch (.pred 0 true) \u27e8.initialize,0\u27e9, .exit]\n  | .initialize => [\n    .localStep (.plain (.mov32 0 (.imm (BitVec.ofNat 32 n)))),\n    .localStep (.plain (.mov32 1 (.imm 0))),\n    .localStep (.plain (.mov64 0 (.imm 0))),\n    .branch .always \u27e8.loop,0\u27e9]\n  | .loop => [\n    .localStep (.plain (.setp .eq 0 (.reg 0) (.imm 0))),\n    .localStep \u27e8.pred 0 true, .bra 7\u27e9,\n    .memory .shared (.plain (.load 2 (.reg 0))),\n    .localStep (.plain (.bin32 .add 1 (.reg 1) (.reg 2))),\n    .localStep (.plain (.add64 0 (.reg 0) (.imm 4))),\n    .localStep (.plain (.bin32 .sub 0 (.reg 0) (.imm 1))),\n    .localStep (.plain (.bra 0)),\n    .branch .always \u27e8.output,0\u27e9]\n  | .output => [\n    .memory .global (.plain (.store (.imm (bytePointer n)) (.reg 1))), .exit]\n\nstructure Lane where\n  block : Block\n  scalar : Scalar.State\n  halted : Bool\n\nstructure State (n : Nat) where\n  lanes : Fin n \u2192 Lane\n  global : List Word\n  shared : List Word\n  barrier : Barrier.State n\n\ninductive Event (n : Nat) where\n  | scalar (thread : Fin n) (block : Block) (space : Option Space) (event : Occurrence)\n  | branch (thread : Fin n) (origin destination : Label) (taken : Bool)\n  | barrier (event : Barrier.Event n)\n  | exit (thread : Fin n) (origin : Label)\n  deriving DecidableEq, Repr\n\ninductive Status where\n  | advanced | waiting | released | halted | invalidPC | rejectedBarrier\n  | fault (reason : Fault) | unsupported (name : String)\n  deriving DecidableEq, Repr\n\nstructure Result (n : Nat) where\n  state : State n\n  status : Status\n  events : List (Event n)\n\ndef setLane (s : State n) (thread : Fin n) (lane : Lane) : State n :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The whole-program runner fetches the producer, shared-store, barrier, leader\nselection, initialization, loop and final-store instructions. Block-qualified\nlabels identify ordinary branch destinations. Cross-block branches are actual\ninstructions; they do not rebind registers. The leader sets its counter,\naccumulator and pointer with actual moves. A finite schedule proves that all\nthreads exit, the global output word contains the modular sum, and scratch\ncontains the published input prefix with its extra words unchanged. Initial\nscratch and output words and all otherwise unused registers remain arbitrary.\nThe exact memory projection of this run contains every producer load/store,\nevery ordered leader load, and its final global store. This constructive result\nis separate from correctness for arbitrary memory-admitted candidate schedules."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionProgram.lean",
+        "passage": {
+          "quote": "theorem full_execution (cfg : Config n) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (inputs : n < input.length) (storage : n \u2264 scratch.length) :\n    let final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The whole-program runner fetches the producer, shared-store, barrier, leader\nselection, initialization, loop and final-store instructions. Block-qualified\nlabels identify ordinary branch destinations. Cross-block branches are actual\ninstructions; they do not rebind registers. The leader sets its counter,\naccumulator and pointer with actual moves. A finite schedule proves that all\nthreads exit, the global output word contains the modular sum, and scratch\ncontains the published input prefix with its extra words unchanged. Initial\nscratch and output words and all otherwise unused registers remain arbitrary.\nThe exact memory projection of this run contains every producer load/store,\nevery ordered leader load, and its final global store. This constructive result\nis separate from correctness for arbitrary memory-admitted candidate schedules."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionTrace.lean",
+        "passage": {
+          "quote": "theorem full_accesses (cfg : Config n) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (inputs : n < input.length) (storage : n \u2264 scratch.length) :\n    accesses (run cfg (fullSchedule cfg) (start input scratch seeds)).trace =\n      (List.finRange n).flatMap (producerAccesses input) ++\n      loopAccesses input \u27e80,cfg.nonempty\u27e9 0 n ++\n      [(.global,\u27e80,cfg.nonempty\u27e9,\u27e8.store,bytePointer n,total input n\u27e9)] :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every emitted memory access is aligned to a four-byte word and lies within the\nselected global or shared allocation. This safety statement holds for arbitrary\ncandidate read values and thread schedules: invalid accesses produce a fault\ninstead of a memory event. Each step preserves both allocation lengths, so the\nbounds refer to the allocations supplied at the start. Access safety alone does\nnot establish absence of faults or completion; the constructive execution proof\nseparately establishes successful completion for its stated storage conditions."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionSafety.lean",
+        "passage": {
+          "quote": "theorem run_memory_safe (cfg : Config n) (reads : Nat \u2192 Option Word) (schedule : List (Fin n))\n    (s : State n) (thread : Fin n) (block : Block) (space : Space)\n    (event : Occurrence) (effect : MemoryEffect)\n    (member : .scalar thread block (some space) event \u2208 (runWith cfg reads schedule s).trace)\n    (memory : event.memory = some effect) : Scalar.ValidAddress (arena s space) effect.address := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For any finite thread schedule and candidate read choices satisfying those\ncombined memory constraints, every emitted global store writes the modular sum\nto the separate output slot. If the leader exits, global memory contains exactly\nthat result and every other global word is unchanged. The proof follows the\nactual counter, pointer, loaded value and accumulator through the loop. It does\nnot require a particular schedule or assume a successful output store. A separate\nfinite execution proves that completion is possible and constructs valid read\nsources and write ordering. Its values have no circular justification through\nexecution-order and read-source edges. This witness does not impose that stronger\ncondition on every candidate covered by the correctness theorem."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionCorrectness.lean",
+        "passage": {
+          "quote": "theorem completed_execution (cfg : Config n)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For any finite thread schedule and candidate read choices satisfying those\ncombined memory constraints, every emitted global store writes the modular sum\nto the separate output slot. If the leader exits, global memory contains exactly\nthat result and every other global word is unchanged. The proof follows the\nactual counter, pointer, loaded value and accumulator through the loop. It does\nnot require a particular schedule or assume a successful output store. A separate\nfinite execution proves that completion is possible and constructs valid read\nsources and write ordering. Its values have no circular justification through\nexecution-order and read-source edges. This witness does not impose that stronger\ncondition on every candidate covered by the correctness theorem."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionCorrectness.lean",
+        "passage": {
+          "quote": "theorem candidate_output (cfg : Config n)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For any finite thread schedule and candidate read choices satisfying those\ncombined memory constraints, every emitted global store writes the modular sum\nto the separate output slot. If the leader exits, global memory contains exactly\nthat result and every other global word is unchanged. The proof follows the\nactual counter, pointer, loaded value and accumulator through the loop. It does\nnot require a particular schedule or assume a successful output store. A separate\nfinite execution proves that completion is possible and constructs valid read\nsources and write ordering. Its values have no circular justification through\nexecution-order and read-source edges. This witness does not impose that stronger\ncondition on every candidate covered by the correctness theorem."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionCorrectness.lean",
+        "passage": {
+          "quote": "theorem completed_candidate (cfg : Config n)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For any finite thread schedule and candidate read choices satisfying those\ncombined memory constraints, every emitted global store writes the modular sum\nto the separate output slot. If the leader exits, global memory contains exactly\nthat result and every other global word is unchanged. The proof follows the\nactual counter, pointer, loaded value and accumulator through the loop. It does\nnot require a particular schedule or assume a successful output store. A separate\nfinite execution proves that completion is possible and constructs valid read\nsources and write ordering. Its values have no circular justification through\nexecution-order and read-source edges. This witness does not impose that stronger\ncondition on every candidate covered by the correctness theorem."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionCorrectness.lean",
+        "passage": {
+          "quote": "theorem read_contract (cfg : Config n)"
+        }
+      }
+    }
+  ],
+  "remaining": "The restricted integer reduction has universal admitted-candidate output and final-storage correctness, an actual complete execution with valid grounded memory graph, and emitted-access safety. General PTX admission, hardware execution and floating-point reduction are outside this example."
+}

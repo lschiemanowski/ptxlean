@@ -1,0 +1,78 @@
+{
+  "id": "reduction-control",
+  "parent": {
+    "description": "shared-reduction",
+    "passage": {
+      "quote": "The supported participants are all threads of one CTA. There is one barrier\nresource, one instruction site and one phase, no exits before the barrier, and\nno asynchronous or outside interference. Storage consists of initialized,\naligned whole words with no pointer wrap. The global input and output regions\nare disjoint, and each thread owns one shared output slot. The fragment uses\nexplicit relaxed GPU-scope global accesses, relaxed CTA-scope shared accesses,\nordinary generic proxy, and PTX ISA 9.4 with an sm_70-or-later feature condition.\nParticipant count is positive and fits the explicit counters and storage;\ncorrespondence to a real launch also needs valid target geometry and all actual\nCTA threads represented. Finite execution witnesses do not assert scheduler\nfairness, hardware conformance or complete PTX dependency semantics."
+    }
+  },
+  "summary": [
+    "Keep every recorded barrier arrival tied to a live thread waiting at the actual common instruction site.",
+    "Prove that completion releases only threads already at that barrier, and classify fetched memory versus local instructions.",
+    "Separate target-neutral candidate execution from the PTX 9.4 and sm_70 source qualification."
+  ],
+  "realization": "implemented",
+  "remaining": "Reachable waiting-site invariants, actual release safety, fetched-opcode and memory-effect origin, fixed global-store address and separate target eligibility are proved. Memory visibility, phase-history ordering, full warp refinement and final reduction correctness belong to separate modules.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A waiting thread has already arrived at the reduction's one barrier and cannot\nexecute its later instructions yet. In every state reached from the supplied\nprogram start, a recorded arrival must belong to a live thread still positioned\nat that exact barrier instruction. Repeatedly scheduling that waiting thread\nleaves it waiting without creating another arrival. When the last participant\narrives, every thread is at that same site, so releasing them together to the\ncontinuation does not skip any thread's computation or revive an exited thread.\nThis is a property of actual fetched steps, not an assumption about a schedule."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionControl.lean",
+        "passage": {
+          "quote": "theorem reachable_release (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (nextRead : Option Word) (thread : Fin n)\n    (released : (step cfg nextRead thread\n      (runWith cfg reads schedule (start input scratch seeds)).state).status = .released) :\n    \u2200 other, AtBarrier ((runWith cfg reads schedule (start input scratch seeds)).state.lanes other)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A waiting thread has already arrived at the reduction's one barrier and cannot\nexecute its later instructions yet. In every state reached from the supplied\nprogram start, a recorded arrival must belong to a live thread still positioned\nat that exact barrier instruction. Repeatedly scheduling that waiting thread\nleaves it waiting without creating another arrival. When the last participant\narrives, every thread is at that same site, so releasing them together to the\ncontinuation does not skip any thread's computation or revive an exited thread.\nThis is a property of actual fetched steps, not an assumption about a schedule."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionControl.lean",
+        "passage": {
+          "quote": "theorem waiting_step_unchanged (cfg : Config n) (reads : Option Word)\n    (s : State n) (thread : Fin n) (invariant : Invariant s)\n    (waiting : s.barrier.arrived thread = true) :\n    step cfg reads thread s = \u27e8s,.waiting,[]\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program's instruction classification also matters: local arithmetic and\ncontrol instructions cannot create memory accesses, and instructions labelled\nas memory operations must actually be loads or stores in their stated space.\nThe proof applies to instructions fetched from this fixed program; the more\ngeneral dispatcher is not independently a PTX instruction validator."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionControl.lean",
+        "passage": {
+          "quote": "theorem fetched_classification (block : Block) (pc : Nat) (instruction : Instruction)\n    (fetch : (program n block)[pc]? = some instruction) :\n    match instruction with\n    | .localStep i => memoryKind i.op = none\n    | .memory _ i => (memoryKind i.op).isSome = true\n    | _ => True"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program's instruction classification also matters: local arithmetic and\ncontrol instructions cannot create memory accesses, and instructions labelled\nas memory operations must actually be loads or stores in their stated space.\nThe proof applies to instructions fetched from this fixed program; the more\ngeneral dispatcher is not independently a PTX instruction validator."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionControl.lean",
+        "passage": {
+          "quote": "theorem runWith_memory_origin (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (s : State n) (thread : Fin n) (block : Block)\n    (space : Option Space) (event : Occurrence) (effect : MemoryEffect)\n    (member : .scalar thread block space event \u2208 (runWith cfg reads schedule s).trace)\n    (memory : event.memory = some effect) :\n    \u2203 actualSpace, space = some actualSpace \u2227\n      (program n block)[event.pc]? = some (.memory actualSpace event.instruction) \u2227\n      event.executed = true \u2227 memoryKind event.instruction.op = some effect.kind"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The machine computes target-neutral candidate executions. Interpreting these as\nthe selected PTX source slice requires ISA 9.4 and the `sm_70` numeric feature\nfloor for explicit relaxed memory operations. This target condition does not\nvalidate all architecture spellings or prove correspondence to a GPU launch.\nShared addresses must fit the state space width; the example's no-wrap and\nbounds conditions keep its actual shared offsets below 2^32 even though the\nlocal address-register carrier has 64 bits."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionControl.lean",
+        "passage": {
+          "quote": "theorem forms_eligible (target : Target) (supported : SupportedTarget target)\n    (space : Space) (kind : AccessKind) :\n    memoryEligibility target (form space kind) = .supported"
+        }
+      }
+    }
+  ]
+}

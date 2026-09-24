@@ -1,0 +1,41 @@
+{
+  "id": "reduction-data",
+  "parent": {
+    "description": "shared-reduction",
+    "passage": {
+      "quote": "The example adds a finite set of unsigned 32-bit input words. Addition wraps\nmodulo 2^32, as the selected integer instruction does. Each thread computes its\ninput address, loads one global word and publishes it to its own shared slot.\nAll threads then meet one full-CTA barrier: every thread in the cooperating\nthread array must arrive before the leader reads the shared words. The leader\nuses an actual load-and-add loop with a changing address and repeated program\ncounters, then stores the sum in global memory."
+    }
+  },
+  "summary": [
+    "Derive each producer memory address from the actual lane-to-byte computation under arbitrary candidate schedules.",
+    "Connect each shared-store value to its earlier actual global-load event, keeping memory-source validity separate."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every producer receives its lane number as an initial word register, converts\nthat number to an address register and doubles it twice. Its global load and\nshared store therefore use byte offset four times that lane number. Address\nand register facts must hold for arbitrary finite candidate schedules, including\ncandidate read values, rather than only for the selected existence schedule."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionData.lean",
+        "passage": {
+          "quote": "theorem runWith_producer_address (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (s : State n) (thread : Fin n) (block : Block) (space : Space)\n    (event : Occurrence) (effect : MemoryEffect) (control : Control.Invariant s) (data : Invariant s)\n    (member : .scalar thread block (some space) event \u2208 (runWith cfg reads schedule s).trace)\n    (memory : event.memory = some effect)\n    (producer : (space = .global \u2227 effect.kind = .load) \u2228\n      (space = .shared \u2227 effect.kind = .store)) : effect.address = bytePointer thread.val"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The value written into a lane's shared slot must come from that lane's actual\nearlier global load. Recording the load event establishes this local origin;\nthe combined memory constraints separately establish that the load observed the\ninitialized global word. Neither the initialized value nor the desired reduction\nanswer may be assumed as the local store's input."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionValues.lean",
+        "passage": {
+          "quote": "theorem shared_store_path (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (thread : Fin n) (block : Block) (event : Occurrence) (effect : MemoryEffect)\n    (member : .scalar thread block (some .shared) event \u2208\n      (runWith cfg reads schedule (start input scratch seeds)).trace)\n    (memory : event.memory = some effect) (store : effect.kind = .store) :\n    \u2203 load address, load.memory = some \u27e8.load,address,effect.value\u27e9 \u2227\n      [.scalar thread .producer (some .global) load, .scalar thread block (some .shared) event].Sublist\n        (runWith cfg reads schedule (start input scratch seeds)).trace"
+        }
+      }
+    }
+  ],
+  "remaining": "Computed producer addresses and strict earlier-load value provenance are proved for arbitrary candidate schedules. Memory-source freshness and the leader loop sum are separate responsibilities."
+}

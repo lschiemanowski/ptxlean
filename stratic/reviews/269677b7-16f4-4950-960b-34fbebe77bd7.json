@@ -1,0 +1,310 @@
+{
+  "id": "269677b7-16f4-4950-960b-34fbebe77bd7",
+  "base": "aab1fe1c50a3fcd2336335f547f4604f1d17f6f6",
+  "contentTree": "62f273addde95ff39c67d5fba336f2dbd68cbd4f",
+  "reviewer": "Codex coordinator with independent semantic and proof reviewers",
+  "summary": "Verify a fetched shared-memory integer reduction with universal output and final-storage correctness, grounded execution existence, and memory safety.",
+  "examined": [
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Existing proofs, semantics and linked passages unchanged; guide navigation and dependency audit gain separate reduction entries."
+    },
+    {
+      "id": "reduction-control",
+      "outcome": "revised",
+      "reason": "Actual fetched origin, waiting-site preservation, release participation and separate target eligibility checked; no fabricated barrier completion."
+    },
+    {
+      "id": "reduction-data",
+      "outcome": "revised",
+      "reason": "Producer addresses and strictly earlier global-load provenance derived for arbitrary candidate schedules; freshness is not assumed."
+    },
+    {
+      "id": "reduction-history",
+      "outcome": "revised",
+      "reason": "Actual unique publications, arrivals and completion produce indexed cross-barrier paths; independent final hash and 42 public declarations reviewed."
+    },
+    {
+      "id": "reduction-loop",
+      "outcome": "revised",
+      "reason": "Counter, cursor, leader identity and terminal-position invariants derived from actual instructions; intermediate PC5 state and all 19 public declarations independently reviewed."
+    },
+    {
+      "id": "reduction-result",
+      "outcome": "revised",
+      "reason": "Actual accumulator and persistent output proved; final public composition discharges ReadContract from graph validity; 23 public declarations independently reviewed."
+    },
+    {
+      "id": "shared-reduction-memory",
+      "outcome": "revised",
+      "reason": "Actual combined global/shared graph retains all effects; source forcing, canonical validity and grounding proved without assuming desired observations; all 89 public declarations audited."
+    },
+    {
+      "id": "shared-reduction",
+      "outcome": "revised",
+      "reason": "Complete universal emitted-output and conditional final-storage correctness, actual finite grounded existence, and emitted-access safety. All five public entries and ten distinguishing examples independently reviewed; restrictions and explanatory guide reconciled."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The parent already requires computation, storage, numerical and execution conditions with clearly separated evidence. The new restricted integer example satisfies that contract without changing network coverage or Gemma scope."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "62f273addde95ff39c67d5fba336f2dbd68cbd4f",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; independent fresh source and proof reviews; stratic validate; git diff --check",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 dependency-free root; separately pinned TorchLean/FloatLib/mathlib integration; current complete selected working tree, no excluded edits",
+      "evidence": "Root full suite passed: 73 worker tests, 26 accepted-form ledger tests, coverage/source/evidence guards, Lake build and 1213 exact dependency reports. Joint integration passed 363 exact reports with pinned dependency validation. No proof placeholders or nonstandard axioms. All 351 new public reduction declarations permanently registered; final 5 public wrappers and 10 examples independently checked. Exact source hashes and independent reviews retained under docs/foundations/reduction-*. Root log /tmp/ptx-reduction-final-rootcheck-v2.log; joint log /tmp/ptx-reduction-final-integration.log. Selected snapshot unchanged across final verification. Unused simplifier/variable warnings in internal history/loop proofs remain non-failing diagnostics.",
+      "tests": [],
+      "id": "3c534de7-8df8-4820-9057-a8d087124132",
+      "recordedAt": "2026-09-24T08:23:08.531Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T08:23:47.972Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Root registration of all 20 reduction modules and 351 public definitions/proofs; no changes to existing theorem statements or dependencies."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Root registration of all 20 reduction modules and 351 public definitions/proofs; no changes to existing theorem statements or dependencies."
+    },
+    {
+      "path": "Ptx/SharedReduction.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionControl.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionCorrectness.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionData.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionExamples.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionHistory.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionLoop.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionMachine.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionMemory.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionMemoryCanonical.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionMemoryExistence.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionMemoryOrder.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionMemoryUniversal.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionMemoryWitness.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionProgram.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionResult.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionSafety.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionTrace.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionValues.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "Ptx/SharedReductionWriteback.lean",
+      "reason": "Reviewed complete reduction source, its supporting definitions and proof structure beyond linked theorem passages; all public declarations are permanently audited, examples independently elaborated and checked."
+    },
+    {
+      "path": "README.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/formalization/pure32-independent-review.md",
+      "reason": "Second independent exact-source review of already accepted Luna leaves; no leaf implementation or acceptance contract changes."
+    },
+    {
+      "path": "docs/foundations/guide.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-control-audit.txt",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-control.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-coordinator-review.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-data-audit.txt",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-data.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-entry-audit.txt",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-entry-review.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-history-audit.txt",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-history.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-loop-audit.txt",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-loop-review.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-loop.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-result-audit.txt",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-result-review.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/reduction-result.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/shared-reduction-audit.txt",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/shared-reduction-memory-audit.txt",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/shared-reduction-memory.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/shared-reduction-safety-audit.txt",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/shared-reduction-safety-review.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "docs/foundations/shared-reduction.md",
+      "reason": "Reviewed navigation, readable study material, distinguishing examples or preserved exact-source independent review/audit evidence for the completed reduction; no wider coverage claims."
+    },
+    {
+      "path": "stratic/descriptions/reduction-control.json",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/reduction-control.md",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/reduction-data.json",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/reduction-data.md",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/reduction-history.json",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/reduction-history.md",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/reduction-loop.json",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/reduction-loop.md",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/reduction-result.json",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/reduction-result.md",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/shared-reduction-memory.json",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/shared-reduction-memory.md",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/shared-reduction.json",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    },
+    {
+      "path": "stratic/descriptions/shared-reduction.md",
+      "reason": "Reviewed complete description, parent anchor, summaries, realization and exact implementation links for the finished restricted reduction contract."
+    }
+  ]
+}

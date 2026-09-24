@@ -1,0 +1,66 @@
+SharedReductionHistory public dependency audit
+Source SHA256: 29d608d01f34b119cef60b71da24c367bcaf6b29f6651262f08dd999e2c4734e
+Command: lake build Ptx.SharedReductionHistory
+Command: lake env lean /tmp/ptx-reduction-history-audit.lean
+42 public declarations; standard Lean axioms only.
+
+'Ptx.Scalar.SharedReduction.Machine.History.publicationCredit' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.isPublication' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.publications' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.publications_append' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.credit_bound' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.run_publication_balance' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.publication_count' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.publication_at_most_once' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.phaseCredit' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.isCompletion' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.completions' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.completions_append' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.run_phase_balance' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.completion_count' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.run_event_prefix' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.step_barrier_origin' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.step_arrival_origin' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.arrival_has_store_prefix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.generation_count' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.phaseKey' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.generation_at_barrier' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.barrier_key' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.arrivalCredit' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.History.arrivals' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.arrivals_append' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.run_arrival_balance' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.publication_member' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.completion_member' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.arrival_member' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.History.arrival_path' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.completing_events' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.completion_has_stores_prefix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.completion_path' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.step_shared_load_loop' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.load_has_completed_prefix' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.load_path' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.isPublication_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.publication_progress' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.phase_progress' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.completion_at_most_once' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.run_index_prefix' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.History.load_prefix_at_index' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

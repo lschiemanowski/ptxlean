@@ -1,0 +1,150 @@
+{
+  "id": "shared-reduction-memory",
+  "parent": {
+    "description": "shared-reduction",
+    "passage": {
+      "quote": "The trace-to-memory connection retains the actual dynamic occurrence index,\nfetched instruction, computed byte address and value for each access. A program\ncounter can repeat in the loop, so it cannot identify an occurrence. Global and\nshared words with the same numeric offset have different storage identities.\nCandidate reads start with arbitrary values; memory constraints require a\nmatching source write and restrict how accesses may be ordered. Actual stores,\nbarrier arrivals and completion force every admitted shared read to see its\nproducer's value, which comes from the initialized global input. Freshness is\nproved from these constraints and execution history, rather than assumed."
+    }
+  },
+  "summary": [
+    "Build one combined global/shared graph from the actual reduction trace, preserving dynamic occurrence identity, exact access origin and completeness.",
+    "Derive global-input initialization and shared-read producer sources/values from graph constraints plus actual address, publication-count, barrier-history and value-provenance proofs.",
+    "Construct a canonical valid graph with a separate finite base/read-source grounding rank; keep universal candidate correctness and PTX semantic fidelity distinct."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each access retains its fetched instruction, issuing thread, selected arena,\ncomputed byte address and value. Its position is the index in the complete\nmachine trace, before memory filtering. These positions include other threads'\nsteps and barrier events; restricting their order to one thread preserves that\nthread's execution order. Repeated visits to a loop instruction remain distinct.\nThe graph combines both arenas, so an ordering path can pass through global and\nshared accesses. It never proves each arena in isolation and then discards the\nconnections between them."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemory.lean",
+        "passage": {
+          "quote": "theorem spaces_distinct (a b : Scalar.Address) :\n    (location .global a).code \u2260 (location .shared b).code"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each access retains its fetched instruction, issuing thread, selected arena,\ncomputed byte address and value. Its position is the index in the complete\nmachine trace, before memory filtering. These positions include other threads'\nsteps and barrier events; restricting their order to one thread preserves that\nthread's execution order. Repeated visits to a loop instruction remain distinct.\nThe graph combines both arenas, so an ordering path can pass through global and\nshared accesses. It never proves each arena in isolation and then discards the\nconnections between them."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemory.lean",
+        "passage": {
+          "quote": "theorem run_projection_complete (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (s : State n) (position : Nat)\n    (thread : Fin n) (block : Machine.Block) (space : Option Space)\n    (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atIndex : (runWith cfg reads schedule s).trace[position]? = some (.scalar thread block space occ))\n    (memory : occ.memory = some effect) :\n    \u2203 actualSpace, space = some actualSpace \u2227\n      (\u27e8position,.scalar thread block space occ,ofEffect actualSpace effect\u27e9 : Projected 2 (Event n))\n        \u2208 projection thread.val (runWith cfg reads schedule s).trace"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each access retains its fetched instruction, issuing thread, selected arena,\ncomputed byte address and value. Its position is the index in the complete\nmachine trace, before memory filtering. These positions include other threads'\nsteps and barrier events; restricting their order to one thread preserves that\nthread's execution order. Repeated visits to a loop instruction remain distinct.\nThe graph combines both arenas, so an ordering path can pass through global and\nshared accesses. It never proves each arena in isolation and then discards the\nconnections between them."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemory.lean",
+        "passage": {
+          "quote": "theorem labels_unique (global shared : List Word) (trace : List (Event n)) :\n    ((labels global shared trace).map identity).Nodup"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Read-source and write-order choices are parameters of this graph. They cannot\nchange the already executed trace. Initialization supplies the arbitrary fixed\ninitial words; it does not promise zero-filled storage. Source compatibility\nrequires every read to obtain its value from a write to the same represented\nword. The reduction must derive its global input reads from initialization and\nits shared reads from the corresponding producer stores, using proved facts\nabout actual execution and the completed barrier. Desired results, fresh shared\nreads and unique producer stores are not supplied as unchecked premises."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemory.lean",
+        "passage": {
+          "quote": "theorem run_global_input_read (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (s : State n) (source co)\n    (r : Fin (runLabels cfg reads schedule s).length)\n    (sources : (runGraph cfg reads schedule s source co).Sources)\n    (read : (runGraph cfg reads schedule s source co).read r)\n    (word : Nat) (input : word < n)\n    (address : ((runGraph cfg reads schedule s source co).event r).effect.address =\n      (\u27e80,word\u27e9 : Location 2).code) :\n    let g"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Cross-barrier order is justified by actual same-key arrival and completion\nevents in the trace. The earlier access must precede its own thread\u2019s arrival,\nand the later access must follow completion after its own thread arrived.\nOrdering is not inferred from a shared address or from a read-source choice."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemoryOrder.lean",
+        "passage": {
+          "quote": "theorem barrier_excludes_initial_source (global shared : List Word) (trace : List (Event n))\n    (source co) (w r : Fin (labels global shared trace).length)\n    (valid : Graph.Ordered.Valid (graph global shared trace source co)\n      (extra global shared trace source co))\n    (write : (graph global shared trace source co).write w)\n    (read : (graph global shared trace source co).read r)\n    (same : (graph global shared trace source co).sameAddress w r)\n    (order : extra global shared trace source co w r) :\n    \u00ac(graph global shared trace source co).initial ((graph global shared trace source co).source r)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Access-origin and completeness proofs ensure that no actual memory effect is\ninvented, dropped or duplicated. Byte alignment and storage bounds are separate\nexecution-safety obligations; dividing an address by four alone does not prove\nthem. A chronological witness orders writes by a finite rank and proves that\nevery read uses a matching preceding write with no later preceding competitor.\nThis is a sufficient construction for a selected execution, not a restriction\non the universal candidate theorem. A constructive completed execution additionally needs compatible read\nsources, write ordering and a finite argument excluding circular justification\nof computed values. These obligations remain distinct from the universal\ncorrectness theorem and from whether the model faithfully represents PTX."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemoryCanonical.lean",
+        "passage": {
+          "quote": "theorem canonical_accesses_ordered (cfg : Config n) (input scratch : List Word)\n    (seeds : Fin n \u2192 Seed) (inputs : n < input.length) (storage : n \u2264 scratch.length) :\n    (accesses (canonicalTrace cfg input scratch seeds)).Pairwise\n      (fun a b => accessRank n a < accessRank n b)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Access-origin and completeness proofs ensure that no actual memory effect is\ninvented, dropped or duplicated. Byte alignment and storage bounds are separate\nexecution-safety obligations; dividing an address by four alone does not prove\nthem. A chronological witness orders writes by a finite rank and proves that\nevery read uses a matching preceding write with no later preceding competitor.\nThis is a sufficient construction for a selected execution, not a restriction\non the universal candidate theorem. A constructive completed execution additionally needs compatible read\nsources, write ordering and a finite argument excluding circular justification\nof computed values. These obligations remain distinct from the universal\ncorrectness theorem and from whether the model faithfully represents PTX."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemoryExistence.lean",
+        "passage": {
+          "quote": "theorem canonical_valid_exists (cfg : Config n) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (inputs : n < input.length) (storage : n \u2264 scratch.length) :\n    \u2203 source co,\n      let g"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Read-source and write-order choices are parameters of this graph. They cannot\nchange the already executed trace. Initialization supplies the arbitrary fixed\ninitial words; it does not promise zero-filled storage. Source compatibility\nrequires every read to obtain its value from a write to the same represented\nword. The reduction must derive its global input reads from initialization and\nits shared reads from the corresponding producer stores, using proved facts\nabout actual execution and the completed barrier. Desired results, fresh shared\nreads and unique producer stores are not supplied as unchecked premises."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemoryUniversal.lean",
+        "passage": {
+          "quote": "theorem run_shared_write_unique (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (source co) (a b : Fin (runLabels cfg reads schedule (start input scratch seeds)).length)\n    (wa : (runGraph cfg reads schedule (start input scratch seeds) source co).write a)\n    (wb : (runGraph cfg reads schedule (start input scratch seeds) source co).write b)\n    (na : \u00ac(runGraph cfg reads schedule (start input scratch seeds) source co).initial a)\n    (nb : \u00ac(runGraph cfg reads schedule (start input scratch seeds) source co).initial b)\n    (i : Nat) (inside : i < n)\n    (aa : ((runGraph cfg reads schedule (start input scratch seeds) source co).event a).effect.address =\n      (\u27e81,i\u27e9 : TraceMemory.Location 2).code)\n    (ab : ((runGraph cfg reads schedule (start input scratch seeds) source co).event b).effect.address =\n      (\u27e81,i\u27e9 : TraceMemory.Location 2).code) : a = b"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Cross-barrier order is justified by actual same-key arrival and completion\nevents in the trace. The earlier access must precede its own thread\u2019s arrival,\nand the later access must follow completion after its own thread arrived.\nOrdering is not inferred from a shared address or from a read-source choice."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemoryUniversal.lean",
+        "passage": {
+          "quote": "theorem run_shared_store_before (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (thread writer : Fin n) (block : Machine.Block) (occ : Scalar.Occurrence)\n    (effect : MemoryEffect) (position : Nat)\n    (atIndex : (runWith cfg reads schedule (start input scratch seeds)).trace[position]? =\n      some (.scalar thread block (some .shared) occ))\n    (memory : occ.memory = some effect) (load : effect.kind = .load) :\n    \u2203 (storePosition : Nat), \u2203 (storeBlock : Machine.Block), \u2203 (storeOcc : Scalar.Occurrence), \u2203 (stored : MemoryEffect),\n      (runWith cfg reads schedule (start input scratch seeds)).trace[storePosition]? =\n        some (.scalar writer storeBlock (some .shared) storeOcc) \u2227\n      storeOcc.memory = some stored \u2227 stored.kind = .store \u2227\n      barrierOrder (runWith cfg reads schedule (start input scratch seeds)).trace\n        \u27e8some writer.val,storePosition,(ofEffect .shared stored).effect\u27e9\n        \u27e8some thread.val,position,(ofEffect .shared effect).effect\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Read-source and write-order choices are parameters of this graph. They cannot\nchange the already executed trace. Initialization supplies the arbitrary fixed\ninitial words; it does not promise zero-filled storage. Source compatibility\nrequires every read to obtain its value from a write to the same represented\nword. The reduction must derive its global input reads from initialization and\nits shared reads from the corresponding producer stores, using proved facts\nabout actual execution and the completed barrier. Desired results, fresh shared\nreads and unique producer stores are not supplied as unchecked premises."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemoryUniversal.lean",
+        "passage": {
+          "quote": "theorem run_shared_load_value (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (position : Nat) (thread : Fin n) (block : Machine.Block)\n    (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atIndex : (runWith cfg reads schedule (start input scratch seeds)).trace[position]? =\n      some (.scalar thread block (some .shared) occ))\n    (memory : occ.memory = some effect) (load : effect.kind = .load)\n    (i : Nat) (inside : i < n) (address : effect.address = bytePointer i)\n    (source co)\n    (valid : Graph.Ordered.Valid (runGraph cfg reads schedule (start input scratch seeds) source co)\n      (extra input scratch (runWith cfg reads schedule (start input scratch seeds)).trace source co)) :\n    i < input.length \u2227 effect.value = input[i]!"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Read-source and write-order choices are parameters of this graph. They cannot\nchange the already executed trace. Initialization supplies the arbitrary fixed\ninitial words; it does not promise zero-filled storage. Source compatibility\nrequires every read to obtain its value from a write to the same represented\nword. The reduction must derive its global input reads from initialization and\nits shared reads from the corresponding producer stores, using proved facts\nabout actual execution and the completed barrier. Desired results, fresh shared\nreads and unique producer stores are not supplied as unchecked premises."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionMemoryUniversal.lean",
+        "passage": {
+          "quote": "theorem run_shared_load_member_value (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (thread : Fin n) (block : Machine.Block) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (member : .scalar thread block (some .shared) occ \u2208\n      (runWith cfg reads schedule (start input scratch seeds)).trace)\n    (memory : occ.memory = some effect) (load : effect.kind = .load)\n    (i : Nat) (inside : i < n) (address : effect.address = bytePointer i)\n    (source co)\n    (valid : Graph.Ordered.Valid (runGraph cfg reads schedule (start input scratch seeds) source co)\n      (extra input scratch (runWith cfg reads schedule (start input scratch seeds)).trace source co)) :\n    effect.value = input[i]!"
+        }
+      }
+    }
+  ],
+  "remaining": "The specified isolated aligned-word reduction memory connection is implemented, including arbitrary actual-candidate input/shared-read value forcing and a canonical instantiated Ordered.Valid/base-RF grounding witness. Scope/ownership/target correspondence, general PTX dependency completeness and hardware conformance remain separate obligations; final arithmetic/output and safety proofs compose outside this child."
+}

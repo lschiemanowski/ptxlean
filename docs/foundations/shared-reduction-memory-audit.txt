@@ -1,0 +1,166 @@
+89 explicit public declarations (68 theorems) across SharedReductionMemory, Order, Witness, Canonical, Existence and Universal. Every source freshly elaborated warning-free. Fresh #print axioms checked by worker_replay.audit_dependencies for exact names/count and only propext, Classical.choice, Quot.sound. Source forbidden-token scan passed.
+
+{
+  "Ptx/SharedReductionMemory.lean": "b2cc1fd5a1eb8fc6a751da71c150f2bee9f762e1ba784b05c624668829ef5b89",
+  "Ptx/SharedReductionMemoryOrder.lean": "3b5dd69d3d8dd6e9d2451b3b76f219e736b9a487add31262ca72e9bfb7a1faf1",
+  "Ptx/SharedReductionMemoryWitness.lean": "7b0708d8575477f21e3785983fcf38edf0fb83ee0941c75c677cd2f5871056aa",
+  "Ptx/SharedReductionMemoryCanonical.lean": "2ac0bcc5a613bd6268fd3f32f592f56b6e174e3473cccb62cc69c287ee8d3b52",
+  "Ptx/SharedReductionMemoryExistence.lean": "d22df3cae930f1e488faa8bcf87f0804e7f10ea411755d79aea5f22eab594a86",
+  "Ptx/SharedReductionMemoryUniversal.lean": "a6c712eb5f9cd220374649a065ee98a62de116b9ebfdbc070c63886d500783ad"
+}
+
+'Ptx.Scalar.SharedReduction.Machine.Memory.slot' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.location' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.catalogue' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.spaces_distinct' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.byte_recover' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.kindMatches' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.ofEffect' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.access' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.access_origin' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.access_complete' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.access_fields' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.projection' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.projection_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.projection_complete' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.projection_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.projection_ordered' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.initial' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.labels' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.graph' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.labels_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.initial_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.labels_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.initial_global' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.initial_shared' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.program_write_origin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.source_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.kindMatches_iff' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_access_complete' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_projection_complete' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.program_global_write_address' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.global_input_read' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.runLabels' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.runGraph' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_global_input_read' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.barrierOrder' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.extra' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.barrier_order_increases' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.barrier_order_noninitial' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.barrier_order_acyclic' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.barrier_base' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.barrier_cause' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.barrier_excludes_initial_source' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.barrier_unique_source' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.SerialCertificate' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Memory.SerialCertificate.valid' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.grounding' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.SerialCertificate.grounded' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonicalTrace' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.accessRank' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Memory.bytePointer_word' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_accesses_ordered' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_access_iff_raw' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_rank_increases' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.effectRank' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Memory.effect_rank_recover' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_program_origin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_program_rank' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_memory_classification' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_access_exists' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.rankBase' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Memory.eventRank' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Memory.initial_rank_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.initial_event_origin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.graph_identity_injective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_position_injective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_rank_injective' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.graph_initial_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.initial_index' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.initial_global_member' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_write' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_read' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.ofEffect_pointer' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_global_initial' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_shared_latest' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_source_exists' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_base_before' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_initial_before' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.canonical_valid_exists' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.count_at_most_one_position' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.sublist_positions' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_graph_complete' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_global_load_value' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.triple_earlier_positions' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_shared_write_slot' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_shared_write_unique' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_shared_store_before' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_shared_source' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_shared_load_value' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Memory.run_shared_load_member_value' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

@@ -1,0 +1,52 @@
+{
+  "id": "reduction-result",
+  "parent": {
+    "description": "shared-reduction",
+    "passage": {
+      "quote": "The example adds a finite set of unsigned 32-bit input words. Addition wraps\nmodulo 2^32, as the selected integer instruction does. Each thread computes its\ninput address, loads one global word and publishes it to its own shared slot.\nAll threads then meet one full-CTA barrier: every thread in the cooperating\nthread array must arrive before the leader reads the shared words. The leader\nuses an actual load-and-add loop with a changing address and repeated program\ncounters, then stores the sum in global memory."
+    }
+  },
+  "summary": [
+    "Connect actual leader accumulation and output to the modular input sum under the memory graph\u2019s source-forced reads."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The leader starts its counter, accumulator and shared pointer by executing the\nprogram's move instructions. Its loop then loads successive shared words and\nadds each word to the accumulator with unsigned 32-bit wraparound. A partial\nexecution has accumulated a precise prefix of the inputs, taking account of\nwhether its current iteration has already executed the add or the decrement.\nThe global output store uses that actual accumulator register."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionResult.lean",
+        "passage": {
+          "quote": "theorem global_store_sum (cfg : Config n) (reads : Nat \u2192 Option Word) (schedule : List (Fin n))\n    (input scratch : List Word) (seeds : Fin n \u2192 Seed) (extent : n \u2264 input.length)\n    (contract : ReadContract n input (runWith cfg reads schedule (start input scratch seeds)).trace)\n    (thread : Fin n) (block : Block) (event : Occurrence) (effect : MemoryEffect)\n    (member : .scalar thread block (some .global) event \u2208\n      (runWith cfg reads schedule (start input scratch seeds)).trace)\n    (memory : event.memory = some effect) (store : effect.kind = .store) :\n    effect.value = total input n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The arithmetic argument needs a precise memory obligation: every actual shared\nload at an input slot must observe that input word. This is a condition on emitted\nmemory events, not an assumed sum or final register. The combined candidate graph\nmust discharge it from source selection, publication order, and the actual\nproducer load-to-store value connection. A memory-validity proof and an arithmetic\nloop proof remain separate, and their final composition must not retain this\nread-value condition as an unexplained assumption."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionResult.lean",
+        "passage": {
+          "quote": "theorem readContract_append (n : Nat) (input : List Word) (left right : List (Event n)) :\n    ReadContract n input (left ++ right) \u2194 ReadContract n input left \u2227 ReadContract n input right"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The result applies to arbitrary finite schedules and candidate observations.\nStopping early need not produce an output. Any actual output store must contain\nthe full modular sum. When the leader finishes, the global allocation contains\nthat sum in its output slot and retains every other word. A supplied complete\nschedule separately establishes execution existence. Pointer bounds come from\nthe fetched initialization, loop counter and cursor updates; extra allocated\nscratch words are not a reason to permit additional iterations."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionWriteback.lean",
+        "passage": {
+          "quote": "theorem halted_leader (cfg : Config n) (reads : Nat \u2192 Option Word) (schedule : List (Fin n))\n    (input scratch : List Word) (seeds : Fin n \u2192 Seed) (extent : n < input.length)\n    (contract : ResultProof.ReadContract n input\n      (runWith cfg reads schedule (start input scratch seeds)).trace)\n    (leader : Fin n) (zero : leader.val = 0)\n    (halted : ((runWith cfg reads schedule (start input scratch seeds)).state.lanes leader).halted = true) :\n    (runWith cfg reads schedule (start input scratch seeds)).state.global = input.set n (total input n)"
+        }
+      }
+    }
+  ],
+  "remaining": "Actual loop arithmetic and persistent writeback are proved for arbitrary candidate traces under the named emitted-read contract. SharedReductionCorrectness discharges that contract from the combined graph, while whole-program existence and access safety remain separate public results."
+}

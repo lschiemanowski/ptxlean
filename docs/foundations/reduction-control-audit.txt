@@ -1,0 +1,27 @@
+SharedReductionControl public dependency audit
+Source SHA256: 0893017e5f89e6b013fa9f0a6603213e13edd0b9a8cdf9ac92892550cfa9bef4
+Command: lake build Ptx.SharedReductionControl
+Command: lake env lean /tmp/ptx-reduction-control-audit.lean
+21 public declarations; no errors; only propext and Quot.sound.
+
+'Ptx.Scalar.SharedReduction.Machine.Control.AtBarrier' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Control.Invariant' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Control.initial' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.fetch_sync' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Control.waiting_step_unchanged' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.step_preserves' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.runWith_preserves' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.release_all_at_barrier' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.reachable_release' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.memoryKind' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Control.fetched_classification' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Control.SupportedTarget' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Control.form' does not depend on any axioms
+'Ptx.Scalar.SharedReduction.Machine.Control.forms_eligible' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.eval_effect_origin' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.scalar_effect_origin' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.step_memory_origin' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.runWith_memory_origin' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.fetched_global_store' depends on axioms: [propext]
+'Ptx.Scalar.SharedReduction.Machine.Control.step_global_store_address' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedReduction.Machine.Control.runWith_global_store_address' depends on axioms: [propext, Quot.sound]

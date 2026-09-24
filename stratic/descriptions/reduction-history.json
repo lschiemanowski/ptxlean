@@ -1,0 +1,90 @@
+{
+  "id": "reduction-history",
+  "parent": {
+    "description": "reduction-control",
+    "passage": {
+      "quote": "A waiting thread has already arrived at the reduction's one barrier and cannot\nexecute its later instructions yet. In every state reached from the supplied\nprogram start, a recorded arrival must belong to a live thread still positioned\nat that exact barrier instruction. Repeatedly scheduling that waiting thread\nleaves it waiting without creating another arrival. When the last participant\narrives, every thread is at that same site, so releasing them together to the\ncontinuation does not skip any thread's computation or revive an exited thread.\nThis is a property of actual fetched steps, not an assumption about a schedule."
+    }
+  },
+  "summary": [
+    "Tie each barrier arrival to its thread\u2019s unique earlier shared publication in the actual trace.",
+    "Require actual completion before leader shared loads, without assuming fresh values or the final sum.",
+    "Keep temporal history separate from address/value provenance and memory-graph source constraints."
+  ],
+  "realization": "implemented",
+  "remaining": "Publication uniqueness, actual arrival/completion accounting, exact common phase key, monotone publication/continuation progress and ordered writer-store/arrival/completion paths before exact indexed shared loads are proved for arbitrary candidate schedules. Address/value provenance, memory source forcing and final output correctness are separate obligations.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each thread publishes to shared memory at most once before reaching the common\nbarrier. A thread's actual arrival is preceded by its own actual shared store;\nbarrier completion is preceded by every participant's store and arrival. Every\nlater leader shared load follows that actual completion. These are statements\nabout the emitted execution trace, including arbitrary scheduling and candidate\nread values, not assumptions that reads are fresh or that the sum is correct."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionHistory.lean",
+        "passage": {
+          "quote": "theorem load_prefix_at_index (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (thread : Fin n) (block : Block) (event : Occurrence) (effect : MemoryEffect) (position : Nat)\n    (atIndex : (runWith cfg reads schedule (start input scratch seeds)).trace[position]? =\n      some (.scalar thread block (some .shared) event))\n    (memory : event.memory = some effect) (load : effect.kind = .load) :\n    \u2203 earlierTrace suffix,\n      (runWith cfg reads schedule (start input scratch seeds)).trace = earlierTrace ++ suffix \u2227\n      earlierTrace.length \u2264 position \u2227\n      \u2200 writer, \u2203 store, isPublication writer store = true \u2227\n        [store,Event.barrier (.arrival (phaseKey cfg) writer),Event.barrier (.completion (phaseKey cfg))] <+ earlierTrace"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each thread publishes to shared memory at most once before reaching the common\nbarrier. A thread's actual arrival is preceded by its own actual shared store;\nbarrier completion is preceded by every participant's store and arrival. Every\nlater leader shared load follows that actual completion. These are statements\nabout the emitted execution trace, including arbitrary scheduling and candidate\nread values, not assumptions that reads are fresh or that the sum is correct."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionHistory.lean",
+        "passage": {
+          "quote": "theorem publication_at_most_once (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed) (thread : Fin n) :\n    publications thread (runWith cfg reads schedule (start input scratch seeds)).trace \u2264 1"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The proof tracks forward control progress through the producer, publication,\nbarrier and continuation blocks. A count of actual publication events agrees\nwith whether a lane has passed its publication instruction. Repeatedly scheduling\na waiting or exited lane cannot publish again. Completion history connects\ncontinuation blocks to an emitted completion, rather than interpreting a block\nname as evidence that synchronization happened."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionHistory.lean",
+        "passage": {
+          "quote": "theorem run_publication_balance (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (s : State n) (invariant : Control.Invariant s) (thread : Fin n) :\n    publicationCredit ((runWith cfg reads schedule s).state.lanes thread) =\n      publicationCredit (s.lanes thread) + publications thread (runWith cfg reads schedule s).trace"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The proof tracks forward control progress through the producer, publication,\nbarrier and continuation blocks. A count of actual publication events agrees\nwith whether a lane has passed its publication instruction. Repeatedly scheduling\na waiting or exited lane cannot publish again. Completion history connects\ncontinuation blocks to an emitted completion, rather than interpreting a block\nname as evidence that synchronization happened."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionHistory.lean",
+        "passage": {
+          "quote": "theorem completion_count (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed) (thread : Fin n) :\n    completions (runWith cfg reads schedule (start input scratch seeds)).trace =\n      phaseCredit ((runWith cfg reads schedule (start input scratch seeds)).state.lanes thread)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The proof tracks forward control progress through the producer, publication,\nbarrier and continuation blocks. A count of actual publication events agrees\nwith whether a lane has passed its publication instruction. Repeatedly scheduling\na waiting or exited lane cannot publish again. Completion history connects\ncontinuation blocks to an emitted completion, rather than interpreting a block\nname as evidence that synchronization happened."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionHistory.lean",
+        "passage": {
+          "quote": "theorem barrier_key (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (event : Barrier.Event n)\n    (member : Event.barrier event \u2208 (runWith cfg reads schedule (start input scratch seeds)).trace) :\n    (match event with | .arrival key _ => key | .completion key => key) = phaseKey cfg"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Addresses and stored values need separate data-flow proofs: this child records\nwhich thread issued a store and its order relative to arrivals, completion and\nloads. The memory adapter combines those actual-history facts with address\nidentity, source compatibility and PTX ordering constraints. No desired read\nvalue, final output or memory freshness is an invariant premise."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionHistory.lean",
+        "passage": {
+          "quote": "theorem isPublication_iff (thread : Fin n) (event : Event n) :\n    isPublication thread event = true \u2194\n      \u2203 block occurrence effect, event = Event.scalar thread block (some .shared) occurrence \u2227\n        occurrence.memory = some effect \u2227 effect.kind = .store"
+        }
+      }
+    }
+  ]
+}

@@ -171,3 +171,14 @@ proof accounts for that recomputation's error, and the [gradient observation](gr
 connects the actual finite codewords to the generated real backward. This remains
 one restricted scalar example, with runtime visibility and general network
 coverage separate.
+
+
+## From publication to a reduction
+
+The [dynamic trace interface](trace-memory.md) explains how memory events retain
+their original instructions, computed values and distinct loop occurrences.
+[The shared reduction](shared-reduction.md) then follows a complete integer
+program through publication, a collective barrier and a leader summation loop.
+Its [memory guide](shared-reduction-memory.md) separates admitted observations
+from a constructed execution witness; the [history guide](reduction-history.md)
+explains why the barrier order follows from actual arrivals and completion.

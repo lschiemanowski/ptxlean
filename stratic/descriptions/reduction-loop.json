@@ -1,0 +1,53 @@
+{
+  "id": "reduction-loop",
+  "parent": {
+    "description": "reduction-history",
+    "passage": {
+      "quote": "Addresses and stored values need separate data-flow proofs: this child records\nwhich thread issued a store and its order relative to arrivals, completion and\nloads. The memory adapter combines those actual-history facts with address\nidentity, source compatibility and PTX ordering constraints. No desired read\nvalue, final output or memory freshness is an invariant premise."
+    }
+  },
+  "summary": [
+    "Track the actual leader counter and pointer through each fetched loop instruction.",
+    "Prove every reachable shared load addresses a valid slot without assuming its value."
+  ],
+  "realization": "implemented",
+  "remaining": "The actual loop address and terminal-position invariants are proved for arbitrary finite candidate schedules. Memory-source freshness, accumulator correctness and execution progress are separate obligations.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The leader walks through the shared input slots in order. Its counter records how\nmany slots remain, and its byte pointer records the next slot to read. These\nvalues come from the program's actual initialization and update instructions;\nother incoming registers and predicates may be arbitrary."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionLoop.lean",
+        "passage": {
+          "quote": "theorem reachable (cfg : Config n) (reads : Nat \u2192 Option Word) (schedule : List (Fin n))\n    (input scratch : List Word) (seeds : Fin n \u2192 Seed) :\n    Invariant (runWith cfg reads schedule (start input scratch seeds)).state"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every reachable shared load belongs to lane zero and addresses slot k with\n0 \u2264 k < n. The counter is positive at a load. After the pointer increment but\nbefore the counter decrement, the pointer is one slot ahead; the invariant\nrecords that intermediate state rather than treating the pair of instructions\nas one atomic update. The exit branch is taken only with a zero counter. A halted leader has passed\nits actual output store; followers can exit only at their distinct follower\nexit instruction."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionLoop.lean",
+        "passage": {
+          "quote": "theorem reachable_shared_load_address (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (thread : Fin n) (block : Block) (event : Occurrence) (effect : MemoryEffect)\n    (member : .scalar thread block (some .shared) event \u2208\n      (runWith cfg reads schedule (start input scratch seeds)).trace)\n    (memory : event.memory = some effect) (load : effect.kind = .load) :\n    thread.val = 0 \u2227 \u2203 index : Fin n, effect.address = bytePointer index.val"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every reachable shared load belongs to lane zero and addresses slot k with\n0 \u2264 k < n. The counter is positive at a load. After the pointer increment but\nbefore the counter decrement, the pointer is one slot ahead; the invariant\nrecords that intermediate state rather than treating the pair of instructions\nas one atomic update. The exit branch is taken only with a zero counter. A halted leader has passed\nits actual output store; followers can exit only at their distinct follower\nexit instruction."
+      },
+      "to": {
+        "path": "Ptx/SharedReductionLoop.lean",
+        "passage": {
+          "quote": "theorem halted_leader (cfg : Config n) (reads : Nat \u2192 Option Word)\n    (schedule : List (Fin n)) (input scratch : List Word) (seeds : Fin n \u2192 Seed)\n    (leader : Fin n) (zero : leader.val = 0)\n    (halted : ((runWith cfg reads schedule (start input scratch seeds)).state.lanes leader).halted = true) :\n    ((runWith cfg reads schedule (start input scratch seeds)).state.lanes leader).block = .output \u2227\n    ((runWith cfg reads schedule (start input scratch seeds)).state.lanes leader).scalar.pc = 1"
+        }
+      }
+    }
+  ]
+}
