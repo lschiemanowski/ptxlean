@@ -121,6 +121,10 @@ Successful runs end with `All source, build, and proof-dependency checks passed.
 and `Integration check passed: 363 exact dependency reports, only standard Lean
 axioms.` respectively. Both concrete examples above are included.
 
+A smaller [array-loop example](docs/foundations/array-mask-select.md) combines
+reviewed integer instructions with memory and branches, proving exact output,
+memory safety and termination. After `lake build`, check it with
+`lake env lean examples/array_mask_select.lean`.
 
 ## Sources and license
 

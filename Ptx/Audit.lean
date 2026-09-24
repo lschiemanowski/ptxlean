@@ -1540,3 +1540,30 @@ output/storage, memory admission, constructed existence and access safety. -/
 #print axioms Ptx.Scalar.ReviewedPure.brev
 #print axioms Ptx.Scalar.ReviewedPure.mulHi
 #print axioms Ptx.Scalar.ReviewedPure.bfe
+
+/-! Array loop and reusable deterministic termination rules. -/
+#print axioms Ptx.Scalar.PureKernel.Run.prepend
+#print axioms Ptx.Scalar.PureKernel.Run.complete_prefix
+#print axioms Ptx.Scalar.PureKernel.Run.no_infinite_advances
+#print axioms Ptx.Scalar.ArrayMaskSelect.transform
+#print axioms Ptx.Scalar.ArrayMaskSelect.pointer
+#print axioms Ptx.Scalar.ArrayMaskSelect.testI
+#print axioms Ptx.Scalar.ArrayMaskSelect.doneI
+#print axioms Ptx.Scalar.ArrayMaskSelect.loadI
+#print axioms Ptx.Scalar.ArrayMaskSelect.selectI
+#print axioms Ptx.Scalar.ArrayMaskSelect.storeI
+#print axioms Ptx.Scalar.ArrayMaskSelect.incrementI
+#print axioms Ptx.Scalar.ArrayMaskSelect.decrementI
+#print axioms Ptx.Scalar.ArrayMaskSelect.backI
+#print axioms Ptx.Scalar.ArrayMaskSelect.program
+#print axioms Ptx.Scalar.ArrayMaskSelect.initial
+#print axioms Ptx.Scalar.ArrayMaskSelect.Bounds
+#print axioms Ptx.Scalar.ArrayMaskSelect.iteration
+#print axioms Ptx.Scalar.ArrayMaskSelect.empty_execution
+#print axioms Ptx.Scalar.ArrayMaskSelect.execution
+#print axioms Ptx.Scalar.ArrayMaskSelect.correct
+#print axioms Ptx.Scalar.ArrayMaskSelect.prefix_termination
+#print axioms Ptx.Scalar.ArrayMaskSelect.no_infinite_execution
+#print axioms Ptx.Scalar.ArrayMaskSelect.memory_safe
+#print axioms Ptx.Scalar.ArrayMaskSelect.completed_memory_safe
+#print axioms Ptx.Scalar.ArrayMaskSelect.other_memory

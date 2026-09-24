@@ -28,3 +28,10 @@ and a scalar instruction remain distinct instruction identities.
 
 This composition does not admit general concurrent PTX executions, validate raw
 modules or register declarations, or establish GPU/runtime correspondence.
+
+For a catalog whose result relation is proved deterministic, a completed
+halting run also controls all finite execution prefixes: each prefix extends
+to the same run and contains fewer events than the complete trace, which
+includes exit. This gives a reusable way to rule out infinite advancing
+executions when a concrete kernel supplies a finite halting witness. It does
+not assume determinism for other catalogs or establish GPU scheduling progress.

@@ -9,10 +9,10 @@
   "summary": [
     "Compose several pure families with scalar memory, control flow and exit over one state.",
     "Preserve each family result and target condition, and report unsupported cases explicitly.",
-    "Separate finite prefixes, completed runs, memory safety, and program-specific existence and termination."
+    "Separate finite prefixes, completed runs and memory safety; for proved deterministic catalogs, derive prefix completion and termination from a halting witness."
   ],
   "realization": "implemented",
-  "remaining": "Catalog composition, finite traces, explicit dispatch boundaries, memory safety and conditional determinism are implemented. General concurrency, raw modules, runtime/launch validation and hardware correspondence remain outside the arena.",
+  "remaining": "Catalog composition, finite traces, explicit dispatch boundaries, memory safety and conditional determinism, prefix completion and exclusion of infinite advancing executions from a halting witness are implemented. General concurrency, raw modules, runtime/launch validation and hardware correspondence remain outside the arena.",
   "links": [
     {
       "kind": "implementation",
@@ -59,6 +59,18 @@
         "path": "Ptx/ReviewedPure.lean",
         "passage": {
           "quote": "theorem bitwise_scalar_iff : Bitwise32.Eval i s next event \u2194"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For a catalog whose result relation is proved deterministic, a completed\nhalting run also controls all finite execution prefixes: each prefix extends\nto the same run and contains fewer events than the complete trace, which\nincludes exit."
+      },
+      "to": {
+        "path": "Ptx/PureKernelRules.lean",
+        "passage": {
+          "quote": "theorem Run.complete_prefix (functional : Functional catalog)"
         }
       }
     }

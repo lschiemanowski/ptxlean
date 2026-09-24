@@ -74,3 +74,5 @@ import Ptx.Shift32
 import Ptx.Brev32
 import Ptx.MulHi32
 import Ptx.Bfe32
+import Ptx.PureKernelRules
+import Ptx.ArrayMaskSelect

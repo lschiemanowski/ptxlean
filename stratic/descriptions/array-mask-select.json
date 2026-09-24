@@ -1,0 +1,77 @@
+{
+  "id": "array-mask-select",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "An example explains how to reproduce its verification, how its proof is\nassembled, and which claims concern mathematical correctness, numerical\naccuracy, implementation correspondence, or execution. Supporting experiments\nare identified separately from checked results. Examples illustrate both the\nuse of reusable contracts and the application-specific obligations that remain."
+    }
+  },
+  "summary": [
+    "Transform an arbitrary bounded array in place with reviewed mask and select instructions.",
+    "Establish exact output, preservation of surrounding memory, safe accesses and termination of every execution in the isolated word arena."
+  ],
+  "realization": "implemented",
+  "remaining": "Implemented: constructive execution, all-completed-run exact output and surrounding-memory preservation, access safety, bounded prefixes and absence of infinite advancing executions. Scope remains one isolated initialized word arena; no launch/runtime or GPU progress claim.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A constructive execution witness processes arbitrary array lengths satisfying\nthese bounds, including zero."
+      },
+      "to": {
+        "path": "Ptx/ArrayMaskSelect.lean",
+        "passage": {
+          "quote": "theorem execution (s : State) (front xs tail : List Word) (mask fallback : Word)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed execution produces the mapped\narray, preserves the surrounding memory and ends at exit."
+      },
+      "to": {
+        "path": "Ptx/ArrayMaskSelect.lean",
+        "passage": {
+          "quote": "theorem correct (eligible : Eligible target) (bounds : Bounds front xs)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every finite\nexecution prefix can complete to that result, and its number of advancing\nsteps is bounded by ten times the array length plus two."
+      },
+      "to": {
+        "path": "Ptx/ArrayMaskSelect.lean",
+        "passage": {
+          "quote": "theorem prefix_termination (eligible : Eligible target) (bounds : Bounds front xs)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Thus no infinite\nsequence of advancing instructions is possible in this model."
+      },
+      "to": {
+        "path": "Ptx/ArrayMaskSelect.lean",
+        "passage": {
+          "quote": "theorem no_infinite_execution (eligible : Eligible target) (bounds : Bounds front xs)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory accesses start at multiples of four bytes and stay within the supplied\ninitialized list of words."
+      },
+      "to": {
+        "path": "Ptx/ArrayMaskSelect.lean",
+        "passage": {
+          "quote": "theorem memory_safe\n    (path : Path (Advances target (program mask fallback)) (initial s front xs tail) events middle)"
+        }
+      }
+    }
+  ]
+}

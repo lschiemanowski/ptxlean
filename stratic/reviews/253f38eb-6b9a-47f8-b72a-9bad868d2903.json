@@ -1,0 +1,98 @@
+{
+  "id": "253f38eb-6b9a-47f8-b72a-9bad868d2903",
+  "base": "620e6527aa6502dd0cf4908310b0484ea23469b3",
+  "contentTree": "e783bc8c36f99ed9183c932280f6b83aedbe3e2c",
+  "reviewer": "Codex coordinator",
+  "summary": "Prove an arbitrary-length in-place array loop and reusable deterministic termination rules.",
+  "examined": [
+    {
+      "id": "array-mask-select",
+      "outcome": "revised",
+      "reason": "New contract was written before implementation. Reviewed the exact word/byte distinction, immediate mask and fallback, initial-state boundary, strict count/one-past bounds, ten-step iteration, zero-length exit, all-completed-run output and frame, prefix bound and infinite-execution exclusion. Definitions and completed Lean proofs implement these conditions without final-result premises."
+    },
+    {
+      "id": "pure-kernel",
+      "outcome": "revised",
+      "reason": "Added proof rules over unchanged dispatch and run relations. Prefix completion requires the explicit Functional catalog premise, instantiated by ReviewedPure.functional; the halting witness supplies the finite bound. General nondeterministic choices remain unchanged."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Only new dependency audit entries were appended; message-passing statements, semantics and evidence are unchanged."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The array example is another small kernel instantiating the existing example responsibility: explicit computation, reproducible checks, concrete execution conditions and separate fidelity claims. No network-example contract changed."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The loop uses the existing word memory and instruction transitions without altering their semantics, target policy or unsupported boundaries; reusable rules prove new consequences of those unchanged relations."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "e783bc8c36f99ed9183c932280f6b83aedbe3e2c",
+      "method": "bash scripts/check.sh; lake env lean examples/array_mask_select.lean; stratic validate; git diff --check; manual contract and proof review",
+      "outcome": "pass",
+      "environment": "Linux; pinned Lean 4.34.0; Python 3.11+; existing local source cache; no external inference calls.",
+      "evidence": "Exact pre/post snapshot trees match. Core check passed: 1507 distinct dependency reports with only standard Lean logical axioms; 22 selected accepted forms and 1050 archived files across 13 archives verified. Concrete array example passed: multi-element output with surrounding words, empty and symbolic singleton executions, counter/address overflow exclusions and adjacent accepted address bound; printed [52, 99, 99, 255] and []. Stratic valid, no issues; whitespace check clean. Manual review checked program/trace correspondence, nonwrapping initialization, exact iteration state equality, list-induction witness, determinism-derived all-run result and finite-prefix/infinite-execution exclusion. No result, existence or termination hypotheses hide missing semantics. TorchLean integration also passed this block with 363 exact dependency reports before the final comment and description-only edits; its code and proof terms are unchanged.",
+      "tests": [],
+      "id": "c847b95c-df1a-46d8-ad12-6d752813ff98",
+      "recordedAt": "2026-09-24T14:08:56.022Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T14:09:10.928Z",
+  "unmapped": [
+    {
+      "path": "Ptx/ArrayMaskSelect.lean",
+      "reason": "Reviewed program, exact intermediate states, helpers, list-induction witness, bounds and all corollaries; links select main contracts, not every helper."
+    },
+    {
+      "path": "Ptx/PureKernelRules.lean",
+      "reason": "Reviewed prefix composition and the deterministic prefix-completion/infinite-execution proofs; no transition or result definition changed."
+    },
+    {
+      "path": "docs/foundations/array-mask-select.md",
+      "reason": "Manually reconciled the instruction table, byte addresses, register banks, invariant, trace count, bound cases, reproducible command and proof/fidelity/hardware distinctions against the Lean definitions."
+    },
+    {
+      "path": "examples/array_mask_select.lean",
+      "reason": "Checked concrete multi-element execution with prefix/tail, empty and symbolic singleton cases, rejected count/address overflow and adjacent accepted bound. Printed list computations are explicitly labeled specification evaluation."
+    },
+    {
+      "path": "stratic/descriptions/array-mask-select.json",
+      "reason": "Reviewed self-contained description, summaries, realization status and exact passage links against the completed implementation; Stratic structure validates."
+    },
+    {
+      "path": "stratic/descriptions/array-mask-select.md",
+      "reason": "Reviewed self-contained description, summaries, realization status and exact passage links against the completed implementation; Stratic structure validates."
+    },
+    {
+      "path": "Ptx.lean",
+      "reason": "Expose the new loop and generic rules through the root library; no existing import removed."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Every public def/theorem from both new modules is included exactly once in the dependency audit."
+    },
+    {
+      "path": "README.md",
+      "reason": "Added only a short link and exact checked command for the new example; preserved the user-edited introduction."
+    },
+    {
+      "path": "docs/foundations/pure-kernels.md",
+      "reason": "Added a link connecting the earlier straight-line example to the array loop."
+    },
+    {
+      "path": "stratic/descriptions/pure-kernel.json",
+      "reason": "Reviewed self-contained description, summaries, realization status and exact passage links against the completed implementation; Stratic structure validates."
+    },
+    {
+      "path": "stratic/descriptions/pure-kernel.md",
+      "reason": "Reviewed self-contained description, summaries, realization status and exact passage links against the completed implementation; Stratic structure validates."
+    }
+  ]
+}

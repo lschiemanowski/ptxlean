@@ -103,3 +103,7 @@ The [shift trial](../../formalization/results/shift32/README.md) records what Lu
 produced, what the fixed GLM reviewer said, and the independent checks required
 before acceptance. The proof of a result and the review of its PTX interpretation
 remain separate evidence.
+
+The [array walkthrough](array-mask-select.md) extends this computation to an
+in-place loop of arbitrary bounded length, with preserved surrounding memory
+and a proof excluding infinite instruction executions.
