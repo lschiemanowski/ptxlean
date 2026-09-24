@@ -1,0 +1,11 @@
+--- a/Ptx/SignedMinMax32.lean
++++ b/Ptx/SignedMinMax32.lean
+@@ -5,7 +5,7 @@
+ 
+ open Ptx.Scalar
+ 
+-def SupportedTarget (target : Ptx.Target) : Prop := target.isa = 94 ∧ 10 ≤ target.sm
++def SupportedTarget (target : Ptx.Target) : Prop := target.isa = 94 ∧ 20 ≤ target.sm
+ 
+ inductive Operation where
+   | min | max

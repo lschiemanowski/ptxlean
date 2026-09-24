@@ -1,0 +1,24 @@
+--- a/Ptx/Select32.lean
++++ b/Ptx/Select32.lean
+@@ -24,7 +24,7 @@
+   predicate : Nat
+   deriving DecidableEq, Repr
+ 
+-def compute (a b : Word) (c : Bool) : Word := if c then a else b
++def compute (a b : Word) (c : Bool) : Word := if c then b else a
+ 
+ def family : Pure32.Family Operation :=
+   Pure32.Family.ofFunction (fun _ => 2) (fun _ => 1)
+@@ -48,10 +48,10 @@
+   Pure32.occurrence s (lower i) executed
+ 
+ theorem compute_eq (a b : Word) (c : Bool) :
+-    compute a b c = if c then a else b := rfl
++    compute a b c = if c then b else a := rfl
+ 
+ theorem results_iff (op : Operation) (words : Fin 2 → Word) (predicates : Fin 1 → Bool) (value : Word) :
+-    family.Results op words predicates value ↔ value = if predicates p0 then words w0 else words w1 := by
++    family.Results op words predicates value ↔ value = if predicates p0 then words w1 else words w0 := by
+   cases op
+   rfl
+ 

@@ -1,0 +1,160 @@
+{
+  "id": "190aa91a-7fcb-4631-ba7d-9033e246b1b6",
+  "base": "2e0f514a5de4409c669390f468fff2b2038b352f",
+  "contentTree": "46478b7def2cf7361ffc85a394f1a8895c7cb2c5",
+  "reviewer": "Codex coordinator",
+  "summary": "Add recorded OpenRouter semantic review with blinded development cases and freeze two Pure32 instruction tasks for Luna.",
+  "examined": [
+    {
+      "id": "model-review",
+      "outcome": "revised",
+      "reason": "New independent fixed-context reviewer contract, recorded API route and blinded cases, with explicit non-acceptance and public-output boundaries."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Records implementation of the separate reviewer route without claiming general reviewer reliability or full instruction coverage."
+    },
+    {
+      "id": "bitwise32",
+      "outcome": "revised",
+      "reason": "New bounded leaf specification and frozen independent contract; implementation remains explicitly unimplemented."
+    },
+    {
+      "id": "unary-bits32",
+      "outcome": "revised",
+      "reason": "New bounded complement/logical-negation specification and contract; implementation remains explicitly unimplemented."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "New planned leaves use its existing total pure32 interface; no shared instruction or transition rule changes."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Model findings remain advisory, proof checking separate, and raw vendor-bearing request/response records stay local."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "unchanged",
+      "reason": "Luna invocation accounting and isolated patch production are untouched; separate OpenRouter calls do not masquerade as worker proof acceptance."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "46478b7def2cf7361ffc85a394f1a8895c7cb2c5",
+      "method": "bash scripts/check.sh; stratic validate; five independent mechanical review cases against public base; source/contract and packet-boundary review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; standard-library Python; synthetic transport tests; no API credentials in source tree.",
+      "evidence": "Full core build and 1213 dependency audits passed; 101 worker tests, 26 ledger tests and 7 inventory tests passed. Five development cases compile and pass named standard-axiom audits; three seeded defects fail exact independent assertions, two controls pass. Initial evaluator decidability failure was preserved and corrected before model dispatch. New bitwise leaf contracts and drivers are frozen specifications, with implementation and driver elaboration pending delegated candidates. README change was separately committed/pushed first. OpenRouter API trials are separate ongoing recorded work, not asserted successful by this check.",
+      "tests": [],
+      "id": "b4a44bc8-e890-4277-b50a-8021c0eedea4",
+      "recordedAt": "2026-09-24T10:48:22.809Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T10:48:43.453Z",
+  "unmapped": [
+    {
+      "path": "docs/formalization/model-review.md",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/checks/bitwise32-v1.lean",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/checks/unary-bits32-v1.lean",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/contracts/bitwise32-v1.md",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/contracts/unary-bits32-v1.md",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/cases/labels.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/cases/r01.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/cases/r02.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/cases/r02.patch",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/cases/r03.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/cases/r03.patch",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/cases/r04.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/cases/r05.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/cases/r05.patch",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/check_cases.py",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "formalization/review/model-catalog-2026-09-24.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "scripts/model_review.py",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "stratic/descriptions/bitwise32.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "stratic/descriptions/bitwise32.md",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "stratic/descriptions/model-review.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "stratic/descriptions/model-review.md",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "stratic/descriptions/unary-bits32.json",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "stratic/descriptions/unary-bits32.md",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    },
+    {
+      "path": "tests/test_worker_model_review.py",
+      "reason": "Reviewed bounded review infrastructure, frozen source-derived cases/contracts, documentation or associated Stratic metadata. New instruction implementations and statistical reviewer reliability are not claimed."
+    }
+  ]
+}

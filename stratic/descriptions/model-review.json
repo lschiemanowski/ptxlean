@@ -1,0 +1,42 @@
+{
+  "id": "model-review",
+  "parent": {
+    "description": "model-formalization",
+    "passage": {
+      "quote": "When semantic review is delegated to an inexpensive model, it is a separate\nreview task from generation."
+    }
+  },
+  "summary": [
+    "Review fixed candidates against pinned PTX passages in a separate model invocation, keeping proof checking and coordinator acceptance independent.",
+    "Record exact request and response identities, failures, usage and unknown costs without silent retries or model substitution.",
+    "Evaluate concrete fault detection and false alarms on blinded cases; retain vendor-bearing requests and responses locally."
+  ],
+  "realization": "partial",
+  "remaining": "Recorded fixed-context OpenRouter review and blinded development cases are implemented. General reviewer-quality evidence, tool-using repository review and automatic integration remain outside the implemented route.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A review packet fixes a repository commit, candidate file hashes, supporting\ninterfaces, source section hashes, and project-authored obligations. The vendor\nsource is read only from the verified local manual. The same packet can be sent\nto different reviewers. Evaluation labels, mutation descriptions, original\nacceptance verdicts and generating-model conversations are excluded from the\nrequest. Candidate text is review material, not instructions to the reviewer.\nThe first implementation reviews a supplied context without tools; it records\nthis limitation instead of claiming the reviewer inspected the whole repository."
+      },
+      "to": {
+        "path": "scripts/model_review.py",
+        "passage": {
+          "quote": "def packet(recipe, root=ROOT):\n    \"\"\"Reconstruct a frozen tree overlay, not a mutable checkout or agent session.\"\"\""
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Reports identify the obligations considered, findings tied to candidate locations\nand source anchors, and remaining uncertainty. References and report structure\nare checked mechanically. Such validation does not establish that a finding is\ntrue. The coordinator adjudicates findings before using them for acceptance."
+      },
+      "to": {
+        "path": "scripts/model_review.py",
+        "passage": {
+          "quote": "def validate_report(report, context):"
+        }
+      }
+    }
+  ]
+}

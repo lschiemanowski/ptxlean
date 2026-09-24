@@ -1,0 +1,105 @@
+{
+  "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+  "files": [
+    {
+      "path": "Ptx/Select32.lean",
+      "role": "candidate",
+      "sha256": "7bd20413ec68ded9b9d9c165ca72dc236e5a92c1d17c04a94006fd80a6c68487"
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "role": "support",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "role": "support",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "role": "support",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "role": "support",
+      "sha256": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "role": "support",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "meaning",
+      "text": "Preserve the selected instruction result for every 32-bit word, including zero, sign-bit and all-ones patterns. The selp selector true copies left and false copies right. Signed min/max compare two-complement signed values and preserve a selected source word."
+    },
+    {
+      "id": "state",
+      "text": "Evaluate sources in the incoming state before writing the destination; permit repeated sources and source/destination aliases. Only the selected word register and incremented program counter change."
+    },
+    {
+      "id": "guards",
+      "text": "Instruction guards support either polarity. A false guard skips the write and advances the program counter. Selector operands are distinct from the guard."
+    },
+    {
+      "id": "events",
+      "text": "The occurrence identifies the fetched instruction and original program counter. Enabled syntactic reads include guard then word operands then predicate operands, retaining repeats. Disabled instructions read only the guard. No memory effect is claimed."
+    },
+    {
+      "id": "target",
+      "text": "The explicit target slice is ISA exactly 94 and numeric sm at least 10, including for skipped fetched instructions. These selected forms have no additional feature threshold. This is not validation of actual target spellings."
+    },
+    {
+      "id": "decoder",
+      "text": "Accept exactly the selected mnemonic and typed operand shapes, preserving guard and source order. Successful decode iff encode. Recognized spelling with malformed operands must return invalidOperands; other spellings return unsupportedMnemonic. Only positive register selectors for selp; both guard polarities are allowed."
+    },
+    {
+      "id": "proofs",
+      "text": "Universal transition, frame, deterministic result, one-step existence and origin theorems must follow the actual definitions without excluding aliases or input bit patterns. Absence of raw module parsing, declared-register checking and whole-kernel termination is within the deliberate scope."
+    }
+  ],
+  "patch": {
+    "path": "formalization/review/cases/r03.patch",
+    "sha256": "a99a54570ee368b16b099751fb7a7089eca7b973990a229a2334783c2106e30e"
+  },
+  "schema_version": 1,
+  "scope": "Only selp.b32 with positive predicate register selector. Already-decoded 32-bit values and compatible declared registers are supplied; no raw parsing, allocation behavior or other ISA versions are claimed. Fixed Pure32 supporting abstractions are not under revision.",
+  "sections": [
+    {
+      "anchor": "predicated-execution",
+      "sha256": "e3de38b106e96f1ccdd8c7710b2efbaa5ea2bde35959da999d2075a12162dd1f"
+    },
+    {
+      "anchor": "instruction-statements",
+      "sha256": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a"
+    },
+    {
+      "anchor": "operand-type-information",
+      "sha256": "2b4deb7a2de0f26463be8ea631b19d3262067641e45c4ca98261b61ff73945a7"
+    },
+    {
+      "anchor": "source-operands",
+      "sha256": "a981cf489133f764d2b9d621b4653ead71abb7709a83a323eccb55bddb8b6fa2"
+    },
+    {
+      "anchor": "destination-operands",
+      "sha256": "46d9e524f958b92cb45b9d9c7113b315e3b44eaf6a69f5af707bb055c5ee6a70"
+    },
+    {
+      "anchor": "integer-constants",
+      "sha256": "d7a625de2e4a872a173e18cde51b2c3475cb2e37a811700332dbf9292713a9f2"
+    },
+    {
+      "anchor": "type-information-for-instructions-and-operands",
+      "sha256": "1191421bc4f06fb7dd96d159cf38c7396851b95257247d2a9c68f54d99f4ad78"
+    },
+    {
+      "anchor": "comparison-and-selection-instructions-selp",
+      "sha256": "8781e1d81a058fbac02e290afeca05c1a45ea6f12c8e9bdcabbde18a5dc75347"
+    }
+  ]
+}

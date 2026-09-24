@@ -1,0 +1,30 @@
+{
+  "id": "bitwise32",
+  "parent": {
+    "description": "pure-instruction-families",
+    "passage": {
+      "quote": "Family source proofs and text decoders can reuse this\nmechanism without modifying the scalar state or duplicating its transition\nrules."
+    }
+  },
+  "summary": [
+    "Implement only and.b32, or.b32 and xor.b32 over all 32-bit inputs using the shared pure-instruction rules.",
+    "Preserve incoming operand values under aliasing, guarded execution, exact operand reads and the restricted typed frontend.",
+    "Separate checked result and execution proofs from PTX source fidelity and hardware correspondence."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Delegate the fixed leaf to Luna, replay its proofs independently, review source correspondence and integrate only the accepted candidate.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The typed frontend accepts exactly the selected spellings and word operand shapes.\nA malformed use of a recognized spelling is distinguished from an unsupported\nspelling. Register declarations and immediate conversion have already been\nchecked by the caller: a word literal is a decoded 32-bit value, not arbitrary\nraw PTX text. Other widths, predicate-valued forms and raw module parsing remain\noutside the family."
+      },
+      "to": {
+        "path": "formalization/contracts/bitwise32-v1.md",
+        "passage": {
+          "quote": "The typed encoder preserves the guard and uses the exact mnemonic for its\noperation with a word-register destination followed by two word sources.\nKnown spellings with malformed operands return `invalidOperands`; every other\nspelling returns `unsupportedMnemonic`, even with malformed operands.\nAll enabled direct operand reads are recorded in order after guard reads,\nincluding repeated registers. A skip has only the guard read, no writes or memory\neffect. A fetched step checks target support even on a false guard.\nThe universal theorem signatures above are fixed; no extra premises or axioms."
+        }
+      }
+    }
+  ]
+}
