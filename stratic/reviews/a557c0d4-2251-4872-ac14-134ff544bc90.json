@@ -1,0 +1,28 @@
+{
+  "id": "a557c0d4-2251-4872-ac14-134ff544bc90",
+  "base": "9ba80724942876038afcef5efade986ed548fd5a",
+  "contentTree": "95bc0ddfe1b4d2c86ac95ef4d21eeab8c3a9399d",
+  "reviewer": "Codex coordinator",
+  "summary": "Describe the release as very early alpha and simplify README model attribution.",
+  "examined": [],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "95bc0ddfe1b4d2c86ac95ef4d21eeab8c3a9399d",
+      "method": "Read README-only diff; git diff --check -- README.md; stratic validate; matching before/after snapshots.",
+      "outcome": "pass",
+      "environment": "Documentation-only user edit.",
+      "evidence": "Changes early beta to very early alpha and shortens the model attribution paragraph exactly as supplied by the user. No code, example command, or formal contract changed. Stratic validation and whitespace checks passed.",
+      "tests": [],
+      "id": "294fd585-5d87-4844-8828-63263bba5f4d",
+      "recordedAt": "2026-09-24T10:29:46.713Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T10:30:00.105Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Reviewed user-authored public introduction changes; no description responsibility or implemented contract changes."
+    }
+  ]
+}

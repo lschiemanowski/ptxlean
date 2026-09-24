@@ -2,11 +2,9 @@
 
 PTXLean is a Lean formalization of NVIDIA's PTX instruction language. It targets **PTX instruction set architecture (ISA) 9.4**. A central goal is allowing to prove that kernels written in PTX implement functions specified in e.g. TorchLean.
 
-This is early beta. Full coverage of PTX is the eventual goal.
+This is very early alpha. Full coverage of PTX is the eventual goal.
 
-This project has been realized with GPT 6 Astra and Luna. Further instruction coverage is delegated to Luna through
-[recorded tasks](docs/formalization/worker-runs.md), with Lean proof checks and
-separate semantic review. An independent inexpensive-model reviewer is planned.
+This project has been realized with GPT 6 Astra and Luna.
 
 The code is accompanied by descriptions managed in [stratic](https://github.com/lschiemanowski/stratic). The current implementation covers selected instructions,
 restricted memory and synchronization, and the forward/backward example below.
