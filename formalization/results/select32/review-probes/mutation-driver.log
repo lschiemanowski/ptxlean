@@ -1,0 +1,216 @@
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:195:47: error: Tactic `rfl` failed: The left-hand side
+  Text.decode
+    { mnemonic := "selp",
+      operands :=
+        [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp")
+
+⊢ Text.decode
+      { mnemonic := "selp",
+        operands :=
+          [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:197:47: error: Tactic `rfl` failed: The left-hand side
+  Text.decode { mnemonic := "selp", operands := [] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp")
+
+⊢ Text.decode { mnemonic := "selp", operands := [] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:201:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode
+    { mnemonic := "selp.u32",
+      operands :=
+        [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.u32")
+
+⊢ Text.decode
+      { mnemonic := "selp.u32",
+        operands :=
+          [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.u32")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:203:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode { mnemonic := "selp.u32", operands := [] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.u32")
+
+⊢ Text.decode { mnemonic := "selp.u32", operands := [] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.u32")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:207:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode
+    { mnemonic := "selp.s32",
+      operands :=
+        [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.s32")
+
+⊢ Text.decode
+      { mnemonic := "selp.s32",
+        operands :=
+          [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.s32")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:209:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode { mnemonic := "selp.s32", operands := [] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.s32")
+
+⊢ Text.decode { mnemonic := "selp.s32", operands := [] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.s32")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:213:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode
+    { mnemonic := "selp.b16",
+      operands :=
+        [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b16")
+
+⊢ Text.decode
+      { mnemonic := "selp.b16",
+        operands :=
+          [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b16")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:215:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode { mnemonic := "selp.b16", operands := [] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b16")
+
+⊢ Text.decode { mnemonic := "selp.b16", operands := [] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b16")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:219:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode
+    { mnemonic := "selp.b64",
+      operands :=
+        [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b64")
+
+⊢ Text.decode
+      { mnemonic := "selp.b64",
+        operands :=
+          [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b64")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:221:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode { mnemonic := "selp.b64", operands := [] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b64")
+
+⊢ Text.decode { mnemonic := "selp.b64", operands := [] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b64")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:225:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode
+    { mnemonic := "selp.f32",
+      operands :=
+        [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.f32")
+
+⊢ Text.decode
+      { mnemonic := "selp.f32",
+        operands :=
+          [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.f32")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:227:51: error: Tactic `rfl` failed: The left-hand side
+  Text.decode { mnemonic := "selp.f32", operands := [] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.f32")
+
+⊢ Text.decode { mnemonic := "selp.f32", operands := [] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.f32")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:231:55: error: Tactic `rfl` failed: The left-hand side
+  Text.decode
+    { mnemonic := "selp.b32.ftz",
+      operands :=
+        [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b32.ftz")
+
+⊢ Text.decode
+      { mnemonic := "selp.b32.ftz",
+        operands :=
+          [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b32.ftz")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:233:55: error: Tactic `rfl` failed: The left-hand side
+  Text.decode { mnemonic := "selp.b32.ftz", operands := [] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b32.ftz")
+
+⊢ Text.decode { mnemonic := "selp.b32.ftz", operands := [] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b32.ftz")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:237:55: error: Tactic `rfl` failed: The left-hand side
+  Text.decode
+    { mnemonic := "selp.ftz.b32",
+      operands :=
+        [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.ftz.b32")
+
+⊢ Text.decode
+      { mnemonic := "selp.ftz.b32",
+        operands :=
+          [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.ftz.b32")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:239:55: error: Tactic `rfl` failed: The left-hand side
+  Text.decode { mnemonic := "selp.ftz.b32", operands := [] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.ftz.b32")
+
+⊢ Text.decode { mnemonic := "selp.ftz.b32", operands := [] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.ftz.b32")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:243:57: error: Tactic `rfl` failed: The left-hand side
+  Text.decode
+    { mnemonic := "selp.b32.extra",
+      operands :=
+        [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+          Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b32.extra")
+
+⊢ Text.decode
+      { mnemonic := "selp.b32.extra",
+        operands :=
+          [Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 0),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.reg 1),
+            Ptx.Scalar.Text.Token.word (Ptx.Scalar.Operand32.imm 7), Ptx.Scalar.Text.Token.predicate 3] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b32.extra")
+/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean:245:57: error: Tactic `rfl` failed: The left-hand side
+  Text.decode { mnemonic := "selp.b32.extra", operands := [] }
+is not definitionally equal to the right-hand side
+  Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b32.extra")
+
+⊢ Text.decode { mnemonic := "selp.b32.extra", operands := [] } =
+    Except.error (Ptx.Scalar.Text.DecodeError.unsupportedMnemonic "selp.b32.extra")

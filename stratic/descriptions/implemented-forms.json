@@ -7,17 +7,16 @@
     }
   },
   "summary": [
-    "Record six exact accepted integer and binary32 instruction forms with their typed boundaries, source conditions, proofs and historical evidence.",
-    "Keep uncovered sibling forms explicit without promoting selected support to instruction-section coverage.",
-    "Reject stale source, declaration and provenance references, following nested name scopes without replacing proof checking or semantic review.",
-    "Keep floating NaN freedom conservative and require ISA 9.4 with SM at least 20 for fetched floating steps, without claiming complete target validation or kernel execution."
+    "Record nine selected accepted instruction forms with exact operand, source, proof and replay evidence.",
+    "Distinguish accepted signed/unsigned arithmetic, bit counts, selection and binary32 slices from uncovered widths, modifiers and whole sections.",
+    "Reject stale file hashes and inconsistent provenance while preserving the separate need for Lean checks and semantic review."
   ],
   "realization": "implemented",
   "links": [
     {
       "kind": "implementation",
       "from": {
-        "quote": "An accepted form is a particular spelling and operand contract, not an entire\ninstruction name. This ledger records six independently reviewed forms:\n`min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32` and `mul.rn.f32`.\nThe integer forms compare unsigned words or count bits, with exact results for\nall input patterns. The floating forms add or multiply encoded binary32 values\nwith nearest-even rounding and preserved subnormal values. Their result relation\nkeeps every non-NaN reference bit, including zero signs, and conservatively\nadmits NaN encodings; it does not assert that every such encoding is realizable.\nThe broader instruction-section inventory remains unassessed."
+        "quote": "An accepted form is a particular spelling and operand contract, not an entire\ninstruction name. This ledger records nine independently reviewed forms:\n`min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32`, `mul.rn.f32`,\n`selp.b32`, `min.s32` and `max.s32`.\nThe integer forms compare signed or unsigned words, count bits, or select a\nword using a predicate, with exact results for all input patterns. The floating forms add or multiply encoded binary32 values\nwith nearest-even rounding and preserved subnormal values. Their result relation\nkeeps every non-NaN reference bit, including zero signs, and conservatively\nadmits NaN encodings; it does not assert that every such encoding is realizable.\nThe broader instruction-section inventory remains unassessed."
       },
       "to": {
         "path": "coverage/implemented-forms.json",
@@ -29,7 +28,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Each record says which typed operands and predicate guards are represented,\nwhich PTX version and hardware targets the manual permits, and where the actual\nvalue definition, instruction execution, text conversion and universal proofs\nlive. A typed operand is an already classified register or value: this boundary\ndoes not parse a complete PTX file or validate its register declarations. The\ninteger version and target conditions are reviewed source facts, not checks in\nthe arithmetic decoder. The floating fetched-step interface additionally requires\nPTX ISA 9.4 and a numeric SM value of at least 20, preserving the source's\nsubnormal behavior; this does not validate target spellings or architecture\nsuffixes. Floating operands denote compatible `.b32`/`.f32` registers or exact\nalready-decoded `0f`/`0F` bit literals, not numeric conversions of integer operands.\nSource and destination may name the same register because both sources are read\nbefore the destination is written. A floating leaf step does not prove complete\nkernel execution."
+        "quote": "Each record says which typed operands and predicate guards are represented,\nwhich PTX version and hardware targets the manual permits, and where the actual\nvalue definition, instruction execution, text conversion and universal proofs\nlive. A typed operand is an already classified register or value: this boundary\ndoes not parse a complete PTX file or validate its register declarations. The\nolder unsigned and bit-count decoders leave version and target checks to the\ncaller. Selection and signed min/max use fetched steps requiring ISA 9.4 and\na numeric SM value of at least 10. The floating fetched-step interface requires\nPTX ISA 9.4 and a numeric SM value of at least 20, preserving the source's\nsubnormal behavior; this does not validate target spellings or architecture\nsuffixes. Floating operands denote compatible `.b32`/`.f32` registers or exact\nalready-decoded `0f`/`0F` bit literals, not numeric conversions of integer operands.\nSource and destination may name the same register because both sources are read\nbefore the destination is written. A floating leaf step does not prove complete\nkernel execution."
       },
       "to": {
         "path": "coverage/implemented-forms.json",
@@ -41,7 +40,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The ledger also lists uncovered sibling forms from the selected integer and\nfloating instruction sections. A sibling is another type, width or modifier combination\nfor the same instruction. These entries explain missing signed comparisons,\npacked values, saturation and 64-bit bit counts; they are not implementation\nclaims. Other floating rounding modes, flush-to-zero, saturation, packed and\n64-bit forms remain outside the accepted floating slice. No percentage or\nwhole-section coverage follows from this ledger."
+        "quote": "The ledger also lists uncovered sibling forms from the selected integer and\nfloating instruction sections. A sibling is another type, width or modifier combination\nfor the same instruction. These entries explain missing widths, packed values, saturation and 64-bit\nbit counts; they are not implementation\nclaims. Other floating rounding modes, flush-to-zero, saturation, packed and\n64-bit forms remain outside the accepted floating slice. No percentage or\nwhole-section coverage follows from this ledger."
       },
       "to": {
         "path": "coverage/implemented-forms.json",

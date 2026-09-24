@@ -7,8 +7,9 @@
     }
   },
   "summary": [
-    "Require proof-preserving faulty candidates to fail independently prepared semantic checks, alongside a passing unchanged control.",
-    "Preserve exact offline mutations and diagnostics, distinguishing targeted detection from unrelated failure and limiting conclusions to the probed defects."
+    "Check independent acceptance against deliberate arithmetic/text, operand-metadata and target-boundary defects that still compile with their proofs.",
+    "Preserve unchanged controls, exact mutation diffs and diagnostics without model calls or candidate edits.",
+    "Treat detection as evidence for the chosen faults, not a general semantic-review guarantee."
   ],
   "realization": "implemented",
   "remaining": "Further defect families and a general reviewer-quality evaluation remain outside these bounded offline probes.",

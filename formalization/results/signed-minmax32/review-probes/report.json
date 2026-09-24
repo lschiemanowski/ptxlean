@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-24T07:43:07.525257+00:00",
+  "model_calls": 0,
+  "attempt": "signed-minmax32-003",
+  "commands": [
+    {
+      "name": "setup",
+      "argv": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/ptx-signed-minmax32-probe-vs0ukpl2/worktree",
+        "181d7f98e007b5875d0cb9a85269e622125ef269"
+      ],
+      "cwd": "/home/lothar/workspace/ptxlean",
+      "exit_code": 0,
+      "log": "setup.log"
+    },
+    {
+      "name": "apply",
+      "argv": [
+        "git",
+        "apply",
+        "/home/lothar/workspace/ptxlean/.formalization-runs/luna/attempts/signed-minmax32-003/candidate.patch"
+      ],
+      "cwd": "/tmp/ptx-signed-minmax32-probe-vs0ukpl2/worktree",
+      "exit_code": 0,
+      "log": "apply.log"
+    },
+    {
+      "name": "control-build",
+      "argv": [
+        "lake",
+        "build",
+        "Ptx.SignedMinMax32"
+      ],
+      "cwd": "/tmp/ptx-signed-minmax32-probe-vs0ukpl2/worktree",
+      "exit_code": 0,
+      "log": "control-build.log"
+    },
+    {
+      "name": "control-driver",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/signed-minmax32/review-probes/acceptance.lean"
+      ],
+      "cwd": "/tmp/ptx-signed-minmax32-probe-vs0ukpl2/worktree",
+      "exit_code": 0,
+      "log": "control-driver.log"
+    },
+    {
+      "name": "control-audit",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/signed-minmax32/review-probes/audit.lean"
+      ],
+      "cwd": "/tmp/ptx-signed-minmax32-probe-vs0ukpl2/worktree",
+      "exit_code": 0,
+      "log": "control-audit.log"
+    },
+    {
+      "name": "mutation-build",
+      "argv": [
+        "lake",
+        "build",
+        "Ptx.SignedMinMax32"
+      ],
+      "cwd": "/tmp/ptx-signed-minmax32-probe-vs0ukpl2/worktree",
+      "exit_code": 0,
+      "log": "mutation-build.log"
+    },
+    {
+      "name": "mutation-audit",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/signed-minmax32/review-probes/audit.lean"
+      ],
+      "cwd": "/tmp/ptx-signed-minmax32-probe-vs0ukpl2/worktree",
+      "exit_code": 0,
+      "log": "mutation-audit.log"
+    },
+    {
+      "name": "mutation-driver",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/signed-minmax32/review-probes/acceptance.lean"
+      ],
+      "cwd": "/tmp/ptx-signed-minmax32-probe-vs0ukpl2/worktree",
+      "exit_code": 1,
+      "log": "mutation-driver.log"
+    }
+  ],
+  "worktree": "/tmp/ptx-signed-minmax32-probe-vs0ukpl2/worktree",
+  "candidate_patch_sha256": "41338a792294b67881939ead14b8132ad86fee00fbd4afca36ef0897944a4f78",
+  "driver_sha256": "69bfeb4ec02b9eee8937b1b7402b61b1ac1bef98cbea1c504060559dbe658e27",
+  "base_commit": "181d7f98e007b5875d0cb9a85269e622125ef269",
+  "mutation": "Raise the target feature floor from sm_10 to sm_20 without changing arithmetic or proofs.",
+  "source_before_sha256": "651f4d1c2b73916b3269e72257f327e0259dff2310512b6ab1b0f65b8b17bbb2",
+  "source_after_sha256": "4729b28cf0564cf11647651d5c244f3ba0df72e260775b2002ddde91b147632c",
+  "outcome": "pass",
+  "qualification": "Chosen mutation rejected although its complete module and standard-axiom audit pass; not a completeness or statistical sensitivity claim.",
+  "finished_at": "2026-09-24T07:43:33.547864+00:00"
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "task": "select32-v1",
+  "selected_forms": [
+    "selp.b32"
+  ],
+  "interface_restriction": "Typed pure32-family leaf over supplied scalar states; word sources and one word destination, positive predicate selector for selp. No raw text/declaration checking, other widths, packed/saturation forms, complete kernel or hardware claim.",
+  "base_commit": "181d7f98e007b5875d0cb9a85269e622125ef269",
+  "accepted_patch_sha256": "68386addc375d6477af4e315934f013e0686d17771b69d06ae95b43c53faed18",
+  "worker_attempt": "select32-002",
+  "mechanical_replay": "replays/select32-002/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "pass: exact accepted patch integrated; isolated full root checks passed with 862 audited declarations",
+  "review_probes": "review-probes/report.json",
+  "source_conditions": {
+    "ptx_minimum": "1.0",
+    "target_minimum": "sm_10 feature floor; not recognized-target validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "comparison-and-selection-instructions-selp"
+    ]
+  },
+  "campaign_call_numbers": [
+    10,
+    12
+  ],
+  "trial_invocations": 2,
+  "repair_invocations": 1,
+  "initial_attempt_passed": false,
+  "evaluator_versions": {
+    "v1": "Frozen original preserved; candidate-only name/Fin-index/decidability elaboration defects recorded separately.",
+    "v2": "Explicit qualification and Fin types; concrete target/family unfolding replaces by decide. Same propositions and expected outcomes."
+  },
+  "additional_dependency_review": {
+    "public_declarations": 32,
+    "archive_log": "review/all-public-dependencies.log"
+  },
+  "usage_policy": "Preserve raw per-receipt usage. Resumed-session counters may be cumulative; do not sum. No billing data returned.",
+  "qualification": "Assisted development with coordinator contracts, shared execution engine, examples, evaluator repairs and focused feedback; not held-out success, general productivity or cost-effectiveness evidence.",
+  "review_probe_result": "Chosen mutation rejected although its complete module and standard-axiom audit pass; not a completeness or statistical sensitivity claim.",
+  "integration_evidence": {
+    "command": "bash scripts/check.sh",
+    "log": "integration-check.log",
+    "log_sha256": "4f4968a2aae2ab5a1c9a8d016c8267eb2ca14387346fd29bd64fe28e39ac8559",
+    "audited_declarations": 862,
+    "scope": "Exact combined leaf milestone isolated from unfinished reduction work. Joint TorchLean integration is separate."
+  }
+}

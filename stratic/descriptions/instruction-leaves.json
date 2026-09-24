@@ -11,7 +11,31 @@
     "Reuse the pure-family state transitions with exact predication, incoming operand values, fetched origin and direct operand metadata.",
     "Accept only the selected typed spellings after separate source review and independent proof and behavior checks."
   ],
-  "realization": "unimplemented",
-  "remaining": "Source-grounded contracts and independent acceptance drivers are prepared. No leaf implementation or instruction coverage is accepted until worker candidates pass their recorded checks and source review.",
-  "links": []
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Selection chooses one of two 32-bit words using a true-or-false predicate\nregister: `selp.b32` copies the first source when the predicate is true and the\nsecond otherwise. This selector is separate from the instruction guard, which\ncan skip the entire instruction. The selector uses a positive predicate register;\npositive and negated instruction guards are supported."
+      },
+      "to": {
+        "path": "Ptx/Select32.lean",
+        "passage": {
+          "quote": "def compute (a b : Word) (c : Bool) : Word := if c then a else b"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Signed minimum and maximum interpret each 32-bit word as a two's-complement\ninteger, ranging from −2147483648 to 2147483647. `min.s32` copies the source with\nthe smaller signed value, and `max.s32` copies the larger. A high leading bit\ntherefore denotes a negative value rather than a large positive integer. Every\n32-bit pattern is supported; there is no nonnegative-input restriction."
+      },
+      "to": {
+        "path": "Ptx/SignedMinMax32.lean",
+        "passage": {
+          "quote": "def compute (op : Operation) (a b : Word) : Word :=\n  match op with\n  | .min => if a.toInt < b.toInt then a else b\n  | .max => if a.toInt > b.toInt then a else b"
+        }
+      }
+    }
+  ]
 }

@@ -187,7 +187,10 @@ class ImplementedFormTests(unittest.TestCase):
         return checker.verify(self.root)
 
     def test_current_selected_forms_pass(self):
-        self.assertEqual(self.check(), 6 if 'binary32' in self.data['trials'] else 4)
+        expected = 4 + (2 if 'binary32' in self.data['trials'] else 0)
+        expected += 1 if 'select32' in self.data['trials'] else 0
+        expected += 2 if 'signed_minmax32' in self.data['trials'] else 0
+        self.assertEqual(self.check(), expected)
 
     def test_wrong_source_rejected_even_if_file_hash_refreshed(self):
         ref = self.data['files']['manual']

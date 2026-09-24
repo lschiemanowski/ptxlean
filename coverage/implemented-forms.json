@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Six reviewed forms: four integer forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Nine reviewed forms: seven integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": "references/nvidia/ptx-isa-9.4/index.html",
@@ -70,6 +70,42 @@
     "binary32_review": {
       "path": "docs/formalization/binary32-instructions-source-review.md",
       "sha256": "bc8a3d73c04be0ca5486bd9851b2e15838dffcdb1e72b6332cb8a1a0bcadab21"
+    },
+    "select32": {
+      "path": "Ptx/Select32.lean",
+      "sha256": "4b8bc90df0d95d7f25a7e5d4512ad9f593466d5f1a008d1cf2c32214b9ea3152"
+    },
+    "select32_acceptance": {
+      "path": "formalization/results/select32/acceptance.json",
+      "sha256": "d6dd587a3a872f38d48fb899f02d870652460b71fe53d2bf2d89453445fb20c1"
+    },
+    "select32_evidence": {
+      "path": "formalization/results/select32/evidence-manifest.json",
+      "sha256": "32742618ae9de228506d6277004de7b0397be65665923566a8c754bcdae9c41f"
+    },
+    "select32_review": {
+      "path": "docs/formalization/pure-leaves-review.md",
+      "sha256": "800d4c6667f94761f0e08fb9353ae1a3ef4c891766b88972623d64f3b3ca7f54"
+    },
+    "pure32": {
+      "path": "Ptx/Pure32.lean",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    "signed_minmax32": {
+      "path": "Ptx/SignedMinMax32.lean",
+      "sha256": "651f4d1c2b73916b3269e72257f327e0259dff2310512b6ab1b0f65b8b17bbb2"
+    },
+    "signed_minmax32_acceptance": {
+      "path": "formalization/results/signed-minmax32/acceptance.json",
+      "sha256": "99945d938e53920b2c27c8496f8b55f0de0fead1369e4b68f6ebe02ccfaf13c5"
+    },
+    "signed_minmax32_evidence": {
+      "path": "formalization/results/signed-minmax32/evidence-manifest.json",
+      "sha256": "d456c14f21b97c4055fa4be7d6cbb3a0675c10f3f29fc3f4f7beb31a982e2c20"
+    },
+    "signed_minmax32_review": {
+      "path": "docs/formalization/pure-leaves-review.md",
+      "sha256": "800d4c6667f94761f0e08fb9353ae1a3ef4c891766b88972623d64f3b3ca7f54"
     }
   },
   "source": {
@@ -90,7 +126,8 @@
       "floating-point-instructions-mul": "be57ecb14198d60386617a258dbe3a113d58e2355810cdc31d44d5679a0f92cb",
       "floating-point-constants": "18bc1c6df31458d6cf5482b57f1f11bbf62e3ae6b79ee53b29d0828986e44ad6",
       "fundamental-types": "737b66557cb0faeb38be8db19ba958bfeb0c0fbc9b50cdef002c9916a8551964",
-      "instruction-statements": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a"
+      "instruction-statements": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a",
+      "comparison-and-selection-instructions-selp": "8781e1d81a058fbac02e290afeca05c1a45ea6f12c8e9bdcabbde18a5dc75347"
     },
     "common_operand_guard_anchors": [
       "operand-type-information",
@@ -125,6 +162,22 @@
       "patch_member": "attempts/binary32-003/candidate.patch",
       "replay_member": "replays/binary32-003/result.json",
       "patch_sha256": "5280b4c9504f4aad4eb232819651fbd9a8d8479498652d6cafb67970631488a6"
+    },
+    "select32": {
+      "acceptance": "select32_acceptance",
+      "evidence": "select32_evidence",
+      "source_review": "select32_review",
+      "patch_member": "attempts/select32-002/candidate.patch",
+      "replay_member": "replays/select32-002/result.json",
+      "patch_sha256": "68386addc375d6477af4e315934f013e0686d17771b69d06ae95b43c53faed18"
+    },
+    "signed_minmax32": {
+      "acceptance": "signed_minmax32_acceptance",
+      "evidence": "signed_minmax32_evidence",
+      "source_review": "signed_minmax32_review",
+      "patch_member": "attempts/signed-minmax32-003/candidate.patch",
+      "replay_member": "replays/signed-minmax32-003/result.json",
+      "patch_sha256": "41338a792294b67881939ead14b8132ad86fee00fbd4afca36ef0897944a4f78"
     }
   },
   "forms": [
@@ -849,6 +902,513 @@
           "name": "decode_iff"
         }
       ]
+    },
+    {
+      "spelling": "selp.b32",
+      "status": "accepted",
+      "trial": "select32",
+      "source_anchor": "comparison-and-selection-instructions-selp",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate",
+          "compatible 32-bit word register or decoded immediate",
+          "positive predicate register"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Copy the first word when the selector is true, second otherwise.",
+      "boundary": "Typed pure32-family leaf over supplied scalar states; word sources and one word destination, positive predicate selector for selp. No raw text/declaration checking, other widths, packed/saturation forms, complete kernel or hardware claim. Exact ISA94/SM>=10 feature requirement on fetched Step, not recognized-target validation.",
+      "semantics": [
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "compute"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "family"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "lower"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "results_iff"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "eval_other"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "eval_event"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "step_origin"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "step_exists"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "select32",
+          "namespace": "Ptx.Scalar.Select32.Text",
+          "name": "decode_iff"
+        }
+      ]
+    },
+    {
+      "spelling": "min.s32",
+      "status": "accepted",
+      "trial": "signed_minmax32",
+      "source_anchor": "integer-arithmetic-instructions-min",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate",
+          "compatible 32-bit word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Copy the signed minimum using all-input two's-complement interpretation.",
+      "boundary": "Typed pure32-family leaf over supplied scalar states; word sources and one word destination, positive predicate selector for selp. No raw text/declaration checking, other widths, packed/saturation forms, complete kernel or hardware claim. Exact ISA94/SM>=10 feature requirement on fetched Step, not recognized-target validation.",
+      "semantics": [
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "compute"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "family"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "lower"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "compute_min"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "compute_max"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "compute_toInt"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "results_iff"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_other"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_event"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "step_origin"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "step_exists"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "decode_iff"
+        }
+      ]
+    },
+    {
+      "spelling": "max.s32",
+      "status": "accepted",
+      "trial": "signed_minmax32",
+      "source_anchor": "integer-arithmetic-instructions-max",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate",
+          "compatible 32-bit word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Copy the signed maximum using all-input two's-complement interpretation.",
+      "boundary": "Typed pure32-family leaf over supplied scalar states; word sources and one word destination, positive predicate selector for selp. No raw text/declaration checking, other widths, packed/saturation forms, complete kernel or hardware claim. Exact ISA94/SM>=10 feature requirement on fetched Step, not recognized-target validation.",
+      "semantics": [
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "compute"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "family"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "lower"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "compute_min"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "compute_max"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "compute_toInt"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "results_iff"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_other"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_event"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "step_origin"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "step_exists"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "signed_minmax32",
+          "namespace": "Ptx.Scalar.SignedMinMax32.Text",
+          "name": "decode_iff"
+        }
+      ]
     }
   ],
   "uncovered_siblings": [
@@ -858,11 +1418,10 @@
         "min.u16",
         "min.u64",
         "min.s16",
-        "min.s32",
         "min.s64"
       ],
       "status": "unimplemented",
-      "reason": "Other scalar widths and signed comparisons are unimplemented in this family."
+      "reason": "Other scalar widths remain unimplemented; signed 32-bit comparison has a separate accepted family."
     },
     {
       "source_anchor": "integer-arithmetic-instructions-min",
@@ -891,11 +1450,10 @@
         "max.u16",
         "max.u64",
         "max.s16",
-        "max.s32",
         "max.s64"
       ],
       "status": "unimplemented",
-      "reason": "Other scalar widths and signed comparisons are unimplemented in this family."
+      "reason": "Other scalar widths remain unimplemented; signed 32-bit comparison has a separate accepted family."
     },
     {
       "source_anchor": "integer-arithmetic-instructions-max",
@@ -963,6 +1521,23 @@
         "mul.rn.f32x2"
       ],
       "reason": "Only explicit nearest-even scalar f32 without FTZ/saturation is accepted. Other spellings may be valid PTX but are not implemented by this leaf; implicit rounding also has distinct optimizer latitude."
+    },
+    {
+      "source_anchor": "comparison-and-selection-instructions-selp",
+      "spellings": [
+        "selp.b16",
+        "selp.b64",
+        "selp.u16",
+        "selp.u32",
+        "selp.u64",
+        "selp.s16",
+        "selp.s32",
+        "selp.s64",
+        "selp.f32",
+        "selp.f64"
+      ],
+      "status": "unimplemented",
+      "reason": "Only selp.b32 with a positive register selector is accepted by this leaf; other widths/types and selector forms are outside its interface."
     }
   ]
 }

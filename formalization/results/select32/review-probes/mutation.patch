@@ -1,0 +1,11 @@
+--- a/Ptx/Select32.lean
++++ b/Ptx/Select32.lean
+@@ -183,7 +183,7 @@
+     | [.word (.reg destination), .word left, .word right, .predicate predicate] =>
+       .ok ⟨statement.guard, destination, left, right, predicate⟩
+     | _ => .error (.invalidOperands statement.mnemonic)
+-  else .error (.unsupportedMnemonic statement.mnemonic)
++  else .error (.invalidOperands statement.mnemonic)
+ 
+ theorem decode_encode (i : Instr) : decode (encode i) = .ok i := by
+   simp [decode, encode, supportedMnemonic]

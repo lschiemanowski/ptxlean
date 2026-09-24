@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "started_at": "2026-09-24T07:39:14.960120+00:00",
+  "model_calls": 0,
+  "attempt": "select32-002",
+  "commands": [
+    {
+      "name": "setup",
+      "argv": [
+        "git",
+        "worktree",
+        "add",
+        "--detach",
+        "/tmp/ptx-select32-probe-3v3t9jxb/worktree",
+        "181d7f98e007b5875d0cb9a85269e622125ef269"
+      ],
+      "cwd": "/home/lothar/workspace/ptxlean",
+      "exit_code": 0,
+      "log": "setup.log"
+    },
+    {
+      "name": "apply",
+      "argv": [
+        "git",
+        "apply",
+        "/home/lothar/workspace/ptxlean/.formalization-runs/luna/attempts/select32-002/candidate.patch"
+      ],
+      "cwd": "/tmp/ptx-select32-probe-3v3t9jxb/worktree",
+      "exit_code": 0,
+      "log": "apply.log"
+    },
+    {
+      "name": "control-build",
+      "argv": [
+        "lake",
+        "build",
+        "Ptx.Select32"
+      ],
+      "cwd": "/tmp/ptx-select32-probe-3v3t9jxb/worktree",
+      "exit_code": 0,
+      "log": "control-build.log"
+    },
+    {
+      "name": "control-driver",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean"
+      ],
+      "cwd": "/tmp/ptx-select32-probe-3v3t9jxb/worktree",
+      "exit_code": 0,
+      "log": "control-driver.log"
+    },
+    {
+      "name": "control-audit",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/audit.lean"
+      ],
+      "cwd": "/tmp/ptx-select32-probe-3v3t9jxb/worktree",
+      "exit_code": 0,
+      "log": "control-audit.log"
+    },
+    {
+      "name": "mutation-build",
+      "argv": [
+        "lake",
+        "build",
+        "Ptx.Select32"
+      ],
+      "cwd": "/tmp/ptx-select32-probe-3v3t9jxb/worktree",
+      "exit_code": 0,
+      "log": "mutation-build.log"
+    },
+    {
+      "name": "mutation-audit",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/audit.lean"
+      ],
+      "cwd": "/tmp/ptx-select32-probe-3v3t9jxb/worktree",
+      "exit_code": 0,
+      "log": "mutation-audit.log"
+    },
+    {
+      "name": "mutation-driver",
+      "argv": [
+        "lake",
+        "env",
+        "lean",
+        "/home/lothar/workspace/ptxlean/formalization/results/select32/review-probes/acceptance.lean"
+      ],
+      "cwd": "/tmp/ptx-select32-probe-3v3t9jxb/worktree",
+      "exit_code": 1,
+      "log": "mutation-driver.log"
+    }
+  ],
+  "worktree": "/tmp/ptx-select32-probe-3v3t9jxb/worktree",
+  "candidate_patch_sha256": "68386addc375d6477af4e315934f013e0686d17771b69d06ae95b43c53faed18",
+  "driver_sha256": "1d82b90a86b7786aa006276f5065325197b8925164e0522540a235fe23a00635",
+  "base_commit": "181d7f98e007b5875d0cb9a85269e622125ef269",
+  "mutation": "Misclassify every unsupported mnemonic as invalid operands; accepted instruction semantics unchanged.",
+  "source_before_sha256": "4b8bc90df0d95d7f25a7e5d4512ad9f593466d5f1a008d1cf2c32214b9ea3152",
+  "source_after_sha256": "042fe4bb8b50940afa1cd812f9fe1afb07f4f3778c98b08e9107cce554a86ce0",
+  "outcome": "pass",
+  "qualification": "Chosen mutation rejected although its complete module and standard-axiom audit pass; not a completeness or statistical sensitivity claim.",
+  "finished_at": "2026-09-24T07:39:39.658728+00:00"
+}

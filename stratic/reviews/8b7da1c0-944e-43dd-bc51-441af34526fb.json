@@ -1,0 +1,324 @@
+{
+  "id": "8b7da1c0-944e-43dd-bc51-441af34526fb",
+  "base": "a59af135e6bf60c654d5b5633019bd76eeb4e9ce",
+  "contentTree": "a022baa3bd41dba5a65bad6ae37863aca7fb7a57",
+  "reviewer": "Codex coordinator independent of Luna candidates",
+  "summary": "Accept selection and signed min/max leaves through the shared Pure32 mechanism after separate source/proof review, fresh replay, preserved repairs and distinguishing mutation checks.",
+  "examined": [
+    {
+      "id": "instruction-leaves",
+      "outcome": "revised",
+      "reason": "Implemented exact frozen semantic contracts; source correspondence, all-input proof signatures, both typed frontends, 67 public declarations and negative checks independently reviewed."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "Added only selp.b32/min.s32/max.s32, removed signed32 from uncovered siblings, pinned exact source/patch/replay/current definitions; nine-form count is not total ISA coverage."
+    },
+    {
+      "id": "worker-review-probes",
+      "outcome": "revised",
+      "reason": "Added exact-control probes for unsupported-name error classification and target floor; both mutants compile with standard-axiom proofs but fail unchanged acceptance."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Only unrelated new public audit registrations touch the linked audit file; existing message-passing proofs and model unchanged."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "The manual section inventory remains unassessed; selected accepted forms are a separate child ledger and do not imply section coverage."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "Both leaves exactly instantiate the reviewed total pure-operation interface, with no engine or target/operand-contract changes."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "The parent already separates proof validity, source fidelity, raw evidence and assisted model evaluation; these two additional bounded trials preserve that contract."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "a022baa3bd41dba5a65bad6ae37863aca7fb7a57",
+      "method": "Isolated exact snapshot: bash scripts/check.sh; fresh v2 worker replay; manual source/proof review; separate control/mutation checks; stratic validate",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; dependency-free root package; Python standard library; isolated /tmp/ptx-leaves-isolated",
+      "evidence": "Full root checks passed: 9 accepted forms, all evidence manifests, coverage regressions, 73 worker tests, 26 ledger tests, source/proof scans, full build and exact dependency audit of 862 declarations. Both new candidates passed fresh isolated replay and explicit source review; 67 public leaf declarations audited. Both deliberate mutations built and passed standard-axiom audit while unchanged acceptance drivers rejected intended defects. Original evaluator failures preserved; all final selected bytes unchanged after checks. Log /tmp/ptx-leaves-finalcheck.log; durable per-trial integration-check.log and archives.",
+      "tests": [],
+      "id": "1ba5a91f-e489-405c-b5dd-2104d1f8e6e5",
+      "recordedAt": "2026-09-24T07:55:59.116Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T07:56:22.637Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "Ptx/Select32.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "Ptx/SignedMinMax32.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "docs/formalization/pure-leaves-review.md",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/checks/select32-v1.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/checks/select32-v2.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/checks/select32-v2.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/checks/signed-minmax32-v1.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/checks/signed-minmax32-v2.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/checks/signed-minmax32-v2.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/feedback/select32-repair-1.md",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/feedback/signed-minmax32-repair-1.md",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/feedback/signed-minmax32-repair-2.md",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/README.md",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/acceptance.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/evidence-manifest.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/integration-check.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/acceptance.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/apply.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/audit.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/control-audit.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/control-build.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/control-driver.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/harness.py",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/mutation-audit.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/mutation-build.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/mutation-driver.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/mutation.patch",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/report.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review-probes/setup.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review/all-public-dependencies.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review/audit.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/review/declarations.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/select32/worker-evidence.tar.gz",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/README.md",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/acceptance.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/evidence-manifest.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/integration-check.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/acceptance.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/apply.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/audit.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/control-audit.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/control-build.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/control-driver.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/harness.py",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/mutation-audit.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/mutation-build.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/mutation-driver.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/mutation.patch",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/report.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review-probes/setup.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review/all-public-dependencies.log",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review/audit.lean",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/review/declarations.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/worker-evidence.tar.gz",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/tasks/select32-v1.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "formalization/tasks/signed-minmax32-v1.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "stratic/descriptions/instruction-leaves.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "stratic/descriptions/worker-review-probes.json",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "stratic/descriptions/worker-review-probes.md",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed supporting module registration/audit, frozen task and evaluator versions, preserved feedback and evidence archives, provenance ledger documentation or independent probe logs for these exact leaf contracts; no broader semantic claim."
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "modules": [
+    "Ptx.Select32"
+  ],
+  "checks": [
+    "formalization/checks/select32-v2.lean"
+  ],
+  "checks_sha256": {
+    "formalization/checks/select32-v2.lean": "1d82b90a86b7786aa006276f5065325197b8925164e0522540a235fe23a00635"
+  },
+  "declarations": [
+    "Ptx.Scalar.Select32.SupportedTarget",
+    "Ptx.Scalar.Select32.Operation",
+    "Ptx.Scalar.Select32.Instr",
+    "Ptx.Scalar.Select32.compute",
+    "Ptx.Scalar.Select32.family",
+    "Ptx.Scalar.Select32.lower",
+    "Ptx.Scalar.Select32.result",
+    "Ptx.Scalar.Select32.Occurrence",
+    "Ptx.Scalar.Select32.Eval",
+    "Ptx.Scalar.Select32.Step",
+    "Ptx.Scalar.Select32.occurrence",
+    "Ptx.Scalar.Select32.compute_eq",
+    "Ptx.Scalar.Select32.results_iff",
+    "Ptx.Scalar.Select32.lower_predicate",
+    "Ptx.Scalar.Select32.lower_fields",
+    "Ptx.Scalar.Select32.eval_true_iff",
+    "Ptx.Scalar.Select32.eval_false_iff",
+    "Ptx.Scalar.Select32.eval_destination",
+    "Ptx.Scalar.Select32.eval_frame",
+    "Ptx.Scalar.Select32.eval_other",
+    "Ptx.Scalar.Select32.eval_event",
+    "Ptx.Scalar.Select32.eval_deterministic",
+    "Ptx.Scalar.Select32.eval_exists",
+    "Ptx.Scalar.Select32.step_origin",
+    "Ptx.Scalar.Select32.step_exists",
+    "Ptx.Scalar.Select32.step_no_fetch",
+    "Ptx.Scalar.Select32.step_unsupported_target",
+    "Ptx.Scalar.Select32.Text.decode_encode",
+    "Ptx.Scalar.Select32.Text.decode_iff",
+    "Ptx.Scalar.Select32.Text.supportedMnemonic",
+    "Ptx.Scalar.Select32.Text.encode",
+    "Ptx.Scalar.Select32.Text.decode"
+  ],
+  "scope": "Frozen source-grounded Pure32 leaf acceptance: all-word arithmetic, actual lowering/fetch, predication, aliasing, metadata, target and strict typed text. No full-kernel or hardware claim.",
+  "revision_note": "Coordinator evaluator repair: remove conflicting broad namespace opens, fully qualify Scalar/Pure32 references, annotate fixed Fin operand indices and unfold target/family predicates in concrete proofs because no Decidable instance was required. Required propositions and expected outcomes are unchanged. Original drivers and all diagnostic stages remain preserved; these repairs do not confer semantic acceptance."
+}

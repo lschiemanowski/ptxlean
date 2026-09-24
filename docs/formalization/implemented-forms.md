@@ -1,9 +1,9 @@
 # Reading the accepted-form ledger
 
-[The ledger](../../coverage/implemented-forms.json) records six selected accepted
+[The ledger](../../coverage/implemented-forms.json) records nine selected accepted
 forms. It is separate from the [instruction-section inventory](coverage.md),
 whose `not_assessed` entries are unchanged. Other existing scalar instructions
-are not yet entered here, so even the ledger's six-form count is not a count of
+are not yet entered here, so even the ledger's nine-form count is not a count of
 all implemented PTX forms.
 
 | Exact form | Inputs → destination | Meaning | Manual conditions |
@@ -14,13 +14,19 @@ all implemented PTX forms.
 | `popc.b32` | one 32-bit pattern → unsigned 32-bit register | Number of one bits; zero gives 0 | PTX 2.0; `sm_20` or later |
 | `add.rn.f32` | two binary32 words → compatible 32-bit register | Nearest-even sum; preserved subnormals; conservative NaN envelope | Arithmetic introduced in PTX 1.0; selected step requires ISA 9.4 and SM ≥20 |
 | `mul.rn.f32` | two binary32 words → compatible 32-bit register | Nearest-even product; preserved subnormals; conservative NaN envelope | Arithmetic introduced in PTX 1.0; selected step requires ISA 9.4 and SM ≥20 |
+| `selp.b32` | two words and a predicate → 32-bit register | First source if true, second otherwise | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `min.s32` | two signed 32-bit words → compatible register | Smaller signed value | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `max.s32` | two signed 32-bit words → compatible register | Larger signed value | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
 
-Every input can come from a word register or a 32-bit immediate value. All six
+Every word input can come from a word register or a 32-bit immediate value.
+The selection predicate is a register. All nine
 forms support unconditional execution or execution guarded by a positive or
 negated predicate. A false guard advances the program counter without writing
 the destination. Register overlap is allowed: the incoming source value is read
 before the destination changes. These are typed statement interfaces, not a
-parser or type checker for complete PTX source files. The integer decoder records no architecture/version eligibility decision.
+parser or type checker for complete PTX source files. The older unsigned and bit-count decoders record no architecture/version
+eligibility decision. The selection and signed min/max fetched steps require
+ISA 9.4 and a numeric SM feature floor of 10.
 The floating `Step` requires exact ISA 94 and numeric SM at least 20, although
 this is not a target-name or architecture-suffix validator. Its source word bank
 represents `.b32`/`.f32` registers; declared `.u32`/`.s32` registers do not become
@@ -40,11 +46,13 @@ Common input, destination and guard rules have their own pinned section anchors
 in the ledger. Source fidelity is an independent review judgment, supported by
 [the first source review](initial-source-review.md) and
 [the bit-count review](bitcount-source-review.md); it is not a consequence of a
-successful Lean build.
+successful Lean build. The [pure-leaf review](pure-leaves-review.md) covers
+selection and signed min/max, their exact shared-engine boundary and retained
+evaluator corrections.
 
-The unsigned minimum and maximum entries do not cover signed comparisons, other
-scalar widths, packed half-word or quarter-word lanes, or `.relu` clamping of a
-negative result to zero. The manual lists those sibling forms explicitly, with
+The separate signed minimum and maximum entries add only `.s32`. Other
+scalar widths, packed half-word or quarter-word lanes, and `.relu` clamping of a
+negative result to zero remain unimplemented. The manual lists those sibling forms explicitly, with
 different target/version conditions for the packed and clamping forms; the ledger
 marks them unimplemented rather than copying the selected forms' conditions onto
 them. Both `.b64` bit-count siblings remain unimplemented and still require a

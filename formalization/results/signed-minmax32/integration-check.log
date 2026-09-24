@@ -1,0 +1,957 @@
+Lean (version 4.34.0, x86_64-unknown-linux-gnu, commit 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b, Release)
+PTX 9.4 source: SHA-256, 3928316 bytes, 23 anchors verified.
+PTX 9.4 instruction-section inventory: {'all_sections': 451, 'instruction': 219, 'group': 81, 'context': 149, 'language_construct': 2}; no form-coverage claim.
+Worker evidence: 736 archived files across 6 archives verified.
+Implemented-form ledger: 9 selected accepted forms verified; no section-coverage claim.
+test_groups_concepts_and_syntax_are_not_instructions (__main__.ExtractionTests.test_groups_concepts_and_syntax_are_not_instructions) ... ok
+test_missing_and_duplicate_structure_rejected (__main__.ExtractionTests.test_missing_and_duplicate_structure_rejected) ... ok
+test_repeated_mnemonic_is_not_deduplicated (__main__.ExtractionTests.test_repeated_mnemonic_is_not_deduplicated) ... ok
+test_source_tampering_rejected (__main__.ExtractionTests.test_source_tampering_rejected) ... ok
+test_unicode_byte_span_and_nested_hashes (__main__.ExtractionTests.test_unicode_byte_span_and_nested_hashes) ... ok
+test_committed_inventory_and_partition (__main__.PinnedSourceTests.test_committed_inventory_and_partition) ... ok
+test_important_boundaries_in_actual_manual (__main__.PinnedSourceTests.test_important_boundaries_in_actual_manual) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.604s
+
+OK
+.........................................................................
+----------------------------------------------------------------------
+Ran 73 tests in 12.585s
+
+OK
+..........................
+----------------------------------------------------------------------
+Ran 26 tests in 7.228s
+
+OK
+Lean source guard: 56 files checked.
+✔ [2/57] Built Ptx.Language (725ms)
+✔ [3/57] Built Ptx.Barrier (912ms)
+✔ [4/57] Built Ptx.Memory (633ms)
+✔ [5/57] Built Ptx.Publication (412ms)
+✔ [6/57] Built Ptx.Reachability (439ms)
+✔ [7/57] Built Ptx.CollectiveOrder (472ms)
+✔ [8/57] Built Ptx.Program (540ms)
+✔ [9/57] Built Ptx.SharedBarrierMachine (1.2s)
+✔ [10/57] Built Ptx.OrderedMemory (478ms)
+✔ [11/57] Built Ptx.Checker (581ms)
+✔ [12/57] Built Ptx.Scalar (1.7s)
+✔ [13/57] Built Ptx.CollectiveMemory (416ms)
+✔ [14/57] Built Ptx.SharedBarrierProgram (741ms)
+✔ [15/57] Built Ptx.GraphTransport (686ms)
+✔ [16/57] Built Ptx.ScalarRules (642ms)
+✔ [17/57] Built Ptx.ScalarKernels (716ms)
+✔ [18/57] Built Ptx.TraceMemory (873ms)
+✔ [19/57] Built Ptx.Environment (2.8s)
+✔ [20/57] Built Ptx.SharedBarrierInvariant (1.4s)
+✔ [21/57] Built Ptx.TraceMemoryExamples (492ms)
+✔ [22/57] Built Ptx.SharedBarrierEnvironment (462ms)
+✔ [23/57] Built Ptx.ScalarEnvironment (562ms)
+✔ [24/57] Built Ptx.ScopedMemory (647ms)
+✔ [25/57] Built Ptx.MessagePassing (2.4s)
+✔ [26/57] Built Ptx.SharedBarrierFrame (667ms)
+✔ [27/57] Built Ptx.Pure32 (698ms)
+✔ [28/57] Built Ptx.Pure32Examples (439ms)
+✔ [29/57] Built Ptx.SharedBarrierHistory (534ms)
+✔ [30/57] Built Ptx.SequentialStorage (707ms)
+✔ [31/57] Built Ptx.ByteMemory (1.5s)
+✔ [32/57] Built Ptx.OrderedMemoryExamples (3.7s)
+✔ [33/57] Built Ptx.ScopedExamples (2.2s)
+✔ [34/57] Built Ptx.ByteExamples (877ms)
+✔ [35/57] Built Ptx.SharedBarrierMemory (5.7s)
+✔ [36/57] Built Ptx.Litmus (5.9s)
+✔ [37/57] Built Ptx.ScalarMemoryWitness (5.7s)
+✔ [38/57] Built Ptx.SharedBarrier (710ms)
+✔ [39/57] Built Ptx.MessagePassingOutcomes (6.9s)
+✔ [40/57] Built Ptx.CheckerExamples (580ms)
+⚠ [41/57] Built Ptx.SharedVector (6.3s)
+warning: Ptx/SharedVector.lean:240:15: `if_neg` has been deprecated: Use `ite_eq_right` instead
+warning: Ptx/SharedVector.lean:383:25: `if_neg` has been deprecated: Use `ite_eq_right` instead
+warning: Ptx/SharedVector.lean:407:10: `if_neg` has been deprecated: Use `ite_eq_right` instead
+✔ [42/57] Built Ptx.SharedVectorExamples (499ms)
+✔ [43/57] Built Ptx.AffineMemory (7.0s)
+✔ [44/57] Built Ptx.ScalarText (18s)
+⚠ [45/57] Built Ptx.Select32 (656ms)
+warning: Ptx/Select32.lean:83:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: Ptx/Select32.lean:141:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+✔ [46/57] Built Ptx.IntegerMinMax (736ms)
+✔ [47/57] Built Ptx.ScalarExamples (811ms)
+✔ [48/57] Built Ptx.IntegerBitCount (885ms)
+✔ [49/57] Built Ptx.ComputedPublicationMachine (1.0s)
+✔ [50/57] Built Ptx.SignedMinMax32 (1.0s)
+✔ [51/57] Built Ptx.ScalarTraceMemory (571ms)
+✔ [52/57] Built Ptx.ComputedPublication (978ms)
+✔ [53/57] Built Ptx.SharedVectorMemory (16s)
+✔ [54/57] Built Ptx.ComputedPublicationWitness (14s)
+✔ [55/57] Built Ptx.ProjectedPublication (560ms)
+✔ [56/57] Built Ptx (360ms)
+Build completed successfully (57 jobs).
+'Ptx.step_exists' does not depend on any axioms
+'Ptx.step_deterministic' does not depend on any axioms
+'Ptx.load_writes_destination' depends on axioms: [propext]
+'Ptx.store_emits_operand' does not depend on any axioms
+'Ptx.execute_runs' does not depend on any axioms
+'Ptx.runs_eq_execute' depends on axioms: [propext]
+'Ptx.runs_exists' does not depend on any axioms
+'Ptx.runs_deterministic' depends on axioms: [propext]
+'Ptx.execute_effects' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.execute_getElem?' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.execute_access_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.word_footprints_disjoint' depends on axioms: [propext, Quot.sound]
+'Ptx.Program.all_threads_run' does not depend on any axioms
+'Ptx.Program.events_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Program.graph_event_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Program.load_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Program.store_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Program.initial_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Program.no_invented_values' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Program.admitted_access_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Graph.single_copy' does not depend on any axioms
+'Ptx.Graph.no_source_coherence_predecessor' depends on axioms: [propext]
+'Ptx.Graph.valid_of_certificate' depends on axioms: [propext]
+'Ptx.MessagePassing.publication' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.publication_observed' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.successful_execution_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.relaxed_counterexample_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.MessagePassing.objects_disjoint' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.local_completion' does not depend on any axioms
+'Ptx.MessagePassing.acquire_stale_impossible' depends on axioms: [propext, Quot.sound]
+'Ptx.reachable_iff' depends on axioms: [propext]
+'Ptx.Graph.baseCheck_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Graph.causeCheck_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Graph.locationCheck_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Graph.check_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Graph.check_false_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.source_values' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.acquire_outcomes' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.relaxed_outcomes' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.zero_flag_check' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.relaxed_check' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.acquire_success_check' depends on axioms: [propext, Quot.sound]
+'Ptx.MessagePassing.acquire_stale_check' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.empty_relation' does not depend on any axioms
+'Ptx.CheckerExamples.singleton_loop' depends on axioms: [propext]
+'Ptx.CheckerExamples.cycle_reachable' does not depend on any axioms
+'Ptx.CheckerExamples.empty_graph_accepted' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.initialized_graph_accepted' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.read_cannot_source_itself' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.reflexive_coherence_rejected' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.wrong_value_rejected' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.wrong_address_rejected' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.missing_initial_coherence_rejected' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.wrong_value_invalid' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.base_cycle_detected' depends on axioms: [propext, Quot.sound]
+'Ptx.CheckerExamples.base_cycle_rejected' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.StoreBuffering.both_zero_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.StoreBuffering.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Litmus.SameLocation.ordered_read' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.SameLocation.stale_impossible' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.SameLocation.execution_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.SameLocation.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Litmus.ReleasePair.publication_observed' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.ReleasePair.execution_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.ReleasePair.no_direct_release_observation' depends on axioms: [propext]
+'Ptx.Litmus.ReleasePair.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Litmus.AcquirePair.publication_observed' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.AcquirePair.execution_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.AcquirePair.no_direct_release_observation' depends on axioms: [propext]
+'Ptx.Litmus.AcquirePair.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Litmus.ReleasePair.pair_required' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.AcquirePair.pair_required' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.ReleasePair.witness_synchronizes' depends on axioms: [propext, Quot.sound]
+'Ptx.Litmus.AcquirePair.witness_synchronizes' depends on axioms: [propext, Quot.sound]
+'Ptx.Scope.includes_self' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scope.cta_includes_cluster' depends on axioms: [propext]
+'Ptx.Scope.cluster_includes_gpu' depends on axioms: [propext]
+'Ptx.Environment.accessible_contract' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Environment.accessible_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.ScopedGraph.morallyStrong_legacy' depends on axioms: [propext]
+'Ptx.ScopedGraph.observation_legacy' depends on axioms: [propext]
+'Ptx.ScopedGraph.sync_legacy' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedGraph.base_legacy' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedGraph.cause_legacy' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedGraph.location_legacy' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedGraph.coherent_legacy' depends on axioms: [propext]
+'Ptx.ScopedGraph.valid_legacy' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedExamples.publication' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedExamples.gpu_all_in_scope' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedExamples.gpu_specialization' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedExamples.in_scope_execution_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedExamples.outside_scope_execution_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedExamples.outside_scope_no_sync' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedExamples.scope_inclusion_is_mutual' depends on axioms: [propext]
+'Ptx.ScopedExamples.different_grids_not_same_cta' does not depend on any axioms
+'Ptx.ScopedExamples.different_grids_same_gpu' does not depend on any axioms
+'Ptx.ScopedExamples.same_cluster_different_cta' does not depend on any axioms
+'Ptx.ScopedExamples.shared_owner_can_access' depends on axioms: [propext]
+'Ptx.ScopedExamples.shared_other_cta_cannot_access' depends on axioms: [propext]
+'Ptx.ScopedExamples.explicit_cluster_shared_access' depends on axioms: [propext]
+'Ptx.ScopedExamples.shared_other_grid_cannot_access' depends on axioms: [propext]
+'Ptx.ScopedExamples.misalignment_rejected' depends on axioms: [propext]
+'Ptx.ScopedExamples.bounds_rejected' depends on axioms: [propext]
+'Ptx.ScopedExamples.cluster_target_rejected' does not depend on any axioms
+'Ptx.ScopedExamples.cluster_target_accepted' does not depend on any axioms
+'Ptx.ScopedExamples.local_other_thread_rejected' depends on axioms: [propext]
+'Ptx.ScopedExamples.entry_parameter_store_rejected' depends on axioms: [propext]
+'Ptx.ScopedExamples.parameter_abi_explicitly_unsupported' does not depend on any axioms
+'Ptx.ScopedExamples.racy_writes_partial_coherence' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedExamples.racy_program_admitted' depends on axioms: [propext, Quot.sound]
+'Ptx.ScopedExamples.racy_not_legacy_valid' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.update_same' depends on axioms: [propext]
+'Ptx.Scalar.update_other' depends on axioms: [propext]
+'Ptx.Scalar.addressIndex_ok_iff' depends on axioms: [propext]
+'Ptx.Scalar.runWith_sound' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.run_sound' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.runWith_trace_length' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.run_zero' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.eval_skipped' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.shift_left_clamped' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.shift_right_clamped' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.run_succ' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.run_add' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.eval_memory_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.eval_memory_length' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.step_memory_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.step_memory_length' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.eval_halted' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.step_halted' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.runWith_memory_length' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.run_memory_length' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.runWith_trace_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.run_trace_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Runs.exists_run' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.add_modulo' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.sub_modulo' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.mul_low_modulo' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.add64_modulo' does not depend on any axioms
+'Ptx.Scalar.validAddress_bytes' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.unsupported_not_hidden' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.shift_boundary_examples' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.unsigned_wrap_examples' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Text.decode_encode' depends on axioms: [propext]
+'Ptx.Scalar.Text.bare_load_rejected' depends on axioms: [propext]
+'Ptx.Scalar.Text.uniform_branch_rejected' depends on axioms: [propext]
+'Ptx.Scalar.Text.wrong_destination_rejected' depends on axioms: [propext]
+'Ptx.Scalar.Text.decodeOp_supported' depends on axioms: [propext]
+'Ptx.Scalar.Text.immediate_store_rejected' depends on axioms: [propext]
+'Ptx.Scalar.Text.decode_supported' depends on axioms: [propext]
+'Ptx.Scalar.Kernels.add_lane_result' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Kernels.elementwise_add' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Kernels.loop_zero' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Kernels.loop_advance' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Kernels.sum_loop_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Kernels.add_lane_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Kernels.sum_loop_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Kernels.sum_loop_extra_fuel' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Kernels.sum_loop_memory_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.arena_access_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.run_environment_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.separate_arenas' does not depend on any axioms
+'Ptx.Scalar.arena_forms_eligible' does not depend on any axioms
+'Ptx.Scalar.Examples.zero_count_no_access' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Examples.modular_sum' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Examples.fuel_exhaustion_is_not_halt' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Examples.misaligned_load_fault' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Examples.out_of_bounds_load_fault' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Examples.skipped_load_no_fault' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Examples.invalid_pc_is_explicit' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Examples.unsupported_is_explicit' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Examples.add_lane_text_roundtrip' depends on axioms: [propext]
+'Ptx.Scalar.Examples.sum_loop_text_roundtrip' depends on axioms: [propext]
+'Ptx.Scalar.MemoryWitness.events_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.graph_event' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.graph_source' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.graph_event0' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.graph_event1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.graph_event2' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.graph_event3' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.graph_event4' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.graph_event5' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.candidate_result' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.MemoryWitness.input_sources' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.candidate_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.witness_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.MemoryWitness.candidate_eq_concrete' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.MemoryWitness.label_preserves_address' depends on axioms: [propext]
+'Ptx.Scalar.MemoryWitness.witness_events_from_run' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.MemoryWitness.constructive_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Rules.segment_comp' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.segment_then_completed' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.segment_then_total' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.completed_total' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.eval_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.step_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.runWith_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.run_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.runWith_invariant' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.partial_of_invariant' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.terminates_of_decreasing_measure' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.replace_same' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.replace_other' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.initial_invariant' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.output_ne_left' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.output_ne_right' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.output_injective' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.get_set_other' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.get_set_same' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.advance_other' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.advance_frame' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.advance_invariant' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.execute_invariant' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.execute_frame' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.completed_correct' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.pointer_index' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.advance_is_scalar_step' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.exit_is_scalar_step' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.scheduled_access_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.cursor_advance' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.execute_cursor' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.schedule_length' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.schedule_complete' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.faithful_step' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.execute_faithful' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.completed_execution_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.emitted_canonical' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.emitted_thread' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.filter_emitted' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVector.trace_correspondence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVector.completed_trace' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVector.emitted_access_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.trace_access_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.Examples.round_robin_result' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.Examples.uneven_result' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.Examples.unfair_schedule_incomplete' depends on axioms: [propext]
+'Ptx.Scalar.SharedVector.Examples.concrete_execution_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVector.Examples.empty_arena_not_faithful' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.Examples.set_segment' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.Examples.exit_segment' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.Examples.composed_completion' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Rules.Examples.composed_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.lane_index' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.slot_index' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.index_eta' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.index_eq' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.forall_index_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.exists_index_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.event0' depends on axioms: [propext]
+'Ptx.Scalar.SharedVectorMemory.event1' depends on axioms: [propext]
+'Ptx.Scalar.SharedVectorMemory.event2' depends on axioms: [propext]
+'Ptx.Scalar.SharedVectorMemory.event3' depends on axioms: [propext]
+'Ptx.Scalar.SharedVectorMemory.event4' depends on axioms: [propext]
+'Ptx.Scalar.SharedVectorMemory.event5' depends on axioms: [propext]
+'Ptx.Scalar.SharedVectorMemory.graph_event' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.witness_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.shared_trace_labels' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.verified_shared_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.initial_labels' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.input_writer' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.input_sources' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.candidate_event_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.candidate_shared_trace_labels' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.SharedVectorMemory.candidate_output' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.word_eq_of_bytes' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.rf_projection' depends on axioms: [propext]
+'Ptx.ByteGraph.readsWhole_projection' depends on axioms: [propext]
+'Ptx.ByteGraph.observation_projection' depends on axioms: [propext]
+'Ptx.ByteGraph.sync_projection' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.base_projection' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.cause_projection' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.communication_projection' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.location_projection' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.sources_projection' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.coherent_projection' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.projection_valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.ofScoped_uniform' depends on axioms: [propext]
+'Ptx.ByteGraph.ofScoped_valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.uniform_policy_independent' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteGraph.coherence_later_not_initial' depends on axioms: [propext]
+'Ptx.ByteGraph.sources_uniform_at' depends on axioms: [propext]
+'Ptx.ByteGraph.uniform_of_all_in_scope' depends on axioms: [propext]
+'Ptx.ByteGraph.all_in_scope_valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Program.byteGraph_access_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.ByteExamples.result_eq' depends on axioms: [propext]
+'Ptx.ByteExamples.little_endian_example' depends on axioms: [propext]
+'Ptx.ByteExamples.torn_valid' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteExamples.torn_value_is_new' does not depend on any axioms
+'Ptx.ByteExamples.torn_execution_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteExamples.in_scope_torn_forbidden' depends on axioms: [propext]
+'Ptx.ByteExamples.torn_projection_invalid' depends on axioms: [propext]
+'Ptx.ByteExamples.equal_value_not_uniform' depends on axioms: [propext, Quot.sound]
+'Ptx.ByteExamples.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Graph.direct_sync' depends on axioms: [propext]
+'Ptx.Graph.publication_cause' depends on axioms: [propext]
+'Ptx.Graph.source_of_latest' depends on axioms: [propext]
+'Ptx.Graph.value_of_source' depends on axioms: [propext]
+'Ptx.Graph.source_of_initial_or_write' depends on axioms: [propext]
+'Ptx.Scalar.IntegerMinMax.min_toNat' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.max_toNat' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.min_mem' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.max_mem' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.min_comm' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.max_comm' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.min_idem' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.max_idem' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.min_bounds' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.max_bounds' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.min_exec' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.max_exec' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.min_exec_preserves_other' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.max_exec_preserves_other' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.min_false' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerMinMax.max_false' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Ordered.run_sound' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Ordered.run_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Ordered.skipped_no_label' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.label_origin' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.label_byte_address' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.label_complete' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Ordered.events_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Ordered.decode_encode' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.literal_store_rejected' depends on axioms: [propext]
+'Ptx.Scalar.ComputedPublication.events_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.graph_event' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.graph_source' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event0' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event1' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event2' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event3' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event4' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event5' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event6' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event7' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event8' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.event9' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.fin_cases' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.ComputedPublication.input_sources' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.run_results' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.ComputedPublication.publication' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.publication_observed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.success_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.stale_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.success_values_grounded' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.stale_values_grounded' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.success_value_acyclic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.stale_value_acyclic' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.producer_concrete' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.ComputedPublication.successful_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.relaxed_counterexample' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.producer_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.ComputedPublication.consumer_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.ComputedPublication.graph_memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Barrier.reset_invariant' depends on axioms: [propext]
+'Ptx.Barrier.initial_invariant' depends on axioms: [propext]
+'Ptx.Barrier.mark_waiting' depends on axioms: [propext, Quot.sound]
+'Ptx.Barrier.mark_other' depends on axioms: [propext, Quot.sound]
+'Ptx.Barrier.mark_monotone' depends on axioms: [propext, Quot.sound]
+'Ptx.Barrier.missing_prevents_completion' depends on axioms: [propext]
+'Ptx.Barrier.wrong_key_unchanged' depends on axioms: [propext]
+'Ptx.Barrier.old_generation_unchanged' depends on axioms: [propext, Quot.sound]
+'Ptx.Barrier.other_cta_unchanged' depends on axioms: [propext]
+'Ptx.Barrier.duplicate_wait_unchanged' depends on axioms: [propext]
+'Ptx.Barrier.completing_step' depends on axioms: [propext]
+'Ptx.Barrier.waiting_step' depends on axioms: [propext]
+'Ptx.Barrier.released_iff' depends on axioms: [propext]
+'Ptx.Barrier.missing_other_blocks_release' depends on axioms: [propext, Quot.sound]
+'Ptx.Barrier.release_resets' depends on axioms: [propext]
+'Ptx.Barrier.release_all_runnable' depends on axioms: [propext]
+'Ptx.Barrier.step_invariant' depends on axioms: [propext]
+'Ptx.Barrier.arrival_monotone_in_generation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Barrier.arrival_event_iff' depends on axioms: [propext]
+'Ptx.Barrier.completion_event_iff' depends on axioms: [propext]
+'Ptx.Barrier.complete_iff_all_warps' does not depend on any axioms
+'Ptx.Barrier.run_sound' does not depend on any axioms
+'Ptx.Barrier.runs_eq_run' does not depend on any axioms
+'Ptx.Barrier.runs_append' does not depend on any axioms
+'Ptx.Barrier.runs_invariant' depends on axioms: [propext]
+'Ptx.Barrier.reachable_invariant' depends on axioms: [propext]
+'Ptx.Barrier.prefix_zero' does not depend on any axioms
+'Ptx.Barrier.mark_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Barrier.complete_prefix_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Barrier.prefix_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Barrier.prefix_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Barrier.round_exists' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Barrier.successive_reuse' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.CollectiveOrder.Certificate.edge_increases' does not depend on any axioms
+'Ptx.CollectiveOrder.Certificate.path_increases' does not depend on any axioms
+'Ptx.CollectiveOrder.Certificate.split_acyclic' does not depend on any axioms
+'Ptx.CollectiveOrder.Certificate.cross_path' does not depend on any axioms
+'Ptx.CollectiveOrder.Certificate.cross_increases' does not depend on any axioms
+'Ptx.CollectiveOrder.Certificate.projected_path_increases' does not depend on any axioms
+'Ptx.CollectiveOrder.Certificate.projected_acyclic' does not depend on any axioms
+'Ptx.Graph.Ordered.base_mono' depends on axioms: [propext]
+'Ptx.Graph.Ordered.cause_mono' depends on axioms: [propext]
+'Ptx.Graph.Ordered.valid_restrict' depends on axioms: [propext]
+'Ptx.Graph.Ordered.original_base' depends on axioms: [propext]
+'Ptx.Graph.Ordered.original_cause' depends on axioms: [propext]
+'Ptx.Graph.Ordered.valid_original' depends on axioms: [propext]
+'Ptx.Graph.Ordered.empty_base_iff' depends on axioms: [propext]
+'Ptx.Graph.Ordered.empty_cause_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Graph.Ordered.empty_valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Graph.Ordered.derived_valid_iff' depends on axioms: [propext]
+'Ptx.Graph.Ordered.extra_cause' depends on axioms: [propext]
+'Ptx.Graph.Ordered.source_of_latest' depends on axioms: [propext]
+'Ptx.Graph.Ordered.value_of_latest' depends on axioms: [propext]
+'Ptx.Graph.Ordered.valid_of_certificate' depends on axioms: [propext]
+'Ptx.Graph.Ordered.Examples.unordered_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Graph.Ordered.Examples.ordered_fresh_valid' depends on axioms: [propext, Quot.sound]
+'Ptx.Graph.Ordered.Examples.ordered_stale_invalid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Graph.Ordered.Examples.extension_distinguishes' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.CollectiveMemory.base_acyclic' depends on axioms: [propext]
+'Ptx.CollectiveMemory.cross_cause' depends on axioms: [propext]
+'Ptx.CollectiveMemory.source_after_phase' depends on axioms: [propext]
+'Ptx.CollectiveMemory.value_after_phase' depends on axioms: [propext]
+'Ptx.SharedBarrier.project_store' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.project_read' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.candidate_graph_trace' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.phase_path_in_trace' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.cross_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.candidate_publication' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.completed_candidate_publication' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.all_in_scope' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.observation_scope' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.initial_graph_label' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.concrete_eq_candidate' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.step_environment' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.trace_accessible' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.verified_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.two_warp_verified' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.accessSafe_bytes' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.arena_accessible' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.emitted_accessible' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.Frame.refl' does not depend on any axioms
+'Ptx.SharedBarrier.Frame.trans' does not depend on any axioms
+'Ptx.SharedBarrier.Frame.fetched_preserves_input' depends on axioms: [propext]
+'Ptx.SharedBarrier.Frame.dispatch_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.step_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.run_frame' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.initialized' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.step_memory_fields' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.step_initial_fields' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.trace_memory_fields' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.step_output' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.run_output' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.start_control' depends on axioms: [propext]
+'Ptx.SharedBarrier.Frame.initialized_output' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.halted_output' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Frame.halted_memory_counts' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.History.memory_member' depends on axioms: [propext]
+'Ptx.SharedBarrier.History.arrival_member' depends on axioms: [propext]
+'Ptx.SharedBarrier.History.completion_member' depends on axioms: [propext]
+'Ptx.SharedBarrier.History.barrier_key' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.History.store_fields' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.History.counted_store' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.History.arrival_path' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.History.completing_events' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.History.completion_path' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.History.load_path' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.History.completed_memory_accounting' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.initial' depends on axioms: [propext]
+'Ptx.SharedBarrier.Control.clear_after' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.live_before' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.phase_at_barrier' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.all_at_barrier' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.congr' does not depend on any axioms
+'Ptx.SharedBarrier.Control.advance_one' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.mark_arrival' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.release' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.exit' depends on axioms: [propext]
+'Ptx.SharedBarrier.Control.completions_append' depends on axioms: [propext]
+'Ptx.SharedBarrier.Control.step_properties' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.step_preserves' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.step_pc_monotone' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.run_properties' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.run_preserves' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.completion_count' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.completed_exactly_once' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.arrivals_append' depends on axioms: [propext]
+'Ptx.SharedBarrier.Control.step_arrival_balance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.Control.run_arrival_balance' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.Control.all_arrived_exactly_once' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.Control.memoryCount_append' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.step_memory_balance' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.run_memory_balance' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.step_event_control' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.run_event_prefix' depends on axioms: [propext]
+'Ptx.SharedBarrier.Control.load_has_completed_prefix' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.Control.arrival_has_store_prefix' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.completion_all_at_barrier' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.completion_has_stores_prefix' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.step_halted_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.run_halted_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.Control.halted_iff_exit_event' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.decode_encode' depends on axioms: [propext]
+'Ptx.SharedBarrier.accessIndex_some' does not depend on any axioms
+'Ptx.SharedBarrier.waiting_blocks' depends on axioms: [propext]
+'Ptx.SharedBarrier.halted_blocks' depends on axioms: [propext]
+'Ptx.SharedBarrier.fetched_step' depends on axioms: [propext]
+'Ptx.SharedBarrier.event_origin' depends on axioms: [propext]
+'Ptx.SharedBarrier.event_complete' depends on axioms: [propext]
+'Ptx.SharedBarrier.dispatch_memory_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.memory_safe' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.runWith_sound' depends on axioms: [propext]
+'Ptx.SharedBarrier.runWith_append' depends on axioms: [propext]
+'Ptx.SharedBarrierMemory.lane_index' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.slot_index' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.index_eta' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.index_eq' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.forall_index_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.exists_index_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.graph_event' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.cross_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.source_choices' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.source_after_barrier' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.read_after_barrier' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.fresh_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrierMemory.stale_without_barrier' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrierMemory.stale_with_barrier_invalid' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.fresh_phase_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrierMemory.read_after_phase' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.partner64_other' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.partner64_other_warp' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.partner64_involution' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrierMemory.two_warp_graphs' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.slotAddress_toNat' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.accessIndex_slot' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.prefixMap_zero' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.prefixMap_full' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.update_prefixMap' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.store_stage_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.read_stage_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.exit_stage_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.barrier_stage_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.prefixSchedule_length' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.schedule_length' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.run_stage' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.flatMap_singleton' depends on axioms: [propext]
+'Ptx.SharedBarrier.store_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.barrier_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.read_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.exit_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.barrier_trace_prefix' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.store_start' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.store_to_barrier' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.barrier_to_read' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.read_to_exit' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.canonical_execution' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.fullSchedule_length' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.canonical_trace_length' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.candidate_completed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.concrete_completed' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.prefixSchedule_eq_take' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.schedule_eq_finRange' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.schedule_contains' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.schedule_nodup' depends on axioms: [propext, Quot.sound]
+'Ptx.SharedBarrier.schedule_map_eq_ofFn' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.unary_exec' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.unary_false' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.unary_preserves_other' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.takeWhile_length_le' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.takeWhile_length_eq_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.popc_toNat' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.clz_toNat' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.popc_bound' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.clz_bound' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.popc_zero_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.IntegerBitCount.clz_width_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.unary_exec' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.unary_false' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.unary_preserves_other' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.UnaryOp.eval' depends on axioms: [propext]
+'Ptx.SharedBarrier.completed_cross_origin' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SharedBarrier.History.load_path_general' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.AffineMemory.Index' does not depend on any axioms
+'Ptx.AffineMemory.initIndex' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.programIndex' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.index_cases' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.programEvent' depends on axioms: [propext]
+'Ptx.AffineMemory.event' depends on axioms: [propext]
+'Ptx.AffineMemory.event_init' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.event_program' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.graph' depends on axioms: [propext]
+'Ptx.AffineMemory.initialReads' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.witnessSource' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.witnessCo' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.witness' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.upper' does not depend on any axioms
+'Ptx.AffineMemory.init_program_ne' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.program_init_ne' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.initIndex_inj' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.programIndex_inj' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.witness_no_observation' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.witness_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.AffineMemory.event_read' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.source_initial_of_before_store' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.valid_reads_initial' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.witness_grounding_rank' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.witness_grounding_acyclic' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.wordIndex' does not depend on any axioms
+'Ptx.AffineMemory.wordIndex_bytes' depends on axioms: [propext]
+'Ptx.AffineMemory.witnessAt' depends on axioms: [propext, Quot.sound]
+'Ptx.AffineMemory.witnessAt_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.AffineMemory.all_alias_example' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.Cell' does not depend on any axioms
+'Ptx.SequentialStorage.Store' does not depend on any axioms
+'Ptx.SequentialStorage.empty' does not depend on any axioms
+'Ptx.SequentialStorage.live_lt' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.release' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve_id' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve_counter' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve_contents' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reserve_fresh' does not depend on any axioms
+'Ptx.SequentialStorage.reserve_other' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.release_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback_properties' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.release_absent' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback_absent' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.Step' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.History' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.Step.counter_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.Step.old_absent' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.History.old_absent' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.released_never_live' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.Cell.allocation' does not depend on any axioms
+'Ptx.SequentialStorage.environment' does not depend on any axioms
+'Ptx.SequentialStorage.address' does not depend on any axioms
+'Ptx.SequentialStorage.access_absent' depends on axioms: [propext]
+'Ptx.SequentialStorage.access_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.released_access_fails' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.release_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.writeback_wrong_extent' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.History.counter_mono' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.History.append' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.released_reallocated' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.SequentialStorage.writeback_environment' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.reallocation_example' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.resize_rejected' depends on axioms: [propext, Quot.sound]
+'Ptx.SequentialStorage.foreign_device_rejected' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Pure32.OperandPred' does not depend on any axioms
+'Ptx.Scalar.Pure32.OperandPred.eval' does not depend on any axioms
+'Ptx.Scalar.Pure32.OperandPred.reads' does not depend on any axioms
+'Ptx.Scalar.Pure32.predicate_positive' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.predicate_negative' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.Family' does not depend on any axioms
+'Ptx.Scalar.Pure32.Family.ofFunction' does not depend on any axioms
+'Ptx.Scalar.Pure32.Family.ofFunction_results' does not depend on any axioms
+'Ptx.Scalar.Pure32.Instr' does not depend on any axioms
+'Ptx.Scalar.Pure32.Instr.wordValues' does not depend on any axioms
+'Ptx.Scalar.Pure32.Instr.predicateValues' does not depend on any axioms
+'Ptx.Scalar.Pure32.Instr.sourceReads' does not depend on any axioms
+'Ptx.Scalar.Pure32.Instr.sourceReads_word' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Pure32.Instr.sourceReads_predicate' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Pure32.Occurrence' does not depend on any axioms
+'Ptx.Scalar.Pure32.occurrence' does not depend on any axioms
+'Ptx.Scalar.Pure32.write' does not depend on any axioms
+'Ptx.Scalar.Pure32.Eval' does not depend on any axioms
+'Ptx.Scalar.Pure32.Step' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_true_iff' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_false_iff' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_destination' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_frame' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_other' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_event' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_reads' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_writes' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_no_memory' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_alias_read' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.repeated_word_values' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_positive_guard' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Pure32.eval_negative_guard' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Pure32.skip_positive_guard' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.skip_negative_guard' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_exists' does not depend on any axioms
+'Ptx.Scalar.Pure32.eval_deterministic' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.eval_preserves_choices' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.step_origin' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.step_iff_of_fetch' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.step_frame' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.step_false_iff' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.step_exists' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.step_no_fetch' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.step_unsupported' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.step_wrong_instruction' depends on axioms: [propext]
+'Ptx.Scalar.Pure32.step_wrong_pc' depends on axioms: [propext]
+'Ptx.GraphTransport.IndexEquiv' does not depend on any axioms
+'Ptx.GraphTransport.IndexEquiv.refl' does not depend on any axioms
+'Ptx.GraphTransport.IndexEquiv.symm' does not depend on any axioms
+'Ptx.GraphTransport.IndexEquiv.injective' does not depend on any axioms
+'Ptx.GraphTransport.IndexEquiv.eq_iff' does not depend on any axioms
+'Ptx.GraphTransport.IndexEquiv.ne_iff' does not depend on any axioms
+'Ptx.GraphTransport.IndexEquiv.forall_old' does not depend on any axioms
+'Ptx.GraphTransport.IndexEquiv.forall_old_two' does not depend on any axioms
+'Ptx.GraphTransport.IndexEquiv.forall_old_three' does not depend on any axioms
+'Ptx.GraphTransport.occurrence' does not depend on any axioms
+'Ptx.GraphTransport.transport' does not depend on any axioms
+'Ptx.GraphTransport.order' does not depend on any axioms
+'Ptx.GraphTransport.event_thread' does not depend on any axioms
+'Ptx.GraphTransport.event_position' does not depend on any axioms
+'Ptx.GraphTransport.event_op' does not depend on any axioms
+'Ptx.GraphTransport.event_address' does not depend on any axioms
+'Ptx.GraphTransport.read' depends on axioms: [propext]
+'Ptx.GraphTransport.write' depends on axioms: [propext]
+'Ptx.GraphTransport.initial' does not depend on any axioms
+'Ptx.GraphTransport.acquire' does not depend on any axioms
+'Ptx.GraphTransport.release' does not depend on any axioms
+'Ptx.GraphTransport.source' does not depend on any axioms
+'Ptx.GraphTransport.value' does not depend on any axioms
+'Ptx.GraphTransport.coherence' does not depend on any axioms
+'Ptx.GraphTransport.po' does not depend on any axioms
+'Ptx.GraphTransport.sameAddress' does not depend on any axioms
+'Ptx.GraphTransport.rf' depends on axioms: [propext]
+'Ptx.GraphTransport.morallyStrong' depends on axioms: [propext]
+'Ptx.GraphTransport.observation' depends on axioms: [propext]
+'Ptx.GraphTransport.releasePattern' depends on axioms: [propext]
+'Ptx.GraphTransport.acquirePattern' depends on axioms: [propext]
+'Ptx.GraphTransport.sync' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.baseEdge' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.path_map' does not depend on any axioms
+'Ptx.GraphTransport.path_iff' does not depend on any axioms
+'Ptx.GraphTransport.base' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.proxyBase' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.cause' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.communication' depends on axioms: [propext]
+'Ptx.GraphTransport.locationEdge' depends on axioms: [propext]
+'Ptx.GraphTransport.locationPath' depends on axioms: [propext]
+'Ptx.GraphTransport.sources_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.coherent_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.ordered_base' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.ordered_cause' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.ordered_valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.renameAddresses' does not depend on any axioms
+'Ptx.GraphTransport.reindex' does not depend on any axioms
+'Ptx.GraphTransport.renameAddresses_valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.renameAddresses_ordered_valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.reindex_valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.GraphTransport.reindex_ordered_valid_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.StorageKey' does not depend on any axioms
+'Ptx.TraceMemory.Location' does not depend on any axioms
+'Ptx.TraceMemory.Location.code' does not depend on any axioms
+'Ptx.TraceMemory.Location.code_injective' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.Location.code_eq_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.Catalogue' does not depend on any axioms
+'Ptx.TraceMemory.Catalogue.same_storage' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.Catalogue.different_storage' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.AccessKind' does not depend on any axioms
+'Ptx.TraceMemory.AccessKind.op' does not depend on any axioms
+'Ptx.TraceMemory.Access' does not depend on any axioms
+'Ptx.TraceMemory.Access.effect' does not depend on any axioms
+'Ptx.TraceMemory.Projected' does not depend on any axioms
+'Ptx.TraceMemory.label' does not depend on any axioms
+'Ptx.TraceMemory.project' does not depend on any axioms
+'Ptx.TraceMemory.label_eq_some_iff' depends on axioms: [propext]
+'Ptx.TraceMemory.project_member_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.project_complete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.project_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.project_ordered' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.project_nodup' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.Projected.occurrence' does not depend on any axioms
+'Ptx.TraceMemory.Projected.position_preserved' does not depend on any axioms
+'Ptx.TraceMemory.Projected.value_preserved' does not depend on any axioms
+'Ptx.TraceMemory.Projected.address_preserved' does not depend on any axioms
+'Ptx.TraceMemory.Projected.kind_preserved' does not depend on any axioms
+'Ptx.TraceMemory.Initial' does not depend on any axioms
+'Ptx.TraceMemory.Initial.occurrence' does not depend on any axioms
+'Ptx.TraceMemory.events' does not depend on any axioms
+'Ptx.TraceMemory.graph' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.graph_label' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.po_iff' depends on axioms: [propext]
+'Ptx.TraceMemory.same_address_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.TraceMemory.events_member_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.TraceMemory.identity' does not depend on any axioms
+'Ptx.TraceMemory.events_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Ordered.access' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.label_recover' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.projection_recover' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Ordered.run_projection' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Ordered.access_origin' depends on axioms: [propext]
+'Ptx.Scalar.Ordered.access_complete' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Ordered.run_access_complete' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Ordered.run_project_complete' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.initialWords' depends on axioms: [propext]
+'Ptx.Scalar.ComputedPublication.Projected.events' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.events_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.events_recover' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.graph' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.graph_recover' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.publication' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.successful_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.relaxed_witness' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.ComputedPublication.Projected.memory_safe' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Select32.Eval' does not depend on any axioms
+'Ptx.Scalar.Select32.Instr' does not depend on any axioms
+'Ptx.Scalar.Select32.Occurrence' does not depend on any axioms
+'Ptx.Scalar.Select32.Operation' does not depend on any axioms
+'Ptx.Scalar.Select32.Step' depends on axioms: [propext]
+'Ptx.Scalar.Select32.SupportedTarget' does not depend on any axioms
+'Ptx.Scalar.Select32.Text.decode' depends on axioms: [propext]
+'Ptx.Scalar.Select32.Text.decode_encode' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Select32.Text.decode_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'Ptx.Scalar.Select32.Text.encode' does not depend on any axioms
+'Ptx.Scalar.Select32.Text.supportedMnemonic' does not depend on any axioms
+'Ptx.Scalar.Select32.compute' does not depend on any axioms
+'Ptx.Scalar.Select32.compute_eq' does not depend on any axioms
+'Ptx.Scalar.Select32.eval_destination' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Select32.eval_deterministic' depends on axioms: [propext]
+'Ptx.Scalar.Select32.eval_event' depends on axioms: [propext]
+'Ptx.Scalar.Select32.eval_exists' does not depend on any axioms
+'Ptx.Scalar.Select32.eval_false_iff' depends on axioms: [propext]
+'Ptx.Scalar.Select32.eval_frame' depends on axioms: [propext]
+'Ptx.Scalar.Select32.eval_other' depends on axioms: [propext]
+'Ptx.Scalar.Select32.eval_true_iff' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Select32.family' does not depend on any axioms
+'Ptx.Scalar.Select32.lower' does not depend on any axioms
+'Ptx.Scalar.Select32.lower_fields' depends on axioms: [propext]
+'Ptx.Scalar.Select32.lower_predicate' depends on axioms: [propext]
+'Ptx.Scalar.Select32.occurrence' does not depend on any axioms
+'Ptx.Scalar.Select32.result' does not depend on any axioms
+'Ptx.Scalar.Select32.results_iff' does not depend on any axioms
+'Ptx.Scalar.Select32.step_exists' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Select32.step_no_fetch' depends on axioms: [propext]
+'Ptx.Scalar.Select32.step_origin' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.Select32.step_unsupported_target' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.Eval' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.Instr' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.Occurrence' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.Operation' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.Step' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.SupportedTarget' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.Text.decode' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.Text.decode_encode' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.Text.decode_iff' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.Text.encode' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.Text.mnemonic' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.Text.supportedMnemonic' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.compute' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.compute_max' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.compute_min' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.compute_toInt' depends on axioms: [propext, Quot.sound]
+'Ptx.Scalar.SignedMinMax32.eval_destination' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.eval_deterministic' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.eval_event' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.eval_exists' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.eval_false_iff' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.eval_frame' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.eval_other' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.eval_true_iff' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.family' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.lower' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.lower_fields' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.lower_operation' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.occurrence' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.result' does not depend on any axioms
+'Ptx.Scalar.SignedMinMax32.results_iff' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.step_exists' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.step_no_fetch' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.step_origin' depends on axioms: [propext]
+'Ptx.Scalar.SignedMinMax32.step_unsupported_target' depends on axioms: [propext]
+Axiom audit: 862 declarations; only standard Lean axioms permitted.
+All source, build, and proof-dependency checks passed.

@@ -1,0 +1,217 @@
+import Ptx.Pure32
+import Ptx.ScalarText
+
+namespace Ptx.Scalar.SignedMinMax32
+
+open Ptx.Scalar
+
+def SupportedTarget (target : Ptx.Target) : Prop := target.isa = 94 ∧ 10 ≤ target.sm
+
+inductive Operation where
+  | min | max
+  deriving DecidableEq, Repr
+
+structure Instr where
+  guard : Scalar.Guard := .always
+  operation : Operation
+  destination : Nat
+  left : Scalar.Operand32
+  right : Scalar.Operand32
+  deriving DecidableEq, Repr
+
+def compute (op : Operation) (a b : Word) : Word :=
+  match op with
+  | .min => if a.toInt < b.toInt then a else b
+  | .max => if a.toInt > b.toInt then a else b
+
+theorem compute_min (a b : Word) : compute .min a b = if a.toInt < b.toInt then a else b := rfl
+theorem compute_max (a b : Word) : compute .max a b = if a.toInt > b.toInt then a else b := rfl
+
+def family : Pure32.Family Operation :=
+  Pure32.Family.ofFunction (fun _ => 2) (fun _ => 0)
+    (fun op words _ => compute op (words 0) (words 1))
+    (fun target _ => SupportedTarget target)
+
+theorem compute_toInt (op : Operation) (a b : Word) :
+    (compute op a b).toInt = match op with
+      | .min => min a.toInt b.toInt
+      | .max => max a.toInt b.toInt := by
+  cases op
+  · by_cases h : a.toInt < b.toInt <;> simp [compute, min, h] <;> omega
+  · by_cases h : b.toInt < a.toInt <;> simp [compute, max, h] <;> omega
+
+theorem results_iff (op : Operation) (words : Fin 2 → Word) (predicates : Fin 0 → Bool) (value : Word) :
+    family.Results op words predicates value ↔ value = compute op (words 0) (words 1) := Iff.rfl
+
+def lower (i : Instr) : Pure32.Instr family where
+  guard := i.guard
+  operation := i.operation
+  destination := i.destination
+  words := fun j => if j.val = 0 then i.left else i.right
+  predicates := Fin.elim0
+
+def result (i : Instr) (s : Scalar.State) : Word :=
+  compute i.operation (i.left.eval s) (i.right.eval s)
+
+abbrev Occurrence := Pure32.Occurrence family
+abbrev Eval (i : Instr) := Pure32.Eval (lower i)
+abbrev Step (target : Ptx.Target) (program : List Instr) := Pure32.Step target (program.map lower)
+
+def occurrence (s : Scalar.State) (i : Instr) (executed : Bool) : Occurrence :=
+  Pure32.occurrence s (lower i) executed
+
+theorem lower_operation (i : Instr) : (lower i).operation = i.operation := rfl
+
+theorem lower_fields (i : Instr) :
+    (lower i).guard = i.guard ∧ (lower i).destination = i.destination ∧
+    (lower i).words (⟨0, by decide⟩ : Fin 2) = i.left ∧
+    (lower i).words (⟨1, by decide⟩ : Fin 2) = i.right := by
+  simp [lower]
+
+private theorem lower_wordValues (i : Instr) (s : Scalar.State) :
+    (lower i).wordValues s = fun j => (if j.val = 0 then i.left else i.right).eval s := by
+  funext j
+  simp [Pure32.Instr.wordValues, lower]
+
+private theorem lower_result (i : Instr) (s : Scalar.State) :
+    compute i.operation
+      ((lower i).wordValues s (⟨0, by decide⟩ : Fin 2))
+      ((lower i).wordValues s (⟨1, by decide⟩ : Fin 2)) = result i s := by
+  simp [lower_wordValues, result]
+
+theorem eval_true_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)
+    (enabled : i.guard.eval s = true) :
+    Eval i s next event ↔
+      next = Pure32.write s i.destination (result i s) ∧ event = occurrence s i true := by
+  change Pure32.Eval (lower i) s next event ↔ _
+  rw [Pure32.eval_true_iff (lower i) s next event enabled]
+  constructor
+  · rintro ⟨value, hres, hnext, hevent⟩
+    have hv : value = result i s := by
+      simpa [family, lower, Pure32.Family.ofFunction, Pure32.Instr.wordValues,
+        Pure32.Instr.predicateValues, result, Scalar.Operand32.eval] using hres
+    subst value
+    exact ⟨hnext, hevent⟩
+  · rintro ⟨hnext, hevent⟩
+    refine ⟨result i s, ?_, hnext, hevent⟩
+    simp [family, lower, Pure32.Family.ofFunction, Pure32.Instr.wordValues,
+      result, Scalar.Operand32.eval]
+
+theorem eval_false_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)
+    (disabled : i.guard.eval s = false) :
+    Eval i s next event ↔
+      next = {s with pc := s.pc + 1} ∧ event = occurrence s i false := by
+  simpa [Eval, occurrence, lower] using
+    (Pure32.eval_false_iff (lower i) s next event disabled)
+
+theorem eval_destination (i : Instr) (s next : Scalar.State) (event : Occurrence)
+    (evaluated : Eval i s next event) (enabled : i.guard.eval s = true) :
+    next.regs i.destination = result i s := by
+  rcases (eval_true_iff i s next event enabled).mp evaluated with ⟨rfl, _⟩
+  simp [Pure32.write]
+
+theorem eval_frame (i : Instr) (s next : Scalar.State) (event : Occurrence)
+    (evaluated : Eval i s next event) :
+    next.pc = s.pc + 1 ∧ next.memory = s.memory ∧ next.addrs = s.addrs ∧ next.preds = s.preds :=
+  Pure32.eval_frame evaluated
+
+theorem eval_other (i : Instr) (s next : Scalar.State) (event : Occurrence) (other : Nat)
+    (evaluated : Eval i s next event) (different : other ≠ i.destination) :
+    next.regs other = s.regs other := Pure32.eval_other evaluated different
+
+theorem eval_event (i : Instr) (s next : Scalar.State) (event : Occurrence)
+    (evaluated : Eval i s next event) : event = occurrence s i (i.guard.eval s) := by
+  simpa [occurrence, lower] using (Pure32.eval_event evaluated)
+
+theorem eval_deterministic (i : Instr) (s next₁ next₂ : Scalar.State) (event₁ event₂ : Occurrence)
+    (left : Eval i s next₁ event₁) (right : Eval i s next₂ event₂) :
+    next₁ = next₂ ∧ event₁ = event₂ := by
+  apply Pure32.eval_deterministic (i := lower i) (left := left) (right := right)
+  intro words predicates a b ha hb
+  exact ha.trans hb.symm
+
+theorem eval_exists (i : Instr) (s : Scalar.State) : ∃ next event, Eval i s next event :=
+  Pure32.eval_exists (lower i) s
+
+theorem step_origin (target : Ptx.Target) (program : List Instr)
+    (s next : Scalar.State) (event : Occurrence) (stepped : Step target program s next event) :
+    SupportedTarget target ∧ ∃ i, program[s.pc]? = some i ∧
+      event.pc = s.pc ∧ event.instruction = lower i ∧ Eval i s next event := by
+  obtain ⟨j, fetch, supported, pc, ins, evaluated⟩ := Pure32.step_origin stepped
+  have original : ∃ i, program[s.pc]? = some i ∧ lower i = j := by
+    cases hx : program[s.pc]? with
+    | none => simp [hx] at fetch
+    | some i =>
+      have hm : some (lower i) = some j := by simpa [hx] using fetch
+      exact ⟨i, by simp, Option.some.inj hm⟩
+  obtain ⟨i, fetchi, eq⟩ := original
+  have ev : Eval i s next event :=
+    Eq.mp (congrArg (fun x : Pure32.Instr family => Pure32.Eval x s next event) eq.symm) evaluated
+  exact ⟨supported, i, fetchi, pc, ins.trans eq.symm, ev⟩
+
+theorem step_exists (target : Ptx.Target) (program : List Instr) (s : Scalar.State) (i : Instr)
+    (supported : SupportedTarget target) (fetch : program[s.pc]? = some i) :
+    ∃ next event, Step target program s next event := by
+  have mapped : (program.map lower)[s.pc]? = some (lower i) := by
+    simp [fetch]
+  apply Pure32.step_exists (target := target) (program := program.map lower) (i := lower i)
+    (s := s) (fetch := mapped)
+  exact supported
+
+theorem step_no_fetch (target : Ptx.Target) (program : List Instr)
+    (s next : Scalar.State) (event : Occurrence) (missing : program[s.pc]? = none) :
+    ¬ Step target program s next event := by
+  exact Pure32.step_no_fetch (program := program.map lower) (s := s) (by simpa using missing)
+
+theorem step_unsupported_target (target : Ptx.Target) (program : List Instr)
+    (s next : Scalar.State) (event : Occurrence) (unsupported : ¬ SupportedTarget target) :
+    ¬ Step target program s next event := by
+  intro h
+  obtain ⟨_, _, admitted, _⟩ := h
+  exact unsupported admitted
+
+namespace Text
+
+def supportedMnemonic : String → Bool
+  | "min.s32" | "max.s32" => true
+  | _ => false
+
+def mnemonic : Operation → String
+  | .min => "min.s32"
+  | .max => "max.s32"
+
+def encode (i : Instr) : Scalar.Text.Statement :=
+  ⟨i.guard, mnemonic i.operation,
+    [.word (.reg i.destination), .word i.left, .word i.right]⟩
+
+def decode (statement : Scalar.Text.Statement) : Except Scalar.Text.DecodeError Instr :=
+  match statement.mnemonic, statement.operands with
+  | "min.s32", [.word (.reg d), .word a, .word b] => .ok ⟨statement.guard, .min, d, a, b⟩
+  | "max.s32", [.word (.reg d), .word a, .word b] => .ok ⟨statement.guard, .max, d, a, b⟩
+  | mnemonic, _ => if supportedMnemonic mnemonic then .error (.invalidOperands mnemonic)
+      else .error (.unsupportedMnemonic mnemonic)
+
+theorem decode_encode (i : Instr) : decode (encode i) = .ok i := by
+  cases i with
+  | mk guard operation destination left right => cases operation <;> rfl
+
+theorem decode_iff (statement : Scalar.Text.Statement) (i : Instr) :
+    decode statement = .ok i ↔ statement = encode i := by
+  constructor
+  · intro h
+    rcases i with ⟨g, op, d, a, b⟩
+    cases op <;> cases statement with
+      | mk guard spelling operands =>
+        unfold decode at h
+        split at h
+        all_goals
+          first
+          | (have hv := Except.ok.inj h; cases hv <;> all_goals simp_all [encode, mnemonic])
+          | (split at h <;> simp_all [supportedMnemonic])
+  · intro h
+    subst statement
+    exact decode_encode i
+
+end Text
+
+end Ptx.Scalar.SignedMinMax32

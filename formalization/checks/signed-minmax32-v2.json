@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "modules": [
+    "Ptx.SignedMinMax32"
+  ],
+  "checks": [
+    "formalization/checks/signed-minmax32-v2.lean"
+  ],
+  "checks_sha256": {
+    "formalization/checks/signed-minmax32-v2.lean": "69bfeb4ec02b9eee8937b1b7402b61b1ac1bef98cbea1c504060559dbe658e27"
+  },
+  "declarations": [
+    "Ptx.Scalar.SignedMinMax32.SupportedTarget",
+    "Ptx.Scalar.SignedMinMax32.Operation",
+    "Ptx.Scalar.SignedMinMax32.Instr",
+    "Ptx.Scalar.SignedMinMax32.compute",
+    "Ptx.Scalar.SignedMinMax32.family",
+    "Ptx.Scalar.SignedMinMax32.lower",
+    "Ptx.Scalar.SignedMinMax32.result",
+    "Ptx.Scalar.SignedMinMax32.Occurrence",
+    "Ptx.Scalar.SignedMinMax32.Eval",
+    "Ptx.Scalar.SignedMinMax32.Step",
+    "Ptx.Scalar.SignedMinMax32.occurrence",
+    "Ptx.Scalar.SignedMinMax32.compute_min",
+    "Ptx.Scalar.SignedMinMax32.compute_max",
+    "Ptx.Scalar.SignedMinMax32.compute_toInt",
+    "Ptx.Scalar.SignedMinMax32.results_iff",
+    "Ptx.Scalar.SignedMinMax32.lower_operation",
+    "Ptx.Scalar.SignedMinMax32.lower_fields",
+    "Ptx.Scalar.SignedMinMax32.eval_true_iff",
+    "Ptx.Scalar.SignedMinMax32.eval_false_iff",
+    "Ptx.Scalar.SignedMinMax32.eval_destination",
+    "Ptx.Scalar.SignedMinMax32.eval_frame",
+    "Ptx.Scalar.SignedMinMax32.eval_other",
+    "Ptx.Scalar.SignedMinMax32.eval_event",
+    "Ptx.Scalar.SignedMinMax32.eval_deterministic",
+    "Ptx.Scalar.SignedMinMax32.eval_exists",
+    "Ptx.Scalar.SignedMinMax32.step_origin",
+    "Ptx.Scalar.SignedMinMax32.step_exists",
+    "Ptx.Scalar.SignedMinMax32.step_no_fetch",
+    "Ptx.Scalar.SignedMinMax32.step_unsupported_target",
+    "Ptx.Scalar.SignedMinMax32.Text.decode_encode",
+    "Ptx.Scalar.SignedMinMax32.Text.decode_iff",
+    "Ptx.Scalar.SignedMinMax32.Text.supportedMnemonic",
+    "Ptx.Scalar.SignedMinMax32.Text.encode",
+    "Ptx.Scalar.SignedMinMax32.Text.decode"
+  ],
+  "scope": "Frozen source-grounded Pure32 leaf acceptance: all-word arithmetic, actual lowering/fetch, predication, aliasing, metadata, target and strict typed text. No full-kernel or hardware claim.",
+  "revision_note": "Coordinator evaluator repair: remove conflicting broad namespace opens, fully qualify Scalar/Pure32 references, annotate fixed Fin operand indices and unfold target/family predicates in concrete proofs because no Decidable instance was required. Required propositions and expected outcomes are unchanged. Original drivers and all diagnostic stages remain preserved; these repairs do not confer semantic acceptance."
+}

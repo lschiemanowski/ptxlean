@@ -34,3 +34,8 @@ Detecting these seeded defects is evidence about these checks and these
 errors. It is not a general reviewer-quality score, an unbiased sample of model
 mistakes, or proof that every semantic error will be detected. Further families
 need their own independently prepared obligations and distinguishing cases.
+
+Selection and signed-comparison probes separately test unsupported-name error
+classification and the minimum target feature requirement. The altered leaves
+still compile with their completed proofs, while the fixed acceptance drivers
+reject the changes. These probe only those two boundaries.

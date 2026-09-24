@@ -1,10 +1,11 @@
 # Accepted instruction forms
 
 An accepted form is a particular spelling and operand contract, not an entire
-instruction name. This ledger records six independently reviewed forms:
-`min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32` and `mul.rn.f32`.
-The integer forms compare unsigned words or count bits, with exact results for
-all input patterns. The floating forms add or multiply encoded binary32 values
+instruction name. This ledger records nine independently reviewed forms:
+`min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32`, `mul.rn.f32`,
+`selp.b32`, `min.s32` and `max.s32`.
+The integer forms compare signed or unsigned words, count bits, or select a
+word using a predicate, with exact results for all input patterns. The floating forms add or multiply encoded binary32 values
 with nearest-even rounding and preserved subnormal values. Their result relation
 keeps every non-NaN reference bit, including zero signs, and conservatively
 admits NaN encodings; it does not assert that every such encoding is realizable.
@@ -15,8 +16,9 @@ which PTX version and hardware targets the manual permits, and where the actual
 value definition, instruction execution, text conversion and universal proofs
 live. A typed operand is an already classified register or value: this boundary
 does not parse a complete PTX file or validate its register declarations. The
-integer version and target conditions are reviewed source facts, not checks in
-the arithmetic decoder. The floating fetched-step interface additionally requires
+older unsigned and bit-count decoders leave version and target checks to the
+caller. Selection and signed min/max use fetched steps requiring ISA 9.4 and
+a numeric SM value of at least 10. The floating fetched-step interface requires
 PTX ISA 9.4 and a numeric SM value of at least 20, preserving the source's
 subnormal behavior; this does not validate target spellings or architecture
 suffixes. Floating operands denote compatible `.b32`/`.f32` registers or exact
@@ -27,8 +29,8 @@ kernel execution.
 
 The ledger also lists uncovered sibling forms from the selected integer and
 floating instruction sections. A sibling is another type, width or modifier combination
-for the same instruction. These entries explain missing signed comparisons,
-packed values, saturation and 64-bit bit counts; they are not implementation
+for the same instruction. These entries explain missing widths, packed values, saturation and 64-bit
+bit counts; they are not implementation
 claims. Other floating rounding modes, flush-to-zero, saturation, packed and
 64-bit forms remain outside the accepted floating slice. No percentage or
 whole-section coverage follows from this ledger.
