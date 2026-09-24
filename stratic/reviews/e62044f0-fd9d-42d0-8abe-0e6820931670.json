@@ -1,0 +1,87 @@
+{
+  "id": "e62044f0-fd9d-42d0-8abe-0e6820931670",
+  "base": "94db7f23eaaa4ee63a4d72a353b19aefa5cdea92",
+  "contentTree": "785ffd4b61ee6644c06e77e8f0a88e5fee72887f",
+  "reviewer": "Codex coordinator",
+  "summary": "Provide generic bit-observation and width-conversion proofs for an assisted LOP3 continuation.",
+  "examined": [
+    {
+      "id": "bitvector-proofs",
+      "outcome": "revised",
+      "reason": "New generic helper contract, Lean proofs and worked examples with explicit width/range conditions."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "Supporting value lemmas add no instruction semantics or execution change."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "No PTX model change or new accepted form."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Audit only gains helper dependency entries."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "Protocol preserves source/proof separation and records explicit assistance; no productivity claim."
+    },
+    {
+      "id": "lop3",
+      "outcome": "unchanged",
+      "reason": "Still unimplemented pending worker proofs and acceptance."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "785ffd4b61ee6644c06e77e8f0a88e5fee72887f",
+      "method": "lake build; worked generic bit-vector examples; full dependency audit; lexical proof guard; Stratic validation; whitespace check; manual theorem and protocol review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, Linux, no external model calls during toolkit preparation.",
+      "evidence": "Five generic helper proofs and arbitrary-width/range examples pass. All root dependency reports use only standard Lean axioms. Helpers contain no PTX computation or source claim; opposite conversion requires an explicit bound. Original LOP3 contract and both drivers unchanged. Prior candidate retained only as historical patch. Two initial proof-wrapper draft errors were repaired before freeze.",
+      "tests": [],
+      "id": "b7202c3e-2830-4019-b347-89679458af10",
+      "recordedAt": "2026-09-24T16:41:46.920Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T16:42:11.896Z",
+  "unmapped": [
+    {
+      "path": "Ptx/BitVecProof.lean",
+      "reason": "Reviewed generic proof support, examples or assisted continuation protocol; no LOP3 semantic implementation."
+    },
+    {
+      "path": "docs/formalization/bitvector-proofs.md",
+      "reason": "Reviewed generic proof support, examples or assisted continuation protocol; no LOP3 semantic implementation."
+    },
+    {
+      "path": "examples/bitvector_proofs.lean",
+      "reason": "Reviewed generic proof support, examples or assisted continuation protocol; no LOP3 semantic implementation."
+    },
+    {
+      "path": "formalization/contracts/lop3-assisted-v1.md",
+      "reason": "Reviewed generic proof support, examples or assisted continuation protocol; no LOP3 semantic implementation."
+    },
+    {
+      "path": "stratic/descriptions/bitvector-proofs.json",
+      "reason": "Reviewed generic proof support, examples or assisted continuation protocol; no LOP3 semantic implementation."
+    },
+    {
+      "path": "stratic/descriptions/bitvector-proofs.md",
+      "reason": "Reviewed generic proof support, examples or assisted continuation protocol; no LOP3 semantic implementation."
+    },
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed generic proof support, examples or assisted continuation protocol; no LOP3 semantic implementation."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed generic proof support, examples or assisted continuation protocol; no LOP3 semantic implementation."
+    }
+  ]
+}

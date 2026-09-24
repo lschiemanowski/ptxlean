@@ -1,0 +1,54 @@
+{
+  "id": "bitvector-proofs",
+  "parent": {
+    "description": "pure-instruction-families",
+    "passage": {
+      "quote": "Family source proofs and text decoders can reuse this\nmechanism without modifying the scalar state or duplicating its transition\nrules."
+    }
+  },
+  "summary": [
+    "Reason about individual bits of conditional values at arbitrary widths.",
+    "Preserve unsigned values across widening and range-checked narrowing; make information loss outside the range explicit.",
+    "Reuse Lean library facts without adding PTX semantics or proof assumptions."
+  ],
+  "realization": "implemented",
+  "remaining": "These generic value lemmas do not supply instruction-specific truth-table or typed-decoder proofs.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Observing a bit of a conditional value is the same as selecting the corresponding\nbit of either branch."
+      },
+      "to": {
+        "path": "Ptx/BitVecProof.lean",
+        "passage": {
+          "quote": "theorem getLsbD_ite (condition : Bool) (left right : BitVec width) (bit : Nat) :"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The opposite journey, reducing then increasing,\nrecovers a value only when it fits within the smaller width."
+      },
+      "to": {
+        "path": "Ptx/BitVecProof.lean",
+        "passage": {
+          "quote": "theorem widen_narrow (value : BitVec large) (fits : value.toNat < 2 ^ small) :"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Worked examples demonstrate conditional bitwise operations and immediate-value\nconversions."
+      },
+      "to": {
+        "path": "examples/bitvector_proofs.lean",
+        "passage": {
+          "quote": "-- A conditional mask: the bit-level law holds at any width and any bit index."
+        }
+      }
+    }
+  ]
+}

@@ -1597,3 +1597,10 @@ output/storage, memory admission, constructed existence and access safety. -/
 #print axioms Ptx.Scalar.Bfi32.Text.decode_encode
 #print axioms Ptx.Scalar.Bfi32.Text.decode_iff
 #print axioms Ptx.Scalar.ReviewedPure.bfi
+
+/-! Generic bit-vector proof support. -/
+#print axioms Ptx.BitVecProof.getLsbD_ite
+#print axioms Ptx.BitVecProof.getLsbD_ite_zero
+#print axioms Ptx.BitVecProof.toNat_widen
+#print axioms Ptx.BitVecProof.narrow_widen
+#print axioms Ptx.BitVecProof.widen_narrow
