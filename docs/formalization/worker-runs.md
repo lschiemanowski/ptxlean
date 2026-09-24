@@ -198,7 +198,8 @@ subset, not availability or inspectability of omitted logs. Raw records remain
 local; a public archive alone cannot resume a historical model session. Replaying
 a saved patch still requires its recorded Git base and pinned source prerequisites.
 
-Deleting vendor content from the current tree does not remove historical Git
-objects. A public release must also exclude historical manuals and original
-transcript archives; history rewriting is a separate explicit operation because
-it changes commit identities used in recorded tasks and receipts.
+The publication history was cleaned separately to remove historical manuals and
+original transcript archives. Original tasks and receipts were not relabelled.
+The [history record](publication-history.md) explains the commit map, private
+backups, and why exact historical replay is unavailable from the public checkout
+when its original base is absent. New runs use the cleaned repository revisions.

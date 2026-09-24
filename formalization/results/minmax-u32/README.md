@@ -106,3 +106,7 @@ patches, receipts and check results are byte-identical to the originals. Public
 archive verification covers this subset; it does not make the omitted transcripts
 available for inspection or session resumption. Historical source and base-commit
 identities in retained evidence have not been rewritten.
+
+The [publication history record](../../../docs/formalization/publication-history.md)
+explains the unchanged historical identities and the limits of replay from the
+public checkout. Current proofs and distributed evidence remain checkable.

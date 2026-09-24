@@ -93,3 +93,10 @@ receipts, candidate patches and proof checks keep their original bytes. Integrit
 checking covers the distributed subset; it does not claim that an omitted
 transcript can be independently inspected or a saved session resumed from that
 subset. The original local records remain separate from the public artifacts.
+
+If publication cleanup rewrites Git history, a separate commit map identifies the
+original and cleaned revisions. Original tasks, receipts and Stratic reviews keep
+their recorded identities: the map is not evidence that an old run checked the
+new tree. Exact historical replay requires the original private history and
+source inputs. The public checkout supports checking the current proofs and
+distributed evidence subset, and recording new runs against its own revisions.

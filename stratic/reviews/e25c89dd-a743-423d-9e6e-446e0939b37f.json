@@ -1,0 +1,110 @@
+{
+  "id": "e25c89dd-a743-423d-9e6e-446e0939b37f",
+  "base": "c10c51092a2d48cd477896937211928946aa7605",
+  "contentTree": "74383abad7aa2a5b0eb7c960a760045e6dd8c69d",
+  "reviewer": "Codex coordinator",
+  "summary": "Clean unpublished release history while preserving original evidence identities, document the commit map and replay limits, and guard all reachable publication trees against bundled vendor artifacts.",
+  "examined": [
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Adds explicit reachability-based publication check with a bounded artifact-detection claim; proof validity and source-fidelity claims remain separate."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "revised",
+      "reason": "Explains unchanged original run identities, separate cleaned commit mapping, and exact historical replay requiring private prerequisites."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "New runs still pin immutable inputs and pass independent mechanical and semantic review. The child documents the historical public evidence subset without promoting old receipts to new trees."
+    },
+    {
+      "id": "worker-replay",
+      "outcome": "unchanged",
+      "reason": "Exact recorded base remains required, with no mapping fallback. The historical synthetic smoke remains a preserved original run; added documentation makes public missing-base limitations explicit."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "The cleaned distribution and explicit original-evidence provenance preserve all formal semantics, restrictions, theorem statements and source-fidelity boundaries. Every Lean file is identical across the history transformation."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "74383abad7aa2a5b0eb7c960a760045e6dd8c69d",
+      "method": "Full scripts/check.sh on tree d568cc27b380c5a592e8b4714d8b64492a0bb8c7; exact tree-diff review confirms the only later change is adding `main` to the private-history sentence. Final stratic validate, git diff --check, and publication-history guard; fresh no-local single-branch clone and source/workflow checks.",
+      "outcome": "pass",
+      "environment": "Linux; pinned Lean 4.34.0; Python 3; no model invocations.",
+      "evidence": "Full core run passed 7 inventory, 90 worker, and 26 ledger tests, Lean build, and 1213 exact dependency audits using standard axioms only. Fresh clone omitted original manual/commit objects and private caches/bundles; explicit local source installation, 722 evidence members across 6 archives, 9 accepted forms, inventory, and 87 committed workflow tests passed. Cleaned main has 25 reachable commits and 825 distinct file contents; artifact scan passed and heuristic normalized 24-word manual-paragraph scan found zero matches. Original main bundles verified; exact rewrite map asserts only approved paths changed per historical tree and final cleaned content equals reviewed cleanup tree. Final documentation-only clarification reviewed, Stratic validation and whitespace check passed.",
+      "tests": [],
+      "id": "bcd3722a-5074-481f-b685-b9d81dd8bc6e",
+      "recordedAt": "2026-09-24T10:08:29.215Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T10:08:42.163Z",
+  "unmapped": [
+    {
+      "path": "docs/formalization/publication-history.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "docs/formalization/worker-runs.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/README.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/README.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "formalization/results/integration-replay-smoke/README.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "formalization/results/minmax-u32/README.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "formalization/results/select32/README.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/README.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "references/publication-history.json",
+      "reason": "Exact old-to-new map validated against original Git objects, with only vendor removal, transcript archive/manifest replacement, and dependent manifest hashes changing; no Lean source changed."
+    },
+    {
+      "path": "scripts/check_distribution.py",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.json",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.md",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    },
+    {
+      "path": "tests/test_worker_local_sources.py",
+      "reason": "Reviewed history guard, regression cases, explicit original-evidence boundaries and navigation, or matching Stratic summaries and passage links. No change to Lean semantics or proof assumptions."
+    }
+  ]
+}

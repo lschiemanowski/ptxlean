@@ -49,3 +49,9 @@ evidence retains project-authored contracts, patches and check results while
 omitting raw model transcripts that can contain copied vendor passages. Omission
 records preserve the original member hashes and make the reduced evidence scope
 explicit. Git history and release artifacts need the same distribution boundary.
+
+A distribution guard can inspect the current tracked files or every commit
+reachable from a selected publication revision, including evidence archive
+members. It rejects known manual artifacts and raw model event transcripts.
+This is a check for those artifact types, not an exhaustive audit of quotations.
+Private recovery bundles and local caches are outside the published history.

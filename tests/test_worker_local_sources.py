@@ -58,3 +58,48 @@ class AcquisitionTests(unittest.TestCase):
             with self.subTest(name=name),self.assertRaisesRegex(ValueError,'Non-distributable'):
                 distribution.check_payload(name,body,self.pin['sha256'])
         distribution.check_payload('review.txt',b'Our own explanation.',self.pin['sha256'])
+
+
+class HistoryDistributionTests(unittest.TestCase):
+    def setUp(self):
+        import subprocess
+        self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.git = lambda *args: subprocess.check_output(['git', *args], cwd=self.root,
+                                                       stderr=subprocess.DEVNULL)
+        self.git('init', '-q')
+        self.git('config', 'user.name', 'Distribution test')
+        self.git('config', 'user.email', 'test@example.invalid')
+        self.manual = b'Synthetic manual bytes for a history test.'
+        self.digest = hashlib.sha256(self.manual).hexdigest()
+
+    def commit(self, name, body):
+        path = self.root/name; path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(body)
+        self.git('add', '--', name)
+        self.git('commit', '-qm', 'fixture')
+        return self.git('rev-parse', 'HEAD').decode().strip()
+
+    def test_deleted_renamed_manual_remains_rejected_in_history(self):
+        self.commit('renamed.txt', self.manual)
+        self.git('rm', 'renamed.txt'); self.git('commit', '-qm', 'remove')
+        with self.assertRaisesRegex(ValueError, 'Non-distributable'):
+            distribution.check_history(self.root, 'HEAD', self.digest)
+
+    def test_historical_archive_transcript_is_rejected(self):
+        import tarfile
+        body = io.BytesIO()
+        with tarfile.open(fileobj=body, mode='w:gz') as stream:
+            member = tarfile.TarInfo('attempts/one/events.jsonl')
+            member.size = 2; stream.addfile(member, io.BytesIO(b'{}'))
+        self.commit('evidence.tar.gz', body.getvalue())
+        self.git('rm', 'evidence.tar.gz'); self.git('commit', '-qm', 'remove')
+        with self.assertRaisesRegex(ValueError, 'Non-distributable'):
+            distribution.check_history(self.root, 'HEAD', self.digest)
+
+    def test_only_selected_history_is_scanned_not_private_other_refs(self):
+        clean = self.commit('README.md', b'Project-authored description.')
+        self.commit('private-source.txt', self.manual)
+        self.assertEqual(distribution.check_history(self.root, clean, self.digest), (1, 1))
+        with self.assertRaisesRegex(ValueError, 'Non-distributable'):
+            distribution.check_history(self.root, 'HEAD', self.digest)

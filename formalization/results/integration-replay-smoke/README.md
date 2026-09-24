@@ -39,3 +39,7 @@ python3 scripts/check_worker_evidence.py formalization/results/integration-repla
 
 The common verifier checks integrity only. It does not rerun builds or interpret
 this synthetic evidence as model success, semantic fidelity or hardware behavior.
+
+The [publication history record](../../../docs/formalization/publication-history.md)
+explains the unchanged historical identities and the limits of replay from the
+public checkout. Current proofs and distributed evidence remain checkable.
