@@ -10,7 +10,8 @@
     "Delegate bounded instruction families to smaller models against fixed semantic foundations and source-derived obligations.",
     "Accept generated definitions only after mechanical proof checks and separate semantic review, preserving all missing and unresolved coverage.",
     "Keep delegated low-cost semantic review independent of generation and evaluate its ability to detect incorrect definitions.",
-    "Evaluate the frozen workflow on held-out tasks with complete attempt, cost and reviewer-effort records."
+    "Evaluate the frozen workflow on held-out tasks with complete attempt, cost and reviewer-effort records.",
+    "Validate checking code before dispatch and distinguish checker repairs from worker failures."
   ],
   "realization": "partial",
   "remaining": "The source-section inventory, recorded fresh/resumed Luna calls, pinned worker provisioning and replay, selected-form provenance and targeted semantic mutation probes are implemented. Reviewed tasks cover selected integer, bitwise and binary32 forms with coordinator-supplied contracts and repair feedback. A separate fixed-context OpenRouter reviewer route and blinded development cases are implemented. Reliable reviewer-quality evidence, full form coverage, broader capability evidence, held-out evaluation and cost effectiveness remain unfinished.",

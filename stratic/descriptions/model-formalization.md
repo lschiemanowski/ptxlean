@@ -18,6 +18,13 @@ including permitted multiple outcomes and behavior for which the manual gives
 no guarantee. An instruction family is not covered merely because its main
 instruction name appears in a definition.
 
+Before dispatch, the coordinator exercises the complete acceptance checks on a
+separate reference fixture and checks that deliberately wrong results are rejected.
+This catches errors in checking code before a task is frozen. Reference fixtures
+are excluded from worker inputs and are recorded as coordinator effort; passing
+these checks does not establish that the chosen contract matches PTX. Any later
+checker repair is retained and reported separately from worker repairs.
+
 The returned package contains the proposed definitions, completed proofs,
 source-to-definition explanation, boundary examples and unresolved questions.
 Proofs refer to the shared foundations. Workers cannot make their task easier

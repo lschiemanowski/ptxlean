@@ -1,0 +1,136 @@
+{
+  "id": "c11a387e-846b-426c-a4d8-e421933d518d",
+  "base": "66484381c3f79df27303590fcd6c29cb6c2571d2",
+  "contentTree": "48496cb5aca9acd8754645c231be5f41f23b9ab6",
+  "reviewer": "Codex coordinator",
+  "summary": "Freeze three source-reviewed pure-family tasks and preflighted acceptance obligations before Luna dispatch.",
+  "examined": [
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Pinned source review and exact all-input pure-family contracts; checker validation distinguished from worker and semantic acceptance."
+    },
+    {
+      "id": "brev32",
+      "outcome": "revised",
+      "reason": "Pinned source review and exact all-input pure-family contracts; checker validation distinguished from worker and semantic acceptance."
+    },
+    {
+      "id": "mulhi32",
+      "outcome": "revised",
+      "reason": "Pinned source review and exact all-input pure-family contracts; checker validation distinguished from worker and semantic acceptance."
+    },
+    {
+      "id": "bfe32",
+      "outcome": "revised",
+      "reason": "Pinned source review and exact all-input pure-family contracts; checker validation distinguished from worker and semantic acceptance."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "Existing separation of family semantics, execution foundations, mechanical proof checking and source-fidelity acceptance preserved. No new implementation or covered form claimed at task freeze."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Existing separation of family semantics, execution foundations, mechanical proof checking and source-fidelity acceptance preserved. No new implementation or covered form claimed at task freeze."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "Existing separation of family semantics, execution foundations, mechanical proof checking and source-fidelity acceptance preserved. No new implementation or covered form claimed at task freeze."
+    },
+    {
+      "id": "model-review",
+      "outcome": "unchanged",
+      "reason": "Existing separation of family semantics, execution foundations, mechanical proof checking and source-fidelity acceptance preserved. No new implementation or covered form claimed at task freeze."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "Existing separation of family semantics, execution foundations, mechanical proof checking and source-fidelity acceptance preserved. No new implementation or covered form claimed at task freeze."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "unchanged",
+      "reason": "Existing separation of family semantics, execution foundations, mechanical proof checking and source-fidelity acceptance preserved. No new implementation or covered form claimed at task freeze."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Contract/checker preflight supports the existing responsibility for separate semantic fidelity and proof validity; coordinator fixture implementation is not worker output or independent source evidence."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "48496cb5aca9acd8754645c231be5f41f23b9ab6",
+      "method": "Three fixture builds, full fixed drivers, exact declaration audits, compiling semantic mutations rejected by false concrete assertions; stratic validate; git diff --check; coordinator pinned source/contract review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; independent coordinator fixtures withheld from worker base.",
+      "evidence": "All three fixtures and universal-signature/edge drivers pass. Three compilable faults are rejected by concrete false assertions. Only standard Lean axioms; no inference calls. Preflight setup fixes completed before freezing. Exact report SHA256 8bfe4ffdaf6f3335279259dc9c12e81670c35f7a9693e2ede9084f9269550f0a",
+      "tests": [],
+      "id": "291caf4a-f5dc-45fb-8aa4-cb94e5e9a6cd",
+      "recordedAt": "2026-09-24T12:49:05.806Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T12:49:20.618Z",
+  "unmapped": [
+    {
+      "path": "formalization/checks/bfe32-v1.lean",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "formalization/checks/brev32-v1.lean",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "formalization/checks/mulhi32-v1.lean",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "formalization/contracts/bfe32-v1.md",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "formalization/contracts/brev32-v1.md",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "formalization/contracts/mulhi32-v1.md",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "stratic/descriptions/bfe32.json",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "stratic/descriptions/bfe32.md",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "stratic/descriptions/brev32.json",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "stratic/descriptions/brev32.md",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "stratic/descriptions/mulhi32.json",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "stratic/descriptions/mulhi32.md",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.md",
+      "reason": "Reviewed coordinator-owned contract, universal signatures, boundary examples or description metadata. Leaf implementation remains pending; preflight fixtures excluded from task base."
+    }
+  ]
+}
