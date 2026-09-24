@@ -1604,3 +1604,33 @@ output/storage, memory admission, constructed existence and access safety. -/
 #print axioms Ptx.BitVecProof.toNat_widen
 #print axioms Ptx.BitVecProof.narrow_widen
 #print axioms Ptx.BitVecProof.widen_narrow
+
+/-! Reviewed three-input truth-table logic. -/
+#print axioms Ptx.Scalar.Lop3.SupportedTarget
+#print axioms Ptx.Scalar.Lop3.compute
+#print axioms Ptx.Scalar.Lop3.family
+#print axioms Ptx.Scalar.Lop3.lower
+#print axioms Ptx.Scalar.Lop3.result
+#print axioms Ptx.Scalar.Lop3.occurrence
+#print axioms Ptx.Scalar.Lop3.compute_bit
+#print axioms Ptx.Scalar.Lop3.results_iff
+#print axioms Ptx.Scalar.Lop3.lower_operation
+#print axioms Ptx.Scalar.Lop3.lower_fields
+#print axioms Ptx.Scalar.Lop3.eval_true_iff
+#print axioms Ptx.Scalar.Lop3.eval_false_iff
+#print axioms Ptx.Scalar.Lop3.eval_destination
+#print axioms Ptx.Scalar.Lop3.eval_frame
+#print axioms Ptx.Scalar.Lop3.eval_other
+#print axioms Ptx.Scalar.Lop3.eval_event
+#print axioms Ptx.Scalar.Lop3.eval_deterministic
+#print axioms Ptx.Scalar.Lop3.eval_exists
+#print axioms Ptx.Scalar.Lop3.step_origin
+#print axioms Ptx.Scalar.Lop3.step_exists
+#print axioms Ptx.Scalar.Lop3.step_no_fetch
+#print axioms Ptx.Scalar.Lop3.step_unsupported_target
+#print axioms Ptx.Scalar.Lop3.Text.supportedMnemonic
+#print axioms Ptx.Scalar.Lop3.Text.encode
+#print axioms Ptx.Scalar.Lop3.Text.decode
+#print axioms Ptx.Scalar.Lop3.Text.decode_encode
+#print axioms Ptx.Scalar.Lop3.Text.decode_iff
+#print axioms Ptx.Scalar.ReviewedPure.lop3

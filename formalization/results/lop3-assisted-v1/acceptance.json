@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "task": "lop3-assisted-v1",
+  "selected_forms": [
+    "lop3.b32"
+  ],
+  "base_commit": "73207f78f06213066c8f8d06951f0900d7d291ad",
+  "accepted_patch_sha256": "d58bf825a4dc00c82a1ad34d4caf1c8eb95ee25f747d0c8288fcc00c637378a5",
+  "worker_attempt": "lop3-assisted-001",
+  "mechanical_replay": "replays/lop3-assisted-001/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "Exact worker candidate; final combined checks recorded by Stratic.",
+  "reviewer": "Coordinator source/statement inspection, fresh clean replay and separately recorded advisory GLM accept.",
+  "source_conditions": {
+    "ptx_minimum": "4.3",
+    "target_minimum": "sm_50 feature floor; not recognized-target validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "logic-and-shift-instructions-lop3"
+    ]
+  },
+  "trial_invocations": 1,
+  "repair_invocations": 0,
+  "campaign_call_numbers": [
+    29
+  ],
+  "qualification": "Assisted continuation of three prior unsuccessful calls, with generic coordinator-written helpers/examples and explicit correction of a malformed private theorem. One fresh worker session, with internal build repairs; not held-out or first-try proof success. Original public theorem statements, drivers, computation and execution/decoder definitions unchanged; no coordinator candidate edits."
+}

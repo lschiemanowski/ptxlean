@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "worker": {
+    "call": 29,
+    "started_at": "2026-09-24T16:43:08.692820+00:00",
+    "finished_at": "2026-09-24T16:45:53.384424+00:00",
+    "reported_usage": [
+      {
+        "input_tokens": 716280,
+        "cached_input_tokens": 668672,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 6808,
+        "reasoning_output_tokens": 2199
+      }
+    ],
+    "requested_model": "gpt-6-luna",
+    "reported_models": [],
+    "patch_sha256": "d58bf825a4dc00c82a1ad34d4caf1c8eb95ee25f747d0c8288fcc00c637378a5",
+    "elapsed_seconds": 164.691604,
+    "build_commands": 11,
+    "failed_build_commands": 10
+  },
+  "worker_receipt_sha256": "8620568656abdfd4370d76f47f4e2f15f42615ee7588a5e72de14a393690a064",
+  "review": {
+    "schema_version": 1,
+    "state": "completed",
+    "started_at": "2026-09-24T16:46:22.893630+00:00",
+    "requested_model": "z-ai/glm-5.3-flash",
+    "request_sha256": "06029a32bf29024047ad43ae4d73cd35b2437b5a24acf149f4fc9aef28564bbc",
+    "recipe_sha256": "af66552f9d1258a8ab9adda3a5fc2ea4c80be64b6d2f254d48b94ee624fe133b",
+    "packet_sha256": "94eef215492758f5c6887c1715de92e75527f15b8774f2448b6581a8970fcec7",
+    "helper_sha256": {
+      "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+      "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+      "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+    },
+    "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+    "reported_model": "z-ai/glm-5.3-flash",
+    "provider": "Friendli",
+    "usage": {
+      "prompt_tokens": 33979,
+      "completion_tokens": 2024,
+      "total_tokens": 36003,
+      "cost": 0.00610885,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.00610885,
+        "upstream_inference_prompt_cost": 0.00509685,
+        "upstream_inference_completions_cost": 0.001012
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 738,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "reported_cost": 0.00610885,
+    "semantic_acceptance": "not_performed",
+    "timeout_seconds": 300,
+    "total_timeout_seconds": 600.0,
+    "response_sha256": "ca5402b9514c9d052ca4d3fd6f54fbbeab919f7d44b751d923307a0db75072af",
+    "response_id": "gen-1790268383-eQE8nUJKFL7YkE4DSqUq",
+    "finish_reason": "stop",
+    "verdict": "accept",
+    "finished_at": "2026-09-24T16:46:49.488403+00:00",
+    "elapsed_seconds": 26.59005238302052
+  },
+  "review_receipt_sha256": "3c4ac82312cd45a4bf20280355507e40829e1303eae7610063c58253893dac7a",
+  "raw_report_sha256": "f94077cbfd9a598ebbaa20d77fd587fbb2a3171af9cfcc782ec9a5f72fd98667",
+  "review_adjudication": "Accept with no findings. Coordinator checked truth-table ordering, all operand patterns, input-state aliases, guard/target/event conditions and exact immediate decoder. Selected ISA remains exactly 9.4, not every version since introduction.",
+  "qualification": "Raw review bodies remain local. Dollar cost is reported OpenRouter usage, not total project/Codex cost. One successful known-task recovery does not establish generalization or cost effectiveness."
+}

@@ -1,0 +1,110 @@
+{
+  "base_commit": "73207f78f06213066c8f8d06951f0900d7d291ad",
+  "files": [
+    {
+      "path": "Ptx/Lop3.lean",
+      "role": "candidate",
+      "sha256": "1ac50a7e49e64441c6e0a1da7a241ffad5d0543f701fa2e4be5b73379604c72d"
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "role": "support",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "role": "support",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "role": "support",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "role": "support",
+      "sha256": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "role": "support",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    },
+    {
+      "path": "Ptx/BitVecProof.lean",
+      "role": "support",
+      "sha256": "50d1eb2c6e97f8ebc86e2235506f26b1b64c04807543ff18c2a67e10d208bdc5"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "meaning",
+      "text": "Apply an eight-entry Boolean truth table independently to each of the 32 bit positions. The first input chooses weight four in the table index, the second weight two and the third weight one. The table is an immediate integer in 0..255. Only plain lop3.b32 is selected; no predicate result, BoolOp qualifier or sink destination. Introduced PTX 4.3; requires sm_50. All 32-bit input data words and aliases are allowed."
+    },
+    {
+      "id": "state",
+      "text": "Evaluate sources in the incoming state before writing the destination; permit repeated sources and source/destination aliases. Only the selected word register and incremented program counter change."
+    },
+    {
+      "id": "guards",
+      "text": "Both positive and negative instruction guards are supported. A false guard skips the write and advances only the program counter. The selected operations have no additional predicate operands."
+    },
+    {
+      "id": "events",
+      "text": "The occurrence identifies the fetched instruction and original program counter. Enabled syntactic reads include guard then word operands then predicate operands, retaining repeats. Disabled instructions read only the guard. No memory effect is claimed."
+    },
+    {
+      "id": "target",
+      "text": "ISA exactly 94, numeric SM at least 50, including skipped instructions; a feature floor, not target-name validation."
+    },
+    {
+      "id": "decoder",
+      "text": "Exactly lop3.b32 with a word-register destination followed by 3 compatible word operands in field order. Preserve guards; malformed selected spellings are invalidOperands; all other spellings are unsupportedMnemonic. Decode succeeds iff the statement is its exact encoding. Compatible declarations and data-immediate conversion are supplied; no raw parser claim. Append one literal table in 0..255; reject a register table or larger immediate. Operation is BitVec 8 holding that immediate, not a runtime register read."
+    },
+    {
+      "id": "proofs",
+      "text": "Universal transition, frame, deterministic result, one-step existence and origin theorems must follow the actual definitions without excluding aliases or input bit patterns. Absence of raw module parsing, declared-register checking and whole-kernel termination is within the deliberate scope."
+    }
+  ],
+  "patch": {
+    "path": "formalization/review/candidates/lop3-assisted-001.patch",
+    "sha256": "d58bf825a4dc00c82a1ad34d4caf1c8eb95ee25f747d0c8288fcc00c637378a5"
+  },
+  "schema_version": 1,
+  "scope": "Selected lop3.b32 only; no other widths, predicate-producing forms, raw parsing, whole-kernel or hardware claim. The worker is free to choose the computation implementation under the source-derived output-bit law. Support files are fixed.",
+  "sections": [
+    {
+      "anchor": "predicated-execution",
+      "sha256": "e3de38b106e96f1ccdd8c7710b2efbaa5ea2bde35959da999d2075a12162dd1f"
+    },
+    {
+      "anchor": "instruction-statements",
+      "sha256": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a"
+    },
+    {
+      "anchor": "operand-type-information",
+      "sha256": "2b4deb7a2de0f26463be8ea631b19d3262067641e45c4ca98261b61ff73945a7"
+    },
+    {
+      "anchor": "source-operands",
+      "sha256": "a981cf489133f764d2b9d621b4653ead71abb7709a83a323eccb55bddb8b6fa2"
+    },
+    {
+      "anchor": "destination-operands",
+      "sha256": "46d9e524f958b92cb45b9d9c7113b315e3b44eaf6a69f5af707bb055c5ee6a70"
+    },
+    {
+      "anchor": "integer-constants",
+      "sha256": "d7a625de2e4a872a173e18cde51b2c3475cb2e37a811700332dbf9292713a9f2"
+    },
+    {
+      "anchor": "type-information-for-instructions-and-operands",
+      "sha256": "1191421bc4f06fb7dd96d159cf38c7396851b95257247d2a9c68f54d99f4ad78"
+    },
+    {
+      "anchor": "logic-and-shift-instructions-lop3",
+      "sha256": "4a886c092cb648517d3837a5ddb32db49958e3cdfb0d97b374ddd67a46f307cf"
+    }
+  ]
+}

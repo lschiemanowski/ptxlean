@@ -10,7 +10,32 @@
     "Apply an eight-entry Boolean truth table independently to each of the 32 bit positions.",
     "Preserve guarded state changes and exact typed decoding for ISA 9.4 and SM at least 50."
   ],
-  "realization": "unimplemented",
-  "remaining": "No accepted implementation. The worker candidate still needs its conditional bit-observation helper and universal compute_bit proof, plus both typed-decoder roundtrip directions. All unchanged drivers and a fresh full dependency audit must pass before integration.",
-  "links": []
+  "realization": "implemented",
+  "remaining": "Plain lop3.b32 has completed output-bit, guarded execution and exact typed-decoder proofs. Predicate-producing BoolOp variants, raw-module validation and hardware correspondence remain outside this leaf.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Its bit at index 4*a + 2*b + c supplies the output for input bits a, b, c."
+      },
+      "to": {
+        "path": "Ptx/Lop3.lean",
+        "passage": {
+          "quote": "theorem compute_bit (op : Operation) (a b c : Word) (bit : Nat) (bound : bit < 32) :"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The typed\ndecoder accepts only an immediate table in 0..255 and a word-register destination."
+      },
+      "to": {
+        "path": "Ptx/Lop3.lean",
+        "passage": {
+          "quote": "def decode (statement : Scalar.Text.Statement) : Except Scalar.Text.DecodeError Instr :="
+        }
+      }
+    }
+  ]
 }

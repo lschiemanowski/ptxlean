@@ -1,11 +1,11 @@
 # Accepted instruction forms
 
 An accepted form is a particular spelling and operand contract, not an entire
-instruction name. This ledger records twenty-three independently reviewed forms:
+instruction name. This ledger records twenty-four independently reviewed forms:
 `min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32`, `mul.rn.f32`,
 `selp.b32`, `min.s32`, `max.s32`, `and.b32`, `or.b32`, `xor.b32`,
 `not.b32`, `cnot.b32`, `shl.b32`, `shr.u32`, `shr.s32`, `brev.b32`,
-`mul.hi.u32`, `mul.hi.s32`, `bfe.u32`, `bfe.s32` and `bfi.b32`.
+`mul.hi.u32`, `mul.hi.s32`, `bfe.u32`, `bfe.s32`, `bfi.b32` and `lop3.b32`.
 The integer forms compare signed or unsigned words, count, reverse, extract, insert, shift or combine bits, take the upper half of a product, test whether a word is zero, or select a
 word using a predicate, with exact results for all input patterns. The floating forms add or multiply encoded binary32 values
 with nearest-even rounding and preserved subnormal values. Their result relation
@@ -21,7 +21,9 @@ does not parse a complete PTX file or validate its register declarations. The
 older unsigned and bit-count decoders leave version and target checks to the
 caller. Selection, signed min/max and the bitwise and shift families use fetched steps requiring ISA 9.4 and
 a numeric SM value of at least 10. High-half multiplication uses the same floor;
-reversal, extraction and insertion require at least 20. The floating fetched-step interface requires
+reversal, extraction and insertion require at least 20. Three-input truth-table
+logic requires at least 50 and accepts its table only as an immediate from 0 to
+255; its three data sources remain word operands. The floating fetched-step interface requires
 PTX ISA 9.4 and a numeric SM value of at least 20, preserving the source's
 subnormal behavior; this does not validate target spellings or architecture
 suffixes. Floating operands denote compatible `.b32`/`.f32` registers or exact

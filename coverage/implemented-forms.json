@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Twenty-three reviewed forms: twenty-one integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Twenty-four reviewed forms: twenty-two integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": ".ptx-source/9.4/index.html",
@@ -218,6 +218,26 @@
     "bfi32_review": {
       "path": "docs/formalization/derived-v1-source-review.md",
       "sha256": "e7b15ffeb3f683e9396856c8d7deccfe0e2376a790c38d6c4014c7385fda502b"
+    },
+    "lop3": {
+      "path": "Ptx/Lop3.lean",
+      "sha256": "1ac50a7e49e64441c6e0a1da7a241ffad5d0543f701fa2e4be5b73379604c72d"
+    },
+    "bitvec_proof": {
+      "path": "Ptx/BitVecProof.lean",
+      "sha256": "50d1eb2c6e97f8ebc86e2235506f26b1b64c04807543ff18c2a67e10d208bdc5"
+    },
+    "lop3_acceptance": {
+      "path": "formalization/results/lop3-assisted-v1/acceptance.json",
+      "sha256": "4952d1f8110113b01bc195784d5f9cfa2d0bd10ad713683a45a8976206add4ef"
+    },
+    "lop3_evidence": {
+      "path": "formalization/results/lop3-assisted-v1/evidence-manifest.json",
+      "sha256": "66d1deb8f4726e9ef054091de49b5488c0782199004e27fc88c1e79259b4f2e7"
+    },
+    "lop3_review": {
+      "path": "docs/formalization/lop3-assisted-source-review.md",
+      "sha256": "aabf4373fadec6e126d16bed2a2381b16df6cf243ca820549d9f718d20a5b070"
     }
   },
   "source": {
@@ -250,7 +270,8 @@
       "integer-arithmetic-instructions-brev": "91b3af28ab3879d746113f91bd71e5ade91911f16a676eb1de377f5e03de2295",
       "integer-arithmetic-instructions-mul": "b9a2d10dc98029a40cff2fb9c914234eaf6cfbffdcfbb5e58338d84bccc14cf9",
       "integer-arithmetic-instructions-bfe": "6ccea820651a49ed6bfb67b48e45ed59bbb72d1c8124802a3b075241e1f31781",
-      "integer-arithmetic-instructions-bfi": "c3421a98b08fb3057289aa33538967c28314e176281817b5601b66efe8ce4859"
+      "integer-arithmetic-instructions-bfi": "c3421a98b08fb3057289aa33538967c28314e176281817b5601b66efe8ce4859",
+      "logic-and-shift-instructions-lop3": "4a886c092cb648517d3837a5ddb32db49958e3cdfb0d97b374ddd67a46f307cf"
     },
     "common_operand_guard_anchors": [
       "operand-type-information",
@@ -357,6 +378,14 @@
       "patch_member": "attempts/bfi32-003/candidate.patch",
       "replay_member": "replays/bfi32-003/result.json",
       "patch_sha256": "ee28a6aed18d3cab288ac336a2f66af023fdba1d936cea445f4d9b8753b95946"
+    },
+    "lop3": {
+      "acceptance": "lop3_acceptance",
+      "evidence": "lop3_evidence",
+      "source_review": "lop3_review",
+      "patch_member": "attempts/lop3-assisted-001/candidate.patch",
+      "replay_member": "replays/lop3-assisted-001/result.json",
+      "patch_sha256": "d58bf825a4dc00c82a1ad34d4caf1c8eb95ee25f747d0c8288fcc00c637378a5"
     }
   },
   "forms": [
@@ -3927,6 +3956,175 @@
           "name": "lower_operation"
         }
       ]
+    },
+    {
+      "spelling": "lop3.b32",
+      "status": "accepted",
+      "trial": "lop3",
+      "source_anchor": "logic-and-shift-instructions-lop3",
+      "ptx_minimum": "4.3",
+      "target": "sm_50 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 50 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit word register or already converted immediate",
+          "compatible declared 32-bit word register or already converted immediate",
+          "compatible declared 32-bit word register or already converted immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands.",
+        "immediate_table": "Required immediate integer 0..255, represented as BitVec 8 operation parameter; decoder rejects registers and out-of-range converted words."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Apply the immediate eight-entry Boolean truth table independently at each bit position. Index weights are 4 for the first input, 2 for the second, 1 for the third. Every input word and all 256 tables admitted; table operand is not a runtime register.",
+      "boundary": "Plain lop3.b32 only, ISA 94 and numeric SM >= 50. No BoolOp predicate result or sink destination, raw module/declaration validation or hardware correspondence.",
+      "semantics": [
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "compute"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "family"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "lower"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3.Text",
+          "name": "encode"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "compute_bit"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "results_iff"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "lower_fields"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "eval_destination"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "eval_frame"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "eval_other"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "eval_event"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "eval_exists"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "step_origin"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "step_exists"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "lop3",
+          "namespace": "Ptx.Scalar.Lop3",
+          "name": "lower_operation"
+        }
+      ]
     }
   ],
   "uncovered_siblings": [
@@ -4166,6 +4364,15 @@
       ],
       "status": "unimplemented",
       "reason": "Only 32-bit insertion has an accepted proof package."
+    },
+    {
+      "source_anchor": "logic-and-shift-instructions-lop3",
+      "spellings": [
+        "lop3.and.b32",
+        "lop3.or.b32"
+      ],
+      "status": "unimplemented",
+      "reason": "Predicate-producing variants, including discarded word destination, require a different interface and state effects."
     }
   ]
 }

@@ -1,0 +1,183 @@
+{
+  "id": "52e6341f-9207-44ad-b2e0-5d51b60fa1a0",
+  "base": "73207f78f06213066c8f8d06951f0900d7d291ad",
+  "contentTree": "da7ee4e69b5f0a67065948bc57c3d48a4dc0a6ef",
+  "reviewer": "Codex coordinator",
+  "summary": "Accept the assisted Luna LOP3 proof completion with unchanged semantics and full provenance.",
+  "examined": [
+    {
+      "id": "lop3",
+      "outcome": "revised",
+      "reason": "Plain form has completed all original obligations with exact worker source, fresh replay, coordinator source/statement inspection and separate advisory GLM accept. No new assumptions or decoder restrictions."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "Adds only plain lop3.b32 and its source, target, immediate-only range, exact patch/replay provenance and missing predicate-producing siblings; 24 selected forms."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Assisted continuation explicitly counts coordinator helper proofs and diagnosis, prior failed calls and ten within-call build failures; no held-out/generalization or cost-effectiveness claim."
+    },
+    {
+      "id": "bitvector-proofs",
+      "outcome": "unchanged",
+      "reason": "The exact frozen five helper proofs are reused unchanged; no additional instruction-specific lemmas or computation inserted."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "Same total pure result interface; table is operation data, not an extra register operand."
+    },
+    {
+      "id": "pure-kernel",
+      "outcome": "unchanged",
+      "reason": "New catalog member directly uses leaf lowering and result relation; functionality rechecked without changing generic nondeterministic semantics."
+    },
+    {
+      "id": "mask-select",
+      "outcome": "unchanged",
+      "reason": "Existing program and claims unchanged under the extended catalog."
+    },
+    {
+      "id": "array-mask-select",
+      "outcome": "unchanged",
+      "reason": "Existing loop/existence/termination claims unchanged and example rechecked."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "No scalar state, memory semantics, branch or execution rule changed."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Audit gains entries only; concurrent fragment unchanged."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Selected sequential form adds no concurrency, raw-module or hardware guarantee."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "Section coverage remains unassessed; selected-form count is not full coverage."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Kernel proof validity remains separate from source fidelity and advisory review."
+    },
+    {
+      "id": "model-review",
+      "outcome": "unchanged",
+      "reason": "Existing prompt, schema, model settings, total deadline and no-retry route unchanged; one completed request recorded."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "da7ee4e69b5f0a67065948bc57c3d48a4dc0a6ef",
+      "method": "Core scripts/check.sh; fresh worker replay; generic helper examples; both frozen LOP3 drivers; array example; TorchLean integration; source/statement/provenance review; exact candidate and unchanged-contract hashes; Stratic validation and whitespace checks",
+      "outcome": "pass",
+      "environment": "Linux, pinned Lean 4.34.0, verified local PTX 9.4 source. Final checks make no inference calls.",
+      "evidence": "Core checks passed on tree 3b34ff4d15c744b40b0a28fa0d6091cd85837b5b: 1568 dependency reports with only standard Lean axioms, 24 accepted forms, 1318 archived members across 17 archives, 106 worker regressions, 26 ledger tests and 7 inventory tests. Final tree changes only a preparation-error-count sentence in the continuation report, without changing any tested code, contract, driver or evidence. Extra-check pre/post snapshots match this final tree. Generic examples, original universal/concrete LOP3 drivers and array example pass; TorchLean integration passes with 363 exact dependency reports. Independent fresh replay of exact worker patch also passes. Coordinator reread source and inspected minterm index order, guards, aliases, targets, range-checking and exact decoder properties. GLM advisory accept is separate. Worker output is integrated byte-for-byte and original public obligations are unchanged. Prior three failed calls remain preserved; the fourth call contains ten failed builds before success. Raw vendor/model transcripts are excluded from public evidence.",
+      "tests": [],
+      "id": "6a763e7f-6036-47d5-b7f4-1231b1526adb",
+      "recordedAt": "2026-09-24T16:54:54.780Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T16:55:11.796Z",
+  "unmapped": [
+    {
+      "path": "Ptx/Lop3.lean",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "docs/formalization/lop3-assisted-source-review.md",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "formalization/results/lop3-assisted-v1/README.md",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "formalization/results/lop3-assisted-v1/acceptance.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "formalization/results/lop3-assisted-v1/effort.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "formalization/results/lop3-assisted-v1/evidence-manifest.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "formalization/results/lop3-assisted-v1/run.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "formalization/results/lop3-assisted-v1/worker-evidence.tar.gz",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "formalization/review/candidates/lop3-assisted-001.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "formalization/review/candidates/lop3-assisted-001.patch",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "formalization/tasks/lop3-assisted-v1.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "Ptx/ReviewedPure.lean",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "docs/foundations/pure-kernels.md",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "stratic/descriptions/lop3.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed exact worker candidate, source/statement contract, archival provenance, unchanged acceptance drivers, documentation or ledger registration. Original failed trial retained unchanged."
+    }
+  ]
+}
