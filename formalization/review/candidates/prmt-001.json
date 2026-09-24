@@ -1,0 +1,110 @@
+{
+  "base_commit": "d63eb04e48c34c99f9802d1428a7b56d7c3b48c3",
+  "files": [
+    {
+      "path": "Ptx/Prmt32.lean",
+      "role": "candidate",
+      "sha256": "db89a7012e4bdebb4cf55a0e33027523d64fb31974dce55c31608b096cad493b"
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "role": "support",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "role": "support",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "role": "support",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "role": "support",
+      "sha256": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "role": "support",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    },
+    {
+      "path": "Ptx/BitVecProof.lean",
+      "role": "support",
+      "sha256": "50d1eb2c6e97f8ebc86e2235506f26b1b64c04807543ff18c2a67e10d208bdc5"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "meaning",
+      "text": "Plain prmt.b32: select four bytes from two source words. Byte 0 is least significant; input bytes 0..3 belong to first word, 4..7 to second. Each output byte uses the corresponding low-control nibble. Low three selector bits pick the input byte; high selector bit requests replication of its sign bit across the entire output byte. Ignore upper sixteen control bits without restricting input range. Introduced PTX 2.0; requires SM20. All six specialized modes excluded."
+    },
+    {
+      "id": "state",
+      "text": "Evaluate sources in the incoming state before writing the destination; permit repeated sources and source/destination aliases. Only the selected word register and incremented program counter change."
+    },
+    {
+      "id": "guards",
+      "text": "Both positive and negative instruction guards are supported. A false guard skips the write and advances only the program counter. The selected operations have no additional predicate operands."
+    },
+    {
+      "id": "events",
+      "text": "The occurrence identifies the fetched instruction and original program counter. Enabled syntactic reads include guard then word operands then predicate operands, retaining repeats. Disabled instructions read only the guard. No memory effect is claimed."
+    },
+    {
+      "id": "target",
+      "text": "ISA exactly 94, numeric SM at least 20, including skipped instructions; feature floor, not target-name validation."
+    },
+    {
+      "id": "decoder",
+      "text": "Exactly prmt.b32 with word-register destination and three compatible word operands (first, second, control). Control may be a register or an already converted 32-bit immediate, including nonzero upper sixteen bits. Preserve guard. Malformed selected spelling is invalidOperands; other spellings are unsupportedMnemonic. Decode succeeds iff exact encoding. No raw module or declaration validation."
+    },
+    {
+      "id": "proofs",
+      "text": "Universal transition, frame, deterministic result, one-step existence and origin theorems must follow the actual definitions without excluding aliases or input bit patterns. Absence of raw module parsing, declared-register checking and whole-kernel termination is within the deliberate scope."
+    }
+  ],
+  "patch": {
+    "path": "formalization/review/candidates/prmt-001.patch",
+    "sha256": "dcbc1e235c570432da5a2176e382145ae9dd3531ca9315a25bdc0d06c9583436"
+  },
+  "schema_version": 1,
+  "scope": "Plain prmt.b32 only; no specialized modes, raw module/declaration validation, whole-kernel or hardware claim. Worker chooses computation under a supplied universal output-bit law. Fixed support is unchanged.",
+  "sections": [
+    {
+      "anchor": "predicated-execution",
+      "sha256": "e3de38b106e96f1ccdd8c7710b2efbaa5ea2bde35959da999d2075a12162dd1f"
+    },
+    {
+      "anchor": "instruction-statements",
+      "sha256": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a"
+    },
+    {
+      "anchor": "operand-type-information",
+      "sha256": "2b4deb7a2de0f26463be8ea631b19d3262067641e45c4ca98261b61ff73945a7"
+    },
+    {
+      "anchor": "source-operands",
+      "sha256": "a981cf489133f764d2b9d621b4653ead71abb7709a83a323eccb55bddb8b6fa2"
+    },
+    {
+      "anchor": "destination-operands",
+      "sha256": "46d9e524f958b92cb45b9d9c7113b315e3b44eaf6a69f5af707bb055c5ee6a70"
+    },
+    {
+      "anchor": "integer-constants",
+      "sha256": "d7a625de2e4a872a173e18cde51b2c3475cb2e37a811700332dbf9292713a9f2"
+    },
+    {
+      "anchor": "type-information-for-instructions-and-operands",
+      "sha256": "1191421bc4f06fb7dd96d159cf38c7396851b95257247d2a9c68f54d99f4ad78"
+    },
+    {
+      "anchor": "data-movement-and-conversion-instructions-prmt",
+      "sha256": "0ddf874061fc8aa356ea0e167ec834ea8f28cb69e8623ed99cd8fc2a0fa02b4e"
+    }
+  ]
+}

@@ -1,3 +1,4 @@
+import Ptx.Prmt32
 import Ptx.Lop3
 import Ptx.Bfi32
 import Ptx.Bfe32
@@ -14,7 +15,7 @@ import Ptx.Shift32
 namespace Ptx.Scalar.ReviewedPure
 
 inductive Kind where
-  | bitwise | unary | select | signedMinMax | shift | brev | mulHi | bfe | bfi | lop3
+  | bitwise | unary | select | signedMinMax | shift | brev | mulHi | bfe | bfi | lop3 | prmt
   deriving DecidableEq, Repr
 
 def Operation : Kind → Type
@@ -23,6 +24,7 @@ def Operation : Kind → Type
   | .select => Select32.Operation
   | .signedMinMax => SignedMinMax32.Operation
   | .shift => Shift32.Operation
+  | .prmt => Prmt32.Operation
   | .lop3 => Lop3.Operation
   | .bfi => Bfi32.Operation
   | .bfe => Bfe32.Operation
@@ -35,6 +37,7 @@ def family : (kind : Kind) → Pure32.Family (Operation kind)
   | .select => Select32.family
   | .signedMinMax => SignedMinMax32.family
   | .shift => Shift32.family
+  | .prmt => Prmt32.family
   | .lop3 => Lop3.family
   | .bfi => Bfi32.family
   | .bfe => Bfe32.family
@@ -62,6 +65,8 @@ def bfe (i : Bfe32.Instr) : Instr := .pure .bfe (Bfe32.lower i)
 def bfi (i : Bfi32.Instr) : Instr := .pure .bfi (Bfi32.lower i)
 
 def lop3 (i : Lop3.Instr) : Instr := .pure .lop3 (Lop3.lower i)
+
+def prmt (i : Prmt32.Instr) : Instr := .pure .prmt (Prmt32.lower i)
 
 theorem functional : PureKernel.Functional catalog := by
   intro kind

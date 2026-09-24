@@ -1634,3 +1634,33 @@ output/storage, memory admission, constructed existence and access safety. -/
 #print axioms Ptx.Scalar.Lop3.Text.decode_encode
 #print axioms Ptx.Scalar.Lop3.Text.decode_iff
 #print axioms Ptx.Scalar.ReviewedPure.lop3
+
+/-! Reviewed plain byte permutation. -/
+#print axioms Ptx.Scalar.Prmt32.SupportedTarget
+#print axioms Ptx.Scalar.Prmt32.compute
+#print axioms Ptx.Scalar.Prmt32.family
+#print axioms Ptx.Scalar.Prmt32.lower
+#print axioms Ptx.Scalar.Prmt32.result
+#print axioms Ptx.Scalar.Prmt32.occurrence
+#print axioms Ptx.Scalar.Prmt32.compute_bit
+#print axioms Ptx.Scalar.Prmt32.results_iff
+#print axioms Ptx.Scalar.Prmt32.lower_operation
+#print axioms Ptx.Scalar.Prmt32.lower_fields
+#print axioms Ptx.Scalar.Prmt32.eval_true_iff
+#print axioms Ptx.Scalar.Prmt32.eval_false_iff
+#print axioms Ptx.Scalar.Prmt32.eval_destination
+#print axioms Ptx.Scalar.Prmt32.eval_frame
+#print axioms Ptx.Scalar.Prmt32.eval_other
+#print axioms Ptx.Scalar.Prmt32.eval_event
+#print axioms Ptx.Scalar.Prmt32.eval_deterministic
+#print axioms Ptx.Scalar.Prmt32.eval_exists
+#print axioms Ptx.Scalar.Prmt32.step_origin
+#print axioms Ptx.Scalar.Prmt32.step_exists
+#print axioms Ptx.Scalar.Prmt32.step_no_fetch
+#print axioms Ptx.Scalar.Prmt32.step_unsupported_target
+#print axioms Ptx.Scalar.Prmt32.Text.supportedMnemonic
+#print axioms Ptx.Scalar.Prmt32.Text.encode
+#print axioms Ptx.Scalar.Prmt32.Text.decode
+#print axioms Ptx.Scalar.Prmt32.Text.decode_encode
+#print axioms Ptx.Scalar.Prmt32.Text.decode_iff
+#print axioms Ptx.Scalar.ReviewedPure.prmt

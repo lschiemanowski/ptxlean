@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "worker": {
+    "call": 30,
+    "requested_model": "gpt-6-luna",
+    "reported_models": [],
+    "started_at": "2026-09-24T17:34:15.743064+00:00",
+    "finished_at": "2026-09-24T17:36:26.877302+00:00",
+    "reported_usage": [
+      {
+        "input_tokens": 559913,
+        "cached_input_tokens": 501760,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 5788,
+        "reasoning_output_tokens": 465
+      }
+    ],
+    "patch_sha256": "dcbc1e235c570432da5a2176e382145ae9dd3531ca9315a25bdc0d06c9583436",
+    "elapsed_seconds": 131.134238,
+    "build_commands": 2,
+    "failed_build_commands": 1,
+    "other_failed_commands": 1
+  },
+  "worker_receipt_sha256": "083fd285142cf3fdadd7c3115ca3310c4c0302f9ffdbc2a8a038ccdf0861d2ff",
+  "review": {
+    "schema_version": 1,
+    "state": "completed",
+    "started_at": "2026-09-24T17:36:48.056333+00:00",
+    "requested_model": "z-ai/glm-5.3-flash",
+    "request_sha256": "a49547a552cc9c7de17fce59dc9acec90d15e30f62cd725c95f409803229d450",
+    "recipe_sha256": "8c3b3b1af164be3d3c28f747ec675a92dd39dfbd1cbe74df52702a4b519f3f47",
+    "packet_sha256": "c7b050ff406032b7a88fa8bd5fc69935e08279990b6cf911f882c0dd20dd4635",
+    "helper_sha256": {
+      "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+      "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+      "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+    },
+    "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+    "reported_model": "z-ai/glm-5.3-flash",
+    "provider": "OpenInference",
+    "usage": {
+      "prompt_tokens": 33655,
+      "completion_tokens": 2767,
+      "total_tokens": 36422,
+      "cost": 0.0025224,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 29688,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0025224,
+        "upstream_inference_prompt_cost": 0.0011389,
+        "upstream_inference_completions_cost": 0.0013835
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 2036,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "reported_cost": 0.0025224,
+    "semantic_acceptance": "not_performed",
+    "timeout_seconds": 300,
+    "total_timeout_seconds": 600.0,
+    "response_sha256": "a32852471a7ba4cd593dfa125afc6cbb6971e18192cf70c2007c2759b1c3e3a5",
+    "response_id": "gen-1790271408-93ZmFVdGzTpTwLnCmfvC",
+    "finish_reason": "stop",
+    "verdict": "accept",
+    "finished_at": "2026-09-24T17:38:25.487709+00:00",
+    "elapsed_seconds": 97.42939939489588
+  },
+  "review_receipt_sha256": "cfd5b64f05762d3b21e1761a9ce337130673c92756545207594d06ab09f2751b",
+  "raw_review_report_sha256": "e7fe229dd6c87861bf96dc06fe3bad1727bf80c8c285247bae02bfe4e8745376",
+  "review_adjudication": "Coordinator checked all obligations against actual source and candidate; reviewer verdict is advisory, not Lean proof checking. Detailed scope and any qualifications are in the source review.",
+  "qualification": "Single fresh-family result with existing leaf templates and a fully specified semantic law. Toolkit import is not evidence its lemmas caused success. No generalization rate or productivity improvement established. Raw model responses stay local; billing is reported OpenRouter cost only."
+}

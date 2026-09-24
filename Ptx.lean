@@ -1,3 +1,4 @@
+import Ptx.Prmt32
 import Ptx.Lop3
 import Ptx.BitVecProof
 import Ptx.Bfi32

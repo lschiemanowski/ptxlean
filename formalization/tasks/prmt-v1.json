@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "id": "prmt-v1",
+  "model": "gpt-6-luna",
+  "base_commit": "d63eb04e48c34c99f9802d1428a7b56d7c3b48c3",
+  "allowed_paths": [
+    "Ptx/Prmt32.lean"
+  ],
+  "sources": [
+    {
+      "path": "lean-toolchain",
+      "sha256": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632"
+    },
+    {
+      "path": "lakefile.toml",
+      "sha256": "0dd5039a9be123956d246a2d0134759ae33bb43c356b3b994b2c97478054e14d"
+    },
+    {
+      "path": "lake-manifest.json",
+      "sha256": "01f2e843d09759bcf28da5f401f7ad71f86b08c579e21227dcc076f31d9be719"
+    },
+    {
+      "path": "references/nvidia/ptx-isa-9.4/manifest.json",
+      "sha256": "2cb4e54aeb0f85025f15149f18fd16f3aca705968373324dc54ec9659108eb9f"
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "sha256": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15"
+    },
+    {
+      "path": "Ptx/Select32.lean",
+      "sha256": "4b8bc90df0d95d7f25a7e5d4512ad9f593466d5f1a008d1cf2c32214b9ea3152"
+    },
+    {
+      "path": "Ptx/SignedMinMax32.lean",
+      "sha256": "651f4d1c2b73916b3269e72257f327e0259dff2310512b6ab1b0f65b8b17bbb2"
+    },
+    {
+      "path": ".ptx-source/9.4/index.html",
+      "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+      "local_only": true
+    },
+    {
+      "path": "Ptx/Bitwise32.lean",
+      "sha256": "80ed9d771cf5c0b0cc39bdf9007c9465815f01d432d8b307b0d86aa742fb026f"
+    },
+    {
+      "path": "Ptx/Shift32.lean",
+      "sha256": "dd666f1995965c64982ecbc4eeab1ed5369edf69c7575ad9af4caf8eecd19ff7"
+    },
+    {
+      "path": "Ptx/BitVecProof.lean",
+      "sha256": "50d1eb2c6e97f8ebc86e2235506f26b1b64c04807543ff18c2a67e10d208bdc5"
+    },
+    {
+      "path": "examples/bitvector_proofs.lean",
+      "sha256": "1bd865163b07d89275a52535619e867c41752062e298415ef302765aa1d7a4ce"
+    },
+    {
+      "path": "docs/formalization/bitvector-proofs.md",
+      "sha256": "b429d0d99e3a50bf2457ec89129ef711a0d417b4d42152c306cd7d6eace9c563"
+    },
+    {
+      "path": "Ptx/Lop3.lean",
+      "sha256": "1ac50a7e49e64441c6e0a1da7a241ffad5d0543f701fa2e4be5b73379604c72d"
+    },
+    {
+      "path": "Ptx/Bfi32.lean",
+      "sha256": "24b864b2a957d0ff599060c0daf9ca5858b8d69ebf4669f94c279216d5dfa230"
+    },
+    {
+      "path": "formalization/contracts/prmt-v1.md",
+      "sha256": "d39133f1bcfb0eb50fbf10e524e550096276bca1638743667860d24b70aeb1ee"
+    },
+    {
+      "path": "formalization/contracts/prmt-v1-protocol.md",
+      "sha256": "5ee600ff841b7cf2caf52b9fadca4cbeefea97e32183f9cb4bcc889bef2894db"
+    },
+    {
+      "path": "formalization/checks/prmt-v1.lean",
+      "sha256": "8949d76b3b71b43d72ce895bb7359aa6805fec0e2ef610c15bb43b0f5f2c6a29"
+    },
+    {
+      "path": "formalization/checks/prmt-concrete-v1.lean",
+      "sha256": "11b92af33ff1e1739f1c1a4c840a638844e690bb72958bab5388cd69dd1e53a1"
+    }
+  ],
+  "prompt": "# prmt fixed worker contract\n\nImplement ONLY `Ptx/Prmt32.lean`, namespace `Ptx.Scalar.Prmt32`.\nUse the existing Pure32 execution and ScalarText interfaces. No shared-file edits.\n\nSelected spellings: prmt.b32.\nPinned PTX 9.4 source: `.ptx-source/9.4/index.html`, SHA-256\n`0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.\nRead anchors data-movement-and-conversion-instructions-prmt, plus predicated-execution,\ninstruction-statements, operand-type-information, source-operands,\ndestination-operands, integer-constants and type-information-for-instructions-and-operands.\n\nSelect each of four output bytes from the eight bytes in the two input words.\nSource bytes zero through three belong to the first word, and four through seven\nto the second; byte zero is least significant. Each output byte uses one four-bit\nselector from the control word, starting with the low four bits for output byte\nzero. The selector's low three bits choose a source byte; its high bit chooses\nwhether to copy that byte or repeat its sign bit over the output byte. Only the\nlow sixteen control bits matter. All input words and control patterns are allowed.\nOnly plain prmt.b32 is selected; all six specialized modes are excluded.\nIntroduced PTX 2.0; requires sm_20.\n\nThe exact slice is ISA 94 and numeric SM >= 20; this is a feature\nthreshold, not target-name validation. All input words and source/destination\naliases are allowed. Operands are read from the incoming state. Both guard\npolarities are supported; skips advance only PC and record only the guard read.\nTarget restrictions apply even to skips. Enabled syntactic reads preserve source\norder and repeats. Memory, address registers, predicates and other value registers\nare preserved. No extra preconditions or new axioms.\n\nSources and destination are compatible declared 32-bit values; immediate words\nare already decoded and size-converted. Register declaration validation, raw text,\nother widths/options and hardware correspondence are outside the slice.\n\nUse the following interface and exact universal theorem statements. Derive the\ncomputation body yourself from the pinned source; no body or algorithm is prescribed.\nThe pointwise theorem describes the required bits for all input values, independently\nof your chosen implementation. Definitions for common execution plumbing are supplied. Text.encode uses a word-register destination and the word sources in\nfield order, preserving the guard. Each operation has exactly its listed spelling.\nText.encode emits the destination register followed by three word operands (first,\nsecond, control); all three can be registers or already converted immediates.\nText.decode accepts exactly these encodings, distinguishes recognized malformed\noperands (invalidOperands) from all other names (unsupportedMnemonic).\n\n```lean\ndef SupportedTarget (target : Ptx.Target) : Prop := target.isa = 94 \u2227 20 \u2264 target.sm\n\ninductive Operation where\n  | permute\n  deriving DecidableEq, Repr\n\nstructure Instr where\n  guard : Scalar.Guard := .always\n  operation : Operation\n  destination : Nat\n  first : Scalar.Operand32\n  second : Scalar.Operand32\n  control : Scalar.Operand32\n  deriving DecidableEq, Repr\n\ndef compute (op : Operation) (a b c : Word) : Word\n\ndef family : Pure32.Family Operation :=\n  Pure32.Family.ofFunction (fun _ => 3) (fun _ => 0)\n    (fun op words _ => compute op (words 0) (words 1) (words 2))\n    (fun target _ => SupportedTarget target)\n\ndef lower (i : Instr) : Pure32.Instr family where\n  guard := i.guard\n  operation := i.operation\n  destination := i.destination\n  words := fun j => if j.val = 0 then i.first else if j.val = 1 then i.second else i.control\n  predicates := Fin.elim0\n\ndef result (i : Instr) (s : Scalar.State) : Word :=\n  compute i.operation (i.first.eval s) (i.second.eval s) (i.control.eval s)\n\nabbrev Occurrence := Pure32.Occurrence family\nabbrev Eval (i : Instr) := Pure32.Eval (lower i)\nabbrev Step (target : Ptx.Target) (program : List Instr) := Pure32.Step target (program.map lower)\n\ndef occurrence (s : Scalar.State) (i : Instr) (executed : Bool) : Occurrence :=\n  Pure32.occurrence s (lower i) executed\n\nnamespace Text\n  def supportedMnemonic : String \u2192 Bool\n  def encode : Instr \u2192 Scalar.Text.Statement\n  def decode : Scalar.Text.Statement \u2192 Except Scalar.Text.DecodeError Instr\nend Text\n\ntheorem compute_bit (op : Operation) (a b c : Word) (bit : Nat) (bound : bit < 32) :\n    (compute op a b c).getLsbD bit = (let selector := (c.toNat / 2 ^ (4 * (bit / 8))) % 16\n     let source := if selector % 8 < 4 then a else b\n     source.getLsbD (8 * (selector % 4) + (if 8 \u2264 selector then 7 else bit % 8)))\n\ntheorem results_iff (op : Operation) (words : Fin 3 \u2192 Word) (predicates : Fin 0 \u2192 Bool) (value : Word) :\n    family.Results op words predicates value \u2194 value = compute op (words 0) (words 1) (words 2)\n\ntheorem lower_operation (i : Instr) : (lower i).operation = i.operation\n\ntheorem lower_fields (i : Instr) :\n    (lower i).guard = i.guard \u2227 (lower i).destination = i.destination \u2227\n    (lower i).words (\u27e80, by decide\u27e9 : Fin 3) = i.first \u2227 (lower i).words (\u27e81, by decide\u27e9 : Fin 3) = i.second \u2227 (lower i).words (\u27e82, by decide\u27e9 : Fin 3) = i.control\n\ntheorem eval_true_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (enabled : i.guard.eval s = true) :\n    Eval i s next event \u2194\n      next = Pure32.write s i.destination (result i s) \u2227 event = occurrence s i true\n\ntheorem eval_false_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (disabled : i.guard.eval s = false) :\n    Eval i s next event \u2194\n      next = {s with pc := s.pc + 1} \u2227 event = occurrence s i false\n\ntheorem eval_destination (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (evaluated : Eval i s next event) (enabled : i.guard.eval s = true) :\n    next.regs i.destination = result i s\n\ntheorem eval_frame (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (evaluated : Eval i s next event) :\n    next.pc = s.pc + 1 \u2227 next.memory = s.memory \u2227 next.addrs = s.addrs \u2227 next.preds = s.preds\n\ntheorem eval_other (i : Instr) (s next : Scalar.State) (event : Occurrence) (other : Nat)\n    (evaluated : Eval i s next event) (different : other \u2260 i.destination) :\n    next.regs other = s.regs other\n\ntheorem eval_event (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (evaluated : Eval i s next event) :\n    event = occurrence s i (i.guard.eval s)\n\ntheorem eval_deterministic (i : Instr) (s next\u2081 next\u2082 : Scalar.State) (event\u2081 event\u2082 : Occurrence)\n    (left : Eval i s next\u2081 event\u2081) (right : Eval i s next\u2082 event\u2082) :\n    next\u2081 = next\u2082 \u2227 event\u2081 = event\u2082\n\ntheorem eval_exists (i : Instr) (s : Scalar.State) : \u2203 next event, Eval i s next event\n\ntheorem step_origin (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (stepped : Step target program s next event) :\n    SupportedTarget target \u2227 \u2203 i, program[s.pc]? = some i \u2227\n      event.pc = s.pc \u2227 event.instruction = lower i \u2227 Eval i s next event\n\ntheorem step_exists (target : Ptx.Target) (program : List Instr) (s : Scalar.State) (i : Instr)\n    (supported : SupportedTarget target) (fetch : program[s.pc]? = some i) :\n    \u2203 next event, Step target program s next event\n\ntheorem step_no_fetch (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (missing : program[s.pc]? = none) :\n    \u00ac Step target program s next event\n\ntheorem step_unsupported_target (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (unsupported : \u00ac SupportedTarget target) :\n    \u00ac Step target program s next event\n\ntheorem Text.decode_encode (i : Instr) : Text.decode (Text.encode i) = .ok i\n\ntheorem Text.decode_iff (statement : Scalar.Text.Statement) (i : Instr) :\n    Text.decode statement = .ok i \u2194 statement = Text.encode i\n```\n\nRun `lake build Ptx.Prmt32` and `lake env lean formalization/checks/prmt-v1.lean`. Audit public definitions and proofs with #print axioms. Only standard propext, Classical.choice, Quot.sound allowed. No sorry/admit, new axioms, native_decide, commits, extra model calls, or changes to the checkers, contracts, descriptions or foundations. Use existing leaf modules as templates. Report exact blockers; do not weaken the contract.\n\nThe existing Ptx.BitVecProof module and its examples/bitvector_proofs.lean and\ndocs/formalization/bitvector-proofs.md guide are available unchanged. No new\ninstruction-specific proof hints or computation body are supplied in this first\ninvocation. Derive and prove your implementation under the fixed output law.\nDo not inspect private coordinator fixtures or unrelated archived trial fixtures.\n\n\n# Plain PRMT transfer trial\n\nThis fresh instruction-family task uses the existing bit-vector proof support,\nits worked examples and accepted leaf modules. Only plain `prmt.b32` is in scope.\nThe six specialized byte-selection modes remain unimplemented. It is one small\ntransfer probe, not a benchmark establishing general success rates or lower cost.\n\nFreeze the source-derived contract, eighteen universal obligations and independent\nconcrete checks before dispatch. The coordinator supplies the exact output-bit\nlaw and common execution interfaces, but no computation body or new PRMT-specific\nproof hints in the initial invocation. The law determines every output bit;\nthis does not test unsupervised interpretation of the manual.\n\nBefore freeze, a private coordinator reference must satisfy the full driver.\nThree deliberate semantic faults\u2014source-word reversal, omission of sign\nreplication, and omission of the selector's four-bit mask\u2014must compile with their\nown proofs and pass dependency audits, yet fail the independent checks. Concrete\nexpectations come from a separate byte-level integer calculation, covering all\nsixteen selectors at every output-byte position, byte order, sign boundaries,\nupper control bits, operand shapes, guards and target limits. These private\nfixtures are excluded from the worker base and inputs and archived after dispatch.\nAny checker or fixture repairs before freeze are coordinator preparation effort.\n\nRun the task with the existing recorded headless Luna workflow. Record the initial\ninvocation's patch and outcome before offering repairs. A worker can build and\nrepair repeatedly within one invocation; report that separately from the number\nof invocations. If additional help is needed, retain each feedback message and\nsubsequent attempt. Do not weaken the contract or conceal coordinator edits.\nThe existing campaign check-in threshold remains in force.\n\nAn accepted candidate must pass fresh replay of both unchanged drivers, a complete\npublic declaration dependency audit and coordinator source/statement inspection.\nSend its exact patch and pinned source sections to the existing fixed GLM review\nroute, retaining the advisory verdict or lack of one separately from acceptance.\nDo not alter reviewer settings or retry automatically in this block. Semantic\nreview is distinct from kernel proof validity and does not establish hardware\nconformance.\n\nRecord all attempts, build failures, preparation, feedback, receipts and reported\ncosts. Unknown billing stays unknown. Preserve raw model events and vendor-bearing\nreview material locally; distribute hashes and project-authored summaries.\nCompletion means an accepted plain form or exact outstanding obligations if the\nbounded trial cannot finish it. Keep this result distinct from LOP3's assisted\ncontinuation and from any later evaluation on other families.\n"
+}

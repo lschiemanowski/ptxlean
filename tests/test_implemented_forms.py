@@ -206,6 +206,7 @@ class ImplementedFormTests(unittest.TestCase):
         expected += 2 if 'bfe32' in self.data['trials'] else 0
         expected += 1 if 'bfi32' in self.data['trials'] else 0
         expected += 1 if 'lop3' in self.data['trials'] else 0
+        expected += 1 if 'prmt' in self.data['trials'] else 0
         self.assertEqual(self.check(), expected)
 
     def test_wrong_source_rejected_even_if_file_hash_refreshed(self):

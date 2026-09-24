@@ -11,7 +11,32 @@
     "Use the low sixteen control bits while admitting every 32-bit control value, including registers and immediates.",
     "Preserve guarded execution and exact typed decoding for plain prmt.b32 at ISA 9.4 and SM at least 20; specialized modes remain excluded."
   ],
-  "realization": "unimplemented",
-  "remaining": "Source-derived contract and independent checks are being prepared; worker completion, fresh replay and separate semantic review remain required.",
-  "links": []
+  "realization": "implemented",
+  "remaining": "Plain prmt.b32 has complete output-bit, guarded execution and exact typed-decoder proofs. The six specialized modes, raw-module validation and hardware correspondence remain outside this leaf.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Its low three bits\nchoose the source byte. Its remaining bit selects ordinary copying or sign\nreplication: filling the output byte with eight copies of the source byte's most\nsignificant bit, producing either zero or 255."
+      },
+      "to": {
+        "path": "Ptx/Prmt32.lean",
+        "passage": {
+          "quote": "theorem compute_bit (op : Operation) (a b c : Word) (bit : Nat) (bound : bit < 32) :"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The typed\ndecoder accepts exactly `prmt.b32`, a word-register destination and three word\noperands, preserving the guard."
+      },
+      "to": {
+        "path": "Ptx/Prmt32.lean",
+        "passage": {
+          "quote": "def decode (statement : Scalar.Text.Statement) : Except Scalar.Text.DecodeError Instr :="
+        }
+      }
+    }
+  ]
 }

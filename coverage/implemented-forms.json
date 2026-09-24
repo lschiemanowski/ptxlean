@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Twenty-four reviewed forms: twenty-two integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Twenty-five reviewed forms: twenty-three integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": ".ptx-source/9.4/index.html",
@@ -238,6 +238,22 @@
     "lop3_review": {
       "path": "docs/formalization/lop3-assisted-source-review.md",
       "sha256": "aabf4373fadec6e126d16bed2a2381b16df6cf243ca820549d9f718d20a5b070"
+    },
+    "prmt": {
+      "path": "Ptx/Prmt32.lean",
+      "sha256": "db89a7012e4bdebb4cf55a0e33027523d64fb31974dce55c31608b096cad493b"
+    },
+    "prmt_acceptance": {
+      "path": "formalization/results/prmt-v1/acceptance.json",
+      "sha256": "43fd0a8d0bd07f5769983ca221d610771b8b048f1b34afa3a46c18d7e44bd455"
+    },
+    "prmt_evidence": {
+      "path": "formalization/results/prmt-v1/evidence-manifest.json",
+      "sha256": "a1c27b8b8cf0e95fdc0c5c333c6ccd8e8383a624981a8b03154ab0b120b922a8"
+    },
+    "prmt_review": {
+      "path": "docs/formalization/prmt-source-review.md",
+      "sha256": "8447ce39a04c510ecc4140f6adeaed5f9286895c03632afd2dc845962b0000ef"
     }
   },
   "source": {
@@ -271,7 +287,8 @@
       "integer-arithmetic-instructions-mul": "b9a2d10dc98029a40cff2fb9c914234eaf6cfbffdcfbb5e58338d84bccc14cf9",
       "integer-arithmetic-instructions-bfe": "6ccea820651a49ed6bfb67b48e45ed59bbb72d1c8124802a3b075241e1f31781",
       "integer-arithmetic-instructions-bfi": "c3421a98b08fb3057289aa33538967c28314e176281817b5601b66efe8ce4859",
-      "logic-and-shift-instructions-lop3": "4a886c092cb648517d3837a5ddb32db49958e3cdfb0d97b374ddd67a46f307cf"
+      "logic-and-shift-instructions-lop3": "4a886c092cb648517d3837a5ddb32db49958e3cdfb0d97b374ddd67a46f307cf",
+      "data-movement-and-conversion-instructions-prmt": "0ddf874061fc8aa356ea0e167ec834ea8f28cb69e8623ed99cd8fc2a0fa02b4e"
     },
     "common_operand_guard_anchors": [
       "operand-type-information",
@@ -386,6 +403,14 @@
       "patch_member": "attempts/lop3-assisted-001/candidate.patch",
       "replay_member": "replays/lop3-assisted-001/result.json",
       "patch_sha256": "d58bf825a4dc00c82a1ad34d4caf1c8eb95ee25f747d0c8288fcc00c637378a5"
+    },
+    "prmt": {
+      "acceptance": "prmt_acceptance",
+      "evidence": "prmt_evidence",
+      "source_review": "prmt_review",
+      "patch_member": "attempts/prmt-001/candidate.patch",
+      "replay_member": "replays/prmt-001/result.json",
+      "patch_sha256": "dcbc1e235c570432da5a2176e382145ae9dd3531ca9315a25bdc0d06c9583436"
     }
   },
   "forms": [
@@ -4125,6 +4150,174 @@
           "name": "lower_operation"
         }
       ]
+    },
+    {
+      "spelling": "prmt.b32",
+      "status": "accepted",
+      "trial": "prmt",
+      "source_anchor": "data-movement-and-conversion-instructions-prmt",
+      "ptx_minimum": "2.0",
+      "target": "sm_20 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 20 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit first source or already converted immediate",
+          "compatible declared 32-bit second source or already converted immediate",
+          "compatible declared 32-bit control register or already converted immediate; all bit patterns admitted, low sixteen bits used"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Select each of four output bytes from eight input bytes. First word provides bytes 0..3, second 4..7, least significant byte first. Each control nibble chooses the source with its low three bits and sign replication with its high bit. Upper sixteen control bits are ignored without an input range restriction.",
+      "boundary": "Plain prmt.b32 only, ISA 94 and numeric SM >= 20. No specialized modes, raw-module/declaration validation or hardware correspondence.",
+      "semantics": [
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "compute"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "family"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "lower"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "compute_bit"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "results_iff"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "eval_other"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "eval_event"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "step_origin"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "step_exists"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "prmt",
+          "namespace": "Ptx.Scalar.Prmt32",
+          "name": "lower_operation"
+        }
+      ]
     }
   ],
   "uncovered_siblings": [
@@ -4373,6 +4566,19 @@
       ],
       "status": "unimplemented",
       "reason": "Predicate-producing variants, including discarded word destination, require a different interface and state effects."
+    },
+    {
+      "source_anchor": "data-movement-and-conversion-instructions-prmt",
+      "spellings": [
+        "prmt.b32.f4e",
+        "prmt.b32.b4e",
+        "prmt.b32.rc8",
+        "prmt.b32.ecl",
+        "prmt.b32.ecr",
+        "prmt.b32.rc16"
+      ],
+      "status": "unimplemented",
+      "reason": "Specialized modes use different byte-selection controls and are not represented by the plain form."
     }
   ]
 }

@@ -69,7 +69,8 @@ required by the general execution model.
 
 [`ReviewedPure.lean`](../../Ptx/ReviewedPure.lean) supplies the current bitwise,
 unary, selection, signed min/max, shift, bit-reversal, high-half multiplication,
-bit-field extraction/insertion and three-input truth-table logic families. Each adapter uses the
+bit-field extraction/insertion, three-input truth-table logic and byte permutation
+families. Each adapter uses the
 original leaf's lowering and results directly. Its bitwise correspondence proves
 both directions of state-step agreement with the older scalar operations and
 matches program counter, execution flag, reads, writes and memory metadata.

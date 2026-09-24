@@ -53,3 +53,20 @@ they do not prove that all possible semantic mistakes are detected.
 Final source/statement review and fresh replay are recorded with the actual
 worker result. A proof about a candidate definition and evidence that it faithfully
 represents PTX remain separate, and neither establishes GPU conformance.
+
+The submitted worker computation constructs a word from 32 Boolean observations,
+using the exact selector, source-word and bit-position rules above. Its bit law
+uses the existing library's list-to-bit-vector observation facts. All operands
+are still evaluated in the incoming state, and the decoder admits full-width
+control registers and immediates without an extra range condition. Inspection of
+the proof statements found no additional premises hiding a result or execution
+obligation. The worker reused accepted leaf patterns; its recorded commands do
+not show a read of the manual section, so this is not evidence of independent
+source interpretation by the worker.
+
+The separate GLM reviewer accepted with no findings. Its target explanation uses
+version-floor language: PTX 2.0 is the instruction's introduction version, while
+the actual formal predicate selects exactly ISA 9.4. That distinction is retained
+in the contract and ledger; the model does not claim support for all versions
+since 2.0. The coordinator reviewed actual definitions and statements separately
+from that advisory verdict.

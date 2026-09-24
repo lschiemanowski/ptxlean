@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "task": "prmt-v1",
+  "selected_forms": [
+    "prmt.b32"
+  ],
+  "base_commit": "d63eb04e48c34c99f9802d1428a7b56d7c3b48c3",
+  "accepted_patch_sha256": "dcbc1e235c570432da5a2176e382145ae9dd3531ca9315a25bdc0d06c9583436",
+  "worker_attempt": "prmt-001",
+  "mechanical_replay": "replays/prmt-001/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "Exact worker candidate; final combined checks recorded by Stratic.",
+  "reviewer": "Coordinator source/statement inspection, fresh clean replay and separate GLM advisory accept.",
+  "source_conditions": {
+    "ptx_minimum": "2.0",
+    "target_minimum": "sm_20 feature floor; not recognized-target validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "data-movement-and-conversion-instructions-prmt"
+    ]
+  },
+  "trial_invocations": 1,
+  "repair_invocations": 0,
+  "campaign_call_numbers": [
+    30
+  ],
+  "qualification": "Fresh family under complete coordinator-supplied output-bit law and shared interfaces. No computation body, new PRMT-specific proof hints, follow-up feedback or coordinator candidate edits. Worker reused accepted leaf construction/proof patterns and did not explicitly invoke the five toolkit lemmas. One failed internal build and an audit-command invocation error preceded successful checks; not a first-build success or isolated causal test of toolkit value."
+}

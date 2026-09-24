@@ -1,0 +1,187 @@
+{
+  "id": "887c0026-cadb-4f42-b9cf-cc98a2286947",
+  "base": "d63eb04e48c34c99f9802d1428a7b56d7c3b48c3",
+  "contentTree": "bf0047802c9ef0bbf2ccebb65892c3ab3dd21533",
+  "reviewer": "Codex coordinator",
+  "summary": "Accept Luna plain PRMT byte permutation with independent checks and first-invocation evidence.",
+  "examined": [
+    {
+      "id": "prmt",
+      "outcome": "revised",
+      "reason": "Exact worker plain byte-permutation module accepted after full/concrete checks, clean replay and separate source review; arbitrary control words and sign replication retained."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "Adds plain prmt.b32 only with exact source, target, patch and replay provenance; specialized modes explicitly missing."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Records fresh-family first-invocation completion with internal repair/tool errors, full coordinator law and preflight costs; no proof of causal toolkit benefit or general cost effectiveness."
+    },
+    {
+      "id": "bitvector-proofs",
+      "outcome": "unchanged",
+      "reason": "Toolkit unchanged. Candidate imports it but uses accepted per-bit construction patterns without explicit invocation of its five lemmas."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "New family instantiates existing total Pure32 mechanism with three incoming word operands and no extra predicates."
+    },
+    {
+      "id": "pure-kernel",
+      "outcome": "unchanged",
+      "reason": "Catalog extension uses the unchanged leaf relation/lowering; functional catalog theorem rechecks and generic nondeterminism remains available."
+    },
+    {
+      "id": "mask-select",
+      "outcome": "unchanged",
+      "reason": "Existing computation and proofs unchanged."
+    },
+    {
+      "id": "array-mask-select",
+      "outcome": "unchanged",
+      "reason": "Existing loop/existence/termination claims and example preserved under catalog extension."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "No change to memory, branch, scalar state or execution rules."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Audit gains entries only; concurrency results untouched."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Selected sequential byte operation adds no general memory/concurrency or hardware semantics."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "Section inventory remains unassessed; 25 accepted forms do not establish section coverage."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Proof validity, source fidelity, advisory review and hardware claims remain separate."
+    },
+    {
+      "id": "model-review",
+      "outcome": "unchanged",
+      "reason": "Same fixed-context GLM route/settings with one completed advisory request and no retry; source judgment remains independent of proof replay."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "bf0047802c9ef0bbf2ccebb65892c3ab3dd21533",
+      "method": "bash scripts/check.sh; PRMT full/concrete drivers; fresh candidate replay; offline reference/mutant reproduction; array example; TorchLean integration; exact input/candidate hashes; source/statement review; Stratic and whitespace validation",
+      "outcome": "pass",
+      "environment": "Linux, pinned Lean 4.34.0, verified local PTX ISA 9.4 source. Final verification makes no model calls.",
+      "evidence": "Exact pre/post snapshot trees match. Core passed with 1596 dependency reports using only standard Lean axioms, 25 selected accepted forms, 1406 archived members across 18 archives, 106 worker regressions, 26 ledger regressions and 7 inventory tests. Both frozen PRMT drivers pass on the integrated byte-identical worker candidate, as do clean fresh replay and the existing array example. TorchLean integration passes with 363 exact dependency reports. Offline reproduction verifies the reference and three compiling mutants: all build/audit, only the reference passes full and concrete drivers. Contract, driver, toolkit and other frozen input hashes remain unchanged. Separate GLM advisory accept and coordinator source/statement review agree on plain byte permutation; ISA exactly 9.4 is distinguished from PTX2.0 introduction. One fresh invocation includes one failed build and one audit invocation error, both repaired by the worker with no follow-up hints or coordinator edits. Toolkit import does not demonstrate causal benefit. No hidden assumptions or broadened semantics; specialized modes, raw modules and hardware conformance remain excluded. Final publication artifact guard, Stratic and whitespace checks pass.",
+      "tests": [],
+      "id": "0d2a76ee-5144-4ddd-8445-72064a66ecdb",
+      "recordedAt": "2026-09-24T17:46:34.822Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T17:46:51.907Z",
+  "unmapped": [
+    {
+      "path": "Ptx/Prmt32.lean",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/prmt-v1/README.md",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/prmt-v1/acceptance.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/prmt-v1/effort.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/prmt-v1/evidence-manifest.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/prmt-v1/run.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/prmt-v1/worker-evidence.tar.gz",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/prmt-001.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/prmt-001.patch",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/check_prmt_v1.py",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/tasks/prmt-v1.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "Ptx/ReviewedPure.lean",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "docs/formalization/prmt-source-review.md",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "docs/foundations/pure-kernels.md",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/prmt.json",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed exact worker output, source/statement boundaries, fixed checks, per-call/provision/replay evidence, offline fixture reproduction, selected-form ledger or documentation. No full ISA or hardware claim."
+    }
+  ]
+}

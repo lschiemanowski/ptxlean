@@ -1,9 +1,9 @@
 # Reading the accepted-form ledger
 
-[The ledger](../../coverage/implemented-forms.json) records twenty-four selected accepted
+[The ledger](../../coverage/implemented-forms.json) records twenty-five selected accepted
 forms. It is separate from the [instruction-section inventory](coverage.md),
 whose `not_assessed` entries are unchanged. Other existing scalar instructions
-are not yet entered here, so even the ledger's twenty-four-form count is not a count of
+are not yet entered here, so even the ledger's twenty-five-form count is not a count of
 all implemented PTX forms.
 
 | Exact form | Inputs → destination | Meaning | Manual conditions |
@@ -32,9 +32,10 @@ all implemented PTX forms.
 | `bfe.s32` | input, position, length → compatible register | Extract with sign padding; zero length gives zero | PTX 2.0; selected step ISA 9.4, SM ≥20 |
 | `bfi.b32` | insertion source, base, position, length → compatible register | Insert with clipping at bit 31; low eight position/length bits | PTX 2.0; selected step ISA 9.4, SM ≥20 |
 | `lop3.b32` | three words plus an immediate table → compatible register | Apply the eight-entry truth table per bit; first input has index weight 4, second 2, third 1 | PTX 4.3; selected step ISA 9.4, SM ≥50 |
+| `prmt.b32` | two data words plus a control word → compatible register | Select four bytes, with optional replication of each selected byte's sign bit; ignore upper sixteen control bits | PTX 2.0; selected step ISA 9.4, SM ≥20 |
 
 Every word input can come from a word register or a 32-bit immediate value.
-The selection predicate is a register. All twenty-four
+The selection predicate is a register. All twenty-five
 forms support unconditional execution or execution guarded by a positive or
 negated predicate. A false guard advances the program counter without writing
 the destination. Register overlap is allowed: the incoming source value is read
@@ -119,3 +120,7 @@ multiplication, field boundaries and the rejected `bfe.b32` example spelling.
 The [worker-derived computation review](derived-v1-source-review.md) covers insertion.
 The [assisted LOP3 review](lop3-assisted-source-review.md) covers the subsequently
 completed plain form; predicate-producing variants remain outside this leaf.
+
+The [plain byte-permutation review](prmt-source-review.md) covers byte order,
+sign replication and unrestricted 32-bit control operands. All six specialized
+PRMT modes remain outside this leaf.
