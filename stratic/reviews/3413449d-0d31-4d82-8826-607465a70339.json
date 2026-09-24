@@ -1,0 +1,51 @@
+{
+  "id": "3413449d-0d31-4d82-8826-607465a70339",
+  "base": "01002987370894dcf059fe84fbe0f370ee28fd34",
+  "contentTree": "82d32eb15f199d6641b022f6463f94dc3555571c",
+  "reviewer": "Codex coordinator",
+  "summary": "Prepare a minimal research-preview README with checked forward/backward examples, pinned Elan/Lake reproduction and an explicit future independent inexpensive-model review stage.",
+  "examined": [
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Specify independent low-cost semantic review as a future evaluated mechanism; preserve Lean checking and source fidelity as separate acceptance obligations. Correct status to include implemented pinned provisioning and five recorded tasks."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The parent already requires independent source review and reproducible checking without claiming hardware fidelity. A future separate inexpensive reviewer preserves that contract; proof validity still cannot establish source correspondence."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "82d32eb15f199d6641b022f6463f94dc3555571c",
+      "method": "Manual release-claim and local-link review; fresh independent clone of unchanged code at 01002987370894dcf059fe84fbe0f370ee28fd34; ./scripts/check.sh; lake exe cache get; ./check.sh in integration/torchlean; lake env lean PtxAffineSquareKernel.lean and PtxAffineBackward.lean; stratic validate; git diff --check",
+      "outcome": "pass",
+      "environment": "Linux; pinned Lean 4.34.0 via preinstalled Elan/toolchain; independent Git clone in /tmp/ptxlean-release-afrfqzii/ptxlean, no copied project .lake or local dependency checkouts; 16 dependencies fetched from upstream at manifest commits; existing upstream mathlib download cache reused",
+      "evidence": "All four documentation changes manually reviewed against current source, theorem statements and evidence. Local links resolve. Independent core check passed 1213 exact axiom reports and its regression suites. Lake fetched pinned dependencies without changing manifests; cache command passed (two unavailable cache entries reported, source build subsequently succeeded). Fresh integration build and 363 exact axiom reports passed; both focused example source elaborations exited zero. Fresh checkout remained clean and code/pins match the proposal. About 9 GB integration build/dependency footprint measured. No GPU or model calls. Logs: /tmp/ptxlean-release-core.log, -cache.log, -integration.log, -forward.log, -backward.log. Only documentation differs from the tested code commit; the documentation snapshot is unchanged across final checks.",
+      "tests": [],
+      "id": "8e009aa5-7c2c-4032-a467-ace4d45634f0",
+      "recordedAt": "2026-09-24T08:55:08.509Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T08:55:27.480Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Reviewed release-facing explanation and exact source/proof boundaries, current recorded trial counts, official Elan/Lake setup, concrete theorem references and future reviewer status."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Reviewed release-facing explanation and exact source/proof boundaries, current recorded trial counts, official Elan/Lake setup, concrete theorem references and future reviewer status."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed release-facing explanation and exact source/proof boundaries, current recorded trial counts, official Elan/Lake setup, concrete theorem references and future reviewer status."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.md",
+      "reason": "Reviewed release-facing explanation and exact source/proof boundaries, current recorded trial counts, official Elan/Lake setup, concrete theorem references and future reviewer status."
+    }
+  ]
+}

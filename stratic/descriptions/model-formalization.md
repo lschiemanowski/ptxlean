@@ -43,6 +43,15 @@ agreement between models alone is insufficient. Deliberately faulty submissions
 check whether the review process detects important mistakes. Such checks measure
 review quality; they do not prove all semantic errors impossible.
 
+When semantic review is delegated to an inexpensive model, it is a separate
+review task from generation. The reviewer receives the pinned source obligations,
+the candidate and independently prepared checks, and returns an explanation of
+source correspondence, counterexamples and unresolved questions. Its verdict
+cannot replace Lean checking or authorize integration by itself. The review
+mechanism is evaluated with deliberately incorrect candidates before relying on
+it to expand coverage; agreement between generator and reviewer is not evidence
+that an ambiguous source interpretation has been resolved.
+
 Only submissions passing both kinds of review enter the accepted formalization.
 An unresolved source interpretation is recorded as such, with any conditional
 results stated explicitly. Passing Lean checking alone never promotes it to a

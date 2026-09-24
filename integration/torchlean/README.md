@@ -120,18 +120,26 @@ visibility, physical ABI, hardware conformance or bitwise PyTorch agreement.
 
 ## Reproduce
 
-From this directory:
+From this directory in a fresh checkout, with Git, Bash, Python 3.11 or later,
+`curl` and [Elan](https://github.com/leanprover/elan) available:
 
 ```sh
+lake exe cache get
 ./check.sh
 ```
 
-The checker requires Python 3.11 or later, Git, Elan with the pinned Lean 4.34
-toolchain already installed, and the dependency checkouts recorded in the
-committed manifest. It does not update pins, clone missing dependencies, or
-request downloaded build caches. Provision the pinned dependencies and, if
-desired, their compatible mathlib cache before running it; do not use
-`lake update` merely to reproduce a build.
+Elan selects the Lean 4.34.0 toolchain recorded in `lean-toolchain`. Lake obtains
+the exact dependency commits recorded in the committed manifest. The first
+command downloads compatible upstream mathlib build artifacts; it is the
+standard mathlib cache command, not a project installer. Do not run `lake update`
+to reproduce the release. To compile dependencies from source instead, use
+`lake --no-cache build` in place of the cache command in a fresh checkout.
+
+The checker itself requires the toolchain and dependency checkouts to be present;
+it does not update pins, clone missing dependencies or request downloaded build
+caches. It builds and checks the examples and their proofs, rather than running
+GPU kernels. The root check, `./scripts/check.sh` from the repository root, should
+also be run; the root README gives the complete command sequence.
 
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
