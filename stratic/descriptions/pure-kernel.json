@@ -1,0 +1,17 @@
+{
+  "id": "pure-kernel",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "Reusable execution and safety rules support concrete scalar kernel proofs."
+    }
+  },
+  "summary": [
+    "Compose several pure families with scalar memory, control flow and exit over one state.",
+    "Preserve each family result and target condition, and report unsupported cases explicitly.",
+    "Separate finite prefixes, completed runs, memory safety, and program-specific existence and termination."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Specified interface; implementation and evidence pending.",
+  "links": []
+}

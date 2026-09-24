@@ -1,0 +1,69 @@
+{
+  "id": "2ec3e0f2-f5c2-4b4f-9498-2d2d02c220dc",
+  "base": "00bfb22453d32215d11e02d6acd932449af6de2c",
+  "contentTree": "d4e78f445fe0f1390e1efe3e5d0ddf25ece3adc9",
+  "reviewer": "Codex coordinator",
+  "summary": "Freeze shift-family obligations and describe mixed pure/scalar kernel composition before implementation.",
+  "examined": [
+    {
+      "id": "shift32",
+      "outcome": "revised",
+      "reason": "New source-reviewed all-input contract and frozen independent checks for Luna."
+    },
+    {
+      "id": "pure-kernel",
+      "outcome": "revised",
+      "reason": "New compositional execution contract with explicit target/failure and nondeterminism boundaries."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "New shift task uses existing total family interface without changing it."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "New child refines existing execution and safety responsibility without broadening concurrency or hardware claims."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "d4e78f445fe0f1390e1efe3e5d0ddf25ece3adc9",
+      "method": "Pinned local PTX 9.4 shl/shr source inspection; manual contract/driver review; stratic validate",
+      "outcome": "pass",
+      "environment": "Lean v4.34.0 interfaces; source manifest verified in prior completed check and unchanged",
+      "evidence": "Selected spellings, unsigned count, sign fill, oversized counts and operand-width rules checked against the pinned sections. Driver binds all universal signatures and exact boundary cases. Candidate does not exist yet: this freezes expectations, not a claim that candidate proofs build. Stratic validate passed.",
+      "tests": [],
+      "id": "af7cc604-22a9-411e-8847-907baed73820",
+      "recordedAt": "2026-09-24T11:41:15.524Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T11:41:29.301Z",
+  "unmapped": [
+    {
+      "path": "formalization/checks/shift32-v1.lean",
+      "reason": "New planned descriptions and frozen worker contract/check source, manually reviewed; no completed implementation is claimed."
+    },
+    {
+      "path": "formalization/contracts/shift32-v1.md",
+      "reason": "New planned descriptions and frozen worker contract/check source, manually reviewed; no completed implementation is claimed."
+    },
+    {
+      "path": "stratic/descriptions/pure-kernel.json",
+      "reason": "New planned descriptions and frozen worker contract/check source, manually reviewed; no completed implementation is claimed."
+    },
+    {
+      "path": "stratic/descriptions/pure-kernel.md",
+      "reason": "New planned descriptions and frozen worker contract/check source, manually reviewed; no completed implementation is claimed."
+    },
+    {
+      "path": "stratic/descriptions/shift32.json",
+      "reason": "New planned descriptions and frozen worker contract/check source, manually reviewed; no completed implementation is claimed."
+    },
+    {
+      "path": "stratic/descriptions/shift32.md",
+      "reason": "New planned descriptions and frozen worker contract/check source, manually reviewed; no completed implementation is claimed."
+    }
+  ]
+}

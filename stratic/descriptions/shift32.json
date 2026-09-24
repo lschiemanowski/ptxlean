@@ -1,0 +1,16 @@
+{
+  "id": "shift32",
+  "parent": {
+    "description": "pure-instruction-families",
+    "passage": {
+      "quote": "Family source proofs and text decoders can reuse this\nmechanism without modifying the scalar state or duplicating its transition\nrules."
+    }
+  },
+  "summary": [
+    "Specify exact all-input shift results, including unsigned large counts and sign filling.",
+    "Preserve the shared guarded execution, target slice and restricted typed decoding contract."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Specified interface; implementation and evidence pending.",
+  "links": []
+}
