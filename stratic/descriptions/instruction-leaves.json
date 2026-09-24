@@ -1,0 +1,17 @@
+{
+  "id": "instruction-leaves",
+  "parent": {
+    "description": "pure-instruction-families",
+    "passage": {
+      "quote": "Each family specifies its operations, their numbers of value and predicate\noperands, the permitted result relation, and the targets supporting each\noperation. A result relation can allow several output words. The family must\nprove that a result exists for every assignment of its operand values; this\ninterface is for total pure operations on those values. That proof establishes\nnonemptiness, not fidelity to PTX. The family-specific semantics, target\nconditions and source justification still need independent review."
+    }
+  },
+  "summary": [
+    "Select one complete 32-bit word using a predicate, and compare all 32-bit patterns as signed integers for minimum and maximum.",
+    "Reuse the pure-family state transitions with exact predication, incoming operand values, fetched origin and direct operand metadata.",
+    "Accept only the selected typed spellings after separate source review and independent proof and behavior checks."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Source-grounded contracts and independent acceptance drivers are prepared. No leaf implementation or instruction coverage is accepted until worker candidates pass their recorded checks and source review.",
+  "links": []
+}

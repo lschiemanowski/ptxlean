@@ -1,0 +1,59 @@
+{
+  "id": "470e9aa6-f43f-432d-8fde-b9beb25bfc51",
+  "base": "8ca07217a767e5a9b4d0f6d3750b6969bde71962",
+  "contentTree": "4cc06c1983e213ff49e9caeaedd929e4b63cc2a9",
+  "reviewer": "Codex coordinator independent of contract author",
+  "summary": "Freeze source-grounded Pure32 leaf contracts and independent acceptance expectations before Luna generation.",
+  "examined": [
+    {
+      "id": "instruction-leaves",
+      "outcome": "revised",
+      "reason": "Description-first scope fixes selection and signed comparison meaning, shared lowering, target feature slice and decoder restrictions; realization remains unimplemented."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "Frozen tasks use existing family/Eval/Step without changing mechanism or claiming PTX fidelity from generic totality."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "4cc06c1983e213ff49e9caeaedd929e4b63cc2a9",
+      "method": "Independent manual source/contract/acceptance-driver review; immutable SHA256 checks; stratic validate; git diff --check",
+      "outcome": "pass",
+      "environment": "Pinned local PTX9.4 manual; existing Lean4.34 shared Pure32 API",
+      "evidence": "Verified selection truth table, signed two-complement comparison and version/target limitations against pinned source. Reviewed exact all-input theorem signatures, lowering and shared-machine requirements, alias/guard/fetch/error expectations in frozen drivers. All11 source pins per task match. This is a specification-only review: no leaf exists and acceptance drivers have NOT yet been elaborated against candidates; no instruction coverage accepted.",
+      "tests": [],
+      "id": "d349dcc2-0af9-4ba6-b22a-85b40a80d01f",
+      "recordedAt": "2026-09-24T07:15:33.418Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T07:15:44.304Z",
+  "unmapped": [
+    {
+      "path": "formalization/checks/select32-v1.lean",
+      "reason": "Reviewed frozen source contract, candidate-dependent acceptance specification or corresponding unimplemented description metadata. These are task specifications; proof acceptance remains pending actual candidates."
+    },
+    {
+      "path": "formalization/checks/signed-minmax32-v1.lean",
+      "reason": "Reviewed frozen source contract, candidate-dependent acceptance specification or corresponding unimplemented description metadata. These are task specifications; proof acceptance remains pending actual candidates."
+    },
+    {
+      "path": "formalization/contracts/select32-v1.md",
+      "reason": "Reviewed frozen source contract, candidate-dependent acceptance specification or corresponding unimplemented description metadata. These are task specifications; proof acceptance remains pending actual candidates."
+    },
+    {
+      "path": "formalization/contracts/signed-minmax32-v1.md",
+      "reason": "Reviewed frozen source contract, candidate-dependent acceptance specification or corresponding unimplemented description metadata. These are task specifications; proof acceptance remains pending actual candidates."
+    },
+    {
+      "path": "stratic/descriptions/instruction-leaves.json",
+      "reason": "Reviewed frozen source contract, candidate-dependent acceptance specification or corresponding unimplemented description metadata. These are task specifications; proof acceptance remains pending actual candidates."
+    },
+    {
+      "path": "stratic/descriptions/instruction-leaves.md",
+      "reason": "Reviewed frozen source contract, candidate-dependent acceptance specification or corresponding unimplemented description metadata. These are task specifications; proof acceptance remains pending actual candidates."
+    }
+  ]
+}
