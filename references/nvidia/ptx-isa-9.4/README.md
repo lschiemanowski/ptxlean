@@ -1,36 +1,37 @@
-# PTX ISA 9.4 source snapshot
+# PTX ISA 9.4 source reference
 
-`index.html` is the unmodified HTML response downloaded from
-[NVIDIA's PTX ISA manual](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html).
-The document identifies itself as PTX ISA 9.4. Its bytes, rather than the changing
-live URL, identify the source used by the foundations study.
+The project does not redistribute NVIDIA's manual. Obtain it directly from
+[NVIDIA](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html).
+The reviewed source is identified by SHA-256
+`0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.
 
 `manifest.json` records the original and resolved URL, UTC retrieval time,
-response metadata, byte count, SHA-256, and 23 section references. Each reference
-has the original heading and anchor, a local fragment URL, and a line number in
-the frozen HTML. Line numbers are locators within these exact bytes, not a
-promise about a later NVIDIA publication. ETag and Last-Modified are recorded
-server metadata; the SHA-256 is the content identity.
+response metadata, byte count, SHA-256, and 23 section references. These are
+locators and provenance, not copies of the instruction descriptions. The
+`index.html` artifact name and line/byte positions refer to the exact reviewed
+HTML; they do not promise that the live website remains unchanged.
 
-From this directory, verify the source offline:
+From the repository root, explicitly acquire and verify a local copy:
 
 ```sh
-sha256sum -c SHA256SUMS
+python3 scripts/check_sources.py --fetch
 ```
 
-Expected result: `index.html: OK`.
+The command downloads HTML as data, verifies the pinned digest and byte count,
+and only then saves `.ptx-source/9.4/index.html`. That cache is ignored by Git.
+It installs no software and executes none of the downloaded content. Ordinary
+checks require this file and never download it implicitly. If NVIDIA's URL no
+longer supplies those exact bytes, verification fails instead of accepting a
+new version. An already acquired exact copy can be installed with
+`python3 scripts/check_sources.py --from-file PATH`.
 
-The snapshot contains the HTML text and embedded code, including NVIDIA's
-notices. Linked figures, stylesheets, scripts, and other documents have not been
-mirrored, so this is not a self-contained rendering of the entire documentation
-site. The study uses text and code sections in this file. A later source update
-requires a new content identity and review of affected interpretations; do not
-silently overwrite this snapshot. The vendor document retains its original
-copyright and notices; the repository's license does not replace them.
+`SHA256SUMS` records the same digest using the original artifact name. Section
+links in project explanations point to NVIDIA's website for reading; exact-source
+checks use the local verified copy. The vendor document remains subject to its
+own notices and terms. The project's license applies to project code, not to
+NVIDIA's documentation.
 
-The manifest is a locator inventory, not a semantics extractor. It does not
-claim that an instruction description is self-contained or that its links cover
-every shared rule needed for full PTX verification.
-
-See the [message-passing study](../../../docs/foundations/message-passing.md)
-and [representation proposal](../../../docs/foundations/representation.md).
+The manifest does not claim that any instruction passage is self-contained or
+that its references cover all shared rules needed for full PTX verification.
+See the [source ledger](../../../docs/foundations/source-ledger.md) for the
+project's interpretations and explicit restrictions.

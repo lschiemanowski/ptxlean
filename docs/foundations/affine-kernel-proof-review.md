@@ -134,12 +134,12 @@ The selected PTX slice uses `.b32`-compatible value registers, bit-preserving
 `.u32` global memory transfers, explicit relaxed GPU scope and `.rn.f32`
 arithmetic. ISA94/sm70 eligibility includes the necessary scoped memory and
 subnormal-support feature conditions. These source interpretations rely on the
-[pinned PTX 9.4 manual](../../references/nvidia/ptx-isa-9.4/index.html), especially
-[operand type compatibility](../../references/nvidia/ptx-isa-9.4/index.html#operand-type-information),
-[loads](../../references/nvidia/ptx-isa-9.4/index.html#data-movement-and-conversion-instructions-ld),
-[stores](../../references/nvidia/ptx-isa-9.4/index.html#data-movement-and-conversion-instructions-st),
-[multiplication](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-mul)
-and [addition](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-add).
+[pinned PTX 9.4 manual](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html), especially
+[operand type compatibility](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#operand-type-information),
+[loads](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-ld),
+[stores](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-st),
+[multiplication](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-mul)
+and [addition](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-add).
 The model's isolation, uniform whole-word access, resolved arena offsets and
 register-declaration boundaries remain explicit. No raw PTX parsing, runtime
 permission proof, hardware conformance or exact NaN realizability is established.

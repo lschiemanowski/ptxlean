@@ -93,11 +93,11 @@ the [mixed affine study guide](mixed-affine.md).
 
 The normative source is the [pinned PTX 9.4 manual](../../references/nvidia/ptx-isa-9.4/README.md),
 SHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.
-The key clauses are [program order](../../references/nvidia/ptx-isa-9.4/index.html#program-order),
-[causality order](../../references/nvidia/ptx-isa-9.4/index.html#causality-order),
-[the causality axiom](../../references/nvidia/ptx-isa-9.4/index.html#causality-axiom),
-[initialization](../../references/nvidia/ptx-isa-9.4/index.html#initialization),
-and [SC per location](../../references/nvidia/ptx-isa-9.4/index.html#sc-per-loc-axiom).
+The key clauses are [program order](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#program-order),
+[causality order](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#causality-order),
+[the causality axiom](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#causality-axiom),
+[initialization](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#initialization),
+and [SC per location](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#sc-per-loc-axiom).
 The [source ledger](source-ledger.md) explains the inherited graph relations and
 normalization of four initial bytes into one word event.
 

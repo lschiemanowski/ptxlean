@@ -8,7 +8,7 @@ import sys
 import unittest
 
 sys.dont_write_bytecode = True
-from coverage_inventory import ROOT, SOURCE, OUTPUT, SectionParser, classify, inventory, render
+from coverage_inventory import ROOT, SOURCE, MANIFEST, OUTPUT, SectionParser, classify, inventory, render
 
 
 def manifest_for(raw):
@@ -99,7 +99,7 @@ class PinnedSourceTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.raw = (ROOT / SOURCE).read_bytes()
-        cls.data = inventory(cls.raw, json.loads((ROOT / SOURCE.parent / 'manifest.json').read_text()))
+        cls.data = inventory(cls.raw, json.loads((ROOT / MANIFEST).read_text()))
 
     def test_committed_inventory_and_partition(self):
         self.assertEqual((ROOT / OUTPUT).read_text(), render(self.data))

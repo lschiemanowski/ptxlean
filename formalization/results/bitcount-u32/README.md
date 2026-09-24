@@ -134,3 +134,13 @@ PY
 The archive preserves previous failed evidence rather than replacing it with the
 accepted patch. Rechecking these stored bytes is reproducible; an identical new
 inference result is not promised.
+
+## Public distribution boundary
+
+The distributed archive omits raw `events.jsonl` transcripts, whose tool outputs
+may contain NVIDIA documentation. `evidence-manifest.json` records the original
+archive digest and the names, byte counts and hashes of omitted members. Retained
+patches, receipts and check results are byte-identical to the originals. Public
+archive verification covers this subset; it does not make the omitted transcripts
+available for inspection or session resumption. Historical source and base-commit
+identities in retained evidence have not been rewritten.

@@ -96,6 +96,27 @@ class ReplayTests(unittest.TestCase):
         self.assertEqual(record['semantic_review'], 'not_performed')
         self.assertEqual(record['integration'], 'not_performed')
 
+    def test_local_source_is_restored_in_independent_replay(self):
+        import worker_run as w
+        body=b'Synthetic local manual input\n'
+        pin={'isa_version':'9.4','artifact':'index.html','sha256':w.sha(body),'bytes':len(body)}
+        manifest=self.repo/w.LOCAL_MANIFEST;manifest.parent.mkdir(parents=True);manifest.write_text(json.dumps(pin))
+        (self.repo/'.gitignore').write_text('.ptx-source/\n')
+        w.git(self.repo,'add','.');w.git(self.repo,'commit','-qm','pin external source')
+        self.base=w.git(self.repo,'rev-parse','HEAD').decode().strip()
+        self.task['base_commit']=self.base
+        self.task['sources'] += [{'path':w.LOCAL_MANIFEST,'sha256':w.sha(manifest.read_bytes())},
+                               {'path':w.LOCAL_SOURCE,'sha256':w.sha(body),'local_only':True}]
+        local=self.repo/w.LOCAL_SOURCE;local.parent.mkdir(parents=True);local.write_bytes(body)
+        w.git(self.worker,'checkout','--detach',self.base)
+        self.receipt['base_commit']=self.base
+        self.receipt['task_sha256']=w.sha(json.dumps(self.task,sort_keys=True).encode())
+        w.atomic_json(self.attempt/'task.json',self.task)
+        self.replace_candidate('namespace Ptx.New\ntheorem result : True := True.intro\nend Ptx.New\n')
+        record=self.replay()
+        self.assertEqual(record['mechanical'],'pass',record.get('error'))
+        self.assertEqual((self.destination/'worktree'/w.LOCAL_SOURCE).read_bytes(),body)
+
     def test_reconstructs_new_file_without_worker_files_or_cache(self):
         original = (self.worker / 'Ptx/New.lean').read_bytes()
         (self.worker / '.lake').mkdir()

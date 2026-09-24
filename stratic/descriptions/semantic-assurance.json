@@ -9,7 +9,8 @@
   "summary": [
     "Justify formal definitions using versioned source passages, reviewed interpretations and independent evidence.",
     "Delegate instruction formalization to smaller models on reviewed foundations, evaluating semantic accuracy separately from proof validity and generation cost.",
-    "Reproduce selected integration proofs with pinned unchanged dependencies, complete named axiom audits and stable local sources."
+    "Reproduce selected integration proofs with pinned unchanged dependencies, complete named axiom audits and stable local sources.",
+    "Acquire vendor documentation locally by pinned hash and distribute source references and explicitly scoped evidence instead of copied manuals or raw transcripts."
   ],
   "realization": "partial",
   "remaining": "Reviews against the pinned source and checked connections between formal components cover restricted memory, byte sources for aligned 32-bit reads, execution environments, scalar proof rules and vector addition in a shared global allocation, actual CTA shared-memory barrier publication, the encoded binary32 numerical adapter, reviewed floating-point instructions, and actual mixed affine execution with source-linked memory witnesses. How mixed-source reads observe writes remains unresolved and explicit, as does exact quiet-versus-signaling NaN output realizability. Byte ordering uses separately attributed NVIDIA binary-interface guidance. General correspondence for data-dependent interactions and different access sizes, and hardware validation, remain unimplemented. Model-assisted generation now has an instruction-section inventory and recorded headless runs; full form coverage, generalized capability evidence and cost-effectiveness evaluation remain unfinished.",
@@ -34,7 +35,7 @@
       "to": {
         "path": "docs/foundations/source-ledger.md",
         "passage": {
-          "quote": "The normative input is the locally [pinned PTX ISA 9.4 manual](../../references/nvidia/ptx-isa-9.4/README.md),\nSHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.\nLinks below resolve to that file, not the mutable online manual. The manifest\nrecords source retrieval and section locators. This ledger is a reviewed\ninterpretation of prose; Lean does not prove the prose has been faithfully\ntranslated. No hardware testing or comparison to another full PTX model is\nclaimed."
+          "quote": "The normative input is the locally [pinned PTX ISA 9.4 manual](../../references/nvidia/ptx-isa-9.4/README.md),\nSHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.\nThe manual is acquired separately into the ignored local source cache. Links\nbelow open NVIDIA\u2019s website for reading; the committed hash and locators identify\nthe exact reviewed bytes used by source checks. This ledger is a reviewed\ninterpretation of prose; Lean does not prove the prose has been faithfully\ntranslated. No hardware testing or comparison to another full PTX model is\nclaimed."
         }
       }
     },
@@ -94,14 +95,14 @@
       "to": {
         "path": "docs/foundations/byte-memory.md",
         "passage": {
-          "quote": "One source interpretation remains explicit: the pinned PTX manual does not spell\nout how its observation-order phrase “reads the value written by” applies when a\nread combines bytes from different writes. `ObservationPolicy` represents two\ninterpretations, `anyByte` and `wholeSource`. The specialization and examples are\nproved for both. This does not establish which interpretation uniquely matches\nPTX. See the [source review](next-source-review.md) for that precise remaining\nsemantic-fidelity obligation and the separate endianness source."
+          "quote": "One source interpretation remains explicit: the pinned PTX manual does not spell\nout how its observation-order phrase \u201creads the value written by\u201d applies when a\nread combines bytes from different writes. `ObservationPolicy` represents two\ninterpretations, `anyByte` and `wholeSource`. The specialization and examples are\nproved for both. This does not establish which interpretation uniquely matches\nPTX. See the [source review](next-source-review.md) for that precise remaining\nsemantic-fidelity obligation and the separate endianness source."
         }
       }
     },
     {
       "kind": "implementation",
       "from": {
-        "quote": "Reproducible integration checks verify the pinned Lean toolchain and the exact\nGit revisions of numerical dependencies, rejecting changed tracked dependency\nfiles. They build the selected PTX–TorchLean integration targets, reject local\nproof placeholders and unchecked axioms, and freshly inspect the named theorem\nand definition dependencies. The requested audit list must match the reported\nlist exactly, and only Lean's standard logical axioms are accepted. Source and\nconfiguration hashes are checked before and after the run. These checks establish\nwhat was built and which formal dependencies were used; they do not turn a\nsoftware arithmetic model into a hardware-conformance proof or resolve an\nambiguous source contract."
+        "quote": "Reproducible integration checks verify the pinned Lean toolchain and the exact\nGit revisions of numerical dependencies, rejecting changed tracked dependency\nfiles. They build the selected PTX\u2013TorchLean integration targets, reject local\nproof placeholders and unchecked axioms, and freshly inspect the named theorem\nand definition dependencies. The requested audit list must match the reported\nlist exactly, and only Lean's standard logical axioms are accepted. Source and\nconfiguration hashes are checked before and after the run. These checks establish\nwhat was built and which formal dependencies were used; they do not turn a\nsoftware arithmetic model into a hardware-conformance proof or resolve an\nambiguous source contract."
       },
       "to": {
         "path": "integration/torchlean/check.py",

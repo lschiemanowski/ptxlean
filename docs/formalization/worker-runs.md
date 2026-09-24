@@ -177,3 +177,28 @@ proofs. This establishes bounded capability under substantial guidance, not an
 autonomous PTX-specification discovery result or a cost/productivity estimate.
 Independent review, prerequisite provisioning and repairs to the coordinator
 evaluator are material parts of the observed effort.
+
+## Locally acquired sources and public evidence
+
+The PTX manual is not a committed task input. New tasks list
+`.ptx-source/9.4/index.html` with `"local_only": true` and its exact SHA-256 in
+`sources`, and also list `references/nvidia/ptx-isa-9.4/manifest.json` as an ordinary
+committed, hash-pinned source. Run `python3 scripts/check_sources.py --fetch`
+first. Preparation and replay copy the verified local bytes without downloading
+anything; drift or absence prevents dispatch. Only that declared input is exempt
+from candidate-patch inclusion, and it remains checked after worker execution.
+Historical recorded tasks retain their original paths and base commit identities.
+
+Public archives omit every `events.jsonl` raw model transcript because tool output
+can include copied NVIDIA passages. Each manifest's `distribution` record gives
+the original archive digest and each omitted member's name, size and digest.
+Retained members—including patches, receipts, usage counters and mechanical
+results—are unchanged. Archive checks establish integrity of this distributed
+subset, not availability or inspectability of omitted logs. Raw records remain
+local; a public archive alone cannot resume a historical model session. Replaying
+a saved patch still requires its recorded Git base and pinned source prerequisites.
+
+Deleting vendor content from the current tree does not remove historical Git
+objects. A public release must also exclude historical manuals and original
+transcript archives; history rewriting is a separate explicit operation because
+it changes commit identities used in recorded tasks and receipts.

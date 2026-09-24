@@ -159,6 +159,60 @@ def project_inputs(task, root, require_root=False):
     return {"path": project, "toolchain": toolchain, "inputs": pins, "dependencies": dependencies}
 
 
+
+LOCAL_SOURCE = ".ptx-source/9.4/index.html"
+LOCAL_MANIFEST = "references/nvidia/ptx-isa-9.4/manifest.json"
+
+
+def local_source_paths(task):
+    return [source["path"] for source in task["sources"] if source.get("local_only") is True]
+
+
+def source_bytes(task, root, source):
+    """Only the pinned PTX input can be local; its manifest remains committed."""
+    path = relative_path(source["path"])
+    if source.get("local_only", False) is not True:
+        if source.get("local_only", False) is not False:
+            raise ValueError("local_only must be a boolean")
+        return git(root, "show", task["base_commit"] + ":" + path)
+    if path != LOCAL_SOURCE:
+        raise ValueError("Unsupported local-only source path")
+    refs = [item for item in task["sources"] if item["path"] == LOCAL_MANIFEST]
+    if len(refs) != 1 or refs[0].get("local_only", False):
+        raise ValueError("Local PTX source requires its committed manifest as an immutable input")
+    raw = git(root, "show", task["base_commit"] + ":" + LOCAL_MANIFEST)
+    pin = json.loads(raw)
+    if (sha(raw) != refs[0]["sha256"] or pin.get("sha256") != source["sha256"]
+            or pin.get("isa_version") != "9.4" or pin.get("artifact") != "index.html"):
+        raise ValueError("Local source manifest/hash mismatch")
+    location = Path(root) / path
+    if not location.is_file():
+        raise ValueError("Local PTX source missing; run python3 scripts/check_sources.py --fetch")
+    data = location.read_bytes()
+    if len(data) != pin["bytes"]:
+        raise ValueError("Local source byte count mismatch")
+    return data
+
+
+def install_local_sources(root, worktree, task):
+    """Copy exact verified input only; never fetch, overwrite drift, or copy builds."""
+    for source in task["sources"]:
+        if source.get("local_only") is not True:
+            continue
+        data = source_bytes(task, root, source)
+        if sha(data) != source["sha256"]:
+            raise ValueError("Local source hash mismatch")
+        destination = Path(worktree) / source["path"]
+        if any(p.is_symlink() for p in [destination, *destination.parents] if p != Path(worktree)):
+            raise ValueError("Local source destination cannot use symlinks")
+        if destination.exists():
+            if destination.read_bytes() != data:
+                raise ValueError("Worker local source changed")
+        else:
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_bytes(data)
+
+
 def validate_task(task, root):
     if task.get("schema_version") != 1:
         raise ValueError("Unsupported task schema")
@@ -172,12 +226,12 @@ def validate_task(task, root):
     allowed = [relative_path(p) for p in task["allowed_paths"]]
     if len(set(allowed)) != len(allowed):
         raise ValueError("Duplicate allowed path")
-    # Source bytes come from the pinned commit, not uncommitted caller files.
+    # Source bytes come from the pinned commit, except hash-bound local-only PTX inputs.
     for source in task["sources"]:
         path = relative_path(source["path"])
         if path in allowed:
             raise ValueError(f"Pinned source cannot be an allowed output: {path}")
-        data = git(root, "show", task["base_commit"] + ":" + path)
+        data = source_bytes(task, root, source)
         if sha(data) != source["sha256"]:
             raise ValueError(f"Source hash mismatch: {path}")
     project_inputs(task, root)
@@ -224,12 +278,12 @@ def update_call(campaign, attempt, **fields):
         atomic_json(path, ledger)
 
 
-def patch_and_boundary(worktree, base, allowed, project="."):
+def patch_and_boundary(worktree, base, allowed, project=".", local_inputs=()):
     changed = set(filter(None, git(worktree, "diff", "--name-only", "-z", base).decode().split("\0")))
     new = list(filter(None, git(worktree, "ls-files", "--others", "-z").decode().split("\0")))
     # Named generated-artifact exemptions, not arbitrary .gitignore rules.
     build_dirs = {".lake/", str(PurePosixPath(project) / ".lake") + "/"}
-    new = [p for p in new if not any(p.startswith(prefix) for prefix in build_dirs)
+    new = [p for p in new if p not in local_inputs and not any(p.startswith(prefix) for prefix in build_dirs)
            and "__pycache__" not in PurePosixPath(p).parts]
     changed.update(new)
     patch = git(worktree, "diff", "--binary", base)
@@ -333,7 +387,7 @@ def dispatch(task, campaign, attempt, directory, worktree, prompt, command, **co
             except Exception as error:
                 receipt["event_capture_error"] = str(error)
         try:
-            patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], replay_project(task))
+            patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], replay_project(task), local_source_paths(task))
             (directory / "candidate.patch").write_bytes(patch)
             altered_sources = changed_sources(worktree, task)
             boundary["altered_sources"] = altered_sources
@@ -361,6 +415,7 @@ def execute(task_file, root, campaign, attempt, executable="codex"):
     directory = new_attempt(campaign, attempt, task, prompt)
     worktree = directory / "worktree"
     git(root, "worktree", "add", "--detach", str(worktree), task["base_commit"])
+    install_local_sources(root, worktree, task)
     command = headless_command(executable, worktree, directory)
     with worktree_locked(campaign, worktree):
         return dispatch(task, campaign, attempt, directory, worktree, prompt, command)
@@ -403,7 +458,7 @@ def resume_preflight(root, campaign, resume_from, feedback_file):
     saved_patch = (previous_dir / "candidate.patch").read_bytes()
     if sha(saved_patch) != previous.get("patch_sha256"):
         raise ValueError("Prior patch record changed")
-    actual_patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], replay_project(task))
+    actual_patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], replay_project(task), local_source_paths(task))
     if actual_patch != saved_patch or not boundary["head_unchanged"]:
         raise ValueError("Worktree does not match the prior recorded patch and commit")
     if not boundary["eligible_for_review"] or changed_sources(worktree, task):

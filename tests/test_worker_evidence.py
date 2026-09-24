@@ -63,6 +63,16 @@ class MultiTrialEvidenceTests(unittest.TestCase):
              mock.patch("sys.stdout", new_callable=io.StringIO):
             evidence.main()
 
+    def test_public_subset_has_explicit_omission_records(self):
+        path=self.trial('subset'); data=json.loads(path.read_text())
+        data['distribution']={'policy':'omit-raw-model-transcripts','reason':'Vendor-bearing transcript',
+            'original_archive_sha256':'a'*64,'omitted_members':{
+                'attempts/example/events.jsonl':{'bytes':120,'sha256':'b'*64}}}
+        path.write_text(json.dumps(data));self.assertEqual(evidence.verify(path),1)
+        data['distribution']['omitted_members']['attempts/example/receipt.json']={'bytes':4,'sha256':'c'*64}
+        path.write_text(json.dumps(data))
+        with self.assertRaisesRegex(ValueError,'omission'):evidence.verify(path)
+
     def test_no_archived_trials_is_not_vacuous_success(self):
         with self.assertRaisesRegex(ValueError, "No archived"):
             evidence.default_manifests(self.root)

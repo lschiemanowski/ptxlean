@@ -9,7 +9,8 @@ import subprocess
 
 from check_proofs import ALLOWED_AXIOMS, FORBIDDEN, code_only
 from worker_run import (atomic_json, changed_sources, git, now, patch_and_boundary,
-                        read_json, sha, validate_task, project_inputs, replay_project)
+                        read_json, sha, validate_task, project_inputs, replay_project,
+                        local_source_paths, install_local_sources)
 
 from worker_project import provision_dependencies, verify_dependencies
 
@@ -102,7 +103,7 @@ def replay(attempt, root, destination, modules, checks, declarations):
         return (destination / (stem + ".log")).read_text()
 
     def unchanged():
-        actual, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], project)
+        actual, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], project, local_source_paths(task))
         for name in boundary["changed_paths"]:
             path = worktree / name
             if any(p.is_symlink() for p in [path, *path.parents] if p != worktree and worktree in p.parents):
@@ -114,6 +115,7 @@ def replay(attempt, root, destination, modules, checks, declarations):
 
     try:
         git(root, "worktree", "add", "--detach", str(worktree), task["base_commit"])
+        install_local_sources(root, worktree, task)
         has_form_ledger = (worktree / "coverage/implemented-forms.json").is_file()
         record["form_ledger"] = {"pristine_base": "pending" if has_form_ledger else "not_present",
                                 "candidate": "not_checked", "integration": "not_performed"}

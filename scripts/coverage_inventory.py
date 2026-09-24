@@ -14,7 +14,7 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = Path('references/nvidia/ptx-isa-9.4/index.html')
+from check_sources import SOURCE, MANIFEST
 OUTPUT = Path('coverage/ptx-isa-9.4-sections.json')
 CHAPTER = 'instructions'
 KINDS = ('instruction', 'group', 'context', 'language_construct')
@@ -190,7 +190,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--write', action='store_true', help='Regenerate the committed inventory; default verifies it.')
     args = parser.parse_args()
-    manifest = json.loads((ROOT / SOURCE.parent / 'manifest.json').read_text())
+    manifest = json.loads((ROOT / MANIFEST).read_text())
     data = inventory((ROOT / SOURCE).read_bytes(), manifest)
     expected = render(data)
     destination = ROOT / OUTPUT

@@ -157,6 +157,14 @@ class ImplementedFormTests(unittest.TestCase):
         cls.base = Path(cls.template.name)
         revision = os.environ.get('PTXLEAN_LEDGER_FIXTURE_REV')
         def read(path):
+            # Vendor input is intentionally absent from every new commit. The
+            # revision's ledger still pins its exact digest; never substitute a
+            # mutable website version when constructing a replay fixture.
+            if str(path) == '.ptx-source/9.4/index.html':
+                raw = (ROOT / path).read_bytes()
+                if hashlib.sha256(raw).hexdigest() != cls.data['files']['manual']['sha256']:
+                    raise ValueError('Local fixture source differs from revision pin')
+                return raw
             return fixture_bytes(ROOT, path, revision)
         cls.data = json.loads(read(checker.LEDGER))
         paths = {ref['path'] for ref in cls.data['files'].values()}

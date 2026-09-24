@@ -22,7 +22,7 @@
       "to": {
         "path": "Ptx/Language.lean",
         "passage": {
-          "quote": "def Instr.step (instruction : Instr) (registers : Registers) (readValue : Word) :\n    Registers × Effect :=\n  match instruction with\n  | .load order address destination =>\n      (fun register => if register = destination then readValue else registers register,\n       ⟨.load order, address, readValue⟩)\n  | .store order address value =>\n      (registers, ⟨.store order, address, value⟩)"
+          "quote": "def Instr.step (instruction : Instr) (registers : Registers) (readValue : Word) :\n    Registers \u00d7 Effect :=\n  match instruction with\n  | .load order address destination =>\n      (fun register => if register = destination then readValue else registers register,\n       \u27e8.load order, address, readValue\u27e9)\n  | .store order address value =>\n      (registers, \u27e8.store order, address, value\u27e9)"
         }
       }
     },
@@ -34,7 +34,7 @@
       "to": {
         "path": "Ptx/Program.lean",
         "passage": {
-          "quote": "def Program.events (p : Program) (registers : Nat → Registers)\n    (oracle : Nat → Nat → Word) : List Occurrence :=\n  p.initial.mapIdx (fun address value => ⟨none, address, ⟨.init, address, value⟩⟩) ++\n    (p.threads.mapIdx fun tid program => threadEvents tid program (registers tid) (oracle tid)).flatten\n\ndef Program.graph (p : Program) (registers : Nat → Registers) (oracle : Nat → Nat → Word)\n    (source : Fin (p.events registers oracle).length → Fin (p.events registers oracle).length)\n    (co : Fin (p.events registers oracle).length → Fin (p.events registers oracle).length → Bool) :\n    Graph (p.events registers oracle).length :=\n  ⟨fun index => (p.events registers oracle).get index, source, co⟩\n\n/-- All typed accesses are inside the initialized word arena. -/\ndef Program.Bounded (p : Program) : Prop :=\n  ∀ program ∈ p.threads, ∀ instruction ∈ program,\n    instruction.address < p.initial.length\n\n/-- Admission combines arena bounds with the derived graph's memory constraints.\nLocal traces are already materialized by `events`; graph validity alone does not\nassert bounds or operational progress of a hardware scheduler. -/\ndef Program.Admitted (p : Program) (registers : Nat → Registers) (oracle : Nat → Nat → Word)\n    (source : Fin (p.events registers oracle).length → Fin (p.events registers oracle).length)\n    (co : Fin (p.events registers oracle).length → Fin (p.events registers oracle).length → Bool) :\n    Prop :=\n  p.Bounded ∧ (p.graph registers oracle source co).Valid\n\n/-- Each actual program thread has the completed local run used to form its events.\nThis holds for any candidate oracle; global compatibility is checked separately. -/\ntheorem Program.all_threads_run (p : Program) (registers : Nat → Registers)\n    (oracle : Nat → Nat → Word) :\n    ∀ (tid : Nat) (ht : tid < p.threads.length),\n      Runs p.threads[tid] (registers tid) (oracle tid)\n        (execute p.threads[tid] (registers tid) (oracle tid)).1\n        (execute p.threads[tid] (registers tid) (oracle tid)).2 := by\n  intro tid ht\n  exact execute_runs _ _ _"
+          "quote": "def Program.events (p : Program) (registers : Nat \u2192 Registers)\n    (oracle : Nat \u2192 Nat \u2192 Word) : List Occurrence :=\n  p.initial.mapIdx (fun address value => \u27e8none, address, \u27e8.init, address, value\u27e9\u27e9) ++\n    (p.threads.mapIdx fun tid program => threadEvents tid program (registers tid) (oracle tid)).flatten\n\ndef Program.graph (p : Program) (registers : Nat \u2192 Registers) (oracle : Nat \u2192 Nat \u2192 Word)\n    (source : Fin (p.events registers oracle).length \u2192 Fin (p.events registers oracle).length)\n    (co : Fin (p.events registers oracle).length \u2192 Fin (p.events registers oracle).length \u2192 Bool) :\n    Graph (p.events registers oracle).length :=\n  \u27e8fun index => (p.events registers oracle).get index, source, co\u27e9\n\n/-- All typed accesses are inside the initialized word arena. -/\ndef Program.Bounded (p : Program) : Prop :=\n  \u2200 program \u2208 p.threads, \u2200 instruction \u2208 program,\n    instruction.address < p.initial.length\n\n/-- Admission combines arena bounds with the derived graph's memory constraints.\nLocal traces are already materialized by `events`; graph validity alone does not\nassert bounds or operational progress of a hardware scheduler. -/\ndef Program.Admitted (p : Program) (registers : Nat \u2192 Registers) (oracle : Nat \u2192 Nat \u2192 Word)\n    (source : Fin (p.events registers oracle).length \u2192 Fin (p.events registers oracle).length)\n    (co : Fin (p.events registers oracle).length \u2192 Fin (p.events registers oracle).length \u2192 Bool) :\n    Prop :=\n  p.Bounded \u2227 (p.graph registers oracle source co).Valid\n\n/-- Each actual program thread has the completed local run used to form its events.\nThis holds for any candidate oracle; global compatibility is checked separately. -/\ntheorem Program.all_threads_run (p : Program) (registers : Nat \u2192 Registers)\n    (oracle : Nat \u2192 Nat \u2192 Word) :\n    \u2200 (tid : Nat) (ht : tid < p.threads.length),\n      Runs p.threads[tid] (registers tid) (oracle tid)\n        (execute p.threads[tid] (registers tid) (oracle tid)).1\n        (execute p.threads[tid] (registers tid) (oracle tid)).2 := by\n  intro tid ht\n  exact execute_runs _ _ _"
         }
       }
     },
@@ -46,7 +46,7 @@
       "to": {
         "path": "Ptx/Memory.lean",
         "passage": {
-          "quote": "structure Valid (g : Graph n) : Prop where\n  sources : g.Sources\n  co : g.Coherent\n  base_irrefl : ∀ a, ¬g.base a a\n  coherence_cause : ∀ a b, g.write a → g.write b → g.sameAddress a b →\n    g.cause a b → g.coherence a b\n  no_future : ∀ r w, g.read r → g.write w → g.sameAddress r w →\n    g.cause r w → g.source r ≠ w\n  no_stale : ∀ w r, g.write w → g.read r → g.sameAddress w r →\n    g.cause w r → ¬g.coherence (g.source r) w\n  sc_per_location : ∀ a, ¬Path g.locationEdge a a"
+          "quote": "structure Valid (g : Graph n) : Prop where\n  sources : g.Sources\n  co : g.Coherent\n  base_irrefl : \u2200 a, \u00acg.base a a\n  coherence_cause : \u2200 a b, g.write a \u2192 g.write b \u2192 g.sameAddress a b \u2192\n    g.cause a b \u2192 g.coherence a b\n  no_future : \u2200 r w, g.read r \u2192 g.write w \u2192 g.sameAddress r w \u2192\n    g.cause r w \u2192 g.source r \u2260 w\n  no_stale : \u2200 w r, g.write w \u2192 g.read r \u2192 g.sameAddress w r \u2192\n    g.cause w r \u2192 \u00acg.coherence (g.source r) w\n  sc_per_location : \u2200 a, \u00acPath g.locationEdge a a"
         }
       }
     },
@@ -70,7 +70,7 @@
       "to": {
         "path": "Ptx/MessagePassing.lean",
         "passage": {
-          "quote": "theorem successful_execution_exists : ∃ (flag payload : Word), ∃ source co,\n    (program .acquire).Admitted registers (oracle flag payload) source co ∧\n    result .acquire flag payload = (1, 7) := by\n  refine ⟨1, 7, successSource, witnessCo, ⟨?_, success_valid⟩, rfl⟩\n  simp [Program.Bounded, program, producer, consumer, Instr.address]"
+          "quote": "theorem successful_execution_exists : \u2203 (flag payload : Word), \u2203 source co,\n    (program .acquire).Admitted registers (oracle flag payload) source co \u2227\n    result .acquire flag payload = (1, 7) := by\n  refine \u27e81, 7, successSource, witnessCo, \u27e8?_, success_valid\u27e9, rfl\u27e9\n  simp [Program.Bounded, program, producer, consumer, Instr.address]"
         }
       }
     },
@@ -82,7 +82,7 @@
       "to": {
         "path": "Ptx/MessagePassing.lean",
         "passage": {
-          "quote": "theorem relaxed_counterexample_exists : ∃ (flag payload : Word), ∃ source co,\n    (program .relaxed).Admitted registers (oracle flag payload) source co ∧\n    result .relaxed flag payload = (1, 0) := by\n  refine ⟨1, 0, staleSource, witnessCo, ⟨?_, stale_valid⟩, rfl⟩\n  simp [Program.Bounded, program, producer, consumer, Instr.address]"
+          "quote": "theorem relaxed_counterexample_exists : \u2203 (flag payload : Word), \u2203 source co,\n    (program .relaxed).Admitted registers (oracle flag payload) source co \u2227\n    result .relaxed flag payload = (1, 0) := by\n  refine \u27e81, 0, staleSource, witnessCo, \u27e8?_, stale_valid\u27e9, rfl\u27e9\n  simp [Program.Bounded, program, producer, consumer, Instr.address]"
         }
       }
     },
@@ -130,7 +130,7 @@
       "to": {
         "path": "docs/foundations/source-ledger.md",
         "passage": {
-          "quote": "The normative input is the locally [pinned PTX ISA 9.4 manual](../../references/nvidia/ptx-isa-9.4/README.md),\nSHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.\nLinks below resolve to that file, not the mutable online manual. The manifest\nrecords source retrieval and section locators. This ledger is a reviewed\ninterpretation of prose; Lean does not prove the prose has been faithfully\ntranslated. No hardware testing or comparison to another full PTX model is\nclaimed."
+          "quote": "The normative input is the locally [pinned PTX ISA 9.4 manual](../../references/nvidia/ptx-isa-9.4/README.md),\nSHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.\nThe manual is acquired separately into the ignored local source cache. Links\nbelow open NVIDIA\u2019s website for reading; the committed hash and locators identify\nthe exact reviewed bytes used by source checks. This ledger is a reviewed\ninterpretation of prose; Lean does not prove the prose has been faithfully\ntranslated. No hardware testing or comparison to another full PTX model is\nclaimed."
         }
       }
     },
@@ -142,7 +142,7 @@
       "to": {
         "path": "Ptx/MessagePassingOutcomes.lean",
         "passage": {
-          "quote": "theorem acquire_outcomes (flag payload : Word) :\n    Possible .acquire flag payload ↔\n      (flag = 0 ∧ payload = 0) ∨ (flag = 0 ∧ payload = 7) ∨ (flag = 1 ∧ payload = 7) := by\n  constructor\n  · rintro ⟨source, co, ⟨_, valid⟩, _⟩\n    obtain ⟨hf, hp⟩ := source_values .acquire flag payload source co valid.sources\n    rcases hf with hf | hf\n    · rcases hp with hp | hp\n      · exact Or.inl ⟨hf, hp⟩\n      · exact Or.inr (Or.inl ⟨hf, hp⟩)\n    · subst flag\n      exact Or.inr (Or.inr ⟨rfl, publication payload source co valid⟩)\n  · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)\n    · exact possible_of_check .acquire false false (zero_flag_check .acquire false)\n    · exact possible_of_check .acquire false true (zero_flag_check .acquire true)\n    · exact possible_of_check .acquire true true acquire_success_check"
+          "quote": "theorem acquire_outcomes (flag payload : Word) :\n    Possible .acquire flag payload \u2194\n      (flag = 0 \u2227 payload = 0) \u2228 (flag = 0 \u2227 payload = 7) \u2228 (flag = 1 \u2227 payload = 7) := by\n  constructor\n  \u00b7 rintro \u27e8source, co, \u27e8_, valid\u27e9, _\u27e9\n    obtain \u27e8hf, hp\u27e9 := source_values .acquire flag payload source co valid.sources\n    rcases hf with hf | hf\n    \u00b7 rcases hp with hp | hp\n      \u00b7 exact Or.inl \u27e8hf, hp\u27e9\n      \u00b7 exact Or.inr (Or.inl \u27e8hf, hp\u27e9)\n    \u00b7 subst flag\n      exact Or.inr (Or.inr \u27e8rfl, publication payload source co valid\u27e9)\n  \u00b7 rintro (\u27e8rfl, rfl\u27e9 | \u27e8rfl, rfl\u27e9 | \u27e8rfl, rfl\u27e9)\n    \u00b7 exact possible_of_check .acquire false false (zero_flag_check .acquire false)\n    \u00b7 exact possible_of_check .acquire false true (zero_flag_check .acquire true)\n    \u00b7 exact possible_of_check .acquire true true acquire_success_check"
         }
       }
     },
@@ -154,7 +154,7 @@
       "to": {
         "path": "Ptx/MessagePassingOutcomes.lean",
         "passage": {
-          "quote": "theorem relaxed_outcomes (flag payload : Word) :\n    Possible .relaxed flag payload ↔\n      (flag = 0 ∨ flag = 1) ∧ (payload = 0 ∨ payload = 7) := by\n  constructor\n  · rintro ⟨source, co, ⟨_, valid⟩, _⟩\n    exact source_values .relaxed flag payload source co valid.sources\n  · rintro ⟨hf | hf, hp | hp⟩ <;> subst flag <;> subst payload\n    · exact possible_of_check .relaxed false false (relaxed_check false false)\n    · exact possible_of_check .relaxed false true (relaxed_check false true)\n    · exact possible_of_check .relaxed true false (relaxed_check true false)\n    · exact possible_of_check .relaxed true true (relaxed_check true true)"
+          "quote": "theorem relaxed_outcomes (flag payload : Word) :\n    Possible .relaxed flag payload \u2194\n      (flag = 0 \u2228 flag = 1) \u2227 (payload = 0 \u2228 payload = 7) := by\n  constructor\n  \u00b7 rintro \u27e8source, co, \u27e8_, valid\u27e9, _\u27e9\n    exact source_values .relaxed flag payload source co valid.sources\n  \u00b7 rintro \u27e8hf | hf, hp | hp\u27e9 <;> subst flag <;> subst payload\n    \u00b7 exact possible_of_check .relaxed false false (relaxed_check false false)\n    \u00b7 exact possible_of_check .relaxed false true (relaxed_check false true)\n    \u00b7 exact possible_of_check .relaxed true false (relaxed_check true false)\n    \u00b7 exact possible_of_check .relaxed true true (relaxed_check true true)"
         }
       }
     },
@@ -166,7 +166,7 @@
       "to": {
         "path": "Ptx/Litmus.lean",
         "passage": {
-          "quote": "theorem both_zero_exists : ∃ (x y : Word), ∃ source co,\n    program.Admitted zeroRegisters (oracle x y) source co ∧ result x y = (0, 0) := by\n  refine ⟨0, 0, source, co, ⟨?_, witness_valid⟩, rfl⟩\n  simp [Program.Bounded, program, left, right, Instr.address]"
+          "quote": "theorem both_zero_exists : \u2203 (x y : Word), \u2203 source co,\n    program.Admitted zeroRegisters (oracle x y) source co \u2227 result x y = (0, 0) := by\n  refine \u27e80, 0, source, co, \u27e8?_, witness_valid\u27e9, rfl\u27e9\n  simp [Program.Bounded, program, left, right, Instr.address]"
         }
       }
     },
@@ -178,7 +178,7 @@
       "to": {
         "path": "Ptx/Litmus.lean",
         "passage": {
-          "quote": "theorem ordered_read (value : Word) (source co) (valid : (graph value source co).Valid) :\n    result value = 1 := by\n  let g := graph value source co\n  have causes : g.cause 1 2 := Or.inl ⟨Path.edge (Or.inl ⟨(by intro h; cases h), rfl, (by change 0 < 1; decide)⟩), rfl⟩\n  have notInitial : source 2 ≠ 0 := by\n    intro hs\n    have hc := valid.co.initFirst 0 1 rfl (by trivial) rfl (by decide)\n    exact valid.no_stale 1 2 (by trivial) (by trivial) rfl causes (by change g.coherence (source _) _; rw [hs]; exact hc)\n  have h := valid.sources.compatible 2 (by trivial)\n  change g.write (source 2) ∧ g.sameAddress (source 2) 2 ∧\n    (g.event (source 2)).effect.value = value at h\n  have cases : source 2 = 0 ∨ source 2 = 1 ∨ source 2 = 2 := by omega\n  rcases cases with hs | hs | hs\n  · exact False.elim (notInitial hs)\n  · rw [hs] at h\n    exact h.2.2.symm\n  · rw [hs] at h\n    exact False.elim h.1"
+          "quote": "theorem ordered_read (value : Word) (source co) (valid : (graph value source co).Valid) :\n    result value = 1 := by\n  let g := graph value source co\n  have causes : g.cause 1 2 := Or.inl \u27e8Path.edge (Or.inl \u27e8(by intro h; cases h), rfl, (by change 0 < 1; decide)\u27e9), rfl\u27e9\n  have notInitial : source 2 \u2260 0 := by\n    intro hs\n    have hc := valid.co.initFirst 0 1 rfl (by trivial) rfl (by decide)\n    exact valid.no_stale 1 2 (by trivial) (by trivial) rfl causes (by change g.coherence (source _) _; rw [hs]; exact hc)\n  have h := valid.sources.compatible 2 (by trivial)\n  change g.write (source 2) \u2227 g.sameAddress (source 2) 2 \u2227\n    (g.event (source 2)).effect.value = value at h\n  have cases : source 2 = 0 \u2228 source 2 = 1 \u2228 source 2 = 2 := by omega\n  rcases cases with hs | hs | hs\n  \u00b7 exact False.elim (notInitial hs)\n  \u00b7 rw [hs] at h\n    exact h.2.2.symm\n  \u00b7 rw [hs] at h\n    exact False.elim h.1"
         }
       }
     },
@@ -190,7 +190,7 @@
       "to": {
         "path": "Ptx/Litmus.lean",
         "passage": {
-          "quote": "theorem ReleasePair.pair_required : ∀ a b : Fin 8,\n    ¬(∃ r, ReleasePair.witness.release a ∧\n      ReleasePair.witness.acquirePattern r b ∧\n      ReleasePair.witness.observation a r ∧\n      ReleasePair.witness.morallyStrong a b) := by decide\n\n/-- Removing the nontrivial acquire-pattern branch likewise eliminates every\npossible synchronization pair in the independent acquire-pair witness. -/\ntheorem AcquirePair.pair_required : ∀ a b : Fin 8,\n    ¬(∃ w, AcquirePair.witness.releasePattern a w ∧\n      AcquirePair.witness.acquire b ∧\n      AcquirePair.witness.observation w b ∧\n      AcquirePair.witness.morallyStrong a b) := by decide\n\ntheorem ReleasePair.witness_synchronizes : ReleasePair.witness.sync 3 6 := by decide\ntheorem AcquirePair.witness_synchronizes : AcquirePair.witness.sync 3 5 := by decide"
+          "quote": "theorem ReleasePair.pair_required : \u2200 a b : Fin 8,\n    \u00ac(\u2203 r, ReleasePair.witness.release a \u2227\n      ReleasePair.witness.acquirePattern r b \u2227\n      ReleasePair.witness.observation a r \u2227\n      ReleasePair.witness.morallyStrong a b) := by decide\n\n/-- Removing the nontrivial acquire-pattern branch likewise eliminates every\npossible synchronization pair in the independent acquire-pair witness. -/\ntheorem AcquirePair.pair_required : \u2200 a b : Fin 8,\n    \u00ac(\u2203 w, AcquirePair.witness.releasePattern a w \u2227\n      AcquirePair.witness.acquire b \u2227\n      AcquirePair.witness.observation w b \u2227\n      AcquirePair.witness.morallyStrong a b) := by decide\n\ntheorem ReleasePair.witness_synchronizes : ReleasePair.witness.sync 3 6 := by decide\ntheorem AcquirePair.witness_synchronizes : AcquirePair.witness.sync 3 5 := by decide"
         }
       }
     },

@@ -18,7 +18,7 @@ not an assertion about the raw numerical value of `%ctaid`. Grid identity is
 included in both CTA and cluster comparisons. Equal local CTA numbers in
 different grids therefore do not imply membership in the same CTA.
 
-`Scope.includes` follows [§8.5](../../references/nvidia/ptx-isa-9.4/index.html#scope):
+`Scope.includes` follows [§8.5](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#scope):
 
 | Scope | Included device threads |
 | --- | --- |
@@ -30,7 +30,7 @@ different grids therefore do not imply membership in the same CTA.
 Host execution is not represented. Thus the `.sys` row models membership of
 device participants, not a complete host/device execution model or a claim of
 system-wide atomicity. NVIDIA separately qualifies host-memory atomicity in
-[§8.1.1](../../references/nvidia/ptx-isa-9.4/index.html#limitations-system-scope-atomicity).
+[§8.1.1](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#limitations-system-scope-atomicity).
 
 `Program.TopologyWellFormed` requires distinct used thread identifiers to map to
 distinct full locations. Both scoped message-passing witnesses discharge this
@@ -41,7 +41,7 @@ Mutual inclusion is checked in both directions. A GPU-scoped release paired
 with a CTA-scoped acquire in another CTA is not enough. The checked regression
 `scope_inclusion_is_mutual` demonstrates this asymmetry. The underlying moral
 strength rule also retains the independent same-thread program-order clause
-from [§8.7](../../references/nvidia/ptx-isa-9.4/index.html#morally-strong-operations).
+from [§8.7](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#morally-strong-operations).
 
 ## Allocation-relative storage contracts
 
@@ -66,7 +66,7 @@ The alignment test is sufficient under the supplied allocation guarantee; it
 does not claim that a failed guarantee proves the actual base address misaligned.
 
 Ownership follows these restricted interpretations of the manual's
-[state spaces](../../references/nvidia/ptx-isa-9.4/index.html#state-spaces):
+[state spaces](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#state-spaces):
 
 | Space | Represented ownership/access contract |
 | --- | --- |
@@ -77,7 +77,7 @@ Ownership follows these restricted interpretations of the manual's
 
 For peer-CTA shared access, being in the same cluster is necessary but not a
 lifetime proof. The caller must establish that the peer CTA is active for the
-access, as required by [§2.2.2](../../references/nvidia/ptx-isa-9.4/index.html#cluster-of-cooperative-thread-arrays).
+access, as required by [§2.2.2](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#cluster-of-cooperative-thread-arrays).
 `checkAccess` does not model CTA lifetimes. Function parameter storage, call ABI
 rules, and parameter stores are explicitly unsupported. Entry-parameter writes
 are rejected even if a malformed supplied allocation marks them writable.
@@ -85,7 +85,7 @@ are rejected even if a malformed supplied allocation marks them writable.
 An `uninitialized` diagnostic means that this storage contract does not supply
 known initial contents. It does **not** mean that PTX has no initial write or
 that reading unknown initial contents is universally illegal. The manual's
-[initialization rule](../../references/nvidia/ptx-isa-9.4/index.html#initialization)
+[initialization rule](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#initialization)
 assigns an unknown constant initial value where no explicit initializer exists.
 No code silently fills an unknown allocation with zero. These diagnostics are
 contract failures, distinct from instruction-form legality.
@@ -99,8 +99,8 @@ the supported relaxed/acquire load or relaxed/release store family; the typed
 instruction supplies the ordering direction.
 
 `memoryEligibility` records the version and target requirements from the
-[load](../../references/nvidia/ptx-isa-9.4/index.html#data-movement-and-conversion-instructions-ld)
-and [store](../../references/nvidia/ptx-isa-9.4/index.html#data-movement-and-conversion-instructions-st)
+[load](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-ld)
+and [store](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-st)
 notes: scoped forms require PTX 6.0 and `sm_70`; cluster scope or explicit
 shared-cluster addressing requires PTX 7.8 and `sm_90`. Scoped forms are allowed
 only for global/shared space. Plain represented load/store forms start at PTX
@@ -126,7 +126,7 @@ order). Observation, synchronization, base paths, causality, and per-location
 constraints are then derived from it. Causality retains the original two
 clauses; it is not silently replaced by its transitive closure.
 
-One essential change concerns [§8.9.6 coherence](../../references/nvidia/ptx-isa-9.4/index.html#coherence-order).
+One essential change concerns [§8.9.6 coherence](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#coherence-order).
 The original single-device GPU fragment could order all same-address writes.
 The extension instead requires comparability for morally strong writes and
 the documented ordering for causally related writes. Its `Coherent.justified`

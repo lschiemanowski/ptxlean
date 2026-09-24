@@ -1,0 +1,292 @@
+{
+  "id": "1f8ef94d-a390-46f9-bd5e-b4e180fa8519",
+  "base": "ef51f90235d90bd7522929a67342357bd3c7e539",
+  "contentTree": "1a241fcade2a2dd39b75dba97160592bb811dd89",
+  "reviewer": "Codex coordinator",
+  "summary": "Remove bundled NVIDIA documentation and raw model transcripts from release files while preserving pinned local source checks and explicit evidence provenance.",
+  "examined": [
+    {
+      "id": "coverage-inventory",
+      "outcome": "revised",
+      "reason": "The exact same pinned source and section hashes are checked from a local-only cache; generated locators change path without changing the instruction-section partition."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "All nine accepted forms, candidate bytes and source hashes remain unchanged; source location and public archive manifest hashes change explicitly, and revision fixtures verify the local vendor hash."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "revised",
+      "reason": "Update exact source-ledger passage links for the new local acquisition contract; original message-passing semantics, restrictions and proofs remain unchanged."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "Separate proof and semantic acceptance remains unchanged; public evidence now explicitly scopes omitted vendor-bearing transcripts while preserving accepted patches and original identities."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "Only vendor source links move to publisher URLs; scalar definitions and proof contracts are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Acquire rather than redistribute the vendor manual; exact hash, size and anchor checks remain mandatory. Public records identify omitted raw transcripts and distinguish this current-tree cleanup from history publication."
+    },
+    {
+      "id": "whole-word-memory",
+      "outcome": "unchanged",
+      "reason": "Only source-navigation URLs changed; allocation, permissions, memory model and proofs remain unchanged."
+    },
+    {
+      "id": "worker-provisioning",
+      "outcome": "revised",
+      "reason": "Provision exact task-declared local source before builds without implicit fetching; preserve hash and drift checks, candidate edit boundaries, and zero-call preparation."
+    },
+    {
+      "id": "worker-replay",
+      "outcome": "revised",
+      "reason": "Fresh replay restores source from a verified local cache tied to a committed manifest; retained patch and receipt bytes and original recorded task identities are unchanged."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "revised",
+      "reason": "Add one narrowly scoped local-only PTX input bound to an immutable manifest; check after dispatch and exclude only that input from patch capture. Public archives explicitly omit raw transcripts with original hashes rather than claiming complete logs."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Only provenance acquisition and public evidence packaging change. Pinned PTX interpretation, permitted-execution definitions, all Lean code and proved obligations are unchanged."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "1a241fcade2a2dd39b75dba97160592bb811dd89",
+      "method": "Full scripts/check.sh and integration/torchlean/check.sh; direct pinned publisher download; retained-archive byte comparison; distribution guard and 24-word vendor-passage scan; stratic validate; git diff --check",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; actual NVIDIA HTML acquired into ignored .ptx-source cache and verified by original SHA256; no model calls",
+      "evidence": "Root checks passed: 87 worker/acquisition/evidence tests, 26 ledger tests, 7 inventory tests, 9 accepted forms, all public evidence manifests, full build and 1213 dependency reports. Integration passed 363 dependency reports. Real publisher download still matches original 3928316-byte hash. All five transformed archives preserve every retained member exactly; 14 raw event transcripts omitted with original size/hash provenance and private originals retained locally. No current tracked artifact is the full manual or a raw transcript; targeted paragraph scan found no 24-word manual match in remaining tracked text/archive members. This guard is not a copyright judgment or exhaustive quotation audit. Git history is explicitly NOT cleaned: 23 local commits beyond remote main still need a separately authorized rewrite. The checked snapshot is unchanged. Logs /tmp/ptx-source-cleanup-check.log and /tmp/ptx-source-cleanup-integration.log.",
+      "tests": [],
+      "id": "5142635a-6e6a-49f0-8758-07c667aee2ab",
+      "recordedAt": "2026-09-24T09:52:11.232Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T09:55:18.913Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Preserved user-edited introduction and examples; added explicit verified manual acquisition and removed the bundled-documentation license statement."
+    },
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "coverage/ptx-isa-9.4-sections.json",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/formalization/binary32-instructions-source-review.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/formalization/initial-source-review.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/formalization/numerical-foundation-audit.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/formalization/pure-leaves-review.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/formalization/worker-runs.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/foundations/affine-kernel-proof-review.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/foundations/affine-memory-observations.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/foundations/binary32-source-review.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/foundations/environment.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/foundations/scalar-machine.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "docs/foundations/source-ledger.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/README.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/evidence-manifest.json",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "formalization/results/binary32-instructions/worker-evidence.tar.gz",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/README.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/evidence-manifest.json",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "formalization/results/bitcount-u32/worker-evidence.tar.gz",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "formalization/results/minmax-u32/README.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "formalization/results/minmax-u32/evidence-manifest.json",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "formalization/results/minmax-u32/worker-evidence.tar.gz",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "formalization/results/select32/README.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "formalization/results/select32/evidence-manifest.json",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "formalization/results/select32/worker-evidence.tar.gz",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/README.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/evidence-manifest.json",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "formalization/results/signed-minmax32/worker-evidence.tar.gz",
+      "reason": "Removed only raw events.jsonl members; retained every other member byte-for-byte, recorded original archive and omitted-member hashes, and refreshed distributed subset integrity hashes."
+    },
+    {
+      "path": "references/nvidia/ptx-isa-9.4/README.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "references/nvidia/ptx-isa-9.4/index.html",
+      "reason": "Removed complete vendor manual from release files; identical pinned bytes remain only in an ignored local cache."
+    },
+    {
+      "path": "scripts/check.sh",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "scripts/check_distribution.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "scripts/check_sources.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "scripts/check_worker_evidence.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "scripts/coverage_inventory.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "scripts/test_coverage_inventory.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "scripts/worker_provision.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "scripts/worker_replay.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "scripts/worker_run.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "stratic/descriptions/message-passing.json",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "stratic/descriptions/worker-provisioning.json",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.json",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.md",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "tests/test_worker_evidence.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "tests/test_worker_local_sources.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "tests/test_worker_provision.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "tests/test_worker_replay.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    },
+    {
+      "path": "tests/test_worker_run.py",
+      "reason": "Reviewed current release cleanup, publisher/local-source navigation, hash-bound source acquisition, worker/test adaptation, or explicitly narrowed archive evidence. No Lean semantics or proof source changes."
+    }
+  ]
+}

@@ -103,3 +103,13 @@ Offline replay uses the archived `attempts/binary32-003` directory and
 from a fresh destination and the pinned Lean/dependency setup. It requires no
 model call. Reproducing verification of stored bytes does not promise identical
 new inference output.
+
+## Public distribution boundary
+
+The distributed archive omits raw `events.jsonl` transcripts, whose tool outputs
+may contain NVIDIA documentation. `evidence-manifest.json` records the original
+archive digest and the names, byte counts and hashes of omitted members. Retained
+patches, receipts and check results are byte-identical to the originals. Public
+archive verification covers this subset; it does not make the omitted transcripts
+available for inspection or session resumption. Historical source and base-commit
+identities in retained evidence have not been rewritten.

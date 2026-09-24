@@ -19,7 +19,7 @@ Reviewed inputs:
   `95577a11afa94eb133c0dae216e540a535a6a6c4cee0581bb6ea0305d4925196`.
   This is the final preworker driver version, including all preflight corrections
   discussed below.
-- The pinned [PTX 9.4 source](../../references/nvidia/ptx-isa-9.4/index.html),
+- The pinned [PTX 9.4 source](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html),
   SHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.
   The source was read locally, not substituted with an unpinned online edition.
 
@@ -238,16 +238,16 @@ The appended examples address the weak demonstration cases identified above:
 - `signed_zero_bits` fixes `-0 * +1` to the negative-zero encoding, rather than
   merely naming an unspecified reference result. This matches the selected
   IEEE-754-compliant multiplication interpretation stated in
-  [§9.7.3](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions)
-  and [mul](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-mul).
+  [§9.7.3](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions)
+  and [mul](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-mul).
 - `subnormal_bits` fixes the sum of two minimum positive subnormals to encoding
-  `2`. The [add clause](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-add)
+  `2`. The [add clause](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-add)
   preserves subnormals on the selected sm_20-or-later slice without `.ftz`.
 - `negative_guard_exec` executes when the incoming predicate is false and
   produces the exact encoding of `1.5 * 2.25 = 3.375`.
   `negative_guard_skip` skips that same negated-guard instruction when the
   incoming predicate is true, changing only PC. Both agree with
-  [§9.3](../../references/nvidia/ptx-isa-9.4/index.html#predicated-execution).
+  [§9.3](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#predicated-execution).
 - `alias_add_bits` reads the same incoming register twice and writes the exact
   encoding of `1.5 + 1.5 = 3.0` back to it. The only value premise describes
   the incoming register; no result premise or nonalias assumption is introduced.

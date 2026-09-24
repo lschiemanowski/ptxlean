@@ -77,3 +77,19 @@ its current-file hash check, because an allowed instruction extension can change
 a file already recorded there. The receipt exposes this deferral. All other root
 checks still run, and integration requires coordinator review and a refreshed
 ledger passing the ordinary strict checks. Deferral is never final acceptance.
+
+A task can require a local-only PTX manual whose digest is bound to a committed
+source manifest included among the task's immutable inputs. Preparation copies
+only those verified bytes into an ignored local cache in the worker checkout;
+it performs no implicit download. That exact input path is excluded from the
+candidate patch, but its digest remains checked before and after generation and
+replay. Missing or changed local input prevents dispatch. Other ignored files
+remain subject to the ordinary edit-boundary check.
+
+Public evidence archives omit raw model event transcripts, which may contain
+vendor documentation returned by tools. Each omission records the original name,
+byte count and digest, together with the original archive digest. Retained
+receipts, candidate patches and proof checks keep their original bytes. Integrity
+checking covers the distributed subset; it does not claim that an omitted
+transcript can be independently inspected or a saved session resumed from that
+subset. The original local records remain separate from the public artifacts.

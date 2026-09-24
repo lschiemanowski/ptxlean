@@ -94,6 +94,17 @@ else:
         (source/'.lake').mkdir();(source/'.lake/stale.olean').write_text('must not copy')
         return source,revision
 
+    def test_prepare_installs_local_source_before_build_and_keeps_it_immutable(self):
+        self.local_task()
+        ready=self.prepare('local-prepared')
+        worktree=self.campaign/'attempts/local-prepared/worktree'
+        self.assertEqual((worktree/w.LOCAL_SOURCE).read_bytes(),(self.repo/w.LOCAL_SOURCE).read_bytes())
+        self.assertEqual((self.campaign/'attempts/local-prepared/prepared.patch').read_bytes(),b'')
+        (worktree/w.LOCAL_SOURCE).write_bytes(b'changed after preparation')
+        with self.assertRaisesRegex(ValueError,'source|boundary'):
+            p.run(self.repo,self.campaign,'local-prepared',self.fake())
+        self.assertFalse((self.campaign/'ledger.json').exists())
+
     def test_prepare_and_run_are_separate_and_recorded(self):
         ready=self.prepare();self.assertEqual(ready['state'],'ready');self.no_calls()
         manifest=w.read_json(self.directory()/'ready.json')

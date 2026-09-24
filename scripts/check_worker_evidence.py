@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 import tarfile
 
@@ -11,6 +12,17 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def verify(path):
     manifest = json.loads(path.read_text())
+    distribution = manifest.get("distribution")
+    if distribution is not None:
+        if (distribution.get("policy") != "omit-raw-model-transcripts"
+                or not re.fullmatch(r"[0-9a-f]{64}", distribution.get("original_archive_sha256", ""))
+                or not distribution.get("reason") or not distribution.get("omitted_members")):
+            raise ValueError("Invalid evidence distribution record")
+        for name, original in distribution["omitted_members"].items():
+            if (not name.endswith("/events.jsonl") or name in manifest["members"]
+                    or not isinstance(original.get("bytes"), int) or original["bytes"] < 0
+                    or not re.fullmatch(r"[0-9a-f]{64}", original.get("sha256", ""))):
+                raise ValueError("Invalid evidence omission record")
     archive = path.parent / manifest["archive"]
     sha = lambda data: hashlib.sha256(data).hexdigest()
     if sha(archive.read_bytes()) != manifest["archive_sha256"]:

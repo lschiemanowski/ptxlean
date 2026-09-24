@@ -90,24 +90,24 @@ recover every older TorchLean convenience bridge.
 ## Pinned PTX requirements the adapter must preserve
 
 The following anchors refer to
-[`references/nvidia/ptx-isa-9.4/index.html`](../../references/nvidia/ptx-isa-9.4/index.html).
+[`references/nvidia/ptx-isa-9.4/index.html`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html).
 They are source obligations, not implemented coverage claims.
 
 | Source anchor | Rule relevant to a binary32 foundation |
 | --- | --- |
-| [`floating-point-instructions`](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions), §9.7.3 | Single-precision NaN results are unspecified. Instructions with rounding modifiers are IEEE-754 compliant. On `sm_20+`, single-precision subnormal inputs/results are supported by default; `.ftz` flushes them to sign-preserving zero. Legacy target behavior differs. |
-| [`rounding-modifiers`](../../references/nvidia/ptx-isa-9.4/index.html#rounding-modifiers), §6.5.2 | The conversion-level list includes `.rn`, `.rna`, `.rz`, `.rm`, `.rp`, `.rs`, plus integer rounding modifiers. Each instruction has its own subset and version restrictions. Stochastic rounding is not ordinary nearest-even with a different label. |
-| [`floating-point-instructions-add`](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-add), §9.7.3.3; corresponding `sub` and `mul` anchors | Scalar arithmetic supports `.rn/.rz/.rm/.rp`. Explicit rounding constrains optimization; omitted rounding defaults to nearest-even but may permit contraction of multiply/add sequences. `.sat` clamps into `[0,1]` and maps NaN to positive zero. |
-| [`floating-point-instructions-fma`](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-fma), §9.7.3.6 | Exact product-plus-addend before a single selected rounding; the rounding modifier is required. Scalar `.f32` FMA requires `sm_20+`. |
-| [`floating-point-instructions-mad`](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-mad), §9.7.3.7 | Modern `.f32` mad is fused like fma, but legacy targets have materially different behavior. Do not define all mad as multiply then add. |
-| [`floating-point-instructions-rcp`](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-rcp), §9.7.3.13 | Approximate reciprocal and correctly rounded reciprocal are different forms. The approximate form has a one-ULP bound and a separate table for zeros, infinities and NaN. |
-| [`floating-point-instructions-ex2`](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-ex2), §9.7.3.21 | Approximate base-two exponentiation permits up to two ULP from the correctly rounded result, with separate exceptional-input behavior and FTZ qualifications. A single deterministic exp implementation does not describe all permitted PTX results. |
-| [`floating-point-comparisons`](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-comparisons), §9.3.1.2 | Ordered/unordered comparisons distinguish NaN behavior; ordinary real comparison cannot stand in for the complete instruction. |
-| [`floating-point-instructions-testp`](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-testp), §9.7.3.1 | PTX treats both zeros as normal for this instruction's classification. Do not copy a library's similarly named classifier without checking this convention. |
+| [`floating-point-instructions`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions), §9.7.3 | Single-precision NaN results are unspecified. Instructions with rounding modifiers are IEEE-754 compliant. On `sm_20+`, single-precision subnormal inputs/results are supported by default; `.ftz` flushes them to sign-preserving zero. Legacy target behavior differs. |
+| [`rounding-modifiers`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#rounding-modifiers), §6.5.2 | The conversion-level list includes `.rn`, `.rna`, `.rz`, `.rm`, `.rp`, `.rs`, plus integer rounding modifiers. Each instruction has its own subset and version restrictions. Stochastic rounding is not ordinary nearest-even with a different label. |
+| [`floating-point-instructions-add`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-add), §9.7.3.3; corresponding `sub` and `mul` anchors | Scalar arithmetic supports `.rn/.rz/.rm/.rp`. Explicit rounding constrains optimization; omitted rounding defaults to nearest-even but may permit contraction of multiply/add sequences. `.sat` clamps into `[0,1]` and maps NaN to positive zero. |
+| [`floating-point-instructions-fma`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-fma), §9.7.3.6 | Exact product-plus-addend before a single selected rounding; the rounding modifier is required. Scalar `.f32` FMA requires `sm_20+`. |
+| [`floating-point-instructions-mad`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-mad), §9.7.3.7 | Modern `.f32` mad is fused like fma, but legacy targets have materially different behavior. Do not define all mad as multiply then add. |
+| [`floating-point-instructions-rcp`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-rcp), §9.7.3.13 | Approximate reciprocal and correctly rounded reciprocal are different forms. The approximate form has a one-ULP bound and a separate table for zeros, infinities and NaN. |
+| [`floating-point-instructions-ex2`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-ex2), §9.7.3.21 | Approximate base-two exponentiation permits up to two ULP from the correctly rounded result, with separate exceptional-input behavior and FTZ qualifications. A single deterministic exp implementation does not describe all permitted PTX results. |
+| [`floating-point-comparisons`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-comparisons), §9.3.1.2 | Ordered/unordered comparisons distinguish NaN behavior; ordinary real comparison cannot stand in for the complete instruction. |
+| [`floating-point-instructions-testp`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-testp), §9.7.3.1 | PTX treats both zeros as normal for this instruction's classification. Do not copy a library's similarly named classifier without checking this convention. |
 
 Further conversion and literal support requires the exact
-[`data-movement-and-conversion-instructions-cvt`](../../references/nvidia/ptx-isa-9.4/index.html#data-movement-and-conversion-instructions-cvt)
-and [`floating-point-constants`](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-constants)
+[`data-movement-and-conversion-instructions-cvt`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#data-movement-and-conversion-instructions-cvt)
+and [`floating-point-constants`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-constants)
 sections. This draft does not audit their entire format/modifier matrix.
 
 ## Concrete options

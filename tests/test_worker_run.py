@@ -47,6 +47,50 @@ print(json.dumps({'type':'turn.completed','usage':{'input_tokens':7,'output_toke
         path.chmod(0o755)
         return str(path)
 
+    def local_task(self):
+        body = b"Synthetic external source input\n"
+        pin = {'isa_version':'9.4','artifact':'index.html','sha256':w.sha(body),'bytes':len(body)}
+        manifest = self.repo/w.LOCAL_MANIFEST
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text(json.dumps(pin))
+        (self.repo/'.gitignore').write_text('.ptx-source/\n')
+        w.git(self.repo,'add','.')
+        w.git(self.repo,'commit','-qm','pin local source without distributing it')
+        self.task['base_commit']=w.git(self.repo,'rev-parse','HEAD').decode().strip()
+        self.task['sources'] += [
+            {'path':w.LOCAL_MANIFEST,'sha256':w.sha(manifest.read_bytes())},
+            {'path':w.LOCAL_SOURCE,'sha256':w.sha(body),'local_only':True}]
+        local=self.repo/w.LOCAL_SOURCE;local.parent.mkdir(parents=True);local.write_bytes(body)
+        w.atomic_json(self.task_file,self.task)
+        return local
+
+    def test_local_source_is_copied_but_never_enters_candidate_patch(self):
+        local=self.local_task()
+        receipt=w.execute(self.task_file,self.repo,self.campaign,'local',self.fake())
+        worker=Path(receipt['worktree'])
+        self.assertEqual((worker/w.LOCAL_SOURCE).read_bytes(),local.read_bytes())
+        self.assertTrue(receipt['boundary']['eligible_for_review'])
+        self.assertEqual(receipt['boundary']['changed_paths'],['result.txt'])
+        self.assertNotIn(w.LOCAL_SOURCE.encode(),(self.campaign/'attempts/local/candidate.patch').read_bytes())
+
+    def test_changed_local_source_blocks_before_any_model_call(self):
+        self.local_task().write_bytes(b'wrong bytes')
+        with self.assertRaisesRegex(ValueError,'Local source byte count|Source hash mismatch'):
+            w.execute(self.task_file,self.repo,self.campaign,'local',self.fake())
+        self.assertFalse((self.campaign/'ledger.json').exists())
+
+    def test_worker_altering_local_source_is_rejected(self):
+        self.local_task()
+        receipt=w.execute(self.task_file,self.repo,self.campaign,'local',
+            self.fake("(root/'"+w.LOCAL_SOURCE+"').write_text('changed')"))
+        self.assertFalse(receipt['boundary']['eligible_for_review'])
+        self.assertEqual(receipt['boundary']['altered_sources'],[w.LOCAL_SOURCE])
+
+    def test_local_source_requires_committed_manifest_in_task(self):
+        self.local_task()
+        self.task['sources']=[x for x in self.task['sources'] if x['path']!=w.LOCAL_MANIFEST]
+        with self.assertRaisesRegex(ValueError,'committed manifest'):w.validate_task(self.task,self.repo)
+
     def test_complete_is_not_accepted_and_patch_includes_new_file(self):
         with patch.dict('os.environ', {'CODEX_API_KEY': 'must-not-reach-worker', 'OPENAI_API_KEY': 'must-not-reach-worker'}):
             receipt = w.execute(self.task_file, self.repo, self.campaign, 'first', self.fake())

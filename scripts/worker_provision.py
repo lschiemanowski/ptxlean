@@ -28,7 +28,8 @@ def attempt_path(campaign, attempt):
 
 def snapshot(worktree, task):
     patch, boundary = runner.patch_and_boundary(worktree, task["base_commit"],
-                                               task["allowed_paths"], runner.replay_project(task))
+                                               task["allowed_paths"], runner.replay_project(task),
+                                               runner.local_source_paths(task))
     if not boundary["eligible_for_review"] or runner.changed_sources(worktree, task):
         raise ValueError("Worktree violates immutable source or edit boundary")
     return patch
@@ -193,6 +194,7 @@ def _prepare(directory, root):
         if not worktree.exists():
             command(["git", "worktree", "add", "--detach", str(worktree), task["base_commit"]],
                     "worktree", cwd=root)
+        runner.install_local_sources(root, worktree, task)
         current = snapshot(worktree, task)
         prior = directory / "prepared.patch"
         if prior.exists():

@@ -1,10 +1,15 @@
 # PTXLean
 
-PTXLean is an early Lean formalization of NVIDIA's PTX instruction language,
-with reusable foundations for proving that GPU kernels implement neural-network
-computations. It targets **PTX instruction set architecture (ISA) 9.4**. Full coverage is a goal;
-the current release contains checked, explicitly restricted fragments and small
-end-to-end examples.
+PTXLean is a Lean formalization of NVIDIA's PTX instruction language. It targets **PTX instruction set architecture (ISA) 9.4**. A central goal is allowing to prove that kernels written in PTX implement functions specified in e.g. TorchLean.
+
+This is early beta. Full coverage of PTX is the eventual goal.
+
+This project has been realized with GPT 6 Astra and Luna. Further instruction coverage is delegated to Luna through
+[recorded tasks](docs/formalization/worker-runs.md), with Lean proof checks and
+separate semantic review. An independent inexpensive-model reviewer is planned.
+
+The code is accompanied by descriptions managed in [stratic](https://github.com/lschiemanowski/stratic). The current implementation covers selected instructions,
+restricted memory and synchronization, and the forward/backward example below.
 
 ## The idea
 
@@ -25,82 +30,26 @@ The project connects three layers:
 Lean checks the proofs connecting these layers. Whether the definitions faithfully
 represent NVIDIA's specification is a separate question, addressed through pinned
 source passages, semantic review and distinguishing examples. The project records
-both kinds of evidence; a successful build alone does not establish PTX fidelity.
-
-## Current status
-
-The checked foundations include scalar integer execution, selected single-precision
-floating-point operations, memory observations and ordering, message passing,
-shared-memory barriers, and logical storage passed between serialized kernel
-launches. A [shared-memory integer reduction](docs/foundations/shared-reduction.md)
-combines computed addresses, a barrier and a summation loop, with proofs of output
-correctness, final storage, execution existence and access safety.
-
-The numerical example below connects actual modeled forward and backward
-instruction executions to the same TorchLean graph. The current checks audit
-**1,213 declarations in the core and 363 in the TorchLean integration**. Their
-transitive logical dependencies contain only Lean's standard `propext`,
-`Classical.choice` and `Quot.sound` axioms. Proof placeholders, new unchecked
-axioms and `native_decide` are rejected in project sources.
-
-This is a research foundation, with substantial work remaining: full ISA and
-computing-model coverage, general neural-network lowering, asynchronous operations,
-and large-model verification. The present results do not establish NVIDIA hardware
-conformance, general GPU scheduling progress, or bitwise agreement with PyTorch.
-Each fragment states its own execution and numerical restrictions. The
-[Stratic descriptions](stratic/descriptions/root.md) explain those contracts;
-[study guides](docs/foundations/guide.md) provide longer walkthroughs.
-
-## Expanding the ISA with Luna
-
-The intended route to full coverage is model-assisted instruction formalization
-on top of shared, reviewed foundations. The current worker is **GPT-6 Luna**, run
-through Codex headless. Routine instruction families are delegated; shared memory,
-execution and numerical foundations are developed and reviewed separately.
-
-For each bounded task, the workflow:
-
-1. Pins the repository, PTX source passages, allowed edits, Lean interfaces and
-   required theorem statements before generation.
-2. Runs the worker in a separate checkout and retains its patch, logs, failures
-   and repair feedback.
-3. Replays the patch in a fresh checkout, builds it with the pinned toolchain,
-   audits proof dependencies and checks independently prepared examples.
-4. Separately reviews the definition against PTX's documented semantics, then
-   integrates accepted changes and reruns the combined checks.
-
-The [selected-form ledger](docs/formalization/implemented-forms.md) currently
-records nine accepted forms: `min.u32`, `max.u32`, `clz.b32`, `popc.b32`,
-`add.rn.f32`, `mul.rn.f32`, `selp.b32`, `min.s32` and `max.s32`. This is the
-delegated-trial ledger, not a count of everything implemented in the project.
-The five tasks needed 14 headless calls, including failures and repairs, with
-substantial coordinator guidance. They demonstrate bounded capability, not an
-established full-ISA success rate or cost estimate.
-
-A **future independent inexpensive-model reviewer** will check candidates
-against the source obligations and look for semantic mistakes. That automated
-review stage is not implemented in this release. It will supplement Lean checks
-and independently prepared tests; agreement between two models will not by itself
-justify acceptance. Existing [mutation probes](stratic/descriptions/worker-review-probes.md)
-exercise whether the acceptance checks reject deliberately incorrect candidates.
-
-See the [worker guide](docs/formalization/worker-runs.md) and
-[pinned provisioning workflow](docs/formalization/worker-provisioning.md).
-Rechecking the released proofs and saved evidence requires no model access.
+both kinds of evidence.
 
 ## Example: squared affine, forward and backward
 
-Consider the scalar computation
+The function takes three real scalars—an input `x`, a weight `w` and a bias
+`b`—and returns one real scalar:
 
 ```text
+F : ℝ × ℝ × ℝ → ℝ
 A = x*w + b
 F(x,w,b) = A²
 ```
 
 TorchLean represents this computation as a graph and automatically constructs
-its real-valued backward. For an incoming output weight `d`, the backward returns
+its real-valued backward. This takes the same three inputs and an incoming
+real-valued output weight `d`, and returns three real sensitivities:
 
 ```text
+backward : ℝ × ℝ × ℝ × ℝ → ℝ × ℝ × ℝ
+backward(x,w,b,d) = (dx,dw,db)
 dx = 2*d*A*w     dw = 2*d*A*x     db = 2*d*A
 ```
 
@@ -146,53 +95,38 @@ explain the proofs. The concrete Lean theorems are `two_launch_example` in
 ## Run the checks and examples
 
 The commands below check the formalized executions and their proofs. They do
-not launch GPU kernels. **No GPU, CUDA, LibTorch, Stratic or model account is
-required.** The tested environment is Linux with Bash, Git, Python 3.11 or later,
+not launch GPU kernels. The tested environment is Linux with Bash, Git, Python 3.11 or later,
 `curl`, and [Elan](https://github.com/leanprover/elan), Lean's standard version
 manager. Install Elan through its official instructions or
-[release binaries](https://github.com/leanprover/elan/releases); there is no
-PTXLean installer. Elan reads `lean-toolchain` and selects Lean **4.34.0**,
+[release binaries](https://github.com/leanprover/elan/releases). Elan reads `lean-toolchain` and selects Lean **4.34.0**,
 including its Lake build tool.
 
 ```sh
 git clone https://github.com/lschiemanowski/ptxlean.git
 cd ptxlean
+python3 scripts/check_sources.py --fetch
 ./scripts/check.sh
 cd integration/torchlean
 lake exe cache get
 ./check.sh
 ```
 
-The root check builds the dependency-free PTX core and checks its source,
+The source command downloads NVIDIA’s manual as data into an ignored local cache
+and verifies the exact reviewed hash; the manual is not distributed with this
+project. The root check builds the dependency-free PTX core and checks its source,
 proof and worker-evidence records. The integration commands fetch dependencies
 at the commits in the committed `lake-manifest.json`, obtain compatible upstream
 mathlib build artifacts, and check the TorchLean examples, numerical bounds and
-forward/backward implementation proofs. No `lake update` is needed.
+forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
 and `Integration check passed: 363 exact dependency reports, only standard Lean
-axioms.` respectively. Both concrete examples above are included. To re-elaborate
-their files explicitly after setup:
+axioms.` respectively. Both concrete examples above are included.
 
-```sh
-lake env lean PtxAffineSquareKernel.lean
-lake env lean PtxAffineBackward.lean
-```
-
-The integration is a substantial mathematical build: the tested dependency/build
-directory occupied about 9 GB, plus roughly 3 GB for the Lean toolchain and
-space for downloaded caches. The cache
-command uses upstream precompiled dependencies; the project proofs are built
-locally. To build dependencies from source instead, use `lake --no-cache build`
-in place of `lake exe cache get` in a fresh checkout. The checker validates pinned
-dependency revisions and rejects tracked dependency edits before and after the
-build. See the [integration README](integration/torchlean/README.md#reproduce)
-for details and the precise trust boundary.
 
 ## Sources and license
 
 The [source ledger](docs/foundations/source-ledger.md) records interpretation of
 the pinned NVIDIA PTX 9.4 documentation separately from checked proofs.
-Project code is distributed under [Apache-2.0](LICENSE). Bundled NVIDIA reference
-documentation retains its own notices; upstream dependencies retain their own
-licenses.
+Project code is distributed under [Apache-2.0](LICENSE). NVIDIA documentation is
+obtained separately from NVIDIA; upstream dependencies retain their own licenses.

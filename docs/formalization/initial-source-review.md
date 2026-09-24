@@ -11,9 +11,9 @@ from Lean proof checking or hardware conformance.
 
 | Task | Exact forms | Source | Conditions and distinguishing cases |
 | --- | --- | --- | --- |
-| First: unsigned minimum and maximum | `min.u32`, `max.u32`, no modifiers | [§9.7.1.13](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-min), [§9.7.1.14](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-max); HTML lines 9521–9684 | PTX 1.0; all targets. Select by unsigned order, including the high-bit boundary. Fits the existing binary-operation interface. |
-| Next: bit counts | `popc.b32`, `clz.b32` | [§9.7.1.15](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-popc), [§9.7.1.16](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-clz); lines 9685–9762 | PTX 2.0, `sm_20` or later. Both return a `.u32` count. `popc` counts all one bits; `clz` starts at the most-significant bit. Zero gives 0 and 32 respectively. Requires a reviewed unary-operation interface. |
-| Then: bit reversal | `brev.b32` | [§9.7.1.19](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-brev); lines 9869–9902 | PTX 2.0, `sm_20` or later. Output bit `i` equals input bit `31-i`; this is bit reversal, not reversal of the four bytes. Reversing twice recovers the input. Reuses the unary interface. |
+| First: unsigned minimum and maximum | `min.u32`, `max.u32`, no modifiers | [§9.7.1.13](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-min), [§9.7.1.14](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-max); HTML lines 9521–9684 | PTX 1.0; all targets. Select by unsigned order, including the high-bit boundary. Fits the existing binary-operation interface. |
+| Next: bit counts | `popc.b32`, `clz.b32` | [§9.7.1.15](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-popc), [§9.7.1.16](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-clz); lines 9685–9762 | PTX 2.0, `sm_20` or later. Both return a `.u32` count. `popc` counts all one bits; `clz` starts at the most-significant bit. Zero gives 0 and 32 respectively. Requires a reviewed unary-operation interface. |
+| Then: bit reversal | `brev.b32` | [§9.7.1.19](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-brev); lines 9869–9902 | PTX 2.0, `sm_20` or later. Output bit `i` equals input bit `31-i`; this is bit reversal, not reversal of the four bytes. Reversing twice recovers the input. Reuses the unary interface. |
 
 These are bounded form-level tasks, not complete instruction families. In
 particular, `.b64` bit counts still produce a **32-bit destination**. Do not
@@ -49,13 +49,13 @@ is false, the destination is unchanged and only the usual skipped-instruction
 behavior occurs. This preserves the existing model's restrictions; it does not
 establish a new general PTX dependency or concurrency semantics.
 
-[§9.7.1](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions)
+[§9.7.1](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions)
 permits register and immediate integer operands.
-[§6.1](../../references/nvidia/ptx-isa-9.4/index.html#operand-type-information)
+[§6.1](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#operand-type-information)
 explains compatible operand types, and
-[§6.3](../../references/nvidia/ptx-isa-9.4/index.html#destination-operands)
+[§6.3](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#destination-operands)
 requires the destination in register storage.
-[§9.3](../../references/nvidia/ptx-isa-9.4/index.html#predicated-execution)
+[§9.3](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#predicated-execution)
 gives positive and negated predicate guards. The existing typed operand boundary
 represents 32-bit values without checking source-file register declarations;
 this task must retain that limitation rather than claim a complete parser.

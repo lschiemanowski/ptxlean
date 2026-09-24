@@ -40,3 +40,12 @@ configuration hashes are checked before and after the run. These checks establis
 what was built and which formal dependencies were used; they do not turn a
 software arithmetic model into a hardware-conformance proof or resolve an
 ambiguous source contract.
+
+Vendor documentation is acquired locally from its publisher, not bundled with the
+project. Committed URLs, version identifiers, section locators and hashes identify
+the reviewed source. Source checks require exact bytes and reject a changed or
+missing document; they do not silently replace the reviewed version. Public
+evidence retains project-authored contracts, patches and check results while
+omitting raw model transcripts that can contain copied vendor passages. Omission
+records preserve the original member hashes and make the reduced evidence scope
+explicit. Git history and release artifacts need the same distribution boundary.

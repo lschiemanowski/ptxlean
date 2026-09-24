@@ -9,7 +9,7 @@ isolated. It is not a replacement for PTX's weak-memory model.
 Start with [`Ptx/Scalar.lean`](../../Ptx/Scalar.lean), then read the typed mnemonic
 boundary in [`Ptx/ScalarText.lean`](../../Ptx/ScalarText.lean). The definitions use
 the pinned Lean toolchain and bundled libraries. Their relationship to NVIDIA's
-[pinned PTX 9.4 manual](../../references/nvidia/ptx-isa-9.4/index.html) is explained
+[pinned PTX 9.4 manual](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html) is explained
 below. Kernel checking establishes properties of these definitions; it does not
 establish that the definitions faithfully describe every PTX execution.
 

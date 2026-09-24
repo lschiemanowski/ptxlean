@@ -4,7 +4,7 @@
   "qualification": "Nine reviewed forms: seven integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
-      "path": "references/nvidia/ptx-isa-9.4/index.html",
+      "path": ".ptx-source/9.4/index.html",
       "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed"
     },
     "source_manifest": {
@@ -37,7 +37,7 @@
     },
     "minmax_review": {
       "path": "docs/formalization/initial-source-review.md",
-      "sha256": "9fd54fbb14abb26cff921a06ebc9a0d734ede39d72ea49088808d3040e2d2212"
+      "sha256": "b36d911210705d8418f163ecb72e2aeecc79c45edd01f53b17fa267ecc872b05"
     },
     "bitcount_acceptance": {
       "path": "formalization/results/bitcount-u32/acceptance.json",
@@ -69,7 +69,7 @@
     },
     "binary32_review": {
       "path": "docs/formalization/binary32-instructions-source-review.md",
-      "sha256": "bc8a3d73c04be0ca5486bd9851b2e15838dffcdb1e72b6332cb8a1a0bcadab21"
+      "sha256": "311d417201aff7973cd39009d787f131763ec44ba6bf0e0d53b0974509c1e842"
     },
     "select32": {
       "path": "Ptx/Select32.lean",
@@ -85,7 +85,7 @@
     },
     "select32_review": {
       "path": "docs/formalization/pure-leaves-review.md",
-      "sha256": "800d4c6667f94761f0e08fb9353ae1a3ef4c891766b88972623d64f3b3ca7f54"
+      "sha256": "5ceae9bd1d6e9d8912f0e9901c312d4f4415b6614394d8002c240e5a7a0cf862"
     },
     "pure32": {
       "path": "Ptx/Pure32.lean",
@@ -105,7 +105,7 @@
     },
     "signed_minmax32_review": {
       "path": "docs/formalization/pure-leaves-review.md",
-      "sha256": "800d4c6667f94761f0e08fb9353ae1a3ef4c891766b88972623d64f3b3ca7f54"
+      "sha256": "5ceae9bd1d6e9d8912f0e9901c312d4f4415b6614394d8002c240e5a7a0cf862"
     }
   },
   "source": {

@@ -20,6 +20,7 @@ if [[ -z "$expected" || "$actual" != "Lean (version $expected,"* ]]; then
   exit 1
 fi
 echo "$actual"
+python3 scripts/check_distribution.py
 python3 scripts/check_sources.py
 python3 scripts/coverage_inventory.py
 python3 scripts/check_worker_evidence.py

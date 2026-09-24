@@ -8,7 +8,7 @@ in `formalization/results/select32` and `formalization/results/signed-minmax32`.
 
 ## Source correspondence
 
-The [selection section](../../references/nvidia/ptx-isa-9.4/index.html#comparison-and-selection-instructions-selp)
+The [selection section](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#comparison-and-selection-instructions-selp)
 specifies that a true predicate copies the first source and a false predicate
 copies the second. The selected `selp.b32` leaf copies complete words without
 numeric conversion. Its selector is a predicate register, separate from the
@@ -19,8 +19,8 @@ register and one positive predicate selector. The section was introduced in
 PTX 1.0; its special `sm_13` restriction applies to `.f64`, not this `.b32` slice.
 Section SHA256: `8781e1d81a058fbac02e290afeca05c1a45ea6f12c8e9bdcabbde18a5dc75347`.
 
-The [minimum](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-min)
-and [maximum](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-max)
+The [minimum](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-min)
+and [maximum](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-max)
 sections distinguish signed from unsigned comparison. The scalar `.s32` leaves
 compare `BitVec.toInt` and return an unchanged source word. All bits, including
 negative values and both endpoints of the signed range, are admitted. Equal

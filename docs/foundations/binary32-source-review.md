@@ -17,18 +17,18 @@ Do not silently narrow the relation to FloatLib's selected quiet NaN encoding.
 ## Reviewed sources
 
 The normative PTX input is
-[`references/nvidia/ptx-isa-9.4/index.html`](../../references/nvidia/ptx-isa-9.4/index.html),
+[`references/nvidia/ptx-isa-9.4/index.html`](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html),
 SHA-256 `0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.
 Relevant sections were read from that exact file:
 
-- [§5.2.1, fundamental types](../../references/nvidia/ptx-isa-9.4/index.html#fundamental-types):
+- [§5.2.1, fundamental types](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#fundamental-types):
   the same-size bit type is compatible with the corresponding fundamental type.
-- [§9.7.3, floating-point instructions](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions):
+- [§9.7.3, floating-point instructions](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions):
   IEEE compliance, subnormal treatment, single-precision NaN freedom and saturation.
-- [§9.7.3.3, floating-point add](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-add):
+- [§9.7.3.3, floating-point add](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-add):
   exact syntax, rounding options, optimization/contraction qualification, target
   conditions, FTZ and saturation.
-- [§9.7.3.5, floating-point mul](../../references/nvidia/ptx-isa-9.4/index.html#floating-point-instructions-mul):
+- [§9.7.3.5, floating-point mul](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#floating-point-instructions-mul):
   the corresponding scalar multiplication clauses.
 
 The dependency versions are FloatLib

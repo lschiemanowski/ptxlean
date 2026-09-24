@@ -96,3 +96,13 @@ The instruction-section inventory remains separate: these two selected forms do
 not complete either entire min/max section, wider register/type forms, raw PTX
 parsing or the full computing model. All standard source-fidelity and hardware
 boundaries still apply.
+
+## Public distribution boundary
+
+The distributed archive omits raw `events.jsonl` transcripts, whose tool outputs
+may contain NVIDIA documentation. `evidence-manifest.json` records the original
+archive digest and the names, byte counts and hashes of omitted members. Retained
+patches, receipts and check results are byte-identical to the originals. Public
+archive verification covers this subset; it does not make the omitted transcripts
+available for inspection or session resumption. Historical source and base-commit
+identities in retained evidence have not been rewritten.

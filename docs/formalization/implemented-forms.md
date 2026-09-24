@@ -38,10 +38,10 @@ realizability, GPU execution, or a complete floating kernel. See the
 [instruction source review](binary32-instructions-source-review.md).
 
 The source was rechecked against the pinned PTX 9.4 integer instruction sections
-[minimum](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-min),
-[maximum](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-max),
-[leading zeros](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-clz)
-and [population count](../../references/nvidia/ptx-isa-9.4/index.html#integer-arithmetic-instructions-popc).
+[minimum](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-min),
+[maximum](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-max),
+[leading zeros](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-clz)
+and [population count](https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-popc).
 Common input, destination and guard rules have their own pinned section anchors
 in the ledger. Source fidelity is an independent review judgment, supported by
 [the first source review](initial-source-review.md) and

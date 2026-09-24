@@ -51,3 +51,13 @@ stored bytes rather than promising identical new model output.
 The exact integrated leaf milestone passed the [full root check](integration-check.log)
 with 862 dependency-audited declarations. Its Stratic check record pins the
 reviewed content. Joint TorchLean checking is reported separately.
+
+## Public distribution boundary
+
+The distributed archive omits raw `events.jsonl` transcripts, whose tool outputs
+may contain NVIDIA documentation. `evidence-manifest.json` records the original
+archive digest and the names, byte counts and hashes of omitted members. Retained
+patches, receipts and check results are byte-identical to the originals. Public
+archive verification covers this subset; it does not make the omitted transcripts
+available for inspection or session resumption. Historical source and base-commit
+identities in retained evidence have not been rewritten.
