@@ -1,0 +1,78 @@
+{
+  "id": "8ffd9ad0-6234-4742-9ad1-09a7f3447dd6",
+  "base": "057a8c6926389dfaa71825fe8cc842267a49bb73",
+  "contentTree": "e87cee29d7f26b8356a1b72872f1a286dd8825d8",
+  "reviewer": "Codex coordinator",
+  "summary": "Freeze the plain PRMT source contract and independently preflighted acceptance checks.",
+  "examined": [
+    {
+      "id": "prmt",
+      "outcome": "revised",
+      "reason": "New source-derived plain byte-permutation contract, target/guard/decoder boundary and pending implementation."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "PRMT task instantiates unchanged pure mechanism; no new accepted implementation."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "Fresh task follows existing supplied-law/no-body and explicit effort accounting workflow."
+    },
+    {
+      "id": "bitvector-proofs",
+      "outcome": "unchanged",
+      "reason": "Existing toolkit frozen unchanged; no new task-specific hints."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Description and pending task add no claimed ISA or hardware coverage."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "e87cee29d7f26b8356a1b72872f1a286dd8825d8",
+      "method": "Private clean-base reference preflight, three compiling mutation probes, full/concrete drivers and dependency audits; source/contract inspection; Stratic validation and whitespace check",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; local hash-verified PTX ISA 9.4 manual; no model calls before freeze.",
+      "evidence": "Private PRMT reference passes 18 universal signatures and all concrete checks, with all public definitions/proofs audited. Three mutants build and audit but are rejected by both drivers: swapped source words, omitted sign replication, omitted selector masking. Concrete arithmetic expectations include all 16 selectors at four positions, upper control bits, boundary values, guard/alias/target/decoder cases. Delimiter-aware signature generation and explicit target comparison fixed draft checker issues before freeze. Public contract gives a complete bit law and shared interfaces but no computation body or new proof hints. No accepted form or shared semantic change; source fidelity and later worker checks remain separate.",
+      "tests": [],
+      "id": "c261d0da-7281-40d6-bac3-356153c5de4c",
+      "recordedAt": "2026-09-24T17:32:59.862Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T17:33:24.330Z",
+  "unmapped": [
+    {
+      "path": "docs/formalization/prmt-source-review.md",
+      "reason": "Reviewed source-derived contract, independent expected values, full signatures, protocol or description; private reference and faults excluded from worker base."
+    },
+    {
+      "path": "formalization/checks/prmt-concrete-v1.lean",
+      "reason": "Reviewed source-derived contract, independent expected values, full signatures, protocol or description; private reference and faults excluded from worker base."
+    },
+    {
+      "path": "formalization/checks/prmt-v1.lean",
+      "reason": "Reviewed source-derived contract, independent expected values, full signatures, protocol or description; private reference and faults excluded from worker base."
+    },
+    {
+      "path": "formalization/contracts/prmt-v1-protocol.md",
+      "reason": "Reviewed source-derived contract, independent expected values, full signatures, protocol or description; private reference and faults excluded from worker base."
+    },
+    {
+      "path": "formalization/contracts/prmt-v1.md",
+      "reason": "Reviewed source-derived contract, independent expected values, full signatures, protocol or description; private reference and faults excluded from worker base."
+    },
+    {
+      "path": "stratic/descriptions/prmt.json",
+      "reason": "Reviewed source-derived contract, independent expected values, full signatures, protocol or description; private reference and faults excluded from worker base."
+    },
+    {
+      "path": "stratic/descriptions/prmt.md",
+      "reason": "Reviewed source-derived contract, independent expected values, full signatures, protocol or description; private reference and faults excluded from worker base."
+    }
+  ]
+}
