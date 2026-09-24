@@ -1,3 +1,4 @@
+import Ptx.Bfi32
 import Ptx.Bfe32
 import Ptx.MulHi32
 import Ptx.Brev32
@@ -12,7 +13,7 @@ import Ptx.Shift32
 namespace Ptx.Scalar.ReviewedPure
 
 inductive Kind where
-  | bitwise | unary | select | signedMinMax | shift | brev | mulHi | bfe
+  | bitwise | unary | select | signedMinMax | shift | brev | mulHi | bfe | bfi
   deriving DecidableEq, Repr
 
 def Operation : Kind → Type
@@ -21,6 +22,7 @@ def Operation : Kind → Type
   | .select => Select32.Operation
   | .signedMinMax => SignedMinMax32.Operation
   | .shift => Shift32.Operation
+  | .bfi => Bfi32.Operation
   | .bfe => Bfe32.Operation
   | .mulHi => MulHi32.Operation
   | .brev => Brev32.Operation
@@ -31,6 +33,7 @@ def family : (kind : Kind) → Pure32.Family (Operation kind)
   | .select => Select32.family
   | .signedMinMax => SignedMinMax32.family
   | .shift => Shift32.family
+  | .bfi => Bfi32.family
   | .bfe => Bfe32.family
   | .mulHi => MulHi32.family
   | .brev => Brev32.family
@@ -52,6 +55,8 @@ def brev (i : Brev32.Instr) : Instr := .pure .brev (Brev32.lower i)
 def mulHi (i : MulHi32.Instr) : Instr := .pure .mulHi (MulHi32.lower i)
 
 def bfe (i : Bfe32.Instr) : Instr := .pure .bfe (Bfe32.lower i)
+
+def bfi (i : Bfi32.Instr) : Instr := .pure .bfi (Bfi32.lower i)
 
 theorem functional : PureKernel.Functional catalog := by
   intro kind

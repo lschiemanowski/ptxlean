@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "qualification": "Process completion is not proof success. Reported usage for resumed sessions may be cumulative; no usage sum or dollar conversion claimed. Returned model identifiers are absent.",
+  "calls": [
+    {
+      "call": 24,
+      "attempt": "bfi32-001",
+      "requested_model": "gpt-6-luna",
+      "reported_models": [],
+      "started_at": "2026-09-24T15:19:55.165767+00:00",
+      "finished_at": "2026-09-24T15:21:30.870336+00:00",
+      "reported_usage": [
+        {
+          "input_tokens": 365507,
+          "cached_input_tokens": 333824,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 4137,
+          "reasoning_output_tokens": 474
+        }
+      ],
+      "patch_sha256": "6db81d41ebdeb74ff6138a30d419c79a57e013f66f0170fb6209e750c3646d6a",
+      "state": "completed",
+      "elapsed_seconds": 95.704569,
+      "receipt_sha256": "49eccf2bdd4ad81ca2d99108b71fac87799be8e24da5ddee1a4acc7e598331d3",
+      "fresh_replay": "fail",
+      "accepted": false
+    },
+    {
+      "call": 25,
+      "attempt": "bfi32-002",
+      "requested_model": "gpt-6-luna",
+      "reported_models": [],
+      "started_at": "2026-09-24T15:23:07.279683+00:00",
+      "finished_at": "2026-09-24T15:24:04.172947+00:00",
+      "reported_usage": [
+        {
+          "input_tokens": 825764,
+          "cached_input_tokens": 772608,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 6053,
+          "reasoning_output_tokens": 1222
+        }
+      ],
+      "patch_sha256": "45fa95faed7d6031bc939e8a799a88870a8ab80d38804f369ca7695a55343423",
+      "state": "completed",
+      "elapsed_seconds": 56.893264,
+      "receipt_sha256": "b1c0334386bfd8a2914c0642e839ee1dd0c65d3c9ed2aefd1f20b6ce6f959903",
+      "fresh_replay": "not_run",
+      "accepted": false
+    },
+    {
+      "call": 27,
+      "attempt": "bfi32-003",
+      "requested_model": "gpt-6-luna",
+      "reported_models": [],
+      "started_at": "2026-09-24T15:25:56.651305+00:00",
+      "finished_at": "2026-09-24T15:28:07.093681+00:00",
+      "reported_usage": [
+        {
+          "input_tokens": 2084002,
+          "cached_input_tokens": 2001408,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 10688,
+          "reasoning_output_tokens": 2471
+        }
+      ],
+      "patch_sha256": "ee28a6aed18d3cab288ac336a2f66af023fdba1d936cea445f4d9b8753b95946",
+      "state": "completed",
+      "elapsed_seconds": 130.442376,
+      "receipt_sha256": "76b96bbd5c2477d744acdb3c343c653fe6b0b59f0579a9a91017091c3571a43d",
+      "fresh_replay": "pass",
+      "accepted": true
+    },
+    {
+      "call": 23,
+      "attempt": "lop3-001",
+      "requested_model": "gpt-6-luna",
+      "reported_models": [],
+      "started_at": "2026-09-24T15:19:55.083597+00:00",
+      "finished_at": "2026-09-24T15:22:07.140700+00:00",
+      "reported_usage": [
+        {
+          "input_tokens": 473971,
+          "cached_input_tokens": 432640,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 5802,
+          "reasoning_output_tokens": 980
+        }
+      ],
+      "patch_sha256": "45e4333c2d226a881bccefad09b24dd84f7a61a97a22fdfa39a5b071c19739cb",
+      "state": "completed",
+      "elapsed_seconds": 132.057103,
+      "receipt_sha256": "6e538438b1d49218db04fd703d9f0388f84781f44790eff65a99767fccdaba8f",
+      "fresh_replay": "fail",
+      "accepted": false
+    },
+    {
+      "call": 26,
+      "attempt": "lop3-002",
+      "requested_model": "gpt-6-luna",
+      "reported_models": [],
+      "started_at": "2026-09-24T15:25:56.646253+00:00",
+      "finished_at": "2026-09-24T15:26:30.054799+00:00",
+      "reported_usage": [
+        {
+          "input_tokens": 757892,
+          "cached_input_tokens": 697600,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 6889,
+          "reasoning_output_tokens": 1326
+        }
+      ],
+      "patch_sha256": "e6c4b88eae9391cdaf03d7ca6fd903f38d5a4951f072b44f84cd55808083fc15",
+      "state": "completed",
+      "elapsed_seconds": 33.408546,
+      "receipt_sha256": "a8f22f679d513ba6c9a3d74901b2dc491ea22c4e177bc22617674c0dbbd59282",
+      "fresh_replay": "not_run",
+      "accepted": false
+    },
+    {
+      "call": 28,
+      "attempt": "lop3-003",
+      "requested_model": "gpt-6-luna",
+      "reported_models": [],
+      "started_at": "2026-09-24T15:27:37.033046+00:00",
+      "finished_at": "2026-09-24T15:28:18.709815+00:00",
+      "reported_usage": [
+        {
+          "input_tokens": 1104894,
+          "cached_input_tokens": 1031168,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 8364,
+          "reasoning_output_tokens": 2037
+        }
+      ],
+      "patch_sha256": "bdade0a8c1112926d75998287c3afb40e3f6bf31ea7325f2c2fda79a14e378ae",
+      "state": "completed",
+      "elapsed_seconds": 41.676769,
+      "receipt_sha256": "842c3b4c51c76a32c92693f75815a9656164029c38bd4dcadbd73d165755f928",
+      "fresh_replay": "fail",
+      "accepted": false
+    }
+  ]
+}

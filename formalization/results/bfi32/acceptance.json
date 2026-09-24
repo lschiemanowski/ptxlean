@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task": "bfi32-v1",
+  "selected_forms": [
+    "bfi.b32"
+  ],
+  "base_commit": "c652f951e6759d2d5e1bb56335e511347791dc1e",
+  "accepted_patch_sha256": "ee28a6aed18d3cab288ac336a2f66af023fdba1d936cea445f4d9b8753b95946",
+  "worker_attempt": "bfi32-003",
+  "mechanical_replay": "replays/bfi32-003/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "Exact worker patch; combined checks recorded in final Stratic acceptance.",
+  "reviewer": "Coordinator source/statement inspection and fresh replay; separate GLM opinion advisory.",
+  "source_conditions": {
+    "ptx_minimum": "2.0",
+    "target_minimum": "sm_20 feature floor; not recognized-target validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "integer-arithmetic-instructions-bfi"
+    ]
+  },
+  "trial_invocations": 3,
+  "repair_invocations": 2,
+  "campaign_call_numbers": [
+    24,
+    25,
+    27
+  ],
+  "qualification": "Worker chose computation under a coordinator-supplied output-bit law and generic execution definitions. Two feedback rounds included explicit library/proof guidance. No coordinator candidate edits, completed proof scripts or supplied computation body; all drivers unchanged after freeze."
+}

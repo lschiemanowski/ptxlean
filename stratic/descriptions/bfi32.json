@@ -10,7 +10,32 @@
     "Insert low bits of the first source into the second source, starting at the position specified by the low eight bits of the third source, with length specified by the low eight bits of the fourth.",
     "Preserve guarded state changes and exact typed decoding for ISA 9.4 and SM at least 20."
   ],
-  "realization": "unimplemented",
-  "remaining": "Source-derived contract and independent preflight are prepared; worker implementation, fresh replay and separate semantic review are pending.",
-  "links": []
+  "realization": "implemented",
+  "remaining": "Selected bfi.b32 is implemented with universal output-bit, guarded execution and exact typed-decoding proofs. Other widths, raw-module validation and hardware correspondence remain outside this leaf.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Insert low bits of the first source into the second source, starting at the position specified by the low eight bits of the third source, with length specified by the low eight bits of the fourth. Preserve all other bits; truncate insertion at bit 31. Zero length or starting past bit 31 preserves the second source. Introduced PTX 2.0; requires sm_20."
+      },
+      "to": {
+        "path": "Ptx/Bfi32.lean",
+        "passage": {
+          "quote": "def compute (_op : Operation) (a b c d : Word) : Word :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Universal\noutput-bit and execution properties establish the formal contract."
+      },
+      "to": {
+        "path": "Ptx/Bfi32.lean",
+        "passage": {
+          "quote": "theorem compute_bit (op : Operation) (a b c d : Word) (bit : Nat) (bound : bit < 32) :"
+        }
+      }
+    }
+  ]
 }

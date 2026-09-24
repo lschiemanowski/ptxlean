@@ -1,0 +1,392 @@
+{
+  "schema_version": 1,
+  "qualification": "Advisory semantic opinions, not acceptance. Raw vendor-bearing requests and responses retained locally only. Reported dollar costs exclude requests without billing and Codex subscription use.",
+  "reported_cost_total_usd": 0.03288859,
+  "unknown_billing": [
+    "lop3-003-001"
+  ],
+  "requests": [
+    {
+      "case": "bfi32-003-001",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T15:29:06.177338+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "344693f3b9462fc989b73255c97aa9454a17f6a0268841a295086af50a7e8382",
+        "recipe_sha256": "bc30a958c7fd901472125ed1963491cd0741f01017a3c2ef16bb3ac59426cb3f",
+        "packet_sha256": "6c54b1c099cbc91471a578e0bfaa6df632ffcf087ddc8074c2dee926e1b68c59",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "InferenceNet",
+        "usage": {
+          "prompt_tokens": 32031,
+          "completion_tokens": 1354,
+          "total_tokens": 33385,
+          "cost": 0.001630955,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.001630955,
+            "upstream_inference_prompt_cost": 0.001441395,
+            "upstream_inference_completions_cost": 0.00018956
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 547,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.001630955,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "total_timeout_seconds": 600.0,
+        "response_sha256": "dd01724387f685f0b1a3bb5530336dcc10552021d2fbd0382fc300574d9dbc8b",
+        "response_id": "gen-1790263746-QSBO9iQqJwZzlG25vlPb",
+        "finish_reason": "stop",
+        "verdict": "accept",
+        "finished_at": "2026-09-24T15:30:37.067339+00:00",
+        "elapsed_seconds": 90.88806096999906
+      },
+      "receipt_sha256": "271f54373508e6aff3c70948a30da201a9fef44c831d5080a665d3f2e8b534b1",
+      "adjudication": "Accept: advisory source opinion agrees with coordinator inspection; independent fresh replay passes. The explanation conflates loop offset and output position in an invalid intermediate equivalence; coordinator source review uses distinct indices and corrects it.",
+      "report.json_sha256": "da2ca4d2c80fa1c8d1d87848d3a481717553b81ad89ab6c2f97c966ee68d50ac",
+      "request.json_sha256": "344693f3b9462fc989b73255c97aa9454a17f6a0268841a295086af50a7e8382",
+      "response.json_sha256": "dd01724387f685f0b1a3bb5530336dcc10552021d2fbd0382fc300574d9dbc8b"
+    },
+    {
+      "case": "c01-001",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T15:20:34.326883+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "d88e5e6a4bc26e4baa994b825505d2fc7d1808f658450e307811eebeba79c84c",
+        "recipe_sha256": "2e3bf00e931556c2f6a8d5486c5175bbef16abe67a98f6a8e2b3c8b39597e45b",
+        "packet_sha256": "90309459a22c37a3cb108ce401b58768f6cad7f8361487fdaa3a197603c35e46",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "Parasail",
+        "usage": {
+          "prompt_tokens": 31968,
+          "completion_tokens": 2073,
+          "total_tokens": 34041,
+          "cost": 0.0058317,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0058317,
+            "upstream_inference_prompt_cost": 0.0047952,
+            "upstream_inference_completions_cost": 0.0010365
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 1152,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.0058317,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "total_timeout_seconds": 600.0,
+        "response_sha256": "55eb305c11592941d32adbcd1d6d56710391ea316aa1e85379a14fe9e9d5caee",
+        "response_id": "gen-1790263234-9TxrVf89d3aDI0syyHWd",
+        "finish_reason": "stop",
+        "verdict": "reject",
+        "finished_at": "2026-09-24T15:21:43.743580+00:00",
+        "elapsed_seconds": 69.41506189317442
+      },
+      "receipt_sha256": "9fa970a02ee4d1b5fbb96ae7f8e41c998234baf030215fb242a4c2afa8fa2f8b",
+      "adjudication": "Reject: correctly identified missing low-eight-bit position mask; concrete example valid.",
+      "report.json_sha256": "cba44604e02f212701dbe66e732bfefe4bba2295a9860fc17c9603c43cbe9ef7",
+      "request.json_sha256": "d88e5e6a4bc26e4baa994b825505d2fc7d1808f658450e307811eebeba79c84c",
+      "response.json_sha256": "55eb305c11592941d32adbcd1d6d56710391ea316aa1e85379a14fe9e9d5caee"
+    },
+    {
+      "case": "c02-001",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T15:20:34.321602+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "9df67d48fa434e16d8c4ff110194ca57527b4f436d2d583772e8e5c051de6f27",
+        "recipe_sha256": "f1ea8c85c199aaf1e7ac2ee7ce8b15c719f59883d96c9813b9f6f095115f6ab8",
+        "packet_sha256": "2b2691dde0623b5ac3598c9a8ac51700ba0b0550e24eb29cf237c22e24b8fadc",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "Near AI",
+        "usage": {
+          "prompt_tokens": 32673,
+          "completion_tokens": 1614,
+          "total_tokens": 34287,
+          "cost": 0.00570795,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00570795,
+            "upstream_inference_prompt_cost": 0.00490095,
+            "upstream_inference_completions_cost": 0.000807
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 963,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.00570795,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "total_timeout_seconds": 600.0,
+        "response_sha256": "ffa07a3d016bec63c9b8cab256ecfa76741e903fe7f29a401b4fb2a25d88a07b",
+        "response_id": "gen-1790263234-Zc4rdUeuSzkvbTqaHIQ4",
+        "finish_reason": "stop",
+        "verdict": "accept",
+        "finished_at": "2026-09-24T15:22:26.624918+00:00",
+        "elapsed_seconds": 112.3016706299968
+      },
+      "receipt_sha256": "5c7aea55b8005fc87ae8bc92b01ee3e1d174c08107a6e8decced87aa622f905c",
+      "adjudication": "Accept: no seeded fault in control.",
+      "report.json_sha256": "606ea2edb91200561997f9b8ca29f101504415d2d75f9bc5225cca8f4b9e8038",
+      "request.json_sha256": "9df67d48fa434e16d8c4ff110194ca57527b4f436d2d583772e8e5c051de6f27",
+      "response.json_sha256": "ffa07a3d016bec63c9b8cab256ecfa76741e903fe7f29a401b4fb2a25d88a07b"
+    },
+    {
+      "case": "c03-001",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T15:20:34.318511+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "a1a486641518281603fbe486f13436f0f8cf94b46c8dcc302c2575fa6dfee6b7",
+        "recipe_sha256": "acc37500691766e0ff78322b5352e7f87aea87572c70cb7ce3e1c888ccdc6f25",
+        "packet_sha256": "aa86c0cd0b696a1d536b889bfd85d5777cf415883d3fb22ed584e8755d370c8b",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "Parasail",
+        "usage": {
+          "prompt_tokens": 31986,
+          "completion_tokens": 1346,
+          "total_tokens": 33332,
+          "cost": 0.0054709,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.0054709,
+            "upstream_inference_prompt_cost": 0.0047979,
+            "upstream_inference_completions_cost": 0.000673
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 681,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.0054709,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "total_timeout_seconds": 600.0,
+        "response_sha256": "c1cd4889790ae6e4c19427ebcd95006d34e49a3eedff14630abde90f8f7193ef",
+        "response_id": "gen-1790263234-SnLzN2F38ZYpnxiYIhXf",
+        "finish_reason": "stop",
+        "verdict": "accept",
+        "finished_at": "2026-09-24T15:21:21.484218+00:00",
+        "elapsed_seconds": 47.163454551948234
+      },
+      "receipt_sha256": "daf054b9b5dd076a7b061af46707e2475438d8ee391efb1d7fa8ef4627efe550",
+      "adjudication": "Accept: no seeded fault in control.",
+      "report.json_sha256": "94a5ca9a000d78f5182cf9d59bd3d98e4683b32335e6b99a6b9d6a849a95a226",
+      "request.json_sha256": "a1a486641518281603fbe486f13436f0f8cf94b46c8dcc302c2575fa6dfee6b7",
+      "response.json_sha256": "c1cd4889790ae6e4c19427ebcd95006d34e49a3eedff14630abde90f8f7193ef"
+    },
+    {
+      "case": "c04-001",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T15:21:22.335518+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "e9e2950c5724b500e23bbaa03f79fb1c5e64a39ff6013ecfa6c150c8ccdecf59",
+        "recipe_sha256": "d0bfa319ec194ebcaad6b6f0079d81f8955469d769f65bafbaf3f215660758b0",
+        "packet_sha256": "437f6c2d52385a679b3011006adfa469b9ea2e6c7544411be524200a3f2d6343",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "Parasail",
+        "usage": {
+          "prompt_tokens": 32673,
+          "completion_tokens": 1329,
+          "total_tokens": 34002,
+          "cost": 0.00556545,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00556545,
+            "upstream_inference_prompt_cost": 0.00490095,
+            "upstream_inference_completions_cost": 0.0006645
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 389,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.00556545,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "total_timeout_seconds": 600.0,
+        "response_sha256": "486890fee42585aa7ed2f843b7482cbc4231a397c8723f5cd2e1b497f23d6db1",
+        "response_id": "gen-1790263282-GS5Co7C1nBAfUrwaoMLw",
+        "finish_reason": "stop",
+        "verdict": "reject",
+        "finished_at": "2026-09-24T15:21:51.285301+00:00",
+        "elapsed_seconds": 28.947699424112216
+      },
+      "receipt_sha256": "1fd91f6efa504b614586f7295ef97f39aeaac021d7f78cb1ab6447896735829a",
+      "adjudication": "Reject: correctly identified swapped input weights; claimed 0x80 counterexample invalid. Lean checks corrected 0xF0 example.",
+      "report.json_sha256": "640b3806e230a1d7f9649be972753b3a4e5da32116f9700c57ed85c84b4b1e6b",
+      "request.json_sha256": "e9e2950c5724b500e23bbaa03f79fb1c5e64a39ff6013ecfa6c150c8ccdecf59",
+      "response.json_sha256": "486890fee42585aa7ed2f843b7482cbc4231a397c8723f5cd2e1b497f23d6db1"
+    },
+    {
+      "case": "lop3-001",
+      "receipt": {
+        "schema_version": 1,
+        "state": "failed",
+        "started_at": "2026-09-24T15:24:01.110167+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "9cef8247432fedd45fd1f7d894b375f12f17769afca5be201616e1859db6e97e",
+        "recipe_sha256": "68fcdbb126b1bb427263b36cfe2144ab797f5e2d2f2d4715019d58cb465af8b6",
+        "packet_sha256": "abc5759caf08ca4254ad2e94af111650c8d0f3cbf0afef1e8e11f22f20af42b0",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "Wafer",
+        "usage": {
+          "prompt_tokens": 33115,
+          "completion_tokens": 16384,
+          "total_tokens": 49499,
+          "cost": 0.008681635,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.008681635,
+            "upstream_inference_prompt_cost": 0.002947235,
+            "upstream_inference_completions_cost": 0.0057344
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 16384,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.008681635,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "total_timeout_seconds": 600.0,
+        "response_sha256": "a985838342f37646b5ef83a9af789fba397c00e99b8231a75b89ad1fd3ec6187",
+        "response_id": "gen-1790263441-GkZNbCb2mA0KQJaWFTQR",
+        "finish_reason": "length",
+        "failure_stage": "completion",
+        "error_type": "ValueError",
+        "http_status": null,
+        "finished_at": "2026-09-24T15:31:34.119669+00:00",
+        "elapsed_seconds": 453.00744550395757
+      },
+      "receipt_sha256": "9bb8faf0e14430a8691f210eb2f2b05654e3ded5f5b72536a0cc3a1b5ff1e358",
+      "adjudication": "No verdict: completion token limit reached.",
+      "request.json_sha256": "9cef8247432fedd45fd1f7d894b375f12f17769afca5be201616e1859db6e97e",
+      "response.json_sha256": "a985838342f37646b5ef83a9af789fba397c00e99b8231a75b89ad1fd3ec6187"
+    },
+    {
+      "case": "lop3-003-001",
+      "receipt": {
+        "schema_version": 1,
+        "state": "failed",
+        "started_at": "2026-09-24T15:30:06.377170+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "4d40d77a60fe30c8ed0fd2e5681bb75cd58426a98c5221107451b28ea62c37b7",
+        "recipe_sha256": "ba6a886ef5010432a01fa98294b4a3012efd9e4f2aa83f4fec82a0242fda9a0f",
+        "packet_sha256": "a23a7f8425d92b36b084bea9f6ec6aa891e33a2080bb7acaeb43cc6b847b586e",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+        "reported_model": null,
+        "provider": null,
+        "usage": null,
+        "reported_cost": null,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "total_timeout_seconds": 600.0,
+        "failure_stage": "deadline",
+        "error_type": "ReviewDeadlineExceeded",
+        "http_status": null,
+        "finished_at": "2026-09-24T15:40:06.382082+00:00",
+        "elapsed_seconds": 600.0006106719375
+      },
+      "receipt_sha256": "7271a2582931637f9ddba523621fe92d64aebcff952983446726f9c15c46f82d",
+      "adjudication": "No verdict: enforced total request deadline. Billing unknown.",
+      "request.json_sha256": "4d40d77a60fe30c8ed0fd2e5681bb75cd58426a98c5221107451b28ea62c37b7"
+    }
+  ]
+}

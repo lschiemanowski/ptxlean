@@ -1,9 +1,9 @@
 # Reading the accepted-form ledger
 
-[The ledger](../../coverage/implemented-forms.json) records twenty-two selected accepted
+[The ledger](../../coverage/implemented-forms.json) records twenty-three selected accepted
 forms. It is separate from the [instruction-section inventory](coverage.md),
 whose `not_assessed` entries are unchanged. Other existing scalar instructions
-are not yet entered here, so even the ledger's twenty-two-form count is not a count of
+are not yet entered here, so even the ledger's twenty-three-form count is not a count of
 all implemented PTX forms.
 
 | Exact form | Inputs → destination | Meaning | Manual conditions |
@@ -30,9 +30,10 @@ all implemented PTX forms.
 | `mul.hi.s32` | two signed words → compatible register | Upper 32 bits of the full signed product | PTX 1.0; selected step ISA 9.4, SM ≥10 |
 | `bfe.u32` | input, position, length → compatible register | Extract with zero padding; low eight position/length bits | PTX 2.0; selected step ISA 9.4, SM ≥20 |
 | `bfe.s32` | input, position, length → compatible register | Extract with sign padding; zero length gives zero | PTX 2.0; selected step ISA 9.4, SM ≥20 |
+| `bfi.b32` | insertion source, base, position, length → compatible register | Insert with clipping at bit 31; low eight position/length bits | PTX 2.0; selected step ISA 9.4, SM ≥20 |
 
 Every word input can come from a word register or a 32-bit immediate value.
-The selection predicate is a register. All twenty-two
+The selection predicate is a register. All twenty-three
 forms support unconditional execution or execution guarded by a positive or
 negated predicate. A false guard advances the program counter without writing
 the destination. Register overlap is allowed: the incoming source value is read
@@ -113,3 +114,6 @@ immutable; current integrity checks do not retroactively rerun that history.
 
 The [three-family source review](batch-v1-source-review.md) explains signed high-half
 multiplication, field boundaries and the rejected `bfe.b32` example spelling.
+
+The [worker-derived computation review](derived-v1-source-review.md) covers insertion.
+Plain `lop3.b32` remains unaccepted because its pilot proof package is unfinished.

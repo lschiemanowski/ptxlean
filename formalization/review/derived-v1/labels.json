@@ -1,0 +1,41 @@
+{
+  "base_commit": "c652f951e6759d2d5e1bb56335e511347791dc1e",
+  "cases": [
+    {
+      "case": "c01",
+      "family": "bfi32",
+      "packet_sha256": "90309459a22c37a3cb108ce401b58768f6cad7f8361487fdaa3a197603c35e46",
+      "recipe_sha256": "2e3bf00e931556c2f6a8d5486c5175bbef16abe67a98f6a8e2b3c8b39597e45b",
+      "request_sha256": "d88e5e6a4bc26e4baa994b825505d2fc7d1808f658450e307811eebeba79c84c",
+      "variant": "mutant"
+    },
+    {
+      "case": "c02",
+      "family": "lop3",
+      "packet_sha256": "2b2691dde0623b5ac3598c9a8ac51700ba0b0550e24eb29cf237c22e24b8fadc",
+      "recipe_sha256": "f1ea8c85c199aaf1e7ac2ee7ce8b15c719f59883d96c9813b9f6f095115f6ab8",
+      "request_sha256": "9df67d48fa434e16d8c4ff110194ca57527b4f436d2d583772e8e5c051de6f27",
+      "variant": "fixture"
+    },
+    {
+      "case": "c03",
+      "family": "bfi32",
+      "packet_sha256": "aa86c0cd0b696a1d536b889bfd85d5777cf415883d3fb22ed584e8755d370c8b",
+      "recipe_sha256": "acc37500691766e0ff78322b5352e7f87aea87572c70cb7ce3e1c888ccdc6f25",
+      "request_sha256": "a1a486641518281603fbe486f13436f0f8cf94b46c8dcc302c2575fa6dfee6b7",
+      "variant": "fixture"
+    },
+    {
+      "case": "c04",
+      "family": "lop3",
+      "packet_sha256": "437f6c2d52385a679b3011006adfa469b9ea2e6c7544411be524200a3f2d6343",
+      "recipe_sha256": "d0bfa319ec194ebcaad6b6f0079d81f8955469d769f65bafbaf3f215660758b0",
+      "request_sha256": "e9e2950c5724b500e23bbaa03f79fb1c5e64a39ff6013ecfa6c150c8ccdecf59",
+      "variant": "mutant"
+    }
+  ],
+  "frozen_before_requests": true,
+  "preflight_sha256": "5259b3277b2f07b0ee6bc38f58c92c7357766325c4c5f5b0b6102d1ea32cb850",
+  "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+  "schema_version": 1
+}

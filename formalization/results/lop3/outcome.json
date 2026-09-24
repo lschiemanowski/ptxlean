@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "task": "lop3-v1",
+  "status": "not_accepted",
+  "base_commit": "c652f951e6759d2d5e1bb56335e511347791dc1e",
+  "last_attempt": "lop3-003",
+  "patch_sha256": "bdade0a8c1112926d75998287c3afb40e3f6bf31ea7325f2c2fda79a14e378ae",
+  "mechanical_replay": "replays/lop3-003/result.json",
+  "mechanical": "fail",
+  "remaining": [
+    "Finish the conditional bit-observation helper and compute_bit for every table, input word and valid bit index.",
+    "Finish Text.decode_encode and Text.decode_iff, preserving immediate-table range and roundtrip conditions.",
+    "Then pass both unchanged drivers and a fresh complete dependency audit."
+  ],
+  "trial_invocations": 3,
+  "repair_invocations": 2,
+  "campaign_call_numbers": [
+    23,
+    26,
+    28
+  ],
+  "qualification": "Three calls with two rounds of proof-strategy assistance; no completed worker proof package. This is a pilot outcome, not an impossibility claim or a new hard call budget. No candidate module or accepted-form entry integrated."
+}

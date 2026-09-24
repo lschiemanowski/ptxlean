@@ -1567,3 +1567,33 @@ output/storage, memory admission, constructed existence and access safety. -/
 #print axioms Ptx.Scalar.ArrayMaskSelect.memory_safe
 #print axioms Ptx.Scalar.ArrayMaskSelect.completed_memory_safe
 #print axioms Ptx.Scalar.ArrayMaskSelect.other_memory
+
+/-! Reviewed bit-field insertion. -/
+#print axioms Ptx.Scalar.Bfi32.SupportedTarget
+#print axioms Ptx.Scalar.Bfi32.compute
+#print axioms Ptx.Scalar.Bfi32.family
+#print axioms Ptx.Scalar.Bfi32.lower
+#print axioms Ptx.Scalar.Bfi32.result
+#print axioms Ptx.Scalar.Bfi32.occurrence
+#print axioms Ptx.Scalar.Bfi32.compute_bit
+#print axioms Ptx.Scalar.Bfi32.results_iff
+#print axioms Ptx.Scalar.Bfi32.lower_operation
+#print axioms Ptx.Scalar.Bfi32.lower_fields
+#print axioms Ptx.Scalar.Bfi32.eval_true_iff
+#print axioms Ptx.Scalar.Bfi32.eval_false_iff
+#print axioms Ptx.Scalar.Bfi32.eval_destination
+#print axioms Ptx.Scalar.Bfi32.eval_frame
+#print axioms Ptx.Scalar.Bfi32.eval_other
+#print axioms Ptx.Scalar.Bfi32.eval_event
+#print axioms Ptx.Scalar.Bfi32.eval_deterministic
+#print axioms Ptx.Scalar.Bfi32.eval_exists
+#print axioms Ptx.Scalar.Bfi32.step_origin
+#print axioms Ptx.Scalar.Bfi32.step_exists
+#print axioms Ptx.Scalar.Bfi32.step_no_fetch
+#print axioms Ptx.Scalar.Bfi32.step_unsupported_target
+#print axioms Ptx.Scalar.Bfi32.Text.supportedMnemonic
+#print axioms Ptx.Scalar.Bfi32.Text.encode
+#print axioms Ptx.Scalar.Bfi32.Text.decode
+#print axioms Ptx.Scalar.Bfi32.Text.decode_encode
+#print axioms Ptx.Scalar.Bfi32.Text.decode_iff
+#print axioms Ptx.Scalar.ReviewedPure.bfi

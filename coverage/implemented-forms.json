@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Twenty-two reviewed forms: twenty integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Twenty-three reviewed forms: twenty-one integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": ".ptx-source/9.4/index.html",
@@ -202,6 +202,22 @@
     "bfe32_review": {
       "path": "docs/formalization/batch-v1-source-review.md",
       "sha256": "d76814d0ccf6860a60f0467a2b4c5196bf88d17552233f1c3fbfe6b8c6c1ca37"
+    },
+    "bfi32": {
+      "path": "Ptx/Bfi32.lean",
+      "sha256": "24b864b2a957d0ff599060c0daf9ca5858b8d69ebf4669f94c279216d5dfa230"
+    },
+    "bfi32_acceptance": {
+      "path": "formalization/results/bfi32/acceptance.json",
+      "sha256": "4ca07db1540e8685c508d59eea371daad2a7c9b493a32a01ca1230021114d0b7"
+    },
+    "bfi32_evidence": {
+      "path": "formalization/results/bfi32/evidence-manifest.json",
+      "sha256": "e47a9a4b85bac873e130be3474cddaff564d8ed05717fe1c554b60089d9bb6e0"
+    },
+    "bfi32_review": {
+      "path": "docs/formalization/derived-v1-source-review.md",
+      "sha256": "e7b15ffeb3f683e9396856c8d7deccfe0e2376a790c38d6c4014c7385fda502b"
     }
   },
   "source": {
@@ -233,7 +249,8 @@
       "logic-and-shift-instructions-shr": "8823ecfcf44c4e6fc1faf14f96ad4dcb676b91f66200f85b08c6ee838547e95e",
       "integer-arithmetic-instructions-brev": "91b3af28ab3879d746113f91bd71e5ade91911f16a676eb1de377f5e03de2295",
       "integer-arithmetic-instructions-mul": "b9a2d10dc98029a40cff2fb9c914234eaf6cfbffdcfbb5e58338d84bccc14cf9",
-      "integer-arithmetic-instructions-bfe": "6ccea820651a49ed6bfb67b48e45ed59bbb72d1c8124802a3b075241e1f31781"
+      "integer-arithmetic-instructions-bfe": "6ccea820651a49ed6bfb67b48e45ed59bbb72d1c8124802a3b075241e1f31781",
+      "integer-arithmetic-instructions-bfi": "c3421a98b08fb3057289aa33538967c28314e176281817b5601b66efe8ce4859"
     },
     "common_operand_guard_anchors": [
       "operand-type-information",
@@ -332,6 +349,14 @@
       "patch_member": "attempts/bfe32-001/candidate.patch",
       "replay_member": "replays/bfe32-001/result.json",
       "patch_sha256": "c1f10414263947e5a0e650c8e242e9302790a3b53620abc387e487487e55b884"
+    },
+    "bfi32": {
+      "acceptance": "bfi32_acceptance",
+      "evidence": "bfi32_evidence",
+      "source_review": "bfi32_review",
+      "patch_member": "attempts/bfi32-003/candidate.patch",
+      "replay_member": "replays/bfi32-003/result.json",
+      "patch_sha256": "ee28a6aed18d3cab288ac336a2f66af023fdba1d936cea445f4d9b8753b95946"
     }
   },
   "forms": [
@@ -3733,6 +3758,175 @@
           "name": "lower_operation"
         }
       ]
+    },
+    {
+      "spelling": "bfi.b32",
+      "status": "accepted",
+      "trial": "bfi32",
+      "source_anchor": "integer-arithmetic-instructions-bfi",
+      "ptx_minimum": "2.0",
+      "target": "sm_20 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 20 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit insertion source or already converted immediate",
+          "compatible declared 32-bit base source or already converted immediate",
+          "unsigned 32-bit position (low eight bits used)",
+          "unsigned 32-bit length (low eight bits used)"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Insert low bits of the first source into the second source. Position and length use only their low eight bits. Preserve other bits and clip at bit 31; zero length or a starting position past bit 31 preserves the base. No operand-range premises. Introduced PTX 2.0; requires sm_20.",
+      "boundary": "Typed Pure32 bfi.b32 family; ISA 94 and numeric SM >= 20. No bfi.b64, module parser, declared-register checking or hardware claim.",
+      "semantics": [
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "compute"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "family"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "lower"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "compute_bit"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "results_iff"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "eval_other"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "eval_event"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "step_origin"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "step_exists"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "bfi32",
+          "namespace": "Ptx.Scalar.Bfi32",
+          "name": "lower_operation"
+        }
+      ]
     }
   ],
   "uncovered_siblings": [
@@ -3964,6 +4158,14 @@
       ],
       "status": "unimplemented",
       "reason": "These other widths or full-width results are outside the accepted leaf; no complete section coverage is claimed."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-bfi",
+      "spellings": [
+        "bfi.b64"
+      ],
+      "status": "unimplemented",
+      "reason": "Only 32-bit insertion has an accepted proof package."
     }
   ]
 }

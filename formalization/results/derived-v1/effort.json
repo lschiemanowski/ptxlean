@@ -1,0 +1,26 @@
+{
+  "qualification": "Recorded phase wall time, not active attention. Final interval ends at report assembly before final snapshot checks/commit; those later checks are excluded. Overlap with model durations prevents adding these figures to model time. No comparable prior-batch attention baseline.",
+  "phases": [
+    {
+      "phase": "source-and-infrastructure",
+      "started_at": 1790262446.4837298,
+      "note": "Start of recorded coordinator wall interval; includes tool waits, not measured active attention.",
+      "ended_at": 1790263172.4760904,
+      "wall_seconds": 725.9923605918884
+    },
+    {
+      "phase": "worker-generation-and-review",
+      "started_at": 1790263172.4760904,
+      "note": "Two contracts, four acceptance/concrete drivers, two full reference fixtures and two compiling mutants preflighted; 106 worker tests. Coordinator proof/checker draft repairs preceded freeze.",
+      "ended_at": 1790264278.23354,
+      "wall_seconds": 1105.7574496269226
+    },
+    {
+      "phase": "integration-and-reporting",
+      "started_at": 1790264278.23354,
+      "note": "Worker results fixed: BFI passed final replay, LOP3 failed final replay. Includes remaining reviewer wait and final combined checks.",
+      "ended_at": 1790264457.796618,
+      "wall_seconds": 179.56307792663574
+    }
+  ]
+}
