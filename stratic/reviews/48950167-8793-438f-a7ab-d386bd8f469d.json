@@ -1,0 +1,351 @@
+{
+  "id": "48950167-8793-438f-a7ab-d386bd8f469d",
+  "base": "ee4689395058b8eef9164aafb2866c6b96d88abc",
+  "contentTree": "5fcd49f1c9b7d456b2a2df023d999126c20d18c4",
+  "reviewer": "Codex coordinator",
+  "summary": "Integrate three preflighted Luna families, preserve exact proof/source evidence, and evaluate the unchanged GLM reviewer on six blinded cases.",
+  "examined": [
+    {
+      "id": "brev32",
+      "outcome": "revised",
+      "reason": "Exact Luna reversal leaf; source/guard/target/decoder review and fresh replay of all frozen obligations passed."
+    },
+    {
+      "id": "mulhi32",
+      "outcome": "revised",
+      "reason": "Exact Luna signed/unsigned high-product leaf; floor division and full product reviewed, frozen checks and replay passed."
+    },
+    {
+      "id": "bfe32",
+      "outcome": "revised",
+      "reason": "Exact Luna extraction leaf; low-eight position/length, zero length and signed out-of-range fill reviewed, frozen checks and replay passed."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "Five accepted selected forms added with exact source, patch, fresh replay and acceptance evidence; missing widths remain explicit."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Three preflighted frozen tasks with no worker repair or candidate edits; coordinator definition/fixture work reported separately."
+    },
+    {
+      "id": "model-review",
+      "outcome": "revised",
+      "reason": "Fresh blinded fixture evaluation with frozen packets and runner settings; all attempts and any transport interruptions kept separate from semantic verdicts."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "New leaves use the original total Pure32 relation without changes to its interface or assumptions."
+    },
+    {
+      "id": "pure-kernel",
+      "outcome": "unchanged",
+      "reason": "New catalog adapters use each original lowering directly; generic result choices, target conditions, traces and memory guarantees unchanged."
+    },
+    {
+      "id": "mask-select",
+      "outcome": "unchanged",
+      "reason": "Existing program and theorem statements unchanged; extended catalog remains proved functional and prior example rechecks."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "Original scalar instructions and pure/scalar execution rules unchanged; catalog additions instantiate existing extension point."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Audit file only gains new entries; no message-passing semantics, assumptions or proofs changed."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Single-thread pure leaves do not extend the computing model, memory admission, architecture naming or hardware claims."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "Section inventory stays not_assessed; selected forms do not imply complete instruction sections."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Mechanical validity, source interpretation, external review and hardware evidence remain separate. Preflight work and infrastructure failures are reported explicitly."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "5fcd49f1c9b7d456b2a2df023d999126c20d18c4",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; all three frozen Lean acceptance drivers and exact reviewer-counterexample adjudication; stratic validate; git diff --check; public source/archive quotation scan; frozen fixture mechanical replay and coordinator semantic review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and existing pinned TorchLean dependencies; unchanged Luna/GLM runners.",
+      "evidence": "1482 root and 363 integration declaration audits passed with only standard Lean axioms; 22 selected forms, source/evidence/checker regressions pass. Three Luna first attempts, no feedback/candidate edits/post-dispatch checker changes, each fresh replay audits 28 definitions/theorems. Six reviewer fixtures build and audit; correct controls pass drivers and three faults reject false assertions. GLM detects all three faults but rejects one correct control; actual candidate reviews include one false rejection and one unfounded uncertainty, independently adjudicated without weakening code. Twelve recorded GLM requests for nine packets, three interruptions and exact-request retries. Known reported cost 0.027346240 USD plus unknown interrupted billing; Codex separate. Stratic valid; clean whitespace; no 24-word manual-paragraph matches in tracked/untracked intended text and archives (heuristic only). Proposal tree unchanged across final checks. Logs: {\"final-check.log\": \"86508159ab4158d79b1b6328225213a25263ba2bd2a844b707b9203fb9914f61\", \"final-torchlean.log\": \"82753ca0c64faf083145599ac9d073612daaaec9d523876bc5e7ff47cd791d5e\", \"final-brev32.log\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"final-mulhi32.log\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"final-bfe32.log\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"final-adjudication.log\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}",
+      "tests": [],
+      "id": "29205b93-c74b-434a-be18-be4b18b3dbc0",
+      "recordedAt": "2026-09-24T13:15:09.080Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T13:15:25.613Z",
+  "unmapped": [
+    {
+      "path": "Ptx/Bfe32.lean",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "Ptx/Brev32.lean",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "Ptx/MulHi32.lean",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "docs/formalization/batch-v1-source-review.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/batch-v1/README.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/batch-v1/evidence-manifest.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/batch-v1/evidence.tar.gz",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/batch-v1/reviews.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/batch-v1/workers.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/bfe32/README.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/bfe32/acceptance.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/bfe32/evidence-manifest.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/bfe32/review.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/bfe32/worker-evidence.tar.gz",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/brev32/README.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/brev32/acceptance.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/brev32/evidence-manifest.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/brev32/review.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/brev32/worker-evidence.tar.gz",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/mulhi32/README.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/mulhi32/acceptance.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/mulhi32/evidence-manifest.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/mulhi32/review.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/results/mulhi32/worker-evidence.tar.gz",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/adjudication.lean",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b01.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b01.patch",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b02.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b02.patch",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b03.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b03.patch",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b04.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b04.patch",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b05.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b05.patch",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b06.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/b06.patch",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/batch-v1/labels.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/bfe32-001.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/bfe32-001.patch",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/brev32-001.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/brev32-001.patch",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/mulhi32-001.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/mulhi32-001.patch",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/review/check_batch_v1.py",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/tasks/bfe32-v1.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/tasks/brev32-v1.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "formalization/tasks/mulhi32-v1.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "Ptx/ReviewedPure.lean",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "docs/formalization/model-review.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "docs/foundations/pure-kernels.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/bfe32.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/brev32.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/model-review.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/model-review.md",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/mulhi32.json",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed selected-family source interpretation, exact worker/fixture provenance, all-input statement boundaries, evidence hashes and mechanical checker or public documentation. No full ISA or hardware claim."
+    }
+  ]
+}

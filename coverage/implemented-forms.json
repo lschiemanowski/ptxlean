@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Seventeen reviewed forms: fifteen integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Twenty-two reviewed forms: twenty integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": ".ptx-source/9.4/index.html",
@@ -154,6 +154,54 @@
     "shift32_review": {
       "path": "docs/formalization/shift32-review.md",
       "sha256": "c8214ccdf1fe6fd3bda2a766085bd4bae2c51329884f05d285d8bca71be32983"
+    },
+    "brev32": {
+      "path": "Ptx/Brev32.lean",
+      "sha256": "8e3cac8deb6bf0e8d0f1245e94e2c5e3832b3e79c20aa7fc9f0983cb02707fe9"
+    },
+    "brev32_acceptance": {
+      "path": "formalization/results/brev32/acceptance.json",
+      "sha256": "6bc05c1139c50c35cd4150db7d6b18b18f8073ea4a432bdff754ec9d80de460b"
+    },
+    "brev32_evidence": {
+      "path": "formalization/results/brev32/evidence-manifest.json",
+      "sha256": "f13a21bead6f8def33753e62573c95703a124eac53d01c680181a8c1496326f8"
+    },
+    "brev32_review": {
+      "path": "docs/formalization/batch-v1-source-review.md",
+      "sha256": "d76814d0ccf6860a60f0467a2b4c5196bf88d17552233f1c3fbfe6b8c6c1ca37"
+    },
+    "mulhi32": {
+      "path": "Ptx/MulHi32.lean",
+      "sha256": "9ca6bc8a3a77e40887ff75b57c874e8718136ae912718374e298d553fe1c8358"
+    },
+    "mulhi32_acceptance": {
+      "path": "formalization/results/mulhi32/acceptance.json",
+      "sha256": "6cc1a9e88a7c90038c6c38e4455cf06500937bd0e01b0c9a635432766e4c337e"
+    },
+    "mulhi32_evidence": {
+      "path": "formalization/results/mulhi32/evidence-manifest.json",
+      "sha256": "bbe2d441c7daba52db9cdbaab4d339d5fbfe374003367ad037da0a6d2a0fb953"
+    },
+    "mulhi32_review": {
+      "path": "docs/formalization/batch-v1-source-review.md",
+      "sha256": "d76814d0ccf6860a60f0467a2b4c5196bf88d17552233f1c3fbfe6b8c6c1ca37"
+    },
+    "bfe32": {
+      "path": "Ptx/Bfe32.lean",
+      "sha256": "13fcdb3c0fd45012ce46986fe7c26599b478d4de160963eddeeb7ae26a9ba066"
+    },
+    "bfe32_acceptance": {
+      "path": "formalization/results/bfe32/acceptance.json",
+      "sha256": "9eebce8d935bd82db96476fe646c75fcaae2b91a174dfe762abab167c26fcea3"
+    },
+    "bfe32_evidence": {
+      "path": "formalization/results/bfe32/evidence-manifest.json",
+      "sha256": "a84e1458d1dd7e9c64dc3c6b92739ecb35279af7ab1a7ac6ac4dfcb7c3fbeb73"
+    },
+    "bfe32_review": {
+      "path": "docs/formalization/batch-v1-source-review.md",
+      "sha256": "d76814d0ccf6860a60f0467a2b4c5196bf88d17552233f1c3fbfe6b8c6c1ca37"
     }
   },
   "source": {
@@ -182,7 +230,10 @@
       "logic-and-shift-instructions-not": "5f2864d328c20efa301fcc7156c0f6b9366ba671055174a8e0f79929a9917f14",
       "logic-and-shift-instructions-cnot": "90ce8e60fe23fad6d8e12240d758951e193fe2d3b428c953c551996871a51f70",
       "logic-and-shift-instructions-shl": "b8c05a6786940a363851e9075a124e57dd014c5ad6307102d2bd30c74c6a034d",
-      "logic-and-shift-instructions-shr": "8823ecfcf44c4e6fc1faf14f96ad4dcb676b91f66200f85b08c6ee838547e95e"
+      "logic-and-shift-instructions-shr": "8823ecfcf44c4e6fc1faf14f96ad4dcb676b91f66200f85b08c6ee838547e95e",
+      "integer-arithmetic-instructions-brev": "91b3af28ab3879d746113f91bd71e5ade91911f16a676eb1de377f5e03de2295",
+      "integer-arithmetic-instructions-mul": "b9a2d10dc98029a40cff2fb9c914234eaf6cfbffdcfbb5e58338d84bccc14cf9",
+      "integer-arithmetic-instructions-bfe": "6ccea820651a49ed6bfb67b48e45ed59bbb72d1c8124802a3b075241e1f31781"
     },
     "common_operand_guard_anchors": [
       "operand-type-information",
@@ -257,6 +308,30 @@
       "patch_member": "attempts/shift32-001/candidate.patch",
       "replay_member": "replays/shift32-001-v3/result.json",
       "patch_sha256": "1a9cbeccd781f6cdde0b3b6d4424d9f70b13e74569985606b8989d3a12fd4e0e"
+    },
+    "brev32": {
+      "acceptance": "brev32_acceptance",
+      "evidence": "brev32_evidence",
+      "source_review": "brev32_review",
+      "patch_member": "attempts/brev32-001/candidate.patch",
+      "replay_member": "replays/brev32-001/result.json",
+      "patch_sha256": "f2a9946614597ae3bcf71ac2fefa90c107501bf27085ae3aa1e94e7377675ba2"
+    },
+    "mulhi32": {
+      "acceptance": "mulhi32_acceptance",
+      "evidence": "mulhi32_evidence",
+      "source_review": "mulhi32_review",
+      "patch_member": "attempts/mulhi32-001/candidate.patch",
+      "replay_member": "replays/mulhi32-001/result.json",
+      "patch_sha256": "877132f8a8b47eb47fe5341377bc449c256881d2df0ec41dfda87f505a0f617b"
+    },
+    "bfe32": {
+      "acceptance": "bfe32_acceptance",
+      "evidence": "bfe32_evidence",
+      "source_review": "bfe32_review",
+      "patch_member": "attempts/bfe32-001/candidate.patch",
+      "replay_member": "replays/bfe32-001/result.json",
+      "patch_sha256": "c1f10414263947e5a0e650c8e242e9302790a3b53620abc387e487487e55b884"
     }
   },
   "forms": [
@@ -2822,6 +2897,842 @@
           "name": "lower_operation"
         }
       ]
+    },
+    {
+      "spelling": "brev.b32",
+      "status": "accepted",
+      "trial": "brev32",
+      "source_anchor": "integer-arithmetic-instructions-brev",
+      "ptx_minimum": "2.0",
+      "target": "sm_20 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 20 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit word register or already converted immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Reverse all 32 bits: output bit i is input bit 31-i. This is bit reversal, not byte reversal. Introduced in PTX 2.0; requires sm_20.",
+      "boundary": "Typed Pure32 family selecting brev.b32; ISA 94 and numeric SM >= 20. No other widths/options, module parser, declared-register checking, whole-kernel or hardware claim.",
+      "semantics": [
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "compute"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "family"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "lower"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "results_iff"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "eval_other"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "eval_event"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "step_origin"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "step_exists"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "brev32",
+          "namespace": "Ptx.Scalar.Brev32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "mul.hi.u32",
+      "status": "accepted",
+      "trial": "mulhi32",
+      "source_anchor": "integer-arithmetic-instructions-mul",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit word register or already converted immediate",
+          "compatible declared 32-bit word register or already converted immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Return the upper 32 bits of the full 64-bit product. Unsigned operands use values 0 through 2^32-1; signed operands use two-complement values. Signed division by positive 2^32 is floor division, including negative products. No saturation or extra range assumptions. Introduced in PTX 1.0; all target architectures (numeric feature floor sm_10).",
+      "boundary": "Typed Pure32 family selecting mul.hi.u32, mul.hi.s32; ISA 94 and numeric SM >= 10. No other widths/options, module parser, declared-register checking, whole-kernel or hardware claim.",
+      "semantics": [
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "compute"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "family"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "lower"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "results_iff"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_other"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_event"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "step_origin"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "step_exists"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "mul.hi.s32",
+      "status": "accepted",
+      "trial": "mulhi32",
+      "source_anchor": "integer-arithmetic-instructions-mul",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit word register or already converted immediate",
+          "compatible declared 32-bit word register or already converted immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Return the upper 32 bits of the full 64-bit product. Unsigned operands use values 0 through 2^32-1; signed operands use two-complement values. Signed division by positive 2^32 is floor division, including negative products. No saturation or extra range assumptions. Introduced in PTX 1.0; all target architectures (numeric feature floor sm_10).",
+      "boundary": "Typed Pure32 family selecting mul.hi.u32, mul.hi.s32; ISA 94 and numeric SM >= 10. No other widths/options, module parser, declared-register checking, whole-kernel or hardware claim.",
+      "semantics": [
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "compute"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "family"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "lower"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "results_iff"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_other"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_event"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "step_origin"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "step_exists"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "mulhi32",
+          "namespace": "Ptx.Scalar.MulHi32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "bfe.u32",
+      "status": "accepted",
+      "trial": "bfe32",
+      "source_anchor": "integer-arithmetic-instructions-bfe",
+      "ptx_minimum": "2.0",
+      "target": "sm_20 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 20 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit word register or already converted immediate",
+          "unsigned 32-bit position (low eight bits used)",
+          "unsigned 32-bit length (low eight bits used)"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Extract a bit field using only the low eight bits of the unsigned position and length operands. Zero length gives zero. Unsigned padding is zero. Signed padding uses the last extracted bit, or input bit 31 when the field reaches beyond the input. Positions past bit 31 can therefore give all ones for negative signed inputs. The normative syntax supports u32/s32; the source example spelling bfe.b32 is not admitted. Introduced PTX 2.0; requires sm_20.",
+      "boundary": "Typed Pure32 family selecting bfe.u32, bfe.s32; ISA 94 and numeric SM >= 20. No other widths/options, module parser, declared-register checking, whole-kernel or hardware claim.",
+      "semantics": [
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "compute"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "family"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "lower"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "results_iff"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_other"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_event"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "step_origin"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "step_exists"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "bfe.s32",
+      "status": "accepted",
+      "trial": "bfe32",
+      "source_anchor": "integer-arithmetic-instructions-bfe",
+      "ptx_minimum": "2.0",
+      "target": "sm_20 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 20 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit word register or already converted immediate",
+          "unsigned 32-bit position (low eight bits used)",
+          "unsigned 32-bit length (low eight bits used)"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Extract a bit field using only the low eight bits of the unsigned position and length operands. Zero length gives zero. Unsigned padding is zero. Signed padding uses the last extracted bit, or input bit 31 when the field reaches beyond the input. Positions past bit 31 can therefore give all ones for negative signed inputs. The normative syntax supports u32/s32; the source example spelling bfe.b32 is not admitted. Introduced PTX 2.0; requires sm_20.",
+      "boundary": "Typed Pure32 family selecting bfe.u32, bfe.s32; ISA 94 and numeric SM >= 20. No other widths/options, module parser, declared-register checking, whole-kernel or hardware claim.",
+      "semantics": [
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "compute"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "family"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "lower"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "results_iff"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_other"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_event"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "step_origin"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "step_exists"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "bfe32",
+          "namespace": "Ptx.Scalar.Bfe32",
+          "name": "lower_operation"
+        }
+      ]
     }
   ],
   "uncovered_siblings": [
@@ -3023,6 +3934,36 @@
       ],
       "status": "unimplemented",
       "reason": "Other legal spellings and widths are excluded from the selected exact typed shift interface. Counts remain unsigned 32-bit for every width."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-brev",
+      "spellings": [
+        "brev.b64"
+      ],
+      "status": "unimplemented",
+      "reason": "These other widths or full-width results are outside the accepted leaf; no complete section coverage is claimed."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-mul",
+      "spellings": [
+        "mul.hi.u16",
+        "mul.hi.s16",
+        "mul.hi.u64",
+        "mul.hi.s64",
+        "mul.wide.u32",
+        "mul.wide.s32"
+      ],
+      "status": "unimplemented",
+      "reason": "These other widths or full-width results are outside the accepted leaf; no complete section coverage is claimed."
+    },
+    {
+      "source_anchor": "integer-arithmetic-instructions-bfe",
+      "spellings": [
+        "bfe.u64",
+        "bfe.s64"
+      ],
+      "status": "unimplemented",
+      "reason": "These other widths or full-width results are outside the accepted leaf; no complete section coverage is claimed."
     }
   ]
 }

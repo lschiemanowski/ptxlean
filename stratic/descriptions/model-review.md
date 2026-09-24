@@ -34,6 +34,11 @@ that still compile with their own proofs. Independent checks confirm the planted
 fault. A reviewer receives neither the expected verdict nor the mutation label.
 Detection requires a finding that explains the planted semantic mismatch; a
 bare rejection, unrelated criticism, or infrastructure failure does not count.
+The review protocol and case packets are fixed before a fresh evaluation.
+Cases used for subsequent tuning become development evidence, and related
+variants are reported together rather than counted as independent instruction
+families. Correct fixtures and faulty fixtures must first compile with their own
+proofs; the distinguishing assertion must fail because of its meaning.
 False alarms on unchanged candidates and additional genuine defects are recorded
 separately. Small adaptive trials describe those cases, not a general accuracy
 estimate or justification for automatic integration.

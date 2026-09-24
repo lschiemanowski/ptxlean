@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "state": "completed",
+  "started_at": "2026-09-24T12:54:52.962410+00:00",
+  "requested_model": "z-ai/glm-5.3-flash",
+  "request_sha256": "f292796a41a1f7b039bd07583db30b7cf97850a20e64694daf1460ee8da82df0",
+  "recipe_sha256": "362caf1b78ff44a1f21c1070dba8c985e3916971186592cc252b6c885d5cb7f5",
+  "packet_sha256": "bf87d1a9d53ab0aba49e8e5d16c0e9f96602fa6a5b5faab65c3bae91fa039436",
+  "helper_sha256": {
+    "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+    "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+    "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+  },
+  "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+  "reported_model": "z-ai/glm-5.3-flash",
+  "provider": "InferenceNet",
+  "usage": {
+    "prompt_tokens": 31550,
+    "completion_tokens": 1198,
+    "total_tokens": 32748,
+    "cost": 0.00158747,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.00158747,
+      "upstream_inference_prompt_cost": 0.00141975,
+      "upstream_inference_completions_cost": 0.00016772
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 623,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "reported_cost": 0.00158747,
+  "semantic_acceptance": "not_performed",
+  "timeout_seconds": 300,
+  "response_sha256": "2815488450ebc6612b4b8749c156e995c12f99c79231e8e0553265810656e6de",
+  "response_id": "gen-1790254493-rSm3aZ3ckAkIzJGPgKNh",
+  "finish_reason": "stop",
+  "verdict": "accept",
+  "finished_at": "2026-09-24T12:55:19.479509+00:00",
+  "elapsed_seconds": 26.515145464101806,
+  "coordinator_classification": "correct_accept",
+  "coordinator_adjudication": "No finding on the actual worker candidate; coordinator source/proof review and fresh replay agree.",
+  "protocol_changed": false,
+  "prior_invocations": []
+}

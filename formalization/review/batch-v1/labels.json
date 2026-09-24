@@ -1,0 +1,76 @@
+{
+  "base_commit": "ee4689395058b8eef9164aafb2866c6b96d88abc",
+  "cases": [
+    {
+      "case": "b01",
+      "driver": "formalization/checks/bfe32-v1.lean",
+      "driver_sha256": "30b32ec4773a778acca1a02941d8f596658e9c70a49c7039a2885b5f94586f58",
+      "kind": "seeded_defect",
+      "namespace": "Bfe32",
+      "obligation": "meaning",
+      "packet_sha256": "ca6becc7c1ee0e4c1223dcec040fd1933fdd65b92d63aabf781c7154370a22cb",
+      "recipe_sha256": "5e9f3150afef1bb0916ee01e3308154220feedc9316baa234f704151d0f9679d",
+      "task": "bfe32-v1"
+    },
+    {
+      "case": "b02",
+      "driver": "formalization/checks/brev32-v1.lean",
+      "driver_sha256": "6b84191dba64bdd2bb9f35c5495a4c5257fdb878e481f4abd555caa6ca4b4428",
+      "kind": "control",
+      "namespace": "Brev32",
+      "obligation": null,
+      "packet_sha256": "291d79ce5cdd72b54458f293d5ad71e5251884474e38bda3cb6a68354b84c315",
+      "recipe_sha256": "34465febcbf933c37ace85595d1b2f3b1788f6aba99cbf91d05d305bb748e9f4",
+      "task": "brev32-v1"
+    },
+    {
+      "case": "b03",
+      "driver": "formalization/checks/mulhi32-v1.lean",
+      "driver_sha256": "7bb23d016577a49fd50bd1deb867d4d093912551a68b26d5b2700d79a3c68044",
+      "kind": "control",
+      "namespace": "MulHi32",
+      "obligation": null,
+      "packet_sha256": "d0038d6c719bb2059596b13d912e0be9546e8db306ccca6e41e153fd93cbf52c",
+      "recipe_sha256": "a3c9dfd3399a00b34c432367b57260ed5e7d14414fa714ad8ef86109eec39615",
+      "task": "mulhi32-v1"
+    },
+    {
+      "case": "b04",
+      "driver": "formalization/checks/bfe32-v1.lean",
+      "driver_sha256": "30b32ec4773a778acca1a02941d8f596658e9c70a49c7039a2885b5f94586f58",
+      "kind": "control",
+      "namespace": "Bfe32",
+      "obligation": null,
+      "packet_sha256": "93225817072950b0db7c748fc01c9da10c8479cc185e6bd0757eb458da9d76dd",
+      "recipe_sha256": "648d9628dc1346d3c7ea3e2bc45c70bb940b2a45e705f6163b1f54e8128adb7f",
+      "task": "bfe32-v1"
+    },
+    {
+      "case": "b05",
+      "driver": "formalization/checks/brev32-v1.lean",
+      "driver_sha256": "6b84191dba64bdd2bb9f35c5495a4c5257fdb878e481f4abd555caa6ca4b4428",
+      "kind": "seeded_defect",
+      "namespace": "Brev32",
+      "obligation": "meaning",
+      "packet_sha256": "a9b9c6dece20679066a4579a54a51f9d16124982c524c32790535613024a6ecf",
+      "recipe_sha256": "4731ea6236ad6e156586e6c9b7a531db059c2a5fd153b5923fe494372a55bba8",
+      "task": "brev32-v1"
+    },
+    {
+      "case": "b06",
+      "driver": "formalization/checks/mulhi32-v1.lean",
+      "driver_sha256": "7bb23d016577a49fd50bd1deb867d4d093912551a68b26d5b2700d79a3c68044",
+      "kind": "seeded_defect",
+      "namespace": "MulHi32",
+      "obligation": "meaning",
+      "packet_sha256": "76ee487e3574e74b83357179e7881349cac78c7eb350158ede0c8c36004582e0",
+      "recipe_sha256": "b8a8524adfeb59f14bf93de4fc3bd4602e960bbc69904928193fe55fd7397478",
+      "task": "mulhi32-v1"
+    }
+  ],
+  "created_at": "2026-09-24T12:51:39.406273+00:00",
+  "model": "z-ai/glm-5.3-flash",
+  "qualification": "Six fresh blinded fixture cases under unchanged v4 protocol; labels and mutation metadata excluded from packets. Related controls/faults grouped by three families; coordinator-authored fixed-contract fixtures, not generator output. No tuning on these results and no general sensitivity estimate.",
+  "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+  "schema_version": 1
+}

@@ -9,10 +9,11 @@
   "summary": [
     "Review fixed candidates against pinned PTX passages in a separate model invocation, keeping proof checking and coordinator acceptance independent.",
     "Record exact request and response identities, failures, usage and unknown costs without silent retries or model substitution.",
-    "Evaluate concrete fault detection and false alarms on blinded cases; retain vendor-bearing requests and responses locally."
+    "Evaluate concrete fault detection and false alarms on blinded cases; retain vendor-bearing requests and responses locally.",
+    "Freeze fresh evaluation cases before requests and keep fixture evidence distinct from actual worker-candidate reviews."
   ],
   "realization": "partial",
-  "remaining": "Recorded fixed-context OpenRouter review and adjudicated blinded development trials are implemented. General reviewer-quality evidence, tool-using repository review and automatic integration remain outside the implemented route.",
+  "remaining": "Recorded fixed-context OpenRouter review, adjudicated development trials, and an adjudicated frozen six-case fixture suite are implemented. A runner-enforced total wall-time deadline, general reviewer-quality evidence, tool-using repository review and automatic integration remain outside the implemented route.",
   "links": [
     {
       "kind": "implementation",
@@ -47,6 +48,18 @@
         "path": "formalization/results/reviewer-pilot/README.md",
         "passage": {
           "quote": "This is a small, adaptively revised development set, not a benchmark\nof general model quality."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The review protocol and case packets are fixed before a fresh evaluation."
+      },
+      "to": {
+        "path": "formalization/review/check_batch_v1.py",
+        "passage": {
+          "quote": "        assert m.sha(m.encoded(packet)) == case['packet_sha256']"
         }
       }
     }

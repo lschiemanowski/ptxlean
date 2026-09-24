@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "task_base": "ee4689395058b8eef9164aafb2866c6b96d88abc",
+  "workers": [
+    {
+      "task": "brev32-v1",
+      "selected_forms": [
+        "brev.b32"
+      ],
+      "attempt": "brev32-001",
+      "campaign_call": 20,
+      "requested_model": "gpt-6-luna",
+      "reported_models": [],
+      "reported_usage": [
+        {
+          "input_tokens": 479309,
+          "cached_input_tokens": 442880,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 3544,
+          "reasoning_output_tokens": 463
+        }
+      ],
+      "elapsed_seconds": 100.129901,
+      "codex_cost_usd": null,
+      "first_attempt_replay": "pass",
+      "audit_declarations": 28,
+      "repair_calls": 0,
+      "coordinator_candidate_edits": false,
+      "post_dispatch_checker_edits": false,
+      "source_review": "pass",
+      "proof_statement_review": "pass"
+    },
+    {
+      "task": "mulhi32-v1",
+      "selected_forms": [
+        "mul.hi.u32",
+        "mul.hi.s32"
+      ],
+      "attempt": "mulhi32-001",
+      "campaign_call": 21,
+      "requested_model": "gpt-6-luna",
+      "reported_models": [],
+      "reported_usage": [
+        {
+          "input_tokens": 279200,
+          "cached_input_tokens": 252416,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 4455,
+          "reasoning_output_tokens": 268
+        }
+      ],
+      "elapsed_seconds": 107.948425,
+      "codex_cost_usd": null,
+      "first_attempt_replay": "pass",
+      "audit_declarations": 28,
+      "repair_calls": 0,
+      "coordinator_candidate_edits": false,
+      "post_dispatch_checker_edits": false,
+      "source_review": "pass",
+      "proof_statement_review": "pass"
+    },
+    {
+      "task": "bfe32-v1",
+      "selected_forms": [
+        "bfe.u32",
+        "bfe.s32"
+      ],
+      "attempt": "bfe32-001",
+      "campaign_call": 22,
+      "requested_model": "gpt-6-luna",
+      "reported_models": [],
+      "reported_usage": [
+        {
+          "input_tokens": 193532,
+          "cached_input_tokens": 161280,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 4179,
+          "reasoning_output_tokens": 53
+        }
+      ],
+      "elapsed_seconds": 91.357814,
+      "codex_cost_usd": null,
+      "first_attempt_replay": "pass",
+      "audit_declarations": 28,
+      "repair_calls": 0,
+      "coordinator_candidate_edits": false,
+      "post_dispatch_checker_edits": false,
+      "source_review": "pass",
+      "proof_statement_review": "pass"
+    }
+  ],
+  "coordinator_effort": {
+    "source_interpretation": "Supplied all selected semantics and restrictions before dispatch.",
+    "proof_contract": "Supplied definitions and eighteen universal theorem statements per family.",
+    "checker_preflight": "Adapted existing proof templates to create three coordinator fixtures, validated all full checkers and compiling wrong variants. Fixtures excluded from worker checkouts.",
+    "draft_checker_fixes": "Fixed signature extraction, recursion limit and concrete target-floor proofs before freezing. No post-dispatch repair.",
+    "measured_active_time_seconds": null
+  },
+  "qualification": "Small task-specific batch with heavy prescribed semantics/template support; no general ISA success probability or end-to-end cost-effectiveness estimate."
+}

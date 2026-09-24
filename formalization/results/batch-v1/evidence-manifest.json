@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "archive": "evidence.tar.gz",
+  "archive_sha256": "adb66b6484725f3f0f2d3ea37c04df8ab2824536bd2f05bf3d6219066e21b008",
+  "members": {
+    "preflight/Bfe32-fixture.lean": {
+      "bytes": 8909,
+      "sha256": "fe0667f999fde31ee26453a0d4d534cd778dad8aebcaca9638c9f4510bd12131"
+    },
+    "preflight/Bfe32-mutant.lean": {
+      "bytes": 8897,
+      "sha256": "3c2736f5125f3c694420a85d53ca3be4bb244644761de186faf314843d86cb82"
+    },
+    "preflight/Brev32-fixture.lean": {
+      "bytes": 7718,
+      "sha256": "0b05288578a38618c6c2c3ce4435956c7027610298c78cd8f50d47db0792705d"
+    },
+    "preflight/Brev32-mutant.lean": {
+      "bytes": 7702,
+      "sha256": "76d77425fed05d47973e34667b2302272a248aab8d1930ba3d5e30a3083c4531"
+    },
+    "preflight/MulHi32-fixture.lean": {
+      "bytes": 8309,
+      "sha256": "79d260de2a7619657f506638bb5ef5750bb969a6bc5755594dc283288d8efc8e"
+    },
+    "preflight/MulHi32-mutant.lean": {
+      "bytes": 8357,
+      "sha256": "47e2b0e1fc897e50e5a03f76ccb14c9e7c2e20f73e823af196ba78544cd17a27"
+    },
+    "preflight/bfe32-fixture-audit.lean": {
+      "bytes": 1260,
+      "sha256": "ca6846a2838834f1c4c87fa7153328d7cbb21c960cf4c5fc0770389bc1a8824c"
+    },
+    "preflight/bfe32-fixture-audit.log": {
+      "bytes": 1723,
+      "sha256": "a1f29375c13efb366636abfc8000617f3e140c60015da0ce074bd0b44d0cfd15"
+    },
+    "preflight/bfe32-mutant-build.log": {
+      "bytes": 72,
+      "sha256": "37d9edf8fbe0a6b15a060b06f44ce35091f1b82a97d76773bd85a008ca23d903"
+    },
+    "preflight/bfe32-mutant-driver.log": {
+      "bytes": 1538,
+      "sha256": "de67affe078316b16316d3a8fcf2740a419110c45e69bf0e3f2aa126db0c5bb4"
+    },
+    "preflight/bfe32-preflight-build.log": {
+      "bytes": 72,
+      "sha256": "37d9edf8fbe0a6b15a060b06f44ce35091f1b82a97d76773bd85a008ca23d903"
+    },
+    "preflight/bfe32-preflight-driver-final.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "preflight/bfe32-preflight-driver.log": {
+      "bytes": 5977,
+      "sha256": "3011725b8092c3286f257b966c72af538f72ed26d57b1f1e399926f5e3b3a1c9"
+    },
+    "preflight/brev32-fixture-audit.lean": {
+      "bytes": 1289,
+      "sha256": "a50018fc4c59dcc4bae01dafdde9785f89923c257c8e3a44403616a2d9fe5274"
+    },
+    "preflight/brev32-fixture-audit.log": {
+      "bytes": 2003,
+      "sha256": "66c67f195281aa2f828f77da350a8cc4ba7b1b5a7c499c0f988cbcdc5dbc731e"
+    },
+    "preflight/brev32-mutant-build.log": {
+      "bytes": 395,
+      "sha256": "04ed414cc5798ffe5c249b5e087821da82463de1404b5d149358b9397d8e9ca3"
+    },
+    "preflight/brev32-mutant-driver.log": {
+      "bytes": 719,
+      "sha256": "e9fa2db04a247f4e2119653f42406a89c768d9c7e15cb3e985684fd97b132271"
+    },
+    "preflight/brev32-preflight-build.log": {
+      "bytes": 577,
+      "sha256": "f709c0a23550ce56dd11d023ba6110d18b9980381047ba8446dd4a27899cb0fe"
+    },
+    "preflight/brev32-preflight-driver-final.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "preflight/brev32-preflight-driver.log": {
+      "bytes": 6948,
+      "sha256": "c9ba1da0bdaa941144584a935cbe077d4d155f6cdaa37e1248e474624a1924f4"
+    },
+    "preflight/check_fixtures.py": {
+      "bytes": 2919,
+      "sha256": "0c1ab92919f76e2b90a0652ae470dccb0989c50179b715739791ae19fca1ba18"
+    },
+    "preflight/configs.json": {
+      "bytes": 4646,
+      "sha256": "ece63fb97cb7035a6a7f15d3ae686f38d122fab2b4499090f441f5cbd522e90d"
+    },
+    "preflight/mulhi32-fixture-audit.lean": {
+      "bytes": 1318,
+      "sha256": "2ca81bb33586d8e9874c98f5b2bc848cf8c344fbe301e1ce187641675236c52a"
+    },
+    "preflight/mulhi32-fixture-audit.log": {
+      "bytes": 1779,
+      "sha256": "11b5f626fc59ce778c1aebe4e40d82a4dea57c77a5845de176d24888a0f580ba"
+    },
+    "preflight/mulhi32-mutant-build.log": {
+      "bytes": 75,
+      "sha256": "7f217a4ababb9d10be1ac72c3b8ac38db11fce4a85b035d46a33a9d9276bb826"
+    },
+    "preflight/mulhi32-mutant-driver.log": {
+      "bytes": 1242,
+      "sha256": "0f2d7f43d1cae1eb6b22f8023be37b1c5d53fdb9f737097507a91345ec19eaaf"
+    },
+    "preflight/mulhi32-preflight-build.log": {
+      "bytes": 75,
+      "sha256": "65d6b935f622d749e44a89755f70b7134015e394bddf55b75963f4a1bf3aee4f"
+    },
+    "preflight/mulhi32-preflight-driver-final.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "preflight/mulhi32-preflight-driver.log": {
+      "bytes": 6007,
+      "sha256": "f687d59602dfd1a1e344990b7aaec52d20bb997fa81df41511d07a6ac5023437"
+    },
+    "preflight/preflight.json": {
+      "bytes": 5503,
+      "sha256": "8bfe4ffdaf6f3335279259dc9c12e81670c35f7a9693e2ede9084f9269550f0a"
+    },
+    "reviewer-mechanical/b01-audit.lean": {
+      "bytes": 1260,
+      "sha256": "ca6846a2838834f1c4c87fa7153328d7cbb21c960cf4c5fc0770389bc1a8824c"
+    },
+    "reviewer-mechanical/b01-audit.log": {
+      "bytes": 1723,
+      "sha256": "a1f29375c13efb366636abfc8000617f3e140c60015da0ce074bd0b44d0cfd15"
+    },
+    "reviewer-mechanical/b01-build.log": {
+      "bytes": 254,
+      "sha256": "1292ea11d8f871b4c26a4f1dd319a3dd795a732542bdd77de4d829307170612a"
+    },
+    "reviewer-mechanical/b01-counterexample.lean": {
+      "bytes": 120,
+      "sha256": "d6ae3451102ec3fdb82baae4a5611d207ff66ebd31079811299b3bc649d20e65"
+    },
+    "reviewer-mechanical/b01-counterexample.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewer-mechanical/b01-driver.log": {
+      "bytes": 1538,
+      "sha256": "de67affe078316b16316d3a8fcf2740a419110c45e69bf0e3f2aa126db0c5bb4"
+    },
+    "reviewer-mechanical/b02-audit.lean": {
+      "bytes": 1289,
+      "sha256": "a50018fc4c59dcc4bae01dafdde9785f89923c257c8e3a44403616a2d9fe5274"
+    },
+    "reviewer-mechanical/b02-audit.log": {
+      "bytes": 2003,
+      "sha256": "66c67f195281aa2f828f77da350a8cc4ba7b1b5a7c499c0f988cbcdc5dbc731e"
+    },
+    "reviewer-mechanical/b02-build.log": {
+      "bytes": 395,
+      "sha256": "c15d946c71f35592f5ed630dbefebbc44c15735a8ab6bbc40fee9600f44c6aed"
+    },
+    "reviewer-mechanical/b02-counterexample.lean": {
+      "bytes": 121,
+      "sha256": "0d0f5c9faa808c893ce988868c901d4176890603380f62566ad805670e783207"
+    },
+    "reviewer-mechanical/b02-counterexample.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewer-mechanical/b02-driver.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewer-mechanical/b03-audit.lean": {
+      "bytes": 1318,
+      "sha256": "2ca81bb33586d8e9874c98f5b2bc848cf8c344fbe301e1ce187641675236c52a"
+    },
+    "reviewer-mechanical/b03-audit.log": {
+      "bytes": 1779,
+      "sha256": "11b5f626fc59ce778c1aebe4e40d82a4dea57c77a5845de176d24888a0f580ba"
+    },
+    "reviewer-mechanical/b03-build.log": {
+      "bytes": 75,
+      "sha256": "7f217a4ababb9d10be1ac72c3b8ac38db11fce4a85b035d46a33a9d9276bb826"
+    },
+    "reviewer-mechanical/b03-counterexample-4294967295.lean": {
+      "bytes": 108,
+      "sha256": "1f1a79eb0e5d0b694ebb1ca97adadff18c324229e4c9e2309d0777c89ebb277b"
+    },
+    "reviewer-mechanical/b03-counterexample-4294967295.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewer-mechanical/b03-driver.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewer-mechanical/b04-audit.lean": {
+      "bytes": 1260,
+      "sha256": "ca6846a2838834f1c4c87fa7153328d7cbb21c960cf4c5fc0770389bc1a8824c"
+    },
+    "reviewer-mechanical/b04-audit.log": {
+      "bytes": 1723,
+      "sha256": "a1f29375c13efb366636abfc8000617f3e140c60015da0ce074bd0b44d0cfd15"
+    },
+    "reviewer-mechanical/b04-build.log": {
+      "bytes": 72,
+      "sha256": "37d9edf8fbe0a6b15a060b06f44ce35091f1b82a97d76773bd85a008ca23d903"
+    },
+    "reviewer-mechanical/b04-counterexample.lean": {
+      "bytes": 120,
+      "sha256": "2f8dfa2fcef54753e2af78012785da6db2a20cb4653ffb0ce9802fba787b4244"
+    },
+    "reviewer-mechanical/b04-counterexample.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewer-mechanical/b04-driver.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewer-mechanical/b05-audit.lean": {
+      "bytes": 1289,
+      "sha256": "a50018fc4c59dcc4bae01dafdde9785f89923c257c8e3a44403616a2d9fe5274"
+    },
+    "reviewer-mechanical/b05-audit.log": {
+      "bytes": 1754,
+      "sha256": "9cf1b330571bca86c0162e676af11b6cde0df9867c2f136c3814910b43ccd568"
+    },
+    "reviewer-mechanical/b05-build.log": {
+      "bytes": 395,
+      "sha256": "ca43d6a1d4d669582f0f08c9bc1a2500f3894c1ef4c83c04568ca62177acb067"
+    },
+    "reviewer-mechanical/b05-counterexample.lean": {
+      "bytes": 112,
+      "sha256": "eb3e0ece4ac5206b86b5717100bce47b5226d2dc13048c266b0e9541a411e0d9"
+    },
+    "reviewer-mechanical/b05-counterexample.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewer-mechanical/b05-driver.log": {
+      "bytes": 719,
+      "sha256": "e9fa2db04a247f4e2119653f42406a89c768d9c7e15cb3e985684fd97b132271"
+    },
+    "reviewer-mechanical/b06-audit.lean": {
+      "bytes": 1318,
+      "sha256": "2ca81bb33586d8e9874c98f5b2bc848cf8c344fbe301e1ce187641675236c52a"
+    },
+    "reviewer-mechanical/b06-audit.log": {
+      "bytes": 1779,
+      "sha256": "11b5f626fc59ce778c1aebe4e40d82a4dea57c77a5845de176d24888a0f580ba"
+    },
+    "reviewer-mechanical/b06-build.log": {
+      "bytes": 75,
+      "sha256": "dcc59e732481ab204dc69eeff26b253f3008a47457dbd06640335e752f2de6b2"
+    },
+    "reviewer-mechanical/b06-counterexample-0.lean": {
+      "bytes": 99,
+      "sha256": "2c20c76ab519fcc8dc62f6edd6bcbef200a22243cfb4c8495aa381410d39c2b9"
+    },
+    "reviewer-mechanical/b06-counterexample-0.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "reviewer-mechanical/b06-driver.log": {
+      "bytes": 1242,
+      "sha256": "0f2d7f43d1cae1eb6b22f8023be37b1c5d53fdb9f737097507a91345ec19eaaf"
+    },
+    "reviewer-mechanical/check_batch_v1.py": {
+      "bytes": 3347,
+      "sha256": "c93e7044bf921b700a4b5f603e8c131c8ff1bf4d4ce571edff69468a30c1754f"
+    },
+    "reviewer-mechanical/report.json": {
+      "bytes": 10845,
+      "sha256": "e97fff7781aec94bef78e278648e9b8cacee2951139b3b9321af2bb6badf3e3e"
+    }
+  }
+}

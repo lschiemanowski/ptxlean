@@ -1,9 +1,9 @@
 # Reading the accepted-form ledger
 
-[The ledger](../../coverage/implemented-forms.json) records seventeen selected accepted
+[The ledger](../../coverage/implemented-forms.json) records twenty-two selected accepted
 forms. It is separate from the [instruction-section inventory](coverage.md),
 whose `not_assessed` entries are unchanged. Other existing scalar instructions
-are not yet entered here, so even the ledger's seventeen-form count is not a count of
+are not yet entered here, so even the ledger's twenty-two-form count is not a count of
 all implemented PTX forms.
 
 | Exact form | Inputs → destination | Meaning | Manual conditions |
@@ -25,9 +25,14 @@ all implemented PTX forms.
 | `shl.b32` | word and unsigned 32-bit count → compatible register | Left shift, zero fill; counts clamped at 32 | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
 | `shr.u32` | word and unsigned 32-bit count → compatible register | Right shift, zero fill; counts clamped at 32 | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
 | `shr.s32` | word and unsigned 32-bit count → compatible register | Right shift, sign fill; counts clamped at 32 | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `brev.b32` | one word → compatible register | Reverse all 32 bits | PTX 2.0; selected step ISA 9.4, SM ≥20 |
+| `mul.hi.u32` | two unsigned words → compatible register | Upper 32 bits of the full unsigned product | PTX 1.0; selected step ISA 9.4, SM ≥10 |
+| `mul.hi.s32` | two signed words → compatible register | Upper 32 bits of the full signed product | PTX 1.0; selected step ISA 9.4, SM ≥10 |
+| `bfe.u32` | input, position, length → compatible register | Extract with zero padding; low eight position/length bits | PTX 2.0; selected step ISA 9.4, SM ≥20 |
+| `bfe.s32` | input, position, length → compatible register | Extract with sign padding; zero length gives zero | PTX 2.0; selected step ISA 9.4, SM ≥20 |
 
 Every word input can come from a word register or a 32-bit immediate value.
-The selection predicate is a register. All seventeen
+The selection predicate is a register. All twenty-two
 forms support unconditional execution or execution guarded by a positive or
 negated predicate. A false guard advances the program counter without writing
 the destination. Register overlap is allowed: the incoming source value is read
@@ -105,3 +110,6 @@ old entry forward. Review the effect on the represented instruction contract,
 rerun the relevant Lean and semantic checks, then update the affected hash. A hash
 refresh alone does not renew semantic acceptance. The historical evidence remains
 immutable; current integrity checks do not retroactively rerun that history.
+
+The [three-family source review](batch-v1-source-review.md) explains signed high-half
+multiplication, field boundaries and the rejected `bfe.b32` example spelling.

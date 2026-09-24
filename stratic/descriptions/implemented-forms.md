@@ -1,7 +1,7 @@
 # Accepted instruction forms
 
 An accepted form is a particular spelling and operand contract, not an entire
-instruction name. This ledger records seventeen independently reviewed forms:
+instruction name. This ledger records twenty-two independently reviewed forms:
 `min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32`, `mul.rn.f32`,
 `selp.b32`, `min.s32`, `max.s32`, `and.b32`, `or.b32`, `xor.b32`,
 `not.b32`, `cnot.b32`, `shl.b32`, `shr.u32` and `shr.s32`.

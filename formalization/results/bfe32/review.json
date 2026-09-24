@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "state": "completed",
+  "started_at": "2026-09-24T13:06:18.859517+00:00",
+  "requested_model": "z-ai/glm-5.3-flash",
+  "request_sha256": "ddd87f7954889ec127de62f7badc49cb1981de4442e2a7aa3af0d722ff31ffaa",
+  "recipe_sha256": "0f47af9c93cf1af50534299a5468c94a50b917eb0618bf3c6d9de02f19da9467",
+  "packet_sha256": "e922ad5739897403b64e068c999dc3cc28a680446ed3f5ced8b55e4194b2a2be",
+  "helper_sha256": {
+    "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+    "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+    "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+  },
+  "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+  "reported_model": "z-ai/glm-5.3-flash",
+  "provider": "OpenInference",
+  "usage": {
+    "prompt_tokens": 32574,
+    "completion_tokens": 3961,
+    "total_tokens": 36535,
+    "cost": 0.00309245,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 28606,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.00309245,
+      "upstream_inference_prompt_cost": 0.00111195,
+      "upstream_inference_completions_cost": 0.0019805
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 2635,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "reported_cost": 0.00309245,
+  "semantic_acceptance": "not_performed",
+  "timeout_seconds": 300,
+  "response_sha256": "94485327b45efd4a71e3ce93a0dd8bfb809c5d5d50dfc01365415d55112e00bf",
+  "response_id": "gen-1790255179-GcXs3RwMVoyav37CvzY0",
+  "finish_reason": "stop",
+  "verdict": "uncertain",
+  "finished_at": "2026-09-24T13:08:03.764487+00:00",
+  "elapsed_seconds": 104.90285732387565,
+  "coordinator_classification": "unfounded_uncertainty",
+  "coordinator_adjudication": "Packet contains the complete definition, including both modulo-256 bindings and Nat-valued position/length; no code was elided. Reported signedness case conflates unsigned zero fill and signed sign fill; both exact results checked. Immediate sources are explicit in the task scope and supported by the general instruction/constant sections, considered alongside the source-operands register-state-space wording. No defect demonstrated; coordinator source review accepts the stated typed interface, without raw parser or assembler claims.",
+  "protocol_changed": false,
+  "prior_invocations": []
+}

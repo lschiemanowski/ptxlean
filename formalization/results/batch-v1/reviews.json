@@ -1,0 +1,643 @@
+{
+  "schema_version": 1,
+  "requested_model": "z-ai/glm-5.3-flash",
+  "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+  "semantic_protocol_changed": false,
+  "labels_sha256": "b02e85959997a94a544f1e9b26bdcbf2ccab5c584636995a83318b26b30d6b63",
+  "invocations": [
+    {
+      "invocation": "b01-001",
+      "recipe": "formalization/review/batch-v1/b01.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T12:53:49.686764+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "81bb6b6644d30bb1d5cc5865c7d1709ae88802e47b20100a7bb9643703b2c861",
+        "recipe_sha256": "5e9f3150afef1bb0916ee01e3308154220feedc9316baa234f704151d0f9679d",
+        "packet_sha256": "ca6becc7c1ee0e4c1223dcec040fd1933fdd65b92d63aabf781c7154370a22cb",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "InferenceNet",
+        "usage": {
+          "prompt_tokens": 32181,
+          "completion_tokens": 1478,
+          "total_tokens": 33659,
+          "cost": 0.001655065,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.001655065,
+            "upstream_inference_prompt_cost": 0.001448145,
+            "upstream_inference_completions_cost": 0.00020692
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 658,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.001655065,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "response_sha256": "dadb9ceabe85469b6524169d00496fd8c22ffe26d8ee64f78db4397067432aef",
+        "response_id": "gen-1790254430-Zj7SKX0ANa2ShV3yyK2W",
+        "finish_reason": "stop",
+        "verdict": "reject",
+        "finished_at": "2026-09-24T12:54:28.191429+00:00",
+        "elapsed_seconds": 38.50305175711401
+      },
+      "effective_state": "completed",
+      "classification": "seed_detected",
+      "adjudication": "Correctly identifies missing low-eight-bit reduction of position. The reported unsigned input (1,256,1) gives zero in the faulty fixture and one in the control; both values checked in Lean."
+    },
+    {
+      "invocation": "b02-001",
+      "recipe": "formalization/review/batch-v1/b02.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T12:53:49.682398+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "3271d974bdf1ace927cc7a187bfcbe64cee5bad78de4f06da09a12dd228efac8",
+        "recipe_sha256": "34465febcbf933c37ace85595d1b2f3b1788f6aba99cbf91d05d305bb748e9f4",
+        "packet_sha256": "291d79ce5cdd72b54458f293d5ad71e5251884474e38bda3cb6a68354b84c315",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "InferenceNet",
+        "usage": {
+          "prompt_tokens": 31340,
+          "completion_tokens": 917,
+          "total_tokens": 32257,
+          "cost": 0.00153868,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00153868,
+            "upstream_inference_prompt_cost": 0.0014103,
+            "upstream_inference_completions_cost": 0.00012838
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 392,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.00153868,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "response_sha256": "a1181d2053acbe2d7c93e936eb6c3e5bf76e1f535129eab40fa1f7bfc374587d",
+        "response_id": "gen-1790254429-cc8cgGPaxtAByRSR18yt",
+        "finish_reason": "stop",
+        "verdict": "accept",
+        "finished_at": "2026-09-24T12:54:21.404922+00:00",
+        "elapsed_seconds": 31.718701953999698
+      },
+      "effective_state": "completed",
+      "classification": "correct_accept",
+      "adjudication": "No finding on the correct reversal fixture; coordinator source review agrees."
+    },
+    {
+      "invocation": "b03-001",
+      "recipe": "formalization/review/batch-v1/b03.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "started",
+        "started_at": "2026-09-24T12:53:49.685937+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "e737ebc836d3f7ec57fce478463240755b3ab126866fcbea39d54032016a498b",
+        "recipe_sha256": "a3c9dfd3399a00b34c432367b57260ed5e7d14414fa714ad8ef86109eec39615",
+        "packet_sha256": "d0038d6c719bb2059596b13d912e0be9546e8db306ccca6e41e153fd93cbf52c",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": null,
+        "provider": null,
+        "usage": null,
+        "reported_cost": null,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "finished_at": "2026-09-24T13:06:18.031181+00:00",
+        "elapsed_seconds": 748.3434342870023
+      },
+      "effective_state": "coordinator_interrupted",
+      "resolution": {
+        "state": "coordinator_interrupted",
+        "at": "2026-09-24T13:06:18.030801+00:00",
+        "reason": "No completed response after more than ten minutes. Existing socket timeout is not a total wall-time bound. One identical-packet retry authorized by coordinator; no semantic verdict inferred.",
+        "pid": 3970872,
+        "request_sha256": "e737ebc836d3f7ec57fce478463240755b3ab126866fcbea39d54032016a498b",
+        "receipt_before_sha256": "c3d5977c17f92977c215a5aa7673da87785099e90af660196047b62213c1a777"
+      },
+      "adjudication": "No semantic verdict. This invocation is retained separately from its retry; billing is unknown."
+    },
+    {
+      "invocation": "b03-002",
+      "recipe": "formalization/review/batch-v1/b03.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T13:06:27.151044+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "e737ebc836d3f7ec57fce478463240755b3ab126866fcbea39d54032016a498b",
+        "recipe_sha256": "a3c9dfd3399a00b34c432367b57260ed5e7d14414fa714ad8ef86109eec39615",
+        "packet_sha256": "d0038d6c719bb2059596b13d912e0be9546e8db306ccca6e41e153fd93cbf52c",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "Together",
+        "usage": {
+          "prompt_tokens": 31837,
+          "completion_tokens": 1078,
+          "total_tokens": 32915,
+          "cost": 0.00531455,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00531455,
+            "upstream_inference_prompt_cost": 0.00477555,
+            "upstream_inference_completions_cost": 0.000539
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 377,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.00531455,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "response_sha256": "14b6c98f458626ec6c7c6371cb83f57022fa94b731e924a50671f65b91087aec",
+        "response_id": "gen-1790255187-Ubt8RNJofUDVNFVRkit9",
+        "finish_reason": "stop",
+        "verdict": "reject",
+        "finished_at": "2026-09-24T13:06:40.799538+00:00",
+        "elapsed_seconds": 13.64683781703934
+      },
+      "effective_state": "completed",
+      "classification": "false_rejection",
+      "adjudication": "Incorrect claim that Lean Int division truncates toward zero. In pinned Lean, (-1)/(2^32) is -1, and the exact proposed signed counterexample gives 0xffffffff in the correct fixture. Checked directly; candidate unchanged."
+    },
+    {
+      "invocation": "b04-001",
+      "recipe": "formalization/review/batch-v1/b04.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T12:54:22.300413+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "9068946a2206db7985be8cc5c633e7c57cefd66ccc38180ec15f9476b59abe0e",
+        "recipe_sha256": "648d9628dc1346d3c7ea3e2bc45c70bb940b2a45e705f6163b1f54e8128adb7f",
+        "packet_sha256": "93225817072950b0db7c748fc01c9da10c8479cc185e6bd0757eb458da9d76dd",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "InferenceNet",
+        "usage": {
+          "prompt_tokens": 32187,
+          "completion_tokens": 1690,
+          "total_tokens": 33877,
+          "cost": 0.001685015,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.001685015,
+            "upstream_inference_prompt_cost": 0.001448415,
+            "upstream_inference_completions_cost": 0.0002366
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 774,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.001685015,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "response_sha256": "8ce6fe77b3bb732aadc5d92c717bc18b5be3656b792d04a1dadb20f7adcb21fc",
+        "response_id": "gen-1790254462-rplIRQs4IOb6zq6BmX3R",
+        "finish_reason": "stop",
+        "verdict": "accept",
+        "finished_at": "2026-09-24T12:54:52.127686+00:00",
+        "elapsed_seconds": 29.82440363103524
+      },
+      "effective_state": "completed",
+      "classification": "correct_accept",
+      "adjudication": "No finding on the correct extraction fixture; coordinator source review agrees."
+    },
+    {
+      "invocation": "b05-001",
+      "recipe": "formalization/review/batch-v1/b05.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T12:54:29.081628+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "a2ee455b3ede26fef17aed353150c8f77530e92fb840f5ee1648ccefa41e68d5",
+        "recipe_sha256": "4731ea6236ad6e156586e6c9b7a531db059c2a5fd153b5923fe494372a55bba8",
+        "packet_sha256": "a9b9c6dece20679066a4579a54a51f9d16124982c524c32790535613024a6ecf",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "InferenceNet",
+        "usage": {
+          "prompt_tokens": 31338,
+          "completion_tokens": 863,
+          "total_tokens": 32201,
+          "cost": 0.00151311,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 512,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00151311,
+            "upstream_inference_prompt_cost": 0.00139229,
+            "upstream_inference_completions_cost": 0.00012082
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 110,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.00151311,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "response_sha256": "5b11a2d728077f1e4635c90455861258718333604a8bd352ee1384998eb76987",
+        "response_id": "gen-1790254469-jCLKoNmm9REzxSis6pJQ",
+        "finish_reason": "stop",
+        "verdict": "reject",
+        "finished_at": "2026-09-24T12:54:45.898773+00:00",
+        "elapsed_seconds": 16.81515227886848
+      },
+      "effective_state": "completed",
+      "classification": "seed_detected",
+      "adjudication": "Correctly identifies identity in place of bit reversal. Input one gives one in the faulty fixture and 0x80000000 in the control; both checked in Lean."
+    },
+    {
+      "invocation": "b06-001",
+      "recipe": "formalization/review/batch-v1/b06.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "started",
+        "started_at": "2026-09-24T12:54:46.778332+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "a8fc2f367edd6eb827167da265ad9f5d12268faab88eaa1ed98d32b2a6e9548c",
+        "recipe_sha256": "b8a8524adfeb59f14bf93de4fc3bd4602e960bbc69904928193fe55fd7397478",
+        "packet_sha256": "76ee487e3574e74b83357179e7881349cac78c7eb350158ede0c8c36004582e0",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": null,
+        "provider": null,
+        "usage": null,
+        "reported_cost": null,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "finished_at": "2026-09-24T13:06:18.031377+00:00",
+        "elapsed_seconds": 691.2510082609951
+      },
+      "effective_state": "coordinator_interrupted",
+      "resolution": {
+        "state": "coordinator_interrupted",
+        "at": "2026-09-24T13:06:18.031100+00:00",
+        "reason": "No completed response after more than ten minutes. Existing socket timeout is not a total wall-time bound. One identical-packet retry authorized by coordinator; no semantic verdict inferred.",
+        "pid": 3988231,
+        "request_sha256": "a8fc2f367edd6eb827167da265ad9f5d12268faab88eaa1ed98d32b2a6e9548c",
+        "receipt_before_sha256": "8debb6f14a35fb69da3f4eaab108aeeb452b459837922ae77a3ff006e001a0e0"
+      },
+      "adjudication": "No semantic verdict. This invocation is retained separately from its retry; billing is unknown."
+    },
+    {
+      "invocation": "b06-002",
+      "recipe": "formalization/review/batch-v1/b06.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T13:06:27.149107+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "a8fc2f367edd6eb827167da265ad9f5d12268faab88eaa1ed98d32b2a6e9548c",
+        "recipe_sha256": "b8a8524adfeb59f14bf93de4fc3bd4602e960bbc69904928193fe55fd7397478",
+        "packet_sha256": "76ee487e3574e74b83357179e7881349cac78c7eb350158ede0c8c36004582e0",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "Together",
+        "usage": {
+          "prompt_tokens": 31857,
+          "completion_tokens": 1772,
+          "total_tokens": 33629,
+          "cost": 0.00566455,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00566455,
+            "upstream_inference_prompt_cost": 0.00477855,
+            "upstream_inference_completions_cost": 0.000886
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 1069,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.00566455,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "response_sha256": "7d33f53223758e889aab4521292230aaf489937da7a707a3d182a599ca00c6d8",
+        "response_id": "gen-1790255187-nLcv151c3xDIjQLHXqXr",
+        "finish_reason": "stop",
+        "verdict": "reject",
+        "finished_at": "2026-09-24T13:07:01.259114+00:00",
+        "elapsed_seconds": 34.10826228396036
+      },
+      "effective_state": "completed",
+      "classification": "seed_detected",
+      "adjudication": "Correctly identifies unsigned interpretation in signed multiplication. For (0xffffffff,1), faulty result is zero and correct signed high half is 0xffffffff; both checked in Lean."
+    },
+    {
+      "invocation": "bfe32-001",
+      "recipe": "formalization/review/candidates/bfe32-001.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T13:06:18.859517+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "ddd87f7954889ec127de62f7badc49cb1981de4442e2a7aa3af0d722ff31ffaa",
+        "recipe_sha256": "0f47af9c93cf1af50534299a5468c94a50b917eb0618bf3c6d9de02f19da9467",
+        "packet_sha256": "e922ad5739897403b64e068c999dc3cc28a680446ed3f5ced8b55e4194b2a2be",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "OpenInference",
+        "usage": {
+          "prompt_tokens": 32574,
+          "completion_tokens": 3961,
+          "total_tokens": 36535,
+          "cost": 0.00309245,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 28606,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00309245,
+            "upstream_inference_prompt_cost": 0.00111195,
+            "upstream_inference_completions_cost": 0.0019805
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 2635,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.00309245,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "response_sha256": "94485327b45efd4a71e3ce93a0dd8bfb809c5d5d50dfc01365415d55112e00bf",
+        "response_id": "gen-1790255179-GcXs3RwMVoyav37CvzY0",
+        "finish_reason": "stop",
+        "verdict": "uncertain",
+        "finished_at": "2026-09-24T13:08:03.764487+00:00",
+        "elapsed_seconds": 104.90285732387565
+      },
+      "effective_state": "completed",
+      "classification": "unfounded_uncertainty",
+      "adjudication": "Packet contains the complete definition, including both modulo-256 bindings and Nat-valued position/length; no code was elided. Reported signedness case conflates unsigned zero fill and signed sign fill; both exact results checked. Immediate sources are explicit in the task scope and supported by the general instruction/constant sections, considered alongside the source-operands register-state-space wording. No defect demonstrated; coordinator source review accepts the stated typed interface, without raw parser or assembler claims."
+    },
+    {
+      "invocation": "brev32-001",
+      "recipe": "formalization/review/candidates/brev32-001.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T12:54:52.962410+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "f292796a41a1f7b039bd07583db30b7cf97850a20e64694daf1460ee8da82df0",
+        "recipe_sha256": "362caf1b78ff44a1f21c1070dba8c985e3916971186592cc252b6c885d5cb7f5",
+        "packet_sha256": "bf87d1a9d53ab0aba49e8e5d16c0e9f96602fa6a5b5faab65c3bae91fa039436",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "InferenceNet",
+        "usage": {
+          "prompt_tokens": 31550,
+          "completion_tokens": 1198,
+          "total_tokens": 32748,
+          "cost": 0.00158747,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00158747,
+            "upstream_inference_prompt_cost": 0.00141975,
+            "upstream_inference_completions_cost": 0.00016772
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 623,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.00158747,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "response_sha256": "2815488450ebc6612b4b8749c156e995c12f99c79231e8e0553265810656e6de",
+        "response_id": "gen-1790254493-rSm3aZ3ckAkIzJGPgKNh",
+        "finish_reason": "stop",
+        "verdict": "accept",
+        "finished_at": "2026-09-24T12:55:19.479509+00:00",
+        "elapsed_seconds": 26.515145464101806
+      },
+      "effective_state": "completed",
+      "classification": "correct_accept",
+      "adjudication": "No finding on the actual worker candidate; coordinator source/proof review and fresh replay agree."
+    },
+    {
+      "invocation": "mulhi32-001",
+      "recipe": "formalization/review/candidates/mulhi32-001.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "started",
+        "started_at": "2026-09-24T12:55:20.331138+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "fa7f4de0d2015dc0602f800612bf3f15fd0bd60bf4fdb414d681d7cb87d158d4",
+        "recipe_sha256": "f7f71799e7a0dc5d86edb0bb361e5743445237ee38ce17a7677db3fdcaca1d1a",
+        "packet_sha256": "fc0f25475cc424ce17e5ea7700e101bd4795a49b4d349bb1b3aa23a1dfa162e7",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": null,
+        "provider": null,
+        "usage": null,
+        "reported_cost": null,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "finished_at": "2026-09-24T13:06:18.031627+00:00",
+        "elapsed_seconds": 657.6984894229099
+      },
+      "effective_state": "coordinator_interrupted",
+      "resolution": {
+        "state": "coordinator_interrupted",
+        "at": "2026-09-24T13:06:18.031323+00:00",
+        "reason": "No completed response after more than ten minutes. Existing socket timeout is not a total wall-time bound. One identical-packet retry authorized by coordinator; no semantic verdict inferred.",
+        "pid": 3989202,
+        "request_sha256": "fa7f4de0d2015dc0602f800612bf3f15fd0bd60bf4fdb414d681d7cb87d158d4",
+        "receipt_before_sha256": "1bbaa2ebcfa765c9b5f5d78cffcecab04a7480d9f0973ad22795b9e89f61d12f"
+      },
+      "adjudication": "No semantic verdict. This invocation is retained separately from its retry; billing is unknown."
+    },
+    {
+      "invocation": "mulhi32-002",
+      "recipe": "formalization/review/candidates/mulhi32-001.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "completed",
+        "started_at": "2026-09-24T13:06:27.139978+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "fa7f4de0d2015dc0602f800612bf3f15fd0bd60bf4fdb414d681d7cb87d158d4",
+        "recipe_sha256": "f7f71799e7a0dc5d86edb0bb361e5743445237ee38ce17a7677db3fdcaca1d1a",
+        "packet_sha256": "fc0f25475cc424ce17e5ea7700e101bd4795a49b4d349bb1b3aa23a1dfa162e7",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": "z-ai/glm-5.3-flash",
+        "provider": "Together",
+        "usage": {
+          "prompt_tokens": 32089,
+          "completion_tokens": 964,
+          "total_tokens": 33053,
+          "cost": 0.00529535,
+          "is_byok": false,
+          "prompt_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0,
+            "audio_tokens": 0,
+            "video_tokens": 0
+          },
+          "cost_details": {
+            "upstream_inference_cost": 0.00529535,
+            "upstream_inference_prompt_cost": 0.00481335,
+            "upstream_inference_completions_cost": 0.000482
+          },
+          "completion_tokens_details": {
+            "reasoning_tokens": 244,
+            "image_tokens": 0,
+            "audio_tokens": 0
+          }
+        },
+        "reported_cost": 0.00529535,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "response_sha256": "addcbf3dea8d049c4199229e37f226bce2bd39efdbf15bb233564986565ad680",
+        "response_id": "gen-1790255187-SaJ4RrZHnHNfPKxLvXfO",
+        "finish_reason": "stop",
+        "verdict": "reject",
+        "finished_at": "2026-09-24T13:06:39.405762+00:00",
+        "elapsed_seconds": 12.262723680119962
+      },
+      "effective_state": "completed",
+      "classification": "false_rejection",
+      "adjudication": "Same false Lean integer-division claim as b03. The exact input (0xffffffff,1) evaluates to 0xffffffff; the allegation of zero is refuted by a checked Lean example. No candidate edit."
+    }
+  ],
+  "counts": {
+    "distinct_packets": 9,
+    "total_invocations": 12,
+    "first_attempt_completions": 6,
+    "coordinator_interruptions": 3,
+    "identical_packet_retries": 3,
+    "completed_reports": 9,
+    "blinded_faults_detected": 3,
+    "blinded_faults_total": 3,
+    "blinded_controls_accepted": 2,
+    "blinded_controls_total": 3,
+    "blinded_control_false_rejections": 1,
+    "worker_candidate_accepts": 1,
+    "worker_candidate_false_rejections": 1,
+    "worker_candidate_unfounded_uncertainties": 1
+  },
+  "known_reported_cost_usd": "0.027346240",
+  "invocations_with_unknown_cost": 3,
+  "qualification": "Costs exclude Codex and unknown billing for three interrupted requests. Initial socket timeout 300 seconds did not bound whole responses. Three slow calls interrupted after ten minutes; identical retries used a coordinator wall-time bound of 600 seconds, without changing packets, model settings or runner. This operational adaptation is explicit; no tuning of semantic prompts. Six fixture cases span only three related families, with coordinator-supplied semantics. No general accuracy estimate."
+}

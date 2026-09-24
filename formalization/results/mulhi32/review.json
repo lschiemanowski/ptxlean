@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "state": "completed",
+  "started_at": "2026-09-24T13:06:27.139978+00:00",
+  "requested_model": "z-ai/glm-5.3-flash",
+  "request_sha256": "fa7f4de0d2015dc0602f800612bf3f15fd0bd60bf4fdb414d681d7cb87d158d4",
+  "recipe_sha256": "f7f71799e7a0dc5d86edb0bb361e5743445237ee38ce17a7677db3fdcaca1d1a",
+  "packet_sha256": "fc0f25475cc424ce17e5ea7700e101bd4795a49b4d349bb1b3aa23a1dfa162e7",
+  "helper_sha256": {
+    "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+    "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+    "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+  },
+  "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+  "reported_model": "z-ai/glm-5.3-flash",
+  "provider": "Together",
+  "usage": {
+    "prompt_tokens": 32089,
+    "completion_tokens": 964,
+    "total_tokens": 33053,
+    "cost": 0.00529535,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.00529535,
+      "upstream_inference_prompt_cost": 0.00481335,
+      "upstream_inference_completions_cost": 0.000482
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 244,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "reported_cost": 0.00529535,
+  "semantic_acceptance": "not_performed",
+  "timeout_seconds": 300,
+  "response_sha256": "addcbf3dea8d049c4199229e37f226bce2bd39efdbf15bb233564986565ad680",
+  "response_id": "gen-1790255187-SaJ4RrZHnHNfPKxLvXfO",
+  "finish_reason": "stop",
+  "verdict": "reject",
+  "finished_at": "2026-09-24T13:06:39.405762+00:00",
+  "elapsed_seconds": 12.262723680119962,
+  "coordinator_classification": "false_rejection",
+  "coordinator_adjudication": "Same false Lean integer-division claim as b03. The exact input (0xffffffff,1) evaluates to 0xffffffff; the allegation of zero is refuted by a checked Lean example. No candidate edit.",
+  "protocol_changed": false,
+  "prior_invocations": [
+    {
+      "invocation": "mulhi32-001",
+      "recipe": "formalization/review/candidates/mulhi32-001.json",
+      "receipt": {
+        "schema_version": 1,
+        "state": "started",
+        "started_at": "2026-09-24T12:55:20.331138+00:00",
+        "requested_model": "z-ai/glm-5.3-flash",
+        "request_sha256": "fa7f4de0d2015dc0602f800612bf3f15fd0bd60bf4fdb414d681d7cb87d158d4",
+        "recipe_sha256": "f7f71799e7a0dc5d86edb0bb361e5743445237ee38ce17a7677db3fdcaca1d1a",
+        "packet_sha256": "fc0f25475cc424ce17e5ea7700e101bd4795a49b4d349bb1b3aa23a1dfa162e7",
+        "helper_sha256": {
+          "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+          "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+          "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+        },
+        "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+        "reported_model": null,
+        "provider": null,
+        "usage": null,
+        "reported_cost": null,
+        "semantic_acceptance": "not_performed",
+        "timeout_seconds": 300,
+        "finished_at": "2026-09-24T13:06:18.031627+00:00",
+        "elapsed_seconds": 657.6984894229099
+      },
+      "effective_state": "coordinator_interrupted",
+      "resolution": {
+        "state": "coordinator_interrupted",
+        "at": "2026-09-24T13:06:18.031323+00:00",
+        "reason": "No completed response after more than ten minutes. Existing socket timeout is not a total wall-time bound. One identical-packet retry authorized by coordinator; no semantic verdict inferred.",
+        "pid": 3989202,
+        "request_sha256": "fa7f4de0d2015dc0602f800612bf3f15fd0bd60bf4fdb414d681d7cb87d158d4",
+        "receipt_before_sha256": "1bbaa2ebcfa765c9b5f5d78cffcecab04a7480d9f0973ad22795b9e89f61d12f"
+      },
+      "adjudication": "No semantic verdict. This invocation is retained separately from its retry; billing is unknown."
+    }
+  ]
+}

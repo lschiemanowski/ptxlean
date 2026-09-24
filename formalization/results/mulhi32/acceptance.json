@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "task": "mulhi32-v1",
+  "selected_forms": [
+    "mul.hi.u32",
+    "mul.hi.s32"
+  ],
+  "base_commit": "ee4689395058b8eef9164aafb2866c6b96d88abc",
+  "accepted_patch_sha256": "877132f8a8b47eb47fe5341377bc449c256881d2df0ec41dfda87f505a0f617b",
+  "worker_attempt": "mulhi32-001",
+  "mechanical_replay": "replays/mulhi32-001/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "Exact worker patch integrated; combined checks are recorded in final Stratic acceptance.",
+  "reviewer": "Coordinator source/statement inspection and fresh replay; GLM opinion advisory.",
+  "source_conditions": {
+    "ptx_minimum": "1.0",
+    "target_minimum": "sm_10 feature floor; not recognized-target validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "integer-arithmetic-instructions-mul"
+    ]
+  },
+  "trial_invocations": 1,
+  "repair_invocations": 0,
+  "campaign_call_numbers": [
+    21
+  ],
+  "qualification": "Precise coordinator-supplied definitions and eighteen theorem contracts; full checker preflight before dispatch. No worker feedback, candidate edits or post-dispatch checker changes. Separate reference fixtures are coordinator preparation, not model output."
+}

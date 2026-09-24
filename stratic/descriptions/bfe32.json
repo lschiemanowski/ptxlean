@@ -11,7 +11,20 @@
     "Preserve zero-length behavior and signed extension beyond the input boundary.",
     "Reuse guarded execution and exact typed decoding within ISA 9.4 and SM at least 20."
   ],
-  "realization": "unimplemented",
-  "remaining": "Frozen worker obligations and pre-dispatch checker validation in preparation; leaf implementation and source/proof acceptance remain pending.",
-  "links": []
+  "realization": "implemented",
+  "remaining": "Selected forms passed frozen all-input obligations and fresh replay. Other spellings/widths, raw-module validation and hardware correspondence remain outside this leaf.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The selected `bfe.u32` and `bfe.s32` instructions take an input word, a starting\nbit position and a field length. Bit zero is the least significant bit. Only\nthe low eight bits of the position and length matter, giving values from zero\nthrough 255. A zero length produces zero, including when the input is negative."
+      },
+      "to": {
+        "path": "Ptx/Bfe32.lean",
+        "passage": {
+          "quote": "def compute (op : Operation) (a b c : Word) : Word :="
+        }
+      }
+    }
+  ]
 }

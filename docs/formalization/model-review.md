@@ -68,3 +68,10 @@ schema appears in the prompt, and local validation remains mandatory. This
 improves report formatting; it does not establish semantic accuracy. The pilot
 supports using these reviewers as additional evidence, with coordinator review
 still required for integration.
+
+The [three-family frozen trial](../../formalization/results/batch-v1/README.md)
+adds fresh fixture and worker-candidate evidence under the unchanged v4 semantic
+protocol. It records both detected faults and false findings, plus three slow
+requests interrupted and retried with identical request bytes. The socket timeout
+is not a total wall-time deadline; those retries used an external coordinator
+bound. Interrupted-request billing remains unknown.

@@ -7,7 +7,7 @@
     }
   },
   "summary": [
-    "Record seventeen selected accepted instruction forms with exact operand, source, proof and replay evidence.",
+    "Record twenty-two selected accepted instruction forms with exact operand, source, proof and replay evidence.",
     "Distinguish accepted signed/unsigned arithmetic, bit counts, selection and binary32 slices from uncovered widths, modifiers and whole sections.",
     "Reject stale file hashes and inconsistent provenance while preserving the separate need for Lean checks and semantic review."
   ],
@@ -16,7 +16,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "An accepted form is a particular spelling and operand contract, not an entire\ninstruction name. This ledger records seventeen independently reviewed forms:\n`min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32`, `mul.rn.f32`,\n`selp.b32`, `min.s32`, `max.s32`, `and.b32`, `or.b32`, `xor.b32`,\n`not.b32`, `cnot.b32`, `shl.b32`, `shr.u32` and `shr.s32`.\nThe integer forms compare signed or unsigned words, count, shift or combine bits, test whether a word is zero, or select a\nword using a predicate, with exact results for all input patterns. The floating forms add or multiply encoded binary32 values\nwith nearest-even rounding and preserved subnormal values. Their result relation\nkeeps every non-NaN reference bit, including zero signs, and conservatively\nadmits NaN encodings; it does not assert that every such encoding is realizable.\nThe broader instruction-section inventory remains unassessed."
+        "quote": "An accepted form is a particular spelling and operand contract, not an entire\ninstruction name. This ledger records twenty-two independently reviewed forms:\n`min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32`, `mul.rn.f32`,\n`selp.b32`, `min.s32`, `max.s32`, `and.b32`, `or.b32`, `xor.b32`,\n`not.b32`, `cnot.b32`, `shl.b32`, `shr.u32` and `shr.s32`.\nThe integer forms compare signed or unsigned words, count, shift or combine bits, test whether a word is zero, or select a\nword using a predicate, with exact results for all input patterns. The floating forms add or multiply encoded binary32 values\nwith nearest-even rounding and preserved subnormal values. Their result relation\nkeeps every non-NaN reference bit, including zero signs, and conservatively\nadmits NaN encodings; it does not assert that every such encoding is realizable.\nThe broader instruction-section inventory remains unassessed."
       },
       "to": {
         "path": "coverage/implemented-forms.json",

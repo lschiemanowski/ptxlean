@@ -1,0 +1,105 @@
+{
+  "base_commit": "ee4689395058b8eef9164aafb2866c6b96d88abc",
+  "files": [
+    {
+      "path": "Ptx/MulHi32.lean",
+      "role": "candidate",
+      "sha256": "47e2b0e1fc897e50e5a03f76ccb14c9e7c2e20f73e823af196ba78544cd17a27"
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "role": "support",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "role": "support",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "role": "support",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "role": "support",
+      "sha256": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "role": "support",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "meaning",
+      "text": "Return the upper 32 bits of the full 64-bit product. Unsigned operands use values 0 through 2^32-1; signed operands use two-complement values. Signed division by positive 2^32 is floor division, including negative products. No saturation or extra range assumptions. Introduced in PTX 1.0; all target architectures (numeric feature floor sm_10). All 32-bit input words and source/destination aliases are allowed."
+    },
+    {
+      "id": "state",
+      "text": "Evaluate sources in the incoming state before writing the destination; permit repeated sources and source/destination aliases. Only the selected word register and incremented program counter change."
+    },
+    {
+      "id": "guards",
+      "text": "Both positive and negative instruction guards are supported. A false guard skips the write and advances only the program counter. The selected operations have no additional predicate operands."
+    },
+    {
+      "id": "events",
+      "text": "The occurrence identifies the fetched instruction and original program counter. Enabled syntactic reads include guard then word operands then predicate operands, retaining repeats. Disabled instructions read only the guard. No memory effect is claimed."
+    },
+    {
+      "id": "target",
+      "text": "Target slice: ISA exactly 94, numeric SM at least 10, including false guarded steps. This is a feature requirement, not GPU name validation."
+    },
+    {
+      "id": "decoder",
+      "text": "Exactly mul.hi.u32, mul.hi.s32 with word-register destination then 2 word sources in field order. Preserve guards. Malformed known spellings return invalidOperands; all other names return unsupportedMnemonic. Decode succeeds iff the statement is the encoding. Compatible declarations and immediate conversion are supplied; no raw parser claim."
+    },
+    {
+      "id": "proofs",
+      "text": "Universal transition, frame, deterministic result, one-step existence and origin theorems must follow the actual definitions without excluding aliases or input bit patterns. Absence of raw module parsing, declared-register checking and whole-kernel termination is within the deliberate scope."
+    }
+  ],
+  "patch": {
+    "path": "formalization/review/batch-v1/b06.patch",
+    "sha256": "1951344248c88f4e36944dbb02a919384b19464d0d7f19e8431365d273abdd0f"
+  },
+  "schema_version": 1,
+  "scope": "Selected mul.hi.u32, mul.hi.s32 leaf only; all other spellings, widths, options, raw parsing and hardware correspondence are outside scope. Existing support files are fixed.",
+  "sections": [
+    {
+      "anchor": "predicated-execution",
+      "sha256": "e3de38b106e96f1ccdd8c7710b2efbaa5ea2bde35959da999d2075a12162dd1f"
+    },
+    {
+      "anchor": "instruction-statements",
+      "sha256": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a"
+    },
+    {
+      "anchor": "operand-type-information",
+      "sha256": "2b4deb7a2de0f26463be8ea631b19d3262067641e45c4ca98261b61ff73945a7"
+    },
+    {
+      "anchor": "source-operands",
+      "sha256": "a981cf489133f764d2b9d621b4653ead71abb7709a83a323eccb55bddb8b6fa2"
+    },
+    {
+      "anchor": "destination-operands",
+      "sha256": "46d9e524f958b92cb45b9d9c7113b315e3b44eaf6a69f5af707bb055c5ee6a70"
+    },
+    {
+      "anchor": "integer-constants",
+      "sha256": "d7a625de2e4a872a173e18cde51b2c3475cb2e37a811700332dbf9292713a9f2"
+    },
+    {
+      "anchor": "type-information-for-instructions-and-operands",
+      "sha256": "1191421bc4f06fb7dd96d159cf38c7396851b95257247d2a9c68f54d99f4ad78"
+    },
+    {
+      "anchor": "integer-arithmetic-instructions-mul",
+      "sha256": "b9a2d10dc98029a40cff2fb9c914234eaf6cfbffdcfbb5e58338d84bccc14cf9"
+    }
+  ]
+}

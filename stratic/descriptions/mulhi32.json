@@ -10,7 +10,20 @@
     "Return the upper half of signed or unsigned full 32-by-32-bit products.",
     "Preserve all input words, aliases and shared execution contracts within the selected target slice."
   ],
-  "realization": "unimplemented",
-  "remaining": "Frozen worker obligations and pre-dispatch checker validation in preparation; leaf implementation and source/proof acceptance remain pending.",
-  "links": []
+  "realization": "implemented",
+  "remaining": "Selected forms passed frozen all-input obligations and fresh replay. Other spellings/widths, raw-module validation and hardware correspondence remain outside this leaf.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Multiplying two 32-bit integers can require 64 bits. The selected `mul.hi.u32`\nand `mul.hi.s32` instructions return the upper 32 bits of that full product.\nThe unsigned form treats each input as a number from zero to 2^32-1. The signed\nform uses two's complement: a word whose highest bit is set represents a negative\nnumber. The signed high half corresponds to division by 2^32 rounded downward,\nincluding for negative products. It does not mean truncation toward zero."
+      },
+      "to": {
+        "path": "Ptx/MulHi32.lean",
+        "passage": {
+          "quote": "def compute (op : Operation) (a b : Word) : Word :="
+        }
+      }
+    }
+  ]
 }

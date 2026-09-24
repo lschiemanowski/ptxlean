@@ -10,7 +10,20 @@
     "Reverse all 32 bits, admitting all input words and aliases.",
     "Retain guarded execution and exact typed decoding within ISA 9.4 and SM at least 20."
   ],
-  "realization": "unimplemented",
-  "remaining": "Frozen worker obligations and pre-dispatch checker validation in preparation; leaf implementation and source/proof acceptance remain pending.",
-  "links": []
+  "realization": "implemented",
+  "remaining": "Selected forms passed frozen all-input obligations and fresh replay. Other spellings/widths, raw-module validation and hardware correspondence remain outside this leaf.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The selected `brev.b32` instruction reverses the order of all 32 bits. The bit\nat position zero (the least significant bit) moves to position 31, and vice\nversa. This does not merely reverse the order of four bytes."
+      },
+      "to": {
+        "path": "Ptx/Brev32.lean",
+        "passage": {
+          "quote": "def compute (op : Operation) (a : Word) : Word :="
+        }
+      }
+    }
+  ]
 }

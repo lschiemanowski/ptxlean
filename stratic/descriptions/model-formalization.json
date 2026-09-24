@@ -14,7 +14,7 @@
     "Validate checking code before dispatch and distinguish checker repairs from worker failures."
   ],
   "realization": "partial",
-  "remaining": "The source-section inventory, recorded fresh/resumed Luna calls, pinned worker provisioning and replay, selected-form provenance and targeted semantic mutation probes are implemented. Reviewed tasks cover selected integer, bitwise and binary32 forms with coordinator-supplied contracts and repair feedback. A separate fixed-context OpenRouter reviewer route and blinded development cases are implemented. Reliable reviewer-quality evidence, full form coverage, broader capability evidence, held-out evaluation and cost effectiveness remain unfinished.",
+  "remaining": "The source-section inventory, recorded fresh/resumed Luna calls, pinned worker provisioning and replay, selected-form provenance and targeted semantic mutation probes are implemented. Reviewed tasks cover selected integer, bitwise and binary32 forms with coordinator-supplied contracts. A three-family batch uses preflighted frozen checkers and preserves first-attempt outcomes separately from earlier repaired trials. A separate fixed-context OpenRouter reviewer route and blinded development cases are implemented. Reliable reviewer-quality evidence, full form coverage, broader capability evidence, held-out evaluation and cost effectiveness remain unfinished.",
   "links": [
     {
       "kind": "implementation",
@@ -25,6 +25,18 @@
         "path": "formalization/results/minmax-u32/README.md",
         "passage": {
           "quote": "This is **one adaptive development task**, not a held-out benchmark. It supports\nthe conclusion that the requested Luna configuration can finish this task after\nfeedback. It does not establish a full-ISA success rate or cost effectiveness."
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Before dispatch, the coordinator exercises the complete acceptance checks on a\nseparate reference fixture and checks that deliberately wrong results are rejected."
+      },
+      "to": {
+        "path": "formalization/review/check_batch_v1.py",
+        "passage": {
+          "quote": "def main():"
         }
       }
     }

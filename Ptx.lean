@@ -71,3 +71,6 @@ import Ptx.ReviewedPure
 import Ptx.MaskSelect
 import Ptx.PureKernelExamples
 import Ptx.Shift32
+import Ptx.Brev32
+import Ptx.MulHi32
+import Ptx.Bfe32
