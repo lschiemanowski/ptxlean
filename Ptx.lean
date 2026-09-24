@@ -29,3 +29,6 @@ import Ptx.SharedBarrier
 import Ptx.AffineMemory
 
 import Ptx.SequentialStorage
+
+import Ptx.Pure32
+import Ptx.Pure32Examples

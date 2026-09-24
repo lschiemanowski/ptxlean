@@ -1,0 +1,138 @@
+{
+  "id": "pure-instruction-families",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "Reusable execution and safety rules support concrete scalar kernel proofs.\nExamples establish functional results, memory safety, execution existence, and\ntermination under explicit premises, without substituting any one property for\nthe others. Explanations connect source semantics and instruction traces to the\nLean definitions and proofs."
+    }
+  },
+  "summary": [
+    "Reuse scalar state and guard handling for total pure operations with finite word and predicate operands and one word destination.",
+    "Prove exact predicated transitions, frame and operand metadata, actual fetched origin and one-step existence without assuming family-specific PTX fidelity.",
+    "Keep operation relations, target restrictions, text legality and accepted instruction coverage separate from the reusable execution mechanism."
+  ],
+  "realization": "implemented",
+  "remaining": "The total pure-family mechanism, predicated evaluation and fetched-step proofs are implemented. Family-specific semantics/source fidelity, leaf decoders, accepted instruction coverage and whole-program execution remain separate obligations.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each family specifies its operations, their numbers of value and predicate\noperands, the permitted result relation, and the targets supporting each\noperation. A result relation can allow several output words. The family must\nprove that a result exists for every assignment of its operand values; this\ninterface is for total pure operations on those values. That proof establishes\nnonemptiness, not fidelity to PTX. The family-specific semantics, target\nconditions and source justification still need independent review."
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "structure Family (Operation : Type) where\n  wordArity : Operation \u2192 Nat\n  predicateArity : Operation \u2192 Nat\n  Results : (op : Operation) \u2192 (Fin (wordArity op) \u2192 Word) \u2192\n    (Fin (predicateArity op) \u2192 Bool) \u2192 Word \u2192 Prop\n  inhabited : \u2200 op words predicates, \u2203 value, Results op words predicates value\n  Supported : Target \u2192 Operation \u2192 Prop"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "When the guard is true, every input is evaluated in the incoming state before\nthe destination is written. Sources may repeat or name the destination. Only\nthat value register changes, and the program counter advances by one. When the\nguard is false, all register banks and memory remain unchanged and only the\nprogram counter advances. A fetched step additionally requires that this exact\ninstruction occurs at the current program counter and is supported on the\nselected target, including when its guard is false."
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "theorem eval_true_iff (i : Instr family) (s next : State) (event : Occurrence family)\n    (enabled : i.guard.eval s = true) :\n    Eval i s next event \u2194 \u2203 value,\n      family.Results i.operation (i.wordValues s) (i.predicateValues s) value \u2227\n      next = write s i.destination value \u2227 event = occurrence s i true"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "When the guard is true, every input is evaluated in the incoming state before\nthe destination is written. Sources may repeat or name the destination. Only\nthat value register changes, and the program counter advances by one. When the\nguard is false, all register banks and memory remain unchanged and only the\nprogram counter advances. A fetched step additionally requires that this exact\ninstruction occurs at the current program counter and is supported on the\nselected target, including when its guard is false."
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "theorem eval_alias_read (evaluated : Eval i s next event) (enabled : i.guard.eval s = true)\n    (index : Fin (family.wordArity i.operation)) (alias : i.words index = .reg i.destination) :\n    i.wordValues s index = s.regs i.destination \u2227\n      family.Results i.operation (i.wordValues s) (i.predicateValues s) (next.regs i.destination)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "When the guard is true, every input is evaluated in the incoming state before\nthe destination is written. Sources may repeat or name the destination. Only\nthat value register changes, and the program counter advances by one. When the\nguard is false, all register banks and memory remain unchanged and only the\nprogram counter advances. A fetched step additionally requires that this exact\ninstruction occurs at the current program counter and is supported on the\nselected target, including when its guard is false."
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "theorem eval_frame (evaluated : Eval i s next event) :\n    next.pc = s.pc + 1 \u2227 next.memory = s.memory \u2227 next.addrs = s.addrs \u2227 next.preds = s.preds"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The occurrence records the actual instruction, its original program counter,\nand whether it executed. Its read list contains the guard's predicate register,\nthen all value-operand registers and all predicate-operand registers in their\nargument order. Repeated reads remain repeated. A skipped instruction records\nonly its guard read, and no destination write. These lists describe direct\nsyntactic register operands; they are not a proof of PTX memory dependencies or\nthat every operand can affect every result. No occurrence carries a memory event."
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "def Instr.sourceReads (i : Instr family) : List Register"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The occurrence records the actual instruction, its original program counter,\nand whether it executed. Its read list contains the guard's predicate register,\nthen all value-operand registers and all predicate-operand registers in their\nargument order. Repeated reads remain repeated. A skipped instruction records\nonly its guard read, and no destination write. These lists describe direct\nsyntactic register operands; they are not a proof of PTX memory dependencies or\nthat every operand can affect every result. No occurrence carries a memory event."
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "theorem eval_reads (evaluated : Eval i s next event) :\n    event.reads = i.guard.reads ++ (if i.guard.eval s then i.sourceReads else [])"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The common proofs expose the exact enabled and skipped transitions, destination\nresult relation, unchanged state, instruction origin and one-step existence.\nDeterminism requires a separate proof that the family's result relation permits\nat most one value. Family source proofs and text decoders can reuse this\nmechanism without modifying the scalar state or duplicating its transition\nrules. It supplies no complete-kernel termination result and adds no instruction\nto the accepted PTX coverage merely by admitting a family.\n"
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "theorem eval_preserves_choices (enabled : i.guard.eval s = true)\n    (left : family.Results i.operation (i.wordValues s) (i.predicateValues s) a)\n    (right : family.Results i.operation (i.wordValues s) (i.predicateValues s) b)\n    (different : a \u2260 b) :\n    Eval i s (write s i.destination a) (occurrence s i true) \u2227\n    Eval i s (write s i.destination b) (occurrence s i true) \u2227\n    write s i.destination a \u2260 write s i.destination b"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The common proofs expose the exact enabled and skipped transitions, destination\nresult relation, unchanged state, instruction origin and one-step existence.\nDeterminism requires a separate proof that the family's result relation permits\nat most one value. Family source proofs and text decoders can reuse this\nmechanism without modifying the scalar state or duplicating its transition\nrules. It supplies no complete-kernel termination result and adds no instruction\nto the accepted PTX coverage merely by admitting a family.\n"
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "theorem eval_deterministic\n    (functional : \u2200 words predicates a b,\n      family.Results i.operation words predicates a \u2192\n      family.Results i.operation words predicates b \u2192 a = b)\n    (left : Eval i s next\u2081 event\u2081) (right : Eval i s next\u2082 event\u2082) :\n    next\u2081 = next\u2082 \u2227 event\u2081 = event\u2082"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The common proofs expose the exact enabled and skipped transitions, destination\nresult relation, unchanged state, instruction origin and one-step existence.\nDeterminism requires a separate proof that the family's result relation permits\nat most one value. Family source proofs and text decoders can reuse this\nmechanism without modifying the scalar state or duplicating its transition\nrules. It supplies no complete-kernel termination result and adds no instruction\nto the accepted PTX coverage merely by admitting a family.\n"
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "theorem step_origin (stepped : Step target program s next event) :\n    \u2203 i, program[s.pc]? = some i \u2227 family.Supported target i.operation \u2227\n      event.pc = s.pc \u2227 event.instruction = i \u2227 Eval i s next event"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The common proofs expose the exact enabled and skipped transitions, destination\nresult relation, unchanged state, instruction origin and one-step existence.\nDeterminism requires a separate proof that the family's result relation permits\nat most one value. Family source proofs and text decoders can reuse this\nmechanism without modifying the scalar state or duplicating its transition\nrules. It supplies no complete-kernel termination result and adds no instruction\nto the accepted PTX coverage merely by admitting a family.\n"
+      },
+      "to": {
+        "path": "Ptx/Pure32.lean",
+        "passage": {
+          "quote": "theorem step_exists (i : Instr family) (fetch : program[s.pc]? = some i)\n    (supported : family.Supported target i.operation) : \u2203 next event, Step target program s next event"
+        }
+      }
+    }
+  ]
+}

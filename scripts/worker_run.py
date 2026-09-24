@@ -75,10 +75,10 @@ def replay_project(task):
     return value
 
 
-def project_inputs(task, root):
+def project_inputs(task, root, require_root=False):
     """Validate the narrow TOML subproject layout against immutable base bytes."""
     project = replay_project(task)
-    if project == ".":
+    if project == "." and not require_root:
         return None
     base = task["base_commit"]
     sources = {s["path"]: s["sha256"] for s in task["sources"]}
@@ -109,11 +109,12 @@ def project_inputs(task, root):
 
     directory = PurePosixPath(project)
     toolchain, config, manifest = load(directory)
-    root_toolchain, root_config, root_manifest = load(PurePosixPath("."))
-    if toolchain != root_toolchain:
-        raise ValueError("Replay project and root toolchains differ")
-    if root_manifest["packages"] or root_config.get("require"):
-        raise ValueError("Subproject replay currently requires a dependency-free root package")
+    if project != ".":
+        root_toolchain, root_config, root_manifest = load(PurePosixPath("."))
+        if toolchain != root_toolchain:
+            raise ValueError("Replay project and root toolchains differ")
+        if root_manifest["packages"] or root_config.get("require"):
+            raise ValueError("Subproject replay currently requires a dependency-free root package")
     dependencies = []
     names = set()
     for package in manifest["packages"]:
@@ -124,6 +125,8 @@ def project_inputs(task, root):
             raise ValueError("Unsafe or duplicate replay dependency name")
         names.add(disk_name)
         if package["type"] == "path":
+            if project == ".":
+                raise ValueError("Root provisioning does not support path dependencies")
             target = Path(project, package["dir"])
             normalized = Path(os.path.normpath(target))
             if target.is_absolute() or normalized != Path("."):
@@ -358,14 +361,13 @@ def execute(task_file, root, campaign, attempt, executable="codex"):
     directory = new_attempt(campaign, attempt, task, prompt)
     worktree = directory / "worktree"
     git(root, "worktree", "add", "--detach", str(worktree), task["base_commit"])
-    command = [executable, "exec", "--ignore-user-config", "--model", MODEL,
-               "--approve-for-me", "--json", "--cd", str(worktree),
-               "--output-last-message", str(directory / "final.md"), "-"]
+    command = headless_command(executable, worktree, directory)
     with worktree_locked(campaign, worktree):
         return dispatch(task, campaign, attempt, directory, worktree, prompt, command)
 
 
-def resume(root, campaign, attempt, resume_from, feedback_file, executable="codex"):
+def resume_preflight(root, campaign, resume_from, feedback_file):
+    """Validate a repair parent; caller must hold worktree_locked for the returned checkout."""
     root, campaign = Path(root).resolve(), Path(campaign).resolve()
     if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", resume_from):
         raise ValueError("Invalid prior attempt identifier")
@@ -381,46 +383,71 @@ def resume(root, campaign, attempt, resume_from, feedback_file, executable="code
     feedback = Path(feedback_file).read_text()
     if not feedback.strip():
         raise ValueError("Resume feedback must not be empty")
+    # The same checkout has one linear invocation history. Reject a stale parent
+    # even if a later run happened to leave identical file contents.
+    with locked(campaign):
+        calls = read_json(campaign / "ledger.json")["calls"]
+        related = []
+        for call in calls:
+            recorded_worktree = call.get("worktree")
+            if recorded_worktree is None:
+                old_receipt = campaign / "attempts" / call["attempt"] / "receipt.json"
+                if old_receipt.exists():
+                    recorded_worktree = read_json(old_receipt).get("worktree")
+            if recorded_worktree and Path(recorded_worktree).resolve() == worktree:
+                related.append(call)
+        if not related or related[-1]["attempt"] != resume_from:
+            raise ValueError("Resume must select the latest recorded invocation for this worktree")
+        if related[-1]["state"] not in {"completed", "failed", "interrupted"}:
+            raise ValueError("Prior ledger entry is unresolved; inspect it before resuming")
+    saved_patch = (previous_dir / "candidate.patch").read_bytes()
+    if sha(saved_patch) != previous.get("patch_sha256"):
+        raise ValueError("Prior patch record changed")
+    actual_patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], replay_project(task))
+    if actual_patch != saved_patch or not boundary["head_unchanged"]:
+        raise ValueError("Worktree does not match the prior recorded patch and commit")
+    if not boundary["eligible_for_review"] or changed_sources(worktree, task):
+        raise ValueError("Prior worktree violates its edit or pinned-source boundary")
+    sessions = event_summary(previous_dir / "events.jsonl")["reported_session_ids"]
+    if len(sessions) != 1:
+        raise ValueError("Prior output must identify exactly one Codex session")
+    session = sessions[0]
+    prompt = (task_prompt(task) + "\nContinue the recorded attempt " + resume_from +
+              ". Preserve its task obligations and finish the requested repair.\n\nFeedback:\n" + feedback)
+    return task, worktree, prompt, feedback, {
+        "resume_from": resume_from, "resumed_session_id": session,
+        "previous_patch_sha256": sha(saved_patch), "feedback_sha256": sha(feedback.encode())}
+
+
+def resume_worktree(campaign, resume_from):
+    if not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", resume_from):
+        raise ValueError("Invalid prior attempt identifier")
+    return Path(read_json(Path(campaign) / "attempts" / resume_from / "receipt.json")["worktree"]).resolve()
+
+
+def headless_command(executable, worktree, directory, session=None):
+    if session is None:
+        return [executable, "exec", "--ignore-user-config", "--model", MODEL,
+                "--approve-for-me", "--json", "--cd", str(worktree),
+                "--output-last-message", str(directory / "final.md"), "-"]
+    return [executable, "exec", "--approve-for-me", "--cd", str(worktree), "resume",
+            "--ignore-user-config", "--model", MODEL, "--json",
+            "--output-last-message", str(directory / "final.md"), session, "-"]
+
+
+def resume(root, campaign, attempt, resume_from, feedback_file, executable="codex"):
+    root, campaign = Path(root).resolve(), Path(campaign).resolve()
+    worktree = resume_worktree(campaign, resume_from)
     with worktree_locked(campaign, worktree):
-        # The same checkout has one linear invocation history. Reject a stale parent
-        # even if a later run happened to leave identical file contents.
-        with locked(campaign):
-            calls = read_json(campaign / "ledger.json")["calls"]
-            related = []
-            for call in calls:
-                recorded_worktree = call.get("worktree")
-                if recorded_worktree is None:
-                    old_receipt = campaign / "attempts" / call["attempt"] / "receipt.json"
-                    if old_receipt.exists():
-                        recorded_worktree = read_json(old_receipt).get("worktree")
-                if recorded_worktree and Path(recorded_worktree).resolve() == worktree:
-                    related.append(call)
-            if not related or related[-1]["attempt"] != resume_from:
-                raise ValueError("Resume must select the latest recorded invocation for this worktree")
-            if related[-1]["state"] not in {"completed", "failed", "interrupted"}:
-                raise ValueError("Prior ledger entry is unresolved; inspect it before resuming")
-        saved_patch = (previous_dir / "candidate.patch").read_bytes()
-        if sha(saved_patch) != previous.get("patch_sha256"):
-            raise ValueError("Prior patch record changed")
-        actual_patch, boundary = patch_and_boundary(worktree, task["base_commit"], task["allowed_paths"], replay_project(task))
-        if actual_patch != saved_patch or not boundary["head_unchanged"]:
-            raise ValueError("Worktree does not match the prior recorded patch and commit")
-        if not boundary["eligible_for_review"] or changed_sources(worktree, task):
-            raise ValueError("Prior worktree violates its edit or pinned-source boundary")
-        sessions = event_summary(previous_dir / "events.jsonl")["reported_session_ids"]
-        if len(sessions) != 1:
-            raise ValueError("Prior output must identify exactly one Codex session")
-        session = sessions[0]
-        prompt = (task_prompt(task) + "\nContinue the recorded attempt " + resume_from +
-                  ". Preserve its task obligations and finish the requested repair.\n\nFeedback:\n" + feedback)
+        task, checked_worktree, prompt, feedback, context = resume_preflight(
+            root, campaign, resume_from, feedback_file)
+        if checked_worktree != worktree:
+            raise ValueError("Prior worktree changed during resume validation")
         directory = new_attempt(campaign, attempt, task, prompt)
         (directory / "feedback.md").write_text(feedback)
-        command = [executable, "exec", "--approve-for-me", "--cd", str(worktree), "resume",
-                   "--ignore-user-config", "--model", MODEL, "--json",
-                   "--output-last-message", str(directory / "final.md"), session, "-"]
-        return dispatch(task, campaign, attempt, directory, worktree, prompt, command,
-                        resume_from=resume_from, resumed_session_id=session,
-                        previous_patch_sha256=sha(saved_patch), feedback_sha256=sha(feedback.encode()))
+        command = headless_command(executable, worktree, directory, context["resumed_session_id"])
+        return dispatch(task, campaign, attempt, directory, worktree, prompt, command, **context)
+
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)

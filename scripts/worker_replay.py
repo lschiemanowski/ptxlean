@@ -11,6 +11,8 @@ from check_proofs import ALLOWED_AXIOMS, FORBIDDEN, code_only
 from worker_run import (atomic_json, changed_sources, git, now, patch_and_boundary,
                         read_json, sha, validate_task, project_inputs, replay_project)
 
+from worker_project import provision_dependencies, verify_dependencies
+
 
 def validate_attempt(attempt, root):
     task = read_json(attempt / "task.json")
@@ -69,10 +71,12 @@ def replay(attempt, root, destination, modules, checks, declarations):
               "checker_sha256": sha(Path(__file__).read_bytes()), "started_at": now(),
               "replay_project": project, "project_inputs": project_info,
               "runner_sha256": sha(Path(__file__).with_name("worker_run.py").read_bytes()),
+              "project_helper_sha256": sha(Path(__file__).with_name("worker_project.py").read_bytes()),
               "commands": [], "drivers": [], "declarations": declarations,
               "mechanical": "running", "semantic_review": "not_performed",
               "integration": "not_performed"}
     worktree = destination / "worktree"
+    (destination / "project_helper.py").write_bytes(Path(__file__).with_name("worker_project.py").read_bytes())
     atomic_json(destination / "task.json", task)
     (destination / "candidate.patch").write_bytes(patch)
     atomic_json(destination / "result.json", record)
@@ -107,15 +111,6 @@ def replay(attempt, root, destination, modules, checks, declarations):
             raise ValueError("Replayed source differs from the recorded allowed patch")
         return boundary
 
-    def verify_dependencies():
-        for dependency in record.get("dependency_checkouts", []):
-            target = Path(dependency["destination"])
-            if any(p.is_symlink() for p in [target, *target.parents] if p != worktree and worktree in p.parents):
-                raise ValueError("Dependency destination became a symbolic link")
-            if git(target, "rev-parse", "HEAD").decode().strip() != dependency["revision"]:
-                raise ValueError(f"Dependency HEAD changed: {dependency['name']}")
-            if git(target, "status", "--porcelain", "--untracked-files=no").strip():
-                raise ValueError(f"Dependency tracked sources changed: {dependency['name']}")
 
     try:
         git(root, "worktree", "add", "--detach", str(worktree), task["base_commit"])
@@ -140,37 +135,8 @@ def replay(attempt, root, destination, modules, checks, declarations):
         command(root_check, "baseline")
         project_cwd = worktree / project
         if project_info:
-            record["dependency_checkouts"] = []
-            # No source checkout or build artifact from the worker is reused.
-            # Local Git repositories supply objects only; every destination is independent.
-            for dependency in project_info["dependencies"]:
-                name, revision = dependency["name"], dependency["revision"]
-                source = root / project / ".lake/packages" / name
-                if not source.is_dir():
-                    raise ValueError(f"Missing local dependency prerequisite: {source} at {revision}")
-                try:
-                    resolved = git(source, "rev-parse", revision + "^{commit}").decode().strip()
-                except subprocess.CalledProcessError as error:
-                    raise ValueError(f"Missing local dependency revision: {source} at {revision}") from error
-                if resolved != revision:
-                    raise ValueError(f"Dependency revision does not resolve exactly: {name}")
-                target = project_cwd / ".lake/packages" / name
-                if any(p.is_symlink() for p in [target, *target.parents] if p != worktree and worktree in p.parents):
-                    raise ValueError("Dependency destination cannot use symbolic links")
-                target.parent.mkdir(parents=True, exist_ok=True)
-                command(["git", "clone", "--no-hardlinks", "--no-checkout", "--", source, target], "dependency-" + name + "-clone")
-                command(["git", "-C", target, "checkout", "--detach", revision], "dependency-" + name + "-checkout")
-                command(["git", "-C", target, "remote", "set-url", "origin", dependency["url"]], "dependency-" + name + "-remote")
-                record["dependency_checkouts"].append({**dependency, "source_repository": str(source), "destination": str(target)})
-                atomic_json(destination / "result.json", record)
-            verify_dependencies()
-            mathlib = next((d for d in project_info["dependencies"] if d["name"] == "mathlib"), None)
-            if mathlib:
-                record["official_cache"] = {"package": "mathlib", "source_revision": mathlib["revision"],
-                                            "policy": "official Lake cache command; failure permits source build"}
-                command(["lake", "exe", "cache", "get"], "mathlib-cache", cwd=project_cwd, allow_failure=True)
-                record["official_cache"]["exit_code"] = record["commands"][-1]["exit_code"]
-                verify_dependencies()
+            provision_dependencies(root, worktree, project, project_info, record, command,
+                                   lambda: atomic_json(destination / "result.json", record))
         command(["lake", "build", *modules], "modules", cwd=project_cwd)
         for index, (source, data) in enumerate(drivers):
             driver = destination / f"driver-{index}.lean"
@@ -184,7 +150,7 @@ def replay(attempt, root, destination, modules, checks, declarations):
         log = command(["lake", "env", "lean", audit], "audit", cwd=project_cwd)
         audit_dependencies(log, declarations)
         record["boundary"] = unchanged()
-        verify_dependencies()
+        verify_dependencies(record.get("dependency_checkouts", []), worktree)
         record["mechanical"] = "pass"
     except Exception as error:
         record.update(mechanical="fail", error=f"{type(error).__name__}: {error}")

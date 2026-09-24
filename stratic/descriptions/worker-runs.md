@@ -64,6 +64,13 @@ explicit build commands. Only the selected project's generated `.lake` directory
 is exempted in addition to the root build directory; arbitrary ignored files
 remain part of the edit-boundary check.
 
+Before a provisioned dispatch, a separate preparation phase records the exact
+project configuration, dependency revisions, prerequisite builds and available
+cache route. Preparation performs no model invocation. The run phase checks that
+this prepared checkout and its prerequisites have not changed before reserving
+a campaign call. Both phases retain recoverable status and diagnostics; source
+or dependency drift blocks dispatch rather than being silently reset.
+
 When the base includes the accepted-form ledger, replay verifies that pristine
 ledger before applying a candidate. Candidate root checks explicitly defer only
 its current-file hash check, because an allowed instruction extension can change

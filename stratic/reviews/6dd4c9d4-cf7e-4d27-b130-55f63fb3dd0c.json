@@ -1,0 +1,140 @@
+{
+  "id": "6dd4c9d4-cf7e-4d27-b130-55f63fb3dd0c",
+  "base": "701e82fd83d515f7f8084a7910def0b513bb1367",
+  "contentTree": "d25361067c71722924d63a22be8611c5ac6ecb86",
+  "reviewer": "Codex coordinator, independent of the implementation agents",
+  "summary": "Prepare pinned worker projects and add the reviewed reusable pure32 instruction-family mechanism.",
+  "examined": [
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Existing message-passing statements and audit entries are unchanged; the audit adds only independent Pure32 declarations."
+    },
+    {
+      "id": "worker-replay",
+      "outcome": "revised",
+      "reason": "Exact dependency clone/cache/verification behavior is factored into worker_project and preserved by replay regressions; refreshed passage links and helper hashes expose that dependency."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "revised",
+      "reason": "Preparation is separate from dispatch; existing call accounting, source boundaries, resume lock and latest-parent checks remain active through shared helpers."
+    },
+    {
+      "id": "worker-provisioning",
+      "outcome": "revised",
+      "reason": "New prepare/retry/run contract records immutable project prerequisites, preserves failures, and rejects drift before reserving a model call; offline behavioral tests cover these transitions."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "revised",
+      "reason": "Total relational pure operations reuse scalar state and explicit fetched/target admission; independent nondeterminism, alias, metadata and unsupported-target probes validate mechanism boundaries."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "The existing responsibility already requires pinned tasks, recorded worker calls, independent semantic/proof review and no automatic acceptance; preparation implements those promises without changing the model-evaluation standard."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The scalar state and all existing instruction and run semantics remain unchanged; a separately described family mechanism reuses that state and adds no accepted instruction coverage."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "d25361067c71722924d63a22be8611c5ac6ecb86",
+      "method": "Isolated exact selected snapshot: bash scripts/check.sh; stratic validate; independent Pure32 semantic and behavioral review",
+      "outcome": "pass",
+      "environment": "Lean4.34.0 root package; Python standard library; /tmp/ptx-foundation1-isolated checked out exact snapshot on original base",
+      "evidence": "Full root source/provenance/proof scan/build passes; 73 worker workflow tests and ledger regression suite pass; 688 exact public dependency endpoints allow only standard Lean axioms; Stratic validates. Independent mechanism probes cover nondeterministic outcomes, pre-state aliases, repeated reads, guards and target rejection. Logs /tmp/ptx-foundation1-check-final.log and /tmp/ptx-foundation1-validate.json. Earlier example namespace ambiguity was corrected before this snapshot.",
+      "tests": [],
+      "id": "2f9dd538-72ac-42a2-95d7-93b05cb33cdc",
+      "recordedAt": "2026-09-24T07:09:10.152Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T07:09:34.266Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed registration/import and exact public dependency audit."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed registration/import and exact public dependency audit."
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "Ptx/Pure32Examples.lean",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "docs/formalization/worker-provisioning.md",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "docs/foundations/pure-instruction-families-audit.txt",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "docs/foundations/pure-instruction-families-review.md",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "docs/foundations/pure-instruction-families.md",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "scripts/worker_project.py",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "scripts/worker_provision.py",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "scripts/worker_replay.py",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "scripts/worker_run.py",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "stratic/descriptions/pure-instruction-families.json",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "stratic/descriptions/pure-instruction-families.md",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "stratic/descriptions/worker-provisioning.json",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "stratic/descriptions/worker-provisioning.md",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "stratic/descriptions/worker-replay.json",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.json",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "stratic/descriptions/worker-runs.md",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    },
+    {
+      "path": "tests/test_worker_provision.py",
+      "reason": "Reviewed supporting implementation, behavioral probes, guide, audit or description metadata for the linked Pure32/provisioning contracts; no additional semantic responsibility is introduced."
+    }
+  ]
+}
