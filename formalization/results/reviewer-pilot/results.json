@@ -1,0 +1,2714 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-24",
+  "qualification": "Adaptive development: three matched five-case rounds, one targeted two-case format follow-up, and two new leaves. Not a held-out accuracy estimate. Raw vendor-bearing content remains local; hashes identify it but cannot substitute for inspecting it. All invocations retained, including failed requests. Model approval never performs integration.",
+  "calls": 38,
+  "summary_by_model": {
+    "deepseek/deepseek-v4.1-flash": {
+      "calls": 19,
+      "validated_reports": 4,
+      "classifications": {
+        "no_verdict": 11,
+        "supported_detection": 2,
+        "correct_diagnosis_invalid_reference": 3,
+        "correct_diagnosis_missing_finding": 1,
+        "correct_diagnosis_invalid_example": 1,
+        "candidate_accept": 1
+      },
+      "failure_classes": {
+        "output_limit": 10,
+        "invalid_report": 4,
+        "transport_timeout": 1
+      },
+      "reported_cost_sum_usd": 0.525420411,
+      "unknown_cost_calls": 1
+    },
+    "z-ai/glm-5.3-flash": {
+      "calls": 19,
+      "validated_reports": 11,
+      "classifications": {
+        "candidate_accept": 2,
+        "false_context_complaint": 3,
+        "no_verdict": 2,
+        "control_accept": 3,
+        "supported_detection": 4,
+        "correct_diagnosis_invalid_reference": 5
+      },
+      "failure_classes": {
+        "output_limit": 2,
+        "invalid_report": 6
+      },
+      "reported_cost_sum_usd": 0.102110968,
+      "unknown_cost_calls": 0
+    }
+  },
+  "invocations": [
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T11:01:43.459280+00:00",
+      "finished_at": "2026-09-24T11:02:56.674789+00:00",
+      "elapsed_seconds": 73.21007351088338,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790247703-O0HU8O4obQTM9hsXMXsH",
+      "finish_reason": "length",
+      "failure_stage": "completion",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.029517072,
+      "request_sha256": "cebe4ec22678c38b49ebb899a3d60b54980db6e73b2cd9c8b76e19b7ba808203",
+      "recipe_sha256": "068e19d40a7586cec46cc352a210bcd189bd23a894a23c11b918195d745d045d",
+      "packet_sha256": "77e826ff71aff6675ba566607c77e9885e57c3dc3751fc2b1ed646d7e5d60e78",
+      "response_sha256": "a5891e23b88e1c56dc68da72f8ec980c06b4d36aa8864ea1cfff7ee493f5acb6",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "bitwise32-deepseek-001",
+      "receipt_sha256": "07c8ba3721c06f668d7d995236290a07c42e618adec938132cb0e8678f331225",
+      "base_commit": "7e2af082735e32fa9eae9622503db3e4fc4a992e",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 33356,
+        "completion_tokens": 16384,
+        "total_tokens": 49740,
+        "cost": 0.029517072,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.029517072,
+          "upstream_inference_prompt_cost": 0.009856272,
+          "upstream_inference_completions_cost": 0.0196608
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T11:01:43.462739+00:00",
+      "finished_at": "2026-09-24T11:02:06.581178+00:00",
+      "elapsed_seconds": 23.115880883997306,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "Reka",
+      "response_id": "gen-1790247703-Hj7coJX7zKYtiTHvDwtq",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.00538635,
+      "request_sha256": "5703199b8fdad79af217d4cd482116067736bb5c9b08dd0b674e2d4fdf1c4a29",
+      "recipe_sha256": "068e19d40a7586cec46cc352a210bcd189bd23a894a23c11b918195d745d045d",
+      "packet_sha256": "77e826ff71aff6675ba566607c77e9885e57c3dc3751fc2b1ed646d7e5d60e78",
+      "response_sha256": "534a0d1f609fc1998352dca451d903ccd1ace744f48dfde483fe451c84dec4a4",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "bitwise32-glm-001",
+      "receipt_sha256": "937002b7c9d1069645bd778191ea225a0b53a852989d5644bb8aff32de3ec577",
+      "base_commit": "7e2af082735e32fa9eae9622503db3e4fc4a992e",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 32059,
+        "completion_tokens": 1155,
+        "total_tokens": 33214,
+        "cost": 0.00538635,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00538635,
+          "upstream_inference_prompt_cost": 0.00480885,
+          "upstream_inference_completions_cost": 0.0005775
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 428,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "accept",
+      "validated_verdict": "accept",
+      "report_sha256": "c209ea80a4285989ddf15f79c8d98f496ae231a32cc839f40df2690c884aaa98",
+      "adjudication": {
+        "classification": "candidate_accept",
+        "explanation": "No defect reported. Coordinator source and statement review agrees within the supplied scope; this is not proof of source fidelity.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:40:35.374850+00:00",
+      "finished_at": "2026-09-24T10:41:00.912024+00:00",
+      "elapsed_seconds": 25.535549018066376,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790246435-FjjkzWGt0YBvOT4pOanR",
+      "finish_reason": "length",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.0259086,
+      "request_sha256": "b321336d693fc807661c26c1ccb0beecd0f8d0a7cb9644a07b3e531ca458e964",
+      "recipe_sha256": "93bccc519d080a46f665aca3d2e1388b6e60fc388c29ebb371e442a8294dcb67",
+      "packet_sha256": "f33e5cda57be96dce4387ffdbc5a31ea10d515a71a97d997efcbd8859bc76c7d",
+      "response_sha256": "375956f82d6884b13606540844f81e649848b3ae0582729fcc242a6c81a542e7",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r01-deepseek-001",
+      "receipt_sha256": "6c38be43584e350b5650db90de2d989b3eca2f466ba7222785f00d81405a82bd",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 37210,
+        "completion_tokens": 12288,
+        "total_tokens": 49498,
+        "cost": 0.0259086,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0259086,
+          "upstream_inference_prompt_cost": 0.011163,
+          "upstream_inference_completions_cost": 0.0147456
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:46:03.426518+00:00",
+      "finished_at": "2026-09-24T10:47:18.223342+00:00",
+      "elapsed_seconds": 74.79149836185388,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790246763-nCHhPwpLMkujC5V2Aee2",
+      "finish_reason": "length",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.0392883,
+      "request_sha256": "5a3eee2ef89960daca0a9a5aeddb5374eeb704ebe1b536f5716513555315321b",
+      "recipe_sha256": "93bccc519d080a46f665aca3d2e1388b6e60fc388c29ebb371e442a8294dcb67",
+      "packet_sha256": "f33e5cda57be96dce4387ffdbc5a31ea10d515a71a97d997efcbd8859bc76c7d",
+      "response_sha256": "6eb8a544608fff0f70d0598adb5bb8283869df5a29bc369bcd884173f05a7f62",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r01-deepseek-002",
+      "receipt_sha256": "bea025c62bc75dea2fa1464272a61332d8c817172f39e333df925146e585ef7e",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 32657,
+        "completion_tokens": 24576,
+        "total_tokens": 57233,
+        "cost": 0.0392883,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0392883,
+          "upstream_inference_prompt_cost": 0.0097971,
+          "upstream_inference_completions_cost": 0.0294912
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:58:50.872633+00:00",
+      "finished_at": "2026-09-24T10:59:49.497863+00:00",
+      "elapsed_seconds": 58.62129097804427,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790247531-BOrJa0J6g8gi1TPuS7i2",
+      "finish_reason": "length",
+      "failure_stage": "completion",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.0295539,
+      "request_sha256": "391fda44a2624bfa9db7253ec81f982591e07938e80161436131b499c5ef57df",
+      "recipe_sha256": "93bccc519d080a46f665aca3d2e1388b6e60fc388c29ebb371e442a8294dcb67",
+      "packet_sha256": "f33e5cda57be96dce4387ffdbc5a31ea10d515a71a97d997efcbd8859bc76c7d",
+      "response_sha256": "b70c9c08a260bc06c6f893c515e0d1d9473e99f4edfe5e7a32c8c692376705ef",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r01-deepseek-003",
+      "receipt_sha256": "a3bb9971dc06361039900be64025dedd0e0942b78ed175ea9b8c6823b0981128",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 32977,
+        "completion_tokens": 16384,
+        "total_tokens": 49361,
+        "cost": 0.0295539,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0295539,
+          "upstream_inference_prompt_cost": 0.0098931,
+          "upstream_inference_completions_cost": 0.0196608
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T10:40:35.365382+00:00",
+      "finished_at": "2026-09-24T10:42:35.787964+00:00",
+      "elapsed_seconds": 120.41919487295672,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "OpenInference",
+      "response_id": "gen-1790246435-x1xsVeHR6l5DSijvbpNe",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.0025501,
+      "request_sha256": "489d6fefd7127ea01d84109e51032bf411a735f342374ba130e8d817bd696a17",
+      "recipe_sha256": "93bccc519d080a46f665aca3d2e1388b6e60fc388c29ebb371e442a8294dcb67",
+      "packet_sha256": "f33e5cda57be96dce4387ffdbc5a31ea10d515a71a97d997efcbd8859bc76c7d",
+      "response_sha256": "890a50489caeccbc08d7a6b429870ce05ba2a8be35d9939a8ee71ff56802cf14",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r01-glm-001",
+      "receipt_sha256": "536516da0bc8692138002e4f378ca5b6ccc4cb9318be528ae5a7a35805707660",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 36047,
+        "completion_tokens": 2704,
+        "total_tokens": 38751,
+        "cost": 0.0025501,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 32088,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0025501,
+          "upstream_inference_prompt_cost": 0.0011981,
+          "upstream_inference_completions_cost": 0.001352
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1094,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "uncertain",
+      "validated_verdict": "uncertain",
+      "report_sha256": "6b2d3acd228d54976d5fc853be5ad46988938f07d790b85392e6f24b2250e50e",
+      "adjudication": {
+        "classification": "false_context_complaint",
+        "explanation": "Unfounded missing-context complaint: the exact request contains the complete candidate, including all definition bodies. No seeded defect was identified.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:46:03.426404+00:00",
+      "finished_at": "2026-09-24T10:56:54.670687+00:00",
+      "elapsed_seconds": 651.2393764760345,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "Wafer",
+      "response_id": "gen-1790246763-wlUPZGyeRfbeF09A4cXk",
+      "finish_reason": "length",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.011394954,
+      "request_sha256": "f33d7434670e1f2e57815443c84bfa0eccb1c2d36db1c6f8a1bd27c2dd025ba3",
+      "recipe_sha256": "93bccc519d080a46f665aca3d2e1388b6e60fc388c29ebb371e442a8294dcb67",
+      "packet_sha256": "f33e5cda57be96dce4387ffdbc5a31ea10d515a71a97d997efcbd8859bc76c7d",
+      "response_sha256": "d23ddf61d5de47e80781e596d24d8e76e5f9f376bb84b82f6d6691eec622f37f",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r01-glm-002",
+      "receipt_sha256": "dd7fbbf00335d480bf82624b059955fbb0886c6878c01551068f510f1b9d4a26",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 31386,
+        "completion_tokens": 24576,
+        "total_tokens": 55962,
+        "cost": 0.011394954,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.011394954,
+          "upstream_inference_prompt_cost": 0.002793354,
+          "upstream_inference_completions_cost": 0.0086016
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 24506,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T10:58:50.896480+00:00",
+      "finished_at": "2026-09-24T10:59:23.364705+00:00",
+      "elapsed_seconds": 32.46643124218099,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "InferenceNet",
+      "response_id": "gen-1790247531-60OQqNWlGZcmG4dtf38J",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.00157624,
+      "request_sha256": "72b3a5c850381d59e26d6b7e31e915ac348907cda1215f65859ba2bb8bb79271",
+      "recipe_sha256": "93bccc519d080a46f665aca3d2e1388b6e60fc388c29ebb371e442a8294dcb67",
+      "packet_sha256": "f33e5cda57be96dce4387ffdbc5a31ea10d515a71a97d997efcbd8859bc76c7d",
+      "response_sha256": "d67fde26693693d39289e6bdc8c4be1e9c6ad03b09103129223cd856fa65b8ec",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r01-glm-003",
+      "receipt_sha256": "c8d81ae2d829f0d43646adfbe8e4650a63e69d82c3b5ae880340dc0fb556fcde",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 31680,
+        "completion_tokens": 1076,
+        "total_tokens": 32756,
+        "cost": 0.00157624,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00157624,
+          "upstream_inference_prompt_cost": 0.0014256,
+          "upstream_inference_completions_cost": 0.00015064
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 388,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "accept",
+      "validated_verdict": "accept",
+      "report_sha256": "77576f8eaebb02d42b13313171298d3456b397d522db4683a2c107247944a293",
+      "adjudication": {
+        "classification": "control_accept",
+        "explanation": "No defect reported. Coordinator source and statement review agrees within the supplied scope; this is not proof of source fidelity.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T10:41:01.570960+00:00",
+      "finished_at": "2026-09-24T10:41:27.900135+00:00",
+      "elapsed_seconds": 26.327533876989037,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790246461-edksfGK7rQ0MkzB1kIH1",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.024821436,
+      "request_sha256": "13f8c2df0be8a8426072f2e50c4bb180822e1c04dd29c1aef56abe2b19c282c0",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "response_sha256": "92a52dc7203ea003b2659c77124e64fd56aba5a9c36892d1a92d0198e5ab7467",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r02-deepseek-001",
+      "receipt_sha256": "2fc342bec7b41baece0d33d14f1ea69c70d0c59bb52b7ea96a66ae252d4f6f1a",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 37213,
+        "completion_tokens": 11444,
+        "total_tokens": 48657,
+        "cost": 0.024821436,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 256,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.024821436,
+          "upstream_inference_prompt_cost": 0.011088636,
+          "upstream_inference_completions_cost": 0.0137328
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 10772,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": "reject",
+      "report_sha256": "4ac49ffaf7b1876cc20f14c0eb68785fae9e5a13b0b48aadfae5d19e25148ff8",
+      "adjudication": {
+        "classification": "supported_detection",
+        "explanation": "Correctly identifies reversed selection, with unequal source values and a selector exposing the wrong result.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:47:18.887319+00:00",
+      "finished_at": "2026-09-24T10:48:51.967408+00:00",
+      "elapsed_seconds": 93.07730368291959,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Venice",
+      "response_id": "gen-1790246839-qL7VhAIjVg4nvPh1pgGf",
+      "finish_reason": "length",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.04911075,
+      "request_sha256": "ece4b23fdcdd068b3f23dd5281bf4584594d94039803894a471bec8f06bb0884",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "response_sha256": "37fffa53c8446ea1a9de491510bea383d248dd680bcf874b5f4010a987fc1305",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r02-deepseek-002",
+      "receipt_sha256": "87a85825cb8287ab6dff059a70b9e7890ff41eff22f6c0272ecbf8bb064d21d7",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 32658,
+        "completion_tokens": 24576,
+        "total_tokens": 57234,
+        "cost": 0.04911075,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.04911075,
+          "upstream_inference_prompt_cost": 0.01224675,
+          "upstream_inference_completions_cost": 0.036864
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 24567,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:59:24.030338+00:00",
+      "finished_at": "2026-09-24T11:00:03.635153+00:00",
+      "elapsed_seconds": 39.60259831487201,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790247564-SRVNalGrmwGHsQ34AtSR",
+      "finish_reason": "stop",
+      "failure_stage": "report_validation",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.021152412,
+      "request_sha256": "eea41c64441d413734f6d84fa8bf4fcfb6eb8c9489b28cc6c43cb4f572c0cfc5",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "response_sha256": "04e30db3bd978124f6c6c7d1194befbd5658cafcf40df984b093cb6263764958",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r02-deepseek-003",
+      "receipt_sha256": "ddae4900aa3a449b9d5a0b56310e713dffc7b646c61c604c38ad69cfea2bc92b",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 32977,
+        "completion_tokens": 9665,
+        "total_tokens": 42642,
+        "cost": 0.021152412,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1152,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.021152412,
+          "upstream_inference_prompt_cost": 0.009554412,
+          "upstream_inference_completions_cost": 0.011598
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 8925,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Unbound finding reference",
+      "adjudication": {
+        "classification": "correct_diagnosis_invalid_reference",
+        "explanation": "Correctly identifies reversed selection, with unequal source values and a selector exposing the wrong result. The report uses an unbound source reference, so it is not a usable validated finding.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T11:04:13.368321+00:00",
+      "finished_at": "2026-09-24T11:04:50.972262+00:00",
+      "elapsed_seconds": 37.60072464100085,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790247853-aOWzmFgVOhu2CXibJkx5",
+      "finish_reason": "stop",
+      "failure_stage": "report_validation",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.018016836,
+      "request_sha256": "42746f98b31ceec5455682c1c6f45643870bfd01564c27c0a0e54b4d2cfac1d0",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "response_sha256": "ce90b5e23f72be975174fea2e7ef473890a1809ee34a9762a2d4c05622e60277",
+      "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r02-deepseek-004",
+      "receipt_sha256": "22fe54fd9452080d75cd23d93f8875501df7da38f462d5b82c6493544c834e66",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 33111,
+        "completion_tokens": 6799,
+        "total_tokens": 39910,
+        "cost": 0.018016836,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 256,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.018016836,
+          "upstream_inference_prompt_cost": 0.009858036,
+          "upstream_inference_completions_cost": 0.0081588
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 6137,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Rejection without a demonstrated finding",
+      "adjudication": {
+        "classification": "correct_diagnosis_missing_finding",
+        "explanation": "Correct reversal diagnosis in the obligation text, but no finding location or counterexample; rejected by report validation. Not a supported detection.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:41:28.551315+00:00",
+      "finished_at": "2026-09-24T10:43:24.139740+00:00",
+      "elapsed_seconds": 115.5865983699914,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "OpenInference",
+      "response_id": "gen-1790246488-DE1LYDmvRrZBVU7bdwAn",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.0025619,
+      "request_sha256": "9b932024bf152d6b77afa58414c9ae34b264251fdd73ba39c1f57047410c0ab0",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "response_sha256": "4e500051309317f61085ee27cd670ae5e9c5c23c246c15df3897b43772d67156",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r02-glm-001",
+      "receipt_sha256": "8dbb7dd8c744b16573953710ffa9517406035397de521132475fec8b5b6b7675",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 36045,
+        "completion_tokens": 2728,
+        "total_tokens": 38773,
+        "cost": 0.0025619,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 32088,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0025619,
+          "upstream_inference_prompt_cost": 0.0011979,
+          "upstream_inference_completions_cost": 0.001364
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1648,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "uncertain",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Unbound finding reference",
+      "adjudication": {
+        "classification": "false_context_complaint",
+        "explanation": "Unfounded missing-context complaint: the exact request contains the complete candidate, including all definition bodies. No seeded defect was identified.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T10:48:52.609768+00:00",
+      "finished_at": "2026-09-24T10:50:12.148679+00:00",
+      "elapsed_seconds": 79.53702890593559,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "InferenceNet",
+      "response_id": "gen-1790246932-ZtjczkVoRbK2FGLHbyb9",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.00192588,
+      "request_sha256": "d7febe9ed947c5b1b6034c62d4f89ae502ad28467e43c6829c151fc5371d521d",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "response_sha256": "68e113fe3f621618c7f449eab0e52dd59eae6965eee879d6b16702d4090fc150",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r02-glm-002",
+      "receipt_sha256": "2676ea6330c9c42348227c9d3b3f552b398d519fe778c4f8561ae03d61fc6a9a",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 31364,
+        "completion_tokens": 3675,
+        "total_tokens": 35039,
+        "cost": 0.00192588,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00192588,
+          "upstream_inference_prompt_cost": 0.00141138,
+          "upstream_inference_completions_cost": 0.0005145
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 2705,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": "reject",
+      "report_sha256": "ddc0bceb804cad7e8d795604f7c0c69f3019b16fafe5a001ecd77fc6b9bd7f05",
+      "adjudication": {
+        "classification": "supported_detection",
+        "explanation": "Correctly identifies reversed selection, with unequal source values and a selector exposing the wrong result.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:59:50.145261+00:00",
+      "finished_at": "2026-09-24T11:00:19.553635+00:00",
+      "elapsed_seconds": 29.406306053046137,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "InferenceNet",
+      "response_id": "gen-1790247590-UKmHjxdB2fogqouNKFRG",
+      "finish_reason": "stop",
+      "failure_stage": "report_validation",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.00159514,
+      "request_sha256": "0799b4c231967e5ec212a912405a2eaf1b6105696c9e711b8036fe003f8566a3",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "response_sha256": "c3118b65a99ec99e24eef5fe79573fa03c9116910aaa15a742ea0564ec32b06d",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r02-glm-003",
+      "receipt_sha256": "945d8b9827f372550ee14452c565d3f4fa6f2455da6679356955e044f34fb666",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 31680,
+        "completion_tokens": 1211,
+        "total_tokens": 32891,
+        "cost": 0.00159514,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00159514,
+          "upstream_inference_prompt_cost": 0.0014256,
+          "upstream_inference_completions_cost": 0.00016954
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 405,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Unbound finding reference",
+      "adjudication": {
+        "classification": "correct_diagnosis_invalid_reference",
+        "explanation": "Correctly identifies reversed selection, with unequal source values and a selector exposing the wrong result. The report uses an unbound source reference, so it is not a usable validated finding.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T11:04:13.387309+00:00",
+      "finished_at": "2026-09-24T11:13:54.287044+00:00",
+      "elapsed_seconds": 580.8980201920494,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "Wafer",
+      "response_id": "gen-1790247853-EuLsnKFKCdQJj4TXNaoH",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.007369095,
+      "request_sha256": "a5a2a72f23b41f1a130df13a739c2f336cfb9d1434349a5ba7106fbf9aab4689",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "response_sha256": "31b2771f8d2226293fb1484f417bf56d0e6ed373d6eb99fc674a7b1004fa6ef7",
+      "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r02-glm-004",
+      "receipt_sha256": "8337e68001ebd97e8d2a3a02c65e3d314be3771d2bc3c201c1ab02a22db98b91",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 31805,
+        "completion_tokens": 12967,
+        "total_tokens": 44772,
+        "cost": 0.007369095,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.007369095,
+          "upstream_inference_prompt_cost": 0.002830645,
+          "upstream_inference_completions_cost": 0.00453845
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 11700,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": "reject",
+      "report_sha256": "325181f94848fc64d82929f98ec962d1d22656c75dbd860ef80cacd7dd244dc7",
+      "adjudication": {
+        "classification": "supported_detection",
+        "explanation": "Correctly identifies reversed selection, with unequal source values and a selector exposing the wrong result.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T10:42:36.445304+00:00",
+      "finished_at": "2026-09-24T10:43:08.613373+00:00",
+      "elapsed_seconds": 32.16625043307431,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790246556-dic6RCDI3yJwgDIkY0aZ",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.025756836,
+      "request_sha256": "64c51e07296ae44520195e86cd05714aed38e09c595043179b3a5681240535ff",
+      "recipe_sha256": "517e953f6fb674c0f6c30233db791352060680a45f5f93e08257e00de27ebf79",
+      "packet_sha256": "92c0f1fee4543c32c63a40a548d75369b0a200e7e9536f90103824daf6b7ceeb",
+      "response_sha256": "78916dd68938b045447937db9486bb4a64f493fbc3ae9799df478393f9876d4d",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r03-deepseek-001",
+      "receipt_sha256": "50da13f42e4cde2ecf0ebade99f64bbca22f9be7639b6d6de9a01d24cf5103c4",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 37207,
+        "completion_tokens": 12225,
+        "total_tokens": 49432,
+        "cost": 0.025756836,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 256,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.025756836,
+          "upstream_inference_prompt_cost": 0.011086836,
+          "upstream_inference_completions_cost": 0.01467
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 11386,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": "reject",
+      "report_sha256": "3e36256745bf1bd45f3552b30fc11276d2a200718fd52b62644ed6b64033ff32",
+      "adjudication": {
+        "classification": "correct_diagnosis_invalid_example",
+        "explanation": "Correctly identifies the malformed-operand error classification, but its four-operand example is well formed and decodes successfully. The explanation finds the seed; the proposed counterexample is wrong.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:50:12.794808+00:00",
+      "finished_at": "2026-09-24T10:51:22.431555+00:00",
+      "elapsed_seconds": 69.63489156099968,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Venice",
+      "response_id": "gen-1790247013-xi5dZKyo1SNgBCH4x0tV",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.035475,
+      "request_sha256": "41c4895e136591437fa687e73c942dd934afc897c39efee3acaf5133a1349456",
+      "recipe_sha256": "517e953f6fb674c0f6c30233db791352060680a45f5f93e08257e00de27ebf79",
+      "packet_sha256": "92c0f1fee4543c32c63a40a548d75369b0a200e7e9536f90103824daf6b7ceeb",
+      "response_sha256": "6b8b0b622b8d612234ee8aedd4dba87fe3b2d6276498f59d5fd82a6ac8c5378f",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r03-deepseek-002",
+      "receipt_sha256": "d6048d49585dfd7e22477bdd4fed6b7d63606713a78c46fac2b372be937676f0",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 32660,
+        "completion_tokens": 15485,
+        "total_tokens": 48145,
+        "cost": 0.035475,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.035475,
+          "upstream_inference_prompt_cost": 0.0122475,
+          "upstream_inference_completions_cost": 0.0232275
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 14884,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Unbound finding reference",
+      "adjudication": {
+        "classification": "correct_diagnosis_invalid_reference",
+        "explanation": "Correctly identifies malformed recognized operands being classified as an unsupported mnemonic; the example has an invalid operand shape. The report uses an unbound source reference, so it is not a usable validated finding.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T11:00:04.276285+00:00",
+      "finished_at": "2026-09-24T11:11:01.893438+00:00",
+      "elapsed_seconds": 657.6151677558664,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": null,
+      "provider": null,
+      "response_id": null,
+      "finish_reason": null,
+      "failure_stage": "transport",
+      "error_type": "TimeoutError",
+      "http_status": null,
+      "reported_cost": null,
+      "request_sha256": "995bf78e9525fd9c8531687258ded2e15a3532a9f8c5535c2b9756ee1f811d9e",
+      "recipe_sha256": "517e953f6fb674c0f6c30233db791352060680a45f5f93e08257e00de27ebf79",
+      "packet_sha256": "92c0f1fee4543c32c63a40a548d75369b0a200e7e9536f90103824daf6b7ceeb",
+      "response_sha256": null,
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r03-deepseek-003",
+      "receipt_sha256": "ed0a24d314bc6ee7b6588a8cff87f8d2bbdafdaf6de4dc023445dbda774a870b",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {},
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "transport_timeout",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T11:04:51.619705+00:00",
+      "finished_at": "2026-09-24T11:05:59.315746+00:00",
+      "elapsed_seconds": 67.69374523311853,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790247892-nVotLueq7VoftjGLNSqQ",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.022879548,
+      "request_sha256": "2973a973e2e6d01a6940215bca3866ee567224821c4cf2e865a26d7e15122559",
+      "recipe_sha256": "517e953f6fb674c0f6c30233db791352060680a45f5f93e08257e00de27ebf79",
+      "packet_sha256": "92c0f1fee4543c32c63a40a548d75369b0a200e7e9536f90103824daf6b7ceeb",
+      "response_sha256": "c48fc3321a9410228b1679a3b2592eebba6b11249f4bcf9aa24517e9e3df9166",
+      "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r03-deepseek-004",
+      "receipt_sha256": "cabe69867ddc7153d3092d3097304c977e2f8073e8d51b6b68a623139aea72e7",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 33113,
+        "completion_tokens": 11133,
+        "total_tokens": 44246,
+        "cost": 0.022879548,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1408,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.022879548,
+          "upstream_inference_prompt_cost": 0.009519948,
+          "upstream_inference_completions_cost": 0.0133596
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 10585,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": "reject",
+      "report_sha256": "f27126edda5ddc7453bde7ada77f66c9b64b578b1be011c3d66276cd8d755635",
+      "adjudication": {
+        "classification": "supported_detection",
+        "explanation": "Correctly identifies malformed recognized operands being classified as an unsupported mnemonic; the example has an invalid operand shape.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T10:43:09.263011+00:00",
+      "finished_at": "2026-09-24T10:44:29.004800+00:00",
+      "elapsed_seconds": 79.73941864795052,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "OpenInference",
+      "response_id": "gen-1790246589-ctODVebrddIsFlomFMpP",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.0020529,
+      "request_sha256": "165deaeaf95d53a113e6a6598d469bb8aff62be9ab56d36024059c2efb0946fe",
+      "recipe_sha256": "517e953f6fb674c0f6c30233db791352060680a45f5f93e08257e00de27ebf79",
+      "packet_sha256": "92c0f1fee4543c32c63a40a548d75369b0a200e7e9536f90103824daf6b7ceeb",
+      "response_sha256": "261ed5d498ad6c0b10ceb71762291ea655fcdcf6d5dfe54b3cede476f2ec69fa",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r03-glm-001",
+      "receipt_sha256": "6c69f47566a34468e4f802564ed2c1f714c35b266e25d392f13a5e7cec92bf83",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 36040,
+        "completion_tokens": 1711,
+        "total_tokens": 37751,
+        "cost": 0.0020529,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 32088,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0020529,
+          "upstream_inference_prompt_cost": 0.0011974,
+          "upstream_inference_completions_cost": 0.0008555
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 994,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "uncertain",
+      "validated_verdict": "uncertain",
+      "report_sha256": "8f154a4d0d4954b356690d49cd6b485ff61f25281b3bdf1f1033924c5982650d",
+      "adjudication": {
+        "classification": "false_context_complaint",
+        "explanation": "Unfounded missing-context complaint: the exact request contains the complete candidate, including all definition bodies. No seeded defect was identified.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:51:23.083066+00:00",
+      "finished_at": "2026-09-24T10:52:18.430061+00:00",
+      "elapsed_seconds": 55.343038409017026,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "InferenceNet",
+      "response_id": "gen-1790247083-7yLKWhP01InYIeJVhgLM",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.00182158,
+      "request_sha256": "d70508c5db9b52c798c97e3929dca1caf75c8182e0b58211a082ef1ea3147299",
+      "recipe_sha256": "517e953f6fb674c0f6c30233db791352060680a45f5f93e08257e00de27ebf79",
+      "packet_sha256": "92c0f1fee4543c32c63a40a548d75369b0a200e7e9536f90103824daf6b7ceeb",
+      "response_sha256": "3b4e5e79fbf32e443d5cf69fb87d8eb3e697e76078a2a85260dbe5152b14be43",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r03-glm-002",
+      "receipt_sha256": "86f9628ff69faec7a6ad84ec71575e8a165ea70457e94dcfe308ab917ad9cc6d",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 31364,
+        "completion_tokens": 2930,
+        "total_tokens": 34294,
+        "cost": 0.00182158,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00182158,
+          "upstream_inference_prompt_cost": 0.00141138,
+          "upstream_inference_completions_cost": 0.0004102
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1992,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Unbound finding reference",
+      "adjudication": {
+        "classification": "correct_diagnosis_invalid_reference",
+        "explanation": "Correctly identifies malformed recognized operands being classified as an unsupported mnemonic; the example has an invalid operand shape. The report uses an unbound source reference, so it is not a usable validated finding.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T11:00:20.210480+00:00",
+      "finished_at": "2026-09-24T11:00:52.789955+00:00",
+      "elapsed_seconds": 32.577491191914305,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "InferenceNet",
+      "response_id": "gen-1790247620-U8q9SrJWMOLBVOmKa4NO",
+      "finish_reason": "stop",
+      "failure_stage": "report_validation",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.00159906,
+      "request_sha256": "1635478d3fbc6edfc254467ac134b089b182db44280b5850f7dbfc2b58976763",
+      "recipe_sha256": "517e953f6fb674c0f6c30233db791352060680a45f5f93e08257e00de27ebf79",
+      "packet_sha256": "92c0f1fee4543c32c63a40a548d75369b0a200e7e9536f90103824daf6b7ceeb",
+      "response_sha256": "0de0f304a59e856571e86db4642bad471011b948e2375e9c5f654f441355de90",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r03-glm-003",
+      "receipt_sha256": "f9c68fd9b21accc5835dce0aca557d85fd20664894ca09eb1af31696010ae41d",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 31680,
+        "completion_tokens": 1239,
+        "total_tokens": 32919,
+        "cost": 0.00159906,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00159906,
+          "upstream_inference_prompt_cost": 0.0014256,
+          "upstream_inference_completions_cost": 0.00017346
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 392,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Unbound finding reference",
+      "adjudication": {
+        "classification": "correct_diagnosis_invalid_reference",
+        "explanation": "Correctly identifies malformed recognized operands being classified as an unsupported mnemonic; the example has an invalid operand shape. The report uses an unbound source reference, so it is not a usable validated finding.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T11:05:59.967507+00:00",
+      "finished_at": "2026-09-24T11:13:56.174941+00:00",
+      "elapsed_seconds": 476.20555723202415,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "Wafer",
+      "response_id": "gen-1790247960-M2qAZX5CcWxpyoAD4ETe",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.007915445,
+      "request_sha256": "bb74a7a2f1609fb1a3298901d09c6e84ca8715bd63c998c04bc5355df452f646",
+      "recipe_sha256": "517e953f6fb674c0f6c30233db791352060680a45f5f93e08257e00de27ebf79",
+      "packet_sha256": "92c0f1fee4543c32c63a40a548d75369b0a200e7e9536f90103824daf6b7ceeb",
+      "response_sha256": "e373a9062748fda1236b8692793c20344a62668b1fd4b8b8647eeb35b137556a",
+      "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r03-glm-004",
+      "receipt_sha256": "ef471537e70feb0ec858416b4b9ac00645b4efcbe242abdabf0bce98cff6d9f3",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 31805,
+        "completion_tokens": 14528,
+        "total_tokens": 46333,
+        "cost": 0.007915445,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.007915445,
+          "upstream_inference_prompt_cost": 0.002830645,
+          "upstream_inference_completions_cost": 0.0050848
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 13407,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": "reject",
+      "report_sha256": "1181db67570a32bea4524e0c008983e2d7b6e08ef67f27de25f5279cf232778c",
+      "adjudication": {
+        "classification": "supported_detection",
+        "explanation": "Correctly identifies malformed recognized operands being classified as an unsupported mnemonic; the example has an invalid operand shape.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:43:24.782466+00:00",
+      "finished_at": "2026-09-24T10:43:57.915664+00:00",
+      "elapsed_seconds": 33.13139255205169,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790246604-3SJ78s6OXWnJmSuxAGo3",
+      "finish_reason": "length",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.026415936,
+      "request_sha256": "be20f6eae7613c72a0bf0e0f421cebeefc28d577978103cd76894d887bcb5056",
+      "recipe_sha256": "82c330842ff7c4cef5c364b1baa95dd9bed27fbce27433ce4d809f61e4d86582",
+      "packet_sha256": "6c8addcbe71d55acc9fb40b5208e74289f54e7d9f176ba6a82d32958a167d09f",
+      "response_sha256": "ec4f5a40ffeeeeb22b280fec306ce33cf349e8fb0e7b45f3ef8c2ff7324abb91",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r04-deepseek-001",
+      "receipt_sha256": "0726c328d4e25029f63dc87099a911ed5bda217d08b07c6d5f8fd3c715450026",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 39152,
+        "completion_tokens": 12288,
+        "total_tokens": 51440,
+        "cost": 0.026415936,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 256,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.026415936,
+          "upstream_inference_prompt_cost": 0.011670336,
+          "upstream_inference_completions_cost": 0.0147456
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:52:19.084048+00:00",
+      "finished_at": "2026-09-24T10:53:55.835221+00:00",
+      "elapsed_seconds": 96.74837559694424,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Venice",
+      "response_id": "gen-1790247139-wPM7OWHMedF5VCXf4qui",
+      "finish_reason": "length",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.049742625,
+      "request_sha256": "3e1179a88969e5934c219e2ac92bd86a0e87c3efe8a36db882315ad193124d62",
+      "recipe_sha256": "82c330842ff7c4cef5c364b1baa95dd9bed27fbce27433ce4d809f61e4d86582",
+      "packet_sha256": "6c8addcbe71d55acc9fb40b5208e74289f54e7d9f176ba6a82d32958a167d09f",
+      "response_sha256": "4bef392f66e55a9ec542f7ec64271dd60efdd569168e5843a567e9dbf2410977",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r04-deepseek-002",
+      "receipt_sha256": "30a128d06475584652a7025f99e40f6886697f0742c3205337a38be1298ee481",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 34343,
+        "completion_tokens": 24576,
+        "total_tokens": 58919,
+        "cost": 0.049742625,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.049742625,
+          "upstream_inference_prompt_cost": 0.012878625,
+          "upstream_inference_completions_cost": 0.036864
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 24563,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T11:00:53.437399+00:00",
+      "finished_at": "2026-09-24T11:01:56.333294+00:00",
+      "elapsed_seconds": 62.89329887391068,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790247653-eAnWok1daqh2HXOvObEK",
+      "finish_reason": "length",
+      "failure_stage": "completion",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.029908872,
+      "request_sha256": "4804ca9c264c4beafee0ad535df0854238ca7f6d355d2a99246f0a017887801d",
+      "recipe_sha256": "82c330842ff7c4cef5c364b1baa95dd9bed27fbce27433ce4d809f61e4d86582",
+      "packet_sha256": "6c8addcbe71d55acc9fb40b5208e74289f54e7d9f176ba6a82d32958a167d09f",
+      "response_sha256": "f887ea581e9371de058a0bae956f0b94c3e977f5bdbe0a0e559666bb1e40fe64",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r04-deepseek-003",
+      "receipt_sha256": "f3a6fd73c17edb463bcc57beb0bb937bdcc3dff8c73e901754d1d75d74c6aa1f",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 34662,
+        "completion_tokens": 16384,
+        "total_tokens": 51046,
+        "cost": 0.029908872,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.029908872,
+          "upstream_inference_prompt_cost": 0.010248072,
+          "upstream_inference_completions_cost": 0.0196608
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T10:43:58.561890+00:00",
+      "finished_at": "2026-09-24T10:45:33.115655+00:00",
+      "elapsed_seconds": 94.55194415594451,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "Modal",
+      "response_id": "gen-1790246638-nU6tI0JjpKYZQOQ27QgX",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.0302352,
+      "request_sha256": "f448e7a52edb6cd23e1298822a4142d85718c193d019f9c9f4c4446afbb550a5",
+      "recipe_sha256": "82c330842ff7c4cef5c364b1baa95dd9bed27fbce27433ce4d809f61e4d86582",
+      "packet_sha256": "6c8addcbe71d55acc9fb40b5208e74289f54e7d9f176ba6a82d32958a167d09f",
+      "response_sha256": "b164b46bdd66d9a5d43e0d9cf1558c32c144bd98303f699159f5f8ce1cbfb695",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r04-glm-001",
+      "receipt_sha256": "a7be587305e4286844e5421bd74f9e7d4de94faa97e166f3add28c13f11ac216",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 37936,
+        "completion_tokens": 8776,
+        "total_tokens": 46712,
+        "cost": 0.0302352,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.0302352,
+          "upstream_inference_prompt_cost": 0.0170712,
+          "upstream_inference_completions_cost": 0.013164
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 7596,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "accept",
+      "validated_verdict": "accept",
+      "report_sha256": "698e9fae66b6d14ffda75d8d733c4541013dccac2ade96e2bb116a8b3b472e10",
+      "adjudication": {
+        "classification": "control_accept",
+        "explanation": "No defect reported. Coordinator source and statement review agrees within the supplied scope; this is not proof of source fidelity.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T10:53:56.470816+00:00",
+      "finished_at": "2026-09-24T11:06:14.897185+00:00",
+      "elapsed_seconds": 738.4243669239804,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "Wafer",
+      "response_id": "gen-1790247236-l8HybXI3KMyfCCwPk1FU",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.005194186,
+      "request_sha256": "2aa6b1c54c56cefcdb318184c265ac44e370b5b72a5cc2eb28825d2d920b8e13",
+      "recipe_sha256": "82c330842ff7c4cef5c364b1baa95dd9bed27fbce27433ce4d809f61e4d86582",
+      "packet_sha256": "6c8addcbe71d55acc9fb40b5208e74289f54e7d9f176ba6a82d32958a167d09f",
+      "response_sha256": "802b38f6a24800a441dea0fa125419aa79b20607f1214817e24e9ca650b93864",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r04-glm-002",
+      "receipt_sha256": "c16526a5fbb2eceb3cfc12f57c36e022b767291c3281200acf8074b6ec36bd5d",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 33024,
+        "completion_tokens": 6443,
+        "total_tokens": 39467,
+        "cost": 0.005194186,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.005194186,
+          "upstream_inference_prompt_cost": 0.002939136,
+          "upstream_inference_completions_cost": 0.00225505
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 5454,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "accept",
+      "validated_verdict": "accept",
+      "report_sha256": "d52eb5394ed0fc5a7bc80f15d030aace55ffb4e179c9d919fb03ee5f459f1c17",
+      "adjudication": {
+        "classification": "control_accept",
+        "explanation": "No defect reported. Coordinator source and statement review agrees within the supplied scope; this is not proof of source fidelity.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T11:01:57.000331+00:00",
+      "finished_at": "2026-09-24T11:10:42.829309+00:00",
+      "elapsed_seconds": 525.8269123071805,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "Wafer",
+      "response_id": "gen-1790247717-m6xVUkKn1fFgFtga1H2u",
+      "finish_reason": "length",
+      "failure_stage": "completion",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.008699702,
+      "request_sha256": "671d40e1fc496655df2e96f55df1bb823512d29cbd3b0b7e2283155768d9e644",
+      "recipe_sha256": "82c330842ff7c4cef5c364b1baa95dd9bed27fbce27433ce4d809f61e4d86582",
+      "packet_sha256": "6c8addcbe71d55acc9fb40b5208e74289f54e7d9f176ba6a82d32958a167d09f",
+      "response_sha256": "5132c051d8ca76f02156cdd697d2bb6865990a09b6530da26a095d298f4f0b4d",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r04-glm-003",
+      "receipt_sha256": "46eb9f83a86d865d9287fee04a0762b04f29f3c89387bd2b06bf75f1d2ab82db",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 33318,
+        "completion_tokens": 16384,
+        "total_tokens": 49702,
+        "cost": 0.008699702,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.008699702,
+          "upstream_inference_prompt_cost": 0.002965302,
+          "upstream_inference_completions_cost": 0.0057344
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 16384,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:44:29.646178+00:00",
+      "finished_at": "2026-09-24T10:44:57.858640+00:00",
+      "elapsed_seconds": 28.210274904966354,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790246669-jSy8T8Ueuo9h1b0CNwDj",
+      "finish_reason": "length",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.026414136,
+      "request_sha256": "d456a796d4267be36e980b21b75f9b0662ddc284743d3e3dbe237d7dea946087",
+      "recipe_sha256": "cdd4268b5c4aebfa7b0c0ffff1506e6b515f2da40b2fab100d3ef66a6b9bd0cb",
+      "packet_sha256": "b4d7d57bebac9c4fab2f614685094d7438791a3f2472ff6f759a0d8675c35fd2",
+      "response_sha256": "39dbb50bc6dc4065385aa1535748f9b9fff55dc35d186acd61e8d7d43be4060d",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r05-deepseek-001",
+      "receipt_sha256": "733e50226a3c3d92c93fedfdc46d5b5fc39e01551cf948636c498b0c20195854",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 39146,
+        "completion_tokens": 12288,
+        "total_tokens": 51434,
+        "cost": 0.026414136,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 256,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.026414136,
+          "upstream_inference_prompt_cost": 0.011668536,
+          "upstream_inference_completions_cost": 0.0147456
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:56:55.336058+00:00",
+      "finished_at": "2026-09-24T10:57:46.647710+00:00",
+      "elapsed_seconds": 51.30874095088802,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790247415-AA9flUnb7h8w5Lr6GsSj",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.014924136,
+      "request_sha256": "65aa03771108b51e225192ed985061a5900a4e5d45e111f895897d1c57be8017",
+      "recipe_sha256": "cdd4268b5c4aebfa7b0c0ffff1506e6b515f2da40b2fab100d3ef66a6b9bd0cb",
+      "packet_sha256": "b4d7d57bebac9c4fab2f614685094d7438791a3f2472ff6f759a0d8675c35fd2",
+      "response_sha256": "a05cc21a4bebd1b461be427f17a6f521ae80c249749daddd696e79607774e586",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r05-deepseek-002",
+      "receipt_sha256": "046b1f3c866c11a2ae7ce682bfcbe2d9ee534626ffdbd8b7b255381d78db19d0",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 34342,
+        "completion_tokens": 3914,
+        "total_tokens": 38256,
+        "cost": 0.014924136,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 256,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.014924136,
+          "upstream_inference_prompt_cost": 0.010227336,
+          "upstream_inference_completions_cost": 0.0046968
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 3021,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Unbound finding reference",
+      "adjudication": {
+        "classification": "correct_diagnosis_invalid_reference",
+        "explanation": "Correctly identifies the excessive numeric SM floor; a target in 10..19 distinguishes the promised slice from the candidate. The report uses an unbound source reference, so it is not a usable validated finding.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T11:10:43.489286+00:00",
+      "finished_at": "2026-09-24T11:11:31.529588+00:00",
+      "elapsed_seconds": 48.03636295115575,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790248243-RZK2DXvJLV00lg0p00XY",
+      "finish_reason": "length",
+      "failure_stage": "completion",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.029758344,
+      "request_sha256": "c8fbe942f383a700ca60e1b688d9c8fcb46dfbfb4a461ff6a6aeeaf80ad71fca",
+      "recipe_sha256": "cdd4268b5c4aebfa7b0c0ffff1506e6b515f2da40b2fab100d3ef66a6b9bd0cb",
+      "packet_sha256": "b4d7d57bebac9c4fab2f614685094d7438791a3f2472ff6f759a0d8675c35fd2",
+      "response_sha256": "726141ca6b0d742957038f82b2e1080c84db21e512f21881a641909a5bb1bd36",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r05-deepseek-003",
+      "receipt_sha256": "e80e991820634532fe95d6285da13014076cfd7d2c565c2b0eb497822eb7d9c9",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 34662,
+        "completion_tokens": 16384,
+        "total_tokens": 51046,
+        "cost": 0.029758344,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 1024,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.029758344,
+          "upstream_inference_prompt_cost": 0.010097544,
+          "upstream_inference_completions_cost": 0.0196608
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 0,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": null,
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "output_limit",
+      "adjudication": {
+        "classification": "no_verdict",
+        "explanation": "No usable verdict; do not count as semantic detection or acceptance.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T10:44:58.490194+00:00",
+      "finished_at": "2026-09-24T10:46:20.927247+00:00",
+      "elapsed_seconds": 82.43523981398903,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "OpenInference",
+      "response_id": "gen-1790246698-Eb5Dcpt80uymcNDc4Fxz",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.00217245,
+      "request_sha256": "09bfeb7a9cd06e4d7aedc93c0d588b0133d8d20d144bd6f963fabfe160f0fbd0",
+      "recipe_sha256": "cdd4268b5c4aebfa7b0c0ffff1506e6b515f2da40b2fab100d3ef66a6b9bd0cb",
+      "packet_sha256": "b4d7d57bebac9c4fab2f614685094d7438791a3f2472ff6f759a0d8675c35fd2",
+      "response_sha256": "8bfdbc371d7fab0e1cd55a0612625073ca7a04578f7b1ccbb99f1643a7fa2569",
+      "runner_sha256": "b357c68d8a692267afc6850ad485855e391da7dff79db928b862a1e11aeb745b",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r05-glm-001",
+      "receipt_sha256": "b0e6b41d5adc98518e847244bd076fa56fc22fe4f84de68fe30ba3a723c7641c",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 12288,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 37947,
+        "completion_tokens": 1854,
+        "total_tokens": 39801,
+        "cost": 0.00217245,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 33990,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00217245,
+          "upstream_inference_prompt_cost": 0.00124545,
+          "upstream_inference_completions_cost": 0.000927
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 1056,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": "reject",
+      "report_sha256": "defb15a343702eaa7fedea849dfc2c0acc8f34d8dee34ae6dd46d659ca84798c",
+      "adjudication": {
+        "classification": "supported_detection",
+        "explanation": "Correctly identifies the excessive numeric SM floor; a target in 10..19 distinguishes the promised slice from the candidate.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T10:57:47.298066+00:00",
+      "finished_at": "2026-09-24T11:00:11.795563+00:00",
+      "elapsed_seconds": 144.4942727771122,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "Wafer",
+      "response_id": "gen-1790247467-YqQ3TNbOiXFzPYXjJEy7",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.004773836,
+      "request_sha256": "75bd87e93b3b216afee76bbd5df0e722737df061db3bcc470d65e3102bb20ff1",
+      "recipe_sha256": "cdd4268b5c4aebfa7b0c0ffff1506e6b515f2da40b2fab100d3ef66a6b9bd0cb",
+      "packet_sha256": "b4d7d57bebac9c4fab2f614685094d7438791a3f2472ff6f759a0d8675c35fd2",
+      "response_sha256": "166c79405223f241b31b8494bec0de508245e0ed61a4ce3e28b5370441e35b2f",
+      "runner_sha256": "d9f2478dc93dd489ebcc336b805f36aea0811d5b739a88c2c21f238e481ec446",
+      "helper_sha256": null,
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r05-glm-002",
+      "receipt_sha256": "c399d750a3580d2f83af54a7bacc6bec4a94bc79268a4fd4e661ba6144fd6975",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 24576,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "high"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 33024,
+        "completion_tokens": 5242,
+        "total_tokens": 38266,
+        "cost": 0.004773836,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.004773836,
+          "upstream_inference_prompt_cost": 0.002939136,
+          "upstream_inference_completions_cost": 0.0018347
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 4062,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Unbound finding reference",
+      "adjudication": {
+        "classification": "correct_diagnosis_invalid_reference",
+        "explanation": "Correctly identifies the excessive numeric SM floor; a target in 10..19 distinguishes the promised slice from the candidate. The report uses an unbound source reference, so it is not a usable validated finding.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "failed",
+      "started_at": "2026-09-24T11:11:02.553657+00:00",
+      "finished_at": "2026-09-24T11:11:40.099215+00:00",
+      "elapsed_seconds": 37.543662757845595,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "InferenceNet",
+      "response_id": "gen-1790248262-7D6lTelP1GAQYAND3KuB",
+      "finish_reason": "stop",
+      "failure_stage": "report_validation",
+      "error_type": "ValueError",
+      "http_status": null,
+      "reported_cost": 0.00167977,
+      "request_sha256": "d662146fd4211b5dcafecba36448b56213f2779eaa8bc694f88f4734488d402f",
+      "recipe_sha256": "cdd4268b5c4aebfa7b0c0ffff1506e6b515f2da40b2fab100d3ef66a6b9bd0cb",
+      "packet_sha256": "b4d7d57bebac9c4fab2f614685094d7438791a3f2472ff6f759a0d8675c35fd2",
+      "response_sha256": "0ab4f5b3028674860bb23bddca9dce4575fda7e5bcf2394cc322ac5c9a07082b",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "r05-glm-003",
+      "receipt_sha256": "a6ae5f32058ecb12b4ab82553ea2a8b2c63b1ad4ed5aba9ed455c044bdc79292",
+      "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 33318,
+        "completion_tokens": 1289,
+        "total_tokens": 34607,
+        "cost": 0.00167977,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00167977,
+          "upstream_inference_prompt_cost": 0.00149931,
+          "upstream_inference_completions_cost": 0.00018046
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 553,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "reject",
+      "validated_verdict": null,
+      "report_sha256": null,
+      "failure_class": "invalid_report",
+      "validation_error": "Unbound finding reference",
+      "adjudication": {
+        "classification": "correct_diagnosis_invalid_reference",
+        "explanation": "Correctly identifies the excessive numeric SM floor; a target in 10..19 distinguishes the promised slice from the candidate. The report uses an unbound source reference, so it is not a usable validated finding.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T11:02:07.225391+00:00",
+      "finished_at": "2026-09-24T11:03:13.005762+00:00",
+      "elapsed_seconds": 65.77728028898127,
+      "requested_model": "deepseek/deepseek-v4.1-flash",
+      "reported_model": "deepseek/deepseek-v4.1-flash",
+      "provider": "Together",
+      "response_id": "gen-1790247727-YKUov57PYS5CsxyYri4Y",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.026775672,
+      "request_sha256": "78af5f067ab3cb2b403a65f0daaef7e51b0a4744ddcacd9a12ceb806834c9652",
+      "recipe_sha256": "dfe5331bf0067eb03cdf70963ab0fb33137a432ec3db2f02355acffdac49469e",
+      "packet_sha256": "69b9a96633dcdf1ce07063840b481aab911b307abf2e8fd61657a568b8e7dc58",
+      "response_sha256": "a6e99dbd6f805b2b622f7c991b290a0ff4cdf15b698b746a814439e5f15f3da6",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "unary-bits32-deepseek-001",
+      "receipt_sha256": "adc063db739ad117875e2e9f6bf946581e0d66e779ec201ddf3908d9d88ecc8d",
+      "base_commit": "7e2af082735e32fa9eae9622503db3e4fc4a992e",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 33226,
+        "completion_tokens": 14132,
+        "total_tokens": 47358,
+        "cost": 0.026775672,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 512,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.026775672,
+          "upstream_inference_prompt_cost": 0.009817272,
+          "upstream_inference_completions_cost": 0.0169584
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 13653,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "accept",
+      "validated_verdict": "accept",
+      "report_sha256": "cfffe5ced2941f6c298a0b7b9ce2828214eb6b465f2d2b331f42b30ae128a7f8",
+      "adjudication": {
+        "classification": "candidate_accept",
+        "explanation": "No defect reported. Coordinator source and statement review agrees within the supplied scope; this is not proof of source fidelity.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    },
+    {
+      "state": "completed",
+      "started_at": "2026-09-24T11:02:57.321038+00:00",
+      "finished_at": "2026-09-24T11:03:20.335330+00:00",
+      "elapsed_seconds": 23.0121526948642,
+      "requested_model": "z-ai/glm-5.3-flash",
+      "reported_model": "z-ai/glm-5.3-flash",
+      "provider": "InferenceNet",
+      "response_id": "gen-1790247777-bJPZ4EmO71zdzkHAJcDd",
+      "finish_reason": "stop",
+      "failure_stage": null,
+      "error_type": null,
+      "http_status": null,
+      "reported_cost": 0.00160718,
+      "request_sha256": "3b8891214877a5e296812530aaf11b64455b91efad01cddf4c9c306565dc6682",
+      "recipe_sha256": "dfe5331bf0067eb03cdf70963ab0fb33137a432ec3db2f02355acffdac49469e",
+      "packet_sha256": "69b9a96633dcdf1ce07063840b481aab911b307abf2e8fd61657a568b8e7dc58",
+      "response_sha256": "9d4d51d963b81e0cb5fb9d9d23f1d51e46ca6c3e8dc87314084ebeb0b7591c66",
+      "runner_sha256": "ebd7e1e814456f0665946b8152520ca1a9af305def0fb140504b903548f78eb3",
+      "helper_sha256": {
+        "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+        "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+        "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+      },
+      "timeout_seconds": 600,
+      "semantic_acceptance": "not_performed",
+      "invocation": "unary-bits32-glm-001",
+      "receipt_sha256": "1d2f33d153a849dc19e4a47b2530d372a6389fa699c085a82929abc2de73ac1c",
+      "base_commit": "7e2af082735e32fa9eae9622503db3e4fc4a992e",
+      "settings": {
+        "max_tokens": 16384,
+        "temperature": 0,
+        "reasoning": {
+          "effort": "medium"
+        },
+        "provider": {
+          "require_parameters": true
+        },
+        "stream": false
+      },
+      "usage": {
+        "prompt_tokens": 31932,
+        "completion_tokens": 1216,
+        "total_tokens": 33148,
+        "cost": 0.00160718,
+        "is_byok": false,
+        "prompt_tokens_details": {
+          "cached_tokens": 0,
+          "cache_write_tokens": 0,
+          "audio_tokens": 0,
+          "video_tokens": 0
+        },
+        "cost_details": {
+          "upstream_inference_cost": 0.00160718,
+          "upstream_inference_prompt_cost": 0.00143694,
+          "upstream_inference_completions_cost": 0.00017024
+        },
+        "completion_tokens_details": {
+          "reasoning_tokens": 507,
+          "image_tokens": 0,
+          "audio_tokens": 0
+        }
+      },
+      "parsed_verdict": "accept",
+      "validated_verdict": "accept",
+      "report_sha256": "6d9ae3f4b52b41caf17a0fe25b36639e680db8957e7180237adb22140aba261c",
+      "adjudication": {
+        "classification": "candidate_accept",
+        "explanation": "No defect reported. Coordinator source and statement review agrees within the supplied scope; this is not proof of source fidelity.",
+        "reviewer": "Coordinator inspection of exact request, candidate, source obligations and returned finding."
+      }
+    }
+  ]
+}

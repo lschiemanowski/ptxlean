@@ -11,8 +11,8 @@
     "Preserve incoming operand values under aliasing, guarded execution, exact operand reads and the restricted typed frontend.",
     "Separate checked result and execution proofs from PTX source fidelity and hardware correspondence."
   ],
-  "realization": "unimplemented",
-  "remaining": "Delegate the fixed leaf to Luna, replay its proofs independently, review source correspondence and integrate only the accepted candidate.",
+  "realization": "implemented",
+  "remaining": "The selected typed .b32 forms and their shared-engine proofs are implemented. Other widths, predicate-valued forms, raw-module validation, whole-kernel execution and hardware correspondence remain separate obligations.",
   "links": [
     {
       "kind": "implementation",
@@ -20,9 +20,45 @@
         "quote": "The typed frontend accepts exactly the selected spellings and word operand shapes.\nA malformed use of a recognized spelling is distinguished from an unsupported\nspelling. Register declarations and immediate conversion have already been\nchecked by the caller: a word literal is a decoded 32-bit value, not arbitrary\nraw PTX text. Other widths, predicate-valued forms and raw module parsing remain\noutside the family."
       },
       "to": {
-        "path": "formalization/contracts/bitwise32-v1.md",
+        "path": "Ptx/Bitwise32.lean",
         "passage": {
-          "quote": "The typed encoder preserves the guard and uses the exact mnemonic for its\noperation with a word-register destination followed by two word sources.\nKnown spellings with malformed operands return `invalidOperands`; every other\nspelling returns `unsupportedMnemonic`, even with malformed operands.\nAll enabled direct operand reads are recorded in order after guard reads,\nincluding repeated registers. A skip has only the guard read, no writes or memory\neffect. A fetched step checks target support even on a false guard.\nThe universal theorem signatures above are fixed; no extra premises or axioms."
+          "quote": "def decode (statement : Scalar.Text.Statement) : Except Scalar.Text.DecodeError Instr :=\n  match statement.mnemonic, statement.operands with\n  | \"and.b32\", [.word (.reg d), .word a, .word b] => .ok \u27e8statement.guard, .bitAnd, d, a, b\u27e9\n  | \"or.b32\", [.word (.reg d), .word a, .word b] => .ok \u27e8statement.guard, .bitOr, d, a, b\u27e9\n  | \"xor.b32\", [.word (.reg d), .word a, .word b] => .ok \u27e8statement.guard, .bitXor, d, a, b\u27e9\n  | spelling, _ => if supportedMnemonic spelling then .error (.invalidOperands spelling)\n      else .error (.unsupportedMnemonic spelling)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This family implements only and.b32, or.b32 and xor.b32. AND sets a bit when both source bits are set; OR when either is set; XOR when exactly one is set.\nAll 32-bit words are admitted, including zero and values with the highest bit set.\nNo interpretation as a signed integer or floating-point number changes these bits."
+      },
+      "to": {
+        "path": "Ptx/Bitwise32.lean",
+        "passage": {
+          "quote": "def compute (op : Operation) (a b : Word) : Word :=\n  match op with\n  | .bitAnd => a &&& b\n  | .bitOr => a ||| b\n  | .bitXor => a ^^^ b"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Proofs establish the exact result, preserved state, determinism, one-step\nexistence and origin in the fetched program."
+      },
+      "to": {
+        "path": "Ptx/Bitwise32.lean",
+        "passage": {
+          "quote": "theorem step_exists (target : Ptx.Target) (program : List Instr) (s : Scalar.State) (i : Instr)\n    (supported : SupportedTarget target) (fetch : program[s.pc]? = some i) :\n    \u2203 next event, Step target program s next event := by\n  have mapped : (program.map lower)[s.pc]? = some (lower i) := by simp [fetch]\n  exact Pure32.step_exists (lower i) mapped supported"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Source review separately establishes\nwhether these definitions match the selected PTX forms."
+      },
+      "to": {
+        "path": "docs/formalization/bitwise-leaves-review.md",
+        "passage": {
+          "quote": "Source interpretation was checked independently of Luna's explanation\nagainst the pinned PTX 9.4 manual, SHA-256\n`0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`."
         }
       }
     }

@@ -12,7 +12,7 @@
     "Evaluate concrete fault detection and false alarms on blinded cases; retain vendor-bearing requests and responses locally."
   ],
   "realization": "partial",
-  "remaining": "Recorded fixed-context OpenRouter review and blinded development cases are implemented. General reviewer-quality evidence, tool-using repository review and automatic integration remain outside the implemented route.",
+  "remaining": "Recorded fixed-context OpenRouter review and adjudicated blinded development trials are implemented. General reviewer-quality evidence, tool-using repository review and automatic integration remain outside the implemented route.",
   "links": [
     {
       "kind": "implementation",
@@ -35,6 +35,18 @@
         "path": "scripts/model_review.py",
         "passage": {
           "quote": "def validate_report(report, context):"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Small adaptive trials describe those cases, not a general accuracy\nestimate or justification for automatic integration."
+      },
+      "to": {
+        "path": "formalization/results/reviewer-pilot/README.md",
+        "passage": {
+          "quote": "This is a small, adaptively revised development set, not a benchmark\nof general model quality."
         }
       }
     }

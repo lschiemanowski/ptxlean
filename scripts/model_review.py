@@ -19,6 +19,7 @@ from check_sources import acquire, MANIFEST
 from coverage_inventory import SectionParser
 from worker_run import atomic_json, relative_path
 
+RUNNER_BYTES = Path(__file__).read_bytes()
 ROOT = Path(__file__).resolve().parents[1]
 ENDPOINT = 'https://openrouter.ai/api/v1/chat/completions'
 MODELS = ('deepseek/deepseek-v4.1-flash', 'z-ai/glm-5.3-flash')
@@ -124,12 +125,12 @@ def packet(recipe, root=ROOT):
             'scope': recipe['scope']}
 
 
-def schema():
+def schema(context=None):
     text = {'type': 'string'}
     def obj(fields):
         return {'type': 'object', 'properties': fields, 'required': list(fields),
                 'additionalProperties': False}
-    return obj({'verdict': {'type': 'string', 'enum': ['accept', 'reject', 'uncertain']},
+    result = obj({'verdict': {'type': 'string', 'enum': ['accept', 'reject', 'uncertain']},
                 'summary': text,
                 'obligations': {'type': 'array', 'items': obj({
                     'id': text, 'status': {'type': 'string', 'enum': ['satisfied', 'violated', 'uncertain']},
@@ -138,6 +139,15 @@ def schema():
                     'obligation': text, 'path': text, 'line': {'type': 'integer'},
                     'anchor': text, 'explanation': text, 'counterexample': text})},
                 'uncertainties': {'type': 'array', 'items': text}})
+    if context is not None:
+        obligations = [o['id'] for o in context['obligations']]
+        findings = result['properties']['findings']['items']['properties']
+        findings['obligation'] = {'type':'string', 'enum':obligations}
+        findings['path'] = {'type':'string', 'enum':[f['path'] for f in context['files'] if f['role']=='candidate']}
+        findings['anchor'] = {'type':'string', 'enum':[s['anchor'] for s in context['source']]}
+        findings['line'] = {'type':'integer', 'minimum':1}
+        result['properties']['obligations']['items']['properties']['id'] = {'type':'string','enum':obligations}
+    return result
 
 
 SYSTEM = '''You review a Lean formalization against supplied PTX source and project obligations.
@@ -152,7 +162,7 @@ relevant provided source anchor, explanation and distinguishing case (or state w
 can be given). A source anchor may justify the instruction meaning while a stricter project
 obligation justifies the interface. Use accept only if all obligations are satisfied and no
 findings/uncertainties remain; otherwise reject for a demonstrated violation, or uncertain.
-Keep the report concise: explain each obligation once, without a line-by-line code walkthrough. Return exactly the JSON object requested by the response schema. Paraphrase source text;
+Inspect definitions and theorem hypotheses for semantic gaps; do not rederive Lean proof tactics, which are checked separately. Keep the report concise: explain each obligation once, without a line-by-line code walkthrough. Return exactly the JSON object requested by the response schema. Paraphrase source text;
 do not reproduce paragraphs from vendor documentation. A verdict is advisory only.'''
 
 
@@ -210,20 +220,20 @@ def render_packet(context):
     return '\n\n'.join(sections)
 
 
-def request_body(context, model, max_tokens=24576):
+def request_body(context, model, max_tokens=16384):
     if model not in MODELS:
         raise ValueError('Reviewer must be one of the explicitly selected models')
     if type(max_tokens) is not int or max_tokens <= 0:
         raise ValueError('Invalid output token allowance')
-    return {'model': model, 'messages': [{'role':'system','content':SYSTEM},
+    return {'model': model, 'messages': [{'role':'system','content':SYSTEM + '\nRequired report schema:\n' + json.dumps(schema(context))},
                 {'role':'user','content':render_packet(context)}],
-            'temperature': 0, 'max_tokens': max_tokens, 'reasoning': {'effort':'high'},
+            'temperature': 0, 'max_tokens': max_tokens, 'reasoning': {'effort':'medium'},
             'provider': {'require_parameters': True}, 'stream': False,
             'response_format': {'type':'json_schema', 'json_schema': {
-                'name':'ptx_semantic_review', 'strict':True, 'schema':schema()}}}
+                'name':'ptx_semantic_review', 'strict':True, 'schema':schema(context)}}}
 
 
-def run(recipe_path, output, model, root=ROOT, max_tokens=24576, timeout=300, transport=urlopen):
+def run(recipe_path, output, model, root=ROOT, max_tokens=16384, timeout=300, transport=urlopen):
     key = os.environ.get('OPENROUTER_API_KEY')
     if not key:
         raise ValueError('OPENROUTER_API_KEY is required; no request sent')
@@ -242,16 +252,22 @@ def run(recipe_path, output, model, root=ROOT, max_tokens=24576, timeout=300, tr
     record = {'schema_version':1, 'state':'started', 'started_at':now(),
               'requested_model':model, 'request_sha256':sha(body),
               'recipe_sha256':sha(recipe_bytes), 'packet_sha256':sha(encoded(context)),
-              'runner_sha256':sha(Path(__file__).read_bytes()),
+              'helper_sha256':{name:sha(Path(__file__).with_name(name).read_bytes()) for name in
+                               ['check_sources.py','coverage_inventory.py','worker_run.py']},
+              'runner_sha256':sha(RUNNER_BYTES),
               'reported_model':None, 'provider':None, 'usage':None, 'reported_cost':None,
               'semantic_acceptance':'not_performed', 'timeout_seconds':timeout}
     atomic_json(output/'receipt.json', record)
     start = time.monotonic()
+    stage = 'transport'
     try:
         request = Request(ENDPOINT, data=body, headers={
             'Authorization':'Bearer '+key, 'Content-Type':'application/json'})
         with transport(request, timeout=timeout) as response:
             raw = response.read()
+        stage = 'response'
+        if key.encode() in raw:
+            raise ValueError('Response contains credential bytes; content not saved')
         (output/'response.json').write_bytes(raw)
         record['response_sha256'] = sha(raw)
         payload = json.loads(raw)
@@ -259,21 +275,24 @@ def run(recipe_path, output, model, root=ROOT, max_tokens=24576, timeout=300, tr
                       usage=payload.get('usage'), response_id=payload.get('id'))
         if isinstance(record['usage'], dict):
             record['reported_cost'] = record['usage'].get('cost')
+        stage = 'model_identity'
         if payload.get('model') != model:
             raise ValueError('Returned model does not match the requested model')
+        stage = 'completion'
         if len(payload.get('choices', [])) != 1:
             raise ValueError('Expected exactly one completed answer')
         choice = payload['choices'][0]
         record['finish_reason'] = choice.get('finish_reason')
         if choice.get('finish_reason') != 'stop':
             raise ValueError('Truncated or otherwise incomplete review')
+        stage = 'report_validation'
         report = validate_report(json.loads(choice['message']['content']), context)
         atomic_json(output/'report.json', report)
         record.update(state='completed', verdict=report['verdict'])
     except Exception as error:
         # Error objects can carry request credentials or provider-returned content.
         # Keep only exception type and HTTP status in the durable receipt.
-        record.update(state='failed', error_type=type(error).__name__,
+        record.update(state='failed', failure_stage=stage, error_type=type(error).__name__,
                       http_status=error.code if isinstance(error, HTTPError) else None)
         raise
     finally:
@@ -307,7 +326,7 @@ def main():
     parser.add_argument('--env-file', type=Path, help='read only OPENROUTER_API_KEY; never execute the file')
     parser.add_argument('--model', choices=MODELS, required=True)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--max-tokens', type=int, default=24576)
+    parser.add_argument('--max-tokens', type=int, default=16384)
     parser.add_argument('--timeout', type=int, default=300)
     args = parser.parse_args()
     try:

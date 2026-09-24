@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Nine reviewed forms: seven integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Fourteen reviewed forms: twelve integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": ".ptx-source/9.4/index.html",
@@ -106,6 +106,38 @@
     "signed_minmax32_review": {
       "path": "docs/formalization/pure-leaves-review.md",
       "sha256": "5ceae9bd1d6e9d8912f0e9901c312d4f4415b6614394d8002c240e5a7a0cf862"
+    },
+    "bitwise32": {
+      "path": "Ptx/Bitwise32.lean",
+      "sha256": "80ed9d771cf5c0b0cc39bdf9007c9465815f01d432d8b307b0d86aa742fb026f"
+    },
+    "bitwise32_acceptance": {
+      "path": "formalization/results/bitwise32/acceptance.json",
+      "sha256": "bf28a91395b62282c2e96796d7f5108f967bc6587658188c66c5797037767056"
+    },
+    "bitwise32_evidence": {
+      "path": "formalization/results/bitwise32/evidence-manifest.json",
+      "sha256": "d9e483f4829ad1725ae80ebdf9d58b65b04c871e5326abb1d9a06c567a36cc5a"
+    },
+    "bitwise32_review": {
+      "path": "docs/formalization/bitwise-leaves-review.md",
+      "sha256": "19669ef314c1fa8df18107d9ce34b04d430721f0f9addf9c319eae00fdc13ea5"
+    },
+    "unary_bits32": {
+      "path": "Ptx/UnaryBits32.lean",
+      "sha256": "2a44c3efb2fd9b9a1bfa459aa0ec2b445918da1e2dbe274cc734421d17d88f3e"
+    },
+    "unary_bits32_acceptance": {
+      "path": "formalization/results/unary-bits32/acceptance.json",
+      "sha256": "f8c5bffc0a1f7d9b4d178e3fa3dfbe36a1343e2f1dc82a9a10ae3116ba5ae685"
+    },
+    "unary_bits32_evidence": {
+      "path": "formalization/results/unary-bits32/evidence-manifest.json",
+      "sha256": "0c6f92692ef209e7e6bfe71d3e90901ade8301cfec571b5b23689e20bb335b45"
+    },
+    "unary_bits32_review": {
+      "path": "docs/formalization/bitwise-leaves-review.md",
+      "sha256": "19669ef314c1fa8df18107d9ce34b04d430721f0f9addf9c319eae00fdc13ea5"
     }
   },
   "source": {
@@ -127,7 +159,12 @@
       "floating-point-constants": "18bc1c6df31458d6cf5482b57f1f11bbf62e3ae6b79ee53b29d0828986e44ad6",
       "fundamental-types": "737b66557cb0faeb38be8db19ba958bfeb0c0fbc9b50cdef002c9916a8551964",
       "instruction-statements": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a",
-      "comparison-and-selection-instructions-selp": "8781e1d81a058fbac02e290afeca05c1a45ea6f12c8e9bdcabbde18a5dc75347"
+      "comparison-and-selection-instructions-selp": "8781e1d81a058fbac02e290afeca05c1a45ea6f12c8e9bdcabbde18a5dc75347",
+      "logic-and-shift-instructions-and": "3fc89c2133f705adeff44135e17bde68be8b92be292865f6731333a1a22aa050",
+      "logic-and-shift-instructions-or": "9297e62ec4c00c1910e345576d97696b16428867beb657a810667e26ef3d7a1d",
+      "logic-and-shift-instructions-xor": "f3da76b6d69b50617e9625e3701efc9c0f0750eaf90c763bcb6780c9bb5af4b4",
+      "logic-and-shift-instructions-not": "5f2864d328c20efa301fcc7156c0f6b9366ba671055174a8e0f79929a9917f14",
+      "logic-and-shift-instructions-cnot": "90ce8e60fe23fad6d8e12240d758951e193fe2d3b428c953c551996871a51f70"
     },
     "common_operand_guard_anchors": [
       "operand-type-information",
@@ -178,6 +215,22 @@
       "patch_member": "attempts/signed-minmax32-003/candidate.patch",
       "replay_member": "replays/signed-minmax32-003/result.json",
       "patch_sha256": "41338a792294b67881939ead14b8132ad86fee00fbd4afca36ef0897944a4f78"
+    },
+    "bitwise32": {
+      "acceptance": "bitwise32_acceptance",
+      "evidence": "bitwise32_evidence",
+      "source_review": "bitwise32_review",
+      "patch_member": "attempts/bitwise32-001/candidate.patch",
+      "replay_member": "replays/bitwise32-001/result.json",
+      "patch_sha256": "c3e3e48409c9a31deb7cd1b06dcacaab461cce478669481d71f2ff37785b7eac"
+    },
+    "unary_bits32": {
+      "acceptance": "unary_bits32_acceptance",
+      "evidence": "unary_bits32_evidence",
+      "source_review": "unary_bits32_review",
+      "patch_member": "attempts/unary-bits32-003/candidate.patch",
+      "replay_member": "replays/unary-bits32-003/result.json",
+      "patch_sha256": "b775edbd2c9da3f326c48abe35f163608a8537d21c8ae89837aa075a80d788c9"
     }
   },
   "forms": [
@@ -1409,6 +1462,839 @@
           "name": "decode_iff"
         }
       ]
+    },
+    {
+      "spelling": "and.b32",
+      "status": "accepted",
+      "trial": "bitwise32",
+      "source_anchor": "logic-and-shift-instructions-and",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate",
+          "compatible 32-bit word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Bitwise conjunction of both inputs. Every 32-bit input is admitted.",
+      "boundary": "Typed Pure32-family leaf over supplied scalar states with word sources and one word destination. No raw text/declaration checking, other widths, predicate-valued forms, complete kernel or hardware claim. Exact ISA94/SM>=10 feature requirement on fetched Step, not recognized-target validation.",
+      "semantics": [
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "compute"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "family"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "lower"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "results_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_other"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_event"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_origin"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_exists"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "or.b32",
+      "status": "accepted",
+      "trial": "bitwise32",
+      "source_anchor": "logic-and-shift-instructions-or",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate",
+          "compatible 32-bit word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Bitwise inclusive disjunction of both inputs. Every 32-bit input is admitted.",
+      "boundary": "Typed Pure32-family leaf over supplied scalar states with word sources and one word destination. No raw text/declaration checking, other widths, predicate-valued forms, complete kernel or hardware claim. Exact ISA94/SM>=10 feature requirement on fetched Step, not recognized-target validation.",
+      "semantics": [
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "compute"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "family"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "lower"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "results_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_other"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_event"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_origin"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_exists"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "xor.b32",
+      "status": "accepted",
+      "trial": "bitwise32",
+      "source_anchor": "logic-and-shift-instructions-xor",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate",
+          "compatible 32-bit word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Bitwise exclusive disjunction of both inputs. Every 32-bit input is admitted.",
+      "boundary": "Typed Pure32-family leaf over supplied scalar states with word sources and one word destination. No raw text/declaration checking, other widths, predicate-valued forms, complete kernel or hardware claim. Exact ISA94/SM>=10 feature requirement on fetched Step, not recognized-target validation.",
+      "semantics": [
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "compute"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "family"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "lower"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "results_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_other"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_event"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_origin"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_exists"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "bitwise32",
+          "namespace": "Ptx.Scalar.Bitwise32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "not.b32",
+      "status": "accepted",
+      "trial": "unary_bits32",
+      "source_anchor": "logic-and-shift-instructions-not",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Complement every bit of the input. Every 32-bit input is admitted.",
+      "boundary": "Typed Pure32-family leaf over supplied scalar states with word sources and one word destination. No raw text/declaration checking, other widths, predicate-valued forms, complete kernel or hardware claim. Exact ISA94/SM>=10 feature requirement on fetched Step, not recognized-target validation.",
+      "semantics": [
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "compute"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "family"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "lower"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "results_iff"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_other"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_event"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "step_origin"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "step_exists"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "cnot.b32",
+      "status": "accepted",
+      "trial": "unary_bits32",
+      "source_anchor": "logic-and-shift-instructions-cnot",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Return the 32-bit word 1 for zero input and 0 for every nonzero input. Every 32-bit input is admitted.",
+      "boundary": "Typed Pure32-family leaf over supplied scalar states with word sources and one word destination. No raw text/declaration checking, other widths, predicate-valued forms, complete kernel or hardware claim. Exact ISA94/SM>=10 feature requirement on fetched Step, not recognized-target validation.",
+      "semantics": [
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "compute"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "family"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "lower"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "results_iff"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_other"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_event"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "step_origin"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "step_exists"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "unary_bits32",
+          "namespace": "Ptx.Scalar.UnaryBits32",
+          "name": "lower_operation"
+        }
+      ]
     }
   ],
   "uncovered_siblings": [
@@ -1538,6 +2424,55 @@
       ],
       "status": "unimplemented",
       "reason": "Only selp.b32 with a positive register selector is accepted by this leaf; other widths/types and selector forms are outside its interface."
+    },
+    {
+      "source_anchor": "logic-and-shift-instructions-and",
+      "spellings": [
+        "and.b16",
+        "and.b64",
+        "and.pred"
+      ],
+      "status": "unimplemented",
+      "reason": "Only the typed .b32 form is accepted; other legal widths and predicate-valued forms remain outside this leaf."
+    },
+    {
+      "source_anchor": "logic-and-shift-instructions-or",
+      "spellings": [
+        "or.b16",
+        "or.b64",
+        "or.pred"
+      ],
+      "status": "unimplemented",
+      "reason": "Only the typed .b32 form is accepted; other legal widths and predicate-valued forms remain outside this leaf."
+    },
+    {
+      "source_anchor": "logic-and-shift-instructions-xor",
+      "spellings": [
+        "xor.b16",
+        "xor.b64",
+        "xor.pred"
+      ],
+      "status": "unimplemented",
+      "reason": "Only the typed .b32 form is accepted; other legal widths and predicate-valued forms remain outside this leaf."
+    },
+    {
+      "source_anchor": "logic-and-shift-instructions-not",
+      "spellings": [
+        "not.b16",
+        "not.b64",
+        "not.pred"
+      ],
+      "status": "unimplemented",
+      "reason": "Only the typed .b32 form is accepted; other legal widths and predicate-valued forms remain outside this leaf."
+    },
+    {
+      "source_anchor": "logic-and-shift-instructions-cnot",
+      "spellings": [
+        "cnot.b16",
+        "cnot.b64"
+      ],
+      "status": "unimplemented",
+      "reason": "Only the typed .b32 form is accepted; other legal widths remain outside this leaf."
     }
   ]
 }

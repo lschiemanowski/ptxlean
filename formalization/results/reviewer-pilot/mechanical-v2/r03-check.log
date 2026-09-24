@@ -1,0 +1,6 @@
+/home/lothar/workspace/ptxlean/.formalization-runs/reviewer-pilot/mechanical-v2/r03-check.lean:2:145: error: Tactic `decide` proved that the proposition
+  (match Ptx.Scalar.Select32.Text.decode { mnemonic := "selp.b32", operands := [] } with
+    | Except.error (Ptx.Scalar.Text.DecodeError.invalidOperands mnemonic) => true
+    | x => false) =
+    true
+is false

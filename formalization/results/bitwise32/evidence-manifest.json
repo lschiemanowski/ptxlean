@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "archive": "worker-evidence.tar.gz",
+  "archive_sha256": "c8ef523f6854ac29475140e354eafc3de0967557c0374183fa9a26b6f239f0c8",
+  "members": {
+    "attempts/bitwise32-001/candidate.patch": {
+      "bytes": 9051,
+      "sha256": "c3e3e48409c9a31deb7cd1b06dcacaab461cce478669481d71f2ff37785b7eac"
+    },
+    "attempts/bitwise32-001/final.md": {
+      "bytes": 607,
+      "sha256": "a318f2db6c0eb6c5fb48f2c591d852b24d0e204dfe13f119893eb3dc3bb32a51"
+    },
+    "attempts/bitwise32-001/phase-1-000-worktree.log": {
+      "bytes": 187,
+      "sha256": "0a807317f905a2e785fa9806de455718ec0bc8b5faee67d15f261c72dae6317f"
+    },
+    "attempts/bitwise32-001/phase-1-001-lake-version.log": {
+      "bytes": 53,
+      "sha256": "242bb637d740597febf655395478ffc9020e35e53e3040d8a7055bf3de6f0541"
+    },
+    "attempts/bitwise32-001/phase-1-002-lean-version.log": {
+      "bytes": 106,
+      "sha256": "cf6e65bfc214882b1c13717aae89d383a03f6bcf5c96dfbae13368cd3e07ff9d"
+    },
+    "attempts/bitwise32-001/phase-1-003-prerequisites.log": {
+      "bytes": 221,
+      "sha256": "206bec06c17d3f2dc9116eec531e0b6f75f8739f3254253e4d98ff71ebd25781"
+    },
+    "attempts/bitwise32-001/plan.json": {
+      "bytes": 1351,
+      "sha256": "a63ab35806dfced7ebe57402e4c3289e82b002f7995d821c5f431f7577d7b189"
+    },
+    "attempts/bitwise32-001/preparation.json": {
+      "bytes": 2642,
+      "sha256": "7f239bd831064b26dbc9d01cc6301561ee5056241fc621b3d3171a2e4a1c18fe"
+    },
+    "attempts/bitwise32-001/prepared.patch": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "attempts/bitwise32-001/prompt.md": {
+      "bytes": 8391,
+      "sha256": "a00fef49a79da1647fc030907ae21ae296389667623dc28e3befa4d478fea493"
+    },
+    "attempts/bitwise32-001/provisioner/worker_project.py": {
+      "bytes": 4970,
+      "sha256": "527eee5c64505ecc56d5cb3cd003cb6f971384556fb31f9132b7f4343d3d2244"
+    },
+    "attempts/bitwise32-001/provisioner/worker_provision.py": {
+      "bytes": 19010,
+      "sha256": "6a7a2aa8b1088892b4f328778b3685604402ed266b0f646ea0f4d6b6c61fc4d9"
+    },
+    "attempts/bitwise32-001/provisioner/worker_run.py": {
+      "bytes": 26721,
+      "sha256": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+    },
+    "attempts/bitwise32-001/ready.json": {
+      "bytes": 7389,
+      "sha256": "49eb657f38b929a3f991c2bd61148e0563c8db6fafd9030670df7fb48fbdfa65"
+    },
+    "attempts/bitwise32-001/receipt.json": {
+      "bytes": 1929,
+      "sha256": "78b001bb60212826f587b1b617caf0c46578a676b5b315992a19f79120d63bb8"
+    },
+    "attempts/bitwise32-001/run-check-97088d5b1cbc4de397b148fb60fd91f8.json": {
+      "bytes": 251,
+      "sha256": "9f74108f0e6e3024906201890e914896f070c8d5afaa5d3f013ddc7b9f31c210"
+    },
+    "attempts/bitwise32-001/run.json": {
+      "bytes": 218,
+      "sha256": "ec19e681c561f365ed27519c5ece46bacf03268172f8f3189d8bb1914ff694d9"
+    },
+    "attempts/bitwise32-001/runner.py": {
+      "bytes": 26721,
+      "sha256": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+    },
+    "attempts/bitwise32-001/stderr.log": {
+      "bytes": 294,
+      "sha256": "7c9078fea4ce29a17189b94429592e4a0a9a7217f54388c5860e0d19207c7578"
+    },
+    "attempts/bitwise32-001/task.json": {
+      "bytes": 9990,
+      "sha256": "393855bbaac986b60cb4fc6746db12671421b5bf9edadf556f55e49432bf8cd4"
+    },
+    "checks/bitwise32-v1.lean": {
+      "bytes": 7684,
+      "sha256": "1beae10426aeb842a49cec8bf5b795cff74822750d3184d7c260c1856341a010"
+    },
+    "checks/bitwise32-v2.lean": {
+      "bytes": 7671,
+      "sha256": "839318f8fb500142ca0fd9ffe243bd00b8ec1f8a8713618a838aaa9fcf51e5d2"
+    },
+    "checks/bitwise32-v3.lean": {
+      "bytes": 7744,
+      "sha256": "1b0907005ffa21c5a69fa7f0a9890b8625b06cbd8d504ba8fd925c78130c5773"
+    },
+    "checks/driver-v2.log": {
+      "bytes": 7098,
+      "sha256": "2490e9ac0cc9adbeb83e815e3ebc34f00997f9200fbe6fbce4ad7adfd634cb25"
+    },
+    "checks/driver-v3.log": {
+      "bytes": 5817,
+      "sha256": "3a38f27d7d948d1281a4803a929b7f37bea9d5bc85987244f8f39eafc04810fe"
+    },
+    "ledger.json": {
+      "bytes": 716,
+      "sha256": "f820696385749dec07cb140aef0280f69132726c47bdd138fc3a6478cb1bec0c"
+    },
+    "replays/bitwise32-001/apply.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "replays/bitwise32-001/audit.lean": {
+      "bytes": 1462,
+      "sha256": "4b17dde142d56208eaba49e2f40581ca28ffc38901754d5b4ee20789097987fd"
+    },
+    "replays/bitwise32-001/audit.log": {
+      "bytes": 2209,
+      "sha256": "8369787c92ab08cd3ff3733d3b5d2084d21eab04a3645216aee0a8feb57f98e5"
+    },
+    "replays/bitwise32-001/base-form-ledger.log": {
+      "bytes": 88,
+      "sha256": "02fe122320111129ebbc50809ec2efcb6166f86545e98c43b17389342efab498"
+    },
+    "replays/bitwise32-001/baseline.log": {
+      "bytes": 117079,
+      "sha256": "acd55db7e46059a1147514629571d04fd7231708e6e1ff4482d24cef1e99f7c8"
+    },
+    "replays/bitwise32-001/candidate.patch": {
+      "bytes": 9051,
+      "sha256": "c3e3e48409c9a31deb7cd1b06dcacaab461cce478669481d71f2ff37785b7eac"
+    },
+    "replays/bitwise32-001/driver-0.lean": {
+      "bytes": 7744,
+      "sha256": "1b0907005ffa21c5a69fa7f0a9890b8625b06cbd8d504ba8fd925c78130c5773"
+    },
+    "replays/bitwise32-001/driver-0.log": {
+      "bytes": 6297,
+      "sha256": "c4652159b13d2f1c9dcfe86fb18f589dc8d8007d5b7b9500ccd3923c8501269c"
+    },
+    "replays/bitwise32-001/modules.log": {
+      "bytes": 76,
+      "sha256": "8c8b198b03d500ad54db7191ef012962c694c780ac763cbd059334f21d608894"
+    },
+    "replays/bitwise32-001/project_helper.py": {
+      "bytes": 4970,
+      "sha256": "527eee5c64505ecc56d5cb3cd003cb6f971384556fb31f9132b7f4343d3d2244"
+    },
+    "replays/bitwise32-001/result.json": {
+      "bytes": 5523,
+      "sha256": "faadd3673ec8fdf10cf2ec22922848352c59b6bf54f1d6dd16f356850a1b1f0b"
+    },
+    "replays/bitwise32-001/task.json": {
+      "bytes": 9990,
+      "sha256": "393855bbaac986b60cb4fc6746db12671421b5bf9edadf556f55e49432bf8cd4"
+    }
+  },
+  "distribution": {
+    "policy": "omit-raw-model-transcripts",
+    "reason": "Raw tool/model event transcripts can reproduce NVIDIA documentation. Retained public members are unchanged; exact omitted bytes remain local.",
+    "original_archive_sha256": "8649a39d0b76b817bfc50e56ce74c41da03e586a2f369275ab297f55b76ea78d",
+    "omitted_members": {
+      "attempts/bitwise32-001/events.jsonl": {
+        "bytes": 120638,
+        "sha256": "204436807bdc05b1a558a9fe4c4b63b2a709afa92f7380e8b8145f5bd6b2e47f"
+      }
+    }
+  }
+}

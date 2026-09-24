@@ -154,3 +154,10 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(m.load_key(path),'literal-$value')
         path.write_text('OPENROUTER_API_KEY=a\nOPENROUTER_API_KEY=b\n')
         with self.assertRaises(ValueError):m.load_key(path)
+
+    def test_report_schema_enumerates_exact_reference_ids(self):
+        context=m.packet(self.recipe,self.root)
+        fields=m.schema(context)['properties']['findings']['items']['properties']
+        self.assertEqual(fields['anchor']['enum'],['source'])
+        self.assertEqual(fields['path']['enum'],['Candidate.lean'])
+        self.assertEqual(fields['obligation']['enum'],['meaning'])

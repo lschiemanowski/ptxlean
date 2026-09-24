@@ -1,6 +1,6 @@
 # Binary bitwise instructions
 
-This family implements only and.b32, or.b32 and xor.b32. Each result bit is respectively the conjunction, disjunction or exclusive-or of the two source bits.
+This family implements only and.b32, or.b32 and xor.b32. AND sets a bit when both source bits are set; OR when either is set; XOR when exactly one is set.
 All 32-bit words are admitted, including zero and values with the highest bit set.
 No interpretation as a signed integer or floating-point number changes these bits.
 

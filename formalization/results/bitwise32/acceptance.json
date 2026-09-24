@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "task": "bitwise32-v1",
+  "selected_forms": [
+    "and.b32",
+    "or.b32",
+    "xor.b32"
+  ],
+  "base_commit": "7e2af082735e32fa9eae9622503db3e4fc4a992e",
+  "accepted_patch_sha256": "c3e3e48409c9a31deb7cd1b06dcacaab461cce478669481d71f2ff37785b7eac",
+  "worker_attempt": "bitwise32-001",
+  "mechanical_replay": "replays/bitwise32-001/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "Exact leaf patch integrated; combined root checks recorded in final Stratic review.",
+  "reviewer": "Coordinator source/statement inspection and fresh Lean replay; OpenRouter verdicts are advisory only.",
+  "source_conditions": {
+    "ptx_minimum": "1.0",
+    "target_minimum": "sm_10 feature floor; not recognized-target validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "logic-and-shift-instructions-and",
+      "logic-and-shift-instructions-or",
+      "logic-and-shift-instructions-xor"
+    ]
+  },
+  "trial_invocations": 1,
+  "repair_invocations": 0,
+  "campaign_call_numbers": [
+    16
+  ],
+  "evaluator_versions": {
+    "v1": "Frozen original; namespace ambiguity.",
+    "v2": "Qualification-only repair; finite-index and numeric-projection elaboration issues.",
+    "v3": "Explicit index types and numeric target fact; same semantic assertions."
+  },
+  "qualification": "Adaptive assisted development; no held-out productivity estimate. Resumed-session usage may be cumulative and is not summed. Full raw event transcripts remain local."
+}

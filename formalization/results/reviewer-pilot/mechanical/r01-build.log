@@ -1,0 +1,13 @@
+✔ [2/7] Built Ptx.Language (727ms)
+✔ [3/7] Built Ptx.Scalar (1.9s)
+✔ [4/7] Built Ptx.Environment (2.9s)
+✔ [5/7] Built Ptx.Pure32 (665ms)
+✔ [6/7] Built Ptx.ScalarText (17s)
+⚠ [7/7] Built Ptx.Select32 (700ms)
+warning: Ptx/Select32.lean:83:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: Ptx/Select32.lean:141:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+Build completed successfully (7 jobs).

@@ -58,3 +58,13 @@ regeneration does not promise the same model output.
 The request format follows OpenRouter's [chat API](https://openrouter.ai/docs/api/api-reference/chat/create-a-chat-completion)
 and [structured-output documentation](https://openrouter.ai/docs/guides/features/structured-outputs).
 Supported parameters are required when routing; output is also validated locally.
+
+The [first development trial](../../formalization/results/reviewer-pilot/README.md)
+retains all 38 invocations and their adjudications, including failed requests and
+counterexamples that did not demonstrate the claimed defect. The current request
+uses medium reasoning and 16,384 output tokens, with exact obligation IDs,
+candidate paths and source anchors enumerated in the response schema. The same
+schema appears in the prompt, and local validation remains mandatory. This
+improves report formatting; it does not establish semantic accuracy. The pilot
+supports using these reviewers as additional evidence, with coordinator review
+still required for integration.

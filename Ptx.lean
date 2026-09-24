@@ -62,3 +62,6 @@ import Ptx.SharedReductionSafety
 import Ptx.SharedReductionTrace
 import Ptx.SharedReductionValues
 import Ptx.SharedReductionWriteback
+
+import Ptx.Bitwise32
+import Ptx.UnaryBits32

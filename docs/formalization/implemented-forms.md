@@ -1,9 +1,9 @@
 # Reading the accepted-form ledger
 
-[The ledger](../../coverage/implemented-forms.json) records nine selected accepted
+[The ledger](../../coverage/implemented-forms.json) records fourteen selected accepted
 forms. It is separate from the [instruction-section inventory](coverage.md),
 whose `not_assessed` entries are unchanged. Other existing scalar instructions
-are not yet entered here, so even the ledger's nine-form count is not a count of
+are not yet entered here, so even the ledger's fourteen-form count is not a count of
 all implemented PTX forms.
 
 | Exact form | Inputs → destination | Meaning | Manual conditions |
@@ -17,15 +17,20 @@ all implemented PTX forms.
 | `selp.b32` | two words and a predicate → 32-bit register | First source if true, second otherwise | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
 | `min.s32` | two signed 32-bit words → compatible register | Smaller signed value | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
 | `max.s32` | two signed 32-bit words → compatible register | Larger signed value | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `and.b32` | two words → compatible 32-bit register | Bitwise AND | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `or.b32` | two words → compatible 32-bit register | Bitwise inclusive OR | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `xor.b32` | two words → compatible 32-bit register | Bitwise exclusive OR | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `not.b32` | one word → compatible 32-bit register | Complement all bits | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `cnot.b32` | one word → compatible 32-bit register | 1 if the input is zero; 0 otherwise | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
 
 Every word input can come from a word register or a 32-bit immediate value.
-The selection predicate is a register. All nine
+The selection predicate is a register. All fourteen
 forms support unconditional execution or execution guarded by a positive or
 negated predicate. A false guard advances the program counter without writing
 the destination. Register overlap is allowed: the incoming source value is read
 before the destination changes. These are typed statement interfaces, not a
 parser or type checker for complete PTX source files. The older unsigned and bit-count decoders record no architecture/version
-eligibility decision. The selection and signed min/max fetched steps require
+eligibility decision. The selection, signed min/max and bitwise fetched steps require
 ISA 9.4 and a numeric SM feature floor of 10.
 The floating `Step` requires exact ISA 94 and numeric SM at least 20, although
 this is not a target-name or architecture-suffix validator. Its source word bank
@@ -48,7 +53,10 @@ in the ledger. Source fidelity is an independent review judgment, supported by
 [the bit-count review](bitcount-source-review.md); it is not a consequence of a
 successful Lean build. The [pure-leaf review](pure-leaves-review.md) covers
 selection and signed min/max, their exact shared-engine boundary and retained
-evaluator corrections.
+evaluator corrections. The [bitwise review](bitwise-leaves-review.md) covers
+the five .b32 logic forms and their separately replayed proofs. Other widths and
+legal predicate-valued siblings remain unimplemented; `cnot.pred` is not a legal
+sibling of `cnot.b32`.
 
 The separate signed minimum and maximum entries add only `.s32`. Other
 scalar widths, packed half-word or quarter-word lanes, and `.relu` clamping of a

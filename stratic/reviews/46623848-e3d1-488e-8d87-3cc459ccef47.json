@@ -1,0 +1,411 @@
+{
+  "id": "46623848-e3d1-488e-8d87-3cc459ccef47",
+  "base": "7e2af082735e32fa9eae9622503db3e4fc4a992e",
+  "contentTree": "ab2a00fa7b8a4b6aaea92903979fc2a7b79f6f89",
+  "reviewer": "Codex coordinator",
+  "summary": "Integrate five Luna-authored bitwise forms after fresh proof replay and source review; record the complete adaptive OpenRouter reviewer trial and update Stratic and coverage.",
+  "examined": [
+    {
+      "id": "bitwise32",
+      "outcome": "revised",
+      "reason": "Three selected .b32 operations now implemented by the exact Luna patch; typed frontend and shared execution/existence proofs linked and independently replayed."
+    },
+    {
+      "id": "unary-bits32",
+      "outcome": "revised",
+      "reason": "not.b32 and cnot.b32 now implemented by Luna after two recorded proof repairs; no coordinator edits to candidate code, with exact input/target and error-classification checks."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "Ledger now records fourteen accepted forms, five new source-section hashes, replay/patch evidence, and explicitly missing legal siblings; no full-section coverage claim."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Remaining-work metadata recognizes new selected forms and separate review evidence; generating and reviewing models do not replace coordinator source acceptance."
+    },
+    {
+      "id": "model-review",
+      "outcome": "revised",
+      "reason": "Reference enums and explicit schema improve inspectability; all 38 adaptive invocations retain failures, unknown cost and independent finding adjudication, without promoting agreement to fidelity."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Only sixty new independent leaf declarations were appended to the shared audit; existing message-passing semantics and theorem dependency entries are unchanged and pass again."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "Both leaves instantiate the existing total Pure32 interface; generic state, guard, read ordering, target check and transition rules are byte-for-byte unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Source judgment, checked proofs and model opinions remain separate; raw vendor-bearing responses are local, public evidence contains authored adjudications and hashes."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "unchanged",
+      "reason": "Existing Codex headless isolation, recorded repair, exact patch and fresh replay mechanisms were reused without change."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "The source-section inventory stays not_assessed; five explicit accepted forms extend its separate ledger without converting an entire section to covered or claiming an ISA percentage."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "ab2a00fa7b8a4b6aaea92903979fc2a7b79f6f89",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; exact historical runner/packet reconstruction; retained-evidence hash checks; public-text/archive quotation scan and git diff --check",
+      "outcome": "pass",
+      "environment": "Pinned root Lean toolchain and pinned TorchLean integration dependencies on Linux; Python standard-library tests. Integration Lean/configuration inputs unchanged throughout the final root and description checks.",
+      "evidence": "Root: 14 accepted forms, 837 files in 8 evidence archives, 7 inventory tests, 102 worker tests, 26 ledger tests, 1273 declaration dependency audit; integration: 363 exact dependency reports. All passed with only standard Lean axioms, no proof placeholders or new unchecked axioms. Four reviewer runner versions and seven complete frozen packets reconstruct exactly; 42 retained mechanical evidence files match their hashes. Every one of 38 model calls is adjudicated including failures, wrong counterexample and unknown cost. Public text/archive scan found no 24-word windows copied from manual paragraphs; this heuristic is not a general copyright audit. Stratic structure/links and patch formatting pass. Before/after root-check snapshots match. Log SHA-256: {\"/tmp/ptx-reviewer-final-check.log\": \"738dbbc4a52e90cf790c0469c6e2e47bed1ba29306d5d0d220371b68c18de9ca\", \"/tmp/ptx-reviewer-final-torchlean.log\": \"77877bf8b7e01404c54f33176a572457f36fa59ad6bd9d2246763dd1fa2bf278\"}",
+      "tests": [],
+      "id": "80af8896-0415-4f45-ad66-e4a3f76f7b1f",
+      "recordedAt": "2026-09-24T11:22:25.426Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T11:22:54.604Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed new leaf implementation and universal theorem statements, root exports, and all sixty added dependency-audit entries; exact patches passed fresh replay and combined root check."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed new leaf implementation and universal theorem statements, root exports, and all sixty added dependency-audit entries; exact patches passed fresh replay and combined root check."
+    },
+    {
+      "path": "Ptx/Bitwise32.lean",
+      "reason": "Reviewed new leaf implementation and universal theorem statements, root exports, and all sixty added dependency-audit entries; exact patches passed fresh replay and combined root check."
+    },
+    {
+      "path": "Ptx/UnaryBits32.lean",
+      "reason": "Reviewed new leaf implementation and universal theorem statements, root exports, and all sixty added dependency-audit entries; exact patches passed fresh replay and combined root check."
+    },
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed coverage/documentation changes against source interpretation, exact accepted forms, retained worker/reviewer evidence and explicit unsupported scope."
+    },
+    {
+      "path": "docs/formalization/bitwise-leaves-review.md",
+      "reason": "Reviewed coverage/documentation changes against source interpretation, exact accepted forms, retained worker/reviewer evidence and explicit unsupported scope."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed coverage/documentation changes against source interpretation, exact accepted forms, retained worker/reviewer evidence and explicit unsupported scope."
+    },
+    {
+      "path": "docs/formalization/model-review.md",
+      "reason": "Reviewed coverage/documentation changes against source interpretation, exact accepted forms, retained worker/reviewer evidence and explicit unsupported scope."
+    },
+    {
+      "path": "formalization/checks/bitwise32-v2.lean",
+      "reason": "Frozen worker tasks and independently corrected Lean check drivers preserve all semantic assertions; evaluator changes fix only qualification and elaboration."
+    },
+    {
+      "path": "formalization/checks/bitwise32-v3.lean",
+      "reason": "Frozen worker tasks and independently corrected Lean check drivers preserve all semantic assertions; evaluator changes fix only qualification and elaboration."
+    },
+    {
+      "path": "formalization/checks/unary-bits32-v2.lean",
+      "reason": "Frozen worker tasks and independently corrected Lean check drivers preserve all semantic assertions; evaluator changes fix only qualification and elaboration."
+    },
+    {
+      "path": "formalization/checks/unary-bits32-v3.lean",
+      "reason": "Frozen worker tasks and independently corrected Lean check drivers preserve all semantic assertions; evaluator changes fix only qualification and elaboration."
+    },
+    {
+      "path": "formalization/results/bitwise32/README.md",
+      "reason": "Reviewed accepted leaf evidence: all Luna attempts and repairs, corrected evaluator versions, exact candidate patch and fresh replay. Archive/manifest checks passed; raw event transcripts omitted with hashes."
+    },
+    {
+      "path": "formalization/results/bitwise32/acceptance.json",
+      "reason": "Reviewed accepted leaf evidence: all Luna attempts and repairs, corrected evaluator versions, exact candidate patch and fresh replay. Archive/manifest checks passed; raw event transcripts omitted with hashes."
+    },
+    {
+      "path": "formalization/results/bitwise32/evidence-manifest.json",
+      "reason": "Reviewed accepted leaf evidence: all Luna attempts and repairs, corrected evaluator versions, exact candidate patch and fresh replay. Archive/manifest checks passed; raw event transcripts omitted with hashes."
+    },
+    {
+      "path": "formalization/results/bitwise32/worker-evidence.tar.gz",
+      "reason": "Reviewed accepted leaf evidence: all Luna attempts and repairs, corrected evaluator versions, exact candidate patch and fresh replay. Archive/manifest checks passed; raw event transcripts omitted with hashes."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/README.md",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/invocations.md",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-manifest.json",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r01-audit.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r01-audit.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r01-build.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r01-check.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r01-check.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r02-audit.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r02-audit.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r02-build.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r02-check.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r02-check.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r03-audit.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r03-audit.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r03-build.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r03-check.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r03-check.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r04-audit.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r04-audit.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r04-build.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r04-check.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r04-check.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r05-audit.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r05-audit.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r05-build.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r05-check.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/r05-check.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical-v2/report.json",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r01-audit.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r01-audit.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r01-build.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r01-check.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r01-check.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r02-audit.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r02-audit.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r02-build.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r02-check.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r02-check.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r03-audit.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r03-audit.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r03-build.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r03-check.lean",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/r03-check.log",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/mechanical/report.json",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/reviewer-pilot/results.json",
+      "reason": "Reviewed safe trial export: all calls, hashes, numeric receipts and coordinator adjudications; mechanical case drivers/logs retain the evaluator failure and corrected fault controls. No raw vendor-bearing responses."
+    },
+    {
+      "path": "formalization/results/unary-bits32/README.md",
+      "reason": "Reviewed accepted leaf evidence: all Luna attempts and repairs, corrected evaluator versions, exact candidate patch and fresh replay. Archive/manifest checks passed; raw event transcripts omitted with hashes."
+    },
+    {
+      "path": "formalization/results/unary-bits32/acceptance.json",
+      "reason": "Reviewed accepted leaf evidence: all Luna attempts and repairs, corrected evaluator versions, exact candidate patch and fresh replay. Archive/manifest checks passed; raw event transcripts omitted with hashes."
+    },
+    {
+      "path": "formalization/results/unary-bits32/evidence-manifest.json",
+      "reason": "Reviewed accepted leaf evidence: all Luna attempts and repairs, corrected evaluator versions, exact candidate patch and fresh replay. Archive/manifest checks passed; raw event transcripts omitted with hashes."
+    },
+    {
+      "path": "formalization/results/unary-bits32/worker-evidence.tar.gz",
+      "reason": "Reviewed accepted leaf evidence: all Luna attempts and repairs, corrected evaluator versions, exact candidate patch and fresh replay. Archive/manifest checks passed; raw event transcripts omitted with hashes."
+    },
+    {
+      "path": "formalization/review/candidates/bitwise32-001.json",
+      "reason": "Frozen candidate recipes/patches and historical runner deltas reconstruct exact recorded input bytes from clean-history bases; private model prose is excluded."
+    },
+    {
+      "path": "formalization/review/candidates/bitwise32-001.patch",
+      "reason": "Frozen candidate recipes/patches and historical runner deltas reconstruct exact recorded input bytes from clean-history bases; private model prose is excluded."
+    },
+    {
+      "path": "formalization/review/candidates/unary-bits32-003.json",
+      "reason": "Frozen candidate recipes/patches and historical runner deltas reconstruct exact recorded input bytes from clean-history bases; private model prose is excluded."
+    },
+    {
+      "path": "formalization/review/candidates/unary-bits32-003.patch",
+      "reason": "Frozen candidate recipes/patches and historical runner deltas reconstruct exact recorded input bytes from clean-history bases; private model prose is excluded."
+    },
+    {
+      "path": "formalization/review/runner-v1.patch",
+      "reason": "Frozen candidate recipes/patches and historical runner deltas reconstruct exact recorded input bytes from clean-history bases; private model prose is excluded."
+    },
+    {
+      "path": "formalization/review/runner-v3.patch",
+      "reason": "Frozen candidate recipes/patches and historical runner deltas reconstruct exact recorded input bytes from clean-history bases; private model prose is excluded."
+    },
+    {
+      "path": "formalization/tasks/bitwise32-v1.json",
+      "reason": "Frozen worker tasks and independently corrected Lean check drivers preserve all semantic assertions; evaluator changes fix only qualification and elaboration."
+    },
+    {
+      "path": "formalization/tasks/unary-bits32-v1.json",
+      "reason": "Frozen worker tasks and independently corrected Lean check drivers preserve all semantic assertions; evaluator changes fix only qualification and elaboration."
+    },
+    {
+      "path": "scripts/model_review.py",
+      "reason": "Reviewed fixed-context rendering, exact reference schema, immutable runner/helper identities and safe failure recording; focused protocol regressions and full worker suite passed."
+    },
+    {
+      "path": "stratic/descriptions/bitwise32.json",
+      "reason": "Reviewed description, summary, remaining-work and passage-link consistency for the completed scoped leaves, reviewer route and fourteen-form ledger."
+    },
+    {
+      "path": "stratic/descriptions/bitwise32.md",
+      "reason": "Reviewed description, summary, remaining-work and passage-link consistency for the completed scoped leaves, reviewer route and fourteen-form ledger."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Reviewed description, summary, remaining-work and passage-link consistency for the completed scoped leaves, reviewer route and fourteen-form ledger."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Reviewed description, summary, remaining-work and passage-link consistency for the completed scoped leaves, reviewer route and fourteen-form ledger."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed description, summary, remaining-work and passage-link consistency for the completed scoped leaves, reviewer route and fourteen-form ledger."
+    },
+    {
+      "path": "stratic/descriptions/model-review.json",
+      "reason": "Reviewed description, summary, remaining-work and passage-link consistency for the completed scoped leaves, reviewer route and fourteen-form ledger."
+    },
+    {
+      "path": "stratic/descriptions/unary-bits32.json",
+      "reason": "Reviewed description, summary, remaining-work and passage-link consistency for the completed scoped leaves, reviewer route and fourteen-form ledger."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed tests for exact report-reference schema and selected-form count; all 102 worker and 26 ledger regressions passed."
+    },
+    {
+      "path": "tests/test_worker_model_review.py",
+      "reason": "Reviewed tests for exact report-reference schema and selected-form count; all 102 worker and 26 ledger regressions passed."
+    }
+  ]
+}

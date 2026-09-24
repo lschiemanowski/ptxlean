@@ -198,6 +198,8 @@ class ImplementedFormTests(unittest.TestCase):
         expected = 4 + (2 if 'binary32' in self.data['trials'] else 0)
         expected += 1 if 'select32' in self.data['trials'] else 0
         expected += 2 if 'signed_minmax32' in self.data['trials'] else 0
+        expected += 3 if 'bitwise32' in self.data['trials'] else 0
+        expected += 2 if 'unary_bits32' in self.data['trials'] else 0
         self.assertEqual(self.check(), expected)
 
     def test_wrong_source_rejected_even_if_file_hash_refreshed(self):

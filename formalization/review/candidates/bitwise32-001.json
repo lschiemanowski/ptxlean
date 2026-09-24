@@ -1,0 +1,113 @@
+{
+  "base_commit": "7e2af082735e32fa9eae9622503db3e4fc4a992e",
+  "files": [
+    {
+      "path": "Ptx/Bitwise32.lean",
+      "role": "candidate",
+      "sha256": "80ed9d771cf5c0b0cc39bdf9007c9465815f01d432d8b307b0d86aa742fb026f"
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "role": "support",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "role": "support",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "role": "support",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "role": "support",
+      "sha256": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "role": "support",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "meaning",
+      "text": "All input bit patterns are permitted. AND sets each bit iff both source bits are set; OR iff either is set; XOR iff exactly one is set. Bitwise not flips every bit. Logical cnot returns the word one iff the whole input is zero, otherwise zero. Assess only operations selected by this packet scope."
+    },
+    {
+      "id": "state",
+      "text": "Evaluate sources in the incoming state before writing the destination; permit repeated sources and source/destination aliases. Only the selected word register and incremented program counter change."
+    },
+    {
+      "id": "guards",
+      "text": "Both positive and negative instruction guards are supported. A false guard skips the write and advances only the program counter. The selected operations have no additional predicate operands."
+    },
+    {
+      "id": "events",
+      "text": "The occurrence identifies the fetched instruction and original program counter. Enabled syntactic reads include guard then word operands then predicate operands, retaining repeats. Disabled instructions read only the guard. No memory effect is claimed."
+    },
+    {
+      "id": "target",
+      "text": "The explicit target slice is ISA exactly 94 and numeric sm at least 10, including for skipped fetched instructions. These selected forms have no additional feature threshold. This is not validation of actual target spellings."
+    },
+    {
+      "id": "decoder",
+      "text": "Accept exactly the selected .b32 mnemonic and its typed operand shape, preserving the guard and source order. Word-register destination, then two word sources for binary operations or one for unary operations. Decode succeeds iff encoding that exact instruction. Known spellings with malformed operands return invalidOperands; other spellings return unsupportedMnemonic. Sources are word registers or already decoded word literals. No predicate-valued forms."
+    },
+    {
+      "id": "proofs",
+      "text": "Universal transition, frame, deterministic result, one-step existence and origin theorems must follow the actual definitions without excluding aliases or input bit patterns. Absence of raw module parsing, declared-register checking and whole-kernel termination is within the deliberate scope."
+    }
+  ],
+  "patch": {
+    "path": "formalization/review/candidates/bitwise32-001.patch",
+    "sha256": "c3e3e48409c9a31deb7cd1b06dcacaab461cce478669481d71f2ff37785b7eac"
+  },
+  "schema_version": 1,
+  "scope": "Only and.b32, or.b32, xor.b32. Supplied typed 32-bit words and compatible declared registers. No raw parser or declaration validation, other widths, predicate-valued instructions, memory behavior or hardware correspondence. Source instructions have been compiled and checked independently; review definitions and theorem hypotheses for source correspondence rather than rederiving proof tactics.",
+  "sections": [
+    {
+      "anchor": "predicated-execution",
+      "sha256": "e3de38b106e96f1ccdd8c7710b2efbaa5ea2bde35959da999d2075a12162dd1f"
+    },
+    {
+      "anchor": "instruction-statements",
+      "sha256": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a"
+    },
+    {
+      "anchor": "operand-type-information",
+      "sha256": "2b4deb7a2de0f26463be8ea631b19d3262067641e45c4ca98261b61ff73945a7"
+    },
+    {
+      "anchor": "source-operands",
+      "sha256": "a981cf489133f764d2b9d621b4653ead71abb7709a83a323eccb55bddb8b6fa2"
+    },
+    {
+      "anchor": "destination-operands",
+      "sha256": "46d9e524f958b92cb45b9d9c7113b315e3b44eaf6a69f5af707bb055c5ee6a70"
+    },
+    {
+      "anchor": "integer-constants",
+      "sha256": "d7a625de2e4a872a173e18cde51b2c3475cb2e37a811700332dbf9292713a9f2"
+    },
+    {
+      "anchor": "type-information-for-instructions-and-operands",
+      "sha256": "1191421bc4f06fb7dd96d159cf38c7396851b95257247d2a9c68f54d99f4ad78"
+    },
+    {
+      "anchor": "logic-and-shift-instructions-and",
+      "sha256": "3fc89c2133f705adeff44135e17bde68be8b92be292865f6731333a1a22aa050"
+    },
+    {
+      "anchor": "logic-and-shift-instructions-or",
+      "sha256": "9297e62ec4c00c1910e345576d97696b16428867beb657a810667e26ef3d7a1d"
+    },
+    {
+      "anchor": "logic-and-shift-instructions-xor",
+      "sha256": "f3da76b6d69b50617e9625e3701efc9c0f0750eaf90c763bcb6780c9bb5af4b4"
+    }
+  ]
+}

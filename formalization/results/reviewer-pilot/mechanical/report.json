@@ -1,0 +1,47 @@
+{
+  "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+  "cases": [
+    {
+      "build": "pass",
+      "case": "r01",
+      "declarations": [
+        "Ptx.Scalar.Select32.eval_true_iff",
+        "Ptx.Scalar.Select32.eval_false_iff",
+        "Ptx.Scalar.Select32.eval_frame",
+        "Ptx.Scalar.Select32.eval_deterministic",
+        "Ptx.Scalar.Select32.eval_exists",
+        "Ptx.Scalar.Select32.step_origin",
+        "Ptx.Scalar.Select32.step_exists",
+        "Ptx.Scalar.Select32.Text.decode_encode",
+        "Ptx.Scalar.Select32.Text.decode_iff"
+      ],
+      "dependency_audit": "pass",
+      "independent_check": "pass",
+      "kind": "control",
+      "obligation": null,
+      "packet_sha256": "f33e5cda57be96dce4387ffdbc5a31ea10d515a71a97d997efcbd8859bc76c7d",
+      "recipe_sha256": "93bccc519d080a46f665aca3d2e1388b6e60fc388c29ebb371e442a8294dcb67"
+    },
+    {
+      "build": "pass",
+      "case": "r02",
+      "declarations": [
+        "Ptx.Scalar.Select32.eval_true_iff",
+        "Ptx.Scalar.Select32.eval_false_iff",
+        "Ptx.Scalar.Select32.eval_frame",
+        "Ptx.Scalar.Select32.eval_deterministic",
+        "Ptx.Scalar.Select32.eval_exists",
+        "Ptx.Scalar.Select32.step_origin",
+        "Ptx.Scalar.Select32.step_exists",
+        "Ptx.Scalar.Select32.Text.decode_encode",
+        "Ptx.Scalar.Select32.Text.decode_iff"
+      ],
+      "dependency_audit": "pass",
+      "independent_check": "rejects_exact_seed",
+      "kind": "seeded_defect",
+      "obligation": "meaning",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077"
+    }
+  ]
+}

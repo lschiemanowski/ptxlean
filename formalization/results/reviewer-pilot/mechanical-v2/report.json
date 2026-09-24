@@ -1,0 +1,110 @@
+{
+  "base_commit": "2e0f514a5de4409c669390f468fff2b2038b352f",
+  "cases": [
+    {
+      "build": "pass",
+      "case": "r01",
+      "declarations": [
+        "Ptx.Scalar.Select32.eval_true_iff",
+        "Ptx.Scalar.Select32.eval_false_iff",
+        "Ptx.Scalar.Select32.eval_frame",
+        "Ptx.Scalar.Select32.eval_deterministic",
+        "Ptx.Scalar.Select32.eval_exists",
+        "Ptx.Scalar.Select32.step_origin",
+        "Ptx.Scalar.Select32.step_exists",
+        "Ptx.Scalar.Select32.Text.decode_encode",
+        "Ptx.Scalar.Select32.Text.decode_iff"
+      ],
+      "dependency_audit": "pass",
+      "independent_check": "pass",
+      "kind": "control",
+      "obligation": null,
+      "packet_sha256": "f33e5cda57be96dce4387ffdbc5a31ea10d515a71a97d997efcbd8859bc76c7d",
+      "recipe_sha256": "93bccc519d080a46f665aca3d2e1388b6e60fc388c29ebb371e442a8294dcb67"
+    },
+    {
+      "build": "pass",
+      "case": "r02",
+      "declarations": [
+        "Ptx.Scalar.Select32.eval_true_iff",
+        "Ptx.Scalar.Select32.eval_false_iff",
+        "Ptx.Scalar.Select32.eval_frame",
+        "Ptx.Scalar.Select32.eval_deterministic",
+        "Ptx.Scalar.Select32.eval_exists",
+        "Ptx.Scalar.Select32.step_origin",
+        "Ptx.Scalar.Select32.step_exists",
+        "Ptx.Scalar.Select32.Text.decode_encode",
+        "Ptx.Scalar.Select32.Text.decode_iff"
+      ],
+      "dependency_audit": "pass",
+      "independent_check": "rejects_exact_seed",
+      "kind": "seeded_defect",
+      "obligation": "meaning",
+      "packet_sha256": "3f791992790378038ed64daab66efd66e6cd5bd9ed3ca9ebb7e02aa7dd0398af",
+      "recipe_sha256": "a5cb1835af7f6f65b051a79a19bd75395d55986c34901e3b11f23248758dd077"
+    },
+    {
+      "build": "pass",
+      "case": "r03",
+      "declarations": [
+        "Ptx.Scalar.Select32.eval_true_iff",
+        "Ptx.Scalar.Select32.eval_false_iff",
+        "Ptx.Scalar.Select32.eval_frame",
+        "Ptx.Scalar.Select32.eval_deterministic",
+        "Ptx.Scalar.Select32.eval_exists",
+        "Ptx.Scalar.Select32.step_origin",
+        "Ptx.Scalar.Select32.step_exists",
+        "Ptx.Scalar.Select32.Text.decode_encode",
+        "Ptx.Scalar.Select32.Text.decode_iff"
+      ],
+      "dependency_audit": "pass",
+      "independent_check": "rejects_exact_seed",
+      "kind": "seeded_defect",
+      "obligation": "decoder",
+      "packet_sha256": "92c0f1fee4543c32c63a40a548d75369b0a200e7e9536f90103824daf6b7ceeb",
+      "recipe_sha256": "517e953f6fb674c0f6c30233db791352060680a45f5f93e08257e00de27ebf79"
+    },
+    {
+      "build": "pass",
+      "case": "r04",
+      "declarations": [
+        "Ptx.Scalar.SignedMinMax32.eval_true_iff",
+        "Ptx.Scalar.SignedMinMax32.eval_false_iff",
+        "Ptx.Scalar.SignedMinMax32.eval_frame",
+        "Ptx.Scalar.SignedMinMax32.eval_deterministic",
+        "Ptx.Scalar.SignedMinMax32.eval_exists",
+        "Ptx.Scalar.SignedMinMax32.step_origin",
+        "Ptx.Scalar.SignedMinMax32.step_exists",
+        "Ptx.Scalar.SignedMinMax32.Text.decode_encode",
+        "Ptx.Scalar.SignedMinMax32.Text.decode_iff"
+      ],
+      "dependency_audit": "pass",
+      "independent_check": "pass",
+      "kind": "control",
+      "obligation": null,
+      "packet_sha256": "6c8addcbe71d55acc9fb40b5208e74289f54e7d9f176ba6a82d32958a167d09f",
+      "recipe_sha256": "82c330842ff7c4cef5c364b1baa95dd9bed27fbce27433ce4d809f61e4d86582"
+    },
+    {
+      "build": "pass",
+      "case": "r05",
+      "declarations": [
+        "Ptx.Scalar.SignedMinMax32.eval_true_iff",
+        "Ptx.Scalar.SignedMinMax32.eval_false_iff",
+        "Ptx.Scalar.SignedMinMax32.eval_frame",
+        "Ptx.Scalar.SignedMinMax32.eval_deterministic",
+        "Ptx.Scalar.SignedMinMax32.eval_exists",
+        "Ptx.Scalar.SignedMinMax32.step_origin",
+        "Ptx.Scalar.SignedMinMax32.step_exists",
+        "Ptx.Scalar.SignedMinMax32.Text.decode_encode",
+        "Ptx.Scalar.SignedMinMax32.Text.decode_iff"
+      ],
+      "dependency_audit": "pass",
+      "independent_check": "rejects_exact_seed",
+      "kind": "seeded_defect",
+      "obligation": "target",
+      "packet_sha256": "b4d7d57bebac9c4fab2f614685094d7438791a3f2472ff6f759a0d8675c35fd2",
+      "recipe_sha256": "cdd4268b5c4aebfa7b0c0ffff1506e6b515f2da40b2fab100d3ef66a6b9bd0cb"
+    }
+  ]
+}

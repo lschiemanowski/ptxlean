@@ -1,0 +1,64 @@
+--- a/scripts/model_review.py
++++ b/scripts/model_review.py
+@@ -152,7 +152,7 @@
+ can be given). A source anchor may justify the instruction meaning while a stricter project
+ obligation justifies the interface. Use accept only if all obligations are satisfied and no
+ findings/uncertainties remain; otherwise reject for a demonstrated violation, or uncertain.
+-Keep the report concise: explain each obligation once, without a line-by-line code walkthrough. Return exactly the JSON object requested by the response schema. Paraphrase source text;
++Return exactly the JSON object requested by the response schema. Paraphrase source text;
+ do not reproduce paragraphs from vendor documentation. A verdict is advisory only.'''
+ 
+ 
+@@ -198,32 +198,20 @@
+     return report
+ 
+ 
+-def render_packet(context):
+-    sections = ['REVIEW SCOPE\n' + context['scope'],
+-                'OBLIGATIONS\n' + '\n'.join(o['id'] + ': ' + o['text'] for o in context['obligations'])]
+-    for item in context['files']:
+-        sections.append('COMPLETE ' + item['role'].upper() + ' FILE: ' + item['path'] +
+-                        '\nEvery source line follows; no bodies are elided.\n```lean\n' +
+-                        item['text'] + '\n```')
+-    for item in context['source']:
+-        sections.append('PTX SOURCE ANCHOR: ' + item['anchor'] + '\n' + item['text'])
+-    return '\n\n'.join(sections)
+-
+-
+-def request_body(context, model, max_tokens=24576):
++def request_body(context, model, max_tokens=8192):
+     if model not in MODELS:
+         raise ValueError('Reviewer must be one of the explicitly selected models')
+     if type(max_tokens) is not int or max_tokens <= 0:
+         raise ValueError('Invalid output token allowance')
+     return {'model': model, 'messages': [{'role':'system','content':SYSTEM},
+-                {'role':'user','content':render_packet(context)}],
++                {'role':'user','content':encoded(context).decode()}],
+             'temperature': 0, 'max_tokens': max_tokens, 'reasoning': {'effort':'high'},
+             'provider': {'require_parameters': True}, 'stream': False,
+             'response_format': {'type':'json_schema', 'json_schema': {
+                 'name':'ptx_semantic_review', 'strict':True, 'schema':schema()}}}
+ 
+ 
+-def run(recipe_path, output, model, root=ROOT, max_tokens=24576, timeout=300, transport=urlopen):
++def run(recipe_path, output, model, root=ROOT, max_tokens=8192, timeout=300, transport=urlopen):
+     key = os.environ.get('OPENROUTER_API_KEY')
+     if not key:
+         raise ValueError('OPENROUTER_API_KEY is required; no request sent')
+@@ -237,7 +225,6 @@
+         raise ValueError('Raw reviews must be stored under .formalization-runs')
+     output.mkdir(parents=True, exist_ok=False)
+     (output/'recipe.json').write_bytes(recipe_bytes)
+-    (output/'packet.json').write_bytes(encoded(context))
+     (output/'request.json').write_bytes(body)
+     record = {'schema_version':1, 'state':'started', 'started_at':now(),
+               'requested_model':model, 'request_sha256':sha(body),
+@@ -307,7 +294,7 @@
+     parser.add_argument('--env-file', type=Path, help='read only OPENROUTER_API_KEY; never execute the file')
+     parser.add_argument('--model', choices=MODELS, required=True)
+     parser.add_argument('--output', type=Path, required=True)
+-    parser.add_argument('--max-tokens', type=int, default=24576)
++    parser.add_argument('--max-tokens', type=int, default=8192)
+     parser.add_argument('--timeout', type=int, default=300)
+     args = parser.parse_args()
+     try:

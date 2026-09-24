@@ -1,10 +1,11 @@
 # Accepted instruction forms
 
 An accepted form is a particular spelling and operand contract, not an entire
-instruction name. This ledger records nine independently reviewed forms:
+instruction name. This ledger records fourteen independently reviewed forms:
 `min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32`, `mul.rn.f32`,
-`selp.b32`, `min.s32` and `max.s32`.
-The integer forms compare signed or unsigned words, count bits, or select a
+`selp.b32`, `min.s32`, `max.s32`, `and.b32`, `or.b32`, `xor.b32`,
+`not.b32` and `cnot.b32`.
+The integer forms compare signed or unsigned words, count or combine bits, test whether a word is zero, or select a
 word using a predicate, with exact results for all input patterns. The floating forms add or multiply encoded binary32 values
 with nearest-even rounding and preserved subnormal values. Their result relation
 keeps every non-NaN reference bit, including zero signs, and conservatively
@@ -17,13 +18,13 @@ value definition, instruction execution, text conversion and universal proofs
 live. A typed operand is an already classified register or value: this boundary
 does not parse a complete PTX file or validate its register declarations. The
 older unsigned and bit-count decoders leave version and target checks to the
-caller. Selection and signed min/max use fetched steps requiring ISA 9.4 and
+caller. Selection, signed min/max and the bitwise families use fetched steps requiring ISA 9.4 and
 a numeric SM value of at least 10. The floating fetched-step interface requires
 PTX ISA 9.4 and a numeric SM value of at least 20, preserving the source's
 subnormal behavior; this does not validate target spellings or architecture
 suffixes. Floating operands denote compatible `.b32`/`.f32` registers or exact
 already-decoded `0f`/`0F` bit literals, not numeric conversions of integer operands.
-Source and destination may name the same register because both sources are read
+Source and destination may name the same register because source values are read
 before the destination is written. A floating leaf step does not prove complete
 kernel execution.
 

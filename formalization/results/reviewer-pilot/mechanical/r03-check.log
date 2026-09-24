@@ -1,0 +1,6 @@
+/home/lothar/workspace/ptxlean/.formalization-runs/reviewer-pilot/mechanical/r03-check.lean:2:113: error: failed to synthesize
+  Decidable
+    (Ptx.Scalar.Select32.Text.decode { mnemonic := "selp.b32", operands := [] } =
+      Except.error (Ptx.Scalar.Text.DecodeError.invalidOperands "selp.b32"))
+
+Hint: Additional diagnostic information may be available using the `set_option diagnostics true` command.
