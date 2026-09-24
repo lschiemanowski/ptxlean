@@ -11,7 +11,56 @@
     "Preserve each family result and target condition, and report unsupported cases explicitly.",
     "Separate finite prefixes, completed runs, memory safety, and program-specific existence and termination."
   ],
-  "realization": "unimplemented",
-  "remaining": "Specified interface; implementation and evidence pending.",
-  "links": []
+  "realization": "implemented",
+  "remaining": "Catalog composition, finite traces, explicit dispatch boundaries, memory safety and conditional determinism are implemented. General concurrency, raw modules, runtime/launch validation and hardware correspondence remain outside the arena.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Adding a family does not require changing the execution rules for other families."
+      },
+      "to": {
+        "path": "Ptx/PureKernel.lean",
+        "passage": {
+          "quote": "structure Catalog (Kind : Type) where\n  Operation : Kind \u2192 Type\n  family : (kind : Kind) \u2192 Pure32.Family (Operation kind)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every permitted pure result remains an available transition; composition does\nnot choose one result or assume determinism."
+      },
+      "to": {
+        "path": "Ptx/PureKernel.lean",
+        "passage": {
+          "quote": "theorem dispatch_preserves_choices (eligible : Eligible target)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Trace\ncomposition, instruction origin, memory bounds and unchanged memory outside\nactual stores follow from the constituent transitions."
+      },
+      "to": {
+        "path": "Ptx/PureKernel.lean",
+        "passage": {
+          "quote": "theorem Run.memory_safe (run : Run target program s final status trace)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Connections to older scalar operations prove equality of their state\nchanges and corresponding event fields where operations overlap."
+      },
+      "to": {
+        "path": "Ptx/ReviewedPure.lean",
+        "passage": {
+          "quote": "theorem bitwise_scalar_iff : Bitwise32.Eval i s next event \u2194"
+        }
+      }
+    }
+  ]
 }

@@ -1,0 +1,227 @@
+{
+  "id": "81f0d5bf-296d-4722-9296-d0f7c23bf7e1",
+  "base": "27356b5ec35c6d32edfb67c14475e220d098d55d",
+  "contentTree": "9acbac537d65fe867d93c7aad3d0b46b4c80a210",
+  "reviewer": "Codex coordinator",
+  "summary": "Compose reviewed pure families with scalar kernel execution, prove mask-select correctness and memory safety, and integrate Luna shifts with recorded independent review and replay.",
+  "examined": [
+    {
+      "id": "pure-kernel",
+      "outcome": "revised",
+      "reason": "New catalog-based scalar/pure execution preserves all result choices and exact target checks, with explicit unsupported outcomes; shared traces, origin, memory safety/frame and conditional uniqueness proved."
+    },
+    {
+      "id": "shift32",
+      "outcome": "revised",
+      "reason": "Exact Luna patch accepted after pinned source/statement review and fresh replay; GLM opinion recorded separately. Shift counts unsigned and clamped; no candidate edits or weaker hypotheses."
+    },
+    {
+      "id": "mask-select",
+      "outcome": "revised",
+      "reason": "New seven-instruction example has an explicit execution, all-completed-run correctness, exact stored output and untouched-memory/access guarantees over arbitrary words/registers/tail."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "Seventeen selected forms with three new spellings, source hashes, exact patch/replay and acceptance evidence; uncovered legal siblings stay explicit."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "revised",
+      "reason": "Remaining-work metadata reflects catalog composition and complete example; existing scalar operational semantics unchanged."
+    },
+    {
+      "id": "mixed-scalar-execution",
+      "outcome": "revised",
+      "reason": "Implementation passage link relocated to the shared Path source. Exact declaration/proofs and public names preserved; original FP dispatch, target convention, run semantics and numerical proofs unchanged, with integration rechecked."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Only new audit entries appended; message-passing definitions and existing theorem statements/audit entries unchanged and checked again."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "Original Pure32 semantics and all-input nonemptiness contract unchanged. New family instantiates it; catalog composition keeps its full result relation."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "Section inventory remains not_assessed; accepted-form additions do not promote full sections or an ISA percentage."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Restricted single-thread arena has explicit admission boundaries; no extension to general concurrency, undefined behavior or hardware guarantees is claimed."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "New small kernel illustrates existing responsibility for reusable contract examples, separately from neural-network and Gemma coverage."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "Existing isolated generation, exact replay, separate advisory review and coordinator acceptance workflow reused. Failed evaluator records retained rather than blamed on generator or hidden in success rates."
+    },
+    {
+      "id": "binary32-instructions",
+      "outcome": "unchanged",
+      "reason": "Original binary32 instruction definitions, admitted result sets, target conditions and lowering untouched; exact shared finite Path extraction imposes no new instruction obligations. Integration dependency audit passes."
+    },
+    {
+      "id": "affine-memory-kernel",
+      "outcome": "unchanged",
+      "reason": "Exact shared Path declaration and proofs moved with original public names; affine program, execution, numerical conditions and theorem statements untouched, and all integration checks pass."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "9acbac537d65fe867d93c7aad3d0b46b4c80a210",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; lake env lean examples/mask_select.lean; stratic validate; git diff --check; public text/archive quotation scan; independent shift replay and coordinator source/statement review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and exact existing TorchLean integration dependencies; Python standard-library regressions; unchanged GLM v4 review route.",
+      "evidence": "Root checks passed: 17 selected forms, 883 members across 9 evidence archives, 7 inventory tests, 102 worker tests, 26 ledger tests, 1395 dependency reports. TorchLean integration passed 363 exact reports. Only standard Lean logical axioms; no placeholders or unchecked axioms. Demo printed 52 and 99 and universal theorem signatures. Generic proofs retain multiple permitted results, require real terminal dispatch, preserve target checks even on skipped operations and lift memory safety/frame results. Concrete kernel has an explicit halted execution and all-completed-run correctness for arbitrary input words and other registers/tail memory. Shift patch passed fresh replay of 28 public definitions/theorems; original and failed evaluator/replay records retained. One Luna call, no candidate repair; one GLM call, advisory accept, reported cost 0.001587735 USD. Frozen assertions unchanged through proof-only evaluator corrections. Public source scan found no 24-word manual paragraph matches; heuristic scope explicit. Before/after full-check trees equal. Log hashes: {\"/tmp/ptx-kernel-final-check.log\": \"ec4d5d3e7e4dd4e8be418daa5158b75d5c1a73ba5a05df5f8ff909a1acc69fd1\", \"/tmp/ptx-kernel-torchlean-check.log\": \"a3c8dc01d6a41eef43588fb371674e64133a4dbf9aa61a992b10df4634c00daf\", \"/tmp/ptx-mask-demo.log\": \"1c3ea76c162721bfc05f62cb905375c1843b0294f6e7fc27e0c8abbbd31d8be1\"}",
+      "tests": [],
+      "id": "d402c348-09a5-499a-9605-9e98e4c68dc7",
+      "recordedAt": "2026-09-24T12:07:38.623Z"
+    }
+  ],
+  "recordedAt": "2026-09-24T12:12:46.442Z",
+  "unmapped": [
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed catalog types, actual constituent relations, dispatch boundary outcomes, finite execution and memory proofs, exact leaf/old-scalar correspondence, example state/trace definitions, and exhaustive new public definition/theorem audit entries."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed catalog types, actual constituent relations, dispatch boundary outcomes, finite execution and memory proofs, exact leaf/old-scalar correspondence, example state/trace definitions, and exhaustive new public definition/theorem audit entries."
+    },
+    {
+      "path": "Ptx/ExecutionPath.lean",
+      "reason": "Reviewed catalog types, actual constituent relations, dispatch boundary outcomes, finite execution and memory proofs, exact leaf/old-scalar correspondence, example state/trace definitions, and exhaustive new public definition/theorem audit entries."
+    },
+    {
+      "path": "Ptx/MaskSelect.lean",
+      "reason": "Reviewed catalog types, actual constituent relations, dispatch boundary outcomes, finite execution and memory proofs, exact leaf/old-scalar correspondence, example state/trace definitions, and exhaustive new public definition/theorem audit entries."
+    },
+    {
+      "path": "Ptx/PureKernel.lean",
+      "reason": "Reviewed catalog types, actual constituent relations, dispatch boundary outcomes, finite execution and memory proofs, exact leaf/old-scalar correspondence, example state/trace definitions, and exhaustive new public definition/theorem audit entries."
+    },
+    {
+      "path": "Ptx/PureKernelExamples.lean",
+      "reason": "Reviewed catalog types, actual constituent relations, dispatch boundary outcomes, finite execution and memory proofs, exact leaf/old-scalar correspondence, example state/trace definitions, and exhaustive new public definition/theorem audit entries."
+    },
+    {
+      "path": "Ptx/ReviewedPure.lean",
+      "reason": "Reviewed catalog types, actual constituent relations, dispatch boundary outcomes, finite execution and memory proofs, exact leaf/old-scalar correspondence, example state/trace definitions, and exhaustive new public definition/theorem audit entries."
+    },
+    {
+      "path": "Ptx/Shift32.lean",
+      "reason": "Reviewed catalog types, actual constituent relations, dispatch boundary outcomes, finite execution and memory proofs, exact leaf/old-scalar correspondence, example state/trace definitions, and exhaustive new public definition/theorem audit entries."
+    },
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed source-fidelity/study documentation, seventeen-form ledger and expected-count regression against exact implementation and evidence; remaining coverage and runtime restrictions explicit."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed source-fidelity/study documentation, seventeen-form ledger and expected-count regression against exact implementation and evidence; remaining coverage and runtime restrictions explicit."
+    },
+    {
+      "path": "docs/formalization/shift32-review.md",
+      "reason": "Reviewed source-fidelity/study documentation, seventeen-form ledger and expected-count regression against exact implementation and evidence; remaining coverage and runtime restrictions explicit."
+    },
+    {
+      "path": "docs/foundations/pure-kernels.md",
+      "reason": "Reviewed source-fidelity/study documentation, seventeen-form ledger and expected-count regression against exact implementation and evidence; remaining coverage and runtime restrictions explicit."
+    },
+    {
+      "path": "examples/mask_select.lean",
+      "reason": "Runnable demo evaluates two specified examples and exposes the universal kernel theorem signatures; printed results checked."
+    },
+    {
+      "path": "formalization/checks/shift32-v2.lean",
+      "reason": "Frozen task, candidate patch/recipe and revised evaluator proofs retain identical semantic assertions and all input/target hypotheses; one worker invocation and one unchanged reviewer invocation."
+    },
+    {
+      "path": "formalization/checks/shift32-v3.lean",
+      "reason": "Frozen task, candidate patch/recipe and revised evaluator proofs retain identical semantic assertions and all input/target hypotheses; one worker invocation and one unchanged reviewer invocation."
+    },
+    {
+      "path": "formalization/results/shift32/README.md",
+      "reason": "Reviewed exact retained worker/replay archive and per-member hashes, proof-only evaluator failures, safe advisory model receipt, independent source judgment and explicit evidence limitations; no raw vendor-bearing model transcript published."
+    },
+    {
+      "path": "formalization/results/shift32/acceptance.json",
+      "reason": "Reviewed exact retained worker/replay archive and per-member hashes, proof-only evaluator failures, safe advisory model receipt, independent source judgment and explicit evidence limitations; no raw vendor-bearing model transcript published."
+    },
+    {
+      "path": "formalization/results/shift32/evidence-manifest.json",
+      "reason": "Reviewed exact retained worker/replay archive and per-member hashes, proof-only evaluator failures, safe advisory model receipt, independent source judgment and explicit evidence limitations; no raw vendor-bearing model transcript published."
+    },
+    {
+      "path": "formalization/results/shift32/review.json",
+      "reason": "Reviewed exact retained worker/replay archive and per-member hashes, proof-only evaluator failures, safe advisory model receipt, independent source judgment and explicit evidence limitations; no raw vendor-bearing model transcript published."
+    },
+    {
+      "path": "formalization/results/shift32/worker-evidence.tar.gz",
+      "reason": "Reviewed exact retained worker/replay archive and per-member hashes, proof-only evaluator failures, safe advisory model receipt, independent source judgment and explicit evidence limitations; no raw vendor-bearing model transcript published."
+    },
+    {
+      "path": "formalization/review/candidates/shift32-001.json",
+      "reason": "Frozen task, candidate patch/recipe and revised evaluator proofs retain identical semantic assertions and all input/target hypotheses; one worker invocation and one unchanged reviewer invocation."
+    },
+    {
+      "path": "formalization/review/candidates/shift32-001.patch",
+      "reason": "Frozen task, candidate patch/recipe and revised evaluator proofs retain identical semantic assertions and all input/target hypotheses; one worker invocation and one unchanged reviewer invocation."
+    },
+    {
+      "path": "formalization/tasks/shift32-v1.json",
+      "reason": "Frozen task, candidate patch/recipe and revised evaluator proofs retain identical semantic assertions and all input/target hypotheses; one worker invocation and one unchanged reviewer invocation."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Mixed.lean",
+      "reason": "Moved only shared finite-path declaration and proofs with exact original names/text; numerical execution unchanged and all 363 integration dependency reports pass."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Reviewed description-first contracts, final realization/remaining fields, summaries and exact implementation passage links."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Reviewed description-first contracts, final realization/remaining fields, summaries and exact implementation passage links."
+    },
+    {
+      "path": "stratic/descriptions/mask-select.json",
+      "reason": "Reviewed description-first contracts, final realization/remaining fields, summaries and exact implementation passage links."
+    },
+    {
+      "path": "stratic/descriptions/mask-select.md",
+      "reason": "Reviewed description-first contracts, final realization/remaining fields, summaries and exact implementation passage links."
+    },
+    {
+      "path": "stratic/descriptions/mixed-scalar-execution.json",
+      "reason": "Reviewed description-first contracts, final realization/remaining fields, summaries and exact implementation passage links."
+    },
+    {
+      "path": "stratic/descriptions/pure-kernel.json",
+      "reason": "Reviewed description-first contracts, final realization/remaining fields, summaries and exact implementation passage links."
+    },
+    {
+      "path": "stratic/descriptions/scalar-execution.json",
+      "reason": "Reviewed description-first contracts, final realization/remaining fields, summaries and exact implementation passage links."
+    },
+    {
+      "path": "stratic/descriptions/shift32.json",
+      "reason": "Reviewed description-first contracts, final realization/remaining fields, summaries and exact implementation passage links."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed source-fidelity/study documentation, seventeen-form ledger and expected-count regression against exact implementation and evidence; remaining coverage and runtime restrictions explicit."
+    }
+  ]
+}

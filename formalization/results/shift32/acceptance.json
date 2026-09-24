@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "task": "shift32-v1",
+  "selected_forms": [
+    "shl.b32",
+    "shr.u32",
+    "shr.s32"
+  ],
+  "base_commit": "27356b5ec35c6d32edfb67c14475e220d098d55d",
+  "accepted_patch_sha256": "1a9cbeccd781f6cdde0b3b6d4424d9f70b13e74569985606b8989d3a12fd4e0e",
+  "worker_attempt": "shift32-001",
+  "mechanical_replay": "replays/shift32-001-v3/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "Exact candidate patch integrated; combined checks recorded in final Stratic acceptance.",
+  "reviewer": "Coordinator source/statement inspection and fresh replay; GLM opinion advisory.",
+  "source_conditions": {
+    "ptx_minimum": "1.0",
+    "target_minimum": "sm_10 feature floor; not recognized-target validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "logic-and-shift-instructions-shl",
+      "logic-and-shift-instructions-shr"
+    ]
+  },
+  "trial_invocations": 1,
+  "repair_invocations": 0,
+  "campaign_call_numbers": [
+    19
+  ],
+  "qualification": "Frozen worker contract and unchanged v4 reviewer protocol; coordinator driver proof repairs preserved, so not a fully frozen productivity estimate."
+}

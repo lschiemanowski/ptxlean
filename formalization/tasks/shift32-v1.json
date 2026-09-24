@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "id": "shift32-v1",
+  "model": "gpt-6-luna",
+  "base_commit": "27356b5ec35c6d32edfb67c14475e220d098d55d",
+  "allowed_paths": [
+    "Ptx/Shift32.lean"
+  ],
+  "sources": [
+    {
+      "path": "lean-toolchain",
+      "sha256": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632"
+    },
+    {
+      "path": "lakefile.toml",
+      "sha256": "0dd5039a9be123956d246a2d0134759ae33bb43c356b3b994b2c97478054e14d"
+    },
+    {
+      "path": "lake-manifest.json",
+      "sha256": "01f2e843d09759bcf28da5f401f7ad71f86b08c579e21227dcc076f31d9be719"
+    },
+    {
+      "path": "references/nvidia/ptx-isa-9.4/manifest.json",
+      "sha256": "2cb4e54aeb0f85025f15149f18fd16f3aca705968373324dc54ec9659108eb9f"
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "sha256": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15"
+    },
+    {
+      "path": "Ptx/Select32.lean",
+      "sha256": "4b8bc90df0d95d7f25a7e5d4512ad9f593466d5f1a008d1cf2c32214b9ea3152"
+    },
+    {
+      "path": "Ptx/SignedMinMax32.lean",
+      "sha256": "651f4d1c2b73916b3269e72257f327e0259dff2310512b6ab1b0f65b8b17bbb2"
+    },
+    {
+      "path": ".ptx-source/9.4/index.html",
+      "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+      "local_only": true
+    },
+    {
+      "path": "Ptx/Bitwise32.lean",
+      "sha256": "80ed9d771cf5c0b0cc39bdf9007c9465815f01d432d8b307b0d86aa742fb026f"
+    },
+    {
+      "path": "formalization/contracts/shift32-v1.md",
+      "sha256": "515fdffdfc7d6b0eb2f9cf08b21892ca9b0745c7f93def678376942a0173b2d2"
+    },
+    {
+      "path": "formalization/checks/shift32-v1.lean",
+      "sha256": "b20436f94b0125ba81e11cf8d20c086b8d0c6fb2a618dc5e65717964650c90be"
+    }
+  ],
+  "prompt": "# Frozen shift32-v1 contract\n\nImplement only `Ptx/Shift32.lean`, namespace `Ptx.Scalar.Shift32`. Import\n`Ptx.Pure32` and `Ptx.ScalarText`; reuse their execution and frontend interfaces.\nDo not change any other file.\n\nUse pinned PTX ISA 9.4 in `.ptx-source/9.4/index.html`, SHA-256\n`0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed`.\nConsult the listed instruction anchors, plus `predicated-execution`,\n`instruction-statements`, `operand-type-information`, `source-operands`,\n`destination-operands`, `integer-constants` and\n`type-information-for-instructions-and-operands`.\nAll selected forms are introduced in PTX 1.0 and supported on all targets.\nRestrict eligibility to `target.isa = 94 \u2227 10 \u2264 target.sm`; this is a numeric\nfeature floor, not validation of target spellings or current assembler support.\nSources and destination are compatible declared 32-bit words supplied by the\ncaller. Immediate words are already decoded and size-converted values; do not\nclaim a raw-text parser, register declaration validation or implicit conversions.\nAll bit patterns, aliases and repeated sources are permitted. Source values are\nread from the incoming state. Both instruction-guard polarities are supported.\nNo predicate-valued instruction forms or other widths are in scope.\n\nSelected forms: shl.b32, shr.u32, shr.s32.\nSource anchors: logic-and-shift-instructions-shl, logic-and-shift-instructions-shr.\n\nThe right operand is an unsigned 32-bit shift count. Counts at or above 32\nproduce zero for left and logical-right shifts. Signed right shift copies the\nhighest input bit into vacated positions; at counts at or above 32 the result\nis all ones for a negative input and zero otherwise. Counts never wrap modulo\n32. Left/destination are compatible 32-bit words; signedness is determined by\nthe instruction, not an extra restriction on input bits. Exclude shr.b32 and\nall other widths/types from this exact spelling interface.\n\n```lean\nnamespace Ptx.Scalar.Shift32\ndef SupportedTarget (target : Ptx.Target) : Prop := target.isa = 94 \u2227 10 \u2264 target.sm\ninductive Operation where\n  | shl | shrU | shrS\n  deriving DecidableEq, Repr\nstructure Instr where\n  guard : Scalar.Guard := .always\n  operation : Operation\n  destination : Nat\n  left : Scalar.Operand32\n  right : Scalar.Operand32\n  deriving DecidableEq, Repr\ndef compute (op : Operation) (a b : Word) : Word\n-- compute is exactly the operation match specified by compute_eq below.\ndef family : Pure32.Family Operation\n-- Use Pure32.Family.ofFunction with wordArity 2, predicateArity 0,\n-- exact compute on input words in order, and SupportedTarget for every operation.\ndef lower (i : Instr) : Pure32.Instr family\n-- Preserve guard, operation, destination and source(s); Fin 0 predicate arguments.\ndef result (i : Instr) (s : Scalar.State) : Word :=\n  compute i.operation (i.left.eval s) (i.right.eval s)\nabbrev Occurrence := Pure32.Occurrence family\nabbrev Eval (i : Instr) := Pure32.Eval (lower i)\nabbrev Step (target : Ptx.Target) (program : List Instr) :=\n  Pure32.Step target (program.map lower)\ndef occurrence (s : Scalar.State) (i : Instr) (executed : Bool) : Occurrence :=\n  Pure32.occurrence s (lower i) executed\nnamespace Text\n  def supportedMnemonic : String \u2192 Bool\n  def encode (i : Instr) : Scalar.Text.Statement\n  def decode (statement : Scalar.Text.Statement) : Except Scalar.Text.DecodeError Instr\nend Text\ntheorem compute_eq (op : Operation) (a b : Word) :\n    compute op a b = match op with\n      | .shl => if b.toNat < 32 then a <<< b.toNat else 0\n      | .shrU => if b.toNat < 32 then a >>> b.toNat else 0\n      | .shrS => if b.toNat < 32 then a.sshiftRight b.toNat\n          else if a.msb then 0xffffffff else 0\n\ntheorem results_iff (op : Operation) (words : Fin 2 \u2192 Word) (predicates : Fin 0 \u2192 Bool) (value : Word) :\n    family.Results op words predicates value \u2194 value = compute op (words 0) (words 1)\n\ntheorem lower_operation (i : Instr) :\n    (lower i).operation = i.operation\n\ntheorem lower_fields (i : Instr) :\n    (lower i).guard = i.guard \u2227 (lower i).destination = i.destination \u2227\n    (lower i).words 0 = i.left \u2227 (lower i).words 1 = i.right\n\ntheorem eval_true_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (enabled : i.guard.eval s = true) :\n    Eval i s next event \u2194\n      next = Pure32.write s i.destination (result i s) \u2227 event = occurrence s i true\n\ntheorem eval_false_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (disabled : i.guard.eval s = false) :\n    Eval i s next event \u2194\n      next = {s with pc := s.pc + 1} \u2227 event = occurrence s i false\n\ntheorem eval_destination (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (evaluated : Eval i s next event) (enabled : i.guard.eval s = true) :\n    next.regs i.destination = result i s\n\ntheorem eval_frame (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (evaluated : Eval i s next event) :\n    next.pc = s.pc + 1 \u2227 next.memory = s.memory \u2227\n      next.addrs = s.addrs \u2227 next.preds = s.preds\n\ntheorem eval_other (i : Instr) (s next : Scalar.State) (event : Occurrence) (other : Nat)\n    (evaluated : Eval i s next event) (different : other \u2260 i.destination) :\n    next.regs other = s.regs other\n\ntheorem eval_event (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (evaluated : Eval i s next event) :\n    event = occurrence s i (i.guard.eval s)\n\ntheorem eval_deterministic (i : Instr) (s next\u2081 next\u2082 : Scalar.State) (event\u2081 event\u2082 : Occurrence)\n    (left : Eval i s next\u2081 event\u2081) (right : Eval i s next\u2082 event\u2082) :\n    next\u2081 = next\u2082 \u2227 event\u2081 = event\u2082\n\ntheorem eval_exists (i : Instr) (s : Scalar.State) :\n    \u2203 next event, Eval i s next event\n\ntheorem step_origin (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (stepped : Step target program s next event) :\n    SupportedTarget target \u2227 \u2203 i, program[s.pc]? = some i \u2227\n      event.pc = s.pc \u2227 event.instruction = lower i \u2227 Eval i s next event\n\ntheorem step_exists (target : Ptx.Target) (program : List Instr) (s : Scalar.State) (i : Instr)\n    (supported : SupportedTarget target) (fetch : program[s.pc]? = some i) :\n    \u2203 next event, Step target program s next event\n\ntheorem step_no_fetch (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (missing : program[s.pc]? = none) :\n    \u00ac Step target program s next event\n\ntheorem step_unsupported_target (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (unsupported : \u00ac SupportedTarget target) :\n    \u00ac Step target program s next event\n\ntheorem Text.decode_encode (i : Instr) :\n    Text.decode (Text.encode i) = .ok i\n\ntheorem Text.decode_iff (statement : Scalar.Text.Statement) (i : Instr) :\n    Text.decode statement = .ok i \u2194 statement = Text.encode i\nend Ptx.Scalar.Shift32\n```\n\nThe typed encoder preserves the guard and uses the exact mnemonic for its\noperation with a word-register destination followed by two word sources.\nKnown spellings with malformed operands return `invalidOperands`; every other\nspelling returns `unsupportedMnemonic`, even with malformed operands.\nAll enabled direct operand reads are recorded in order after guard reads,\nincluding repeated registers. A skip has only the guard read, no writes or memory\neffect. A fetched step checks target support even on a false guard.\nThe universal theorem signatures above are fixed; no extra premises or axioms.\n\nRun `lake build Ptx.Shift32` and the immutable coordinator driver\n`lake env lean formalization/checks/shift32-v1.lean`. Inspect all public theorem\ndependencies with `#print axioms`. Only Lean's standard propext, Classical.choice\nand Quot.sound are permitted. No sorry/admit, axioms, native_decide, extra model\ncalls or commits. Do not modify checks, descriptions, imports, manifests or shared\nfoundations. Report exact remaining obligations if blocked. A completed worker\nrun is not semantic acceptance; the coordinator will replay and review it.\n\nUse Bitwise32 as the completed binary-operand template. There is one encoder spelling per operation, in the order listed above. Report any blocker; do not alter the frozen acceptance driver or contract.\n"
+}

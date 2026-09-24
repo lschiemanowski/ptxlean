@@ -7,14 +7,14 @@
     }
   },
   "summary": [
-    "Execute instructions on individual fixed-width values, recording each thread’s registers, next instruction and memory accesses from a supplied initial state.",
+    "Execute instructions on individual fixed-width values, recording each thread\u2019s registers, next instruction and memory accesses from a supplied initial state.",
     "Distinguish supported program text, invalid execution, reaching a step limit and finishing through an exit instruction.",
     "Distinguish reads from a concrete memory state from proposed read results that need justification under the rules for interacting threads.",
     "Provide reusable proof rules for restricted kernels, with explicit conditions for connecting their executions to the memory model.",
     "Connect floating-point result contracts to actual fetched instructions, incoming operands, predicates and precise register updates in the shared scalar state."
   ],
   "realization": "partial",
-  "remaining": "Implemented: the scalar integer/memory subset, reviewed min/max and bit counts, separately typed binary32 add/multiply instructions, mixed fetched execution, reusable proof rules, shared-allocation kernels, computed publication and an alias-safe affine kernel with stored-word error bounds. General concurrent admission, raw modules, ABI and launch support remain unimplemented.",
+  "remaining": "Implemented: the scalar integer/memory subset, reviewed min/max and bit counts, separately typed binary32 add/multiply instructions, mixed fetched execution, catalog composition of reviewed pure families with scalar memory/control and a complete mask-select kernel, reusable proof rules, shared-allocation kernels, computed publication and an alias-safe affine kernel with stored-word error bounds. General concurrent admission, raw modules, ABI and launch support remain unimplemented.",
   "links": [
     {
       "kind": "implementation",
@@ -36,7 +36,7 @@
       "to": {
         "path": "Ptx/Scalar.lean",
         "passage": {
-          "quote": "def BinOp.eval : BinOp → Word → Word → Word\n  | .add, a, b => a + b\n  | .sub, a, b => a - b\n  | .mulLo, a, b => a * b\n  | .and, a, b => a &&& b\n  | .or, a, b => a ||| b\n  | .xor, a, b => a ^^^ b\n  | .shl, a, b => if b.toNat < 32 then a <<< b.toNat else 0\n  | .shr, a, b => if b.toNat < 32 then a >>> b.toNat else 0"
+          "quote": "def BinOp.eval : BinOp \u2192 Word \u2192 Word \u2192 Word\n  | .add, a, b => a + b\n  | .sub, a, b => a - b\n  | .mulLo, a, b => a * b\n  | .and, a, b => a &&& b\n  | .or, a, b => a ||| b\n  | .xor, a, b => a ^^^ b\n  | .shl, a, b => if b.toNat < 32 then a <<< b.toNat else 0\n  | .shr, a, b => if b.toNat < 32 then a >>> b.toNat else 0"
         }
       }
     },
@@ -48,7 +48,7 @@
       "to": {
         "path": "Ptx/Scalar.lean",
         "passage": {
-          "quote": "def eval (readOverride : Option Word) (instruction : Instr) (s : State) : StepResult :=\n  match instruction.op with\n  | .unsupported spelling => .unsupported spelling\n  | _ =>\n      if instruction.guard.eval s then\n        let advance := {s with pc := s.pc + 1}\n        let event := occurrence s instruction true\n        match instruction.op with\n        | .mov32 destination source =>\n            .next {advance with regs := update s.regs destination (source.eval s)} event\n        | .bin32 operation destination left right =>\n            .next {advance with regs := update s.regs destination (operation.eval (left.eval s) (right.eval s))} event\n        | .unary32 operation destination source =>\n            .next {advance with regs := update s.regs destination (operation.eval (source.eval s))} event\n        | .mov64 destination source =>\n            .next {advance with addrs := update s.addrs destination (source.eval s)} event\n        | .add64 destination left right =>\n            .next {advance with addrs := update s.addrs destination (left.eval s + right.eval s)} event\n        | .cvt64 destination source =>\n            .next {advance with addrs := update s.addrs destination (BitVec.ofNat 64 (source.eval s).toNat)} event\n        | .setp comparison destination left right =>\n            .next {advance with preds := update s.preds destination (comparison.eval (left.eval s) (right.eval s))} event\n        | .load destination address =>\n            let pointer := address.eval s\n            match addressIndex s.memory pointer with\n            | .error reason => .fault reason\n            | .ok index =>\n                let value := readOverride.getD (s.memory[index]!)\n                .next {advance with regs := update s.regs destination value}\n                  (occurrence s instruction true (some ⟨.load, pointer, value⟩))\n        | .store address source =>\n            let pointer := address.eval s\n            match addressIndex s.memory pointer with\n            | .error reason => .fault reason\n            | .ok index =>\n                let value := source.eval s\n                .next {advance with memory := s.memory.set index value}\n                  (occurrence s instruction true (some ⟨.store, pointer, value⟩))\n        | .bra target => .next {s with pc := target} event\n        | .exit => .halted s event\n        | .unsupported spelling => .unsupported spelling\n      else .next {s with pc := s.pc + 1} (occurrence s instruction false)"
+          "quote": "def eval (readOverride : Option Word) (instruction : Instr) (s : State) : StepResult :=\n  match instruction.op with\n  | .unsupported spelling => .unsupported spelling\n  | _ =>\n      if instruction.guard.eval s then\n        let advance := {s with pc := s.pc + 1}\n        let event := occurrence s instruction true\n        match instruction.op with\n        | .mov32 destination source =>\n            .next {advance with regs := update s.regs destination (source.eval s)} event\n        | .bin32 operation destination left right =>\n            .next {advance with regs := update s.regs destination (operation.eval (left.eval s) (right.eval s))} event\n        | .unary32 operation destination source =>\n            .next {advance with regs := update s.regs destination (operation.eval (source.eval s))} event\n        | .mov64 destination source =>\n            .next {advance with addrs := update s.addrs destination (source.eval s)} event\n        | .add64 destination left right =>\n            .next {advance with addrs := update s.addrs destination (left.eval s + right.eval s)} event\n        | .cvt64 destination source =>\n            .next {advance with addrs := update s.addrs destination (BitVec.ofNat 64 (source.eval s).toNat)} event\n        | .setp comparison destination left right =>\n            .next {advance with preds := update s.preds destination (comparison.eval (left.eval s) (right.eval s))} event\n        | .load destination address =>\n            let pointer := address.eval s\n            match addressIndex s.memory pointer with\n            | .error reason => .fault reason\n            | .ok index =>\n                let value := readOverride.getD (s.memory[index]!)\n                .next {advance with regs := update s.regs destination value}\n                  (occurrence s instruction true (some \u27e8.load, pointer, value\u27e9))\n        | .store address source =>\n            let pointer := address.eval s\n            match addressIndex s.memory pointer with\n            | .error reason => .fault reason\n            | .ok index =>\n                let value := source.eval s\n                .next {advance with memory := s.memory.set index value}\n                  (occurrence s instruction true (some \u27e8.store, pointer, value\u27e9))\n        | .bra target => .next {s with pc := target} event\n        | .exit => .halted s event\n        | .unsupported spelling => .unsupported spelling\n      else .next {s with pc := s.pc + 1} (occurrence s instruction false)"
         }
       }
     },
@@ -84,7 +84,7 @@
       "to": {
         "path": "Ptx/Scalar.lean",
         "passage": {
-          "quote": "theorem runWith_sound (fuel : Nat) (oracle : Nat → Option Word) (program : List Instr) (s : State) :\n    Runs program oracle s (runWith fuel oracle program s) := by\n  induction fuel generalizing oracle s with\n  | zero => exact .exhausted\n  | succ fuel ih =>\n      simp only [runWith]\n      split\n      · exact .next (by assumption) (ih _ _)\n      · exact .halted (by assumption)\n      · exact .fault (by assumption)\n      · exact .unsupported (by assumption)"
+          "quote": "theorem runWith_sound (fuel : Nat) (oracle : Nat \u2192 Option Word) (program : List Instr) (s : State) :\n    Runs program oracle s (runWith fuel oracle program s) := by\n  induction fuel generalizing oracle s with\n  | zero => exact .exhausted\n  | succ fuel ih =>\n      simp only [runWith]\n      split\n      \u00b7 exact .next (by assumption) (ih _ _)\n      \u00b7 exact .halted (by assumption)\n      \u00b7 exact .fault (by assumption)\n      \u00b7 exact .unsupported (by assumption)"
         }
       }
     },
@@ -96,7 +96,7 @@
       "to": {
         "path": "Ptx/Scalar.lean",
         "passage": {
-          "quote": "theorem Runs.exists_run (h : Runs program oracle s result) :\n    ∃ fuel, runWith fuel oracle program s = result := by\n  induction h with\n  | exhausted => exact ⟨0, rfl⟩\n  | @next oracle s next event rest hs hr ih =>\n      obtain ⟨fuel, hf⟩ := ih\n      exact ⟨fuel + 1, by simp [runWith, hs, hf]⟩\n  | halted hs => exact ⟨1, by simp [runWith, hs]⟩\n  | fault hs => exact ⟨1, by simp [runWith, hs]⟩\n  | unsupported hs => exact ⟨1, by simp [runWith, hs]⟩"
+          "quote": "theorem Runs.exists_run (h : Runs program oracle s result) :\n    \u2203 fuel, runWith fuel oracle program s = result := by\n  induction h with\n  | exhausted => exact \u27e80, rfl\u27e9\n  | @next oracle s next event rest hs hr ih =>\n      obtain \u27e8fuel, hf\u27e9 := ih\n      exact \u27e8fuel + 1, by simp [runWith, hs, hf]\u27e9\n  | halted hs => exact \u27e81, by simp [runWith, hs]\u27e9\n  | fault hs => exact \u27e81, by simp [runWith, hs]\u27e9\n  | unsupported hs => exact \u27e81, by simp [runWith, hs]\u27e9"
         }
       }
     },
@@ -120,7 +120,7 @@
       "to": {
         "path": "Ptx/Scalar.lean",
         "passage": {
-          "quote": "theorem run_trace_safe (fuel : Nat) (program : List Instr) (s : State) :\n    ∀ event ∈ (run fuel program s).trace,\n      ∀ effect, event.memory = some effect → ValidAddress s.memory effect.address :=\n  runWith_trace_safe _ _ _ _"
+          "quote": "theorem run_trace_safe (fuel : Nat) (program : List Instr) (s : State) :\n    \u2200 event \u2208 (run fuel program s).trace,\n      \u2200 effect, event.memory = some effect \u2192 ValidAddress s.memory effect.address :=\n  runWith_trace_safe _ _ _ _"
         }
       }
     },
@@ -156,7 +156,7 @@
       "to": {
         "path": "Ptx/Scalar.lean",
         "passage": {
-          "quote": "structure State where\n  pc : Nat\n  regs : Nat → Word\n  addrs : Nat → Address\n  preds : Nat → Bool\n  memory : List Word"
+          "quote": "structure State where\n  pc : Nat\n  regs : Nat \u2192 Word\n  addrs : Nat \u2192 Address\n  preds : Nat \u2192 Bool\n  memory : List Word"
         }
       }
     },

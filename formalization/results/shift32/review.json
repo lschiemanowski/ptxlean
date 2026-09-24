@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "state": "completed",
+  "started_at": "2026-09-24T11:45:48.140091+00:00",
+  "requested_model": "z-ai/glm-5.3-flash",
+  "request_sha256": "8ccb3249049d4fc10ea85ccf1c86ea5a5f0ba3a6a8d67a4c6627883da8321e93",
+  "recipe_sha256": "e741c82d4868cd04ad14e977c62176af945f046c4522bc66895d65df6a82e9c1",
+  "packet_sha256": "440702f83d3f1e32364a4a00ed771975d523d8b2498a215d83ea1acaab2331a5",
+  "helper_sha256": {
+    "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+    "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+    "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+  },
+  "runner_sha256": "41d3d602738f05ff95ccd186872e3fb8c55bed23e4f27f3d555807115b7f9098",
+  "reported_model": "z-ai/glm-5.3-flash",
+  "provider": "InferenceNet",
+  "usage": {
+    "prompt_tokens": 32203,
+    "completion_tokens": 990,
+    "total_tokens": 33193,
+    "cost": 0.001587735,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 0.001587735,
+      "upstream_inference_prompt_cost": 0.001449135,
+      "upstream_inference_completions_cost": 0.0001386
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 411,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  },
+  "reported_cost": 0.001587735,
+  "semantic_acceptance": "not_performed",
+  "timeout_seconds": 600,
+  "response_sha256": "ecdc2ba1fe53b658992249f6d1ddbaebef9175766809115382dc76468bb38474",
+  "response_id": "gen-1790250348-zJ6vE0cGZM1T1KicI8Yw",
+  "finish_reason": "stop",
+  "verdict": "accept",
+  "finished_at": "2026-09-24T11:46:19.607313+00:00",
+  "elapsed_seconds": 31.463985505979508,
+  "report_sha256": "460af42c77d3a841958883263d2f132eefd91bd4c6482a15e944292c73ac9313",
+  "coordinator_adjudication": "No finding to resolve. Source and universal statement review agrees for the selected scope; independent Lean replay required separately.",
+  "protocol_changed": false
+}

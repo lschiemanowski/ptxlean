@@ -10,7 +10,32 @@
     "Specify exact all-input shift results, including unsigned large counts and sign filling.",
     "Preserve the shared guarded execution, target slice and restricted typed decoding contract."
   ],
-  "realization": "unimplemented",
-  "remaining": "Specified interface; implementation and evidence pending.",
-  "links": []
+  "realization": "implemented",
+  "remaining": "Selected spellings and all-input instruction proofs implemented by Luna and passed fresh replay. Other widths, shr.b32, raw-module validation and hardware correspondence remain outside this leaf.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Counts do not wrap."
+      },
+      "to": {
+        "path": "Ptx/Shift32.lean",
+        "passage": {
+          "quote": "def compute (op : Operation) (a b : Word) : Word :=\n  match op with\n  | .shl => if b.toNat < 32 then a <<< b.toNat else 0\n  | .shrU => if b.toNat < 32 then a >>> b.toNat else 0\n  | .shrS => if b.toNat < 32 then a.sshiftRight b.toNat else if a.msb then 0xffffffff else 0"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Universal result, frame, determinism, decoder and one-step existence proofs\nare separate from source-fidelity review and from whole-program correctness."
+      },
+      "to": {
+        "path": "docs/formalization/shift32-review.md",
+        "passage": {
+          "quote": "The coordinator inspected the definitions, lowering, decoder, theorem statements\nand hypotheses."
+        }
+      }
+    }
+  ]
 }

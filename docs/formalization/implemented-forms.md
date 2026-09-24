@@ -1,9 +1,9 @@
 # Reading the accepted-form ledger
 
-[The ledger](../../coverage/implemented-forms.json) records fourteen selected accepted
+[The ledger](../../coverage/implemented-forms.json) records seventeen selected accepted
 forms. It is separate from the [instruction-section inventory](coverage.md),
 whose `not_assessed` entries are unchanged. Other existing scalar instructions
-are not yet entered here, so even the ledger's fourteen-form count is not a count of
+are not yet entered here, so even the ledger's seventeen-form count is not a count of
 all implemented PTX forms.
 
 | Exact form | Inputs → destination | Meaning | Manual conditions |
@@ -22,9 +22,12 @@ all implemented PTX forms.
 | `xor.b32` | two words → compatible 32-bit register | Bitwise exclusive OR | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
 | `not.b32` | one word → compatible 32-bit register | Complement all bits | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
 | `cnot.b32` | one word → compatible 32-bit register | 1 if the input is zero; 0 otherwise | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `shl.b32` | word and unsigned 32-bit count → compatible register | Left shift, zero fill; counts clamped at 32 | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `shr.u32` | word and unsigned 32-bit count → compatible register | Right shift, zero fill; counts clamped at 32 | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
+| `shr.s32` | word and unsigned 32-bit count → compatible register | Right shift, sign fill; counts clamped at 32 | PTX 1.0; selected step ISA 9.4, SM ≥10 feature floor |
 
 Every word input can come from a word register or a 32-bit immediate value.
-The selection predicate is a register. All fourteen
+The selection predicate is a register. All seventeen
 forms support unconditional execution or execution guarded by a positive or
 negated predicate. A false guard advances the program counter without writing
 the destination. Register overlap is allowed: the incoming source value is read
@@ -56,7 +59,9 @@ selection and signed min/max, their exact shared-engine boundary and retained
 evaluator corrections. The [bitwise review](bitwise-leaves-review.md) covers
 the five .b32 logic forms and their separately replayed proofs. Other widths and
 legal predicate-valued siblings remain unimplemented; `cnot.pred` is not a legal
-sibling of `cnot.b32`.
+sibling of `cnot.b32`. The [shift review](shift32-review.md) covers the three
+selected shifts, unsigned counts and large-count behavior. Other widths and
+`shr.b32` remain outside that leaf.
 
 The separate signed minimum and maximum entries add only `.s32`. Other
 scalar widths, packed half-word or quarter-word lanes, and `.relu` clamping of a

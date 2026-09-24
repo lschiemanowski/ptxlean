@@ -1,0 +1,109 @@
+{
+  "base_commit": "27356b5ec35c6d32edfb67c14475e220d098d55d",
+  "files": [
+    {
+      "path": "Ptx/Shift32.lean",
+      "role": "candidate",
+      "sha256": "dd666f1995965c64982ecbc4eeab1ed5369edf69c7575ad9af4caf8eecd19ff7"
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "role": "support",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "role": "support",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "role": "support",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "role": "support",
+      "sha256": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "role": "support",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "meaning",
+      "text": "All 32-bit input patterns and aliases admitted. Selected shl.b32 shifts left with zero fill, shr.u32 shifts right with zero fill, shr.s32 shifts right with sign fill. The right operand is unsigned u32. Counts at or above 32 are clamped, never reduced modulo 32: logical results zero; signed right gives all ones for negative input, zero otherwise."
+    },
+    {
+      "id": "state",
+      "text": "Evaluate sources in the incoming state before writing the destination; permit repeated sources and source/destination aliases. Only the selected word register and incremented program counter change."
+    },
+    {
+      "id": "guards",
+      "text": "Both positive and negative instruction guards are supported. A false guard skips the write and advances only the program counter. The selected operations have no additional predicate operands."
+    },
+    {
+      "id": "events",
+      "text": "The occurrence identifies the fetched instruction and original program counter. Enabled syntactic reads include guard then word operands then predicate operands, retaining repeats. Disabled instructions read only the guard. No memory effect is claimed."
+    },
+    {
+      "id": "target",
+      "text": "The explicit target slice is ISA exactly 94 and numeric sm at least 10, including for skipped fetched instructions. These selected forms have no additional feature threshold. This is not validation of actual target spellings."
+    },
+    {
+      "id": "decoder",
+      "text": "Exactly shl.b32, shr.u32, shr.s32, one operation per spelling. Word-register destination and two word sources in order; both guard polarities. Known malformed operands give invalidOperands, other spellings unsupportedMnemonic. Full success iff exact encoding. Register compatibility and immediate conversion are caller obligations."
+    },
+    {
+      "id": "proofs",
+      "text": "Universal transition, frame, deterministic result, one-step existence and origin theorems must follow the actual definitions without excluding aliases or input bit patterns. Absence of raw module parsing, declared-register checking and whole-kernel termination is within the deliberate scope."
+    }
+  ],
+  "patch": {
+    "path": "formalization/review/candidates/shift32-001.patch",
+    "sha256": "1a9cbeccd781f6cdde0b3b6d4424d9f70b13e74569985606b8989d3a12fd4e0e"
+  },
+  "schema_version": 1,
+  "scope": "Selected shl.b32, shr.u32 and shr.s32 Pure32 leaf only. Do not require other spellings, widths, module parsing, concurrency or hardware correspondence. Existing support files are fixed interfaces.",
+  "sections": [
+    {
+      "anchor": "predicated-execution",
+      "sha256": "e3de38b106e96f1ccdd8c7710b2efbaa5ea2bde35959da999d2075a12162dd1f"
+    },
+    {
+      "anchor": "instruction-statements",
+      "sha256": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a"
+    },
+    {
+      "anchor": "operand-type-information",
+      "sha256": "2b4deb7a2de0f26463be8ea631b19d3262067641e45c4ca98261b61ff73945a7"
+    },
+    {
+      "anchor": "source-operands",
+      "sha256": "a981cf489133f764d2b9d621b4653ead71abb7709a83a323eccb55bddb8b6fa2"
+    },
+    {
+      "anchor": "destination-operands",
+      "sha256": "46d9e524f958b92cb45b9d9c7113b315e3b44eaf6a69f5af707bb055c5ee6a70"
+    },
+    {
+      "anchor": "integer-constants",
+      "sha256": "d7a625de2e4a872a173e18cde51b2c3475cb2e37a811700332dbf9292713a9f2"
+    },
+    {
+      "anchor": "type-information-for-instructions-and-operands",
+      "sha256": "1191421bc4f06fb7dd96d159cf38c7396851b95257247d2a9c68f54d99f4ad78"
+    },
+    {
+      "anchor": "logic-and-shift-instructions-shl",
+      "sha256": "b8c05a6786940a363851e9075a124e57dd014c5ad6307102d2bd30c74c6a034d"
+    },
+    {
+      "anchor": "logic-and-shift-instructions-shr",
+      "sha256": "8823ecfcf44c4e6fc1faf14f96ad4dcb676b91f66200f85b08c6ee838547e95e"
+    }
+  ]
+}

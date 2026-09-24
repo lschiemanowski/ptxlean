@@ -1,5 +1,5 @@
 import PtxBinary32.Instructions
-import Ptx.ScalarRules
+import Ptx.ExecutionPath
 
 /-! Tagged scalar/FP finite execution over the original scalar state. Concrete
 arena reads are a restricted sequential discipline, not general concurrent PTX
@@ -91,37 +91,9 @@ theorem dispatch_exists (target : Ptx.Target) (program : List Instr) (s : State)
       obtain ⟨next, event, h⟩ := Scalar.Binary32.eval_exists i s
       exact ⟨_, (dispatch_fetch fetch).2 ⟨eligible, .binary32 h⟩⟩
 
-/-- A finite advancing prefix has no implicit exit or fuel interpretation. -/
-inductive Path (advance : S → E → S → Prop) : S → List E → S → Prop where
-  | nil : Path advance s [] s
-  | cons : advance s event next → Path advance next rest final →
-      Path advance s (event :: rest) final
-
 def Advances (target : Ptx.Target) (program : List Instr)
     (s : State) (event : Event) (next : State) : Prop :=
   Dispatch target program s (.next next event)
-
-theorem Path.append (first : Path advance s xs middle) (second : Path advance middle ys final) :
-    Path advance s (xs ++ ys) final := by
-  induction first with
-  | nil => exact second
-  | cons step _ ih => exact .cons step (ih second)
-
-theorem Path.invariant (property : S → Prop)
-    (preserved : ∀ s event next, property s → advance s event next → property next)
-    (path : Path advance s trace final) (initial : property s) : property final := by
-  induction path with
-  | nil => exact initial
-  | cons step _ ih => exact ih (preserved _ _ _ initial step)
-
-theorem Path.event_origin (path : Path advance s trace final) (member : event ∈ trace) :
-    ∃ before after, advance before event after := by
-  induction path with
-  | nil => simp at member
-  | cons step _ ih =>
-    rcases List.mem_cons.mp member with rfl | member
-    · exact ⟨_, _, step⟩
-    · exact ih member
 
 /-- A run ends in a real terminal dispatch; there is no exhausted constructor. -/
 inductive Run (target : Ptx.Target) (program : List Instr) :

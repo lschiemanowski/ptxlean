@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Fourteen reviewed forms: twelve integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Seventeen reviewed forms: fifteen integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": ".ptx-source/9.4/index.html",
@@ -138,6 +138,22 @@
     "unary_bits32_review": {
       "path": "docs/formalization/bitwise-leaves-review.md",
       "sha256": "19669ef314c1fa8df18107d9ce34b04d430721f0f9addf9c319eae00fdc13ea5"
+    },
+    "shift32": {
+      "path": "Ptx/Shift32.lean",
+      "sha256": "dd666f1995965c64982ecbc4eeab1ed5369edf69c7575ad9af4caf8eecd19ff7"
+    },
+    "shift32_acceptance": {
+      "path": "formalization/results/shift32/acceptance.json",
+      "sha256": "b1db735f868985978d40ce23ba3ddd050ceace8e264086de3f9e64939d8accf6"
+    },
+    "shift32_evidence": {
+      "path": "formalization/results/shift32/evidence-manifest.json",
+      "sha256": "97b9854c79a28109b9765fdd51bdd91551e741ae756dfc48b240c78ea185af1c"
+    },
+    "shift32_review": {
+      "path": "docs/formalization/shift32-review.md",
+      "sha256": "c8214ccdf1fe6fd3bda2a766085bd4bae2c51329884f05d285d8bca71be32983"
     }
   },
   "source": {
@@ -164,7 +180,9 @@
       "logic-and-shift-instructions-or": "9297e62ec4c00c1910e345576d97696b16428867beb657a810667e26ef3d7a1d",
       "logic-and-shift-instructions-xor": "f3da76b6d69b50617e9625e3701efc9c0f0750eaf90c763bcb6780c9bb5af4b4",
       "logic-and-shift-instructions-not": "5f2864d328c20efa301fcc7156c0f6b9366ba671055174a8e0f79929a9917f14",
-      "logic-and-shift-instructions-cnot": "90ce8e60fe23fad6d8e12240d758951e193fe2d3b428c953c551996871a51f70"
+      "logic-and-shift-instructions-cnot": "90ce8e60fe23fad6d8e12240d758951e193fe2d3b428c953c551996871a51f70",
+      "logic-and-shift-instructions-shl": "b8c05a6786940a363851e9075a124e57dd014c5ad6307102d2bd30c74c6a034d",
+      "logic-and-shift-instructions-shr": "8823ecfcf44c4e6fc1faf14f96ad4dcb676b91f66200f85b08c6ee838547e95e"
     },
     "common_operand_guard_anchors": [
       "operand-type-information",
@@ -231,6 +249,14 @@
       "patch_member": "attempts/unary-bits32-003/candidate.patch",
       "replay_member": "replays/unary-bits32-003/result.json",
       "patch_sha256": "b775edbd2c9da3f326c48abe35f163608a8537d21c8ae89837aa075a80d788c9"
+    },
+    "shift32": {
+      "acceptance": "shift32_acceptance",
+      "evidence": "shift32_evidence",
+      "source_review": "shift32_review",
+      "patch_member": "attempts/shift32-001/candidate.patch",
+      "replay_member": "replays/shift32-001-v3/result.json",
+      "patch_sha256": "1a9cbeccd781f6cdde0b3b6d4424d9f70b13e74569985606b8989d3a12fd4e0e"
     }
   },
   "forms": [
@@ -2295,6 +2321,507 @@
           "name": "lower_operation"
         }
       ]
+    },
+    {
+      "spelling": "shl.b32",
+      "status": "accepted",
+      "trial": "shift32",
+      "source_anchor": "logic-and-shift-instructions-shl",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate",
+          "unsigned 32-bit count from a word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Shift left and fill with zeros. Counts are unsigned and clamped at 32, never reduced modulo 32. All input bit patterns admitted.",
+      "boundary": "Typed Pure32-family leaf selecting exactly shl.b32, shr.u32 and shr.s32; no raw module or declared-register checking, other spellings/widths, complete-kernel or hardware claim. Exact ISA94/SM>=10 floor on fetched Step.",
+      "semantics": [
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "compute"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "family"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "lower"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "results_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_other"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_event"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_origin"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_exists"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "shr.u32",
+      "status": "accepted",
+      "trial": "shift32",
+      "source_anchor": "logic-and-shift-instructions-shr",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate",
+          "unsigned 32-bit count from a word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Shift right and fill with zeros. Counts are unsigned and clamped at 32, never reduced modulo 32. All input bit patterns admitted.",
+      "boundary": "Typed Pure32-family leaf selecting exactly shl.b32, shr.u32 and shr.s32; no raw module or declared-register checking, other spellings/widths, complete-kernel or hardware claim. Exact ISA94/SM>=10 floor on fetched Step.",
+      "semantics": [
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "compute"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "family"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "lower"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "results_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_other"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_event"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_origin"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_exists"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "shr.s32",
+      "status": "accepted",
+      "trial": "shift32",
+      "source_anchor": "logic-and-shift-instructions-shr",
+      "ptx_minimum": "1.0",
+      "target": "sm_10 feature floor; not recognized-target validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 10 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible 32-bit word register or decoded immediate",
+          "unsigned 32-bit count from a word register or decoded immediate"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Shift right and fill with the input sign bit. Counts are unsigned and clamped at 32, never reduced modulo 32. All input bit patterns admitted.",
+      "boundary": "Typed Pure32-family leaf selecting exactly shl.b32, shr.u32 and shr.s32; no raw module or declared-register checking, other spellings/widths, complete-kernel or hardware claim. Exact ISA94/SM>=10 floor on fetched Step.",
+      "semantics": [
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "compute"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "family"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "lower"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "compute_eq"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "results_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_other"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_event"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_origin"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_exists"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "shift32",
+          "namespace": "Ptx.Scalar.Shift32",
+          "name": "lower_operation"
+        }
+      ]
     }
   ],
   "uncovered_siblings": [
@@ -2473,6 +3000,29 @@
       ],
       "status": "unimplemented",
       "reason": "Only the typed .b32 form is accepted; other legal widths remain outside this leaf."
+    },
+    {
+      "source_anchor": "logic-and-shift-instructions-shl",
+      "spellings": [
+        "shl.b16",
+        "shl.b64"
+      ],
+      "status": "unimplemented",
+      "reason": "Other legal spellings and widths are excluded from the selected exact typed shift interface. Counts remain unsigned 32-bit for every width."
+    },
+    {
+      "source_anchor": "logic-and-shift-instructions-shr",
+      "spellings": [
+        "shr.b16",
+        "shr.b32",
+        "shr.b64",
+        "shr.u16",
+        "shr.u64",
+        "shr.s16",
+        "shr.s64"
+      ],
+      "status": "unimplemented",
+      "reason": "Other legal spellings and widths are excluded from the selected exact typed shift interface. Counts remain unsigned 32-bit for every width."
     }
   ]
 }

@@ -59,7 +59,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "inductive Eval : Instr → State → Outcome → Prop\n  | scalar : Eval (.scalar i) s (liftScalar (Scalar.eval none i s))\n  | binary32 : Scalar.Binary32.Eval i s next event →\n      Eval (.binary32 i) s (.next next (.binary32 event))"
+          "quote": "inductive Eval : Instr \u2192 State \u2192 Outcome \u2192 Prop\n  | scalar : Eval (.scalar i) s (liftScalar (Scalar.eval none i s))\n  | binary32 : Scalar.Binary32.Eval i s next event \u2192\n      Eval (.binary32 i) s (.next next (.binary32 event))"
         }
       }
     },
@@ -71,7 +71,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "def Dispatch (target : Ptx.Target) (program : List Instr)\n    (s : State) (outcome : Outcome) : Prop :=\n  Eligible target ∧ match program[s.pc]? with\n    | none => outcome = .fault (.invalidPC s.pc)\n    | some i => Eval i s outcome"
+          "quote": "def Dispatch (target : Ptx.Target) (program : List Instr)\n    (s : State) (outcome : Outcome) : Prop :=\n  Eligible target \u2227 match program[s.pc]? with\n    | none => outcome = .fault (.invalidPC s.pc)\n    | some i => Eval i s outcome"
         }
       }
     },
@@ -83,7 +83,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "theorem dispatch_event_origin\n    (h : Dispatch target program s (.next next event) ∨\n      Dispatch target program s (.halted next event)) :\n    event.pc = s.pc ∧ program[s.pc]? = some event.instruction := by"
+          "quote": "theorem dispatch_event_origin\n    (h : Dispatch target program s (.next next event) \u2228\n      Dispatch target program s (.halted next event)) :\n    event.pc = s.pc \u2227 program[s.pc]? = some event.instruction := by"
         }
       }
     },
@@ -95,7 +95,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "def Eligible (target : Ptx.Target) : Prop := target.isa = 94 ∧ 70 ≤ target.sm"
+          "quote": "def Eligible (target : Ptx.Target) : Prop := target.isa = 94 \u2227 70 \u2264 target.sm"
         }
       }
     },
@@ -107,7 +107,19 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "theorem eligible_binary32 (h : Eligible target) : Scalar.Binary32.SupportedTarget target :=\n  ⟨h.1, by have := h.2; omega⟩"
+          "quote": "theorem eligible_binary32 (h : Eligible target) : Scalar.Binary32.SupportedTarget target :=\n  \u27e8h.1, by have := h.2; omega\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite path is a sequence of advancing steps. It can stop before the program\nfinishes and therefore proves no termination by itself. A completed run follows\na finite path with an actual exit instruction. Faults and unsupported operations\nare separate terminal outcomes. Exit retains its own event; faults and unsupported\noperations retain the current state without inventing an instruction event.\nThis interface describes finite executions. It does not introduce a fuel-bounded\nrunner or treat an empty path as successful completion."
+      },
+      "to": {
+        "path": "Ptx/ExecutionPath.lean",
+        "passage": {
+          "quote": "inductive Path (advance : S \u2192 E \u2192 S \u2192 Prop) : S \u2192 List E \u2192 S \u2192 Prop where\n  | nil : Path advance s [] s\n  | cons : advance s event next \u2192 Path advance next rest final \u2192\n      Path advance s (event :: rest) final"
         }
       }
     },
@@ -119,7 +131,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "inductive Path (advance : S → E → S → Prop) : S → List E → S → Prop where\n  | nil : Path advance s [] s\n  | cons : advance s event next → Path advance next rest final →\n      Path advance s (event :: rest) final"
+          "quote": "inductive Run (target : Ptx.Target) (program : List Instr) :\n    State \u2192 State \u2192 Scalar.Stop \u2192 List Event \u2192 Prop where\n  | next : Dispatch target program s (.next next event) \u2192\n      Run target program next final status rest \u2192\n      Run target program s final status (event :: rest)\n  | halted : Dispatch target program s (.halted final event) \u2192\n      Run target program s final .halted [event]\n  | fault : Dispatch target program s (.fault reason) \u2192\n      Run target program s s (.fault reason) []\n  | unsupported : Dispatch target program s (.unsupported spelling) \u2192\n      Run target program s s (.unsupported spelling) []"
         }
       }
     },
@@ -131,7 +143,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "inductive Run (target : Ptx.Target) (program : List Instr) :\n    State → State → Scalar.Stop → List Event → Prop where\n  | next : Dispatch target program s (.next next event) →\n      Run target program next final status rest →\n      Run target program s final status (event :: rest)\n  | halted : Dispatch target program s (.halted final event) →\n      Run target program s final .halted [event]\n  | fault : Dispatch target program s (.fault reason) →\n      Run target program s s (.fault reason) []\n  | unsupported : Dispatch target program s (.unsupported spelling) →\n      Run target program s s (.unsupported spelling) []"
+          "quote": "theorem Run.not_exhausted (run : Run target program s final status trace) :\n    status \u2260 .exhausted := by"
         }
       }
     },
@@ -143,19 +155,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "theorem Run.not_exhausted (run : Run target program s final status trace) :\n    status ≠ .exhausted := by"
-        }
-      }
-    },
-    {
-      "kind": "implementation",
-      "from": {
-        "quote": "A finite path is a sequence of advancing steps. It can stop before the program\nfinishes and therefore proves no termination by itself. A completed run follows\na finite path with an actual exit instruction. Faults and unsupported operations\nare separate terminal outcomes. Exit retains its own event; faults and unsupported\noperations retain the current state without inventing an instruction event.\nThis interface describes finite executions. It does not introduce a fuel-bounded\nrunner or treat an empty path as successful completion."
-      },
-      "to": {
-        "path": "integration/torchlean/PtxBinary32/Mixed.lean",
-        "passage": {
-          "quote": "theorem Run.unfold : Run target program s final status trace ↔\n    (∃ next event rest, Dispatch target program s (.next next event) ∧\n      Run target program next final status rest ∧ trace = event :: rest) ∨\n    (∃ event, Dispatch target program s (.halted final event) ∧ status = .halted ∧ trace = [event]) ∨\n    (∃ reason, Dispatch target program s (.fault reason) ∧ final = s ∧\n      status = .fault reason ∧ trace = []) ∨\n    (∃ spelling, Dispatch target program s (.unsupported spelling) ∧ final = s ∧\n      status = .unsupported spelling ∧ trace = []) := by"
+          "quote": "theorem Run.unfold : Run target program s final status trace \u2194\n    (\u2203 next event rest, Dispatch target program s (.next next event) \u2227\n      Run target program next final status rest \u2227 trace = event :: rest) \u2228\n    (\u2203 event, Dispatch target program s (.halted final event) \u2227 status = .halted \u2227 trace = [event]) \u2228\n    (\u2203 reason, Dispatch target program s (.fault reason) \u2227 final = s \u2227\n      status = .fault reason \u2227 trace = []) \u2228\n    (\u2203 spelling, Dispatch target program s (.unsupported spelling) \u2227 final = s \u2227\n      status = .unsupported spelling \u2227 trace = []) := by"
         }
       }
     },
@@ -167,7 +167,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "theorem Path.memory_safe (path : Path (Advances target program) s trace final)\n    (member : event ∈ trace) (memory : event.memory = some effect) :\n    ValidAddress s.memory effect.address := by"
+          "quote": "theorem Path.memory_safe (path : Path (Advances target program) s trace final)\n    (member : event \u2208 trace) (memory : event.memory = some effect) :\n    ValidAddress s.memory effect.address := by"
         }
       }
     },
@@ -179,7 +179,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "theorem Run.memory_safe (run : Run target program s final status trace)\n    (member : event ∈ trace) (memory : event.memory = some effect) :\n    ValidAddress s.memory effect.address := by"
+          "quote": "theorem Run.memory_safe (run : Run target program s final status trace)\n    (member : event \u2208 trace) (memory : event.memory = some effect) :\n    ValidAddress s.memory effect.address := by"
         }
       }
     },
@@ -191,7 +191,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "theorem Path.frame (path : Path (Advances target program) s trace final)\n    (untouched : ∀ event ∈ trace, ¬ StoresTo event index) :\n    final.memory[index]? = s.memory[index]? := by"
+          "quote": "theorem Path.frame (path : Path (Advances target program) s trace final)\n    (untouched : \u2200 event \u2208 trace, \u00ac StoresTo event index) :\n    final.memory[index]? = s.memory[index]? := by"
         }
       }
     },
@@ -203,19 +203,19 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "theorem Run.frame (run : Run target program s final status trace)\n    (untouched : ∀ event ∈ trace, ¬ StoresTo event index) :\n    final.memory[index]? = s.memory[index]? := by"
+          "quote": "theorem Run.frame (run : Run target program s final status trace)\n    (untouched : \u2200 event \u2208 trace, \u00ac StoresTo event index) :\n    final.memory[index]? = s.memory[index]? := by"
         }
       }
     },
     {
       "kind": "implementation",
       "from": {
-        "quote": "Every eligible state has a dispatch outcome, but that does not mean every\nprogram terminates. Constructing a floating-point next state uses existence in\nthe numerical result set. Universal run properties must cover all members of\nthat set, including its conservative freedom for NaNs, special “not a number”\nresults. A chosen numerical reference can witness existence but cannot replace\nthe allowed execution relation. Hardware progress and exact NaN realizability\nremain separate questions.\n"
+        "quote": "Every eligible state has a dispatch outcome, but that does not mean every\nprogram terminates. Constructing a floating-point next state uses existence in\nthe numerical result set. Universal run properties must cover all members of\nthat set, including its conservative freedom for NaNs, special \u201cnot a number\u201d\nresults. A chosen numerical reference can witness existence but cannot replace\nthe allowed execution relation. Hardware progress and exact NaN realizability\nremain separate questions.\n"
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/Mixed.lean",
         "passage": {
-          "quote": "theorem dispatch_exists (target : Ptx.Target) (program : List Instr) (s : State)\n    (eligible : Eligible target) : ∃ outcome, Dispatch target program s outcome := by"
+          "quote": "theorem dispatch_exists (target : Ptx.Target) (program : List Instr) (s : State)\n    (eligible : Eligible target) : \u2203 outcome, Dispatch target program s outcome := by"
         }
       }
     }

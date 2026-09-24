@@ -1,0 +1,41 @@
+{
+  "id": "mask-select",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "An example explains how to reproduce its verification, how its proof is\nassembled, and which claims concern mathematical correctness, numerical\naccuracy, implementation correspondence, or execution. Supporting experiments\nare identified separately from checked results. Examples illustrate both the\nuse of reusable contracts and the application-specific obligations that remain."
+    }
+  },
+  "summary": [
+    "Load, mask and select arbitrary words, store the exact result and exit in the restricted scalar arena.",
+    "Prove execution existence, correctness of every completed execution, access validity and preservation of other memory."
+  ],
+  "realization": "implemented",
+  "remaining": "Exact masked selection, explicit execution, all-completed-run correctness and memory preservation are implemented for the stated word-arena layout. No floating, tensor, concurrent launch or hardware claim.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The result theorem covers every completed execution, and a separate constructive\nwitness supplies an execution ending in exit."
+      },
+      "to": {
+        "path": "Ptx/MaskSelect.lean",
+        "passage": {
+          "quote": "theorem correct (eligible : Eligible target)\n    (run : Run target (program mask) (initial s x y old tail) final status events) :\n    status = .halted \u2227 final.memory = x :: y :: answer x y mask :: tail \u2227\n      events = trace s x y old mask tail := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The kernel loads x and y, overwrites the x register with the masked value,\ncompares that value with zero, selects the result, stores it into the third\nword and exits."
+      },
+      "to": {
+        "path": "Ptx/MaskSelect.lean",
+        "passage": {
+          "quote": "def program (mask : Word) : List ReviewedPure.Instr :=\n  [.scalar loadX, .scalar loadY, ReviewedPure.bitwise (maskI mask), .scalar compareI,\n   ReviewedPure.select selectI, .scalar storeI, .scalar exitI]"
+        }
+      }
+    }
+  ]
+}
