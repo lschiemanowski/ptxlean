@@ -1,9 +1,9 @@
 # Reading the accepted-form ledger
 
-[The ledger](../../coverage/implemented-forms.json) records twenty-five selected accepted
+[The ledger](../../coverage/implemented-forms.json) records twenty-nine selected accepted
 forms. It is separate from the [instruction-section inventory](coverage.md),
 whose `not_assessed` entries are unchanged. Other existing scalar instructions
-are not yet entered here, so even the ledger's twenty-five-form count is not a count of
+are not yet entered here, so even the ledger's twenty-nine-form count is not a count of
 all implemented PTX forms.
 
 | Exact form | Inputs → destination | Meaning | Manual conditions |
@@ -35,7 +35,7 @@ all implemented PTX forms.
 | `prmt.b32` | two data words plus a control word → compatible register | Select four bytes, with optional replication of each selected byte's sign bit; ignore upper sixteen control bits | PTX 2.0; selected step ISA 9.4, SM ≥20 |
 
 Every word input can come from a word register or a 32-bit immediate value.
-The selection predicate is a register. All twenty-five
+The selection predicate is a register. All twenty-nine
 forms support unconditional execution or execution guarded by a positive or
 negated predicate. A false guard advances the program counter without writing
 the destination. Register overlap is allowed: the incoming source value is read
@@ -124,3 +124,9 @@ completed plain form; predicate-producing variants remain outside this leaf.
 The [plain byte-permutation review](prmt-source-review.md) covers byte order,
 sign replication and unrestricted 32-bit control operands. All six specialized
 PRMT modes remain outside this leaf.
+
+The four `shf.l/r.clamp/wrap.b32` forms join two words, shift, and return
+the high half for left or the low half for right. Counts cap at 32 or wrap
+modulo 32. PTX3.1 introduced them; selected steps use ISA9.4 and SM≥32.
+See the [source review](shf-source-review.md) and
+[rotation example](../foundations/funnel-rotation.md).

@@ -11,7 +11,56 @@
     "Admit every unsigned count, capping at 32 in clamp mode or reducing modulo 32 in wrap mode.",
     "Use repeated inputs to verify a register-only rotation kernel with finite execution and preserved memory."
   ],
-  "realization": "unimplemented",
-  "remaining": "Frozen result and execution contracts; worker implementation, independent review, and rotation example are pending.",
-  "links": []
+  "realization": "implemented",
+  "remaining": "Four selected forms and both wrap-mode rotation kernels have complete proofs. Raw-module parsing, register declaration validation, architecture-name validation and hardware correspondence remain excluded.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first source supplies the low half; the second supplies\nthe high half. Left shifts return the high half and right shifts return the low\nhalf. Bits entering the combined value are zero."
+      },
+      "to": {
+        "path": "Ptx/Shf32.lean",
+        "passage": {
+          "quote": "def compute (op : Operation) (a b c : Word) : Word :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A typed decoder accepts exactly a word-register destination\nand three word operands, preserving the true-or-false execution guard."
+      },
+      "to": {
+        "path": "Ptx/Shf32.lean",
+        "passage": {
+          "quote": "theorem decode_iff (statement : Scalar.Text.Statement) (i : Instr) :"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Its result is specified\nby Lean's standard word rotation, for arbitrary input and count."
+      },
+      "to": {
+        "path": "Ptx/FunnelRotation.lean",
+        "passage": {
+          "quote": "theorem compute_rotation (left : Bool) (x count : Word) :"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "It provides a\nfinite execution witness and a correctness result for every completed execution,\nwhile preserving memory and other registers."
+      },
+      "to": {
+        "path": "Ptx/FunnelRotation.lean",
+        "passage": {
+          "quote": "theorem correct (eligible : Eligible target)"
+        }
+      }
+    }
+  ]
 }

@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "worker": {
+    "call": 31,
+    "requested_model": "gpt-6-luna",
+    "reported_models": [],
+    "started_at": "2026-09-25T06:37:23.204886+00:00",
+    "finished_at": "2026-09-25T06:39:49.505776+00:00",
+    "reported_usage": [
+      {
+        "input_tokens": 441754,
+        "cached_input_tokens": 402176,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 4802,
+        "reasoning_output_tokens": 939
+      }
+    ],
+    "patch_sha256": "708d72af7edfe8f7a295761b16d0c647c4909a50c0a732c97c524e2a6d6e3bc0",
+    "elapsed_seconds": 146.30089,
+    "commands_containing_module_build": 2,
+    "failed_commands_containing_module_build": 1,
+    "other_failed_commands": 1
+  },
+  "worker_receipt_sha256": "2da5f781940fac83037a103864e0621fa7d857978ff22315512f13a13d6f9eca",
+  "review": {
+    "schema_version": 1,
+    "state": "completed",
+    "started_at": "2026-09-25T06:40:59.483758+00:00",
+    "requested_model": "z-ai/glm-5.3-flash",
+    "request_sha256": "efca67ac1f96bbcc31ea95a753cbd28ac4f9781938808e18a3de4621a1b398f0",
+    "recipe_sha256": "90c5d2c0b2c78102852a33acc7a4a2357e920e1f95bf80cd0a941548fbdf5069",
+    "packet_sha256": "0b299b55da1e25a73c0ddb0b887299e306c3d9a2e207183d1b82f9e5f58bde05",
+    "helper_sha256": {
+      "check_sources.py": "f71a567e1d6751cd2cf478f0c7346e256e23cc58ec69b487bf653ed7897c85c0",
+      "coverage_inventory.py": "42ed056c0541859cbfa74a8180f4d066c56b3a2e8b0e150852e1c392af554d2b",
+      "worker_run.py": "1e4c3e083d10594b02c9f598d5b6aabf51cfc36cabfc3c986a89c545492f367b"
+    },
+    "runner_sha256": "2e8c065d7cb2647291d915a7e1d80af16c70bf3331b264981af1e6208f415d6a",
+    "reported_model": "z-ai/glm-5.3-flash",
+    "provider": "Together",
+    "usage": {
+      "prompt_tokens": 33528,
+      "completion_tokens": 1414,
+      "total_tokens": 34942,
+      "cost": 0.0057362,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.0057362,
+        "upstream_inference_prompt_cost": 0.0050292,
+        "upstream_inference_completions_cost": 0.000707
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 765,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      }
+    },
+    "reported_cost": 0.0057362,
+    "semantic_acceptance": "not_performed",
+    "timeout_seconds": 300,
+    "total_timeout_seconds": 600.0,
+    "response_sha256": "a2b9d120dbf2745af97a8c72484e6f526f7e3c7c2b7b585c0c1d13933aed413e",
+    "response_id": "gen-1790318459-BCIvPXCgG4G0rz8Iq2DJ",
+    "finish_reason": "stop",
+    "verdict": "accept",
+    "finished_at": "2026-09-25T06:41:15.440502+00:00",
+    "elapsed_seconds": 15.954131972976029
+  },
+  "review_receipt_sha256": "e80ba50004ab0253e2937b826f996c5ce6e4778626594c5a04bb388005d37788",
+  "raw_review_report_sha256": "925854f851282574e620c6f8b94b6b084daf9f6f5d5e6d1e4fc480964f12db2f",
+  "review_adjudication": "Advisory accept with no findings. Reviewer explanatory prose overgeneralizes wrap count zero as returning b; that is true only for left. Right returns a, as candidate, contract and checks all establish. Coordinator reviewed both directions explicitly.",
+  "qualification": "Single assisted-family completion after coordinator checker repair, not an initial all-check pass or a productivity benchmark. Reviewer billing is reported OpenRouter cost only; requested Luna identity is not provider-confirmed. Raw model/manual-bearing material stays local."
+}

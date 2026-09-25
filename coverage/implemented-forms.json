@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Twenty-five reviewed forms: twenty-three integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Twenty-nine reviewed forms: twenty-seven integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": ".ptx-source/9.4/index.html",
@@ -254,6 +254,22 @@
     "prmt_review": {
       "path": "docs/formalization/prmt-source-review.md",
       "sha256": "8447ce39a04c510ecc4140f6adeaed5f9286895c03632afd2dc845962b0000ef"
+    },
+    "shf": {
+      "path": "Ptx/Shf32.lean",
+      "sha256": "94fd4d06ca3aa7f920029413de75ba81c767f67e7f42b5615f7a689e89c7443f"
+    },
+    "shf_acceptance": {
+      "path": "formalization/results/shf-v1/acceptance.json",
+      "sha256": "9cfb81bf3b7b1fff0fa42efe7fa986e26648f781b2da7bc267121a2b5dbd9630"
+    },
+    "shf_evidence": {
+      "path": "formalization/results/shf-v1/evidence-manifest.json",
+      "sha256": "82a5757ee934cac7d9f5b8cd044f50a57d9e850a661a40b459cf159480383e34"
+    },
+    "shf_review": {
+      "path": "docs/formalization/shf-source-review.md",
+      "sha256": "3d431dd3edfae1b9eb5b4b2efa08d7f9e1aa1c8cd42158b6dabc5c22e64f1c0d"
     }
   },
   "source": {
@@ -288,7 +304,8 @@
       "integer-arithmetic-instructions-bfe": "6ccea820651a49ed6bfb67b48e45ed59bbb72d1c8124802a3b075241e1f31781",
       "integer-arithmetic-instructions-bfi": "c3421a98b08fb3057289aa33538967c28314e176281817b5601b66efe8ce4859",
       "logic-and-shift-instructions-lop3": "4a886c092cb648517d3837a5ddb32db49958e3cdfb0d97b374ddd67a46f307cf",
-      "data-movement-and-conversion-instructions-prmt": "0ddf874061fc8aa356ea0e167ec834ea8f28cb69e8623ed99cd8fc2a0fa02b4e"
+      "data-movement-and-conversion-instructions-prmt": "0ddf874061fc8aa356ea0e167ec834ea8f28cb69e8623ed99cd8fc2a0fa02b4e",
+      "logic-and-shift-instructions-shf": "3dbb54947209e5144a5407d03642e7be049776fe90f5a7506965dd2168b3dfd1"
     },
     "common_operand_guard_anchors": [
       "operand-type-information",
@@ -411,6 +428,14 @@
       "patch_member": "attempts/prmt-001/candidate.patch",
       "replay_member": "replays/prmt-001/result.json",
       "patch_sha256": "dcbc1e235c570432da5a2176e382145ae9dd3531ca9315a25bdc0d06c9583436"
+    },
+    "shf": {
+      "acceptance": "shf_acceptance",
+      "evidence": "shf_evidence",
+      "source_review": "shf_review",
+      "patch_member": "attempts/shf-001/candidate.patch",
+      "replay_member": "replays/shf-001/result.json",
+      "patch_sha256": "708d72af7edfe8f7a295761b16d0c647c4909a50c0a732c97c524e2a6d6e3bc0"
     }
   },
   "forms": [
@@ -4315,6 +4340,678 @@
         {
           "file": "prmt",
           "namespace": "Ptx.Scalar.Prmt32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "shf.l.clamp.b32",
+      "status": "accepted",
+      "trial": "shf",
+      "source_anchor": "logic-and-shift-instructions-shf",
+      "ptx_minimum": "3.1",
+      "target": "sm_32 feature floor; not target-name validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 32 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit low source or already converted immediate",
+          "compatible declared 32-bit high source or already converted immediate",
+          "unsigned 32-bit runtime count, register or already converted immediate; every bit pattern admitted"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Return high32 of joined64 value shifted left. First source is low half, second high half; count caps at32.",
+      "boundary": "Four exact b32 funnel-shift spellings, ISA94 and numeric SM >=32. No raw module/declaration or target-name validation, no hardware correspondence.",
+      "semantics": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "compute"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "family"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "compute_leftClamp"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "results_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_other"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_event"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_origin"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_exists"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "shf.l.wrap.b32",
+      "status": "accepted",
+      "trial": "shf",
+      "source_anchor": "logic-and-shift-instructions-shf",
+      "ptx_minimum": "3.1",
+      "target": "sm_32 feature floor; not target-name validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 32 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit low source or already converted immediate",
+          "compatible declared 32-bit high source or already converted immediate",
+          "unsigned 32-bit runtime count, register or already converted immediate; every bit pattern admitted"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Return high32 of joined64 value shifted left. First source is low half, second high half; count reduces modulo32.",
+      "boundary": "Four exact b32 funnel-shift spellings, ISA94 and numeric SM >=32. No raw module/declaration or target-name validation, no hardware correspondence.",
+      "semantics": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "compute"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "family"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "compute_leftWrap"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "results_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_other"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_event"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_origin"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_exists"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "shf.r.clamp.b32",
+      "status": "accepted",
+      "trial": "shf",
+      "source_anchor": "logic-and-shift-instructions-shf",
+      "ptx_minimum": "3.1",
+      "target": "sm_32 feature floor; not target-name validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 32 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit low source or already converted immediate",
+          "compatible declared 32-bit high source or already converted immediate",
+          "unsigned 32-bit runtime count, register or already converted immediate; every bit pattern admitted"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Return low32 of joined64 value shifted right. First source is low half, second high half; count caps at32.",
+      "boundary": "Four exact b32 funnel-shift spellings, ISA94 and numeric SM >=32. No raw module/declaration or target-name validation, no hardware correspondence.",
+      "semantics": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "compute"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "family"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "compute_rightClamp"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "results_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_other"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_event"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_origin"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_exists"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower_operation"
+        }
+      ]
+    },
+    {
+      "spelling": "shf.r.wrap.b32",
+      "status": "accepted",
+      "trial": "shf",
+      "source_anchor": "logic-and-shift-instructions-shf",
+      "ptx_minimum": "3.1",
+      "target": "sm_32 feature floor; not target-name validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 32 <= target.sm",
+      "operands": {
+        "destination": "compatible 32-bit word register",
+        "sources": [
+          "compatible declared 32-bit low source or already converted immediate",
+          "compatible declared 32-bit high source or already converted immediate",
+          "unsigned 32-bit runtime count, register or already converted immediate; every bit pattern admitted"
+        ],
+        "aliasing": "Incoming source values; unrestricted source/destination overlap and repeated operands."
+      },
+      "guard": "Unconditional, positive or negative predicate; skipped execution advances PC and emits guard-only read metadata.",
+      "meaning": "Return low32 of joined64 value shifted right. First source is low half, second high half; count reduces modulo32.",
+      "boundary": "Four exact b32 funnel-shift spellings, ISA94 and numeric SM >=32. No raw module/declaration or target-name validation, no hardware correspondence.",
+      "semantics": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "compute"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "family"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "occurrence"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Eval"
+        },
+        {
+          "file": "pure32",
+          "namespace": "Ptx.Scalar.Pure32",
+          "name": "Step"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "encode"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "compute_rightWrap"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "results_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "lower_fields"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_destination"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_frame"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_other"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_event"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_deterministic"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "eval_exists"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_origin"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_exists"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32.Text",
+          "name": "decode_iff"
+        },
+        {
+          "file": "shf",
+          "namespace": "Ptx.Scalar.Shf32",
           "name": "lower_operation"
         }
       ]

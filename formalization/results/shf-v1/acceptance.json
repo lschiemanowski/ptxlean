@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "task": "shf-v1",
+  "selected_forms": [
+    "shf.l.clamp.b32",
+    "shf.l.wrap.b32",
+    "shf.r.clamp.b32",
+    "shf.r.wrap.b32"
+  ],
+  "base_commit": "9ac36dc1b3cbd5a6c3f3885fa706d522c99a9b3f",
+  "accepted_patch_sha256": "708d72af7edfe8f7a295761b16d0c647c4909a50c0a732c97c524e2a6d6e3bc0",
+  "worker_attempt": "shf-001",
+  "mechanical_replay": "replays/shf-001/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "Exact worker candidate; combined checks recorded by Stratic.",
+  "reviewer": "Coordinator source/statement inspection, fresh clean replay and separate GLM advisory accept.",
+  "source_conditions": {
+    "ptx_minimum": "3.1",
+    "target_minimum": "sm_32 feature floor; not target-name validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "logic-and-shift-instructions-shf"
+    ]
+  },
+  "trial_invocations": 1,
+  "repair_invocations": 0,
+  "campaign_call_numbers": [
+    31
+  ],
+  "qualification": "One invocation, unchanged candidate. Initial full universal driver passed, frozen concrete v1 failed because of coordinator checker defects. Concrete v2 removes accidentally copied PRMT cases, supplies an explicit target inequality type and uses definitional equality instead of unavailable Decidable instances. Original v1 and worker failure report retained. No semantic equation or worker implementation changed. Complete equations supplied; this is not independent unsupervised semantic discovery."
+}

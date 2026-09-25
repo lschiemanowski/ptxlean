@@ -69,7 +69,7 @@ required by the general execution model.
 
 [`ReviewedPure.lean`](../../Ptx/ReviewedPure.lean) supplies the current bitwise,
 unary, selection, signed min/max, shift, bit-reversal, high-half multiplication,
-bit-field extraction/insertion, three-input truth-table logic and byte permutation
+bit-field extraction/insertion, three-input truth-table logic, byte permutation and funnel shifts
 families. Each adapter uses the
 original leaf's lowering and results directly. Its bitwise correspondence proves
 both directions of state-step agreement with the older scalar operations and
@@ -108,3 +108,7 @@ remain separate evidence.
 The [array walkthrough](array-mask-select.md) extends this computation to an
 in-place loop of arbitrary bounded length, with preserved surrounding memory
 and a proof excluding infinite instruction executions.
+
+The [funnel-rotation study](funnel-rotation.md) connects an in-place register
+computation to standard word rotations, with arbitrary runtime counts, a completed
+execution witness, and no memory accesses.

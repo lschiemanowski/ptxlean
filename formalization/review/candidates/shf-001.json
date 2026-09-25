@@ -1,0 +1,110 @@
+{
+  "base_commit": "9ac36dc1b3cbd5a6c3f3885fa706d522c99a9b3f",
+  "files": [
+    {
+      "path": "Ptx/Shf32.lean",
+      "role": "candidate",
+      "sha256": "94fd4d06ca3aa7f920029413de75ba81c767f67e7f42b5615f7a689e89c7443f"
+    },
+    {
+      "path": "Ptx/Pure32.lean",
+      "role": "support",
+      "sha256": "02eb8b1cb85b2d40f7e0befe65a75be57ae91cff09e6c2a78ad9c6e04ca98fd5"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "role": "support",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "role": "support",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Language.lean",
+      "role": "support",
+      "sha256": "5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "role": "support",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    },
+    {
+      "path": "Ptx/BitVecProof.lean",
+      "role": "support",
+      "sha256": "50d1eb2c6e97f8ebc86e2235506f26b1b64c04807543ff18c2a67e10d208bdc5"
+    }
+  ],
+  "obligations": [
+    {
+      "id": "meaning",
+      "text": "Four shf forms: l/r times clamp/wrap, b32 only. First source is low half, second high half. Left returns high32 after shifting joined64 value left; right returns low32 after logical right shift. Unsigned32 count uses min(count,32) in clamp, modulo32 in wrap. At clamp32 left returns first source and right returns second; wrap32 is count0. PTX3.1 introduction, SM32 floor. All bit patterns allowed."
+    },
+    {
+      "id": "state",
+      "text": "Evaluate sources in the incoming state before writing the destination; permit repeated sources and source/destination aliases. Only the selected word register and incremented program counter change."
+    },
+    {
+      "id": "guards",
+      "text": "Both positive and negative instruction guards are supported. A false guard skips the write and advances only the program counter. The selected operations have no additional predicate operands."
+    },
+    {
+      "id": "events",
+      "text": "The occurrence identifies the fetched instruction and original program counter. Enabled syntactic reads include guard then word operands then predicate operands, retaining repeats. Disabled instructions read only the guard. No memory effect is claimed."
+    },
+    {
+      "id": "target",
+      "text": "ISA exactly94, numeric SM at least32 including skipped instructions. Numeric feature floor, not target-name validation."
+    },
+    {
+      "id": "decoder",
+      "text": "Exactly shf.l.clamp.b32, shf.l.wrap.b32, shf.r.clamp.b32, shf.r.wrap.b32. Word-register destination then first, second, count word operands, each source register or converted immediate. Preserve guard, distinguish invalid operands from unsupported names. Decode succeeds iff exact encoding. No raw-module or declaration validation."
+    },
+    {
+      "id": "proofs",
+      "text": "Universal transition, frame, deterministic result, one-step existence and origin theorems must follow the actual definitions without excluding aliases or input bit patterns. Absence of raw module parsing, declared-register checking and whole-kernel termination is within the deliberate scope."
+    }
+  ],
+  "patch": {
+    "path": "formalization/review/candidates/shf-001.patch",
+    "sha256": "708d72af7edfe8f7a295761b16d0c647c4909a50c0a732c97c524e2a6d6e3bc0"
+  },
+  "schema_version": 1,
+  "scope": "Four 32-bit funnel-shift forms, exact selected ISA94. Worker chooses computation under supplied result equations. No raw module validation, whole-kernel execution or hardware-conformance claim in this leaf. Fixed support unchanged.",
+  "sections": [
+    {
+      "anchor": "predicated-execution",
+      "sha256": "e3de38b106e96f1ccdd8c7710b2efbaa5ea2bde35959da999d2075a12162dd1f"
+    },
+    {
+      "anchor": "instruction-statements",
+      "sha256": "4975c445c073e1c4b1c9dcf32f9fa11d1b31b138b342afa4745efddeb13e405a"
+    },
+    {
+      "anchor": "operand-type-information",
+      "sha256": "2b4deb7a2de0f26463be8ea631b19d3262067641e45c4ca98261b61ff73945a7"
+    },
+    {
+      "anchor": "source-operands",
+      "sha256": "a981cf489133f764d2b9d621b4653ead71abb7709a83a323eccb55bddb8b6fa2"
+    },
+    {
+      "anchor": "destination-operands",
+      "sha256": "46d9e524f958b92cb45b9d9c7113b315e3b44eaf6a69f5af707bb055c5ee6a70"
+    },
+    {
+      "anchor": "integer-constants",
+      "sha256": "d7a625de2e4a872a173e18cde51b2c3475cb2e37a811700332dbf9292713a9f2"
+    },
+    {
+      "anchor": "type-information-for-instructions-and-operands",
+      "sha256": "1191421bc4f06fb7dd96d159cf38c7396851b95257247d2a9c68f54d99f4ad78"
+    },
+    {
+      "anchor": "logic-and-shift-instructions-shf",
+      "sha256": "3dbb54947209e5144a5407d03642e7be049776fe90f5a7506965dd2168b3dfd1"
+    }
+  ]
+}

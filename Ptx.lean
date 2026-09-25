@@ -1,3 +1,5 @@
+import Ptx.FunnelRotation
+import Ptx.Shf32
 import Ptx.Prmt32
 import Ptx.Lop3
 import Ptx.BitVecProof

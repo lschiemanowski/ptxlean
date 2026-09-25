@@ -1,0 +1,207 @@
+{
+  "id": "93b1a81c-8445-4569-9b40-1d5e58ac88ca",
+  "base": "9ac36dc1b3cbd5a6c3f3885fa706d522c99a9b3f",
+  "contentTree": "ec00dd699d24842085027fa4e2ac6d07ef2fdbe0",
+  "reviewer": "Codex coordinator",
+  "summary": "Accept four funnel-shift forms and verified in-place rotation kernels.",
+  "examined": [
+    {
+      "id": "shf",
+      "outcome": "revised",
+      "reason": "Four all-input funnel-shift forms accepted from unchanged worker patch; standard left/right rotation kernel witness, correctness and frame proofs, with explicit leaf SM32 versus combined-kernel SM70 conditions."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "29 selected accepted forms with exact source, patch, replay, review and definition hashes; four new spellings have full-word unsigned counts."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "revised",
+      "reason": "Records one invocation with initial universal pass and concrete-check failure; coordinator repaired checker v2 without candidate edits or weakening equations. No claim of initial all-check success or independent unsupervised discovery."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "Three incoming words and no additional predicates instantiate the existing pure-family contract; no shared execution changes."
+    },
+    {
+      "id": "pure-kernel",
+      "outcome": "unchanged",
+      "reason": "Catalog adds the exact leaf relation and preserves functional catalog proof. New example uses existing Run, exit and target restrictions without new assumptions or execution rules."
+    },
+    {
+      "id": "bitvector-proofs",
+      "outcome": "unchanged",
+      "reason": "No toolkit change or causal claim about its utility."
+    },
+    {
+      "id": "mask-select",
+      "outcome": "unchanged",
+      "reason": "Existing computation, proofs and state effects unchanged."
+    },
+    {
+      "id": "array-mask-select",
+      "outcome": "unchanged",
+      "reason": "Existing loop/existence/termination proofs and example rechecked under extended catalog."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "State, memory, branching and existing scalar instruction rules unchanged."
+    },
+    {
+      "id": "message-passing",
+      "outcome": "unchanged",
+      "reason": "Audit additions only; concurrent semantics and results unchanged."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Adds a bounded pure family and register-only example; no broader memory model, launch or hardware claims."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "Section inventory remains unassessed; selected spelling count does not imply whole-section coverage."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Source fidelity, kernel validity and hardware correspondence remain distinct. Three self-proved wrong models rejected by independent checks."
+    },
+    {
+      "id": "model-review",
+      "outcome": "unchanged",
+      "reason": "Existing GLM route and settings used once. Advisory accept retained; coordinator corrected reviewer prose about right-shift count zero."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "ec00dd699d24842085027fa4e2ac6d07ef2fdbe0",
+      "method": "bash scripts/check.sh; full frozen universal driver and corrected concrete v2; fresh worker replay; independent GLM plus coordinator source/statement review; three compiling/audited semantic mutants; rotation and array examples; TorchLean integration; input/candidate hash verification; Stratic validation and whitespace check",
+      "outcome": "pass",
+      "environment": "Linux, pinned Lean4.34.0, hash-verified local PTX ISA9.4 source; final checks make no model calls.",
+      "evidence": "Exact pre/post tree equality. Root checks pass with 1643 dependency reports using only standard Lean axioms, 29 accepted forms, 1477 evidence members in19 archives, 106 worker regressions,26 ledger regressions and7 inventory checks. TorchLean integration passes363 exact dependency reports. All21 frozen universal obligations and corrected concrete v2 pass on byte-identical worker output; all original task inputs unchanged. One Luna invocation: universal driver passed, original concrete v1 failed on coordinator checker defects, preserved and corrected in v2 without changing semantic laws or candidate. Fresh replay and full public declaration audit pass. Three self-proved faulty modules compile/audit but are rejected by both external drivers. GLM accept is advisory; coordinator corrected its imprecise count-zero explanation. Rotation kernels match standard BitVec rotations for arbitrary word/count, have real halting witnesses, all-completed-run correctness, repeated-read metadata and full memory/other-register preservation. Example produces878082066,2014458966,878082066,305419896 and[17,23]; existing array example remains[52,99,99,255] and[]. Leaf floor SM32 versus combined-kernel SM70 explicit. Typed input/declaration/launch/hardware restrictions retained. Publication guard and Stratic validation pass.",
+      "tests": [],
+      "id": "babee818-9936-438d-8a10-6df21d7328ad",
+      "recordedAt": "2026-09-25T06:50:39.152Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T06:50:56.664Z",
+  "unmapped": [
+    {
+      "path": "Ptx/FunnelRotation.lean",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "Ptx/Shf32.lean",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "docs/formalization/shf-source-review.md",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "docs/foundations/funnel-rotation.md",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "examples/funnel_rotation.lean",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/checks/shf-concrete-v2.lean",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/results/shf-v1/README.md",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/results/shf-v1/acceptance.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/results/shf-v1/effort.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/results/shf-v1/evidence-manifest.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/results/shf-v1/run.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/results/shf-v1/worker-evidence.tar.gz",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/shf-001.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/review/candidates/shf-001.patch",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/review/check_shf_v1.py",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "formalization/tasks/shf-v1.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "Ptx.lean",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "Ptx/Audit.lean",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "Ptx/ReviewedPure.lean",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "docs/formalization/implemented-forms.md",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "docs/foundations/pure-kernels.md",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/model-formalization.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/shf.json",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "stratic/descriptions/shf.md",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Reviewed exact leaf/canonical rotation composition, dependency audit, corrected checker with original failure retained, reproducible mutation probes, task/review/archive evidence, documentation or ledger mapping. No broader semantic or hardware claim."
+    }
+  ]
+}

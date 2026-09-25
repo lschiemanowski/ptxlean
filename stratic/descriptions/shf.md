@@ -16,7 +16,10 @@ register twice and overwrites that register, then exits. Its result is specified
 by Lean's standard word rotation, for arbitrary input and count. It provides a
 finite execution witness and a correctness result for every completed execution,
 while preserving memory and other registers. It models a sequential register-only
-kernel; there is no device launch or hardware-conformance claim.
+kernel. Register 0 contains the word and receives the result; register 1 contains
+the runtime count. The example inherits the existing combined-kernel interface's
+ISA9.4 and SM70 floor, which is stricter than this instruction's SM32 floor.
+There is no device launch or hardware-conformance claim.
 
 The four spellings are `shf.l.clamp.b32`, `shf.l.wrap.b32`, `shf.r.clamp.b32`
 and `shf.r.wrap.b32`. A typed decoder accepts exactly a word-register destination
