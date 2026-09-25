@@ -3,174 +3,174 @@
 <title>Ptx/ScalarText.lean · PTXLean</title><link rel="stylesheet" href="../style.css">
 <script src="../search.js" defer></script></head>
 <body class="code-source"><header><a href="../index.html"><strong>PTXLEAN</strong> / Instruction reference</a><span>PTX ISA 9.4 · Lean 4.34.0</span></header>
-<main><p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>Ptx/ScalarText.lean</h1><p><small>SHA-256 <code>ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91</code></small></p><pre><code><span class="code-line" id="L1"><a class="line-number" href="#L1">1</a>import Ptx.Scalar</span>
+<main><p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>Ptx/ScalarText.lean</h1><p><small>SHA-256 <code>ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91</code></small></p><pre><code><span class="code-line" id="L1"><a class="line-number" href="#L1">1</a><span class="syntax-keyword">import</span> Ptx.Scalar</span>
 <span class="code-line" id="L2"><a class="line-number" href="#L2">2</a></span>
-<span class="code-line" id="L3"><a class="line-number" href="#L3">3</a>set_option maxHeartbeats 1000000</span>
+<span class="code-line" id="L3"><a class="line-number" href="#L3">3</a><span class="syntax-keyword">set_option</span> maxHeartbeats <span class="syntax-number">1000000</span></span>
 <span class="code-line" id="L4"><a class="line-number" href="#L4">4</a></span>
-<span class="code-line" id="L5"><a class="line-number" href="#L5">5</a>/-!</span>
-<span class="code-line" id="L6"><a class="line-number" href="#L6">6</a># Typed mnemonic boundary</span>
+<span class="code-line" id="L5"><a class="line-number" href="#L5">5</a><span class="syntax-comment">/-!</span></span>
+<span class="code-line" id="L6"><a class="line-number" href="#L6">6</a><span class="syntax-comment"># Typed mnemonic boundary</span></span>
 <span class="code-line" id="L7"><a class="line-number" href="#L7">7</a></span>
-<span class="code-line" id="L8"><a class="line-number" href="#L8">8</a>This decoder consumes a mnemonic and already-tokenized, typed operands. It is not</span>
-<span class="code-line" id="L9"><a class="line-number" href="#L9">9</a>a raw PTX lexer/parser, module parser, register-declaration checker, or label</span>
-<span class="code-line" id="L10"><a class="line-number" href="#L10">10</a>resolver. `label` carries a resolved instruction index. Canonical encoding has a</span>
-<span class="code-line" id="L11"><a class="line-number" href="#L11">11</a>checked round trip for every supported instruction, including its predicate.</span>
-<span class="code-line" id="L12"><a class="line-number" href="#L12">12</a>-/</span>
-<span class="code-line" id="L13"><a class="line-number" href="#L13">13</a>namespace Ptx.Scalar.Text</span>
+<span class="code-line" id="L8"><a class="line-number" href="#L8">8</a><span class="syntax-comment">This decoder consumes a mnemonic and already-tokenized, typed operands. It is not</span></span>
+<span class="code-line" id="L9"><a class="line-number" href="#L9">9</a><span class="syntax-comment">a raw PTX lexer/parser, module parser, register-declaration checker, or label</span></span>
+<span class="code-line" id="L10"><a class="line-number" href="#L10">10</a><span class="syntax-comment">resolver. `label` carries a resolved instruction index. Canonical encoding has a</span></span>
+<span class="code-line" id="L11"><a class="line-number" href="#L11">11</a><span class="syntax-comment">checked round trip for every supported instruction, including its predicate.</span></span>
+<span class="code-line" id="L12"><a class="line-number" href="#L12">12</a><span class="syntax-comment">-/</span></span>
+<span class="code-line" id="L13"><a class="line-number" href="#L13">13</a><span class="syntax-keyword">namespace</span> Ptx.Scalar.Text</span>
 <span class="code-line" id="L14"><a class="line-number" href="#L14">14</a></span>
-<span class="code-line" id="L15"><a class="line-number" href="#L15">15</a>inductive Token where</span>
-<span class="code-line" id="L16"><a class="line-number" href="#L16">16</a>  | word (operand : Operand32)</span>
-<span class="code-line" id="L17"><a class="line-number" href="#L17">17</a>  | address (operand : Operand64)</span>
-<span class="code-line" id="L18"><a class="line-number" href="#L18">18</a>  | predicate (index : Nat)</span>
-<span class="code-line" id="L19"><a class="line-number" href="#L19">19</a>  | memory (address : Operand64)</span>
-<span class="code-line" id="L20"><a class="line-number" href="#L20">20</a>  | label (resolvedPC : Nat)</span>
-<span class="code-line" id="L21"><a class="line-number" href="#L21">21</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L15"><a class="line-number" href="#L15">15</a><span class="syntax-keyword">inductive</span> Token <span class="syntax-keyword">where</span></span>
+<span class="code-line" id="L16"><a class="line-number" href="#L16">16</a>  <span class="syntax-operator">|</span> word (operand <span class="syntax-operator">:</span> Operand32)</span>
+<span class="code-line" id="L17"><a class="line-number" href="#L17">17</a>  <span class="syntax-operator">|</span> address (operand <span class="syntax-operator">:</span> Operand64)</span>
+<span class="code-line" id="L18"><a class="line-number" href="#L18">18</a>  <span class="syntax-operator">|</span> predicate (index <span class="syntax-operator">:</span> Nat)</span>
+<span class="code-line" id="L19"><a class="line-number" href="#L19">19</a>  <span class="syntax-operator">|</span> memory (address <span class="syntax-operator">:</span> Operand64)</span>
+<span class="code-line" id="L20"><a class="line-number" href="#L20">20</a>  <span class="syntax-operator">|</span> label (resolvedPC <span class="syntax-operator">:</span> Nat)</span>
+<span class="code-line" id="L21"><a class="line-number" href="#L21">21</a>  <span class="syntax-keyword">deriving</span> DecidableEq, Repr</span>
 <span class="code-line" id="L22"><a class="line-number" href="#L22">22</a></span>
-<span class="code-line" id="L23"><a class="line-number" href="#L23">23</a>structure Statement where</span>
-<span class="code-line" id="L24"><a class="line-number" href="#L24">24</a>  guard : Guard := .always</span>
-<span class="code-line" id="L25"><a class="line-number" href="#L25">25</a>  mnemonic : String</span>
-<span class="code-line" id="L26"><a class="line-number" href="#L26">26</a>  operands : List Token</span>
-<span class="code-line" id="L27"><a class="line-number" href="#L27">27</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L23"><a class="line-number" href="#L23">23</a><span class="syntax-keyword">structure</span> Statement <span class="syntax-keyword">where</span></span>
+<span class="code-line" id="L24"><a class="line-number" href="#L24">24</a>  guard <span class="syntax-operator">:</span> Guard <span class="syntax-operator">:=</span> .always</span>
+<span class="code-line" id="L25"><a class="line-number" href="#L25">25</a>  mnemonic <span class="syntax-operator">:</span> String</span>
+<span class="code-line" id="L26"><a class="line-number" href="#L26">26</a>  operands <span class="syntax-operator">:</span> List Token</span>
+<span class="code-line" id="L27"><a class="line-number" href="#L27">27</a>  <span class="syntax-keyword">deriving</span> DecidableEq, Repr</span>
 <span class="code-line" id="L28"><a class="line-number" href="#L28">28</a></span>
-<span class="code-line" id="L29"><a class="line-number" href="#L29">29</a>inductive DecodeError where</span>
-<span class="code-line" id="L30"><a class="line-number" href="#L30">30</a>  | unsupportedMnemonic (mnemonic : String)</span>
-<span class="code-line" id="L31"><a class="line-number" href="#L31">31</a>  | invalidOperands (mnemonic : String)</span>
-<span class="code-line" id="L32"><a class="line-number" href="#L32">32</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L29"><a class="line-number" href="#L29">29</a><span class="syntax-keyword">inductive</span> DecodeError <span class="syntax-keyword">where</span></span>
+<span class="code-line" id="L30"><a class="line-number" href="#L30">30</a>  <span class="syntax-operator">|</span> unsupportedMnemonic (mnemonic <span class="syntax-operator">:</span> String)</span>
+<span class="code-line" id="L31"><a class="line-number" href="#L31">31</a>  <span class="syntax-operator">|</span> invalidOperands (mnemonic <span class="syntax-operator">:</span> String)</span>
+<span class="code-line" id="L32"><a class="line-number" href="#L32">32</a>  <span class="syntax-keyword">deriving</span> DecidableEq, Repr</span>
 <span class="code-line" id="L33"><a class="line-number" href="#L33">33</a></span>
-<span class="code-line" id="L34"><a class="line-number" href="#L34">34</a>def binMnemonic : BinOp → String</span>
-<span class="code-line" id="L35"><a class="line-number" href="#L35">35</a>  | .add =&gt; &quot;add.u32&quot;</span>
-<span class="code-line" id="L36"><a class="line-number" href="#L36">36</a>  | .sub =&gt; &quot;sub.u32&quot;</span>
-<span class="code-line" id="L37"><a class="line-number" href="#L37">37</a>  | .mulLo =&gt; &quot;mul.lo.u32&quot;</span>
-<span class="code-line" id="L38"><a class="line-number" href="#L38">38</a>  | .and =&gt; &quot;and.b32&quot;</span>
-<span class="code-line" id="L39"><a class="line-number" href="#L39">39</a>  | .or =&gt; &quot;or.b32&quot;</span>
-<span class="code-line" id="L40"><a class="line-number" href="#L40">40</a>  | .xor =&gt; &quot;xor.b32&quot;</span>
-<span class="code-line" id="L41"><a class="line-number" href="#L41">41</a>  | .shl =&gt; &quot;shl.b32&quot;</span>
-<span class="code-line" id="L42"><a class="line-number" href="#L42">42</a>  | .shr =&gt; &quot;shr.u32&quot;</span>
-<span class="code-line" id="L43"><a class="line-number" href="#L43">43</a>  | .minU =&gt; &quot;min.u32&quot;</span>
-<span class="code-line" id="L44"><a class="line-number" href="#L44">44</a>  | .maxU =&gt; &quot;max.u32&quot;</span>
+<span class="code-line" id="L34"><a class="line-number" href="#L34">34</a><span class="syntax-keyword">def</span> binMnemonic <span class="syntax-operator">:</span> BinOp <span class="syntax-operator">→</span> String</span>
+<span class="code-line" id="L35"><a class="line-number" href="#L35">35</a>  <span class="syntax-operator">|</span> .add <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;add.u32&quot;</span></span>
+<span class="code-line" id="L36"><a class="line-number" href="#L36">36</a>  <span class="syntax-operator">|</span> .sub <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;sub.u32&quot;</span></span>
+<span class="code-line" id="L37"><a class="line-number" href="#L37">37</a>  <span class="syntax-operator">|</span> .mulLo <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;mul.lo.u32&quot;</span></span>
+<span class="code-line" id="L38"><a class="line-number" href="#L38">38</a>  <span class="syntax-operator">|</span> .and <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;and.b32&quot;</span></span>
+<span class="code-line" id="L39"><a class="line-number" href="#L39">39</a>  <span class="syntax-operator">|</span> .or <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;or.b32&quot;</span></span>
+<span class="code-line" id="L40"><a class="line-number" href="#L40">40</a>  <span class="syntax-operator">|</span> .xor <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;xor.b32&quot;</span></span>
+<span class="code-line" id="L41"><a class="line-number" href="#L41">41</a>  <span class="syntax-operator">|</span> .shl <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;shl.b32&quot;</span></span>
+<span class="code-line" id="L42"><a class="line-number" href="#L42">42</a>  <span class="syntax-operator">|</span> .shr <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;shr.u32&quot;</span></span>
+<span class="code-line" id="L43"><a class="line-number" href="#L43">43</a>  <span class="syntax-operator">|</span> .minU <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;min.u32&quot;</span></span>
+<span class="code-line" id="L44"><a class="line-number" href="#L44">44</a>  <span class="syntax-operator">|</span> .maxU <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;max.u32&quot;</span></span>
 <span class="code-line" id="L45"><a class="line-number" href="#L45">45</a></span>
-<span class="code-line" id="L46"><a class="line-number" href="#L46">46</a>def unaryMnemonic : UnaryOp → String</span>
-<span class="code-line" id="L47"><a class="line-number" href="#L47">47</a>  | .clz =&gt; &quot;clz.b32&quot;</span>
-<span class="code-line" id="L48"><a class="line-number" href="#L48">48</a>  | .popc =&gt; &quot;popc.b32&quot;</span>
+<span class="code-line" id="L46"><a class="line-number" href="#L46">46</a><span class="syntax-keyword">def</span> unaryMnemonic <span class="syntax-operator">:</span> UnaryOp <span class="syntax-operator">→</span> String</span>
+<span class="code-line" id="L47"><a class="line-number" href="#L47">47</a>  <span class="syntax-operator">|</span> .clz <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;clz.b32&quot;</span></span>
+<span class="code-line" id="L48"><a class="line-number" href="#L48">48</a>  <span class="syntax-operator">|</span> .popc <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;popc.b32&quot;</span></span>
 <span class="code-line" id="L49"><a class="line-number" href="#L49">49</a></span>
-<span class="code-line" id="L50"><a class="line-number" href="#L50">50</a>def compareMnemonic : Compare → String</span>
-<span class="code-line" id="L51"><a class="line-number" href="#L51">51</a>  | .eq =&gt; &quot;setp.eq.u32&quot;</span>
-<span class="code-line" id="L52"><a class="line-number" href="#L52">52</a>  | .ne =&gt; &quot;setp.ne.u32&quot;</span>
-<span class="code-line" id="L53"><a class="line-number" href="#L53">53</a>  | .lt =&gt; &quot;setp.lt.u32&quot;</span>
-<span class="code-line" id="L54"><a class="line-number" href="#L54">54</a>  | .le =&gt; &quot;setp.le.u32&quot;</span>
-<span class="code-line" id="L55"><a class="line-number" href="#L55">55</a>  | .gt =&gt; &quot;setp.gt.u32&quot;</span>
-<span class="code-line" id="L56"><a class="line-number" href="#L56">56</a>  | .ge =&gt; &quot;setp.ge.u32&quot;</span>
+<span class="code-line" id="L50"><a class="line-number" href="#L50">50</a><span class="syntax-keyword">def</span> compareMnemonic <span class="syntax-operator">:</span> Compare <span class="syntax-operator">→</span> String</span>
+<span class="code-line" id="L51"><a class="line-number" href="#L51">51</a>  <span class="syntax-operator">|</span> .eq <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;setp.eq.u32&quot;</span></span>
+<span class="code-line" id="L52"><a class="line-number" href="#L52">52</a>  <span class="syntax-operator">|</span> .ne <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;setp.ne.u32&quot;</span></span>
+<span class="code-line" id="L53"><a class="line-number" href="#L53">53</a>  <span class="syntax-operator">|</span> .lt <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;setp.lt.u32&quot;</span></span>
+<span class="code-line" id="L54"><a class="line-number" href="#L54">54</a>  <span class="syntax-operator">|</span> .le <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;setp.le.u32&quot;</span></span>
+<span class="code-line" id="L55"><a class="line-number" href="#L55">55</a>  <span class="syntax-operator">|</span> .gt <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;setp.gt.u32&quot;</span></span>
+<span class="code-line" id="L56"><a class="line-number" href="#L56">56</a>  <span class="syntax-operator">|</span> .ge <span class="syntax-operator">=&gt;</span> <span class="syntax-string">&quot;setp.ge.u32&quot;</span></span>
 <span class="code-line" id="L57"><a class="line-number" href="#L57">57</a></span>
-<span class="code-line" id="L58"><a class="line-number" href="#L58">58</a>def supportedMnemonic (mnemonic : String) : Bool :=</span>
-<span class="code-line" id="L59"><a class="line-number" href="#L59">59</a>  mnemonic ∈ [&quot;mov.b32&quot;, &quot;add.u32&quot;, &quot;sub.u32&quot;, &quot;mul.lo.u32&quot;, &quot;and.b32&quot;, &quot;or.b32&quot;, &quot;xor.b32&quot;,</span>
-<span class="code-line" id="L60"><a class="line-number" href="#L60">60</a>    &quot;shl.b32&quot;, &quot;shr.u32&quot;, &quot;min.u32&quot;, &quot;max.u32&quot;, &quot;clz.b32&quot;, &quot;popc.b32&quot;, &quot;mov.b64&quot;, &quot;add.u64&quot;, &quot;cvt.u64.u32&quot;, &quot;setp.eq.u32&quot;, &quot;setp.ne.u32&quot;,</span>
-<span class="code-line" id="L61"><a class="line-number" href="#L61">61</a>    &quot;setp.lt.u32&quot;, &quot;setp.le.u32&quot;, &quot;setp.gt.u32&quot;, &quot;setp.ge.u32&quot;,</span>
-<span class="code-line" id="L62"><a class="line-number" href="#L62">62</a>    &quot;ld.relaxed.gpu.global.u32&quot;, &quot;st.relaxed.gpu.global.u32&quot;, &quot;bra&quot;, &quot;exit&quot;]</span>
+<span class="code-line" id="L58"><a class="line-number" href="#L58">58</a><span class="syntax-keyword">def</span> supportedMnemonic (mnemonic <span class="syntax-operator">:</span> String) <span class="syntax-operator">:</span> Bool <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L59"><a class="line-number" href="#L59">59</a>  mnemonic <span class="syntax-operator">∈</span> [<span class="syntax-string">&quot;mov.b32&quot;</span>, <span class="syntax-string">&quot;add.u32&quot;</span>, <span class="syntax-string">&quot;sub.u32&quot;</span>, <span class="syntax-string">&quot;mul.lo.u32&quot;</span>, <span class="syntax-string">&quot;and.b32&quot;</span>, <span class="syntax-string">&quot;or.b32&quot;</span>, <span class="syntax-string">&quot;xor.b32&quot;</span>,</span>
+<span class="code-line" id="L60"><a class="line-number" href="#L60">60</a>    <span class="syntax-string">&quot;shl.b32&quot;</span>, <span class="syntax-string">&quot;shr.u32&quot;</span>, <span class="syntax-string">&quot;min.u32&quot;</span>, <span class="syntax-string">&quot;max.u32&quot;</span>, <span class="syntax-string">&quot;clz.b32&quot;</span>, <span class="syntax-string">&quot;popc.b32&quot;</span>, <span class="syntax-string">&quot;mov.b64&quot;</span>, <span class="syntax-string">&quot;add.u64&quot;</span>, <span class="syntax-string">&quot;cvt.u64.u32&quot;</span>, <span class="syntax-string">&quot;setp.eq.u32&quot;</span>, <span class="syntax-string">&quot;setp.ne.u32&quot;</span>,</span>
+<span class="code-line" id="L61"><a class="line-number" href="#L61">61</a>    <span class="syntax-string">&quot;setp.lt.u32&quot;</span>, <span class="syntax-string">&quot;setp.le.u32&quot;</span>, <span class="syntax-string">&quot;setp.gt.u32&quot;</span>, <span class="syntax-string">&quot;setp.ge.u32&quot;</span>,</span>
+<span class="code-line" id="L62"><a class="line-number" href="#L62">62</a>    <span class="syntax-string">&quot;ld.relaxed.gpu.global.u32&quot;</span>, <span class="syntax-string">&quot;st.relaxed.gpu.global.u32&quot;</span>, <span class="syntax-string">&quot;bra&quot;</span>, <span class="syntax-string">&quot;exit&quot;</span>]</span>
 <span class="code-line" id="L63"><a class="line-number" href="#L63">63</a></span>
-<span class="code-line" id="L64"><a class="line-number" href="#L64">64</a>def decodeOp (mnemonic : String) (operands : List Token) : Except DecodeError Op :=</span>
-<span class="code-line" id="L65"><a class="line-number" href="#L65">65</a>  match mnemonic, operands with</span>
-<span class="code-line" id="L66"><a class="line-number" href="#L66">66</a>  | &quot;mov.b32&quot;, [.word (.reg d), .word s] =&gt; .ok (.mov32 d s)</span>
-<span class="code-line" id="L67"><a class="line-number" href="#L67">67</a>  | &quot;add.u32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .add d a b)</span>
-<span class="code-line" id="L68"><a class="line-number" href="#L68">68</a>  | &quot;sub.u32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .sub d a b)</span>
-<span class="code-line" id="L69"><a class="line-number" href="#L69">69</a>  | &quot;mul.lo.u32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .mulLo d a b)</span>
-<span class="code-line" id="L70"><a class="line-number" href="#L70">70</a>  | &quot;and.b32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .and d a b)</span>
-<span class="code-line" id="L71"><a class="line-number" href="#L71">71</a>  | &quot;or.b32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .or d a b)</span>
-<span class="code-line" id="L72"><a class="line-number" href="#L72">72</a>  | &quot;xor.b32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .xor d a b)</span>
-<span class="code-line" id="L73"><a class="line-number" href="#L73">73</a>  | &quot;shl.b32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .shl d a b)</span>
-<span class="code-line" id="L74"><a class="line-number" href="#L74">74</a>  | &quot;shr.u32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .shr d a b)</span>
-<span class="code-line" id="L75"><a class="line-number" href="#L75">75</a>  | &quot;min.u32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .minU d a b)</span>
-<span class="code-line" id="L76"><a class="line-number" href="#L76">76</a>  | &quot;max.u32&quot;, [.word (.reg d), .word a, .word b] =&gt; .ok (.bin32 .maxU d a b)</span>
-<span class="code-line" id="L77"><a class="line-number" href="#L77">77</a>  | &quot;clz.b32&quot;, [.word (.reg d), .word a] =&gt; .ok (.unary32 .clz d a)</span>
-<span class="code-line" id="L78"><a class="line-number" href="#L78">78</a>  | &quot;popc.b32&quot;, [.word (.reg d), .word a] =&gt; .ok (.unary32 .popc d a)</span>
-<span class="code-line" id="L79"><a class="line-number" href="#L79">79</a>  | &quot;mov.b64&quot;, [.address (.reg d), .address s] =&gt; .ok (.mov64 d s)</span>
-<span class="code-line" id="L80"><a class="line-number" href="#L80">80</a>  | &quot;add.u64&quot;, [.address (.reg d), .address a, .address b] =&gt; .ok (.add64 d a b)</span>
-<span class="code-line" id="L81"><a class="line-number" href="#L81">81</a>  | &quot;cvt.u64.u32&quot;, [.address (.reg d), .word s] =&gt; .ok (.cvt64 d s)</span>
-<span class="code-line" id="L82"><a class="line-number" href="#L82">82</a>  | &quot;setp.eq.u32&quot;, [.predicate d, .word a, .word b] =&gt; .ok (.setp .eq d a b)</span>
-<span class="code-line" id="L83"><a class="line-number" href="#L83">83</a>  | &quot;setp.ne.u32&quot;, [.predicate d, .word a, .word b] =&gt; .ok (.setp .ne d a b)</span>
-<span class="code-line" id="L84"><a class="line-number" href="#L84">84</a>  | &quot;setp.lt.u32&quot;, [.predicate d, .word a, .word b] =&gt; .ok (.setp .lt d a b)</span>
-<span class="code-line" id="L85"><a class="line-number" href="#L85">85</a>  | &quot;setp.le.u32&quot;, [.predicate d, .word a, .word b] =&gt; .ok (.setp .le d a b)</span>
-<span class="code-line" id="L86"><a class="line-number" href="#L86">86</a>  | &quot;setp.gt.u32&quot;, [.predicate d, .word a, .word b] =&gt; .ok (.setp .gt d a b)</span>
-<span class="code-line" id="L87"><a class="line-number" href="#L87">87</a>  | &quot;setp.ge.u32&quot;, [.predicate d, .word a, .word b] =&gt; .ok (.setp .ge d a b)</span>
-<span class="code-line" id="L88"><a class="line-number" href="#L88">88</a>  | &quot;ld.relaxed.gpu.global.u32&quot;, [.word (.reg d), .memory address] =&gt; .ok (.load d address)</span>
-<span class="code-line" id="L89"><a class="line-number" href="#L89">89</a>  | &quot;st.relaxed.gpu.global.u32&quot;, [.memory address, .word (.reg source)] =&gt; .ok (.store address (.reg source))</span>
-<span class="code-line" id="L90"><a class="line-number" href="#L90">90</a>  | &quot;bra&quot;, [.label target] =&gt; .ok (.bra target)</span>
-<span class="code-line" id="L91"><a class="line-number" href="#L91">91</a>  | &quot;exit&quot;, [] =&gt; .ok .exit</span>
-<span class="code-line" id="L92"><a class="line-number" href="#L92">92</a>  | mnemonic, _ =&gt; if supportedMnemonic mnemonic then .error (.invalidOperands mnemonic)</span>
-<span class="code-line" id="L93"><a class="line-number" href="#L93">93</a>      else .error (.unsupportedMnemonic mnemonic)</span>
+<span class="code-line" id="L64"><a class="line-number" href="#L64">64</a><span class="syntax-keyword">def</span> decodeOp (mnemonic <span class="syntax-operator">:</span> String) (operands <span class="syntax-operator">:</span> List Token) <span class="syntax-operator">:</span> Except DecodeError Op <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L65"><a class="line-number" href="#L65">65</a>  <span class="syntax-keyword">match</span> mnemonic, operands <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L66"><a class="line-number" href="#L66">66</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;mov.b32&quot;</span>, [.word (.reg d), .word s] <span class="syntax-operator">=&gt;</span> .ok (.mov32 d s)</span>
+<span class="code-line" id="L67"><a class="line-number" href="#L67">67</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;add.u32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .add d a b)</span>
+<span class="code-line" id="L68"><a class="line-number" href="#L68">68</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;sub.u32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .sub d a b)</span>
+<span class="code-line" id="L69"><a class="line-number" href="#L69">69</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;mul.lo.u32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .mulLo d a b)</span>
+<span class="code-line" id="L70"><a class="line-number" href="#L70">70</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;and.b32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .and d a b)</span>
+<span class="code-line" id="L71"><a class="line-number" href="#L71">71</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;or.b32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .or d a b)</span>
+<span class="code-line" id="L72"><a class="line-number" href="#L72">72</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;xor.b32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .xor d a b)</span>
+<span class="code-line" id="L73"><a class="line-number" href="#L73">73</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;shl.b32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .shl d a b)</span>
+<span class="code-line" id="L74"><a class="line-number" href="#L74">74</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;shr.u32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .shr d a b)</span>
+<span class="code-line" id="L75"><a class="line-number" href="#L75">75</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;min.u32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .minU d a b)</span>
+<span class="code-line" id="L76"><a class="line-number" href="#L76">76</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;max.u32&quot;</span>, [.word (.reg d), .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.bin32 .maxU d a b)</span>
+<span class="code-line" id="L77"><a class="line-number" href="#L77">77</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;clz.b32&quot;</span>, [.word (.reg d), .word a] <span class="syntax-operator">=&gt;</span> .ok (.unary32 .clz d a)</span>
+<span class="code-line" id="L78"><a class="line-number" href="#L78">78</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;popc.b32&quot;</span>, [.word (.reg d), .word a] <span class="syntax-operator">=&gt;</span> .ok (.unary32 .popc d a)</span>
+<span class="code-line" id="L79"><a class="line-number" href="#L79">79</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;mov.b64&quot;</span>, [.address (.reg d), .address s] <span class="syntax-operator">=&gt;</span> .ok (.mov64 d s)</span>
+<span class="code-line" id="L80"><a class="line-number" href="#L80">80</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;add.u64&quot;</span>, [.address (.reg d), .address a, .address b] <span class="syntax-operator">=&gt;</span> .ok (.add64 d a b)</span>
+<span class="code-line" id="L81"><a class="line-number" href="#L81">81</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;cvt.u64.u32&quot;</span>, [.address (.reg d), .word s] <span class="syntax-operator">=&gt;</span> .ok (.cvt64 d s)</span>
+<span class="code-line" id="L82"><a class="line-number" href="#L82">82</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;setp.eq.u32&quot;</span>, [.predicate d, .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.setp .eq d a b)</span>
+<span class="code-line" id="L83"><a class="line-number" href="#L83">83</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;setp.ne.u32&quot;</span>, [.predicate d, .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.setp .ne d a b)</span>
+<span class="code-line" id="L84"><a class="line-number" href="#L84">84</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;setp.lt.u32&quot;</span>, [.predicate d, .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.setp .lt d a b)</span>
+<span class="code-line" id="L85"><a class="line-number" href="#L85">85</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;setp.le.u32&quot;</span>, [.predicate d, .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.setp .le d a b)</span>
+<span class="code-line" id="L86"><a class="line-number" href="#L86">86</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;setp.gt.u32&quot;</span>, [.predicate d, .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.setp .gt d a b)</span>
+<span class="code-line" id="L87"><a class="line-number" href="#L87">87</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;setp.ge.u32&quot;</span>, [.predicate d, .word a, .word b] <span class="syntax-operator">=&gt;</span> .ok (.setp .ge d a b)</span>
+<span class="code-line" id="L88"><a class="line-number" href="#L88">88</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;ld.relaxed.gpu.global.u32&quot;</span>, [.word (.reg d), .memory address] <span class="syntax-operator">=&gt;</span> .ok (.load d address)</span>
+<span class="code-line" id="L89"><a class="line-number" href="#L89">89</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;st.relaxed.gpu.global.u32&quot;</span>, [.memory address, .word (.reg source)] <span class="syntax-operator">=&gt;</span> .ok (.store address (.reg source))</span>
+<span class="code-line" id="L90"><a class="line-number" href="#L90">90</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;bra&quot;</span>, [.label target] <span class="syntax-operator">=&gt;</span> .ok (.bra target)</span>
+<span class="code-line" id="L91"><a class="line-number" href="#L91">91</a>  <span class="syntax-operator">|</span> <span class="syntax-string">&quot;exit&quot;</span>, [] <span class="syntax-operator">=&gt;</span> .ok .exit</span>
+<span class="code-line" id="L92"><a class="line-number" href="#L92">92</a>  <span class="syntax-operator">|</span> mnemonic, _ <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">if</span> supportedMnemonic mnemonic <span class="syntax-keyword">then</span> .error (.invalidOperands mnemonic)</span>
+<span class="code-line" id="L93"><a class="line-number" href="#L93">93</a>      <span class="syntax-keyword">else</span> .error (.unsupportedMnemonic mnemonic)</span>
 <span class="code-line" id="L94"><a class="line-number" href="#L94">94</a></span>
-<span class="code-line" id="L95"><a class="line-number" href="#L95">95</a>def decode (statement : Statement) : Except DecodeError Instr :=</span>
-<span class="code-line" id="L96"><a class="line-number" href="#L96">96</a>  (decodeOp statement.mnemonic statement.operands).map fun op =&gt; ⟨statement.guard, op⟩</span>
+<span class="code-line" id="L95"><a class="line-number" href="#L95">95</a><span class="syntax-keyword">def</span> decode (statement <span class="syntax-operator">:</span> Statement) <span class="syntax-operator">:</span> Except DecodeError Instr <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L96"><a class="line-number" href="#L96">96</a>  (decodeOp statement.mnemonic statement.operands).map <span class="syntax-keyword">fun</span> op <span class="syntax-operator">=&gt;</span> <span class="syntax-operator">⟨</span>statement.guard, op<span class="syntax-operator">⟩</span></span>
 <span class="code-line" id="L97"><a class="line-number" href="#L97">97</a></span>
-<span class="code-line" id="L98"><a class="line-number" href="#L98">98</a>def encodeOp : Op → String × List Token</span>
-<span class="code-line" id="L99"><a class="line-number" href="#L99">99</a>  | .mov32 d s =&gt; (&quot;mov.b32&quot;, [.word (.reg d), .word s])</span>
-<span class="code-line" id="L100"><a class="line-number" href="#L100">100</a>  | .bin32 operation d a b =&gt; (binMnemonic operation, [.word (.reg d), .word a, .word b])</span>
-<span class="code-line" id="L101"><a class="line-number" href="#L101">101</a>  | .unary32 operation d a =&gt; (unaryMnemonic operation, [.word (.reg d), .word a])</span>
-<span class="code-line" id="L102"><a class="line-number" href="#L102">102</a>  | .mov64 d s =&gt; (&quot;mov.b64&quot;, [.address (.reg d), .address s])</span>
-<span class="code-line" id="L103"><a class="line-number" href="#L103">103</a>  | .add64 d a b =&gt; (&quot;add.u64&quot;, [.address (.reg d), .address a, .address b])</span>
-<span class="code-line" id="L104"><a class="line-number" href="#L104">104</a>  | .cvt64 d s =&gt; (&quot;cvt.u64.u32&quot;, [.address (.reg d), .word s])</span>
-<span class="code-line" id="L105"><a class="line-number" href="#L105">105</a>  | .setp comparison d a b =&gt; (compareMnemonic comparison, [.predicate d, .word a, .word b])</span>
-<span class="code-line" id="L106"><a class="line-number" href="#L106">106</a>  | .load d address =&gt; (&quot;ld.relaxed.gpu.global.u32&quot;, [.word (.reg d), .memory address])</span>
-<span class="code-line" id="L107"><a class="line-number" href="#L107">107</a>  | .store address (.reg source) =&gt; (&quot;st.relaxed.gpu.global.u32&quot;, [.memory address, .word (.reg source)])</span>
-<span class="code-line" id="L108"><a class="line-number" href="#L108">108</a>  | .store address (.imm value) =&gt; (&quot;internal.store-immediate.u32&quot;, [.memory address, .word (.imm value)])</span>
-<span class="code-line" id="L109"><a class="line-number" href="#L109">109</a>  | .bra target =&gt; (&quot;bra&quot;, [.label target])</span>
-<span class="code-line" id="L110"><a class="line-number" href="#L110">110</a>  | .exit =&gt; (&quot;exit&quot;, [])</span>
-<span class="code-line" id="L111"><a class="line-number" href="#L111">111</a>  | .unsupported spelling =&gt; (spelling, [])</span>
+<span class="code-line" id="L98"><a class="line-number" href="#L98">98</a><span class="syntax-keyword">def</span> encodeOp <span class="syntax-operator">:</span> Op <span class="syntax-operator">→</span> String × List Token</span>
+<span class="code-line" id="L99"><a class="line-number" href="#L99">99</a>  <span class="syntax-operator">|</span> .mov32 d s <span class="syntax-operator">=&gt;</span> (<span class="syntax-string">&quot;mov.b32&quot;</span>, [.word (.reg d), .word s])</span>
+<span class="code-line" id="L100"><a class="line-number" href="#L100">100</a>  <span class="syntax-operator">|</span> .bin32 operation d a b <span class="syntax-operator">=&gt;</span> (binMnemonic operation, [.word (.reg d), .word a, .word b])</span>
+<span class="code-line" id="L101"><a class="line-number" href="#L101">101</a>  <span class="syntax-operator">|</span> .unary32 operation d a <span class="syntax-operator">=&gt;</span> (unaryMnemonic operation, [.word (.reg d), .word a])</span>
+<span class="code-line" id="L102"><a class="line-number" href="#L102">102</a>  <span class="syntax-operator">|</span> .mov64 d s <span class="syntax-operator">=&gt;</span> (<span class="syntax-string">&quot;mov.b64&quot;</span>, [.address (.reg d), .address s])</span>
+<span class="code-line" id="L103"><a class="line-number" href="#L103">103</a>  <span class="syntax-operator">|</span> .add64 d a b <span class="syntax-operator">=&gt;</span> (<span class="syntax-string">&quot;add.u64&quot;</span>, [.address (.reg d), .address a, .address b])</span>
+<span class="code-line" id="L104"><a class="line-number" href="#L104">104</a>  <span class="syntax-operator">|</span> .cvt64 d s <span class="syntax-operator">=&gt;</span> (<span class="syntax-string">&quot;cvt.u64.u32&quot;</span>, [.address (.reg d), .word s])</span>
+<span class="code-line" id="L105"><a class="line-number" href="#L105">105</a>  <span class="syntax-operator">|</span> .setp comparison d a b <span class="syntax-operator">=&gt;</span> (compareMnemonic comparison, [.predicate d, .word a, .word b])</span>
+<span class="code-line" id="L106"><a class="line-number" href="#L106">106</a>  <span class="syntax-operator">|</span> .load d address <span class="syntax-operator">=&gt;</span> (<span class="syntax-string">&quot;ld.relaxed.gpu.global.u32&quot;</span>, [.word (.reg d), .memory address])</span>
+<span class="code-line" id="L107"><a class="line-number" href="#L107">107</a>  <span class="syntax-operator">|</span> .store address (.reg source) <span class="syntax-operator">=&gt;</span> (<span class="syntax-string">&quot;st.relaxed.gpu.global.u32&quot;</span>, [.memory address, .word (.reg source)])</span>
+<span class="code-line" id="L108"><a class="line-number" href="#L108">108</a>  <span class="syntax-operator">|</span> .store address (.imm value) <span class="syntax-operator">=&gt;</span> (<span class="syntax-string">&quot;internal.store-immediate.u32&quot;</span>, [.memory address, .word (.imm value)])</span>
+<span class="code-line" id="L109"><a class="line-number" href="#L109">109</a>  <span class="syntax-operator">|</span> .bra target <span class="syntax-operator">=&gt;</span> (<span class="syntax-string">&quot;bra&quot;</span>, [.label target])</span>
+<span class="code-line" id="L110"><a class="line-number" href="#L110">110</a>  <span class="syntax-operator">|</span> .exit <span class="syntax-operator">=&gt;</span> (<span class="syntax-string">&quot;exit&quot;</span>, [])</span>
+<span class="code-line" id="L111"><a class="line-number" href="#L111">111</a>  <span class="syntax-operator">|</span> .unsupported spelling <span class="syntax-operator">=&gt;</span> (spelling, [])</span>
 <span class="code-line" id="L112"><a class="line-number" href="#L112">112</a></span>
-<span class="code-line" id="L113"><a class="line-number" href="#L113">113</a>def encode (instruction : Instr) : Statement :=</span>
-<span class="code-line" id="L114"><a class="line-number" href="#L114">114</a>  ⟨instruction.guard, (encodeOp instruction.op).1, (encodeOp instruction.op).2⟩</span>
+<span class="code-line" id="L113"><a class="line-number" href="#L113">113</a><span class="syntax-keyword">def</span> encode (instruction <span class="syntax-operator">:</span> Instr) <span class="syntax-operator">:</span> Statement <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L114"><a class="line-number" href="#L114">114</a>  <span class="syntax-operator">⟨</span>instruction.guard, (encodeOp instruction.op).<span class="syntax-number">1</span>, (encodeOp instruction.op).<span class="syntax-number">2</span><span class="syntax-operator">⟩</span></span>
 <span class="code-line" id="L115"><a class="line-number" href="#L115">115</a></span>
-<span class="code-line" id="L116"><a class="line-number" href="#L116">116</a>/-- Literal stores are an internal machine convenience, not a legal `st` source. -/</span>
-<span class="code-line" id="L117"><a class="line-number" href="#L117">117</a>def SupportedOp : Op → Prop</span>
-<span class="code-line" id="L118"><a class="line-number" href="#L118">118</a>  | .unsupported _ | .store _ (.imm _) =&gt; False</span>
-<span class="code-line" id="L119"><a class="line-number" href="#L119">119</a>  | _ =&gt; True</span>
+<span class="code-line" id="L116"><a class="line-number" href="#L116">116</a><span class="syntax-comment">/-- Literal stores are an internal machine convenience, not a legal `st` source. -/</span></span>
+<span class="code-line" id="L117"><a class="line-number" href="#L117">117</a><span class="syntax-keyword">def</span> SupportedOp <span class="syntax-operator">:</span> Op <span class="syntax-operator">→</span> <span class="syntax-keyword">Prop</span></span>
+<span class="code-line" id="L118"><a class="line-number" href="#L118">118</a>  <span class="syntax-operator">|</span> .unsupported _ <span class="syntax-operator">|</span> .store _ (.imm _) <span class="syntax-operator">=&gt;</span> False</span>
+<span class="code-line" id="L119"><a class="line-number" href="#L119">119</a>  <span class="syntax-operator">|</span> _ <span class="syntax-operator">=&gt;</span> True</span>
 <span class="code-line" id="L120"><a class="line-number" href="#L120">120</a></span>
-<span class="code-line" id="L121"><a class="line-number" href="#L121">121</a>def Supported (instruction : Instr) : Prop := SupportedOp instruction.op</span>
+<span class="code-line" id="L121"><a class="line-number" href="#L121">121</a><span class="syntax-keyword">def</span> Supported (instruction <span class="syntax-operator">:</span> Instr) <span class="syntax-operator">:</span> <span class="syntax-keyword">Prop</span> <span class="syntax-operator">:=</span> SupportedOp instruction.op</span>
 <span class="code-line" id="L122"><a class="line-number" href="#L122">122</a></span>
-<span class="code-line" id="L123"><a class="line-number" href="#L123">123</a>theorem decode_encode (instruction : Instr) (supported : Supported instruction) :</span>
-<span class="code-line" id="L124"><a class="line-number" href="#L124">124</a>    decode (encode instruction) = .ok instruction := by</span>
-<span class="code-line" id="L125"><a class="line-number" href="#L125">125</a>  rcases instruction with ⟨guard, op⟩</span>
-<span class="code-line" id="L126"><a class="line-number" href="#L126">126</a>  cases op with</span>
-<span class="code-line" id="L127"><a class="line-number" href="#L127">127</a>  | bin32 operation d a b =&gt; cases operation &lt;;&gt; rfl</span>
-<span class="code-line" id="L128"><a class="line-number" href="#L128">128</a>  | unary32 operation d a =&gt; cases operation &lt;;&gt; rfl</span>
-<span class="code-line" id="L129"><a class="line-number" href="#L129">129</a>  | setp comparison d a b =&gt; cases comparison &lt;;&gt; rfl</span>
-<span class="code-line" id="L130"><a class="line-number" href="#L130">130</a>  | store address source =&gt;</span>
-<span class="code-line" id="L131"><a class="line-number" href="#L131">131</a>      cases source with</span>
-<span class="code-line" id="L132"><a class="line-number" href="#L132">132</a>      | reg index =&gt; rfl</span>
-<span class="code-line" id="L133"><a class="line-number" href="#L133">133</a>      | imm value =&gt; exact False.elim supported</span>
-<span class="code-line" id="L134"><a class="line-number" href="#L134">134</a>  | unsupported spelling =&gt; exact False.elim supported</span>
-<span class="code-line" id="L135"><a class="line-number" href="#L135">135</a>  | _ =&gt; rfl</span>
+<span class="code-line" id="L123"><a class="line-number" href="#L123">123</a><span class="syntax-keyword">theorem</span> decode_encode (instruction <span class="syntax-operator">:</span> Instr) (supported <span class="syntax-operator">:</span> Supported instruction) <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L124"><a class="line-number" href="#L124">124</a>    decode (encode instruction) <span class="syntax-operator">=</span> .ok instruction <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L125"><a class="line-number" href="#L125">125</a>  <span class="syntax-keyword">rcases</span> instruction <span class="syntax-keyword">with</span> <span class="syntax-operator">⟨</span>guard, op<span class="syntax-operator">⟩</span></span>
+<span class="code-line" id="L126"><a class="line-number" href="#L126">126</a>  <span class="syntax-keyword">cases</span> op <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L127"><a class="line-number" href="#L127">127</a>  <span class="syntax-operator">|</span> bin32 operation d a b <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">cases</span> operation <span class="syntax-operator">&lt;</span>;<span class="syntax-operator">&gt;</span> <span class="syntax-keyword">rfl</span></span>
+<span class="code-line" id="L128"><a class="line-number" href="#L128">128</a>  <span class="syntax-operator">|</span> unary32 operation d a <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">cases</span> operation <span class="syntax-operator">&lt;</span>;<span class="syntax-operator">&gt;</span> <span class="syntax-keyword">rfl</span></span>
+<span class="code-line" id="L129"><a class="line-number" href="#L129">129</a>  <span class="syntax-operator">|</span> setp comparison d a b <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">cases</span> comparison <span class="syntax-operator">&lt;</span>;<span class="syntax-operator">&gt;</span> <span class="syntax-keyword">rfl</span></span>
+<span class="code-line" id="L130"><a class="line-number" href="#L130">130</a>  <span class="syntax-operator">|</span> store address source <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L131"><a class="line-number" href="#L131">131</a>      <span class="syntax-keyword">cases</span> source <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L132"><a class="line-number" href="#L132">132</a>      <span class="syntax-operator">|</span> reg index <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">rfl</span></span>
+<span class="code-line" id="L133"><a class="line-number" href="#L133">133</a>      <span class="syntax-operator">|</span> imm value <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">exact</span> False.elim supported</span>
+<span class="code-line" id="L134"><a class="line-number" href="#L134">134</a>  <span class="syntax-operator">|</span> unsupported spelling <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">exact</span> False.elim supported</span>
+<span class="code-line" id="L135"><a class="line-number" href="#L135">135</a>  <span class="syntax-operator">|</span> _ <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">rfl</span></span>
 <span class="code-line" id="L136"><a class="line-number" href="#L136">136</a></span>
-<span class="code-line" id="L137"><a class="line-number" href="#L137">137</a>/-- Unknown spellings remain explicit errors, including bare weak-memory forms. -/</span>
-<span class="code-line" id="L138"><a class="line-number" href="#L138">138</a>theorem bare_load_rejected : decodeOp &quot;ld.global.u32&quot; [] =</span>
-<span class="code-line" id="L139"><a class="line-number" href="#L139">139</a>    .error (.unsupportedMnemonic &quot;ld.global.u32&quot;) := rfl</span>
+<span class="code-line" id="L137"><a class="line-number" href="#L137">137</a><span class="syntax-comment">/-- Unknown spellings remain explicit errors, including bare weak-memory forms. -/</span></span>
+<span class="code-line" id="L138"><a class="line-number" href="#L138">138</a><span class="syntax-keyword">theorem</span> bare_load_rejected <span class="syntax-operator">:</span> decodeOp <span class="syntax-string">&quot;ld.global.u32&quot;</span> [] <span class="syntax-operator">=</span></span>
+<span class="code-line" id="L139"><a class="line-number" href="#L139">139</a>    .error (.unsupportedMnemonic <span class="syntax-string">&quot;ld.global.u32&quot;</span>) <span class="syntax-operator">:=</span> <span class="syntax-keyword">rfl</span></span>
 <span class="code-line" id="L140"><a class="line-number" href="#L140">140</a></span>
-<span class="code-line" id="L141"><a class="line-number" href="#L141">141</a>theorem uniform_branch_rejected : decodeOp &quot;bra.uni&quot; [.label 0] =</span>
-<span class="code-line" id="L142"><a class="line-number" href="#L142">142</a>    .error (.unsupportedMnemonic &quot;bra.uni&quot;) := rfl</span>
+<span class="code-line" id="L141"><a class="line-number" href="#L141">141</a><span class="syntax-keyword">theorem</span> uniform_branch_rejected <span class="syntax-operator">:</span> decodeOp <span class="syntax-string">&quot;bra.uni&quot;</span> [.label <span class="syntax-number">0</span>] <span class="syntax-operator">=</span></span>
+<span class="code-line" id="L142"><a class="line-number" href="#L142">142</a>    .error (.unsupportedMnemonic <span class="syntax-string">&quot;bra.uni&quot;</span>) <span class="syntax-operator">:=</span> <span class="syntax-keyword">rfl</span></span>
 <span class="code-line" id="L143"><a class="line-number" href="#L143">143</a></span>
-<span class="code-line" id="L144"><a class="line-number" href="#L144">144</a>theorem wrong_destination_rejected : decodeOp &quot;add.u32&quot; [.word (.imm 0), .word (.imm 1), .word (.imm 2)] =</span>
-<span class="code-line" id="L145"><a class="line-number" href="#L145">145</a>    .error (.invalidOperands &quot;add.u32&quot;) := rfl</span>
+<span class="code-line" id="L144"><a class="line-number" href="#L144">144</a><span class="syntax-keyword">theorem</span> wrong_destination_rejected <span class="syntax-operator">:</span> decodeOp <span class="syntax-string">&quot;add.u32&quot;</span> [.word (.imm <span class="syntax-number">0</span>), .word (.imm <span class="syntax-number">1</span>), .word (.imm <span class="syntax-number">2</span>)] <span class="syntax-operator">=</span></span>
+<span class="code-line" id="L145"><a class="line-number" href="#L145">145</a>    .error (.invalidOperands <span class="syntax-string">&quot;add.u32&quot;</span>) <span class="syntax-operator">:=</span> <span class="syntax-keyword">rfl</span></span>
 <span class="code-line" id="L146"><a class="line-number" href="#L146">146</a></span>
 <span class="code-line" id="L147"><a class="line-number" href="#L147">147</a></span>
 <span class="code-line" id="L148"><a class="line-number" href="#L148">148</a></span>
-<span class="code-line" id="L149"><a class="line-number" href="#L149">149</a>/- Decoding cannot manufacture an unsupported operation or an immediate store. -/</span>
-<span class="code-line" id="L150"><a class="line-number" href="#L150">150</a>theorem decodeOp_supported (h : decodeOp mnemonic operands = .ok op) : SupportedOp op := by</span>
-<span class="code-line" id="L151"><a class="line-number" href="#L151">151</a>  unfold decodeOp at h</span>
-<span class="code-line" id="L152"><a class="line-number" href="#L152">152</a>  split at h</span>
-<span class="code-line" id="L153"><a class="line-number" href="#L153">153</a>  all_goals first</span>
-<span class="code-line" id="L154"><a class="line-number" href="#L154">154</a>    | (obtain rfl := Except.ok.inj h; trivial)</span>
-<span class="code-line" id="L155"><a class="line-number" href="#L155">155</a>    | (split at h &lt;;&gt; contradiction)</span>
+<span class="code-line" id="L149"><a class="line-number" href="#L149">149</a><span class="syntax-comment">/- Decoding cannot manufacture an unsupported operation or an immediate store. -/</span></span>
+<span class="code-line" id="L150"><a class="line-number" href="#L150">150</a><span class="syntax-keyword">theorem</span> decodeOp_supported (h <span class="syntax-operator">:</span> decodeOp mnemonic operands <span class="syntax-operator">=</span> .ok op) <span class="syntax-operator">:</span> SupportedOp op <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L151"><a class="line-number" href="#L151">151</a>  <span class="syntax-keyword">unfold</span> decodeOp <span class="syntax-keyword">at</span> h</span>
+<span class="code-line" id="L152"><a class="line-number" href="#L152">152</a>  split <span class="syntax-keyword">at</span> h</span>
+<span class="code-line" id="L153"><a class="line-number" href="#L153">153</a>  <span class="syntax-keyword">all_goals</span> <span class="syntax-keyword">first</span></span>
+<span class="code-line" id="L154"><a class="line-number" href="#L154">154</a>    <span class="syntax-operator">|</span> (<span class="syntax-keyword">obtain</span> <span class="syntax-keyword">rfl</span> <span class="syntax-operator">:=</span> Except.ok.inj h; <span class="syntax-keyword">trivial</span>)</span>
+<span class="code-line" id="L155"><a class="line-number" href="#L155">155</a>    <span class="syntax-operator">|</span> (split <span class="syntax-keyword">at</span> h <span class="syntax-operator">&lt;</span>;<span class="syntax-operator">&gt;</span> <span class="syntax-keyword">contradiction</span>)</span>
 <span class="code-line" id="L156"><a class="line-number" href="#L156">156</a></span>
-<span class="code-line" id="L157"><a class="line-number" href="#L157">157</a>/-- PTX `st` requires its data operand in the register state space. -/</span>
-<span class="code-line" id="L158"><a class="line-number" href="#L158">158</a>theorem immediate_store_rejected :</span>
-<span class="code-line" id="L159"><a class="line-number" href="#L159">159</a>    decodeOp &quot;st.relaxed.gpu.global.u32&quot; [.memory (.reg 0), .word (.imm 7)] =</span>
-<span class="code-line" id="L160"><a class="line-number" href="#L160">160</a>      .error (.invalidOperands &quot;st.relaxed.gpu.global.u32&quot;) := rfl</span>
+<span class="code-line" id="L157"><a class="line-number" href="#L157">157</a><span class="syntax-comment">/-- PTX `st` requires its data operand in the register state space. -/</span></span>
+<span class="code-line" id="L158"><a class="line-number" href="#L158">158</a><span class="syntax-keyword">theorem</span> immediate_store_rejected <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L159"><a class="line-number" href="#L159">159</a>    decodeOp <span class="syntax-string">&quot;st.relaxed.gpu.global.u32&quot;</span> [.memory (.reg <span class="syntax-number">0</span>), .word (.imm <span class="syntax-number">7</span>)] <span class="syntax-operator">=</span></span>
+<span class="code-line" id="L160"><a class="line-number" href="#L160">160</a>      .error (.invalidOperands <span class="syntax-string">&quot;st.relaxed.gpu.global.u32&quot;</span>) <span class="syntax-operator">:=</span> <span class="syntax-keyword">rfl</span></span>
 <span class="code-line" id="L161"><a class="line-number" href="#L161">161</a></span>
-<span class="code-line" id="L162"><a class="line-number" href="#L162">162</a>theorem decode_supported (h : decode statement = .ok instruction) : Supported instruction := by</span>
-<span class="code-line" id="L163"><a class="line-number" href="#L163">163</a>  unfold decode at h</span>
-<span class="code-line" id="L164"><a class="line-number" href="#L164">164</a>  cases decoded : decodeOp statement.mnemonic statement.operands with</span>
-<span class="code-line" id="L165"><a class="line-number" href="#L165">165</a>  | error reason =&gt; simp [decoded, Except.map] at h</span>
-<span class="code-line" id="L166"><a class="line-number" href="#L166">166</a>  | ok op =&gt;</span>
-<span class="code-line" id="L167"><a class="line-number" href="#L167">167</a>      simp only [decoded, Except.map, Except.ok.injEq] at h</span>
-<span class="code-line" id="L168"><a class="line-number" href="#L168">168</a>      subst instruction</span>
-<span class="code-line" id="L169"><a class="line-number" href="#L169">169</a>      exact decodeOp_supported decoded</span>
+<span class="code-line" id="L162"><a class="line-number" href="#L162">162</a><span class="syntax-keyword">theorem</span> decode_supported (h <span class="syntax-operator">:</span> decode statement <span class="syntax-operator">=</span> .ok instruction) <span class="syntax-operator">:</span> Supported instruction <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L163"><a class="line-number" href="#L163">163</a>  <span class="syntax-keyword">unfold</span> decode <span class="syntax-keyword">at</span> h</span>
+<span class="code-line" id="L164"><a class="line-number" href="#L164">164</a>  <span class="syntax-keyword">cases</span> decoded <span class="syntax-operator">:</span> decodeOp statement.mnemonic statement.operands <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L165"><a class="line-number" href="#L165">165</a>  <span class="syntax-operator">|</span> error reason <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">simp</span> [decoded, Except.map] <span class="syntax-keyword">at</span> h</span>
+<span class="code-line" id="L166"><a class="line-number" href="#L166">166</a>  <span class="syntax-operator">|</span> ok op <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L167"><a class="line-number" href="#L167">167</a>      <span class="syntax-keyword">simp</span> <span class="syntax-keyword">only</span> [decoded, Except.map, Except.ok.injEq] <span class="syntax-keyword">at</span> h</span>
+<span class="code-line" id="L168"><a class="line-number" href="#L168">168</a>      <span class="syntax-keyword">subst</span> instruction</span>
+<span class="code-line" id="L169"><a class="line-number" href="#L169">169</a>      <span class="syntax-keyword">exact</span> decodeOp_supported decoded</span>
 <span class="code-line" id="L170"><a class="line-number" href="#L170">170</a></span>
-<span class="code-line" id="L171"><a class="line-number" href="#L171">171</a>end Ptx.Scalar.Text</span></code></pre><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>
+<span class="code-line" id="L171"><a class="line-number" href="#L171">171</a><span class="syntax-keyword">end</span> Ptx.Scalar.Text</span></code></pre><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>

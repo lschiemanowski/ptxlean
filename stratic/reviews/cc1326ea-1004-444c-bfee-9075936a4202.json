@@ -1,0 +1,359 @@
+{
+  "id": "cc1326ea-1004-444c-bfee-9075936a4202",
+  "base": "ad9df47caa196acea8edfd25b8dea8d905d5a7a8",
+  "contentTree": "e58187916443ee03da9bfc14c37cab84eb0f00d4",
+  "reviewer": "Codex",
+  "summary": "Add offline static Lean syntax highlighting to instruction excerpts and full source without altering Lean text.",
+  "examined": [
+    {
+      "id": "instruction-reference",
+      "outcome": "revised",
+      "reason": "Static lexical colors improve code reading; text and line anchors remain unchanged, and no network, JavaScript or third-party package is needed."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "Presentation of code changes only; instruction section inventory, accepted forms and coverage claims are unchanged."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "e58187916443ee03da9bfc14c37cab84eb0f00d4",
+      "method": "Documentation unittest suite; generated freshness check; Stratic validate; git diff --check; manual source-preservation script and browser screenshot/navigation",
+      "outcome": "pass",
+      "environment": "System Python3 and in-app browser; static HTML generation; unchanged Lean source",
+      "evidence": "Four documentation tests passed, 79 generated files current, Stratic valid and whitespace checks passed. Escaping/highlighting round trip preserves module source and nested-comment/string sample. Browser full-source navigation and screenshot confirm keyword, number and operator colors with line links intact. No Lean rebuild needed for this presentation-only change.",
+      "tests": [],
+      "id": "e614a34c-0272-417a-b57a-e79ac974bbf2",
+      "recordedAt": "2026-09-25T07:25:11.697Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T07:25:36.498Z",
+  "unmapped": [
+    {
+      "path": "docs/instructions/code/Ptx__Bfe32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Bfi32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Bitwise32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Brev32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__IntegerBitCount.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__IntegerMinMax.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Language.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Lop3.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Memory.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__MessagePassing.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__MulHi32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Prmt32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Pure32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Scalar.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__ScalarRules.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__ScalarText.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Select32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__SharedBarrierMachine.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__SharedBarrierMemory.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Shf32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Shift32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__SignedMinMax32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__UnaryBits32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/integration__torchlean__PtxBinary32.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/code/integration__torchlean__PtxBinary32__Instructions.lean.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/add.rn.f32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/add.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/add.u64.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/and.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/bar.sync.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/bfe.s32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/bfe.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/bfi.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/bra.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/brev.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/clz.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/cnot.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/cvt.u64.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/exit.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/ld.acquire.gpu.global.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/ld.relaxed.cta.shared.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/ld.relaxed.gpu.global.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/lop3.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/max.s32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/max.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/min.s32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/min.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/mov.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/mov.b64.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/mul.hi.s32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/mul.hi.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/mul.lo.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/mul.rn.f32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/not.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/or.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/popc.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/prmt.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/selp.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/setp.eq.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/setp.ge.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/setp.gt.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/setp.le.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/setp.lt.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/setp.ne.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/shf.l.clamp.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/shf.l.wrap.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/shf.r.clamp.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/shf.r.wrap.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/shl.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/shr.s32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/shr.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/st.relaxed.cta.shared.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/st.relaxed.gpu.global.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/st.release.gpu.global.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/sub.u32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/forms/xor.b32.html",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "docs/instructions/style.css",
+      "reason": "Generated highlighted HTML and CSS checked by deterministic regeneration and browser inspection; source preserved."
+    },
+    {
+      "path": "scripts/build_instruction_docs.py",
+      "reason": "Reviewed lexical scanner, static token colors, and matching Stratic description/summary/implementation link; no Lean definitions changed."
+    },
+    {
+      "path": "scripts/instruction_docs.css",
+      "reason": "Reviewed lexical scanner, static token colors, and matching Stratic description/summary/implementation link; no Lean definitions changed."
+    },
+    {
+      "path": "stratic/descriptions/instruction-reference.json",
+      "reason": "Reviewed lexical scanner, static token colors, and matching Stratic description/summary/implementation link; no Lean definitions changed."
+    },
+    {
+      "path": "stratic/descriptions/instruction-reference.md",
+      "reason": "Reviewed lexical scanner, static token colors, and matching Stratic description/summary/implementation link; no Lean definitions changed."
+    }
+  ]
+}

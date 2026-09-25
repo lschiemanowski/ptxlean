@@ -11,6 +11,9 @@ project-authored words, gives operand and target restrictions, distinguishes
 source review from Lean proof validity, and displays the associated Lean
 computation with links to the full definitions and proofs. Source pages reproduce
 project code with line anchors; the vendor manual is linked, never embedded.
+Lean excerpts and full source use static syntax colors for comments, strings,
+keywords, numbers and operators. Coloring is a reading aid, not semantic analysis;
+it preserves the displayed source and works without JavaScript.
 Restricted core models also have pages, clearly separated from accepted leaf
 forms. A missing catalog entry means no documented mapping, not proof that no
 related Lean definition exists anywhere in the project.

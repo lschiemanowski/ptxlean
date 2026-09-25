@@ -18,6 +18,71 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = Path('docs/instructions')
 
 
+LEAN_KEYWORDS = set('''import namespace end section open scoped variable variables
+ def abbrev theorem lemma example instance structure inductive class where deriving
+ private protected noncomputable opaque axiom constant universe universes attribute
+ set_option in if then else match with let have show from fun forall exists do return
+ by at as calc suffices obtain constructor cases induction intro intros exact apply
+ refine simp simpa only rw rfl decide native_decide omega aesop trivial assumption
+ rcases rintro use unfold dsimp change subst contradiction linarith ring norm_num
+ repeat first all_goals sorry termination_by decreasing_by mutual Prop Type Sort
+ true false'''.split())
+LEAN_TOKEN = re.compile(
+    r'(?P<string>"(?:\\.|[^"\\])*")'
+    r"|(?P<string_char>'(?:\\.|[^'\\\n])')"
+    r'|(?P<number>\b(?:0[xX][0-9a-fA-F]+|0[bB][01]+|[0-9]+(?:\.[0-9]+)?))'
+    r"|(?P<name>[^\W\d][\w'.!?]*)"
+    r'|(?P<operator>[:=<>+*/|&^~!@#$%\-→←↔⇒∀∃∧∨¬λ⟨⟩≤≥≠∈∉⊆∪∩]+)', re.UNICODE)
+
+
+def highlight_lean(body):
+    """Return escaped, independently balanced HTML lines; never rewrite source.
+
+    This is lexical coloring, not a Lean parser. Scan the complete source before
+    splitting lines so nested block comments and multiline strings retain color.
+    """
+    lines = ['']
+
+    def emit(text, kind=None):
+        for i, part in enumerate(text.split('\n')):
+            if i:
+                lines.append('')
+            if part:
+                safe = escape(part)
+                lines[-1] += f'<span class="syntax-{kind}">{safe}</span>' if kind else safe
+
+    pos = 0
+    while pos < len(body):
+        if body.startswith('--', pos):
+            stop = body.find('\n', pos)
+            stop = len(body) if stop < 0 else stop
+            emit(body[pos:stop], 'comment')
+        elif body.startswith('/-', pos):
+            stop, depth = pos + 2, 1
+            while stop < len(body) and depth:
+                if body.startswith('/-', stop):
+                    depth += 1
+                    stop += 2
+                elif body.startswith('-/', stop):
+                    depth -= 1
+                    stop += 2
+                else:
+                    stop += 1
+            emit(body[pos:stop], 'comment')
+        else:
+            token = LEAN_TOKEN.match(body, pos)
+            stop = token.end() if token else pos + 1
+            kind = token.lastgroup if token else None
+            word = body[pos:stop]
+            if kind == 'name':
+                kind = 'keyword' if word in LEAN_KEYWORDS else None
+            elif kind == 'string_char':
+                kind = 'string'
+            emit(word, kind)
+        pos = stop
+    return lines
+
+
 def digest(raw):
     return hashlib.sha256(raw).hexdigest()
 
@@ -111,8 +176,8 @@ def render(root=ROOT):
         later = [n - 1 for _, n in sites.values() if n > line]
         if later:
             stop = min(stop, min(later))
-        code = '\n'.join(lines[line - 1:stop]).rstrip()
-        return f'<p>{code_link(path, declaration)} <small>· opening excerpt; follow the link for full source</small></p><pre><code>{escape(code)}</code></pre>'
+        code = '\n'.join(highlight_lean(body)[line - 1:stop]).rstrip()
+        return f'<p>{code_link(path, declaration)} <small>· opening excerpt; follow the link for full source</small></p><pre><code>{code}</code></pre>'
 
     def refs(form, key):
         return [(ledger['files'][r['file']]['path'], r['namespace'] + '.' + r['name'])
@@ -159,7 +224,8 @@ def render(root=ROOT):
 
     for path, (body, sites) in source_files.items():
         content = f'<p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>{escape(path)}</h1><p><small>SHA-256 <code>{digest(body.encode())}</code></small></p>'
-        content += '<pre><code>' + '\n'.join(f'<span class="code-line" id="L{i}"><a class="line-number" href="#L{i}">{i}</a>{escape(line)}</span>' for i, line in enumerate(body.splitlines(), 1)) + '</code></pre>'
+        colored = highlight_lean(body)[:len(body.splitlines())]
+        content += '<pre><code>' + '\n'.join(f'<span class="code-line" id="L{i}"><a class="line-number" href="#L{i}">{i}</a>{line}</span>' for i, line in enumerate(colored, 1)) + '</code></pre>'
         output['code/' + code_name(path)] = page(path, content, '../', True)
 
     def category(section):

@@ -8,7 +8,7 @@
   },
   "summary": [
     "Browse every pinned instruction entry and distinguish accepted forms, restricted core models and entries without a documented mapping.",
-    "Read original explanations alongside exact project Lean code and proof links, without distributing the vendor manual.",
+    "Read original explanations alongside exact, syntax-highlighted project Lean code and proof links, without distributing the vendor manual.",
     "Rebuild a portable static site deterministically and reject stale generated pages or source mappings."
   ],
   "realization": "implemented",
@@ -59,6 +59,18 @@
         "path": "tests/test_instruction_docs.py",
         "passage": {
           "quote": "class InstructionDocsTests(unittest.TestCase):"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Coloring is a reading aid, not semantic analysis;\nit preserves the displayed source and works without JavaScript."
+      },
+      "to": {
+        "path": "scripts/build_instruction_docs.py",
+        "passage": {
+          "quote": "def highlight_lean(body):"
         }
       }
     }

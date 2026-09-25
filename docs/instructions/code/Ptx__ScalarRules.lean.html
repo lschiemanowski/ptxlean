@@ -3,194 +3,194 @@
 <title>Ptx/ScalarRules.lean · PTXLean</title><link rel="stylesheet" href="../style.css">
 <script src="../search.js" defer></script></head>
 <body class="code-source"><header><a href="../index.html"><strong>PTXLEAN</strong> / Instruction reference</a><span>PTX ISA 9.4 · Lean 4.34.0</span></header>
-<main><p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>Ptx/ScalarRules.lean</h1><p><small>SHA-256 <code>57a0dbf7a370f0d484cfdde5ad7c66963b14d7a9d6c4d4a2b0cd5b4bef236d9f</code></small></p><pre><code><span class="code-line" id="L1"><a class="line-number" href="#L1">1</a>import Ptx.Scalar</span>
+<main><p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>Ptx/ScalarRules.lean</h1><p><small>SHA-256 <code>57a0dbf7a370f0d484cfdde5ad7c66963b14d7a9d6c4d4a2b0cd5b4bef236d9f</code></small></p><pre><code><span class="code-line" id="L1"><a class="line-number" href="#L1">1</a><span class="syntax-keyword">import</span> Ptx.Scalar</span>
 <span class="code-line" id="L2"><a class="line-number" href="#L2">2</a></span>
-<span class="code-line" id="L3"><a class="line-number" href="#L3">3</a>/-! Reusable concrete scalar verification rules. Segment exhaustion, successful</span>
-<span class="code-line" id="L4"><a class="line-number" href="#L4">4</a>completion, and partial correctness are distinct contracts. Frame and invariant</span>
-<span class="code-line" id="L5"><a class="line-number" href="#L5">5</a>rules also apply to candidate reads; they do not admit those candidates under a</span>
-<span class="code-line" id="L6"><a class="line-number" href="#L6">6</a>concurrent PTX memory model. -/</span>
-<span class="code-line" id="L7"><a class="line-number" href="#L7">7</a>namespace Ptx.Scalar.Rules</span>
+<span class="code-line" id="L3"><a class="line-number" href="#L3">3</a><span class="syntax-comment">/-! Reusable concrete scalar verification rules. Segment exhaustion, successful</span></span>
+<span class="code-line" id="L4"><a class="line-number" href="#L4">4</a><span class="syntax-comment">completion, and partial correctness are distinct contracts. Frame and invariant</span></span>
+<span class="code-line" id="L5"><a class="line-number" href="#L5">5</a><span class="syntax-comment">rules also apply to candidate reads; they do not admit those candidates under a</span></span>
+<span class="code-line" id="L6"><a class="line-number" href="#L6">6</a><span class="syntax-comment">concurrent PTX memory model. -/</span></span>
+<span class="code-line" id="L7"><a class="line-number" href="#L7">7</a><span class="syntax-keyword">namespace</span> Ptx.Scalar.Rules</span>
 <span class="code-line" id="L8"><a class="line-number" href="#L8">8</a></span>
-<span class="code-line" id="L9"><a class="line-number" href="#L9">9</a>abbrev Assertion := State → Prop</span>
+<span class="code-line" id="L9"><a class="line-number" href="#L9">9</a><span class="syntax-keyword">abbrev</span> Assertion <span class="syntax-operator">:=</span> State <span class="syntax-operator">→</span> <span class="syntax-keyword">Prop</span></span>
 <span class="code-line" id="L10"><a class="line-number" href="#L10">10</a></span>
-<span class="code-line" id="L11"><a class="line-number" href="#L11">11</a>/-- An exact finite prefix reaches an intermediate assertion without terminating. -/</span>
-<span class="code-line" id="L12"><a class="line-number" href="#L12">12</a>def Segment (program : List Instr) (fuel : Nat) (pre post : Assertion) : Prop :=</span>
-<span class="code-line" id="L13"><a class="line-number" href="#L13">13</a>  ∀ s, pre s → (run fuel program s).status = .exhausted ∧ post (run fuel program s).state</span>
+<span class="code-line" id="L11"><a class="line-number" href="#L11">11</a><span class="syntax-comment">/-- An exact finite prefix reaches an intermediate assertion without terminating. -/</span></span>
+<span class="code-line" id="L12"><a class="line-number" href="#L12">12</a><span class="syntax-keyword">def</span> Segment (program <span class="syntax-operator">:</span> List Instr) (fuel <span class="syntax-operator">:</span> Nat) (pre post <span class="syntax-operator">:</span> Assertion) <span class="syntax-operator">:</span> <span class="syntax-keyword">Prop</span> <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L13"><a class="line-number" href="#L13">13</a>  <span class="syntax-operator">∀</span> s, pre s <span class="syntax-operator">→</span> (run fuel program s).status <span class="syntax-operator">=</span> .exhausted <span class="syntax-operator">∧</span> post (run fuel program s).state</span>
 <span class="code-line" id="L14"><a class="line-number" href="#L14">14</a></span>
-<span class="code-line" id="L15"><a class="line-number" href="#L15">15</a>/-- A fixed-budget total-correctness contract: explicit exit and the postcondition. -/</span>
-<span class="code-line" id="L16"><a class="line-number" href="#L16">16</a>def Completed (program : List Instr) (fuel : Nat) (pre post : Assertion) : Prop :=</span>
-<span class="code-line" id="L17"><a class="line-number" href="#L17">17</a>  ∀ s, pre s → (run fuel program s).status = .halted ∧ post (run fuel program s).state</span>
+<span class="code-line" id="L15"><a class="line-number" href="#L15">15</a><span class="syntax-comment">/-- A fixed-budget total-correctness contract: explicit exit and the postcondition. -/</span></span>
+<span class="code-line" id="L16"><a class="line-number" href="#L16">16</a><span class="syntax-keyword">def</span> Completed (program <span class="syntax-operator">:</span> List Instr) (fuel <span class="syntax-operator">:</span> Nat) (pre post <span class="syntax-operator">:</span> Assertion) <span class="syntax-operator">:</span> <span class="syntax-keyword">Prop</span> <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L17"><a class="line-number" href="#L17">17</a>  <span class="syntax-operator">∀</span> s, pre s <span class="syntax-operator">→</span> (run fuel program s).status <span class="syntax-operator">=</span> .halted <span class="syntax-operator">∧</span> post (run fuel program s).state</span>
 <span class="code-line" id="L18"><a class="line-number" href="#L18">18</a></span>
-<span class="code-line" id="L19"><a class="line-number" href="#L19">19</a>/-- No termination claim: this constrains only runs that explicitly halt. -/</span>
-<span class="code-line" id="L20"><a class="line-number" href="#L20">20</a>def PartialCorrect (program : List Instr) (pre post : Assertion) : Prop :=</span>
-<span class="code-line" id="L21"><a class="line-number" href="#L21">21</a>  ∀ s, pre s → ∀ fuel, (run fuel program s).status = .halted → post (run fuel program s).state</span>
+<span class="code-line" id="L19"><a class="line-number" href="#L19">19</a><span class="syntax-comment">/-- No termination claim: this constrains only runs that explicitly halt. -/</span></span>
+<span class="code-line" id="L20"><a class="line-number" href="#L20">20</a><span class="syntax-keyword">def</span> PartialCorrect (program <span class="syntax-operator">:</span> List Instr) (pre post <span class="syntax-operator">:</span> Assertion) <span class="syntax-operator">:</span> <span class="syntax-keyword">Prop</span> <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L21"><a class="line-number" href="#L21">21</a>  <span class="syntax-operator">∀</span> s, pre s <span class="syntax-operator">→</span> <span class="syntax-operator">∀</span> fuel, (run fuel program s).status <span class="syntax-operator">=</span> .halted <span class="syntax-operator">→</span> post (run fuel program s).state</span>
 <span class="code-line" id="L22"><a class="line-number" href="#L22">22</a></span>
-<span class="code-line" id="L23"><a class="line-number" href="#L23">23</a>/-- Termination with a state-dependent finite budget. -/</span>
-<span class="code-line" id="L24"><a class="line-number" href="#L24">24</a>def TotalCorrect (program : List Instr) (pre post : Assertion) : Prop :=</span>
-<span class="code-line" id="L25"><a class="line-number" href="#L25">25</a>  ∀ s, pre s → ∃ fuel, (run fuel program s).status = .halted ∧ post (run fuel program s).state</span>
+<span class="code-line" id="L23"><a class="line-number" href="#L23">23</a><span class="syntax-comment">/-- Termination with a state-dependent finite budget. -/</span></span>
+<span class="code-line" id="L24"><a class="line-number" href="#L24">24</a><span class="syntax-keyword">def</span> TotalCorrect (program <span class="syntax-operator">:</span> List Instr) (pre post <span class="syntax-operator">:</span> Assertion) <span class="syntax-operator">:</span> <span class="syntax-keyword">Prop</span> <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L25"><a class="line-number" href="#L25">25</a>  <span class="syntax-operator">∀</span> s, pre s <span class="syntax-operator">→</span> <span class="syntax-operator">∃</span> fuel, (run fuel program s).status <span class="syntax-operator">=</span> .halted <span class="syntax-operator">∧</span> post (run fuel program s).state</span>
 <span class="code-line" id="L26"><a class="line-number" href="#L26">26</a></span>
-<span class="code-line" id="L27"><a class="line-number" href="#L27">27</a>theorem segment_comp (first : Segment program firstFuel pre middle)</span>
-<span class="code-line" id="L28"><a class="line-number" href="#L28">28</a>    (second : Segment program secondFuel middle post) :</span>
-<span class="code-line" id="L29"><a class="line-number" href="#L29">29</a>    Segment program (firstFuel + secondFuel) pre post := by</span>
-<span class="code-line" id="L30"><a class="line-number" href="#L30">30</a>  intro s hs</span>
-<span class="code-line" id="L31"><a class="line-number" href="#L31">31</a>  obtain ⟨hf, hm⟩ := first s hs</span>
-<span class="code-line" id="L32"><a class="line-number" href="#L32">32</a>  obtain ⟨hh, hp⟩ := second _ hm</span>
-<span class="code-line" id="L33"><a class="line-number" href="#L33">33</a>  rw [run_add]</span>
-<span class="code-line" id="L34"><a class="line-number" href="#L34">34</a>  simpa only [resume, hf, ↓reduceIte] using And.intro hh hp</span>
+<span class="code-line" id="L27"><a class="line-number" href="#L27">27</a><span class="syntax-keyword">theorem</span> segment_comp (<span class="syntax-keyword">first</span> <span class="syntax-operator">:</span> Segment program firstFuel pre middle)</span>
+<span class="code-line" id="L28"><a class="line-number" href="#L28">28</a>    (second <span class="syntax-operator">:</span> Segment program secondFuel middle post) <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L29"><a class="line-number" href="#L29">29</a>    Segment program (firstFuel <span class="syntax-operator">+</span> secondFuel) pre post <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L30"><a class="line-number" href="#L30">30</a>  <span class="syntax-keyword">intro</span> s hs</span>
+<span class="code-line" id="L31"><a class="line-number" href="#L31">31</a>  <span class="syntax-keyword">obtain</span> <span class="syntax-operator">⟨</span>hf, hm<span class="syntax-operator">⟩</span> <span class="syntax-operator">:=</span> <span class="syntax-keyword">first</span> s hs</span>
+<span class="code-line" id="L32"><a class="line-number" href="#L32">32</a>  <span class="syntax-keyword">obtain</span> <span class="syntax-operator">⟨</span>hh, hp<span class="syntax-operator">⟩</span> <span class="syntax-operator">:=</span> second _ hm</span>
+<span class="code-line" id="L33"><a class="line-number" href="#L33">33</a>  <span class="syntax-keyword">rw</span> [run_add]</span>
+<span class="code-line" id="L34"><a class="line-number" href="#L34">34</a>  <span class="syntax-keyword">simpa</span> <span class="syntax-keyword">only</span> [resume, hf, ↓reduceIte] using And.intro hh hp</span>
 <span class="code-line" id="L35"><a class="line-number" href="#L35">35</a></span>
-<span class="code-line" id="L36"><a class="line-number" href="#L36">36</a>theorem segment_then_completed (first : Segment program firstFuel pre middle)</span>
-<span class="code-line" id="L37"><a class="line-number" href="#L37">37</a>    (second : Completed program secondFuel middle post) :</span>
-<span class="code-line" id="L38"><a class="line-number" href="#L38">38</a>    Completed program (firstFuel + secondFuel) pre post := by</span>
-<span class="code-line" id="L39"><a class="line-number" href="#L39">39</a>  intro s hs</span>
-<span class="code-line" id="L40"><a class="line-number" href="#L40">40</a>  obtain ⟨hf, hm⟩ := first s hs</span>
-<span class="code-line" id="L41"><a class="line-number" href="#L41">41</a>  obtain ⟨hh, hp⟩ := second _ hm</span>
-<span class="code-line" id="L42"><a class="line-number" href="#L42">42</a>  rw [run_add]</span>
-<span class="code-line" id="L43"><a class="line-number" href="#L43">43</a>  simpa only [resume, hf, ↓reduceIte] using And.intro hh hp</span>
+<span class="code-line" id="L36"><a class="line-number" href="#L36">36</a><span class="syntax-keyword">theorem</span> segment_then_completed (<span class="syntax-keyword">first</span> <span class="syntax-operator">:</span> Segment program firstFuel pre middle)</span>
+<span class="code-line" id="L37"><a class="line-number" href="#L37">37</a>    (second <span class="syntax-operator">:</span> Completed program secondFuel middle post) <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L38"><a class="line-number" href="#L38">38</a>    Completed program (firstFuel <span class="syntax-operator">+</span> secondFuel) pre post <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L39"><a class="line-number" href="#L39">39</a>  <span class="syntax-keyword">intro</span> s hs</span>
+<span class="code-line" id="L40"><a class="line-number" href="#L40">40</a>  <span class="syntax-keyword">obtain</span> <span class="syntax-operator">⟨</span>hf, hm<span class="syntax-operator">⟩</span> <span class="syntax-operator">:=</span> <span class="syntax-keyword">first</span> s hs</span>
+<span class="code-line" id="L41"><a class="line-number" href="#L41">41</a>  <span class="syntax-keyword">obtain</span> <span class="syntax-operator">⟨</span>hh, hp<span class="syntax-operator">⟩</span> <span class="syntax-operator">:=</span> second _ hm</span>
+<span class="code-line" id="L42"><a class="line-number" href="#L42">42</a>  <span class="syntax-keyword">rw</span> [run_add]</span>
+<span class="code-line" id="L43"><a class="line-number" href="#L43">43</a>  <span class="syntax-keyword">simpa</span> <span class="syntax-keyword">only</span> [resume, hf, ↓reduceIte] using And.intro hh hp</span>
 <span class="code-line" id="L44"><a class="line-number" href="#L44">44</a></span>
-<span class="code-line" id="L45"><a class="line-number" href="#L45">45</a>theorem segment_then_total (first : Segment program firstFuel pre middle)</span>
-<span class="code-line" id="L46"><a class="line-number" href="#L46">46</a>    (second : TotalCorrect program middle post) : TotalCorrect program pre post := by</span>
-<span class="code-line" id="L47"><a class="line-number" href="#L47">47</a>  intro s hs</span>
-<span class="code-line" id="L48"><a class="line-number" href="#L48">48</a>  obtain ⟨hf, hm⟩ := first s hs</span>
-<span class="code-line" id="L49"><a class="line-number" href="#L49">49</a>  obtain ⟨secondFuel, hh, hp⟩ := second _ hm</span>
-<span class="code-line" id="L50"><a class="line-number" href="#L50">50</a>  refine ⟨firstFuel + secondFuel, ?_⟩</span>
-<span class="code-line" id="L51"><a class="line-number" href="#L51">51</a>  rw [run_add]</span>
-<span class="code-line" id="L52"><a class="line-number" href="#L52">52</a>  simpa only [resume, hf, ↓reduceIte] using And.intro hh hp</span>
+<span class="code-line" id="L45"><a class="line-number" href="#L45">45</a><span class="syntax-keyword">theorem</span> segment_then_total (<span class="syntax-keyword">first</span> <span class="syntax-operator">:</span> Segment program firstFuel pre middle)</span>
+<span class="code-line" id="L46"><a class="line-number" href="#L46">46</a>    (second <span class="syntax-operator">:</span> TotalCorrect program middle post) <span class="syntax-operator">:</span> TotalCorrect program pre post <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L47"><a class="line-number" href="#L47">47</a>  <span class="syntax-keyword">intro</span> s hs</span>
+<span class="code-line" id="L48"><a class="line-number" href="#L48">48</a>  <span class="syntax-keyword">obtain</span> <span class="syntax-operator">⟨</span>hf, hm<span class="syntax-operator">⟩</span> <span class="syntax-operator">:=</span> <span class="syntax-keyword">first</span> s hs</span>
+<span class="code-line" id="L49"><a class="line-number" href="#L49">49</a>  <span class="syntax-keyword">obtain</span> <span class="syntax-operator">⟨</span>secondFuel, hh, hp<span class="syntax-operator">⟩</span> <span class="syntax-operator">:=</span> second _ hm</span>
+<span class="code-line" id="L50"><a class="line-number" href="#L50">50</a>  <span class="syntax-keyword">refine</span> <span class="syntax-operator">⟨</span>firstFuel <span class="syntax-operator">+</span> secondFuel, ?_<span class="syntax-operator">⟩</span></span>
+<span class="code-line" id="L51"><a class="line-number" href="#L51">51</a>  <span class="syntax-keyword">rw</span> [run_add]</span>
+<span class="code-line" id="L52"><a class="line-number" href="#L52">52</a>  <span class="syntax-keyword">simpa</span> <span class="syntax-keyword">only</span> [resume, hf, ↓reduceIte] using And.intro hh hp</span>
 <span class="code-line" id="L53"><a class="line-number" href="#L53">53</a></span>
-<span class="code-line" id="L54"><a class="line-number" href="#L54">54</a>theorem completed_total (h : Completed program fuel pre post) :</span>
-<span class="code-line" id="L55"><a class="line-number" href="#L55">55</a>    TotalCorrect program pre post := fun s hs =&gt; ⟨fuel, h s hs⟩</span>
+<span class="code-line" id="L54"><a class="line-number" href="#L54">54</a><span class="syntax-keyword">theorem</span> completed_total (h <span class="syntax-operator">:</span> Completed program fuel pre post) <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L55"><a class="line-number" href="#L55">55</a>    TotalCorrect program pre post <span class="syntax-operator">:=</span> <span class="syntax-keyword">fun</span> s hs <span class="syntax-operator">=&gt;</span> <span class="syntax-operator">⟨</span>fuel, h s hs<span class="syntax-operator">⟩</span></span>
 <span class="code-line" id="L56"><a class="line-number" href="#L56">56</a></span>
-<span class="code-line" id="L57"><a class="line-number" href="#L57">57</a>/-- A trace records a write to a word only when an actual executed store emits it. -/</span>
-<span class="code-line" id="L58"><a class="line-number" href="#L58">58</a>def StoresTo (event : Occurrence) (index : Nat) : Prop :=</span>
-<span class="code-line" id="L59"><a class="line-number" href="#L59">59</a>  ∃ effect, event.memory = some effect ∧ effect.kind = .store ∧ effect.address.toNat / 4 = index</span>
+<span class="code-line" id="L57"><a class="line-number" href="#L57">57</a><span class="syntax-comment">/-- A trace records a write to a word only when an actual executed store emits it. -/</span></span>
+<span class="code-line" id="L58"><a class="line-number" href="#L58">58</a><span class="syntax-keyword">def</span> StoresTo (event <span class="syntax-operator">:</span> Occurrence) (index <span class="syntax-operator">:</span> Nat) <span class="syntax-operator">:</span> <span class="syntax-keyword">Prop</span> <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L59"><a class="line-number" href="#L59">59</a>  <span class="syntax-operator">∃</span> effect, event.memory <span class="syntax-operator">=</span> some effect <span class="syntax-operator">∧</span> effect.kind <span class="syntax-operator">=</span> .store <span class="syntax-operator">∧</span> effect.address.toNat <span class="syntax-operator">/</span> <span class="syntax-number">4</span> <span class="syntax-operator">=</span> index</span>
 <span class="code-line" id="L60"><a class="line-number" href="#L60">60</a></span>
-<span class="code-line" id="L61"><a class="line-number" href="#L61">61</a>def TraceAvoids (trace : List Occurrence) (index : Nat) : Prop :=</span>
-<span class="code-line" id="L62"><a class="line-number" href="#L62">62</a>  ∀ event ∈ trace, ¬StoresTo event index</span>
+<span class="code-line" id="L61"><a class="line-number" href="#L61">61</a><span class="syntax-keyword">def</span> TraceAvoids (trace <span class="syntax-operator">:</span> List Occurrence) (index <span class="syntax-operator">:</span> Nat) <span class="syntax-operator">:</span> <span class="syntax-keyword">Prop</span> <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L62"><a class="line-number" href="#L62">62</a>  <span class="syntax-operator">∀</span> event <span class="syntax-operator">∈</span> trace, <span class="syntax-operator">¬</span>StoresTo event index</span>
 <span class="code-line" id="L63"><a class="line-number" href="#L63">63</a></span>
-<span class="code-line" id="L64"><a class="line-number" href="#L64">64</a>theorem eval_frame (hstep : eval override instruction s = .next next event)</span>
-<span class="code-line" id="L65"><a class="line-number" href="#L65">65</a>    (untouched : ¬StoresTo event index) : next.memory[index]? = s.memory[index]? := by</span>
-<span class="code-line" id="L66"><a class="line-number" href="#L66">66</a>  cases instruction with</span>
-<span class="code-line" id="L67"><a class="line-number" href="#L67">67</a>  | mk guard op =&gt;</span>
-<span class="code-line" id="L68"><a class="line-number" href="#L68">68</a>    cases op &lt;;&gt; cases hguard : guard.eval s &lt;;&gt;</span>
-<span class="code-line" id="L69"><a class="line-number" href="#L69">69</a>      simp only [eval, hguard, ↓reduceIte] at hstep</span>
-<span class="code-line" id="L70"><a class="line-number" href="#L70">70</a>    all_goals first</span>
-<span class="code-line" id="L71"><a class="line-number" href="#L71">71</a>      | (obtain ⟨rfl, rfl⟩ := StepResult.next.inj hstep; rfl)</span>
-<span class="code-line" id="L72"><a class="line-number" href="#L72">72</a>      | contradiction</span>
-<span class="code-line" id="L73"><a class="line-number" href="#L73">73</a>      | skip</span>
-<span class="code-line" id="L74"><a class="line-number" href="#L74">74</a>    all_goals</span>
-<span class="code-line" id="L75"><a class="line-number" href="#L75">75</a>      split at hstep</span>
-<span class="code-line" id="L76"><a class="line-number" href="#L76">76</a>      · contradiction</span>
-<span class="code-line" id="L77"><a class="line-number" href="#L77">77</a>      · obtain ⟨rfl, rfl⟩ := StepResult.next.inj hstep</span>
-<span class="code-line" id="L78"><a class="line-number" href="#L78">78</a>        first</span>
-<span class="code-line" id="L79"><a class="line-number" href="#L79">79</a>        | rfl</span>
-<span class="code-line" id="L80"><a class="line-number" href="#L80">80</a>        | apply List.getElem?_set_ne</span>
-<span class="code-line" id="L81"><a class="line-number" href="#L81">81</a>          intro equal</span>
-<span class="code-line" id="L82"><a class="line-number" href="#L82">82</a>          apply untouched</span>
-<span class="code-line" id="L83"><a class="line-number" href="#L83">83</a>          refine ⟨_,rfl,rfl,?_⟩</span>
-<span class="code-line" id="L84"><a class="line-number" href="#L84">84</a>          have address := addressIndex_ok_iff.mp (by assumption)</span>
-<span class="code-line" id="L85"><a class="line-number" href="#L85">85</a>          exact address.2.symm.trans equal</span>
+<span class="code-line" id="L64"><a class="line-number" href="#L64">64</a><span class="syntax-keyword">theorem</span> eval_frame (hstep <span class="syntax-operator">:</span> eval override instruction s <span class="syntax-operator">=</span> .next next event)</span>
+<span class="code-line" id="L65"><a class="line-number" href="#L65">65</a>    (untouched <span class="syntax-operator">:</span> <span class="syntax-operator">¬</span>StoresTo event index) <span class="syntax-operator">:</span> next.memory[index]? <span class="syntax-operator">=</span> s.memory[index]? <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L66"><a class="line-number" href="#L66">66</a>  <span class="syntax-keyword">cases</span> instruction <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L67"><a class="line-number" href="#L67">67</a>  <span class="syntax-operator">|</span> mk guard op <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L68"><a class="line-number" href="#L68">68</a>    <span class="syntax-keyword">cases</span> op <span class="syntax-operator">&lt;</span>;<span class="syntax-operator">&gt;</span> <span class="syntax-keyword">cases</span> hguard <span class="syntax-operator">:</span> guard.eval s <span class="syntax-operator">&lt;</span>;<span class="syntax-operator">&gt;</span></span>
+<span class="code-line" id="L69"><a class="line-number" href="#L69">69</a>      <span class="syntax-keyword">simp</span> <span class="syntax-keyword">only</span> [eval, hguard, ↓reduceIte] <span class="syntax-keyword">at</span> hstep</span>
+<span class="code-line" id="L70"><a class="line-number" href="#L70">70</a>    <span class="syntax-keyword">all_goals</span> <span class="syntax-keyword">first</span></span>
+<span class="code-line" id="L71"><a class="line-number" href="#L71">71</a>      <span class="syntax-operator">|</span> (<span class="syntax-keyword">obtain</span> <span class="syntax-operator">⟨</span><span class="syntax-keyword">rfl</span>, <span class="syntax-keyword">rfl</span><span class="syntax-operator">⟩</span> <span class="syntax-operator">:=</span> StepResult.next.inj hstep; <span class="syntax-keyword">rfl</span>)</span>
+<span class="code-line" id="L72"><a class="line-number" href="#L72">72</a>      <span class="syntax-operator">|</span> <span class="syntax-keyword">contradiction</span></span>
+<span class="code-line" id="L73"><a class="line-number" href="#L73">73</a>      <span class="syntax-operator">|</span> skip</span>
+<span class="code-line" id="L74"><a class="line-number" href="#L74">74</a>    <span class="syntax-keyword">all_goals</span></span>
+<span class="code-line" id="L75"><a class="line-number" href="#L75">75</a>      split <span class="syntax-keyword">at</span> hstep</span>
+<span class="code-line" id="L76"><a class="line-number" href="#L76">76</a>      · <span class="syntax-keyword">contradiction</span></span>
+<span class="code-line" id="L77"><a class="line-number" href="#L77">77</a>      · <span class="syntax-keyword">obtain</span> <span class="syntax-operator">⟨</span><span class="syntax-keyword">rfl</span>, <span class="syntax-keyword">rfl</span><span class="syntax-operator">⟩</span> <span class="syntax-operator">:=</span> StepResult.next.inj hstep</span>
+<span class="code-line" id="L78"><a class="line-number" href="#L78">78</a>        <span class="syntax-keyword">first</span></span>
+<span class="code-line" id="L79"><a class="line-number" href="#L79">79</a>        <span class="syntax-operator">|</span> <span class="syntax-keyword">rfl</span></span>
+<span class="code-line" id="L80"><a class="line-number" href="#L80">80</a>        <span class="syntax-operator">|</span> <span class="syntax-keyword">apply</span> List.getElem?_set_ne</span>
+<span class="code-line" id="L81"><a class="line-number" href="#L81">81</a>          <span class="syntax-keyword">intro</span> equal</span>
+<span class="code-line" id="L82"><a class="line-number" href="#L82">82</a>          <span class="syntax-keyword">apply</span> untouched</span>
+<span class="code-line" id="L83"><a class="line-number" href="#L83">83</a>          <span class="syntax-keyword">refine</span> <span class="syntax-operator">⟨</span>_,<span class="syntax-keyword">rfl</span>,<span class="syntax-keyword">rfl</span>,?_<span class="syntax-operator">⟩</span></span>
+<span class="code-line" id="L84"><a class="line-number" href="#L84">84</a>          <span class="syntax-keyword">have</span> address <span class="syntax-operator">:=</span> addressIndex_ok_iff.mp (<span class="syntax-keyword">by</span> <span class="syntax-keyword">assumption</span>)</span>
+<span class="code-line" id="L85"><a class="line-number" href="#L85">85</a>          <span class="syntax-keyword">exact</span> address.2.symm.trans equal</span>
 <span class="code-line" id="L86"><a class="line-number" href="#L86">86</a></span>
-<span class="code-line" id="L87"><a class="line-number" href="#L87">87</a>theorem step_frame (hstep : stepWith override program s = .next next event)</span>
-<span class="code-line" id="L88"><a class="line-number" href="#L88">88</a>    (untouched : ¬StoresTo event index) : next.memory[index]? = s.memory[index]? := by</span>
-<span class="code-line" id="L89"><a class="line-number" href="#L89">89</a>  unfold stepWith at hstep</span>
-<span class="code-line" id="L90"><a class="line-number" href="#L90">90</a>  split at hstep</span>
-<span class="code-line" id="L91"><a class="line-number" href="#L91">91</a>  · contradiction</span>
-<span class="code-line" id="L92"><a class="line-number" href="#L92">92</a>  · exact eval_frame hstep untouched</span>
+<span class="code-line" id="L87"><a class="line-number" href="#L87">87</a><span class="syntax-keyword">theorem</span> step_frame (hstep <span class="syntax-operator">:</span> stepWith override program s <span class="syntax-operator">=</span> .next next event)</span>
+<span class="code-line" id="L88"><a class="line-number" href="#L88">88</a>    (untouched <span class="syntax-operator">:</span> <span class="syntax-operator">¬</span>StoresTo event index) <span class="syntax-operator">:</span> next.memory[index]? <span class="syntax-operator">=</span> s.memory[index]? <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L89"><a class="line-number" href="#L89">89</a>  <span class="syntax-keyword">unfold</span> stepWith <span class="syntax-keyword">at</span> hstep</span>
+<span class="code-line" id="L90"><a class="line-number" href="#L90">90</a>  split <span class="syntax-keyword">at</span> hstep</span>
+<span class="code-line" id="L91"><a class="line-number" href="#L91">91</a>  · <span class="syntax-keyword">contradiction</span></span>
+<span class="code-line" id="L92"><a class="line-number" href="#L92">92</a>  · <span class="syntax-keyword">exact</span> eval_frame hstep untouched</span>
 <span class="code-line" id="L93"><a class="line-number" href="#L93">93</a></span>
-<span class="code-line" id="L94"><a class="line-number" href="#L94">94</a>/-- Outside actual emitted stores, all words are preserved, including on fault,</span>
-<span class="code-line" id="L95"><a class="line-number" href="#L95">95</a>unsupported, exhausted, and candidate-read executions. No final-memory premise. -/</span>
-<span class="code-line" id="L96"><a class="line-number" href="#L96">96</a>theorem runWith_frame (fuel : Nat) (oracle : Nat → Option Word) (program : List Instr)</span>
-<span class="code-line" id="L97"><a class="line-number" href="#L97">97</a>    (s : State) (index : Nat)</span>
-<span class="code-line" id="L98"><a class="line-number" href="#L98">98</a>    (untouched : TraceAvoids (runWith fuel oracle program s).trace index) :</span>
-<span class="code-line" id="L99"><a class="line-number" href="#L99">99</a>    (runWith fuel oracle program s).state.memory[index]? = s.memory[index]? := by</span>
-<span class="code-line" id="L100"><a class="line-number" href="#L100">100</a>  induction fuel generalizing oracle s with</span>
-<span class="code-line" id="L101"><a class="line-number" href="#L101">101</a>  | zero =&gt; rfl</span>
-<span class="code-line" id="L102"><a class="line-number" href="#L102">102</a>  | succ fuel ih =&gt;</span>
-<span class="code-line" id="L103"><a class="line-number" href="#L103">103</a>    cases hs : stepWith (oracle 0) program s with</span>
-<span class="code-line" id="L104"><a class="line-number" href="#L104">104</a>    | next next emitted =&gt;</span>
-<span class="code-line" id="L105"><a class="line-number" href="#L105">105</a>      simp only [runWith, hs] at untouched ⊢</span>
-<span class="code-line" id="L106"><a class="line-number" href="#L106">106</a>      have head := untouched emitted (by simp)</span>
-<span class="code-line" id="L107"><a class="line-number" href="#L107">107</a>      have tail : TraceAvoids (runWith fuel (fun i =&gt; oracle (i + 1)) program next).trace index :=</span>
-<span class="code-line" id="L108"><a class="line-number" href="#L108">108</a>        fun event member =&gt; untouched event (by simp [member])</span>
-<span class="code-line" id="L109"><a class="line-number" href="#L109">109</a>      exact (ih _ _ tail).trans (step_frame hs head)</span>
-<span class="code-line" id="L110"><a class="line-number" href="#L110">110</a>    | halted final emitted =&gt;</span>
-<span class="code-line" id="L111"><a class="line-number" href="#L111">111</a>      simp only [runWith, hs]</span>
-<span class="code-line" id="L112"><a class="line-number" href="#L112">112</a>      rw [(step_halted hs).1]</span>
-<span class="code-line" id="L113"><a class="line-number" href="#L113">113</a>    | fault reason =&gt; simp [runWith, hs]</span>
-<span class="code-line" id="L114"><a class="line-number" href="#L114">114</a>    | unsupported spelling =&gt; simp [runWith, hs]</span>
+<span class="code-line" id="L94"><a class="line-number" href="#L94">94</a><span class="syntax-comment">/-- Outside actual emitted stores, all words are preserved, including on fault,</span></span>
+<span class="code-line" id="L95"><a class="line-number" href="#L95">95</a><span class="syntax-comment">unsupported, exhausted, and candidate-read executions. No final-memory premise. -/</span></span>
+<span class="code-line" id="L96"><a class="line-number" href="#L96">96</a><span class="syntax-keyword">theorem</span> runWith_frame (fuel <span class="syntax-operator">:</span> Nat) (oracle <span class="syntax-operator">:</span> Nat <span class="syntax-operator">→</span> Option Word) (program <span class="syntax-operator">:</span> List Instr)</span>
+<span class="code-line" id="L97"><a class="line-number" href="#L97">97</a>    (s <span class="syntax-operator">:</span> State) (index <span class="syntax-operator">:</span> Nat)</span>
+<span class="code-line" id="L98"><a class="line-number" href="#L98">98</a>    (untouched <span class="syntax-operator">:</span> TraceAvoids (runWith fuel oracle program s).trace index) <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L99"><a class="line-number" href="#L99">99</a>    (runWith fuel oracle program s).state.memory[index]? <span class="syntax-operator">=</span> s.memory[index]? <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L100"><a class="line-number" href="#L100">100</a>  <span class="syntax-keyword">induction</span> fuel generalizing oracle s <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L101"><a class="line-number" href="#L101">101</a>  <span class="syntax-operator">|</span> zero <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">rfl</span></span>
+<span class="code-line" id="L102"><a class="line-number" href="#L102">102</a>  <span class="syntax-operator">|</span> succ fuel ih <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L103"><a class="line-number" href="#L103">103</a>    <span class="syntax-keyword">cases</span> hs <span class="syntax-operator">:</span> stepWith (oracle <span class="syntax-number">0</span>) program s <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L104"><a class="line-number" href="#L104">104</a>    <span class="syntax-operator">|</span> next next emitted <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L105"><a class="line-number" href="#L105">105</a>      <span class="syntax-keyword">simp</span> <span class="syntax-keyword">only</span> [runWith, hs] <span class="syntax-keyword">at</span> untouched ⊢</span>
+<span class="code-line" id="L106"><a class="line-number" href="#L106">106</a>      <span class="syntax-keyword">have</span> head <span class="syntax-operator">:=</span> untouched emitted (<span class="syntax-keyword">by</span> <span class="syntax-keyword">simp</span>)</span>
+<span class="code-line" id="L107"><a class="line-number" href="#L107">107</a>      <span class="syntax-keyword">have</span> tail <span class="syntax-operator">:</span> TraceAvoids (runWith fuel (<span class="syntax-keyword">fun</span> i <span class="syntax-operator">=&gt;</span> oracle (i <span class="syntax-operator">+</span> <span class="syntax-number">1</span>)) program next).trace index <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L108"><a class="line-number" href="#L108">108</a>        <span class="syntax-keyword">fun</span> event member <span class="syntax-operator">=&gt;</span> untouched event (<span class="syntax-keyword">by</span> <span class="syntax-keyword">simp</span> [member])</span>
+<span class="code-line" id="L109"><a class="line-number" href="#L109">109</a>      <span class="syntax-keyword">exact</span> (ih _ _ tail).trans (step_frame hs head)</span>
+<span class="code-line" id="L110"><a class="line-number" href="#L110">110</a>    <span class="syntax-operator">|</span> halted final emitted <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L111"><a class="line-number" href="#L111">111</a>      <span class="syntax-keyword">simp</span> <span class="syntax-keyword">only</span> [runWith, hs]</span>
+<span class="code-line" id="L112"><a class="line-number" href="#L112">112</a>      <span class="syntax-keyword">rw</span> [(step_halted hs).<span class="syntax-number">1</span>]</span>
+<span class="code-line" id="L113"><a class="line-number" href="#L113">113</a>    <span class="syntax-operator">|</span> fault reason <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">simp</span> [runWith, hs]</span>
+<span class="code-line" id="L114"><a class="line-number" href="#L114">114</a>    <span class="syntax-operator">|</span> unsupported spelling <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">simp</span> [runWith, hs]</span>
 <span class="code-line" id="L115"><a class="line-number" href="#L115">115</a></span>
-<span class="code-line" id="L116"><a class="line-number" href="#L116">116</a>theorem run_frame (fuel : Nat) (program : List Instr) (s : State) (index : Nat)</span>
-<span class="code-line" id="L117"><a class="line-number" href="#L117">117</a>    (untouched : TraceAvoids (run fuel program s).trace index) :</span>
-<span class="code-line" id="L118"><a class="line-number" href="#L118">118</a>    (run fuel program s).state.memory[index]? = s.memory[index]? :=</span>
-<span class="code-line" id="L119"><a class="line-number" href="#L119">119</a>  runWith_frame fuel (fun _ =&gt; none) program s index untouched</span>
+<span class="code-line" id="L116"><a class="line-number" href="#L116">116</a><span class="syntax-keyword">theorem</span> run_frame (fuel <span class="syntax-operator">:</span> Nat) (program <span class="syntax-operator">:</span> List Instr) (s <span class="syntax-operator">:</span> State) (index <span class="syntax-operator">:</span> Nat)</span>
+<span class="code-line" id="L117"><a class="line-number" href="#L117">117</a>    (untouched <span class="syntax-operator">:</span> TraceAvoids (run fuel program s).trace index) <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L118"><a class="line-number" href="#L118">118</a>    (run fuel program s).state.memory[index]? <span class="syntax-operator">=</span> s.memory[index]? <span class="syntax-operator">:=</span></span>
+<span class="code-line" id="L119"><a class="line-number" href="#L119">119</a>  runWith_frame fuel (<span class="syntax-keyword">fun</span> _ <span class="syntax-operator">=&gt;</span> none) program s index untouched</span>
 <span class="code-line" id="L120"><a class="line-number" href="#L120">120</a></span>
-<span class="code-line" id="L121"><a class="line-number" href="#L121">121</a>/-- A one-step invariant lifts to every finite prefix. Terminal faults leave the</span>
-<span class="code-line" id="L122"><a class="line-number" href="#L122">122</a>state unchanged, and explicit exit also leaves its incoming state unchanged. -/</span>
-<span class="code-line" id="L123"><a class="line-number" href="#L123">123</a>theorem runWith_invariant (invariant : Assertion)</span>
-<span class="code-line" id="L124"><a class="line-number" href="#L124">124</a>    (preserved : ∀ override s next event, invariant s →</span>
-<span class="code-line" id="L125"><a class="line-number" href="#L125">125</a>      stepWith override program s = .next next event → invariant next)</span>
-<span class="code-line" id="L126"><a class="line-number" href="#L126">126</a>    (fuel : Nat) (oracle : Nat → Option Word) (s : State) (initial : invariant s) :</span>
-<span class="code-line" id="L127"><a class="line-number" href="#L127">127</a>    invariant (runWith fuel oracle program s).state := by</span>
-<span class="code-line" id="L128"><a class="line-number" href="#L128">128</a>  induction fuel generalizing oracle s with</span>
-<span class="code-line" id="L129"><a class="line-number" href="#L129">129</a>  | zero =&gt; exact initial</span>
-<span class="code-line" id="L130"><a class="line-number" href="#L130">130</a>  | succ fuel ih =&gt;</span>
-<span class="code-line" id="L131"><a class="line-number" href="#L131">131</a>    cases hs : stepWith (oracle 0) program s with</span>
-<span class="code-line" id="L132"><a class="line-number" href="#L132">132</a>    | next next emitted =&gt;</span>
-<span class="code-line" id="L133"><a class="line-number" href="#L133">133</a>      simp only [runWith, hs]</span>
-<span class="code-line" id="L134"><a class="line-number" href="#L134">134</a>      exact ih _ _ (preserved _ _ _ _ initial hs)</span>
-<span class="code-line" id="L135"><a class="line-number" href="#L135">135</a>    | halted final emitted =&gt;</span>
-<span class="code-line" id="L136"><a class="line-number" href="#L136">136</a>      simp only [runWith, hs]</span>
-<span class="code-line" id="L137"><a class="line-number" href="#L137">137</a>      rw [(step_halted hs).1]</span>
-<span class="code-line" id="L138"><a class="line-number" href="#L138">138</a>      exact initial</span>
-<span class="code-line" id="L139"><a class="line-number" href="#L139">139</a>    | fault reason =&gt; simpa [runWith, hs] using initial</span>
-<span class="code-line" id="L140"><a class="line-number" href="#L140">140</a>    | unsupported spelling =&gt; simpa [runWith, hs] using initial</span>
+<span class="code-line" id="L121"><a class="line-number" href="#L121">121</a><span class="syntax-comment">/-- A one-step invariant lifts to every finite prefix. Terminal faults leave the</span></span>
+<span class="code-line" id="L122"><a class="line-number" href="#L122">122</a><span class="syntax-comment">state unchanged, and explicit exit also leaves its incoming state unchanged. -/</span></span>
+<span class="code-line" id="L123"><a class="line-number" href="#L123">123</a><span class="syntax-keyword">theorem</span> runWith_invariant (invariant <span class="syntax-operator">:</span> Assertion)</span>
+<span class="code-line" id="L124"><a class="line-number" href="#L124">124</a>    (preserved <span class="syntax-operator">:</span> <span class="syntax-operator">∀</span> override s next event, invariant s <span class="syntax-operator">→</span></span>
+<span class="code-line" id="L125"><a class="line-number" href="#L125">125</a>      stepWith override program s <span class="syntax-operator">=</span> .next next event <span class="syntax-operator">→</span> invariant next)</span>
+<span class="code-line" id="L126"><a class="line-number" href="#L126">126</a>    (fuel <span class="syntax-operator">:</span> Nat) (oracle <span class="syntax-operator">:</span> Nat <span class="syntax-operator">→</span> Option Word) (s <span class="syntax-operator">:</span> State) (initial <span class="syntax-operator">:</span> invariant s) <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L127"><a class="line-number" href="#L127">127</a>    invariant (runWith fuel oracle program s).state <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L128"><a class="line-number" href="#L128">128</a>  <span class="syntax-keyword">induction</span> fuel generalizing oracle s <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L129"><a class="line-number" href="#L129">129</a>  <span class="syntax-operator">|</span> zero <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">exact</span> initial</span>
+<span class="code-line" id="L130"><a class="line-number" href="#L130">130</a>  <span class="syntax-operator">|</span> succ fuel ih <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L131"><a class="line-number" href="#L131">131</a>    <span class="syntax-keyword">cases</span> hs <span class="syntax-operator">:</span> stepWith (oracle <span class="syntax-number">0</span>) program s <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L132"><a class="line-number" href="#L132">132</a>    <span class="syntax-operator">|</span> next next emitted <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L133"><a class="line-number" href="#L133">133</a>      <span class="syntax-keyword">simp</span> <span class="syntax-keyword">only</span> [runWith, hs]</span>
+<span class="code-line" id="L134"><a class="line-number" href="#L134">134</a>      <span class="syntax-keyword">exact</span> ih _ _ (preserved _ _ _ _ initial hs)</span>
+<span class="code-line" id="L135"><a class="line-number" href="#L135">135</a>    <span class="syntax-operator">|</span> halted final emitted <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L136"><a class="line-number" href="#L136">136</a>      <span class="syntax-keyword">simp</span> <span class="syntax-keyword">only</span> [runWith, hs]</span>
+<span class="code-line" id="L137"><a class="line-number" href="#L137">137</a>      <span class="syntax-keyword">rw</span> [(step_halted hs).<span class="syntax-number">1</span>]</span>
+<span class="code-line" id="L138"><a class="line-number" href="#L138">138</a>      <span class="syntax-keyword">exact</span> initial</span>
+<span class="code-line" id="L139"><a class="line-number" href="#L139">139</a>    <span class="syntax-operator">|</span> fault reason <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">simpa</span> [runWith, hs] using initial</span>
+<span class="code-line" id="L140"><a class="line-number" href="#L140">140</a>    <span class="syntax-operator">|</span> unsupported spelling <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">simpa</span> [runWith, hs] using initial</span>
 <span class="code-line" id="L141"><a class="line-number" href="#L141">141</a></span>
-<span class="code-line" id="L142"><a class="line-number" href="#L142">142</a>/-- Invariant preservation and the exit case establish partial correctness.</span>
-<span class="code-line" id="L143"><a class="line-number" href="#L143">143</a>No progress or decreasing-measure premise is required, so divergence remains possible. -/</span>
-<span class="code-line" id="L144"><a class="line-number" href="#L144">144</a>theorem partial_of_invariant (program : List Instr) (pre invariant post : Assertion)</span>
-<span class="code-line" id="L145"><a class="line-number" href="#L145">145</a>    (initial : ∀ s, pre s → invariant s)</span>
-<span class="code-line" id="L146"><a class="line-number" href="#L146">146</a>    (preserved : ∀ s next event, invariant s →</span>
-<span class="code-line" id="L147"><a class="line-number" href="#L147">147</a>      step program s = .next next event → invariant next)</span>
-<span class="code-line" id="L148"><a class="line-number" href="#L148">148</a>    (exitPost : ∀ s final event, invariant s →</span>
-<span class="code-line" id="L149"><a class="line-number" href="#L149">149</a>      step program s = .halted final event → post final) :</span>
-<span class="code-line" id="L150"><a class="line-number" href="#L150">150</a>    PartialCorrect program pre post := by</span>
-<span class="code-line" id="L151"><a class="line-number" href="#L151">151</a>  have aux : ∀ fuel s, invariant s → (run fuel program s).status = .halted →</span>
-<span class="code-line" id="L152"><a class="line-number" href="#L152">152</a>      post (run fuel program s).state := by</span>
-<span class="code-line" id="L153"><a class="line-number" href="#L153">153</a>    intro fuel</span>
-<span class="code-line" id="L154"><a class="line-number" href="#L154">154</a>    induction fuel with</span>
-<span class="code-line" id="L155"><a class="line-number" href="#L155">155</a>    | zero =&gt; intro s hs halted; simp [run_zero] at halted</span>
-<span class="code-line" id="L156"><a class="line-number" href="#L156">156</a>    | succ fuel ih =&gt;</span>
-<span class="code-line" id="L157"><a class="line-number" href="#L157">157</a>      intro s hs halted</span>
-<span class="code-line" id="L158"><a class="line-number" href="#L158">158</a>      rw [run_succ] at halted ⊢</span>
-<span class="code-line" id="L159"><a class="line-number" href="#L159">159</a>      cases stepEq : step program s with</span>
-<span class="code-line" id="L160"><a class="line-number" href="#L160">160</a>      | next next event =&gt;</span>
-<span class="code-line" id="L161"><a class="line-number" href="#L161">161</a>        simp only [stepEq] at halted ⊢</span>
-<span class="code-line" id="L162"><a class="line-number" href="#L162">162</a>        exact ih next (preserved s next event hs stepEq) halted</span>
-<span class="code-line" id="L163"><a class="line-number" href="#L163">163</a>      | halted final event =&gt;</span>
-<span class="code-line" id="L164"><a class="line-number" href="#L164">164</a>        exact exitPost s final event hs stepEq</span>
-<span class="code-line" id="L165"><a class="line-number" href="#L165">165</a>      | fault reason =&gt; simp [stepEq] at halted</span>
-<span class="code-line" id="L166"><a class="line-number" href="#L166">166</a>      | unsupported spelling =&gt; simp [stepEq] at halted</span>
-<span class="code-line" id="L167"><a class="line-number" href="#L167">167</a>  exact fun s hs fuel halted =&gt; aux fuel s (initial s hs) halted</span>
+<span class="code-line" id="L142"><a class="line-number" href="#L142">142</a><span class="syntax-comment">/-- Invariant preservation and the exit case establish partial correctness.</span></span>
+<span class="code-line" id="L143"><a class="line-number" href="#L143">143</a><span class="syntax-comment">No progress or decreasing-measure premise is required, so divergence remains possible. -/</span></span>
+<span class="code-line" id="L144"><a class="line-number" href="#L144">144</a><span class="syntax-keyword">theorem</span> partial_of_invariant (program <span class="syntax-operator">:</span> List Instr) (pre invariant post <span class="syntax-operator">:</span> Assertion)</span>
+<span class="code-line" id="L145"><a class="line-number" href="#L145">145</a>    (initial <span class="syntax-operator">:</span> <span class="syntax-operator">∀</span> s, pre s <span class="syntax-operator">→</span> invariant s)</span>
+<span class="code-line" id="L146"><a class="line-number" href="#L146">146</a>    (preserved <span class="syntax-operator">:</span> <span class="syntax-operator">∀</span> s next event, invariant s <span class="syntax-operator">→</span></span>
+<span class="code-line" id="L147"><a class="line-number" href="#L147">147</a>      step program s <span class="syntax-operator">=</span> .next next event <span class="syntax-operator">→</span> invariant next)</span>
+<span class="code-line" id="L148"><a class="line-number" href="#L148">148</a>    (exitPost <span class="syntax-operator">:</span> <span class="syntax-operator">∀</span> s final event, invariant s <span class="syntax-operator">→</span></span>
+<span class="code-line" id="L149"><a class="line-number" href="#L149">149</a>      step program s <span class="syntax-operator">=</span> .halted final event <span class="syntax-operator">→</span> post final) <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L150"><a class="line-number" href="#L150">150</a>    PartialCorrect program pre post <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L151"><a class="line-number" href="#L151">151</a>  <span class="syntax-keyword">have</span> aux <span class="syntax-operator">:</span> <span class="syntax-operator">∀</span> fuel s, invariant s <span class="syntax-operator">→</span> (run fuel program s).status <span class="syntax-operator">=</span> .halted <span class="syntax-operator">→</span></span>
+<span class="code-line" id="L152"><a class="line-number" href="#L152">152</a>      post (run fuel program s).state <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L153"><a class="line-number" href="#L153">153</a>    <span class="syntax-keyword">intro</span> fuel</span>
+<span class="code-line" id="L154"><a class="line-number" href="#L154">154</a>    <span class="syntax-keyword">induction</span> fuel <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L155"><a class="line-number" href="#L155">155</a>    <span class="syntax-operator">|</span> zero <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">intro</span> s hs halted; <span class="syntax-keyword">simp</span> [run_zero] <span class="syntax-keyword">at</span> halted</span>
+<span class="code-line" id="L156"><a class="line-number" href="#L156">156</a>    <span class="syntax-operator">|</span> succ fuel ih <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L157"><a class="line-number" href="#L157">157</a>      <span class="syntax-keyword">intro</span> s hs halted</span>
+<span class="code-line" id="L158"><a class="line-number" href="#L158">158</a>      <span class="syntax-keyword">rw</span> [run_succ] <span class="syntax-keyword">at</span> halted ⊢</span>
+<span class="code-line" id="L159"><a class="line-number" href="#L159">159</a>      <span class="syntax-keyword">cases</span> stepEq <span class="syntax-operator">:</span> step program s <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L160"><a class="line-number" href="#L160">160</a>      <span class="syntax-operator">|</span> next next event <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L161"><a class="line-number" href="#L161">161</a>        <span class="syntax-keyword">simp</span> <span class="syntax-keyword">only</span> [stepEq] <span class="syntax-keyword">at</span> halted ⊢</span>
+<span class="code-line" id="L162"><a class="line-number" href="#L162">162</a>        <span class="syntax-keyword">exact</span> ih next (preserved s next event hs stepEq) halted</span>
+<span class="code-line" id="L163"><a class="line-number" href="#L163">163</a>      <span class="syntax-operator">|</span> halted final event <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L164"><a class="line-number" href="#L164">164</a>        <span class="syntax-keyword">exact</span> exitPost s final event hs stepEq</span>
+<span class="code-line" id="L165"><a class="line-number" href="#L165">165</a>      <span class="syntax-operator">|</span> fault reason <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">simp</span> [stepEq] <span class="syntax-keyword">at</span> halted</span>
+<span class="code-line" id="L166"><a class="line-number" href="#L166">166</a>      <span class="syntax-operator">|</span> unsupported spelling <span class="syntax-operator">=&gt;</span> <span class="syntax-keyword">simp</span> [stepEq] <span class="syntax-keyword">at</span> halted</span>
+<span class="code-line" id="L167"><a class="line-number" href="#L167">167</a>  <span class="syntax-keyword">exact</span> <span class="syntax-keyword">fun</span> s hs fuel halted <span class="syntax-operator">=&gt;</span> aux fuel s (initial s hs) halted</span>
 <span class="code-line" id="L168"><a class="line-number" href="#L168">168</a></span>
-<span class="code-line" id="L169"><a class="line-number" href="#L169">169</a>/-- A decreasing natural measure and a local progress obligation establish</span>
-<span class="code-line" id="L170"><a class="line-number" href="#L170">170</a>termination. The progress premise excludes faults/unsupported outcomes without</span>
-<span class="code-line" id="L171"><a class="line-number" href="#L171">171</a>assuming any completed run; it may be discharged instruction by instruction. -/</span>
-<span class="code-line" id="L172"><a class="line-number" href="#L172">172</a>theorem terminates_of_decreasing_measure (program : List Instr) (invariant post : Assertion)</span>
-<span class="code-line" id="L173"><a class="line-number" href="#L173">173</a>    (measure : State → Nat)</span>
-<span class="code-line" id="L174"><a class="line-number" href="#L174">174</a>    (progress : ∀ s, invariant s →</span>
-<span class="code-line" id="L175"><a class="line-number" href="#L175">175</a>      (∃ final event, step program s = .halted final event ∧ post final) ∨</span>
-<span class="code-line" id="L176"><a class="line-number" href="#L176">176</a>      (∃ next event, step program s = .next next event ∧ invariant next ∧</span>
-<span class="code-line" id="L177"><a class="line-number" href="#L177">177</a>        measure next &lt; measure s)) :</span>
-<span class="code-line" id="L178"><a class="line-number" href="#L178">178</a>    TotalCorrect program invariant post := by</span>
-<span class="code-line" id="L179"><a class="line-number" href="#L179">179</a>  have terminate : ∀ rank, ∀ s, measure s = rank → invariant s →</span>
-<span class="code-line" id="L180"><a class="line-number" href="#L180">180</a>      ∃ fuel, (run fuel program s).status = .halted ∧ post (run fuel program s).state := by</span>
-<span class="code-line" id="L181"><a class="line-number" href="#L181">181</a>    intro rank</span>
-<span class="code-line" id="L182"><a class="line-number" href="#L182">182</a>    induction rank using Nat.strongRecOn with</span>
-<span class="code-line" id="L183"><a class="line-number" href="#L183">183</a>    | ind rank ih =&gt;</span>
-<span class="code-line" id="L184"><a class="line-number" href="#L184">184</a>      intro s rankEq initial</span>
-<span class="code-line" id="L185"><a class="line-number" href="#L185">185</a>      rcases progress s initial with ⟨final,event,hs,hpost⟩ | ⟨next,event,hs,hnext,less⟩</span>
-<span class="code-line" id="L186"><a class="line-number" href="#L186">186</a>      · exact ⟨1, by simp [run_succ, hs, hpost]⟩</span>
-<span class="code-line" id="L187"><a class="line-number" href="#L187">187</a>      · obtain ⟨fuel,hh,hp⟩ := ih (measure next) (by omega) next rfl hnext</span>
-<span class="code-line" id="L188"><a class="line-number" href="#L188">188</a>        exact ⟨fuel + 1, by simpa only [run_succ, hs] using And.intro hh hp⟩</span>
-<span class="code-line" id="L189"><a class="line-number" href="#L189">189</a>  exact fun s initial =&gt; terminate (measure s) s rfl initial</span>
+<span class="code-line" id="L169"><a class="line-number" href="#L169">169</a><span class="syntax-comment">/-- A decreasing natural measure and a local progress obligation establish</span></span>
+<span class="code-line" id="L170"><a class="line-number" href="#L170">170</a><span class="syntax-comment">termination. The progress premise excludes faults/unsupported outcomes without</span></span>
+<span class="code-line" id="L171"><a class="line-number" href="#L171">171</a><span class="syntax-comment">assuming any completed run; it may be discharged instruction by instruction. -/</span></span>
+<span class="code-line" id="L172"><a class="line-number" href="#L172">172</a><span class="syntax-keyword">theorem</span> terminates_of_decreasing_measure (program <span class="syntax-operator">:</span> List Instr) (invariant post <span class="syntax-operator">:</span> Assertion)</span>
+<span class="code-line" id="L173"><a class="line-number" href="#L173">173</a>    (measure <span class="syntax-operator">:</span> State <span class="syntax-operator">→</span> Nat)</span>
+<span class="code-line" id="L174"><a class="line-number" href="#L174">174</a>    (progress <span class="syntax-operator">:</span> <span class="syntax-operator">∀</span> s, invariant s <span class="syntax-operator">→</span></span>
+<span class="code-line" id="L175"><a class="line-number" href="#L175">175</a>      (<span class="syntax-operator">∃</span> final event, step program s <span class="syntax-operator">=</span> .halted final event <span class="syntax-operator">∧</span> post final) <span class="syntax-operator">∨</span></span>
+<span class="code-line" id="L176"><a class="line-number" href="#L176">176</a>      (<span class="syntax-operator">∃</span> next event, step program s <span class="syntax-operator">=</span> .next next event <span class="syntax-operator">∧</span> invariant next <span class="syntax-operator">∧</span></span>
+<span class="code-line" id="L177"><a class="line-number" href="#L177">177</a>        measure next <span class="syntax-operator">&lt;</span> measure s)) <span class="syntax-operator">:</span></span>
+<span class="code-line" id="L178"><a class="line-number" href="#L178">178</a>    TotalCorrect program invariant post <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L179"><a class="line-number" href="#L179">179</a>  <span class="syntax-keyword">have</span> terminate <span class="syntax-operator">:</span> <span class="syntax-operator">∀</span> rank, <span class="syntax-operator">∀</span> s, measure s <span class="syntax-operator">=</span> rank <span class="syntax-operator">→</span> invariant s <span class="syntax-operator">→</span></span>
+<span class="code-line" id="L180"><a class="line-number" href="#L180">180</a>      <span class="syntax-operator">∃</span> fuel, (run fuel program s).status <span class="syntax-operator">=</span> .halted <span class="syntax-operator">∧</span> post (run fuel program s).state <span class="syntax-operator">:=</span> <span class="syntax-keyword">by</span></span>
+<span class="code-line" id="L181"><a class="line-number" href="#L181">181</a>    <span class="syntax-keyword">intro</span> rank</span>
+<span class="code-line" id="L182"><a class="line-number" href="#L182">182</a>    <span class="syntax-keyword">induction</span> rank using Nat.strongRecOn <span class="syntax-keyword">with</span></span>
+<span class="code-line" id="L183"><a class="line-number" href="#L183">183</a>    <span class="syntax-operator">|</span> ind rank ih <span class="syntax-operator">=&gt;</span></span>
+<span class="code-line" id="L184"><a class="line-number" href="#L184">184</a>      <span class="syntax-keyword">intro</span> s rankEq initial</span>
+<span class="code-line" id="L185"><a class="line-number" href="#L185">185</a>      <span class="syntax-keyword">rcases</span> progress s initial <span class="syntax-keyword">with</span> <span class="syntax-operator">⟨</span>final,event,hs,hpost<span class="syntax-operator">⟩</span> <span class="syntax-operator">|</span> <span class="syntax-operator">⟨</span>next,event,hs,hnext,less<span class="syntax-operator">⟩</span></span>
+<span class="code-line" id="L186"><a class="line-number" href="#L186">186</a>      · <span class="syntax-keyword">exact</span> <span class="syntax-operator">⟨</span><span class="syntax-number">1</span>, <span class="syntax-keyword">by</span> <span class="syntax-keyword">simp</span> [run_succ, hs, hpost]<span class="syntax-operator">⟩</span></span>
+<span class="code-line" id="L187"><a class="line-number" href="#L187">187</a>      · <span class="syntax-keyword">obtain</span> <span class="syntax-operator">⟨</span>fuel,hh,hp<span class="syntax-operator">⟩</span> <span class="syntax-operator">:=</span> ih (measure next) (<span class="syntax-keyword">by</span> <span class="syntax-keyword">omega</span>) next <span class="syntax-keyword">rfl</span> hnext</span>
+<span class="code-line" id="L188"><a class="line-number" href="#L188">188</a>        <span class="syntax-keyword">exact</span> <span class="syntax-operator">⟨</span>fuel <span class="syntax-operator">+</span> <span class="syntax-number">1</span>, <span class="syntax-keyword">by</span> <span class="syntax-keyword">simpa</span> <span class="syntax-keyword">only</span> [run_succ, hs] using And.intro hh hp<span class="syntax-operator">⟩</span></span>
+<span class="code-line" id="L189"><a class="line-number" href="#L189">189</a>  <span class="syntax-keyword">exact</span> <span class="syntax-keyword">fun</span> s initial <span class="syntax-operator">=&gt;</span> terminate (measure s) s <span class="syntax-keyword">rfl</span> initial</span>
 <span class="code-line" id="L190"><a class="line-number" href="#L190">190</a></span>
-<span class="code-line" id="L191"><a class="line-number" href="#L191">191</a>end Ptx.Scalar.Rules</span></code></pre><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>
+<span class="code-line" id="L191"><a class="line-number" href="#L191">191</a><span class="syntax-keyword">end</span> Ptx.Scalar.Rules</span></code></pre><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>
