@@ -1,0 +1,101 @@
+{
+  "id": "378a31b6-56eb-4e4f-9e2d-8c44cad75c88",
+  "base": "770a35ce9931ccd4273f13b956e31881ea164f58",
+  "contentTree": "6341cbd253699def639b4fb74e8190da5701b0ca",
+  "reviewer": "Codex",
+  "summary": "Prove complete selected execution and stored-word accuracy for the parallel dense forward kernel.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Completed the previously described selected forward instruction witness through every round and exit, linked stored-word bounds, and retained precise missing admission, universal correctness and TorchLean identity obligations."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "More endpoints use the same pinned builds, forbidden-proof-token guard and exact standard-axiom audit. Software candidate execution remains distinct from semantic fidelity and memory-model admission."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The parent requires explicit domains and distinctions among mathematical, numerical, execution and experimental claims. This child makes completed selected execution precise and remains partial until admission and the universal TorchLean correspondence are proved."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "unchanged",
+      "reason": "Existing segments, actual fetch, repeated barriers and selected reference-run soundness support the new composition without any change to candidate semantics, allowed arithmetic results or the requirement for a separate memory-admission proof."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "6341cbd253699def639b4fb74e8190da5701b0ca",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; public declaration coverage inspection",
+      "outcome": "pass",
+      "environment": "Linux; Lean 4.34.0 with unchanged pinned TorchLean and FloatLib dependencies; no external model calls, GPU execution or benchmarking",
+      "evidence": "Both full suites exited 0. Root audit: 1643 declarations. Integration: 52 default targets and 868 exact dependency reports, accepting only standard Lean logical axioms. Four whole-program interpreter regressions were evaluated afresh and passed. All public declarations in the six changed/new proof modules appear in the audit driver. Source guards reject proof placeholders and new unchecked axioms. Before/after selected snapshots both 6341cbd253699def639b4fb74e8190da5701b0ca. Stratic validation had no issues. The checked complete forward result is a selected candidate execution, not a memory-admission or universal-correctness theorem.",
+      "tests": [],
+      "id": "4d3c22f9-82af-4293-85a7-bb122568cde9",
+      "recordedAt": "2026-09-25T15:54:22.990Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T15:55:30.326Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Only the exact integration dependency-report count changed to match the checked audit."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Reviewed the explanation of plane and output invariants, full selected execution, stored-word error conditions, and the explicit admission/universal/TorchLean obligations still open."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseForward.lean",
+      "reason": "Reviewed complete selected-run composition, unchanged input region, unique row stores within the selected sweep, all exits, allocation lengths and access safety. Stored-word accuracy uses explicit RowInput matching/range conditions and does not claim PTX admission or the missing real tensor-tree identity."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseOutput.lean",
+      "reason": "Reviewed arbitrary caller registers, both leader cases and sign-test branches, exact store effects, actual instruction location and exit dispatch. Bounds remain the pre-existing kernel domain."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProductPhase.lean",
+      "reason": "Strengthened the existing product-prefix invariant and result to expose the actual initialized coordinate registers; no new caller hypotheses."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProducts.lean",
+      "reason": "Added the proved initialized coordinate registers required by later rounds; initial caller assumptions and instruction semantics are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseRoundPhase.lean",
+      "reason": "Reviewed induction across thread sweeps and rounds: prior planes preserved, reads derived from the proved plane invariant, fresh writes established, and actual barrier arrivals compiled."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseRounds.lean",
+      "reason": "Reviewed computed indexes, active/inactive instruction regularity, exact state effects and fetched slice. Reads use concrete arrays only for the selected witness; no admission is inferred."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "All 35 newly introduced public declarations are named; the exact transitive dependency audit passed."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updated checked target/report counts and the precise selected-execution proof boundary."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Added exact coverage for four default modules and 35 declarations without changing accepted axioms or dependency pins."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Added four build targets; all package/toolchain revisions unchanged."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Reviewed the summary, exact implementation anchors and remaining field; component intentionally remains partial."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Existing layout, numerical and memory contracts are preserved; explained the distinction between complete selected candidate execution, memory admission and correctness for all admitted executions."
+    }
+  ]
+}

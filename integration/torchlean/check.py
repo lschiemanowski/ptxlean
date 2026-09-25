@@ -90,6 +90,10 @@ COUNTS.update({'Ptx.Scalar.Parallel.Dense': 61, 'Ptx.Scalar.Parallel.Dense.Shape
 COUNTS["Ptx.Scalar.Parallel"] += 10
 TARGETS.update({'PtxBinary32.DenseLayout', 'PtxBinary32.DenseProducts', 'PtxBinary32.ParallelSegment', 'PtxBinary32.DenseProductPhase', 'PtxBinary32.DenseArithmetic', 'PtxBinary32.DenseAddress', 'PtxBinary32.DenseProgram', 'PtxBinary32.DenseSegments', 'PtxBinary32.DenseChecks'})
 
+# Complete selected dense forward candidate; admission remains separate.
+COUNTS["Ptx.Scalar.Parallel.Dense"] += 35
+TARGETS.update({'PtxBinary32.DenseOutput', 'PtxBinary32.DenseRoundPhase', 'PtxBinary32.DenseForward', 'PtxBinary32.DenseRounds'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

@@ -44,12 +44,24 @@ executions, synchronization and memory safety are separate proof obligations;
 no desired numerical result substitutes for an instruction execution or a
 memory-visibility argument.
 
+A selected execution witness chooses the software binary32 result and reads from
+the current storage arrays. Its proof must reach every thread's exit, derive the
+stored row outputs, preserve the input region and bound every emitted access.
+This establishes a complete candidate execution. Showing that PTX's memory
+rules admit that candidate, and proving correctness for all admitted executions,
+requires separate arguments about actual writers, read sources and barrier timing.
+
 Numerical contracts relate finite encoded inputs to ideal real tensors. Bounds
 follow the actual multiplication and tree-addition order, including bias and
 backward arithmetic. A strict error margin at each activation proves that
 rounding cannot change its branch. Result freedom in the underlying instruction
 contracts is retained. The stored forward outputs and all input, weight and bias
 gradients are related to the actual TorchLean forward and generated backward.
+
+The bound for a selected stored row follows from finite input interpretations,
+explicit encoding errors and checks on the calculated intermediate ranges.
+It does not assume the accuracy of intermediate results. Matching that ideal
+padded row tree to the tensor graph is an additional identity to prove.
 
 The first implementation uses binary32 with explicit separate rounding, fixed
 contiguous layouts, and a bounded cooperating thread group for each reduction.

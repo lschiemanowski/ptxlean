@@ -1,3 +1,7 @@
+import PtxBinary32.DenseRounds
+import PtxBinary32.DenseRoundPhase
+import PtxBinary32.DenseOutput
+import PtxBinary32.DenseForward
 import PtxBinary32.DenseLayout
 import PtxBinary32.DenseProgram
 import PtxBinary32.DenseAddress
@@ -894,3 +898,40 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Dense.Checks.seeds
 #print axioms Ptx.Scalar.Parallel.Dense.Checks.check
 #print axioms Ptx.Scalar.Parallel.Dense.Checks.run
+
+-- Complete selected dense forward execution and conditional stored-word accuracy.
+#print axioms Ptx.Scalar.Parallel.Dense.leftIndex
+#print axioms Ptx.Scalar.Parallel.Dense.nextIndex
+#print axioms Ptx.Scalar.Parallel.Dense.round_indices
+#print axioms Ptx.Scalar.Parallel.Dense.round_regular
+#print axioms Ptx.Scalar.Parallel.Dense.roundFinish
+#print axioms Ptx.Scalar.Parallel.Dense.round_effect
+#print axioms Ptx.Scalar.Parallel.Dense.program_round_split
+#print axioms Ptx.Scalar.Parallel.Dense.round_fetch
+#print axioms Ptx.Scalar.Parallel.Dense.round_run
+#print axioms Ptx.Scalar.Parallel.Dense.PlaneReady
+#print axioms Ptx.Scalar.Parallel.Dense.thread_coordinates
+#print axioms Ptx.Scalar.Parallel.Dense.RoundInvariant
+#print axioms Ptx.Scalar.Parallel.Dense.round_reads
+#print axioms Ptx.Scalar.Parallel.Dense.round_invariant_step
+#print axioms Ptx.Scalar.Parallel.Dense.round_phase_exists
+#print axioms Ptx.Scalar.Parallel.Dense.first_plane_exists
+#print axioms Ptx.Scalar.Parallel.Dense.reduction_exists
+#print axioms Ptx.Scalar.Parallel.Dense.rootIndex
+#print axioms Ptx.Scalar.Parallel.Dense.biasIndex
+#print axioms Ptx.Scalar.Parallel.Dense.outputIndex
+#print axioms Ptx.Scalar.Parallel.Dense.output_indices
+#print axioms Ptx.Scalar.Parallel.Dense.outputFinish
+#print axioms Ptx.Scalar.Parallel.Dense.outputValue
+#print axioms Ptx.Scalar.Parallel.Dense.output_regular
+#print axioms Ptx.Scalar.Parallel.Dense.output_effect
+#print axioms Ptx.Scalar.Parallel.Dense.outputDone
+#print axioms Ptx.Scalar.Parallel.Dense.output_fetch
+#print axioms Ptx.Scalar.Parallel.Dense.output_run
+#print axioms Ptx.Scalar.Parallel.Dense.OutputInvariant
+#print axioms Ptx.Scalar.Parallel.Dense.output_value
+#print axioms Ptx.Scalar.Parallel.Dense.output_invariant_step
+#print axioms Ptx.Scalar.Parallel.Dense.output_phase_exists
+#print axioms Ptx.Scalar.Parallel.Dense.selected_forward_exists
+#print axioms Ptx.Scalar.Parallel.Dense.selected_forward_accuracy
+#print axioms Ptx.Scalar.Parallel.Dense.product_coordinates

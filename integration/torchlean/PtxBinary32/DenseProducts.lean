@@ -164,4 +164,19 @@ theorem product_control (s : Shape) (b : Bounds s) (state : Parallel.State s.thr
   intro u ne
   simp [Function.update,ne,Ne.symm ne]
 
+theorem product_coordinates (s : Shape) (b : Bounds s) (state : Parallel.State s.threads) (t : Fin s.threads)
+    (shared : s.sharedWords ≤ state.shared.length) :
+    ((productFinish s b state t).lanes t).scalar.regs 1 = BitVec.ofNat 32 (t.val%s.width) ∧
+    ((productFinish s b state t).lanes t).scalar.regs 2 = BitVec.ofNat 32 (t.val/s.width) := by
+  have ti := t.isLt
+  have mono : s.threads ≤ s.sharedWords := by
+    change s.threads ≤ (s.depth+1)*s.threads
+    nlinarith
+  have inside : t.val < state.shared.length := by omega
+  have tf := thread_fits s b t
+  have address := pointer_index state.shared t.val inside (by omega)
+  simp [productFinish,afterSetup,afterLoad,afterPointer,Reference.dispatch,
+    Reference.binary32,Scalar.Guard.eval,setLane,Scalar.update,ite_apply,Scalar.Operand32.eval,
+    scalarStep,Scalar.eval,Scalar.Instr.plain,Scalar.Operand64.eval,arena,address]
+
 end Ptx.Scalar.Parallel.Dense

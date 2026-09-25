@@ -7,13 +7,14 @@ x\in\mathbb R^n,\quad W\in\mathbb R^{m\times n},\quad b\in\mathbb R^m,
 \qquad y=\operatorname{ReLU}(Wx+b)\in\mathbb R^m.
 \]
 
-**The concrete parallel forward instruction list is now implemented. Its
-product phase and first completed barrier have general fetched-execution proofs.
-The later reduction rounds and output stores have software regression checks,
-but their general execution and memory-admission proofs remain unfinished.**
-The actual TorchLean graph, generated backward and rounded arithmetic bounds
-are checked separately. There is no end-to-end theorem about a completed dense
-layer's stored outputs yet, and no GPU execution or speed claim.
+**The complete selected forward execution is now checked in Lean, including
+all reduction rounds, barriers, bias/ReLU stores and every thread's exit.**
+The proof derives the stored binary32 words from the original inputs and connects
+them to the existing conditional row error bound. It also preserves inputs and
+proves access safety for the whole trace. **PTX memory-model admission and
+correctness for every admitted execution remain unproved.** The final real-valued
+padding identity connecting these row bounds to TorchLean's tensor graph is also
+still open. There is no GPU execution or speed claim.
 
 ## The mathematical computation and its backward
 
@@ -257,7 +258,7 @@ the byte conversion and access bounds. `DenseLayout.scratch_injective` proves
 that distinct round/row/column owners name distinct shared words. This layout
 fact still needs to be connected to every later instruction's emitted access.
 
-## What the new execution proof establishes
+## From individual instructions to a complete selected execution
 
 `ParallelSegment` composes ordinary instruction dispatches. Each segment must
 prove that its instructions advance, leave the thread live and preserve the
@@ -282,18 +283,62 @@ threads through the first actual barrier. It proves that:
 - global storage is unchanged and shared storage retains its length;
 - every emitted access is aligned and within its selected array.
 
-The proof schedules the threads' product segments one at a time, followed by
-all barrier arrivals. This supplies a finite witness for a parallel program;
-it neither imposes that schedule on all executions nor proves scheduler fairness.
-Its memory graph is not yet proved admissible. Address safety, selected reads
-from arrays and memory-model admission remain separate statements.
+The selected schedule runs all product segments, then the first barrier; each
+addition round follows the same pattern. This is a finite witness for a parallel
+program, not a requirement that arbitrary executions use this schedule, and not
+a scheduler-fairness theorem.
 
-`DenseArithmetic.node_tree` connects the plane-indexed arithmetic to the checked
-balanced-tree relation. `forward_accuracy` inherits its explicit finite-input,
-encoding-error and intermediate-range conditions. It concerns the calculated
-reference word; it does not assume or prove that the kernel stores that word.
-The final connection to the ideal tensor graph, including removal of padded
-zero terms, remains part of the end-to-end obligation.
+`DenseRounds.round_regular` checks every instruction in a reduction segment.
+The coordinates come from the thread's actual registers. An active column's
+left and right addresses are proved in bounds; inactive columns skip their
+loads, floating-point addition and store. `round_effect` derives the exact
+fresh-plane write and proves that other threads' lane states are unchanged.
+`round_fetch` locates that segment in the actual common instruction list.
+
+`DenseRoundPhase.PlaneReady` describes the state just after a barrier: threads
+are at the next round's entry, their coordinate registers are initialized, and
+the previous plane holds its calculated tree values. `RoundInvariant` tracks a
+sweep through the threads. Stores go to the new plane, so every earlier plane
+stays unchanged. `round_reads` obtains operands from that preserved storage;
+the proof does not receive their desired values as assumptions. The round then
+executes all barrier arrivals and establishes `PlaneReady` for the next plane.
+Induction on the number of rounds gives `reduction_exists`, including depth zero.
+
+`DenseOutput` checks the bias and activation instructions for both leaders and
+inactive columns. The activation is the actual unsigned sign-bit comparison and
+conditional register clear, not an abstract machine instruction. Positive and
+negative zero therefore produce positive zero. Each thread then fetches its
+exit. `DenseForward.OutputInvariant` keeps the input region unchanged while
+row leaders fill separate output words; already completed threads cannot be
+modified by a later thread's segment.
+
+`selected_forward_exists` combines those proofs. For every supported shape,
+sufficient input/shared allocations and arbitrary caller register seeds, it
+constructs a complete candidate execution with:
+
+- every thread halted at its exit instruction;
+- output row r equal to `forwardWord s originalGlobal r`;
+- every input-region word unchanged;
+- unchanged global and shared allocation lengths;
+- all `depth+1` barriers completed and the barrier resource reset;
+- every emitted memory access aligned and in bounds.
+
+This is symbolic in all input words, including exceptional encodings. A
+real-valued error statement needs additional conditions. `DenseArithmetic` maps
+the plane-indexed calculation to the balanced-tree arithmetic relation.
+`selected_forward_accuracy` now applies that bound to the words **actually
+stored by the complete candidate**, under the existing `RowInput` conditions:
+finite operand interpretations, encoding errors, calculated intermediate-range
+checks, and a tree and bias that match the original input array. It does not
+assume intermediate numerical accuracy. The real tensor/padded-tree identity
+still needs to be proved before claiming the TorchLean correspondence.
+
+The witness chooses concrete array reads and the checked software binary32
+results. That is sufficient to construct steps in the candidate machine. It is
+not yet a certificate that the trace's memory graph satisfies PTX's memory rules.
+Nor does one selected completed execution prove that every permitted execution
+has the same numerical guarantees. The unrestricted candidate relation and its
+arithmetic result freedom have not been narrowed to obtain this proof.
 
 ## Software regression checks
 
@@ -313,20 +358,19 @@ or performance measurements.
 
 ## The exact remaining obligation
 
-The next proof must extend the fetched product prefix through every reduction
-round, bias/activation/output and exit. It must derive each round's guarded
-addresses, unique actual writers and access positions relative to actual
-barrier arrivals and completion. The existing generic memory-order results
-can then force the permitted read sources, rather than assuming fresh values.
-A complete selected execution also needs a checked admission certificate.
+The next step is a memory-admission certificate for the complete selected trace.
+For correctness over arbitrary admitted executions, the proof must additionally
+derive each actual writer and the access positions relative to barrier arrivals
+and completion. The existing generic memory-order results can then force the
+permitted read sources. The selected array-read calculation must not be used as
+a premise that an arbitrary read is fresh.
 
-The resulting stored forward values must be connected to the actual TorchLean
-matrix graph and the numerical bounds, preserving permitted arithmetic results.
-The empty-output wrapper and the separately supplied parallel backward kernel
-with its stored `dx`, `dW`, and `db` correspondence remain additional work.
-Neither the interpreter tests nor the arithmetic-tree theorem discharges these
-obligations. The Stratic component remains partial. No GPU run or benchmark is
-needed for these proof obligations.
+The stored row bounds must then be connected to the actual TorchLean matrix
+graph, including the identity removing the padded zero terms, while preserving
+permitted arithmetic results. The empty-output no-launch wrapper and the
+separately supplied parallel backward kernel with stored `dx`, `dW`, and `db`
+correspondence remain additional work. The Stratic component stays partial.
+No GPU run or benchmark is needed for these proof obligations.
 
 ## Reproduce the checks
 
@@ -343,7 +387,7 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxBinary32.DenseProductPhase
+lake build PtxBinary32.DenseForward
 lake env lean PtxBinary32/DenseChecks.lean
 ```
 

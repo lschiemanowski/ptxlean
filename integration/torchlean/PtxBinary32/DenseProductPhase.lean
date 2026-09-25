@@ -18,6 +18,9 @@ structure ProductInvariant (s : Shape) (original current : Parallel.State s.thre
   ids : ∀ t, (current.lanes t).scalar.regs 0 = BitVec.ofNat 32 t.val
   barrier : current.barrier = Barrier.reset 0
   site : current.site = none
+  coordinates : ∀ t : Fin s.threads, t.val < count →
+    (current.lanes t).scalar.regs 1 = BitVec.ofNat 32 (t.val%s.width) ∧
+    (current.lanes t).scalar.regs 2 = BitVec.ofNat 32 (t.val/s.width)
 
 theorem product_invariant_step (s : Shape) (b : Bounds s)
     (original current : Parallel.State s.threads) (count : Nat) (bound : count < s.threads)
@@ -35,7 +38,7 @@ theorem product_invariant_step (s : Shape) (b : Bounds s)
   have pc21 : ((productFinish s b current t).lanes t).scalar.pc = 21 := by
     simpa [pc0] using frame.1
   refine ⟨memory.1.trans invariant.global,?_,?_,?_,?_,?_,control.1.trans invariant.barrier,
-    control.2.1.trans invariant.site⟩
+    control.2.1.trans invariant.site,?_⟩
   · rw [memory.2,List.length_set]; exact invariant.shared
   · intro u hu
     rw [memory.2]
@@ -67,6 +70,14 @@ theorem product_invariant_step (s : Shape) (b : Bounds s)
     · subst u; exact control.2.2.1.trans (invariant.ids t)
     · rw [control.2.2.2 u eq]; exact invariant.ids u
 
+  · intro u hu
+    by_cases eq : u=t
+    · subst u; exact product_coordinates s b current t ss
+    · rw [control.2.2.2 u eq]
+      apply invariant.coordinates u
+      have ne : u.val ≠ count := by intro h; exact eq (Fin.ext h)
+      omega
+
 /-- There is a concrete instruction execution of every product followed by
 all barrier arrivals. The witness is selected; other admitted observations
 require the separate memory-order argument. -/
@@ -79,14 +90,17 @@ theorem product_phase_exists (s : Shape) (b : Bounds s) (global shared : List Wo
         some (nodeValue s global (t.val/s.width) 0 (t.val%s.width))) ∧
       (∀ t, (final.lanes t).scalar.pc = 22 ∧ (final.lanes t).halted = false) ∧
       final.barrier = Barrier.reset 1 ∧ final.site = none ∧
-      (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) := by
+      (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) ∧
+      (∀ t, (final.lanes t).scalar.regs 0 = BitVec.ofNat 32 t.val ∧
+        (final.lanes t).scalar.regs 1 = BitVec.ofNat 32 (t.val%s.width) ∧
+        (final.lanes t).scalar.regs 2 = BitVec.ofNat 32 (t.val/s.width)) := by
   let start := initial s global shared seeds
   have prefixRun : ∀ count, count ≤ s.threads → ∃ events current,
       Runs (config s b) (program s) start events current ∧ ProductInvariant s start current count := by
     intro count bound
     induction count with
     | zero =>
-      refine ⟨[],start,Runs.nil,?_,?_,?_,?_,?_,?_,?_,?_⟩
+      refine ⟨[],start,Runs.nil,?_,?_,?_,?_,?_,?_,?_,?_,?_⟩
       · rfl
       · rfl
       · intro t ht; omega
@@ -95,6 +109,7 @@ theorem product_phase_exists (s : Shape) (b : Bounds s) (global shared : List Wo
       · intro t; simp [start,initial,Scalar.update]
       · rfl
       · rfl
+      · intro t ht; omega
     | succ count ih =>
       obtain ⟨events,current,run,inv⟩ := ih (by omega)
       let t : Fin s.threads := ⟨count,by omega⟩
@@ -109,9 +124,10 @@ theorem product_phase_exists (s : Shape) (b : Bounds s) (global shared : List Wo
   have fetch : (program s)[21]? = some (.sync 0) := by simp [program,products,pointer]
   obtain ⟨arrivals,release⟩ := barrier_round_exists (config s b) current (program s) 21 0
     pcs inv.live inv.barrier inv.site fetch (by change 94=94 ∧ 70≤70; decide)
-  refine ⟨events++arrivals,afterRound current 0,runs_append run release,inv.global,inv.shared,?_,?_,rfl,rfl,?_⟩
+  refine ⟨events++arrivals,afterRound current 0,runs_append run release,inv.global,inv.shared,?_,?_,rfl,rfl,?_,?_⟩
   · intro t; exact inv.products t t.isLt
   · intro t; exact ⟨by simp [afterRound,pcs],inv.live t⟩
   · intro event member; exact runs_access_safe (runs_append run release) event member
+  · intro t; exact ⟨inv.ids t,inv.coordinates t t.isLt⟩
 
 end Ptx.Scalar.Parallel.Dense
