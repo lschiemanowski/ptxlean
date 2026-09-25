@@ -17,6 +17,20 @@ Bias and activation belong to the same forward computation. The cache-free
 backward recomputes affine values and gates, uses another parallel reduction for
 W-transpose times g, and computes weight-gradient entries independently.
 
+The first forward kernel places all output rows in one cooperating thread array.
+For a padded row width p=2^d, thread number r*p+c owns column c of row r.
+The matrix is stored row by row. Global storage contains x, then W, then b,
+then a separate output slice. Thread-number registers are supplied at entry;
+ordinary integer instructions compute the row, column and byte addresses.
+Out-of-range padded columns use zero operands without reading input storage.
+Each round halves the active columns within every row, while all threads reach
+the barrier. Column zero of each row adds bias, applies ReLU and stores output.
+Shared storage reserves a full padded plane for each round, including the
+initial products. Bounds must cover that total allocation and prevent address
+arithmetic from wrapping. An empty output requires no launch; an empty input
+can use a one-leaf zero reduction. This bounded single-array layout does not yet
+cover larger layers split across multiple cooperating arrays.
+
 The implementation fixes matrix layout, thread ownership, reduction order,
 scratch lifetimes, dimension and address bounds, and the sequence of completed
 launches. Each reduction round uses fresh shared scratch locations, with one

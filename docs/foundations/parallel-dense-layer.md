@@ -1,4 +1,4 @@
-# A parallel dense–ReLU layer: specification and execution foundations
+# A parallel dense–ReLU layer: program and verification boundaries
 
 The target computation is
 
@@ -7,13 +7,13 @@ x\in\mathbb R^n,\quad W\in\mathbb R^{m\times n},\quad b\in\mathbb R^m,
 \qquad y=\operatorname{ReLU}(Wx+b)\in\mathbb R^m.
 \]
 
-**This milestone establishes the actual TorchLean graph and generated backward,
-rounded reduction arithmetic, and reusable parallel control and address-safety
-proofs. It does not yet implement or verify the parallel dense-layer kernel.**
-In particular, there is no claim about a completed layer's stored outputs,
-a completed dense-layer execution, GPU execution, or speed.
-The cooperating-thread foundations now include a memory graph derived from
-actual repeated barriers and a separately checked two-round execution witness.
+**The concrete parallel forward instruction list is now implemented. Its
+product phase and first completed barrier have general fetched-execution proofs.
+The later reduction rounds and output stores have software regression checks,
+but their general execution and memory-admission proofs remain unfinished.**
+The actual TorchLean graph, generated backward and rounded arithmetic bounds
+are checked separately. There is no end-to-end theorem about a completed dense
+layer's stored outputs yet, and no GPU execution or speed claim.
 
 ## The mathematical computation and its backward
 
@@ -205,20 +205,128 @@ against a chronological rank. `admitted` derives the original memory constraints
 These proofs are symbolic in `a` and `b`, including exceptional encodings; they
 make no claim of real-valued accuracy for such encodings.
 
+## The concrete forward program
+
+`DenseProgram.lean` supplies a common instruction list, specialized to a shape.
+It uses represented PTX instructions, including integer address arithmetic,
+guarded loads and stores, separate binary32 multiplication and addition, and
+`bar.sync 0`. It does not insert an abstract matrix multiplication or reduction
+step. This is the internal instruction representation; PTX text parsing,
+register declarations and the CUDA launch interface are separate obligations.
+
+Choose a padded width `p = 2^depth` with `n ≤ p`. There are `m*p` threads in one
+cooperating thread array. Thread `r*p+c` owns row `r` and column `c`.
+For example, two rows with three inputs use eight threads when `p=4`.
+Columns zero through two load inputs; column three uses zero without loading.
+
+The global array has four consecutive slices:
+
+| Words | Contents |
+| --- | --- |
+| `0 .. n-1` | Input vector x |
+| `n .. n+m*n-1` | Matrix W, one row after another |
+| `n+m*n .. n+m*n+m-1` | Bias b |
+| Following m words | Output y |
+
+Shared memory contains `depth+1` planes, each of `m*p` words. Plane zero holds
+products. Every addition round writes to a new plane, so a consumer's inputs
+are never overwritten by a later round. This is a simple ownership discipline
+at the cost of additional shared storage. It is not a claim of an optimal kernel.
+
+| Phase | Active work | Work required of every thread |
+| --- | --- | --- |
+| Products | Load `W[r,c]` and `x[c]` when `c<n`; otherwise use zero. Multiply and store plane zero. | Reach the first barrier. |
+| Round k, from zero | Columns `c < 2^(depth-k-1)` read columns `2*c` and `2*c+1` from plane k, add, and store column c in plane k+1. | Reach the next barrier, including inactive columns. |
+| Output | Column zero loads its row's root, adds bias, clears negative values to positive zero, and stores y[r]. | Exit. |
+
+The program has `42+16*depth` instructions. The domain requires positive `m`,
+`depth<32`, at most 1024 threads, and a conservative bound
+`globalWords+sharedWords+2*p < 2^30`. The actual supplied arrays must cover their
+required word counts. These bounds justify represented arithmetic; they are not
+a GPU resource or launch-conformance theorem. An empty input can use `p=1` and
+then computes ReLU of the bias. An empty output requires no launch, but a
+formal wrapper for that case has not yet been added.
+
+Only the thread ID and entry program counter are installed initially. Other
+registers may contain arbitrary caller values. The program initializes every
+operand used by the proved product phase, including the zeros for padding.
+Byte pointers are calculated by widening a word index to 64 bits and doubling
+twice. `DenseAddress.decoded_coordinates` proves the bit mask and shift compute
+the intended row and column; `pointer_arithmetic` and `pointer_index` establish
+the byte conversion and access bounds. `DenseLayout.scratch_injective` proves
+that distinct round/row/column owners name distinct shared words. This layout
+fact still needs to be connected to every later instruction's emitted access.
+
+## What the new execution proof establishes
+
+`ParallelSegment` composes ordinary instruction dispatches. Each segment must
+prove that its instructions advance, leave the thread live and preserve the
+barrier. `Segment.compile` additionally checks the segment's exact place in the
+common program and an initially runnable thread. Thus a convenient arithmetic
+calculation cannot masquerade as a fetched instruction execution.
+
+`DenseSegments` proves pointer construction, coordinate setup and guarded
+memory operations. `DenseProducts.product_segment` composes these into the
+actual first 21 instructions for any thread, with no assumed loaded values.
+The selected witness reads the concrete global array, and padding executes
+without attempting an out-of-range load. `product_memory` calculates the exact
+product written to that thread's slot.
+
+`DenseProductPhase.product_phase_exists` then constructs an execution of all
+threads through the first actual barrier. It proves that:
+
+- every thread reaches instruction 22 alive;
+- the barrier has completed and reset to generation one;
+- every product slot contains the product calculated from its row's original
+  inputs, including padded zeros;
+- global storage is unchanged and shared storage retains its length;
+- every emitted access is aligned and within its selected array.
+
+The proof schedules the threads' product segments one at a time, followed by
+all barrier arrivals. This supplies a finite witness for a parallel program;
+it neither imposes that schedule on all executions nor proves scheduler fairness.
+Its memory graph is not yet proved admissible. Address safety, selected reads
+from arrays and memory-model admission remain separate statements.
+
+`DenseArithmetic.node_tree` connects the plane-indexed arithmetic to the checked
+balanced-tree relation. `forward_accuracy` inherits its explicit finite-input,
+encoding-error and intermediate-range conditions. It concerns the calculated
+reference word; it does not assume or prove that the kernel stores that word.
+The final connection to the ideal tensor graph, including removal of padded
+zero terms, remains part of the end-to-end obligation.
+
+## Software regression checks
+
+`DenseChecks` runs the complete instruction list through `ParallelReference`.
+The cases cover two rows and three inputs padded to four, an empty input with
+two biases, a one-input activation exactly at zero, and a two-row power-of-two
+case. Both activation branches are exercised. Caller registers, address
+registers, output and shared storage start with nonzero sentinel values so
+accidental reliance on zero initialization is exposed.
+
+Each case checks successful statuses, every thread's exit and final program
+counter, outputs, unchanged inputs, allocation lengths and the final barrier
+generation. The integration checker evaluates these cases afresh even when
+Lean build artifacts are cached. These are executable tests of the selected
+software semantics, not general Lean proofs, memory-admission proofs, GPU runs
+or performance measurements.
+
 ## The exact remaining obligation
 
-A full parallel-layer theorem still needs its fetched kernel program. The
-generic history, event-projection and single-writer publication results are
-available, and the computed two-round witness demonstrates their compatibility.
-They do not yet establish the layer's scratch ownership, phase timing, padded
-reduction values, or an admitted complete layer execution.
+The next proof must extend the fetched product prefix through every reduction
+round, bias/activation/output and exit. It must derive each round's guarded
+addresses, unique actual writers and access positions relative to actual
+barrier arrivals and completion. The existing generic memory-order results
+can then force the permitted read sources, rather than assuming fresh values.
+A complete selected execution also needs a checked admission certificate.
 
-Only then can the layer connect stored `y`, `dx`, `dW`, and `db` to the graph and
-the error bounds, with padding, address calculations and dimension/launch limits
-proved. Assuming the desired read values, using arithmetic-tree evaluation as
-execution, or serializing the layer into the old scalar launches would leave
-that obligation unresolved. The Stratic component remains partial for this
-reason. No GPU run or benchmark is needed for these proof obligations.
+The resulting stored forward values must be connected to the actual TorchLean
+matrix graph and the numerical bounds, preserving permitted arithmetic results.
+The empty-output wrapper and the separately supplied parallel backward kernel
+with its stored `dx`, `dW`, and `db` correspondence remain additional work.
+Neither the interpreter tests nor the arithmetic-tree theorem discharges these
+obligations. The Stratic component remains partial. No GPU run or benchmark is
+needed for these proof obligations.
 
 ## Reproduce the checks
 
@@ -235,7 +343,8 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxDenseVJP PtxBinary32.ReductionRelu PtxBinary32.ParallelPublication
+lake build PtxBinary32.DenseProductPhase
+lake env lean PtxBinary32/DenseChecks.lean
 ```
 
 Lean checking establishes the stated formal results. Source review assesses the

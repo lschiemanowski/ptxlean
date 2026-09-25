@@ -7,7 +7,7 @@
     }
   },
   "summary": [
-    "Fetch integer, binary32 and full-group barrier instructions for cooperating threads with separate global and shared storage and checked access bounds.",
+    "Fetch integer, binary32 and full-group barrier instructions for cooperating threads with separate global and shared storage and checked access bounds; compose instruction segments only after matching their actual program positions.",
     "Derive repeated-barrier ordering and complete memory labels from actual executions; force single-writer publication through the existing memory constraints.",
     "Construct a completed two-thread, two-round computed-publication witness with checked read sources and no circular dependencies; concrete layer ownership, timing and execution proofs remain separate."
   ],
@@ -167,6 +167,18 @@
         "path": "integration/torchlean/PtxBinary32/ParallelPublication.lean",
         "passage": {
           "quote": "theorem graph_actual (a b : Word) : List.ofFn (graph a b).event =\n    Memory.labels program (initial a b).global (initial a b).shared (execution a b).2.1 :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Before using the segment in a program execution, its instructions\nmust match the common program at that thread's current position, and the thread\nmust be live and not waiting at a barrier."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelSegment.lean",
+        "passage": {
+          "quote": "theorem Segment.compile (segment : Segment cfg thread code s events final)\n    (fetch : Fetches program (s.lanes thread).scalar.pc code)\n    (live : (s.lanes thread).halted = false) (fresh : s.barrier.arrived thread = false)\n    (eligible : Mixed.Eligible cfg.target) : Runs cfg program s events final :="
         }
       }
     }

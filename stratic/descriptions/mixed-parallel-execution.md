@@ -8,6 +8,13 @@ keeps its own registers, predicates and program counter, which identifies its
 next instruction. A schedule chooses one thread to take the next step; no
 simultaneous or lockstep hardware execution is assumed.
 
+Several consecutive instructions can be proved together as a segment. Such a
+proof checks that each instruction advances its thread and leaves the barrier
+unchanged. Before using the segment in a program execution, its instructions
+must match the common program at that thread's current position, and the thread
+must be live and not waiting at a barrier. This allows short instruction proofs
+to compose without replacing instruction execution by an assumed result.
+
 There are two separate lists of memory words: global storage and the group's
 shared storage. A memory instruction explicitly selects one of them. The tag
 also remains on its trace event, so an access cannot silently change its memory

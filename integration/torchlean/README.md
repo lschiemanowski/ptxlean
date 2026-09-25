@@ -167,8 +167,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 39 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 745
+All 48 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 833
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward
@@ -211,10 +211,11 @@ Neither receipt is a substitute for rerunning checks after changing its inputs.
 ## Parallel dense-layer foundations
 
 The [dense-layer study](../../docs/foundations/parallel-dense-layer.md) covers the
-actual TorchLean graph for `ReLU(Wx+b)` and its generated backward, together with
-balanced-tree binary32 arithmetic and a fetched mixed-thread machine supporting
-repeated full-group barriers. Actual histories now supply the memory graph and
-barrier ordering, with a completed admitted two-round computed-publication
-witness for arbitrary input words. The parallel layer kernel, its concrete
-ownership and timing proofs, and stored-gradient correspondence remain
-unimplemented. No GPU execution or benchmarking is included.
+actual TorchLean graph for `ReLU(Wx+b)` and its generated backward, balanced-tree
+binary32 arithmetic, and the concrete forward instruction list. The product
+phase through its first completed barrier has a general fetched-execution and
+access-safety proof. Four complete software-interpreter cases exercise padding,
+empty inputs and activation branches. General proofs of the later reduction
+rounds, output stores, memory admission and stored numerical correspondence
+remain open; the backward kernel is also unimplemented. No GPU execution or
+benchmarking is included.

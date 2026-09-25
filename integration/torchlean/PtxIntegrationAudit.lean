@@ -1,3 +1,12 @@
+import PtxBinary32.DenseLayout
+import PtxBinary32.DenseProgram
+import PtxBinary32.DenseAddress
+import PtxBinary32.ParallelSegment
+import PtxBinary32.DenseSegments
+import PtxBinary32.DenseArithmetic
+import PtxBinary32.DenseProducts
+import PtxBinary32.DenseProductPhase
+import PtxBinary32.DenseChecks
 import PtxBinary32.ParallelHistory
 import PtxBinary32.ParallelMemory
 import PtxBinary32.ParallelReference
@@ -795,3 +804,93 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Memory.Prior.initial_unique
 #print axioms Ptx.Scalar.Parallel.Memory.Prior.memoryKind
 #print axioms Ptx.Scalar.Parallel.Memory.Prior.eval_effect_origin
+
+-- Concrete dense program, bounded addresses, actual product phase, and software checks.
+#print axioms Ptx.Scalar.Parallel.Dense.Shape
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.width
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.threads
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.weightBase
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.biasBase
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.outputBase
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.globalWords
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.sharedWords
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.thread
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.weight
+#print axioms Ptx.Scalar.Parallel.Dense.Shape.scratch
+#print axioms Ptx.Scalar.Parallel.Dense.width_positive
+#print axioms Ptx.Scalar.Parallel.Dense.thread_bound
+#print axioms Ptx.Scalar.Parallel.Dense.thread_injective
+#print axioms Ptx.Scalar.Parallel.Dense.weight_bound
+#print axioms Ptx.Scalar.Parallel.Dense.global_slices
+#print axioms Ptx.Scalar.Parallel.Dense.scratch_bound
+#print axioms Ptx.Scalar.Parallel.Dense.scratch_injective
+#print axioms Ptx.Scalar.Parallel.Dense.children_bound
+#print axioms Ptx.Scalar.Parallel.Dense.word
+#print axioms Ptx.Scalar.Parallel.Dense.scalar
+#print axioms Ptx.Scalar.Parallel.Dense.guarded
+#print axioms Ptx.Scalar.Parallel.Dense.pointer
+#print axioms Ptx.Scalar.Parallel.Dense.products
+#print axioms Ptx.Scalar.Parallel.Dense.round
+#print axioms Ptx.Scalar.Parallel.Dense.output
+#print axioms Ptx.Scalar.Parallel.Dense.program
+#print axioms Ptx.Scalar.Parallel.Dense.Bounds
+#print axioms Ptx.Scalar.Parallel.Dense.config
+#print axioms Ptx.Scalar.Parallel.Dense.initial
+#print axioms Ptx.Scalar.Parallel.Dense.products_length
+#print axioms Ptx.Scalar.Parallel.Dense.round_length
+#print axioms Ptx.Scalar.Parallel.Dense.output_length
+#print axioms Ptx.Scalar.Parallel.Dense.program_length
+#print axioms Ptx.Scalar.Parallel.Dense.round_barrier
+#print axioms Ptx.Scalar.Parallel.Dense.product_barrier
+#print axioms Ptx.Scalar.Parallel.Dense.output_exit
+#print axioms Ptx.Scalar.Parallel.Dense.relu_bits
+#print axioms Ptx.Scalar.Parallel.Dense.thread_fits
+#print axioms Ptx.Scalar.Parallel.Dense.width_fits
+#print axioms Ptx.Scalar.Parallel.Dense.coordinates
+#print axioms Ptx.Scalar.Parallel.Dense.decoded_coordinates
+#print axioms Ptx.Scalar.Parallel.Dense.bytePointer
+#print axioms Ptx.Scalar.Parallel.Dense.pointer_index
+#print axioms Ptx.Scalar.Parallel.Dense.pointer_arithmetic
+#print axioms Ptx.Scalar.Parallel.Dense.global_output_disjoint
+#print axioms Ptx.Scalar.Parallel.Segment
+#print axioms Ptx.Scalar.Parallel.Fetches
+#print axioms Ptx.Scalar.Parallel.fetches_head
+#print axioms Ptx.Scalar.Parallel.fetches_tail
+#print axioms Ptx.Scalar.Parallel.Segment.frame
+#print axioms Ptx.Scalar.Parallel.Segment.compile
+#print axioms Ptx.Scalar.Parallel.Segment.append
+#print axioms Ptx.Scalar.Parallel.segmentReference
+#print axioms Ptx.Scalar.Parallel.SegmentRegular
+#print axioms Ptx.Scalar.Parallel.segmentReference_sound
+#print axioms Ptx.Scalar.Parallel.segmentReference_append
+#print axioms Ptx.Scalar.Parallel.segmentRegular_append
+#print axioms Ptx.Scalar.Parallel.fetches_slice
+#print axioms Ptx.Scalar.Parallel.Dense.afterPointer
+#print axioms Ptx.Scalar.Parallel.Dense.pointer_execution
+#print axioms Ptx.Scalar.Parallel.Dense.afterSetup
+#print axioms Ptx.Scalar.Parallel.Dense.setup_execution
+#print axioms Ptx.Scalar.Parallel.Dense.afterLoad
+#print axioms Ptx.Scalar.Parallel.Dense.guarded_load_execution
+#print axioms Ptx.Scalar.Parallel.Dense.afterStore
+#print axioms Ptx.Scalar.Parallel.Dense.guarded_store_execution
+#print axioms Ptx.Scalar.Parallel.Dense.binary32_regular
+#print axioms Ptx.Scalar.Parallel.Dense.operands
+#print axioms Ptx.Scalar.Parallel.Dense.nodeValue
+#print axioms Ptx.Scalar.Parallel.Dense.affineWord
+#print axioms Ptx.Scalar.Parallel.Dense.forwardWord
+#print axioms Ptx.Scalar.Parallel.Dense.node_tree
+#print axioms Ptx.Scalar.Parallel.Dense.forward_accuracy
+#print axioms Ptx.Scalar.Parallel.Dense.weight_index_fits
+#print axioms Ptx.Scalar.Parallel.Dense.productFinish
+#print axioms Ptx.Scalar.Parallel.Dense.product_segment
+#print axioms Ptx.Scalar.Parallel.Dense.products_fetch
+#print axioms Ptx.Scalar.Parallel.Dense.product_run
+#print axioms Ptx.Scalar.Parallel.Dense.product_memory
+#print axioms Ptx.Scalar.Parallel.Dense.product_control
+#print axioms Ptx.Scalar.Parallel.Dense.ProductInvariant
+#print axioms Ptx.Scalar.Parallel.Dense.product_invariant_step
+#print axioms Ptx.Scalar.Parallel.Dense.product_phase_exists
+#print axioms Ptx.Scalar.Parallel.Dense.Checks.schedule
+#print axioms Ptx.Scalar.Parallel.Dense.Checks.seeds
+#print axioms Ptx.Scalar.Parallel.Dense.Checks.check
+#print axioms Ptx.Scalar.Parallel.Dense.Checks.run

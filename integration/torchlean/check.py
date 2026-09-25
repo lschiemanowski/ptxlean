@@ -85,6 +85,11 @@ TARGETS.update({'PtxDenseVJP', 'PtxTensorContext', 'PtxBinary32.Reduction', 'Ptx
 COUNTS.update({'Ptx.Scalar.Parallel.History': 13, 'Ptx.Scalar.Parallel.Memory': 21, 'Ptx.Scalar.Parallel.Reference': 8, 'Ptx.Scalar.Parallel.Publication': 21, 'Ptx.Scalar.Parallel.Memory.Prior': 4})
 TARGETS.update({'PtxBinary32.ParallelReference', 'PtxBinary32.ParallelPublication', 'PtxBinary32.ParallelMemory', 'PtxBinary32.ParallelHistory'})
 
+# Concrete dense forward program; general fetched proof currently stops after product publication.
+COUNTS.update({'Ptx.Scalar.Parallel.Dense': 61, 'Ptx.Scalar.Parallel.Dense.Shape': 10, 'Ptx.Scalar.Parallel.Segment': 3, 'Ptx.Scalar.Parallel.Dense.Checks': 4})
+COUNTS["Ptx.Scalar.Parallel"] += 10
+TARGETS.update({'PtxBinary32.DenseLayout', 'PtxBinary32.DenseProducts', 'PtxBinary32.ParallelSegment', 'PtxBinary32.DenseProductPhase', 'PtxBinary32.DenseArithmetic', 'PtxBinary32.DenseAddress', 'PtxBinary32.DenseProgram', 'PtxBinary32.DenseSegments', 'PtxBinary32.DenseChecks'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 
@@ -160,6 +165,9 @@ def main():
             raise ValueError(f"Actual Lean differs from pin {pin}: {version}")
         print(version, flush=True)
         subprocess.run(["lake", "--no-cache", "build"], cwd=HERE, check=True)
+        # Fresh evaluation is required even when the compiled module was cached.
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/DenseChecks.lean"],
+                       cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(audit.stdout, end="", flush=True)

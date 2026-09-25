@@ -8,10 +8,10 @@
   },
   "summary": [
     "Connect a vector-output dense–ReLU layer and all its gradients to an actual TorchLean graph and automatically generated backward.",
-    "Verify a separately supplied parallel binary32 implementation with a fixed reduction tree, fresh scratch per round, synchronization and explicit storage and numerical conditions; defer GPU execution and benchmarking."
+    "Verify a separately supplied parallel binary32 implementation with a fixed reduction tree, fresh scratch per round and explicit numerical conditions; the first forward layout places all rows in one bounded cooperating thread array."
   ],
   "realization": "partial",
-  "remaining": "Implemented: actual TorchLean matrix graph, generated VJP and derivative identification away from every ReLU kink; balanced-tree arithmetic existence and universal error bounds; bias/ReLU/gate bounds; reusable fetched mixed-thread control, trace-derived repeated-barrier ordering, complete memory projection, single-writer source forcing and a completed admitted two-round publication witness. Missing: the parallel layer program and its completed admitted execution, layer-specific scratch ownership and phase timing, padding and dimension/launch bounds, and stored forward/backward numerical correspondence. The publication witness is not a layer kernel; arithmetic existence is not layer execution existence.",
+  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list, disjoint layout and coordinate/pointer arithmetic; fetched all-thread product execution through its first completed barrier with exact padded product stores and access safety. Four complete software-interpreter cases are tests only. Missing: general execution proofs for later rounds and output stores; actual-access ownership and barrier timing for the full layer; complete memory admission; stored forward numerical correspondence to TorchLean including padding; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. The product-prefix witness is not a completed or admitted layer execution.",
   "links": [
     {
       "kind": "implementation",
@@ -121,6 +121,90 @@
         }
       },
       "reason": "A parallel arithmetic result must come from fetched instructions and permitted memory observations; the execution layer preserves this separate obligation."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first forward kernel places all output rows in one cooperating thread array.\nFor a padded row width p=2^d, thread number r*p+c owns column c of row r."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseProgram.lean",
+        "passage": {
+          "quote": "def program (s : Shape) : List Parallel.Instr :=\n  products s ++ (List.range s.depth).flatMap (round s) ++ output s"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Shared storage reserves a full padded plane for each round, including the\ninitial products."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseLayout.lean",
+        "passage": {
+          "quote": "theorem scratch_injective (s : Shape) (p r c p' r' c' : Nat)\n    (hr : r < s.rows) (hc : c < s.width) (hr' : r' < s.rows) (hc' : c' < s.width)\n    (same : s.scratch p r c = s.scratch p' r' c') : p=p' ∧ r=r' ∧ c=c' :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Thread-number registers are supplied at entry;\nordinary integer instructions compute the row, column and byte addresses."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseAddress.lean",
+        "passage": {
+          "quote": "theorem decoded_coordinates (s : Shape) (b : Bounds s) (t : Fin s.threads) :\n    (Scalar.BinOp.eval .and (BitVec.ofNat 32 t.val) (BitVec.ofNat 32 (s.width-1))).toNat = t.val % s.width ∧\n    (Scalar.BinOp.eval .shr (BitVec.ofNat 32 t.val) (BitVec.ofNat 32 s.depth)).toNat = t.val / s.width :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each memory access must be justified by the supplied\nstorage and computed address."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseSegments.lean",
+        "passage": {
+          "quote": "theorem guarded_load_execution (cfg : Config n) (state : Parallel.State n) (t : Fin n)\n    (space : Space) (destination address index : Nat)\n    (valid : (state.lanes t).scalar.preds 0 = true →\n      Scalar.addressIndex (arena state (some space)) ((state.lanes t).scalar.addrs address) = .ok index) :\n    SegmentRegular cfg t [guarded space (.load destination (.reg address))] state ∧\n    (segmentReference cfg t [guarded space (.load destination (.reg address))] state).1 =\n      afterLoad state t space destination index :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Out-of-range padded columns use zero operands without reading input storage."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseProducts.lean",
+        "passage": {
+          "quote": "theorem product_segment (s : Shape) (b : Bounds s) (state : Parallel.State s.threads) (t : Fin s.threads)\n    (tid : (state.lanes t).scalar.regs 0 = BitVec.ofNat 32 t.val)\n    (global : s.globalWords ≤ state.global.length) (shared : s.sharedWords ≤ state.shared.length) :\n    ∃ events, Segment (config s b) t ((products s).take 21) state events (productFinish s b state t) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Execution existence, correctness of completed\nexecutions, synchronization and memory safety are separate proof obligations;\nno desired numerical result substitutes for an instruction execution or a\nmemory-visibility argument."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseProductPhase.lean",
+        "passage": {
+          "quote": "theorem product_phase_exists (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, Runs (config s b) (program s) (initial s global shared seeds) events final ∧\n      final.global = global ∧ final.shared.length = shared.length ∧\n      (∀ t : Fin s.threads, final.shared[t.val]? =\n        some (nodeValue s global (t.val/s.width) 0 (t.val%s.width))) ∧\n      (∀ t, (final.lanes t).scalar.pc = 22 ∧ (final.lanes t).halted = false) ∧\n      final.barrier = Barrier.reset 1 ∧ final.site = none ∧\n      (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Bounds\nfollow the actual multiplication and tree-addition order, including bias and\nbackward arithmetic."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseArithmetic.lean",
+        "passage": {
+          "quote": "theorem forward_accuracy (s : Shape) (global : List Word) (row : Nat)\n    (i : Reduction.RowInput)\n    (tree : Reduction.words i.tree = Reduction.balanced s.depth 0 (operands s global row))\n    (bias : i.bias = global[s.biasBase+row]!) :\n    finiteReal (forwardWord s global row) = some (max i.affine 0) ∧\n      |max i.affine 0-max i.idealAffine 0| ≤ i.error :="
+        }
+      }
     }
   ]
 }

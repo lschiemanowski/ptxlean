@@ -1,0 +1,126 @@
+{
+  "id": "c619c186-61dd-4552-9c94-4985da573438",
+  "base": "b448a96b2bf1ff5bb5b39b74aabb8fad8eb2fa85",
+  "contentTree": "ec10c3abc749ff2fc0797c29d8f43cba2918eb11",
+  "reviewer": "Codex",
+  "summary": "Implement the concrete dense forward instruction list and prove bounded coordinate/address arithmetic plus fetched all-thread product publication through the first barrier. Add four whole-program software regressions. Keep later execution, actual memory-order admission and stored numerical correspondence explicitly incomplete.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Added the concrete one-CTA layout, forward program and product-phase proof links; reconciled remaining obligations without calling the partial witness a verified full layer."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Added the reusable segment contract and exact-fetched-position obligation; underlying dispatch, candidate results, scopes and barrier semantics remain unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Fresh pinned builds, source guards and exact allowed-axiom reports remain the assurance contract; more endpoints and explicit software tests preserve its distinction from semantic fidelity and hardware conformance."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The parent requires explicit computation, domain and separate proof/experimental claims. The dense child remains partial and now identifies a proved product prefix and tested whole instruction list without claiming end-to-end verification."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The parent already requires actual instructions, explicit initial caller state and conditions for composing per-thread results. The new segment helper discharges those obligations without changing scalar semantics or granting memory admission."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "ec10c3abc749ff2fc0797c29d8f43cba2918eb11",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check",
+      "outcome": "pass",
+      "environment": "Linux; pinned Lean 4.34.0; unchanged TorchLean/FloatLib dependency revisions; no GPU or external model calls",
+      "evidence": "Both check commands exited 0. Root audit: 1643 declarations. Integration: all 48 default targets built, four fresh full-program interpreter checks passed, and 833 exact dependency reports admitted only propext, Classical.choice and Quot.sound. Stratic validation reported no issues. Before/after snapshots both ec10c3abc749ff2fc0797c29d8f43cba2918eb11. Source guards rejected proof placeholders and unchecked axioms. Interpreter checks are tests, not general layer proofs.",
+      "tests": [],
+      "id": "5ec6b514-4768-4c1f-93f5-a8301483094f",
+      "recordedAt": "2026-09-25T15:17:09.800Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T15:19:00.255Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Reviewed the sole change: exact integration audit count now matches the expanded driver."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Reviewed the expanded study, layout and phase table, proof endpoints, tests and exact remaining obligations; it expressly withholds full-layer and memory-admission claims."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseAddress.lean",
+      "reason": "Reviewed all new definitions and supporting proofs beyond the linked main contract: bounded layout/address arithmetic, selected arithmetic values, exact product segments and the all-thread product/barrier witness. All public declarations are in the fresh dependency audit. No proof of later layer phases or memory admission is inferred."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseArithmetic.lean",
+      "reason": "Reviewed all new definitions and supporting proofs beyond the linked main contract: bounded layout/address arithmetic, selected arithmetic values, exact product segments and the all-thread product/barrier witness. All public declarations are in the fresh dependency audit. No proof of later layer phases or memory admission is inferred."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseChecks.lean",
+      "reason": "Four executable software regressions cover whole-program exits, statuses, padded and empty inputs, activation branches, sentinel caller state, outputs and storage preservation; these are explicitly not proof endpoints."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseLayout.lean",
+      "reason": "Reviewed all new definitions and supporting proofs beyond the linked main contract: bounded layout/address arithmetic, selected arithmetic values, exact product segments and the all-thread product/barrier witness. All public declarations are in the fresh dependency audit. No proof of later layer phases or memory admission is inferred."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProductPhase.lean",
+      "reason": "Reviewed all new definitions and supporting proofs beyond the linked main contract: bounded layout/address arithmetic, selected arithmetic values, exact product segments and the all-thread product/barrier witness. All public declarations are in the fresh dependency audit. No proof of later layer phases or memory admission is inferred."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProducts.lean",
+      "reason": "Reviewed all new definitions and supporting proofs beyond the linked main contract: bounded layout/address arithmetic, selected arithmetic values, exact product segments and the all-thread product/barrier witness. All public declarations are in the fresh dependency audit. No proof of later layer phases or memory admission is inferred."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProgram.lean",
+      "reason": "Reviewed all new definitions and supporting proofs beyond the linked main contract: bounded layout/address arithmetic, selected arithmetic values, exact product segments and the all-thread product/barrier witness. All public declarations are in the fresh dependency audit. No proof of later layer phases or memory admission is inferred."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseSegments.lean",
+      "reason": "Reviewed all new definitions and supporting proofs beyond the linked main contract: bounded layout/address arithmetic, selected arithmetic values, exact product segments and the all-thread product/barrier witness. All public declarations are in the fresh dependency audit. No proof of later layer phases or memory admission is inferred."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelSegment.lean",
+      "reason": "Reviewed the segment relation, regular reference evaluator, composition and frame lemmas: every step is actual dispatch and compilation requires exact fetch plus initial eligibility and runnable status; no admission claim."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Imports and dependency reports cover all 88 newly introduced public source declarations; 833 reports passed the exact audit."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Reviewed revised audit counts and the product-prefix versus completed-layer boundary."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Expanded exact target/declaration allowlists and forced fresh software regression evaluation without changing dependency pins or accepted axioms."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Added nine explicit default module targets; dependency and toolchain pins unchanged."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Reviewed the self-contained contracts, summaries, partial realization and implementation links; outstanding full-layer proofs remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Reviewed the self-contained contracts, summaries, partial realization and implementation links; outstanding full-layer proofs remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Reviewed the self-contained contracts, summaries, partial realization and implementation links; outstanding full-layer proofs remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Reviewed the self-contained contracts, summaries, partial realization and implementation links; outstanding full-layer proofs remain explicit."
+    }
+  ]
+}
