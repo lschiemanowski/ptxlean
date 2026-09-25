@@ -46,7 +46,7 @@ theorem output_invariant_step (s : Shape) (b : Bounds s) (global : List Word)
   have gs : s.globalWords ≤ state.global.length := by rw [inv.length,ready.global]; exact globalBound
   have ss : s.sharedWords ≤ state.shared.length := by rw [inv.shared]; exact ready.extent
   have eff := output_effect s b state t regs gs ss
-  have frame := (segmentReference_sound (output_regular s b state t regs gs ss)).frame
+  have frame := (segmentReference_concrete (output_regular s b state t regs gs ss)).frame
   change ((outputFinish s b state t).lanes t).scalar.pc = (state.lanes t).scalar.pc + ((output s).take 19).length ∧
     ((outputFinish s b state t).lanes t).halted = (state.lanes t).halted ∧
     (outputFinish s b state t).barrier = state.barrier at frame
@@ -99,14 +99,14 @@ are preserved. The result is for the selected software arithmetic choices. -/
 theorem output_phase_exists (s : Shape) (b : Bounds s) (global : List Word)
     (start : Parallel.State s.threads) (ready : PlaneReady s global start s.depth)
     (globalBound : s.globalWords ≤ global.length) :
-    ∃ events final, Runs (config s b) (program s) start events final ∧
+    ∃ events final, ConcreteRuns (config s b) (program s) start events final ∧
       OutputInvariant s start final s.threads := by
   have sweep : ∀ count, count≤s.threads → ∃ events state,
-      Runs (config s b) (program s) start events state ∧ OutputInvariant s start state count := by
+      ConcreteRuns (config s b) (program s) start events state ∧ OutputInvariant s start state count := by
     intro count bound
     induction count with
     | zero =>
-      refine ⟨[],start,Runs.nil,rfl,rfl,?_,?_,?_,?_,rfl,rfl⟩
+      refine ⟨[],start,ConcreteRuns.nil,rfl,rfl,?_,?_,?_,?_,rfl,rfl⟩
       · intro i _; rfl
       · intro r _ h; omega
       · intro t h; omega
@@ -121,13 +121,39 @@ theorem output_phase_exists (s : Shape) (b : Bounds s) (global : List Word)
       have ss : s.sharedWords ≤ state.shared.length := by rw [inv.shared]; exact ready.extent
       obtain ⟨next,step⟩ := output_run s b state t regs gs ss (by rw [lane]; exact ready.pc t)
         (by rw [lane]; exact ready.live t) (by simp [inv.barrier,ready.barrier,Barrier.reset])
-      exact ⟨events++next,_,runs_append run step,
+      exact ⟨events++next,_,concrete_runs_append run step,
         output_invariant_step s b global start state ready globalBound count (by omega) inv⟩
   exact sweep s.threads (Nat.le_refl _)
 
 /-- Complete candidate execution of the parallel forward kernel. The theorem
 contains no assumed intermediate loads or output values. It does not assert
 admission under the PTX memory graph or correctness of every candidate run. -/
+theorem selected_forward_concrete (s : Shape) (b : Bounds s) (global shared : List Word)
+    (seeds : Fin s.threads → Scalar.State)
+    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :
+    ∃ events final, ConcreteRuns (config s b) (program s) (initial s global shared seeds) events final ∧
+      (∀ t, (final.lanes t).halted = true ∧ (final.lanes t).scalar.pc = (program s).length-1) ∧
+      (∀ r, r<s.rows → final.global[s.outputBase+r]? = some (forwardWord s global r)) ∧
+      (∀ i, i<s.outputBase → final.global[i]? = global[i]?) ∧
+      final.global.length = global.length ∧ final.shared.length = shared.length ∧
+      final.barrier = Barrier.reset (s.depth+1) ∧ final.site = none ∧
+      (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) := by
+  obtain ⟨first,state,run,ready,length⟩ := reduction_exists s b global shared seeds globalBound sharedBound
+  obtain ⟨last,final,finish,inv⟩ := output_phase_exists s b global state ready globalBound
+  refine ⟨first++last,final,concrete_runs_append run finish,?_,?_,?_,?_,?_,inv.barrier.trans ready.barrier,
+    inv.site.trans ready.site,?_⟩
+  · intro t
+    have done := inv.done t t.isLt
+    exact ⟨done.1,by rw [done.2,program_length]; omega⟩
+  · intro r hr
+    simpa [ready.global] using inv.outputs r hr (thread_bound s r 0 hr (width_positive s))
+  · intro i hi; simpa [ready.global] using inv.inputs i hi
+  · rw [inv.length,ready.global]
+  · rw [inv.shared]; exact length
+  · intro event member; exact runs_access_safe (concrete_runs_append run finish).toRuns event member
+
+
+/-- The original candidate-execution interface follows by forgetting only the concrete-read evidence. -/
 theorem selected_forward_exists (s : Shape) (b : Bounds s) (global shared : List Word)
     (seeds : Fin s.threads → Scalar.State)
     (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :
@@ -138,19 +164,8 @@ theorem selected_forward_exists (s : Shape) (b : Bounds s) (global shared : List
       final.global.length = global.length ∧ final.shared.length = shared.length ∧
       final.barrier = Barrier.reset (s.depth+1) ∧ final.site = none ∧
       (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) := by
-  obtain ⟨first,state,run,ready,length⟩ := reduction_exists s b global shared seeds globalBound sharedBound
-  obtain ⟨last,final,finish,inv⟩ := output_phase_exists s b global state ready globalBound
-  refine ⟨first++last,final,runs_append run finish,?_,?_,?_,?_,?_,inv.barrier.trans ready.barrier,
-    inv.site.trans ready.site,?_⟩
-  · intro t
-    have done := inv.done t t.isLt
-    exact ⟨done.1,by rw [done.2,program_length]; omega⟩
-  · intro r hr
-    simpa [ready.global] using inv.outputs r hr (thread_bound s r 0 hr (width_positive s))
-  · intro i hi; simpa [ready.global] using inv.inputs i hi
-  · rw [inv.length,ready.global]
-  · rw [inv.shared]; exact length
-  · intro event member; exact runs_access_safe (runs_append run finish) event member
+  obtain ⟨events,final,run,rest⟩ := selected_forward_concrete s b global shared seeds globalBound sharedBound
+  exact ⟨events,final,run.toRuns,rest⟩
 
 /-- Numerical accuracy for the words actually stored by a complete selected
 execution. RowInput supplies finite operand interpretations, encoding errors and

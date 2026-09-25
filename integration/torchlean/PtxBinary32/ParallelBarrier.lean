@@ -1,4 +1,4 @@
-import PtxBinary32.Parallel
+import PtxBinary32.ParallelConcrete
 
 /-! Finite witnesses for fetched full-group barrier rounds and resource reuse.
 These are control executions; no shared-memory visibility is assumed or claimed. -/
@@ -68,26 +68,36 @@ theorem runs_append (first : Runs cfg program s left middle) (second : Runs cfg 
 
 /-- Every thread actually fetches the barrier at `pc`; increasing thread order
 provides a finite witness. No fairness assumption is used. -/
+theorem barrier_round_concrete (cfg : Config n) (s : State n) (program : List Instr)
+    (pc generation : Nat) (pcs : ∀ t, (s.lanes t).scalar.pc = pc)
+    (live : ∀ t, (s.lanes t).halted = false) (reset : s.barrier = Barrier.reset generation)
+    (site : s.site = none) (fetch : program[pc]? = some (.sync 0))
+    (eligible : Mixed.Eligible cfg.target) :
+    ∃ events, ConcreteRuns cfg program s events (afterRound s generation) := by
+  have base : roundPrefix s pc generation 0 = s := by
+    have ne : 0 ≠ n := by have := cfg.nonempty; omega
+    simp [roundPrefix,ne,Barrier.prefix_zero,← reset,← site]
+  have witness : ∀ count, count ≤ n → ∃ events, ConcreteRuns cfg program s events (roundPrefix s pc generation count) := by
+    intro count bound
+    induction count with
+    | zero => exact ⟨[],by rw [base]; exact ConcreteRuns.nil⟩
+    | succ count ih =>
+      obtain ⟨events,run⟩ := ih (by omega)
+      obtain ⟨out,step,next⟩ := prefix_dispatch cfg s program pc generation count (by omega) pcs live fetch eligible
+      have one : ConcreteRuns cfg program (roundPrefix s pc generation count) out.events (roundPrefix s pc generation (count+1)) := by
+        simpa only [List.append_nil,next] using ConcreteRuns.cons step (ConcreteRuns.nil (s := out.state))
+      exact ⟨events++out.events,concrete_runs_append run one⟩
+  simpa [roundPrefix] using witness n (Nat.le_refl n)
+
+
 theorem barrier_round_exists (cfg : Config n) (s : State n) (program : List Instr)
     (pc generation : Nat) (pcs : ∀ t, (s.lanes t).scalar.pc = pc)
     (live : ∀ t, (s.lanes t).halted = false) (reset : s.barrier = Barrier.reset generation)
     (site : s.site = none) (fetch : program[pc]? = some (.sync 0))
     (eligible : Mixed.Eligible cfg.target) :
     ∃ events, Runs cfg program s events (afterRound s generation) := by
-  have base : roundPrefix s pc generation 0 = s := by
-    have ne : 0 ≠ n := by have := cfg.nonempty; omega
-    simp [roundPrefix,ne,Barrier.prefix_zero,← reset,← site]
-  have witness : ∀ count, count ≤ n → ∃ events, Runs cfg program s events (roundPrefix s pc generation count) := by
-    intro count bound
-    induction count with
-    | zero => exact ⟨[],by rw [base]; exact Runs.nil⟩
-    | succ count ih =>
-      obtain ⟨events,run⟩ := ih (by omega)
-      obtain ⟨out,step,next⟩ := prefix_dispatch cfg s program pc generation count (by omega) pcs live fetch eligible
-      have one : Runs cfg program (roundPrefix s pc generation count) out.events (roundPrefix s pc generation (count+1)) := by
-        simpa only [List.append_nil,next] using Runs.cons step (Runs.nil (s := out.state))
-      exact ⟨events++out.events,runs_append run one⟩
-  simpa [roundPrefix] using witness n (Nat.le_refl n)
+  obtain ⟨events,run⟩ := barrier_round_concrete cfg s program pc generation pcs live reset site fetch eligible
+  exact ⟨events,run.toRuns⟩
 
 /-- The same resource can be fetched at two successive sites with different
 barrier generations. Registers and both memory arenas are preserved. -/

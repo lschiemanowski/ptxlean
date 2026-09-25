@@ -85,7 +85,7 @@ TARGETS.update({'PtxDenseVJP', 'PtxTensorContext', 'PtxBinary32.Reduction', 'Ptx
 COUNTS.update({'Ptx.Scalar.Parallel.History': 13, 'Ptx.Scalar.Parallel.Memory': 21, 'Ptx.Scalar.Parallel.Reference': 8, 'Ptx.Scalar.Parallel.Publication': 21, 'Ptx.Scalar.Parallel.Memory.Prior': 4})
 TARGETS.update({'PtxBinary32.ParallelReference', 'PtxBinary32.ParallelPublication', 'PtxBinary32.ParallelMemory', 'PtxBinary32.ParallelHistory'})
 
-# Concrete dense forward program; general fetched proof currently stops after product publication.
+# Concrete dense forward program and its product-publication proof.
 COUNTS.update({'Ptx.Scalar.Parallel.Dense': 61, 'Ptx.Scalar.Parallel.Dense.Shape': 10, 'Ptx.Scalar.Parallel.Segment': 3, 'Ptx.Scalar.Parallel.Dense.Checks': 4})
 COUNTS["Ptx.Scalar.Parallel"] += 10
 TARGETS.update({'PtxBinary32.DenseLayout', 'PtxBinary32.DenseProducts', 'PtxBinary32.ParallelSegment', 'PtxBinary32.DenseProductPhase', 'PtxBinary32.DenseArithmetic', 'PtxBinary32.DenseAddress', 'PtxBinary32.DenseProgram', 'PtxBinary32.DenseSegments', 'PtxBinary32.DenseChecks'})
@@ -93,6 +93,15 @@ TARGETS.update({'PtxBinary32.DenseLayout', 'PtxBinary32.DenseProducts', 'PtxBina
 # Complete selected dense forward candidate; admission remains separate.
 COUNTS["Ptx.Scalar.Parallel.Dense"] += 35
 TARGETS.update({'PtxBinary32.DenseOutput', 'PtxBinary32.DenseRoundPhase', 'PtxBinary32.DenseForward', 'PtxBinary32.DenseRounds'})
+
+
+# Concrete-read execution evidence and checked chronological load sources.
+COUNTS["Ptx.Scalar.Parallel"] = COUNTS.get("Ptx.Scalar.Parallel", 0) + 5
+COUNTS["Ptx.Scalar.Parallel.ConcreteRuns"] = COUNTS.get("Ptx.Scalar.Parallel.ConcreteRuns", 0) + 1
+COUNTS["Ptx.Scalar.Parallel.Replay"] = COUNTS.get("Ptx.Scalar.Parallel.Replay", 0) + 25
+COUNTS["Ptx.Scalar.Parallel.Dense"] = COUNTS.get("Ptx.Scalar.Parallel.Dense", 0) + 2
+COUNTS["Ptx.Scalar.Parallel.ConcreteSegment"] = COUNTS.get("Ptx.Scalar.Parallel.ConcreteSegment", 0) + 4
+TARGETS.update({'PtxBinary32.DenseReplay', 'PtxBinary32.ParallelReplay', 'PtxBinary32.ParallelReplaySources', 'PtxBinary32.ParallelConcrete'})
 
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()

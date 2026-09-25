@@ -1,4 +1,5 @@
 import PtxBinary32.DenseProgram
+import PtxBinary32.ParallelReplay
 
 /-! Executable regression checks of the selected software interpreter. These
 exercise the entire instruction list, but are tests, not general correctness
@@ -33,7 +34,8 @@ def check (label : String) (s : Shape) (b : Bounds s)
   let outputs := (result.1.global.drop s.outputBase).take s.rows
   if !statuses || !completed || outputs != expected || result.1.global.take s.outputBase != input ||
       result.1.global.length != global.length || result.1.shared.length != shared.length ||
-      result.1.barrier.generation != s.depth+1 then
+      result.1.barrier.generation != s.depth+1 ||
+      Replay.trace ⟨global,shared⟩ result.2.1 != some (Replay.arrays result.1) then
     throw (IO.userError s!"{label}: interpreter regression; outputs {outputs.map BitVec.toNat}")
   IO.println s!"Dense interpreter check passed: {label}"
 

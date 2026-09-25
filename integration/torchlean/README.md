@@ -167,8 +167,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 52 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 868
+All 56 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 905
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward
@@ -216,7 +216,9 @@ binary32 arithmetic, and a complete selected forward candidate execution.
 The proof reaches every thread's exit, derives stored row words, preserves
 inputs and allocation lengths, and proves access safety for the full trace.
 The existing explicit encoding/range conditions give bounds for those stored
-words. Four complete software-interpreter cases remain regression tests.
+words. The complete witness now retains concrete-read evidence: checked replay
+reproduces both final arrays, and each load has a proved initial or last-store
+origin in the trace. Four complete software-interpreter cases also check replay.
 PTX memory admission, correctness over all admitted executions, the real padded
 row-tree identity connecting to TorchLean, and the backward kernel remain open.
 No GPU execution or benchmarking is included.

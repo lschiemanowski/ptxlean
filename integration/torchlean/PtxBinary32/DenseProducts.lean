@@ -32,25 +32,25 @@ def productFinish (s : Shape) (b : Bounds s) (state : Parallel.State s.threads) 
 private theorem pointer_segment (cfg : Config n) (state : Parallel.State n) (t : Fin n)
     (destination source index : Nat)
     (operand : (state.lanes t).scalar.regs source = BitVec.ofNat 32 index) (fits : index < 2^32) :
-    ∃ events, Segment cfg t (pointer destination source) state events (afterPointer state t destination index) := by
+    ∃ events, ConcreteSegment cfg t (pointer destination source) state events (afterPointer state t destination index) := by
   obtain ⟨regular,result⟩ := pointer_execution cfg state t destination source index operand fits
-  exact ⟨_,result ▸ segmentReference_sound regular⟩
+  exact ⟨_,result ▸ segmentReference_concrete regular⟩
 
 private theorem load_segment (cfg : Config n) (state : Parallel.State n) (t : Fin n)
     (space : Space) (destination address index : Nat)
     (valid : (state.lanes t).scalar.preds 0 = true →
       Scalar.addressIndex (arena state (some space)) ((state.lanes t).scalar.addrs address) = .ok index) :
-    ∃ events, Segment cfg t [guarded space (.load destination (.reg address))] state events
+    ∃ events, ConcreteSegment cfg t [guarded space (.load destination (.reg address))] state events
       (afterLoad state t space destination index) := by
   obtain ⟨regular,result⟩ := guarded_load_execution cfg state t space destination address index valid
-  exact ⟨_,result ▸ segmentReference_sound regular⟩
+  exact ⟨_,result ▸ segmentReference_concrete regular⟩
 
 /-- Every product lane, including a padded lane, has a complete instruction
 segment. This is an actual-dispatch witness, not a supplied product value. -/
 theorem product_segment (s : Shape) (b : Bounds s) (state : Parallel.State s.threads) (t : Fin s.threads)
     (tid : (state.lanes t).scalar.regs 0 = BitVec.ofNat 32 t.val)
     (global : s.globalWords ≤ state.global.length) (shared : s.sharedWords ≤ state.shared.length) :
-    ∃ events, Segment (config s b) t ((products s).take 21) state events (productFinish s b state t) := by
+    ∃ events, ConcreteSegment (config s b) t ((products s).take 21) state events (productFinish s b state t) := by
   let c := t.val % s.width
   let r := t.val / s.width
   let index := s.weight r c
@@ -68,7 +68,7 @@ theorem product_segment (s : Shape) (b : Bounds s) (state : Parallel.State s.thr
   let h := (Reference.dispatch (config s b) t (.binary32 ⟨.always,.mul,6,.reg 5,.reg 4⟩) g).state
   let j := afterPointer h t 2 t.val
   obtain ⟨setupOK,setupValue⟩ := setup_execution s b state t tid
-  have setupRun := segmentReference_sound setupOK
+  have setupRun := segmentReference_concrete setupOK
   rw [setupValue] at setupRun
   obtain ⟨ev0,ptr0⟩ := pointer_segment (config s b) a t 0 1 c
     (by simp [a,afterSetup,setLane,ite_apply,Scalar.update,c]) cf
@@ -89,7 +89,7 @@ theorem product_segment (s : Shape) (b : Bounds s) (state : Parallel.State s.thr
       simp only [Shape.globalWords,Shape.outputBase] at global
       dsimp [index]; omega
     simpa [f,e,d,a,afterLoad,afterPointer,afterSetup,setLane,ite_apply,Scalar.update,arena] using pointer_index state.global index extent wp)
-  have mulRun := segmentReference_sound (binary32_regular (config s b) g t ⟨.always,.mul,6,.reg 5,.reg 4⟩)
+  have mulRun := segmentReference_concrete (binary32_regular (config s b) g t ⟨.always,.mul,6,.reg 5,.reg 4⟩)
   obtain ⟨ev4,ptr2⟩ := pointer_segment (config s b) h t 2 0 t.val (by
     simp [h,g,f,e,d,a,Reference.dispatch,Reference.binary32,Scalar.Guard.eval,afterLoad,afterPointer,afterSetup,setLane,ite_apply,Scalar.update,tid]) tf
   have si : t.val < state.shared.length := by
@@ -104,7 +104,7 @@ theorem product_segment (s : Shape) (b : Bounds s) (state : Parallel.State s.thr
   have storeOK : SegmentRegular (config s b) t [.memory .shared (.plain (.store (.reg 2) (.reg 6)))] j := by
     simp [SegmentRegular,Reference.dispatch,scalarStep,Scalar.eval,Scalar.Instr.plain,
       Scalar.Guard.eval,Scalar.Operand64.eval,setLane,arena,address]
-  have storeRun := segmentReference_sound storeOK
+  have storeRun := segmentReference_concrete storeOK
   have all := ((((((setupRun.append ptr0).append ld0).append ptr1).append ld1).append mulRun).append ptr2).append storeRun
   exact ⟨_,all⟩
 
@@ -120,7 +120,7 @@ theorem product_run (s : Shape) (b : Bounds s) (state : Parallel.State s.threads
     (pc : (state.lanes t).scalar.pc = 0) (live : (state.lanes t).halted = false)
     (fresh : state.barrier.arrived t = false)
     (global : s.globalWords ≤ state.global.length) (shared : s.sharedWords ≤ state.shared.length) :
-    ∃ events, Runs (config s b) (program s) state events (productFinish s b state t) := by
+    ∃ events, ConcreteRuns (config s b) (program s) state events (productFinish s b state t) := by
   obtain ⟨events,segment⟩ := product_segment s b state t tid global shared
   exact ⟨events,segment.compile (by rw [pc]; exact products_fetch s) live fresh (by change 94 = 94 ∧ 70 ≤ 70; decide)⟩
 

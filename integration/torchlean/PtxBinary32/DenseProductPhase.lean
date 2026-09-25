@@ -84,7 +84,7 @@ require the separate memory-order argument. -/
 theorem product_phase_exists (s : Shape) (b : Bounds s) (global shared : List Word)
     (seeds : Fin s.threads → Scalar.State)
     (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :
-    ∃ events final, Runs (config s b) (program s) (initial s global shared seeds) events final ∧
+    ∃ events final, ConcreteRuns (config s b) (program s) (initial s global shared seeds) events final ∧
       final.global = global ∧ final.shared.length = shared.length ∧
       (∀ t : Fin s.threads, final.shared[t.val]? =
         some (nodeValue s global (t.val/s.width) 0 (t.val%s.width))) ∧
@@ -96,11 +96,11 @@ theorem product_phase_exists (s : Shape) (b : Bounds s) (global shared : List Wo
         (final.lanes t).scalar.regs 2 = BitVec.ofNat 32 (t.val/s.width)) := by
   let start := initial s global shared seeds
   have prefixRun : ∀ count, count ≤ s.threads → ∃ events current,
-      Runs (config s b) (program s) start events current ∧ ProductInvariant s start current count := by
+      ConcreteRuns (config s b) (program s) start events current ∧ ProductInvariant s start current count := by
     intro count bound
     induction count with
     | zero =>
-      refine ⟨[],start,Runs.nil,?_,?_,?_,?_,?_,?_,?_,?_,?_⟩
+      refine ⟨[],start,ConcreteRuns.nil,?_,?_,?_,?_,?_,?_,?_,?_,?_⟩
       · rfl
       · rfl
       · intro t ht; omega
@@ -117,17 +117,17 @@ theorem product_phase_exists (s : Shape) (b : Bounds s) (global shared : List Wo
       have ss : s.sharedWords ≤ current.shared.length := by rw [inv.shared]; exact sharedBound
       obtain ⟨next,step⟩ := product_run s b current t (inv.ids t) (by simp [inv.pc,t])
         (inv.live t) (by simp [inv.barrier,Barrier.reset]) gs ss
-      exact ⟨events++next,_,runs_append run step,
+      exact ⟨events++next,_,concrete_runs_append run step,
         product_invariant_step s b start current count (by omega) inv globalBound sharedBound⟩
   obtain ⟨events,current,run,inv⟩ := prefixRun s.threads (Nat.le_refl _)
   have pcs : ∀ t, (current.lanes t).scalar.pc = 21 := by intro t; simp [inv.pc,t.isLt]
   have fetch : (program s)[21]? = some (.sync 0) := by simp [program,products,pointer]
-  obtain ⟨arrivals,release⟩ := barrier_round_exists (config s b) current (program s) 21 0
+  obtain ⟨arrivals,release⟩ := barrier_round_concrete (config s b) current (program s) 21 0
     pcs inv.live inv.barrier inv.site fetch (by change 94=94 ∧ 70≤70; decide)
-  refine ⟨events++arrivals,afterRound current 0,runs_append run release,inv.global,inv.shared,?_,?_,rfl,rfl,?_,?_⟩
+  refine ⟨events++arrivals,afterRound current 0,concrete_runs_append run release,inv.global,inv.shared,?_,?_,rfl,rfl,?_,?_⟩
   · intro t; exact inv.products t t.isLt
   · intro t; exact ⟨by simp [afterRound,pcs],inv.live t⟩
-  · intro event member; exact runs_access_safe (runs_append run release) event member
+  · intro event member; exact runs_access_safe (concrete_runs_append run release).toRuns event member
   · intro t; exact ⟨inv.ids t,inv.coordinates t t.isLt⟩
 
 end Ptx.Scalar.Parallel.Dense

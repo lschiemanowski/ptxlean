@@ -9,7 +9,8 @@
   "summary": [
     "Fetch integer, binary32 and full-group barrier instructions for cooperating threads with separate global and shared storage and checked access bounds; compose instruction segments only after matching their actual program positions.",
     "Derive repeated-barrier ordering and complete memory labels from actual executions; force single-writer publication through the existing memory constraints.",
-    "Construct a completed two-thread, two-round computed-publication witness with checked read sources and no circular dependencies; concrete layer ownership, timing and execution proofs remain separate."
+    "Construct a completed two-thread, two-round computed-publication witness with checked read sources and no circular dependencies; concrete layer ownership, timing and execution proofs remain separate.",
+    "Retain concrete-read evidence for selected witnesses; replay their actual events and derive initial or last-store read origins, separately from memory-model admission."
   ],
   "realization": "partial",
   "remaining": "Layer-specific multi-round ownership, timing and admitted execution proofs, launch validation and general barrier forms remain unimplemented. The completed two-round publication witness is not a dense-layer implementation.",
@@ -125,7 +126,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A two-thread\nwitness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
+        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A concrete-read\nexecution additionally retains that each load used the current array rather than\na freely proposed word. This restriction applies only to an existence witness;\nthe general candidate relation and permitted floating-point results stay unchanged.\nReplaying the recorded loads and stores must reproduce the arrays, including\nthe value observed by each load. This supplies evidence for constructing read\nsources: every load must use the initial word when there is no preceding store,\nor the value of the last preceding store to that location in the trace. Global\nand shared locations are tracked separately. This does not itself discharge the\nmemory constraints.\n\nA two-thread witness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/ParallelReference.lean",
@@ -137,7 +138,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A two-thread\nwitness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
+        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A concrete-read\nexecution additionally retains that each load used the current array rather than\na freely proposed word. This restriction applies only to an existence witness;\nthe general candidate relation and permitted floating-point results stay unchanged.\nReplaying the recorded loads and stores must reproduce the arrays, including\nthe value observed by each load. This supplies evidence for constructing read\nsources: every load must use the initial word when there is no preceding store,\nor the value of the last preceding store to that location in the trace. Global\nand shared locations are tracked separately. This does not itself discharge the\nmemory constraints.\n\nA two-thread witness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/ParallelPublication.lean",
@@ -149,7 +150,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A two-thread\nwitness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
+        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A concrete-read\nexecution additionally retains that each load used the current array rather than\na freely proposed word. This restriction applies only to an existence witness;\nthe general candidate relation and permitted floating-point results stay unchanged.\nReplaying the recorded loads and stores must reproduce the arrays, including\nthe value observed by each load. This supplies evidence for constructing read\nsources: every load must use the initial word when there is no preceding store,\nor the value of the last preceding store to that location in the trace. Global\nand shared locations are tracked separately. This does not itself discharge the\nmemory constraints.\n\nA two-thread witness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/ParallelPublication.lean",
@@ -161,7 +162,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A two-thread\nwitness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
+        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A concrete-read\nexecution additionally retains that each load used the current array rather than\na freely proposed word. This restriction applies only to an existence witness;\nthe general candidate relation and permitted floating-point results stay unchanged.\nReplaying the recorded loads and stores must reproduce the arrays, including\nthe value observed by each load. This supplies evidence for constructing read\nsources: every load must use the initial word when there is no preceding store,\nor the value of the last preceding store to that location in the trace. Global\nand shared locations are tracked separately. This does not itself discharge the\nmemory constraints.\n\nA two-thread witness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/ParallelPublication.lean",
@@ -179,6 +180,54 @@
         "path": "integration/torchlean/PtxBinary32/ParallelSegment.lean",
         "passage": {
           "quote": "theorem Segment.compile (segment : Segment cfg thread code s events final)\n    (fetch : Fetches program (s.lanes thread).scalar.pc code)\n    (live : (s.lanes thread).halted = false) (fresh : s.barrier.arrived thread = false)\n    (eligible : Mixed.Eligible cfg.target) : Runs cfg program s events final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A concrete-read\nexecution additionally retains that each load used the current array rather than\na freely proposed word. This restriction applies only to an existence witness;\nthe general candidate relation and permitted floating-point results stay unchanged."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelConcrete.lean",
+        "passage": {
+          "quote": "inductive ConcreteRuns (cfg : Config n) (program : List Instr) : State n → List (Event n) → State n → Prop\n  | nil : ConcreteRuns cfg program s [] s\n  | cons : Step cfg program none thread s out → ConcreteRuns cfg program out.state rest final →\n      ConcreteRuns cfg program s (out.events++rest) final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A concrete-read\nexecution additionally retains that each load used the current array rather than\na freely proposed word. This restriction applies only to an existence witness;\nthe general candidate relation and permitted floating-point results stay unchanged."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelSegment.lean",
+        "passage": {
+          "quote": "inductive ConcreteSegment (cfg : Config n) (thread : Fin n) :\n    List Instr → State n → List (Event n) → State n → Prop where\n  | nil : ConcreteSegment cfg thread [] s [] s\n  | cons : Dispatch cfg none thread i s out →\n      (out.state.lanes thread).scalar.pc = (s.lanes thread).scalar.pc+1 →\n      (out.state.lanes thread).halted = (s.lanes thread).halted →\n      out.state.barrier = s.barrier →\n      ConcreteSegment cfg thread rest out.state events final →\n      ConcreteSegment cfg thread (i::rest) s (out.events++events) final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Replaying the recorded loads and stores must reproduce the arrays, including\nthe value observed by each load."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelReplay.lean",
+        "passage": {
+          "quote": "theorem concrete_replays (run : ConcreteRuns cfg program state events final) :\n    trace (arrays state) events = some (arrays final) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "every load must use the initial word when there is no preceding store,\nor the value of the last preceding store to that location in the trace. Global\nand shared locations are tracked separately."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelReplaySources.lean",
+        "passage": {
+          "quote": "theorem load_source (memory final : Arrays) (before after : List (Event n))\n    (t : Fin n) (space : Space) (occ : Scalar.Occurrence) (address : Address) (value : Word)\n    (load : occ.memory = some ⟨.load,address,value⟩)\n    (checked : trace memory (before++.scalar t (some space) occ::after) = some final) :\n    ((arena memory space)[address.toNat/4]? = some value ∧\n      ∀ e ∈ before, writtenAt space (address.toNat/4) e = none) ∨\n    (∃ pre writer suffix, before = pre++writer::suffix ∧\n      writtenAt space (address.toNat/4) writer = some value ∧\n      ∀ e ∈ suffix, writtenAt space (address.toNat/4) e = none) :="
         }
       }
     }

@@ -61,8 +61,18 @@ rule for reductions, but a kernel must still prove ownership and timing.
 
 A selected software runner reads the current arrays and chooses the checked
 binary32 reference result. Its steps are proved to be candidate-machine steps;
-this alone does not make the resulting memory graph admissible. A two-thread
-witness supplies that additional proof: threads publish inputs, synchronize,
+this alone does not make the resulting memory graph admissible. A concrete-read
+execution additionally retains that each load used the current array rather than
+a freely proposed word. This restriction applies only to an existence witness;
+the general candidate relation and permitted floating-point results stay unchanged.
+Replaying the recorded loads and stores must reproduce the arrays, including
+the value observed by each load. This supplies evidence for constructing read
+sources: every load must use the initial word when there is no preceding store,
+or the value of the last preceding store to that location in the trace. Global
+and shared locations are tracked separately. This does not itself discharge the
+memory constraints.
+
+A two-thread witness supplies that additional proof: threads publish inputs, synchronize,
 compute sums, publish to fresh locations, synchronize again and store the peer's
 result to separate outputs. It works for arbitrary input words, reaches exit in
 both threads, and satisfies the original memory constraints. A chronological

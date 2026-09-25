@@ -145,8 +145,8 @@ theorem round_run (s : Shape) (b : Bounds s) (k : Nat) (hk : k < s.depth)
     (shared : s.sharedWords ≤ state.shared.length)
     (pc : (state.lanes t).scalar.pc = 22+16*k)
     (live : (state.lanes t).halted = false) (fresh : state.barrier.arrived t = false) :
-    ∃ events, Runs (config s b) (program s) state events (roundFinish s b k state t) := by
-  have segment := segmentReference_sound (round_regular s b k hk state t tid column shared)
+    ∃ events, ConcreteRuns (config s b) (program s) state events (roundFinish s b k state t) := by
+  have segment := segmentReference_concrete (round_regular s b k hk state t tid column shared)
   refine ⟨_,segment.compile ?_ live fresh (by change 94=94 ∧ 70≤70; decide)⟩
   rw [pc]
   intro j hj

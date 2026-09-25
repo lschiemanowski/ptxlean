@@ -70,7 +70,7 @@ theorem round_invariant_step (s : Shape) (b : Bounds s) (k : Nat) (hk : k<s.dept
   have col := (inv.regs t).2.1.trans (ready.regs t).2.1
   have extent : s.sharedWords ≤ state.shared.length := by rw [inv.length]; exact ready.extent
   have eff := round_effect s b k hk state t tid col extent
-  have frame := (segmentReference_sound (round_regular s b k hk state t tid col extent)).frame
+  have frame := (segmentReference_concrete (round_regular s b k hk state t tid col extent)).frame
   change ((roundFinish s b k state t).lanes t).scalar.pc = _ ∧
     ((roundFinish s b k state t).lanes t).halted = _ ∧ (roundFinish s b k state t).barrier = _ at frame
   have pc0 : (state.lanes t).scalar.pc = 22+16*k := by simp [inv.pc,t]
@@ -119,14 +119,14 @@ theorem round_invariant_step (s : Shape) (b : Bounds s) (k : Nat) (hk : k<s.dept
 its next barrier. The earlier plane is preserved throughout the sweep. -/
 theorem round_phase_exists (s : Shape) (b : Bounds s) (k : Nat) (hk : k<s.depth)
     (global : List Word) (start : Parallel.State s.threads) (ready : PlaneReady s global start k) :
-    ∃ events final, Runs (config s b) (program s) start events final ∧
+    ∃ events final, ConcreteRuns (config s b) (program s) start events final ∧
       PlaneReady s global final (k+1) ∧ final.shared.length = start.shared.length := by
   have sweep : ∀ count, count≤s.threads → ∃ events state,
-      Runs (config s b) (program s) start events state ∧ RoundInvariant s start state k count := by
+      ConcreteRuns (config s b) (program s) start events state ∧ RoundInvariant s start state k count := by
     intro count bound
     induction count with
     | zero =>
-      refine ⟨[],start,Runs.nil,rfl,rfl,?_,?_,?_,ready.live,?_,rfl,rfl⟩
+      refine ⟨[],start,ConcreteRuns.nil,rfl,rfl,?_,?_,?_,ready.live,?_,rfl,rfl⟩
       · intro i _; rfl
       · intro t ht; omega
       · intro t; simp [ready.pc]
@@ -138,15 +138,15 @@ theorem round_phase_exists (s : Shape) (b : Bounds s) (k : Nat) (hk : k<s.depth)
       obtain ⟨next,step⟩ := round_run s b k hk state t
         ((inv.regs t).1.trans (ready.regs t).1) ((inv.regs t).2.1.trans (ready.regs t).2.1)
         extent (by simp [inv.pc,t]) (inv.live t) (by simp [inv.barrier,ready.barrier,Barrier.reset])
-      exact ⟨events++next,_,runs_append run step,round_invariant_step s b k hk global start state ready count (by omega) inv⟩
+      exact ⟨events++next,_,concrete_runs_append run step,round_invariant_step s b k hk global start state ready count (by omega) inv⟩
   obtain ⟨events,state,run,inv⟩ := sweep s.threads (Nat.le_refl _)
   have pcs : ∀ t, (state.lanes t).scalar.pc = 22+16*k+15 := by intro t; simp [inv.pc,t.isLt]
   have fetch : (program s)[22+16*k+15]? = some (.sync 0) := by
     rw [round_fetch s k hk 15 (by simp)]; exact round_barrier s k
-  obtain ⟨arrivals,release⟩ := barrier_round_exists (config s b) state (program s) (22+16*k+15) (k+1)
+  obtain ⟨arrivals,release⟩ := barrier_round_concrete (config s b) state (program s) (22+16*k+15) (k+1)
     pcs inv.live (inv.barrier.trans ready.barrier) (inv.site.trans ready.site) fetch
     (by change 94=94 ∧ 70≤70; decide)
-  refine ⟨events++arrivals,afterRound state (k+1),runs_append run release,?_,inv.length⟩
+  refine ⟨events++arrivals,afterRound state (k+1),concrete_runs_append run release,?_,inv.length⟩
   refine ⟨inv.global.trans ready.global,?_,?_,inv.live,?_,rfl,rfl,?_⟩
   · change s.sharedWords ≤ state.shared.length; rw [inv.length]; exact ready.extent
   · intro t; simp [afterRound,pcs]; omega
@@ -164,7 +164,7 @@ all later rounds. No caller initialization of working registers is assumed. -/
 theorem first_plane_exists (s : Shape) (b : Bounds s) (global shared : List Word)
     (seeds : Fin s.threads → Scalar.State)
     (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :
-    ∃ events state, Runs (config s b) (program s) (initial s global shared seeds) events state ∧
+    ∃ events state, ConcreteRuns (config s b) (program s) (initial s global shared seeds) events state ∧
       PlaneReady s global state 0 ∧ state.shared.length = shared.length := by
   obtain ⟨events,state,run,gs,ss,values,pcs,barrier,site,_,regs⟩ :=
     product_phase_exists s b global shared seeds globalBound sharedBound
@@ -183,10 +183,10 @@ row's tree root calculated from the original global input array. -/
 theorem reduction_exists (s : Shape) (b : Bounds s) (global shared : List Word)
     (seeds : Fin s.threads → Scalar.State)
     (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :
-    ∃ events state, Runs (config s b) (program s) (initial s global shared seeds) events state ∧
+    ∃ events state, ConcreteRuns (config s b) (program s) (initial s global shared seeds) events state ∧
       PlaneReady s global state s.depth ∧ state.shared.length = shared.length := by
   have each : ∀ k, k≤s.depth → ∃ events state,
-      Runs (config s b) (program s) (initial s global shared seeds) events state ∧
+      ConcreteRuns (config s b) (program s) (initial s global shared seeds) events state ∧
       PlaneReady s global state k ∧ state.shared.length = shared.length := by
     intro k bound
     induction k with
@@ -194,7 +194,7 @@ theorem reduction_exists (s : Shape) (b : Bounds s) (global shared : List Word)
     | succ k ih =>
       obtain ⟨events,state,run,ready,length⟩ := ih (by omega)
       obtain ⟨next,final,step,done,extent⟩ := round_phase_exists s b k (by omega) global state ready
-      exact ⟨events++next,final,runs_append run step,done,extent.trans length⟩
+      exact ⟨events++next,final,concrete_runs_append run step,done,extent.trans length⟩
   exact each s.depth (Nat.le_refl _)
 
 end Ptx.Scalar.Parallel.Dense

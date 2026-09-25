@@ -47,9 +47,14 @@ memory-visibility argument.
 A selected execution witness chooses the software binary32 result and reads from
 the current storage arrays. Its proof must reach every thread's exit, derive the
 stored row outputs, preserve the input region and bound every emitted access.
-This establishes a complete candidate execution. Showing that PTX's memory
-rules admit that candidate, and proving correctness for all admitted executions,
-requires separate arguments about actual writers, read sources and barrier timing.
+The witness retains concrete-read evidence through every instruction and
+barrier. Replaying its emitted memory events checks every load value and
+reproduces the final arrays. Each load is traced to the initial contents or the
+last preceding store to that location, with global and shared storage kept
+separate. This establishes a complete candidate execution with checked read
+origins. Showing that PTX's memory rules admit that candidate, and proving
+correctness for all admitted executions, requires separate arguments about the
+memory graph, actual writers and barrier timing.
 
 Numerical contracts relate finite encoded inputs to ideal real tensors. Bounds
 follow the actual multiplication and tree-addition order, including bias and

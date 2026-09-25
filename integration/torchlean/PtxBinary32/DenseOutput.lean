@@ -132,8 +132,8 @@ theorem output_run (s : Shape) (b : Bounds s) (state : Parallel.State s.threads)
     (global : s.globalWords ≤ state.global.length) (shared : s.sharedWords ≤ state.shared.length)
     (pc : (state.lanes t).scalar.pc = 22+16*s.depth)
     (live : (state.lanes t).halted = false) (fresh : state.barrier.arrived t = false) :
-    ∃ events, Runs (config s b) (program s) state events (outputDone s b state t) := by
-  have segment := segmentReference_sound (output_regular s b state t regs global shared)
+    ∃ events, ConcreteRuns (config s b) (program s) state events (outputDone s b state t) := by
+  have segment := segmentReference_concrete (output_regular s b state t regs global shared)
   have frame := segment.frame
   change ((outputFinish s b state t).lanes t).scalar.pc = (state.lanes t).scalar.pc + ((output s).take 19).length ∧
     ((outputFinish s b state t).lanes t).halted = (state.lanes t).halted ∧
@@ -156,7 +156,7 @@ theorem output_run (s : Shape) (b : Bounds s) (state : Parallel.State s.threads)
     have hf : (outputFinish s b state t).barrier.arrived t = false := by rw [frame.2.2]; exact fresh
     simp only [hl,hf,Bool.false_eq_true,ite_false,lastpc,fetch]
     exact Dispatch.exit
-  have one := Runs.cons step (Runs.nil (s := outputDone s b state t))
-  exact ⟨_,runs_append run one⟩
+  have one := ConcreteRuns.cons step (ConcreteRuns.nil (s := outputDone s b state t))
+  exact ⟨_,concrete_runs_append run one⟩
 
 end Ptx.Scalar.Parallel.Dense

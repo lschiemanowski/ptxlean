@@ -111,4 +111,58 @@ theorem fetches_slice (before code after : List Instr) :
   intro k hk
   simp [List.getElem?_append,hk]
 
+/-- Segment evidence that retains concrete-array loads. -/
+inductive ConcreteSegment (cfg : Config n) (thread : Fin n) :
+    List Instr → State n → List (Event n) → State n → Prop where
+  | nil : ConcreteSegment cfg thread [] s [] s
+  | cons : Dispatch cfg none thread i s out →
+      (out.state.lanes thread).scalar.pc = (s.lanes thread).scalar.pc+1 →
+      (out.state.lanes thread).halted = (s.lanes thread).halted →
+      out.state.barrier = s.barrier →
+      ConcreteSegment cfg thread rest out.state events final →
+      ConcreteSegment cfg thread (i::rest) s (out.events++events) final
+
+theorem ConcreteSegment.toSegment (segment : ConcreteSegment cfg thread code s events final) :
+    Segment cfg thread code s events final := by
+  induction segment with
+  | nil => exact .nil
+  | cons dispatch pc live barrier _ ih => exact .cons dispatch pc live barrier ih
+
+theorem ConcreteSegment.frame (segment : ConcreteSegment cfg thread code s events final) :
+    (final.lanes thread).scalar.pc = (s.lanes thread).scalar.pc+code.length ∧
+    (final.lanes thread).halted = (s.lanes thread).halted ∧ final.barrier=s.barrier := segment.toSegment.frame
+
+theorem ConcreteSegment.append (first : ConcreteSegment cfg thread a s left middle)
+    (second : ConcreteSegment cfg thread b middle right final) :
+    ConcreteSegment cfg thread (a++b) s (left++right) final := by
+  induction first with
+  | nil => exact second
+  | cons dispatch pc live barrier _ ih =>
+    simpa [List.append_assoc] using ConcreteSegment.cons dispatch pc live barrier (ih second)
+
+theorem ConcreteSegment.compile (segment : ConcreteSegment cfg thread code s events final)
+    (fetch : Fetches program (s.lanes thread).scalar.pc code)
+    (live : (s.lanes thread).halted = false) (fresh : s.barrier.arrived thread = false)
+    (eligible : Mixed.Eligible cfg.target) : ConcreteRuns cfg program s events final := by
+  induction segment with
+  | nil => exact .nil
+  | @cons i current out restCode restEvents last dispatch pc halted barrier rest ih =>
+    have step : Step cfg program none thread current out := by
+      refine ⟨eligible,?_⟩
+      simp only [live,fresh,Bool.false_eq_true,ite_false,fetches_head fetch]
+      exact dispatch
+    apply ConcreteRuns.cons step
+    apply ih
+    · rw [pc]; exact fetches_tail fetch
+    · exact halted.trans live
+    · simpa [barrier] using fresh
+
+theorem segmentReference_concrete (regular : SegmentRegular cfg thread code s) :
+    ConcreteSegment cfg thread code s (segmentReference cfg thread code s).2 (segmentReference cfg thread code s).1 := by
+  induction code generalizing s with
+  | nil => exact .nil
+  | cons i rest ih =>
+    exact .cons (Reference.dispatch_sound cfg thread i s) regular.2.1 regular.2.2.1 regular.2.2.2.1
+      (ih regular.2.2.2.2)
+
 end Ptx.Scalar.Parallel

@@ -1,0 +1,142 @@
+{
+  "id": "e4c02038-7ab0-4636-bfc9-3ff70d153d46",
+  "base": "5b90434444a8de11dad1039df5ab1f7cd01a8108",
+  "contentTree": "95c1134f013fc8c1be2cd45081cde53d15cfd56a",
+  "reviewer": "Codex",
+  "summary": "Preserve concrete loads and prove checked read origins for the complete dense forward execution.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Preserved all previous complete-forward guarantees and caller premises while retaining concrete-load choices and deriving replay and actual initial/last-store origins. Admission, universal correctness and the TorchLean real-tree identity remain explicitly unproved."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Added a concrete-read witness relation, compositional segments and chronological replay/source lemmas without changing general candidate semantics, floating-point result freedom or PTX memory constraints."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The same pinned toolchain, dependency revisions, forbidden-token guard and standard-axiom audit apply to 37 added endpoints. Internal replay fidelity does not establish NVIDIA semantic fidelity."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The example still distinguishes mathematical, numerical, candidate execution and admission claims; this increment makes its selected-read evidence explicit."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "Concrete array reads and candidate overrides already belong to the scalar contract. The cooperating-thread witness retains that existing choice; instruction and memory-validity definitions are unchanged."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "95c1134f013fc8c1be2cd45081cde53d15cfd56a",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual review of strengthened witnesses, replay/source proofs, descriptions and exact remaining admission obligations.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; unchanged TorchLean/FloatLib and manifest revisions; 56 default integration targets; no GPU execution, external model calls or dependency updates.",
+      "evidence": "Both suites exited 0. Root: 1643 audited declarations, all source/build/proof checks passed. Integration: 905 exact dependency reports, only standard Lean axioms; all four complete dense interpreter cases passed including replay of both arrays. No proof placeholders or new unchecked axioms. Stratic valid with no issues; diff whitespace check passed. Before/after snapshot trees match. Logs: /tmp/concrete-root-check.log and /tmp/concrete-integration-check.log.",
+      "tests": [],
+      "id": "22e5cb39-2045-47e2-9528-8f75c2a6dd87",
+      "recordedAt": "2026-09-25T17:01:22.612Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T17:01:56.355Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Updated only the exact integration dependency-report count to 905."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Explained concrete-read evidence, replay, latest-store origins, unchanged result freedom and the exact graph admission obligations still open."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseChecks.lean",
+      "reason": "All four full-interpreter cases now additionally require checked replay to reproduce both final arrays."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseForward.lean",
+      "reason": "Strengthened existing segment and phase witnesses to ConcreteSegment/ConcreteRuns, preserving proof invariants and caller premises. Explicit toRuns conversions retain existing safety results; the original selected_forward_exists and accuracy interface are preserved."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseOutput.lean",
+      "reason": "Strengthened existing segment and phase witnesses to ConcreteSegment/ConcreteRuns, preserving proof invariants and caller premises. Explicit toRuns conversions retain existing safety results; the original selected_forward_exists and accuracy interface are preserved."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProductPhase.lean",
+      "reason": "Strengthened existing segment and phase witnesses to ConcreteSegment/ConcreteRuns, preserving proof invariants and caller premises. Explicit toRuns conversions retain existing safety results; the original selected_forward_exists and accuracy interface are preserved."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProducts.lean",
+      "reason": "Strengthened existing segment and phase witnesses to ConcreteSegment/ConcreteRuns, preserving proof invariants and caller premises. Explicit toRuns conversions retain existing safety results; the original selected_forward_exists and accuracy interface are preserved."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseReplay.lean",
+      "reason": "Composes the full concrete witness with replay and read origins, preserving outputs, input region, exits, allocation lengths, barrier reset and access safety under the original premises."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseRoundPhase.lean",
+      "reason": "Strengthened existing segment and phase witnesses to ConcreteSegment/ConcreteRuns, preserving proof invariants and caller premises. Explicit toRuns conversions retain existing safety results; the original selected_forward_exists and accuracy interface are preserved."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseRounds.lean",
+      "reason": "Strengthened existing segment and phase witnesses to ConcreteSegment/ConcreteRuns, preserving proof invariants and caller premises. Explicit toRuns conversions retain existing safety results; the original selected_forward_exists and accuracy interface are preserved."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelBarrier.lean",
+      "reason": "Retained the stronger none-override witness through all actual arrivals and derived the old Runs interface by forgetting evidence; barrier semantics and fairness claims unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelConcrete.lean",
+      "reason": "Each step fixes only the load override to none. Conversion and append preserve the existing candidate relation; floating-point results stay relational."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelReplay.lean",
+      "reason": "Reviewed explicit rejection of bad addresses and mismatched load values, separate storage arenas, nonmemory events and the proof from each actual dispatch through complete runs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelReplaySources.lean",
+      "reason": "Reviewed last-write precedence, the no-intervening-store property, initial-read alternative and recovery of an actual scalar store from writtenAt; all derive from checked replay without graph-admission assumptions."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelSegment.lean",
+      "reason": "Added concrete dispatch segments with matching fetched slices, live-thread and fresh-barrier checks; old generic segments remain available."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Names every new public declaration for exact transitive dependency auditing."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updated exact counts and explained checked read origins without claiming memory admission."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Extends exact namespace counts by 37 endpoints and default-target coverage by four modules; accepted logical axioms and pin checks unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Four explicit build targets added; no dependency or toolchain revision changed."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Reviewed description, summary and exact implementation anchors. The concrete-read guarantee is explicit and the component remains partial with admission and universal obligations recorded. The read-origin detail elaborates the description-first concrete-read responsibility."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Reviewed description, summary and exact implementation anchors. The concrete-read guarantee is explicit and the component remains partial with admission and universal obligations recorded. The read-origin detail elaborates the description-first concrete-read responsibility."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Reviewed description, summary and exact implementation anchors. The concrete-read guarantee is explicit and the component remains partial with admission and universal obligations recorded. The read-origin detail elaborates the description-first concrete-read responsibility."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Reviewed description, summary and exact implementation anchors. The concrete-read guarantee is explicit and the component remains partial with admission and universal obligations recorded. The read-origin detail elaborates the description-first concrete-read responsibility."
+    }
+  ]
+}

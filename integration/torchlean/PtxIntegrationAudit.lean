@@ -1,3 +1,7 @@
+import PtxBinary32.ParallelConcrete
+import PtxBinary32.ParallelReplay
+import PtxBinary32.ParallelReplaySources
+import PtxBinary32.DenseReplay
 import PtxBinary32.DenseRounds
 import PtxBinary32.DenseRoundPhase
 import PtxBinary32.DenseOutput
@@ -935,3 +939,42 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Dense.selected_forward_exists
 #print axioms Ptx.Scalar.Parallel.Dense.selected_forward_accuracy
 #print axioms Ptx.Scalar.Parallel.Dense.product_coordinates
+
+-- Concrete-read witnesses, checked replay and actual read origins.
+#print axioms Ptx.Scalar.Parallel.ConcreteRuns
+#print axioms Ptx.Scalar.Parallel.ConcreteRuns.toRuns
+#print axioms Ptx.Scalar.Parallel.concrete_runs_append
+#print axioms Ptx.Scalar.Parallel.Replay.Arrays
+#print axioms Ptx.Scalar.Parallel.Replay.arrays
+#print axioms Ptx.Scalar.Parallel.Replay.effect
+#print axioms Ptx.Scalar.Parallel.Replay.event
+#print axioms Ptx.Scalar.Parallel.Replay.trace
+#print axioms Ptx.Scalar.Parallel.Replay.trace_append
+#print axioms Ptx.Scalar.Parallel.Replay.eval_replays
+#print axioms Ptx.Scalar.Parallel.Replay.scalar_replays
+#print axioms Ptx.Scalar.Parallel.Replay.barriers_replay
+#print axioms Ptx.Scalar.Parallel.Replay.dispatch_replays
+#print axioms Ptx.Scalar.Parallel.Replay.step_replays
+#print axioms Ptx.Scalar.Parallel.Replay.concrete_replays
+#print axioms Ptx.Scalar.Parallel.Replay.reject_wrong_load
+#print axioms Ptx.Scalar.Parallel.Replay.arena
+#print axioms Ptx.Scalar.Parallel.Replay.writtenAt
+#print axioms Ptx.Scalar.Parallel.Replay.latestWrite
+#print axioms Ptx.Scalar.Parallel.Replay.latestWrite_none
+#print axioms Ptx.Scalar.Parallel.Replay.latestWrite_origin
+#print axioms Ptx.Scalar.Parallel.Replay.event_value
+#print axioms Ptx.Scalar.Parallel.Replay.trace_value
+#print axioms Ptx.Scalar.Parallel.Replay.load_prefix
+#print axioms Ptx.Scalar.Parallel.Replay.load_source
+#print axioms Ptx.Scalar.Parallel.Replay.ReadOrigins
+#print axioms Ptx.Scalar.Parallel.Replay.read_origins
+#print axioms Ptx.Scalar.Parallel.Replay.writtenAt_some
+#print axioms Ptx.Scalar.Parallel.Dense.selected_forward_checked
+#print axioms Ptx.Scalar.Parallel.barrier_round_concrete
+#print axioms Ptx.Scalar.Parallel.ConcreteSegment
+#print axioms Ptx.Scalar.Parallel.ConcreteSegment.toSegment
+#print axioms Ptx.Scalar.Parallel.ConcreteSegment.frame
+#print axioms Ptx.Scalar.Parallel.ConcreteSegment.append
+#print axioms Ptx.Scalar.Parallel.ConcreteSegment.compile
+#print axioms Ptx.Scalar.Parallel.segmentReference_concrete
+#print axioms Ptx.Scalar.Parallel.Dense.selected_forward_concrete

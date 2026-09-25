@@ -340,6 +340,43 @@ Nor does one selected completed execution prove that every permitted execution
 has the same numerical guarantees. The unrestricted candidate relation and its
 arithmetic result freedom have not been narrowed to obtain this proof.
 
+## Checked memory replay and read origins
+
+The selected execution now carries `ConcreteRuns` evidence: its scalar loads
+use the current global or shared array. Forgetting that evidence gives the
+original `Runs` relation, so existing candidate-execution results still apply.
+The narrower witness relation does not alter which floating-point results or
+candidate loads the general semantics permits. `ConcreteSegment` and the
+concrete barrier-round witness preserve this evidence through the entire proof.
+
+`ParallelReplay` independently checks the emitted memory events. It starts with
+the supplied arrays, checks alignment and bounds, compares each recorded load
+value with the current word, and applies each store. Global and shared arrays
+remain separate. Non-memory events leave these arrays unchanged. The theorem
+`concrete_replays` proves that a concrete-read execution always passes this
+check and reproduces both final arrays. `reject_wrong_load` proves that changing
+a load's word makes its replay fail even if the address remains valid.
+
+`ParallelReplaySources.load_source` goes further. Split the trace immediately
+before a particular load. Either there was no preceding store to that location
+and the load uses the initial word, or the proof identifies a preceding store
+with the observed value and proves that no later event before the load stores
+to that location. The source is an event in this execution, not an assumed
+correct intermediate value. Repeated writes and writes to the other memory
+space are handled by the same theorem.
+
+`DenseReplay.selected_forward_checked` exposes these facts alongside every
+complete-forward guarantee listed above. It derives replay and read origins
+from `selected_forward_concrete`; callers provide only the same shape, storage
+bounds and register seeds as before.
+
+Replay alone does not check instruction fetches or synchronization, and does
+not prove PTX memory admission. The execution proof supplies the former facts;
+the remaining admission proof must map the derived sources into the existing
+memory graph, construct the order of writes to each location, and discharge all
+memory and barrier constraints. These obligations have not been replaced with
+replay or added as assumptions of the dense theorem.
+
 ## Software regression checks
 
 `DenseChecks` runs the complete instruction list through `ParallelReference`.
@@ -351,7 +388,8 @@ accidental reliance on zero initialization is exposed.
 
 Each case checks successful statuses, every thread's exit and final program
 counter, outputs, unchanged inputs, allocation lengths and the final barrier
-generation. The integration checker evaluates these cases afresh even when
+generation. Each case also replays the emitted memory events and compares both
+final arrays. The integration checker evaluates these cases afresh even when
 Lean build artifacts are cached. These are executable tests of the selected
 software semantics, not general Lean proofs, memory-admission proofs, GPU runs
 or performance measurements.
@@ -359,6 +397,9 @@ or performance measurements.
 ## The exact remaining obligation
 
 The next step is a memory-admission certificate for the complete selected trace.
+Concrete-read replay and latest preceding store origins are proved; constructing
+the indexed graph sources and write ordering and proving their compatibility
+with the actual barrier certificate remain open.
 For correctness over arbitrary admitted executions, the proof must additionally
 derive each actual writer and the access positions relative to barrier arrivals
 and completion. The existing generic memory-order results can then force the
