@@ -1,0 +1,161 @@
+{
+  "id": "dot-product",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "A small kernel makes the\nconnection between instructions, stored values and checked guarantees easier to\nfollow."
+    }
+  },
+  "summary": [
+    "Compute a left-to-right binary32 dot product with separate multiplication and addition, including an empty-array result of positive zero.",
+    "Prove execution existence, bounded termination for every instruction choice, memory safety and stored-result error bounds under explicit input and range conditions."
+  ],
+  "realization": "implemented",
+  "remaining": "Complete for the isolated one-thread binary32 loop and stated initial-input numerical conditions. Activation/bias composition, a TorchLean dot-product graph and backward, parallel reductions, fused/mixed-precision arithmetic, launch ABI and hardware conformance remain outside this component.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One thread runs an actual PTX loop over two contiguous arrays of binary32 words.\nEach multiplication and addition rounds separately to nearest with ties to even;\nthere is no fused multiply-add and no reassociation of the sum. The caller supplies\ninitialized storage, the two input addresses, the output address and a 32-bit\nlength. The code initializes its own accumulator. Length and address conditions\nexclude counter truncation and pointer wraparound, including the final one-past\npointers. Every read and write must be aligned and within the supplied allocation.\nThe output is written only after all reads; the reusable contract permits it to\nalias an input word, while a caller wanting both inputs preserved supplies a\nseparate output word. All other memory remains unchanged."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Dot.lean",
+        "passage": {
+          "quote": "theorem total (s : State) (left right output : Nat) (xs : List (Word × Word))\n    (bounds : Bounds s.memory left right xs) (stored : Stored s.memory left right xs)\n    (outBound : output < s.memory.length) (outPointer : 4*output < 2^64) :\n    Total target program (Post xs 0 s.memory output) (10*xs.length+5)\n      (initial s left right output xs.length) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One thread runs an actual PTX loop over two contiguous arrays of binary32 words.\nEach multiplication and addition rounds separately to nearest with ties to even;\nthere is no fused multiply-add and no reassociation of the sum. The caller supplies\ninitialized storage, the two input addresses, the output address and a 32-bit\nlength. The code initializes its own accumulator. Length and address conditions\nexclude counter truncation and pointer wraparound, including the final one-past\npointers. Every read and write must be aligned and within the supplied allocation.\nThe output is written only after all reads; the reusable contract permits it to\nalias an input word, while a caller wanting both inputs preserved supplies a\nseparate output word. All other memory remains unchanged."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Dot.lean",
+        "passage": {
+          "quote": "theorem memory_safe\n    (path : Path (Advances target program) (initial s left right output count) events middle)\n    (member : event ∈ events) (access : event.memory = some effect) :\n    ValidAddress s.memory effect.address :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One thread runs an actual PTX loop over two contiguous arrays of binary32 words.\nEach multiplication and addition rounds separately to nearest with ties to even;\nthere is no fused multiply-add and no reassociation of the sum. The caller supplies\ninitialized storage, the two input addresses, the output address and a 32-bit\nlength. The code initializes its own accumulator. Length and address conditions\nexclude counter truncation and pointer wraparound, including the final one-past\npointers. Every read and write must be aligned and within the supplied allocation.\nThe output is written only after all reads; the reusable contract permits it to\nalias an input word, while a caller wanting both inputs preserved supplies a\nseparate output word. All other memory remains unchanged."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Dot.lean",
+        "passage": {
+          "quote": "theorem other_memory (bounds : Bounds s.memory left right xs) (stored : Stored s.memory left right xs)\n    (outBound : output < s.memory.length) (outPointer : 4*output < 2^64)\n    (run : Run target program (initial s left right output xs.length) final status events)\n    (other : index ≠ output) : final.memory[index]? = s.memory[index]? :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed execution has the prescribed accumulation order and exactly\n10*n+5 instruction events for n pairs. Every advancing prefix can finish and is\nshorter than that bound, so no infinite instruction execution is admitted.\nThese guarantees cover all bit patterns and all results admitted by the existing\nfloating-point contracts. They do not assume a deterministic choice of NaN bits.\nThe execution proof uses a finite proof of all possible instruction successors;\nit does not change the semantics into a fuel-limited runner."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Dot.lean",
+        "passage": {
+          "quote": "theorem execution_exists (eligible : Eligible target)\n    (bounds : Bounds s.memory left right xs) (stored : Stored s.memory left right xs)\n    (outBound : output < s.memory.length) (outPointer : 4*output < 2^64) :\n    ∃ final events, Run target program (initial s left right output xs.length) final .halted events ∧\n      events.length = 10*xs.length+5 ∧ Post xs 0 s.memory output final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed execution has the prescribed accumulation order and exactly\n10*n+5 instruction events for n pairs. Every advancing prefix can finish and is\nshorter than that bound, so no infinite instruction execution is admitted.\nThese guarantees cover all bit patterns and all results admitted by the existing\nfloating-point contracts. They do not assume a deterministic choice of NaN bits.\nThe execution proof uses a finite proof of all possible instruction successors;\nit does not change the semantics into a fuel-limited runner."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Dot.lean",
+        "passage": {
+          "quote": "theorem correct (bounds : Bounds s.memory left right xs) (stored : Stored s.memory left right xs)\n    (outBound : output < s.memory.length) (outPointer : 4*output < 2^64)\n    (run : Run target program (initial s left right output xs.length) final status events) :\n    status = .halted ∧ events.length = 10*xs.length+5 ∧ Post xs 0 s.memory output final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed execution has the prescribed accumulation order and exactly\n10*n+5 instruction events for n pairs. Every advancing prefix can finish and is\nshorter than that bound, so no infinite instruction execution is admitted.\nThese guarantees cover all bit patterns and all results admitted by the existing\nfloating-point contracts. They do not assume a deterministic choice of NaN bits.\nThe execution proof uses a finite proof of all possible instruction successors;\nit does not change the semantics into a fuel-limited runner."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Dot.lean",
+        "passage": {
+          "quote": "theorem prefix_termination (eligible : Eligible target)\n    (bounds : Bounds s.memory left right xs) (stored : Stored s.memory left right xs)\n    (outBound : output < s.memory.length) (outPointer : 4*output < 2^64)\n    (path : Path (Advances target program) (initial s left right output xs.length) events middle) :\n    events.length < 10*xs.length+5 ∧\n      ∃ final rest, Run target program middle final .halted rest ∧\n        rest.length = 10*xs.length+5-events.length ∧ Post xs 0 s.memory output final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed execution has the prescribed accumulation order and exactly\n10*n+5 instruction events for n pairs. Every advancing prefix can finish and is\nshorter than that bound, so no infinite instruction execution is admitted.\nThese guarantees cover all bit patterns and all results admitted by the existing\nfloating-point contracts. They do not assume a deterministic choice of NaN bits.\nThe execution proof uses a finite proof of all possible instruction successors;\nit does not change the semantics into a fuel-limited runner."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Dot.lean",
+        "passage": {
+          "quote": "theorem no_infinite_execution (bounds : Bounds s.memory left right xs)\n    (stored : Stored s.memory left right xs)\n    (outBound : output < s.memory.length) (outPointer : 4*output < 2^64) :\n    ¬ ∃ (states : Nat → State) (events : Nat → Mixed.Event),\n      states 0 = initial s left right output xs.length ∧\n      ∀ k, Advances target program (states k) (events k) (states (k+1)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed execution has the prescribed accumulation order and exactly\n10*n+5 instruction events for n pairs. Every advancing prefix can finish and is\nshorter than that bound, so no infinite instruction execution is admitted.\nThese guarantees cover all bit patterns and all results admitted by the existing\nfloating-point contracts. They do not assume a deterministic choice of NaN bits.\nThe execution proof uses a finite proof of all possible instruction successors;\nit does not change the semantics into a fuel-limited runner."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Total.lean",
+        "passage": {
+          "quote": "theorem Total.exists_run (h : Total target program post n s) (eligible : Eligible target) :\n    ∃ final events, Run target program s final .halted events ∧ events.length = n ∧ post final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed execution has the prescribed accumulation order and exactly\n10*n+5 instruction events for n pairs. Every advancing prefix can finish and is\nshorter than that bound, so no infinite instruction execution is admitted.\nThese guarantees cover all bit patterns and all results admitted by the existing\nfloating-point contracts. They do not assume a deterministic choice of NaN bits.\nThe execution proof uses a finite proof of all possible instruction successors;\nit does not change the semantics into a fuel-limited runner."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Total.lean",
+        "passage": {
+          "quote": "theorem Total.correct (h : Total target program post n s)\n    (run : Run target program s final status events) :\n    status = .halted ∧ events.length = n ∧ post final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed execution has the prescribed accumulation order and exactly\n10*n+5 instruction events for n pairs. Every advancing prefix can finish and is\nshorter than that bound, so no infinite instruction execution is admitted.\nThese guarantees cover all bit patterns and all results admitted by the existing\nfloating-point contracts. They do not assume a deterministic choice of NaN bits.\nThe execution proof uses a finite proof of all possible instruction successors;\nit does not change the semantics into a fuel-limited runner."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Total.lean",
+        "passage": {
+          "quote": "theorem Total.no_infinite (h : Total target program post n s) :\n    ¬ ∃ (states : Nat → State) (events : Nat → Event), states 0 = s ∧\n      ∀ k, Advances target program (states k) (events k) (states (k+1)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For numerical accuracy, each encoded input must represent a finite real value.\nThe caller bounds its deviation from the intended real input. Explicit range\nconditions, computed recursively from those initial values and the specified\nrounding operation, keep each product and running sum finite. The proof derives\nfiniteness and an absolute error bound for the stored result. The bound accumulates\ninput encoding errors and both rounding errors at each iteration; no final result\nor intermediate accuracy is assumed. Its size depends on the input magnitudes and\nnumber of terms, and need not be small for every admitted input."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DotError.lean",
+        "passage": {
+          "quote": "theorem fold_accuracy (xs : List Input) (acc out : Word) (ah a error : ℝ)\n    (accReal : finiteReal acc = some ah) (accError : |ah-a| ≤ error)\n    (safe : Safe xs ah) (allowed : Scalar.Dot.Fold (words xs) acc out) :\n    finiteReal out = some (rounded xs ah) ∧ |rounded xs ah-ideal xs a| ≤ error+budget xs ah :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For numerical accuracy, each encoded input must represent a finite real value.\nThe caller bounds its deviation from the intended real input. Explicit range\nconditions, computed recursively from those initial values and the specified\nrounding operation, keep each product and running sum finite. The proof derives\nfiniteness and an absolute error bound for the stored result. The bound accumulates\ninput encoding errors and both rounding errors at each iteration; no final result\nor intermediate accuracy is assumed. Its size depends on the input magnitudes and\nnumber of terms, and need not be small for every admitted input."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DotError.lean",
+        "passage": {
+          "quote": "theorem stored_accuracy (xs : List Input)\n    (bounds : Scalar.Dot.Bounds s.memory left right (words xs))\n    (stored : Scalar.Dot.Stored s.memory left right (words xs))\n    (outBound : output < s.memory.length) (outPointer : 4*output < 2^64)\n    (safe : Safe xs 0)\n    (run : Scalar.Mixed.Run target Scalar.Dot.program\n      (Scalar.Dot.initial s left right output xs.length) final status events) :\n    status = .halted ∧ ∃ out,\n      final.memory[output]? = some out ∧ finiteReal out = some (rounded xs 0) ∧\n      |rounded xs 0-(xs.map fun x => x.l*x.r).sum| ≤ budget xs 0 :="
+        }
+      }
+    }
+  ]
+}

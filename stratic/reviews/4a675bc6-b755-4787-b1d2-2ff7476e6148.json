@@ -1,0 +1,102 @@
+{
+  "id": "4a675bc6-b755-4787-b1d2-2ff7476e6148",
+  "base": "5e1db82fc6f953882c7a538d11798cbf95415e43",
+  "contentTree": "952563a26df866816fcf37bd746bfbbfccc1f9de",
+  "reviewer": "Codex",
+  "summary": "Verify a sequential binary32 dot-product loop with termination and error bounds",
+  "examined": [
+    {
+      "id": "dot-product",
+      "outcome": "revised",
+      "reason": "New reusable loop with all-result termination, exact ordered arithmetic correspondence, storage safety and accumulated numerical bounds from initial values."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Updated current implementation status for array-input accumulation; the broad example contract and summary still apply."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Four new targets and 54 new public dependency endpoints preserve the exact-audit and standard-axioms-only policy. Existing instruction definitions and source interpretation are reused without changes."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "The bounded sequential arithmetic example advances existing responsibilities without expanding ISA, concurrency or hardware claims."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "This component supplies a reusable array kernel; graph/backward composition and runtime argument setup remain separate explicit obligations."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "952563a26df866816fcf37bd746bfbbfccc1f9de",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; local documentation link check; manual program and contract review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, unchanged pinned TorchLean/FloatLib dependencies, Linux. No new instruction semantics and no external model calls.",
+      "evidence": "Core source/build/evidence/regression checks passed and audited 1643 declarations. Integration built 26 targets and freshly checked exactly 493 dependency reports, including all 54 new public declarations, with only propext, Classical.choice and Quot.sound permitted. Empty-input, order-sensitive cancellation, actual 35-event execution and nonempty numerical-domain proofs built. Documentation links and Stratic passages resolve, whitespace check passes. Before/after Stratic snapshots have identical content tree 952563a26df866816fcf37bd746bfbbfccc1f9de. Manual review checked all-successor totality against unchanged dispatch, counter/address bounds, late output store, aliasing, initial-input range guards and per-term error propagation.",
+      "tests": [],
+      "id": "2a4cf2e2-5dd8-4a15-ad18-c232f7f1c1dd",
+      "recordedAt": "2026-09-25T09:44:22.553Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T09:44:40.407Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Added a link to the array dot-product example and updated the live audit count; retained the scalar ReLU introduction and example."
+    },
+    {
+      "path": "docs/foundations/dot-product.md",
+      "reason": "Walkthrough checked against the 13 instruction positions, 10*n+5 event count, storage bounds, aliasing behavior, initial-value error guards and exact proof endpoints."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Dot.lean",
+      "reason": "Reviewed all instruction definitions, layout/count/pointer invariants, load provenance and store timing. Helper proofs establish linked universal totality, numerical-result chaining and memory preservation."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DotError.lean",
+      "reason": "Reviewed actual finite encodings versus ideal inputs, input-only range recursion and per-term error composition. Neither intermediate nor final accuracy is assumed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DotExamples.lean",
+      "reason": "Checked empty input, order-sensitive finite cancellation, a real 35-event witness with nonzero scratch and an inhabited nonempty numerical domain using kernel-checked proofs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Total.lean",
+      "reason": "Reviewed proof certificate over the unchanged dispatch relation; every successor is covered. Existence uses the original dispatch-existence theorem with eligible target, and prefix/no-infinite results do not assume functionality."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Added exactly 54 fresh public-declaration dependency reports while retaining the original 439 endpoints."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Added module orientation and kept the dot-product graph/backward boundary explicit; updated target and audit counts."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Extended explicit default-target and namespace-count sets without changing dependency pins, source guards or allowed axioms."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Added four modules to the default build; no dependency or toolchain changes."
+    },
+    {
+      "path": "stratic/descriptions/dot-product.json",
+      "reason": "Reviewed implementation status, summary, exact passage links and intentional future work."
+    },
+    {
+      "path": "stratic/descriptions/dot-product.md",
+      "reason": "Contract written before implementation and checked against final code, including nondeterministic result choices, termination, ranges and execution restrictions."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Added current dot-product status while preserving the broader example responsibilities and accurate summary."
+    }
+  ]
+}

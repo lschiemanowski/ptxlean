@@ -64,6 +64,14 @@ COUNTS.update({
 })
 TARGETS.update({"PtxBinary32.Relu", "PtxBinary32.ReluGate", "PtxReluVJP", "PtxReluKernel", "PtxReluAccuracy"})
 
+# Ordered binary32 dot product with universal termination and numerical bounds.
+COUNTS["Ptx.Binary32.DotError"] = 10
+COUNTS["Ptx.Scalar.Dot"] = 26
+COUNTS["Ptx.Scalar.Dot.Examples"] = 9
+COUNTS["Ptx.Scalar.Mixed"] += 1
+COUNTS["Ptx.Scalar.Mixed.Total"] = 8
+TARGETS.update({"PtxBinary32.Total", "PtxBinary32.Dot", "PtxBinary32.DotError", "PtxBinary32.DotExamples"})
+
 
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()

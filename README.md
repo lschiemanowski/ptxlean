@@ -187,13 +187,18 @@ mathlib build artifacts, and check the TorchLean examples, numerical bounds and
 forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
-and `Integration check passed: 439 exact dependency reports, only standard Lean
+and `Integration check passed: 493 exact dependency reports, only standard Lean
 axioms.` respectively. The general forward and backward proofs above are included.
 
 A smaller [array-loop example](docs/foundations/array-mask-select.md) combines
 reviewed integer instructions with memory and branches, proving exact output,
 memory safety and termination. After `lake build`, check it with
 `lake env lean examples/array_mask_select.lean`.
+
+The [sequential dot-product example](docs/foundations/dot-product.md) extends the
+arithmetic to array inputs, with a PTX loop, termination for every permitted
+instruction result, and accumulated floating-point error bounds. It is included
+in the integration check above.
 
 ## Instruction reference
 

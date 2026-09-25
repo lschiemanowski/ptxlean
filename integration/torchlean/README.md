@@ -14,6 +14,12 @@ The numerical backward theorem requires an explicit margin preventing rounding
 from changing the activation branch. The finite bit gate is implemented in
 `PtxBinary32/Relu.lean` and `PtxBinary32/ReluGate.lean` using existing instructions.
 
+The [sequential dot-product kernel](../../docs/foundations/dot-product.md) adds
+array traversal and left-to-right binary32 accumulation. `PtxBinary32.Total`
+provides termination certificates covering every dispatch result; `Dot`, `DotError` and `DotExamples`
+prove execution, numerical bounds and boundary examples. This component does
+not yet supply a TorchLean dot-product graph or its backward.
+
 ## Retained squared-affine graph
 
 The original example computes `(x * weight + bias)^2` independently at each coordinate of
@@ -155,8 +161,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 22 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 439
+All 26 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 493
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward

@@ -1,3 +1,4 @@
+import PtxBinary32.DotExamples
 import PtxReluAccuracy
 import PtxAffineBackward
 import PtxAffineSquareKernel
@@ -467,3 +468,59 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.ReluKernel.backward_accuracy
 #print axioms PtxTorchLean.ReluKernel.stored_forward_accuracy
 #print axioms PtxTorchLean.ReluKernel.stored_backward_accuracy
+
+-- Sequential dot product and all-choice termination certificates.
+#print axioms Ptx.Scalar.Mixed.Total
+#print axioms Ptx.Scalar.Mixed.Total.mono
+#print axioms Ptx.Scalar.Mixed.Total.scalar_next
+#print axioms Ptx.Scalar.Mixed.Total.scalar_halt
+#print axioms Ptx.Scalar.Mixed.Total.binary32
+#print axioms Ptx.Scalar.Mixed.Total.exists_run
+#print axioms Ptx.Scalar.Mixed.Total.correct
+#print axioms Ptx.Scalar.Mixed.Total.prefix
+#print axioms Ptx.Scalar.Mixed.Total.no_infinite
+#print axioms Ptx.Scalar.Dot.Fold
+#print axioms Ptx.Scalar.Dot.pointer
+#print axioms Ptx.Scalar.Dot.initI
+#print axioms Ptx.Scalar.Dot.test
+#print axioms Ptx.Scalar.Dot.done
+#print axioms Ptx.Scalar.Dot.load
+#print axioms Ptx.Scalar.Dot.multiply
+#print axioms Ptx.Scalar.Dot.addition
+#print axioms Ptx.Scalar.Dot.increment
+#print axioms Ptx.Scalar.Dot.decrement
+#print axioms Ptx.Scalar.Dot.back
+#print axioms Ptx.Scalar.Dot.store
+#print axioms Ptx.Scalar.Dot.exit
+#print axioms Ptx.Scalar.Dot.program
+#print axioms Ptx.Scalar.Dot.Stored
+#print axioms Ptx.Scalar.Dot.Bounds
+#print axioms Ptx.Scalar.Dot.Post
+#print axioms Ptx.Scalar.Dot.initial
+#print axioms Ptx.Scalar.Dot.total_loop
+#print axioms Ptx.Scalar.Dot.total
+#print axioms Ptx.Scalar.Dot.execution_exists
+#print axioms Ptx.Scalar.Dot.correct
+#print axioms Ptx.Scalar.Dot.prefix_termination
+#print axioms Ptx.Scalar.Dot.no_infinite_execution
+#print axioms Ptx.Scalar.Dot.memory_safe
+#print axioms Ptx.Scalar.Dot.other_memory
+#print axioms Ptx.Binary32.DotError.Input
+#print axioms Ptx.Binary32.DotError.words
+#print axioms Ptx.Binary32.DotError.step
+#print axioms Ptx.Binary32.DotError.rounded
+#print axioms Ptx.Binary32.DotError.ideal
+#print axioms Ptx.Binary32.DotError.Safe
+#print axioms Ptx.Binary32.DotError.budget
+#print axioms Ptx.Binary32.DotError.ideal_cons
+#print axioms Ptx.Binary32.DotError.fold_accuracy
+#print axioms Ptx.Binary32.DotError.stored_accuracy
+#print axioms Ptx.Scalar.Dot.Examples.cancellation
+#print axioms Ptx.Scalar.Dot.Examples.reordered
+#print axioms Ptx.Scalar.Dot.Examples.cancellation_result
+#print axioms Ptx.Scalar.Dot.Examples.reordered_result
+#print axioms Ptx.Scalar.Dot.Examples.empty_result
+#print axioms Ptx.Scalar.Dot.Examples.cancellationState
+#print axioms Ptx.Scalar.Dot.Examples.cancellation_execution
+#print axioms Ptx.Scalar.Dot.Examples.zeroInput
+#print axioms Ptx.Scalar.Dot.Examples.nonempty_numerical_domain
