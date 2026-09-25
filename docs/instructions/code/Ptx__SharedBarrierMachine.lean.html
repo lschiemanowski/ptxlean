@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ptx/SharedBarrierMachine.lean · PTXLean</title><link rel="stylesheet" href="../style.css">
+<script src="../search.js" defer></script></head>
+<body class="code-source"><header><a href="../index.html"><strong>PTXLEAN</strong> / Instruction reference</a><span>PTX ISA 9.4 · Lean 4.34.0</span></header>
+<main><p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>Ptx/SharedBarrierMachine.lean</h1><p><small>SHA-256 <code>f8e6b3ba9faf7a38c7ceee46da5db06c24193471511e2733806cad2dc84792bc</code></small></p><pre><code><span class="code-line" id="L1"><a class="line-number" href="#L1">1</a>import Ptx.Barrier</span>
+<span class="code-line" id="L2"><a class="line-number" href="#L2">2</a>import Ptx.Language</span>
+<span class="code-line" id="L3"><a class="line-number" href="#L3">3</a></span>
+<span class="code-line" id="L4"><a class="line-number" href="#L4">4</a>/-! A deliberately small fetched instruction machine for one full-CTA barrier.</span>
+<span class="code-line" id="L5"><a class="line-number" href="#L5">5</a>Only the typed shared-memory forms below are represented. Candidate reads and</span>
+<span class="code-line" id="L6"><a class="line-number" href="#L6">6</a>concrete arena reads share access/control checks, but are different modes. -/</span>
+<span class="code-line" id="L7"><a class="line-number" href="#L7">7</a>namespace Ptx.SharedBarrier</span>
+<span class="code-line" id="L8"><a class="line-number" href="#L8">8</a></span>
+<span class="code-line" id="L9"><a class="line-number" href="#L9">9</a>structure Config (n : Nat) where</span>
+<span class="code-line" id="L10"><a class="line-number" href="#L10">10</a>  cta : Nat</span>
+<span class="code-line" id="L11"><a class="line-number" href="#L11">11</a>  partner : Fin n → Fin n</span>
+<span class="code-line" id="L12"><a class="line-number" href="#L12">12</a>  nonempty : 0 &lt; n</span>
+<span class="code-line" id="L13"><a class="line-number" href="#L13">13</a>  noWrap : 4*n &lt; 2^32</span>
+<span class="code-line" id="L14"><a class="line-number" href="#L14">14</a></span>
+<span class="code-line" id="L15"><a class="line-number" href="#L15">15</a>inductive Instruction where</span>
+<span class="code-line" id="L16"><a class="line-number" href="#L16">16</a>  | store (addressRegister sourceRegister : Nat)</span>
+<span class="code-line" id="L17"><a class="line-number" href="#L17">17</a>  | sync (resource : Fin 16)</span>
+<span class="code-line" id="L18"><a class="line-number" href="#L18">18</a>  | load (destinationRegister addressRegister : Nat)</span>
+<span class="code-line" id="L19"><a class="line-number" href="#L19">19</a>  | exit</span>
+<span class="code-line" id="L20"><a class="line-number" href="#L20">20</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L21"><a class="line-number" href="#L21">21</a></span>
+<span class="code-line" id="L22"><a class="line-number" href="#L22">22</a>/-- No predicate, branch, dynamic barrier resource or count is hidden here. -/</span>
+<span class="code-line" id="L23"><a class="line-number" href="#L23">23</a>def program : List Instruction := [.store 0 0, .sync 0, .load 1 1, .exit]</span>
+<span class="code-line" id="L24"><a class="line-number" href="#L24">24</a></span>
+<span class="code-line" id="L25"><a class="line-number" href="#L25">25</a>inductive Token where</span>
+<span class="code-line" id="L26"><a class="line-number" href="#L26">26</a>  | wordRegister (index : Nat)</span>
+<span class="code-line" id="L27"><a class="line-number" href="#L27">27</a>  | sharedAddressRegister (index : Nat)</span>
+<span class="code-line" id="L28"><a class="line-number" href="#L28">28</a>  | resource (value : Fin 16)</span>
+<span class="code-line" id="L29"><a class="line-number" href="#L29">29</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L30"><a class="line-number" href="#L30">30</a></span>
+<span class="code-line" id="L31"><a class="line-number" href="#L31">31</a>def encode : Instruction → String × List Token</span>
+<span class="code-line" id="L32"><a class="line-number" href="#L32">32</a>  | .store a s =&gt; (&quot;st.relaxed.cta.shared.u32&quot;, [.sharedAddressRegister a, .wordRegister s])</span>
+<span class="code-line" id="L33"><a class="line-number" href="#L33">33</a>  | .sync r =&gt; (&quot;bar.sync&quot;, [.resource r])</span>
+<span class="code-line" id="L34"><a class="line-number" href="#L34">34</a>  | .load d a =&gt; (&quot;ld.relaxed.cta.shared.u32&quot;, [.wordRegister d, .sharedAddressRegister a])</span>
+<span class="code-line" id="L35"><a class="line-number" href="#L35">35</a>  | .exit =&gt; (&quot;exit&quot;, [])</span>
+<span class="code-line" id="L36"><a class="line-number" href="#L36">36</a></span>
+<span class="code-line" id="L37"><a class="line-number" href="#L37">37</a>def decode : String → List Token → Option Instruction</span>
+<span class="code-line" id="L38"><a class="line-number" href="#L38">38</a>  | &quot;st.relaxed.cta.shared.u32&quot;, [.sharedAddressRegister a, .wordRegister s] =&gt; some (.store a s)</span>
+<span class="code-line" id="L39"><a class="line-number" href="#L39">39</a>  | &quot;bar.sync&quot;, [.resource r] =&gt; some (.sync r)</span>
+<span class="code-line" id="L40"><a class="line-number" href="#L40">40</a>  | &quot;ld.relaxed.cta.shared.u32&quot;, [.wordRegister d, .sharedAddressRegister a] =&gt; some (.load d a)</span>
+<span class="code-line" id="L41"><a class="line-number" href="#L41">41</a>  | &quot;exit&quot;, [] =&gt; some .exit</span>
+<span class="code-line" id="L42"><a class="line-number" href="#L42">42</a>  | _, _ =&gt; none</span>
+<span class="code-line" id="L43"><a class="line-number" href="#L43">43</a></span>
+<span class="code-line" id="L44"><a class="line-number" href="#L44">44</a>theorem decode_encode (instruction : Instruction) :</span>
+<span class="code-line" id="L45"><a class="line-number" href="#L45">45</a>    decode (encode instruction).1 (encode instruction).2 = some instruction := by</span>
+<span class="code-line" id="L46"><a class="line-number" href="#L46">46</a>  cases instruction &lt;;&gt; rfl</span>
+<span class="code-line" id="L47"><a class="line-number" href="#L47">47</a></span>
+<span class="code-line" id="L48"><a class="line-number" href="#L48">48</a>structure ThreadState where</span>
+<span class="code-line" id="L49"><a class="line-number" href="#L49">49</a>  pc : Nat</span>
+<span class="code-line" id="L50"><a class="line-number" href="#L50">50</a>  registers : Nat → Word</span>
+<span class="code-line" id="L51"><a class="line-number" href="#L51">51</a>  addresses : Nat → Word</span>
+<span class="code-line" id="L52"><a class="line-number" href="#L52">52</a>  halted : Bool</span>
+<span class="code-line" id="L53"><a class="line-number" href="#L53">53</a></span>
+<span class="code-line" id="L54"><a class="line-number" href="#L54">54</a>structure Arena (n : Nat) where</span>
+<span class="code-line" id="L55"><a class="line-number" href="#L55">55</a>  owner : Nat</span>
+<span class="code-line" id="L56"><a class="line-number" href="#L56">56</a>  words : Fin n → Word</span>
+<span class="code-line" id="L57"><a class="line-number" href="#L57">57</a></span>
+<span class="code-line" id="L58"><a class="line-number" href="#L58">58</a>structure State (n : Nat) where</span>
+<span class="code-line" id="L59"><a class="line-number" href="#L59">59</a>  threads : Fin n → ThreadState</span>
+<span class="code-line" id="L60"><a class="line-number" href="#L60">60</a>  arena : Arena n</span>
+<span class="code-line" id="L61"><a class="line-number" href="#L61">61</a>  barrier : Barrier.State n</span>
+<span class="code-line" id="L62"><a class="line-number" href="#L62">62</a></span>
+<span class="code-line" id="L63"><a class="line-number" href="#L63">63</a>/-- Shared addresses are 32-bit byte offsets in this CTA&#x27;s initialized arena. -/</span>
+<span class="code-line" id="L64"><a class="line-number" href="#L64">64</a>def AccessSafe (n : Nat) (address : Word) : Prop :=</span>
+<span class="code-line" id="L65"><a class="line-number" href="#L65">65</a>  address.toNat % 4 = 0 ∧ address.toNat / 4 &lt; n</span>
+<span class="code-line" id="L66"><a class="line-number" href="#L66">66</a></span>
+<span class="code-line" id="L67"><a class="line-number" href="#L67">67</a>def accessIndex (n : Nat) (address : Word) : Option (Fin n) :=</span>
+<span class="code-line" id="L68"><a class="line-number" href="#L68">68</a>  if _aligned : address.toNat % 4 = 0 then</span>
+<span class="code-line" id="L69"><a class="line-number" href="#L69">69</a>    if bound : address.toNat / 4 &lt; n then some ⟨address.toNat / 4, bound⟩ else none</span>
+<span class="code-line" id="L70"><a class="line-number" href="#L70">70</a>  else none</span>
+<span class="code-line" id="L71"><a class="line-number" href="#L71">71</a></span>
+<span class="code-line" id="L72"><a class="line-number" href="#L72">72</a>theorem accessIndex_some (h : accessIndex n address = some index) :</span>
+<span class="code-line" id="L73"><a class="line-number" href="#L73">73</a>    AccessSafe n address ∧ index.val = address.toNat / 4 := by</span>
+<span class="code-line" id="L74"><a class="line-number" href="#L74">74</a>  unfold accessIndex at h</span>
+<span class="code-line" id="L75"><a class="line-number" href="#L75">75</a>  split at h</span>
+<span class="code-line" id="L76"><a class="line-number" href="#L76">76</a>  · split at h</span>
+<span class="code-line" id="L77"><a class="line-number" href="#L77">77</a>    · cases h</span>
+<span class="code-line" id="L78"><a class="line-number" href="#L78">78</a>      exact ⟨⟨by assumption, by assumption⟩, rfl⟩</span>
+<span class="code-line" id="L79"><a class="line-number" href="#L79">79</a>    · contradiction</span>
+<span class="code-line" id="L80"><a class="line-number" href="#L80">80</a>  · contradiction</span>
+<span class="code-line" id="L81"><a class="line-number" href="#L81">81</a></span>
+<span class="code-line" id="L82"><a class="line-number" href="#L82">82</a>def update (values : α → β) [DecidableEq α] (index : α) (value : β) : α → β :=</span>
+<span class="code-line" id="L83"><a class="line-number" href="#L83">83</a>  fun other =&gt; if other = index then value else values other</span>
+<span class="code-line" id="L84"><a class="line-number" href="#L84">84</a></span>
+<span class="code-line" id="L85"><a class="line-number" href="#L85">85</a>inductive MemoryKind where</span>
+<span class="code-line" id="L86"><a class="line-number" href="#L86">86</a>  | store | load</span>
+<span class="code-line" id="L87"><a class="line-number" href="#L87">87</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L88"><a class="line-number" href="#L88">88</a></span>
+<span class="code-line" id="L89"><a class="line-number" href="#L89">89</a>/-- The kind selects exactly the explicit relaxed/CTA/shared/u32 instruction.</span>
+<span class="code-line" id="L90"><a class="line-number" href="#L90">90</a>The owner is retained; a global instruction is never used as its source. -/</span>
+<span class="code-line" id="L91"><a class="line-number" href="#L91">91</a>structure MemoryEvent (n : Nat) where</span>
+<span class="code-line" id="L92"><a class="line-number" href="#L92">92</a>  kind : MemoryKind</span>
+<span class="code-line" id="L93"><a class="line-number" href="#L93">93</a>  cta : Nat</span>
+<span class="code-line" id="L94"><a class="line-number" href="#L94">94</a>  thread : Fin n</span>
+<span class="code-line" id="L95"><a class="line-number" href="#L95">95</a>  pc : Nat</span>
+<span class="code-line" id="L96"><a class="line-number" href="#L96">96</a>  address : Word</span>
+<span class="code-line" id="L97"><a class="line-number" href="#L97">97</a>  value : Word</span>
+<span class="code-line" id="L98"><a class="line-number" href="#L98">98</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L99"><a class="line-number" href="#L99">99</a></span>
+<span class="code-line" id="L100"><a class="line-number" href="#L100">100</a>inductive Event (n : Nat) where</span>
+<span class="code-line" id="L101"><a class="line-number" href="#L101">101</a>  | memory (effect : MemoryEvent n)</span>
+<span class="code-line" id="L102"><a class="line-number" href="#L102">102</a>  | barrier (effect : Barrier.Event n)</span>
+<span class="code-line" id="L103"><a class="line-number" href="#L103">103</a>  | exited (thread : Fin n) (pc : Nat)</span>
+<span class="code-line" id="L104"><a class="line-number" href="#L104">104</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L105"><a class="line-number" href="#L105">105</a></span>
+<span class="code-line" id="L106"><a class="line-number" href="#L106">106</a>inductive Outcome where</span>
+<span class="code-line" id="L107"><a class="line-number" href="#L107">107</a>  | advanced | waiting | released | halted</span>
+<span class="code-line" id="L108"><a class="line-number" href="#L108">108</a>  | wrongOwner | invalidAddress | invalidPC | wrongBarrierKey</span>
+<span class="code-line" id="L109"><a class="line-number" href="#L109">109</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L110"><a class="line-number" href="#L110">110</a></span>
+<span class="code-line" id="L111"><a class="line-number" href="#L111">111</a>structure Result (n : Nat) where</span>
+<span class="code-line" id="L112"><a class="line-number" href="#L112">112</a>  state : State n</span>
+<span class="code-line" id="L113"><a class="line-number" href="#L113">113</a>  outcome : Outcome</span>
+<span class="code-line" id="L114"><a class="line-number" href="#L114">114</a>  events : List (Event n)</span>
+<span class="code-line" id="L115"><a class="line-number" href="#L115">115</a></span>
+<span class="code-line" id="L116"><a class="line-number" href="#L116">116</a>def barrierConfig (config : Config n) : Barrier.Config n :=</span>
+<span class="code-line" id="L117"><a class="line-number" href="#L117">117</a>  ⟨config.cta, 0, 1, config.nonempty⟩</span>
+<span class="code-line" id="L118"><a class="line-number" href="#L118">118</a></span>
+<span class="code-line" id="L119"><a class="line-number" href="#L119">119</a>/-- Key site and resource come from the actual fetched instruction/PC. -/</span>
+<span class="code-line" id="L120"><a class="line-number" href="#L120">120</a>def barrierRequest (config : Config n) (state : State n) (thread : Fin n) (resource : Fin 16) :</span>
+<span class="code-line" id="L121"><a class="line-number" href="#L121">121</a>    Barrier.Request n :=</span>
+<span class="code-line" id="L122"><a class="line-number" href="#L122">122</a>  ⟨⟨config.cta, resource, state.barrier.generation, (state.threads thread).pc⟩, thread⟩</span>
+<span class="code-line" id="L123"><a class="line-number" href="#L123">123</a></span>
+<span class="code-line" id="L124"><a class="line-number" href="#L124">124</a>def advance (thread : ThreadState) : ThreadState := {thread with pc := thread.pc+1}</span>
+<span class="code-line" id="L125"><a class="line-number" href="#L125">125</a></span>
+<span class="code-line" id="L126"><a class="line-number" href="#L126">126</a>/-- The caller&#x27;s fetch selects this operation. Barriers park at their own PC;</span>
+<span class="code-line" id="L127"><a class="line-number" href="#L127">127</a>on release all participants advance. Reachability establishes they are all at</span>
+<span class="code-line" id="L128"><a class="line-number" href="#L128">128</a>that same barrier, rather than assuming it as a release premise. -/</span>
+<span class="code-line" id="L129"><a class="line-number" href="#L129">129</a>def dispatch (config : Config n) (override : Option Word) (thread : Fin n)</span>
+<span class="code-line" id="L130"><a class="line-number" href="#L130">130</a>    (instruction : Instruction) (state : State n) : Result n :=</span>
+<span class="code-line" id="L131"><a class="line-number" href="#L131">131</a>  let current := state.threads thread</span>
+<span class="code-line" id="L132"><a class="line-number" href="#L132">132</a>  match instruction with</span>
+<span class="code-line" id="L133"><a class="line-number" href="#L133">133</a>  | .store addressRegister sourceRegister =&gt;</span>
+<span class="code-line" id="L134"><a class="line-number" href="#L134">134</a>    if state.arena.owner = config.cta then</span>
+<span class="code-line" id="L135"><a class="line-number" href="#L135">135</a>      match accessIndex n (current.addresses addressRegister) with</span>
+<span class="code-line" id="L136"><a class="line-number" href="#L136">136</a>      | none =&gt; ⟨state, .invalidAddress, []⟩</span>
+<span class="code-line" id="L137"><a class="line-number" href="#L137">137</a>      | some index =&gt;</span>
+<span class="code-line" id="L138"><a class="line-number" href="#L138">138</a>        ⟨{state with</span>
+<span class="code-line" id="L139"><a class="line-number" href="#L139">139</a>            threads := update state.threads thread (advance current)</span>
+<span class="code-line" id="L140"><a class="line-number" href="#L140">140</a>            arena := {state.arena with words := update state.arena.words index (current.registers sourceRegister)}},</span>
+<span class="code-line" id="L141"><a class="line-number" href="#L141">141</a>         .advanced,</span>
+<span class="code-line" id="L142"><a class="line-number" href="#L142">142</a>         [.memory ⟨.store, config.cta, thread, current.pc,</span>
+<span class="code-line" id="L143"><a class="line-number" href="#L143">143</a>           current.addresses addressRegister, current.registers sourceRegister⟩]⟩</span>
+<span class="code-line" id="L144"><a class="line-number" href="#L144">144</a>    else ⟨state, .wrongOwner, []⟩</span>
+<span class="code-line" id="L145"><a class="line-number" href="#L145">145</a>  | .load destinationRegister addressRegister =&gt;</span>
+<span class="code-line" id="L146"><a class="line-number" href="#L146">146</a>    if state.arena.owner = config.cta then</span>
+<span class="code-line" id="L147"><a class="line-number" href="#L147">147</a>      match accessIndex n (current.addresses addressRegister) with</span>
+<span class="code-line" id="L148"><a class="line-number" href="#L148">148</a>      | none =&gt; ⟨state, .invalidAddress, []⟩</span>
+<span class="code-line" id="L149"><a class="line-number" href="#L149">149</a>      | some index =&gt;</span>
+<span class="code-line" id="L150"><a class="line-number" href="#L150">150</a>        let value := override.getD (state.arena.words index)</span>
+<span class="code-line" id="L151"><a class="line-number" href="#L151">151</a>        ⟨{state with threads := update state.threads thread {current with pc := current.pc+1, registers := update current.registers destinationRegister value}},</span>
+<span class="code-line" id="L152"><a class="line-number" href="#L152">152</a>         .advanced,</span>
+<span class="code-line" id="L153"><a class="line-number" href="#L153">153</a>         [.memory ⟨.load, config.cta, thread, current.pc, current.addresses addressRegister, value⟩]⟩</span>
+<span class="code-line" id="L154"><a class="line-number" href="#L154">154</a>    else ⟨state, .wrongOwner, []⟩</span>
+<span class="code-line" id="L155"><a class="line-number" href="#L155">155</a>  | .sync resource =&gt;</span>
+<span class="code-line" id="L156"><a class="line-number" href="#L156">156</a>    let result := Barrier.step (barrierConfig config) state.barrier (barrierRequest config state thread resource)</span>
+<span class="code-line" id="L157"><a class="line-number" href="#L157">157</a>    match result.disposition with</span>
+<span class="code-line" id="L158"><a class="line-number" href="#L158">158</a>    | .rejectedWrongKey =&gt; ⟨state, .wrongBarrierKey, []⟩</span>
+<span class="code-line" id="L159"><a class="line-number" href="#L159">159</a>    | .waiting =&gt;</span>
+<span class="code-line" id="L160"><a class="line-number" href="#L160">160</a>      ⟨{state with barrier := result.state}, .waiting, result.events.map Event.barrier⟩</span>
+<span class="code-line" id="L161"><a class="line-number" href="#L161">161</a>    | .released =&gt;</span>
+<span class="code-line" id="L162"><a class="line-number" href="#L162">162</a>      ⟨{state with threads := fun other =&gt; advance (state.threads other), barrier := result.state},</span>
+<span class="code-line" id="L163"><a class="line-number" href="#L163">163</a>        .released, result.events.map Event.barrier⟩</span>
+<span class="code-line" id="L164"><a class="line-number" href="#L164">164</a>  | .exit =&gt;</span>
+<span class="code-line" id="L165"><a class="line-number" href="#L165">165</a>    ⟨{state with threads := update state.threads thread {current with halted := true}},</span>
+<span class="code-line" id="L166"><a class="line-number" href="#L166">166</a>      .halted, [.exited thread current.pc]⟩</span>
+<span class="code-line" id="L167"><a class="line-number" href="#L167">167</a></span>
+<span class="code-line" id="L168"><a class="line-number" href="#L168">168</a>instance (state : Barrier.State n) (thread : Fin n) : Decidable (Barrier.Waiting state thread) :=</span>
+<span class="code-line" id="L169"><a class="line-number" href="#L169">169</a>  inferInstanceAs (Decidable (state.arrived thread = true))</span>
+<span class="code-line" id="L170"><a class="line-number" href="#L170">170</a></span>
+<span class="code-line" id="L171"><a class="line-number" href="#L171">171</a>/-- Waiting and halted threads cannot fetch a later instruction. -/</span>
+<span class="code-line" id="L172"><a class="line-number" href="#L172">172</a>def stepWith (config : Config n) (override : Option Word) (thread : Fin n) (state : State n) : Result n :=</span>
+<span class="code-line" id="L173"><a class="line-number" href="#L173">173</a>  if (state.threads thread).halted = true then ⟨state, .halted, []⟩</span>
+<span class="code-line" id="L174"><a class="line-number" href="#L174">174</a>  else if Barrier.Waiting state.barrier thread then ⟨state, .waiting, []⟩</span>
+<span class="code-line" id="L175"><a class="line-number" href="#L175">175</a>  else match program[(state.threads thread).pc]? with</span>
+<span class="code-line" id="L176"><a class="line-number" href="#L176">176</a>    | none =&gt; ⟨state, .invalidPC, []⟩</span>
+<span class="code-line" id="L177"><a class="line-number" href="#L177">177</a>    | some instruction =&gt; dispatch config override thread instruction state</span>
+<span class="code-line" id="L178"><a class="line-number" href="#L178">178</a></span>
+<span class="code-line" id="L179"><a class="line-number" href="#L179">179</a>def step (config : Config n) (thread : Fin n) (state : State n) : Result n :=</span>
+<span class="code-line" id="L180"><a class="line-number" href="#L180">180</a>  stepWith config none thread state</span>
+<span class="code-line" id="L181"><a class="line-number" href="#L181">181</a></span>
+<span class="code-line" id="L182"><a class="line-number" href="#L182">182</a>theorem waiting_blocks (config : Config n) (override : Option Word) (thread : Fin n) (state : State n)</span>
+<span class="code-line" id="L183"><a class="line-number" href="#L183">183</a>    (live : (state.threads thread).halted = false) (waiting : Barrier.Waiting state.barrier thread) :</span>
+<span class="code-line" id="L184"><a class="line-number" href="#L184">184</a>    stepWith config override thread state = ⟨state, .waiting, []⟩ := by</span>
+<span class="code-line" id="L185"><a class="line-number" href="#L185">185</a>  simp [stepWith, live, waiting]</span>
+<span class="code-line" id="L186"><a class="line-number" href="#L186">186</a></span>
+<span class="code-line" id="L187"><a class="line-number" href="#L187">187</a>theorem halted_blocks (config : Config n) (override : Option Word) (thread : Fin n) (state : State n)</span>
+<span class="code-line" id="L188"><a class="line-number" href="#L188">188</a>    (halted : (state.threads thread).halted = true) :</span>
+<span class="code-line" id="L189"><a class="line-number" href="#L189">189</a>    stepWith config override thread state = ⟨state, .halted, []⟩ := by</span>
+<span class="code-line" id="L190"><a class="line-number" href="#L190">190</a>  simp [stepWith, halted]</span>
+<span class="code-line" id="L191"><a class="line-number" href="#L191">191</a></span>
+<span class="code-line" id="L192"><a class="line-number" href="#L192">192</a>theorem fetched_step (config : Config n) (override : Option Word) (thread : Fin n) (state : State n)</span>
+<span class="code-line" id="L193"><a class="line-number" href="#L193">193</a>    (live : (state.threads thread).halted = false) (runnable : ¬Barrier.Waiting state.barrier thread)</span>
+<span class="code-line" id="L194"><a class="line-number" href="#L194">194</a>    (fetch : program[(state.threads thread).pc]? = some instruction) :</span>
+<span class="code-line" id="L195"><a class="line-number" href="#L195">195</a>    stepWith config override thread state = dispatch config override thread instruction state := by</span>
+<span class="code-line" id="L196"><a class="line-number" href="#L196">196</a>  simp [stepWith, live, runnable, fetch]</span>
+<span class="code-line" id="L197"><a class="line-number" href="#L197">197</a></span>
+<span class="code-line" id="L198"><a class="line-number" href="#L198">198</a>/-- Every emitted effect comes from an actually fetched instruction at a live,</span>
+<span class="code-line" id="L199"><a class="line-number" href="#L199">199</a>unblocked thread. The individual dispatch branches determine its full fields. -/</span>
+<span class="code-line" id="L200"><a class="line-number" href="#L200">200</a>theorem event_origin (config : Config n) (override : Option Word) (thread : Fin n) (state : State n)</span>
+<span class="code-line" id="L201"><a class="line-number" href="#L201">201</a>    (member : event ∈ (stepWith config override thread state).events) :</span>
+<span class="code-line" id="L202"><a class="line-number" href="#L202">202</a>    ∃ instruction, (state.threads thread).halted = false ∧</span>
+<span class="code-line" id="L203"><a class="line-number" href="#L203">203</a>      ¬Barrier.Waiting state.barrier thread ∧</span>
+<span class="code-line" id="L204"><a class="line-number" href="#L204">204</a>      program[(state.threads thread).pc]? = some instruction ∧</span>
+<span class="code-line" id="L205"><a class="line-number" href="#L205">205</a>      event ∈ (dispatch config override thread instruction state).events := by</span>
+<span class="code-line" id="L206"><a class="line-number" href="#L206">206</a>  unfold stepWith at member</span>
+<span class="code-line" id="L207"><a class="line-number" href="#L207">207</a>  split at member</span>
+<span class="code-line" id="L208"><a class="line-number" href="#L208">208</a>  · simp at member</span>
+<span class="code-line" id="L209"><a class="line-number" href="#L209">209</a>  · rename_i live</span>
+<span class="code-line" id="L210"><a class="line-number" href="#L210">210</a>    split at member</span>
+<span class="code-line" id="L211"><a class="line-number" href="#L211">211</a>    · simp at member</span>
+<span class="code-line" id="L212"><a class="line-number" href="#L212">212</a>    · rename_i runnable</span>
+<span class="code-line" id="L213"><a class="line-number" href="#L213">213</a>      split at member</span>
+<span class="code-line" id="L214"><a class="line-number" href="#L214">214</a>      · simp at member</span>
+<span class="code-line" id="L215"><a class="line-number" href="#L215">215</a>      · rename_i instruction fetch</span>
+<span class="code-line" id="L216"><a class="line-number" href="#L216">216</a>        exact ⟨instruction, by simpa using live, runnable, fetch, member⟩</span>
+<span class="code-line" id="L217"><a class="line-number" href="#L217">217</a></span>
+<span class="code-line" id="L218"><a class="line-number" href="#L218">218</a>/-- No dispatch event is discarded by the outer fetched-step wrapper. -/</span>
+<span class="code-line" id="L219"><a class="line-number" href="#L219">219</a>theorem event_complete (config : Config n) (override : Option Word) (thread : Fin n) (state : State n)</span>
+<span class="code-line" id="L220"><a class="line-number" href="#L220">220</a>    (live : (state.threads thread).halted = false) (runnable : ¬Barrier.Waiting state.barrier thread)</span>
+<span class="code-line" id="L221"><a class="line-number" href="#L221">221</a>    (fetch : program[(state.threads thread).pc]? = some instruction)</span>
+<span class="code-line" id="L222"><a class="line-number" href="#L222">222</a>    (member : event ∈ (dispatch config override thread instruction state).events) :</span>
+<span class="code-line" id="L223"><a class="line-number" href="#L223">223</a>    event ∈ (stepWith config override thread state).events := by</span>
+<span class="code-line" id="L224"><a class="line-number" href="#L224">224</a>  rw [fetched_step config override thread state live runnable fetch]</span>
+<span class="code-line" id="L225"><a class="line-number" href="#L225">225</a>  exact member</span>
+<span class="code-line" id="L226"><a class="line-number" href="#L226">226</a></span>
+<span class="code-line" id="L227"><a class="line-number" href="#L227">227</a>/-- Emitted shared accesses always passed ownership, alignment and full-word bounds. -/</span>
+<span class="code-line" id="L228"><a class="line-number" href="#L228">228</a>theorem dispatch_memory_safe (config : Config n) (override : Option Word) (thread : Fin n)</span>
+<span class="code-line" id="L229"><a class="line-number" href="#L229">229</a>    (instruction : Instruction) (state : State n) (effect : MemoryEvent n)</span>
+<span class="code-line" id="L230"><a class="line-number" href="#L230">230</a>    (member : Event.memory effect ∈ (dispatch config override thread instruction state).events) :</span>
+<span class="code-line" id="L231"><a class="line-number" href="#L231">231</a>    state.arena.owner = config.cta ∧ AccessSafe n effect.address ∧ effect.cta = config.cta ∧</span>
+<span class="code-line" id="L232"><a class="line-number" href="#L232">232</a>      effect.thread = thread ∧ effect.pc = (state.threads thread).pc := by</span>
+<span class="code-line" id="L233"><a class="line-number" href="#L233">233</a>  cases instruction with</span>
+<span class="code-line" id="L234"><a class="line-number" href="#L234">234</a>  | store a s =&gt;</span>
+<span class="code-line" id="L235"><a class="line-number" href="#L235">235</a>    simp only [dispatch] at member</span>
+<span class="code-line" id="L236"><a class="line-number" href="#L236">236</a>    split at member</span>
+<span class="code-line" id="L237"><a class="line-number" href="#L237">237</a>    · rename_i owner</span>
+<span class="code-line" id="L238"><a class="line-number" href="#L238">238</a>      split at member</span>
+<span class="code-line" id="L239"><a class="line-number" href="#L239">239</a>      · simp at member</span>
+<span class="code-line" id="L240"><a class="line-number" href="#L240">240</a>      · rename_i index indexed</span>
+<span class="code-line" id="L241"><a class="line-number" href="#L241">241</a>        simp only [List.mem_singleton, Event.memory.injEq] at member</span>
+<span class="code-line" id="L242"><a class="line-number" href="#L242">242</a>        subst effect</span>
+<span class="code-line" id="L243"><a class="line-number" href="#L243">243</a>        exact ⟨owner, (accessIndex_some indexed).1, rfl, rfl, rfl⟩</span>
+<span class="code-line" id="L244"><a class="line-number" href="#L244">244</a>    · simp at member</span>
+<span class="code-line" id="L245"><a class="line-number" href="#L245">245</a>  | load d a =&gt;</span>
+<span class="code-line" id="L246"><a class="line-number" href="#L246">246</a>    simp only [dispatch] at member</span>
+<span class="code-line" id="L247"><a class="line-number" href="#L247">247</a>    split at member</span>
+<span class="code-line" id="L248"><a class="line-number" href="#L248">248</a>    · rename_i owner</span>
+<span class="code-line" id="L249"><a class="line-number" href="#L249">249</a>      split at member</span>
+<span class="code-line" id="L250"><a class="line-number" href="#L250">250</a>      · simp at member</span>
+<span class="code-line" id="L251"><a class="line-number" href="#L251">251</a>      · rename_i index indexed</span>
+<span class="code-line" id="L252"><a class="line-number" href="#L252">252</a>        simp only [List.mem_singleton, Event.memory.injEq] at member</span>
+<span class="code-line" id="L253"><a class="line-number" href="#L253">253</a>        subst effect</span>
+<span class="code-line" id="L254"><a class="line-number" href="#L254">254</a>        exact ⟨owner, (accessIndex_some indexed).1, rfl, rfl, rfl⟩</span>
+<span class="code-line" id="L255"><a class="line-number" href="#L255">255</a>    · simp at member</span>
+<span class="code-line" id="L256"><a class="line-number" href="#L256">256</a>  | sync resource =&gt;</span>
+<span class="code-line" id="L257"><a class="line-number" href="#L257">257</a>    simp only [dispatch] at member</span>
+<span class="code-line" id="L258"><a class="line-number" href="#L258">258</a>    split at member &lt;;&gt; simp at member</span>
+<span class="code-line" id="L259"><a class="line-number" href="#L259">259</a>  | exit =&gt; simp [dispatch] at member</span>
+<span class="code-line" id="L260"><a class="line-number" href="#L260">260</a></span>
+<span class="code-line" id="L261"><a class="line-number" href="#L261">261</a>theorem memory_safe (config : Config n) (override : Option Word) (thread : Fin n) (state : State n)</span>
+<span class="code-line" id="L262"><a class="line-number" href="#L262">262</a>    (effect : MemoryEvent n) (member : Event.memory effect ∈ (stepWith config override thread state).events) :</span>
+<span class="code-line" id="L263"><a class="line-number" href="#L263">263</a>    state.arena.owner = config.cta ∧ AccessSafe n effect.address ∧ effect.cta = config.cta ∧</span>
+<span class="code-line" id="L264"><a class="line-number" href="#L264">264</a>      effect.thread = thread ∧ effect.pc = (state.threads thread).pc := by</span>
+<span class="code-line" id="L265"><a class="line-number" href="#L265">265</a>  obtain ⟨instruction, _, _, _, source⟩ := event_origin _ _ _ _ member</span>
+<span class="code-line" id="L266"><a class="line-number" href="#L266">266</a>  exact dispatch_memory_safe _ _ _ _ _ _ source</span>
+<span class="code-line" id="L267"><a class="line-number" href="#L267">267</a></span>
+<span class="code-line" id="L268"><a class="line-number" href="#L268">268</a>structure Execution (n : Nat) where</span>
+<span class="code-line" id="L269"><a class="line-number" href="#L269">269</a>  state : State n</span>
+<span class="code-line" id="L270"><a class="line-number" href="#L270">270</a>  trace : List (Event n)</span>
+<span class="code-line" id="L271"><a class="line-number" href="#L271">271</a></span>
+<span class="code-line" id="L272"><a class="line-number" href="#L272">272</a>def runWith (config : Config n) (reads : Fin n → Option Word) :</span>
+<span class="code-line" id="L273"><a class="line-number" href="#L273">273</a>    State n → List (Fin n) → Execution n</span>
+<span class="code-line" id="L274"><a class="line-number" href="#L274">274</a>  | state, [] =&gt; ⟨state, []⟩</span>
+<span class="code-line" id="L275"><a class="line-number" href="#L275">275</a>  | state, thread :: rest =&gt;</span>
+<span class="code-line" id="L276"><a class="line-number" href="#L276">276</a>    let first := stepWith config (reads thread) thread state</span>
+<span class="code-line" id="L277"><a class="line-number" href="#L277">277</a>    let remaining := runWith config reads first.state rest</span>
+<span class="code-line" id="L278"><a class="line-number" href="#L278">278</a>    ⟨remaining.state, first.events ++ remaining.trace⟩</span>
+<span class="code-line" id="L279"><a class="line-number" href="#L279">279</a></span>
+<span class="code-line" id="L280"><a class="line-number" href="#L280">280</a>def run (config : Config n) : State n → List (Fin n) → Execution n :=</span>
+<span class="code-line" id="L281"><a class="line-number" href="#L281">281</a>  runWith config (fun _ =&gt; none)</span>
+<span class="code-line" id="L282"><a class="line-number" href="#L282">282</a></span>
+<span class="code-line" id="L283"><a class="line-number" href="#L283">283</a>inductive Runs (config : Config n) (reads : Fin n → Option Word) :</span>
+<span class="code-line" id="L284"><a class="line-number" href="#L284">284</a>    State n → List (Fin n) → Execution n → Prop where</span>
+<span class="code-line" id="L285"><a class="line-number" href="#L285">285</a>  | nil : Runs config reads state [] ⟨state, []⟩</span>
+<span class="code-line" id="L286"><a class="line-number" href="#L286">286</a>  | cons : Runs config reads (stepWith config (reads thread) thread state).state rest remaining →</span>
+<span class="code-line" id="L287"><a class="line-number" href="#L287">287</a>      Runs config reads state (thread :: rest)</span>
+<span class="code-line" id="L288"><a class="line-number" href="#L288">288</a>        ⟨remaining.state, (stepWith config (reads thread) thread state).events ++ remaining.trace⟩</span>
+<span class="code-line" id="L289"><a class="line-number" href="#L289">289</a></span>
+<span class="code-line" id="L290"><a class="line-number" href="#L290">290</a>theorem runWith_sound (config : Config n) (reads : Fin n → Option Word)</span>
+<span class="code-line" id="L291"><a class="line-number" href="#L291">291</a>    (state : State n) (schedule : List (Fin n)) :</span>
+<span class="code-line" id="L292"><a class="line-number" href="#L292">292</a>    Runs config reads state schedule (runWith config reads state schedule) := by</span>
+<span class="code-line" id="L293"><a class="line-number" href="#L293">293</a>  induction schedule generalizing state with</span>
+<span class="code-line" id="L294"><a class="line-number" href="#L294">294</a>  | nil =&gt; exact .nil</span>
+<span class="code-line" id="L295"><a class="line-number" href="#L295">295</a>  | cons thread rest ih =&gt; exact .cons (ih _)</span>
+<span class="code-line" id="L296"><a class="line-number" href="#L296">296</a></span>
+<span class="code-line" id="L297"><a class="line-number" href="#L297">297</a>theorem runWith_append (config : Config n) (reads : Fin n → Option Word)</span>
+<span class="code-line" id="L298"><a class="line-number" href="#L298">298</a>    (state : State n) (first second : List (Fin n)) :</span>
+<span class="code-line" id="L299"><a class="line-number" href="#L299">299</a>    runWith config reads state (first ++ second) =</span>
+<span class="code-line" id="L300"><a class="line-number" href="#L300">300</a>      let left := runWith config reads state first</span>
+<span class="code-line" id="L301"><a class="line-number" href="#L301">301</a>      let right := runWith config reads left.state second</span>
+<span class="code-line" id="L302"><a class="line-number" href="#L302">302</a>      ⟨right.state, left.trace ++ right.trace⟩ := by</span>
+<span class="code-line" id="L303"><a class="line-number" href="#L303">303</a>  induction first generalizing state with</span>
+<span class="code-line" id="L304"><a class="line-number" href="#L304">304</a>  | nil =&gt; simp [runWith]</span>
+<span class="code-line" id="L305"><a class="line-number" href="#L305">305</a>  | cons thread rest ih =&gt; simp [runWith, ih, List.append_assoc]</span>
+<span class="code-line" id="L306"><a class="line-number" href="#L306">306</a></span>
+<span class="code-line" id="L307"><a class="line-number" href="#L307">307</a>end Ptx.SharedBarrier</span></code></pre><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>

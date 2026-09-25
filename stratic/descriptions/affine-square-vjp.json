@@ -17,7 +17,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A seed is a real weight applied to the output when propagating sensitivity\nbackward. For any real x, w, b and seed d, TorchLean's checked backward call\nsucceeds and returns the three input sensitivities in order: `2*d*(x*w+b)*w`\nfor x, `2*d*(x*w+b)*x` for w, and `2*d*(x*w+b)` for b. Its returned forward\nvalue is `(x*w+b)^2`. Taking d=1 gives the usual scalar gradient; arbitrary d\nretains the general vector-Jacobian interface, which propagates a weighted\noutput change back to the inputs."
+        "quote": "The seed is the derivative arriving from the rest of a computation. If this\nnetwork's output F feeds a final loss L, the caller supplies d = \u2202L/\u2202F. The\nbackward then returns the derivatives of L with respect to x, w and b by the\nchain rule. To obtain the gradient of F itself, the caller supplies d = 1.\nThe seed is an input to the backward, not another parameter of the forward.\n\nFor any real x, w, b and seed d, TorchLean's checked backward call succeeds and\nreturns the three input sensitivities in order: `2*d*(x*w+b)*w` for x,\n`2*d*(x*w+b)*x` for w, and `2*d*(x*w+b)` for b. Its returned forward value is\n`(x*w+b)^2`. This general interface is a vector\u2013Jacobian product: it propagates\nsupplied output sensitivities back to the inputs, including when a network has\nseveral outputs."
       },
       "to": {
         "path": "integration/torchlean/PtxAffineSquareVJP.lean",

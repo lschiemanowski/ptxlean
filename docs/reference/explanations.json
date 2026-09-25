@@ -1,0 +1,108 @@
+{
+  "min.u32": [
+    "Compare two 32-bit words as unsigned numbers from 0 through 2^32−1. Copy the smaller value into the destination register. Equal inputs give that same value.",
+    "The signed form treats a set highest bit as part of a negative number; the unsigned form does not. Every input bit pattern is allowed."
+  ],
+  "min.s32": [
+    "Compare two 32-bit words as signed numbers from −2^31 through 2^31−1, using two’s-complement encoding. Copy the smaller value into the destination register. Equal inputs give that same value.",
+    "The signed form treats a set highest bit as part of a negative number; the unsigned form does not. Every input bit pattern is allowed."
+  ],
+  "max.u32": [
+    "Compare two 32-bit words as unsigned numbers from 0 through 2^32−1. Copy the larger value into the destination register. Equal inputs give that same value.",
+    "The signed form treats a set highest bit as part of a negative number; the unsigned form does not. Every input bit pattern is allowed."
+  ],
+  "max.s32": [
+    "Compare two 32-bit words as signed numbers from −2^31 through 2^31−1, using two’s-complement encoding. Copy the larger value into the destination register. Equal inputs give that same value.",
+    "The signed form treats a set highest bit as part of a negative number; the unsigned form does not. Every input bit pattern is allowed."
+  ],
+  "clz.b32": [
+    "Count consecutive zero bits starting at the highest of the 32 bit positions. Stop at the first one bit. If the entire input is zero, return 32."
+  ],
+  "popc.b32": [
+    "Count how many of the input word’s 32 bits are one. The result ranges from zero, for an all-zero word, to 32, for an all-one word."
+  ],
+  "add.rn.f32": [
+    "Interpret two input words as binary32 numbers, the usual 32-bit single-precision floating-point format, and compute their sum. Round to the nearest representable value; an exact tie chooses the value whose last retained significand bit is even.",
+    "Very small representable values, called subnormal numbers, are preserved rather than replaced with zero. For results that are not NaN (a special “not a number” encoding), the model fixes the reference result bits, including the sign of zero. When the reference produces NaN, the model allows any NaN encoding to preserve unspecified payload bits. This conservative allowance does not claim that hardware can produce every such encoding."
+  ],
+  "mul.rn.f32": [
+    "Interpret two input words as binary32 numbers, the usual 32-bit single-precision floating-point format, and compute their product. Round to the nearest representable value; an exact tie chooses the value whose last retained significand bit is even.",
+    "Very small representable values, called subnormal numbers, are preserved rather than replaced with zero. For results that are not NaN (a special “not a number” encoding), the model fixes the reference result bits, including the sign of zero. When the reference produces NaN, the model allows any NaN encoding to preserve unspecified payload bits. This conservative allowance does not claim that hardware can produce every such encoding."
+  ],
+  "selp.b32": [
+    "Copy the first 32-bit input when the selection predicate is true, and the second when it is false. A predicate is a register containing a true-or-false value.",
+    "The selection predicate chooses a value. It is distinct from the instruction’s execution guard, which can skip the instruction entirely."
+  ],
+  "and.b32": [
+    "Compare the two input words at each of their 32 bit positions. Set the corresponding result bit to one exactly when both input bits are one; otherwise set it to zero. No carries or arithmetic rounding occur."
+  ],
+  "or.b32": [
+    "Compare the two input words at each of their 32 bit positions. Set the corresponding result bit to one exactly when at least one input bit is one; otherwise set it to zero. No carries or arithmetic rounding occur."
+  ],
+  "xor.b32": [
+    "Compare the two input words at each of their 32 bit positions. Set the corresponding result bit to one exactly when exactly one input bit is one; otherwise set it to zero. No carries or arithmetic rounding occur."
+  ],
+  "not.b32": [
+    "Flip each of the word’s 32 bits: zeros become ones and ones become zeros."
+  ],
+  "cnot.b32": [
+    "Test whether the entire 32-bit input is zero. Return the word 1 if it is zero, or the word 0 otherwise. This tests the whole value; it does not flip its individual bits."
+  ],
+  "shl.b32": [
+    "Move the input bits to higher positions by the unsigned count and fill the newly empty low positions with zeros. Discard bits that move beyond the 32-bit word. A count of 32 or more gives zero; the count does not wrap."
+  ],
+  "shr.u32": [
+    "Move the input bits to lower positions by the unsigned count, filling newly empty high positions with zeros. Discard bits that leave the low end. A count of 32 or more gives zero; the count does not wrap."
+  ],
+  "shr.s32": [
+    "Move the input bits to lower positions, copying the original highest bit into every newly empty high position. This preserves the sign of a two’s-complement signed number.",
+    "The count itself is unsigned. At a count of 32 or more, return all ones for a negative input and zero otherwise. Counts do not wrap."
+  ],
+  "brev.b32": [
+    "Reverse the order of all 32 bits: the lowest bit becomes the highest, the next-lowest becomes the next-highest, and so on. This reverses individual bits, not just the four bytes."
+  ],
+  "mul.hi.u32": [
+    "Multiply two 32-bit words interpreted as unsigned integers. Represent the full product in 64 bits, then return its upper 32 bits, discarding the lower half.",
+    "The result is exact for this integer operation. No floating-point rounding or saturation is involved."
+  ],
+  "mul.hi.s32": [
+    "Multiply two 32-bit words interpreted as signed two’s-complement integers. Represent the full product in 64 bits, then return its upper 32 bits, discarding the lower half.",
+    "The result is exact for this integer operation. No floating-point rounding or saturation is involved."
+  ],
+  "bfe.u32": [
+    "Select a consecutive group of bits from a 32-bit word and place it at the low end of the result. The position counts upward from bit zero, the least significant bit; the length says how many bits to take.",
+    "Only the low eight bits of each position and length operand are used. Missing source bits and unused high result bits are zero. A zero length or a position beyond the input gives zero."
+  ],
+  "bfe.s32": [
+    "Extract a consecutive group of bits, starting at a position counted from the least significant bit, and place it at the low end of the result. Extend it to a 32-bit signed value by repeating its sign bit in the higher positions.",
+    "Only the low eight bits of the position and length operands are used. For a field that reaches past the input, the input’s highest bit supplies the sign. A position past bit 31 can therefore give all ones for a negative input. A zero length always gives zero."
+  ],
+  "bfi.b32": [
+    "Use the low bits of the first source to replace a selected group of bits in the second source, the base word. Leave every other base bit unchanged.",
+    "Position and length each use only their low eight bits. Insertion stops at the highest bit of the 32-bit destination. A zero length or a starting position beyond that bit leaves the base unchanged."
+  ],
+  "lop3.b32": [
+    "Combine three 32-bit inputs using a supplied truth table: a list of the output bit for each of the eight possible triples of input bits. Apply that same rule independently at all 32 positions.",
+    "The first input contributes 4 to the table index, the second 2, and the third 1 when its bit is set. The table is an immediate integer from 0 to 255, supplied in the instruction rather than read from a runtime register."
+  ],
+  "prmt.b32": [
+    "Build four output bytes by selecting from the eight bytes of two input words. A byte is eight bits. Input bytes 0–3 come from the first word and 4–7 from the second, with each word numbered from its least significant byte.",
+    "Each output byte has a four-bit selector in the low half of the control word. Three selector bits choose an input byte. The fourth chooses whether to copy it or fill the output byte with eight copies of its highest bit. The upper sixteen control bits are ignored, and the control may be a register or an immediate word."
+  ],
+  "shf.l.clamp.b32": [
+    "Join two 32-bit words into a 64-bit value: the first input is the low half, and the second is the high half. Shift that value left, fill vacated positions with zeros, and return the high 32 bits.",
+    "The count is an unsigned 32-bit word. Clamp it to at most 32. At zero, return the second source; at 32 or above, return the first source."
+  ],
+  "shf.l.wrap.b32": [
+    "Join two 32-bit words into a 64-bit value: the first input is the low half, and the second is the high half. Shift that value left, fill vacated positions with zeros, and return the high 32 bits.",
+    "The count is an unsigned 32-bit word. Use its remainder after division by 32, so count 32 acts like zero and count 33 acts like one. Supplying the same word as both sources rotates that word’s bits."
+  ],
+  "shf.r.clamp.b32": [
+    "Join two 32-bit words into a 64-bit value: the first input is the low half, and the second is the high half. Shift that value right, fill vacated positions with zeros, and return the low 32 bits.",
+    "The count is an unsigned 32-bit word. Clamp it to at most 32. At zero, return the first source; at 32 or above, return the second source."
+  ],
+  "shf.r.wrap.b32": [
+    "Join two 32-bit words into a 64-bit value: the first input is the low half, and the second is the high half. Shift that value right, fill vacated positions with zeros, and return the low 32 bits.",
+    "The count is an unsigned 32-bit word. Use its remainder after division by 32, so count 32 acts like zero and count 33 acts like one. Supplying the same word as both sources rotates that word’s bits."
+  ]
+}

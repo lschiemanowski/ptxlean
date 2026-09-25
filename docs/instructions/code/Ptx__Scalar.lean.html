@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ptx/Scalar.lean · PTXLean</title><link rel="stylesheet" href="../style.css">
+<script src="../search.js" defer></script></head>
+<body class="code-source"><header><a href="../index.html"><strong>PTXLEAN</strong> / Instruction reference</a><span>PTX ISA 9.4 · Lean 4.34.0</span></header>
+<main><p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>Ptx/Scalar.lean</h1><p><small>SHA-256 <code>d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5</code></small></p><pre><code><span class="code-line" id="L1"><a class="line-number" href="#L1">1</a>import Ptx.Language</span>
+<span class="code-line" id="L2"><a class="line-number" href="#L2">2</a></span>
+<span class="code-line" id="L3"><a class="line-number" href="#L3">3</a>/-!</span>
+<span class="code-line" id="L4"><a class="line-number" href="#L4">4</a># A scalar machine with explicit execution outcomes</span>
+<span class="code-line" id="L5"><a class="line-number" href="#L5">5</a></span>
+<span class="code-line" id="L6"><a class="line-number" href="#L6">6</a>This is a concrete, sequential arena machine for a typed PTX integer subset.</span>
+<span class="code-line" id="L7"><a class="line-number" href="#L7">7</a>Candidate reads can be supplied explicitly through `stepWith`/`runWith`; such</span>
+<span class="code-line" id="L8"><a class="line-number" href="#L8">8</a>candidates are not automatically permitted PTX weak-memory executions. Registers</span>
+<span class="code-line" id="L9"><a class="line-number" href="#L9">9</a>and initial memory are supplied by the caller, never implicitly initialized.</span>
+<span class="code-line" id="L10"><a class="line-number" href="#L10">10</a>-/</span>
+<span class="code-line" id="L11"><a class="line-number" href="#L11">11</a>namespace Ptx.Scalar</span>
+<span class="code-line" id="L12"><a class="line-number" href="#L12">12</a></span>
+<span class="code-line" id="L13"><a class="line-number" href="#L13">13</a>abbrev Address := BitVec 64</span>
+<span class="code-line" id="L14"><a class="line-number" href="#L14">14</a></span>
+<span class="code-line" id="L15"><a class="line-number" href="#L15">15</a>inductive Operand32 where</span>
+<span class="code-line" id="L16"><a class="line-number" href="#L16">16</a>  | reg (index : Nat)</span>
+<span class="code-line" id="L17"><a class="line-number" href="#L17">17</a>  | imm (value : Word)</span>
+<span class="code-line" id="L18"><a class="line-number" href="#L18">18</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L19"><a class="line-number" href="#L19">19</a></span>
+<span class="code-line" id="L20"><a class="line-number" href="#L20">20</a>inductive Operand64 where</span>
+<span class="code-line" id="L21"><a class="line-number" href="#L21">21</a>  | reg (index : Nat)</span>
+<span class="code-line" id="L22"><a class="line-number" href="#L22">22</a>  | imm (value : Address)</span>
+<span class="code-line" id="L23"><a class="line-number" href="#L23">23</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L24"><a class="line-number" href="#L24">24</a></span>
+<span class="code-line" id="L25"><a class="line-number" href="#L25">25</a>inductive BinOp where</span>
+<span class="code-line" id="L26"><a class="line-number" href="#L26">26</a>  | add | sub | mulLo | and | or | xor | shl | shr | minU | maxU</span>
+<span class="code-line" id="L27"><a class="line-number" href="#L27">27</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L28"><a class="line-number" href="#L28">28</a></span>
+<span class="code-line" id="L29"><a class="line-number" href="#L29">29</a>inductive UnaryOp where</span>
+<span class="code-line" id="L30"><a class="line-number" href="#L30">30</a>  | clz | popc</span>
+<span class="code-line" id="L31"><a class="line-number" href="#L31">31</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L32"><a class="line-number" href="#L32">32</a></span>
+<span class="code-line" id="L33"><a class="line-number" href="#L33">33</a>inductive Compare where</span>
+<span class="code-line" id="L34"><a class="line-number" href="#L34">34</a>  | eq | ne | lt | le | gt | ge</span>
+<span class="code-line" id="L35"><a class="line-number" href="#L35">35</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L36"><a class="line-number" href="#L36">36</a></span>
+<span class="code-line" id="L37"><a class="line-number" href="#L37">37</a>inductive Guard where</span>
+<span class="code-line" id="L38"><a class="line-number" href="#L38">38</a>  | always</span>
+<span class="code-line" id="L39"><a class="line-number" href="#L39">39</a>  | pred (index : Nat) (positive : Bool)</span>
+<span class="code-line" id="L40"><a class="line-number" href="#L40">40</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L41"><a class="line-number" href="#L41">41</a></span>
+<span class="code-line" id="L42"><a class="line-number" href="#L42">42</a>inductive Op where</span>
+<span class="code-line" id="L43"><a class="line-number" href="#L43">43</a>  | mov32 (destination : Nat) (source : Operand32)</span>
+<span class="code-line" id="L44"><a class="line-number" href="#L44">44</a>  | bin32 (operation : BinOp) (destination : Nat) (left right : Operand32)</span>
+<span class="code-line" id="L45"><a class="line-number" href="#L45">45</a>  | unary32 (operation : UnaryOp) (destination : Nat) (source : Operand32)</span>
+<span class="code-line" id="L46"><a class="line-number" href="#L46">46</a>  | mov64 (destination : Nat) (source : Operand64)</span>
+<span class="code-line" id="L47"><a class="line-number" href="#L47">47</a>  | add64 (destination : Nat) (left right : Operand64)</span>
+<span class="code-line" id="L48"><a class="line-number" href="#L48">48</a>  | cvt64 (destination : Nat) (source : Operand32)</span>
+<span class="code-line" id="L49"><a class="line-number" href="#L49">49</a>  | setp (comparison : Compare) (destination : Nat) (left right : Operand32)</span>
+<span class="code-line" id="L50"><a class="line-number" href="#L50">50</a>  | load (destination : Nat) (address : Operand64)</span>
+<span class="code-line" id="L51"><a class="line-number" href="#L51">51</a>  | store (address : Operand64) (source : Operand32)</span>
+<span class="code-line" id="L52"><a class="line-number" href="#L52">52</a>  | bra (target : Nat)</span>
+<span class="code-line" id="L53"><a class="line-number" href="#L53">53</a>  | exit</span>
+<span class="code-line" id="L54"><a class="line-number" href="#L54">54</a>  | unsupported (spelling : String)</span>
+<span class="code-line" id="L55"><a class="line-number" href="#L55">55</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L56"><a class="line-number" href="#L56">56</a></span>
+<span class="code-line" id="L57"><a class="line-number" href="#L57">57</a>structure Instr where</span>
+<span class="code-line" id="L58"><a class="line-number" href="#L58">58</a>  guard : Guard := .always</span>
+<span class="code-line" id="L59"><a class="line-number" href="#L59">59</a>  op : Op</span>
+<span class="code-line" id="L60"><a class="line-number" href="#L60">60</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L61"><a class="line-number" href="#L61">61</a></span>
+<span class="code-line" id="L62"><a class="line-number" href="#L62">62</a>def Instr.plain (op : Op) : Instr := ⟨.always, op⟩</span>
+<span class="code-line" id="L63"><a class="line-number" href="#L63">63</a></span>
+<span class="code-line" id="L64"><a class="line-number" href="#L64">64</a>structure State where</span>
+<span class="code-line" id="L65"><a class="line-number" href="#L65">65</a>  pc : Nat</span>
+<span class="code-line" id="L66"><a class="line-number" href="#L66">66</a>  regs : Nat → Word</span>
+<span class="code-line" id="L67"><a class="line-number" href="#L67">67</a>  addrs : Nat → Address</span>
+<span class="code-line" id="L68"><a class="line-number" href="#L68">68</a>  preds : Nat → Bool</span>
+<span class="code-line" id="L69"><a class="line-number" href="#L69">69</a>  memory : List Word</span>
+<span class="code-line" id="L70"><a class="line-number" href="#L70">70</a></span>
+<span class="code-line" id="L71"><a class="line-number" href="#L71">71</a>def update (registers : Nat → α) (destination : Nat) (value : α) : Nat → α :=</span>
+<span class="code-line" id="L72"><a class="line-number" href="#L72">72</a>  fun index =&gt; if index = destination then value else registers index</span>
+<span class="code-line" id="L73"><a class="line-number" href="#L73">73</a></span>
+<span class="code-line" id="L74"><a class="line-number" href="#L74">74</a>@[simp] theorem update_same : update registers destination value destination = value := by</span>
+<span class="code-line" id="L75"><a class="line-number" href="#L75">75</a>  simp [update]</span>
+<span class="code-line" id="L76"><a class="line-number" href="#L76">76</a></span>
+<span class="code-line" id="L77"><a class="line-number" href="#L77">77</a>@[simp] theorem update_other (h : index ≠ destination) :</span>
+<span class="code-line" id="L78"><a class="line-number" href="#L78">78</a>    update registers destination value index = registers index := by simp [update, h]</span>
+<span class="code-line" id="L79"><a class="line-number" href="#L79">79</a></span>
+<span class="code-line" id="L80"><a class="line-number" href="#L80">80</a>def Operand32.eval (s : State) : Operand32 → Word</span>
+<span class="code-line" id="L81"><a class="line-number" href="#L81">81</a>  | .reg index =&gt; s.regs index</span>
+<span class="code-line" id="L82"><a class="line-number" href="#L82">82</a>  | .imm value =&gt; value</span>
+<span class="code-line" id="L83"><a class="line-number" href="#L83">83</a></span>
+<span class="code-line" id="L84"><a class="line-number" href="#L84">84</a>def Operand64.eval (s : State) : Operand64 → Address</span>
+<span class="code-line" id="L85"><a class="line-number" href="#L85">85</a>  | .reg index =&gt; s.addrs index</span>
+<span class="code-line" id="L86"><a class="line-number" href="#L86">86</a>  | .imm value =&gt; value</span>
+<span class="code-line" id="L87"><a class="line-number" href="#L87">87</a></span>
+<span class="code-line" id="L88"><a class="line-number" href="#L88">88</a>/-- Shift counts are unsigned 32-bit values. PTX clamps counts at 32. -/</span>
+<span class="code-line" id="L89"><a class="line-number" href="#L89">89</a>def BinOp.eval : BinOp → Word → Word → Word</span>
+<span class="code-line" id="L90"><a class="line-number" href="#L90">90</a>  | .add, a, b =&gt; a + b</span>
+<span class="code-line" id="L91"><a class="line-number" href="#L91">91</a>  | .sub, a, b =&gt; a - b</span>
+<span class="code-line" id="L92"><a class="line-number" href="#L92">92</a>  | .mulLo, a, b =&gt; a * b</span>
+<span class="code-line" id="L93"><a class="line-number" href="#L93">93</a>  | .and, a, b =&gt; a &amp;&amp;&amp; b</span>
+<span class="code-line" id="L94"><a class="line-number" href="#L94">94</a>  | .or, a, b =&gt; a ||| b</span>
+<span class="code-line" id="L95"><a class="line-number" href="#L95">95</a>  | .xor, a, b =&gt; a ^^^ b</span>
+<span class="code-line" id="L96"><a class="line-number" href="#L96">96</a>  | .shl, a, b =&gt; if b.toNat &lt; 32 then a &lt;&lt;&lt; b.toNat else 0</span>
+<span class="code-line" id="L97"><a class="line-number" href="#L97">97</a>  | .shr, a, b =&gt; if b.toNat &lt; 32 then a &gt;&gt;&gt; b.toNat else 0</span>
+<span class="code-line" id="L98"><a class="line-number" href="#L98">98</a>  | .minU, a, b =&gt; if a.toNat ≤ b.toNat then a else b</span>
+<span class="code-line" id="L99"><a class="line-number" href="#L99">99</a>  | .maxU, a, b =&gt; if a.toNat ≥ b.toNat then a else b</span>
+<span class="code-line" id="L100"><a class="line-number" href="#L100">100</a></span>
+<span class="code-line" id="L101"><a class="line-number" href="#L101">101</a>/-- PTX 9.4 `clz.b32` and `popc.b32`; their result register is u32. -/</span>
+<span class="code-line" id="L102"><a class="line-number" href="#L102">102</a>def UnaryOp.eval : UnaryOp → Word → Word</span>
+<span class="code-line" id="L103"><a class="line-number" href="#L103">103</a>  | .clz, a =&gt; BitVec.ofNat 32 ((List.range 32).reverse.takeWhile</span>
+<span class="code-line" id="L104"><a class="line-number" href="#L104">104</a>      (fun i =&gt; !a.getLsbD i)).length</span>
+<span class="code-line" id="L105"><a class="line-number" href="#L105">105</a>  | .popc, a =&gt; BitVec.ofNat 32 ((List.range 32).filter</span>
+<span class="code-line" id="L106"><a class="line-number" href="#L106">106</a>      (fun i =&gt; a.getLsbD i)).length</span>
+<span class="code-line" id="L107"><a class="line-number" href="#L107">107</a></span>
+<span class="code-line" id="L108"><a class="line-number" href="#L108">108</a>def Compare.eval : Compare → Word → Word → Bool</span>
+<span class="code-line" id="L109"><a class="line-number" href="#L109">109</a>  | .eq, a, b =&gt; a == b</span>
+<span class="code-line" id="L110"><a class="line-number" href="#L110">110</a>  | .ne, a, b =&gt; !(a == b)</span>
+<span class="code-line" id="L111"><a class="line-number" href="#L111">111</a>  | .lt, a, b =&gt; decide (a.toNat &lt; b.toNat)</span>
+<span class="code-line" id="L112"><a class="line-number" href="#L112">112</a>  | .le, a, b =&gt; decide (a.toNat ≤ b.toNat)</span>
+<span class="code-line" id="L113"><a class="line-number" href="#L113">113</a>  | .gt, a, b =&gt; decide (a.toNat &gt; b.toNat)</span>
+<span class="code-line" id="L114"><a class="line-number" href="#L114">114</a>  | .ge, a, b =&gt; decide (a.toNat ≥ b.toNat)</span>
+<span class="code-line" id="L115"><a class="line-number" href="#L115">115</a></span>
+<span class="code-line" id="L116"><a class="line-number" href="#L116">116</a>def Guard.eval (s : State) : Guard → Bool</span>
+<span class="code-line" id="L117"><a class="line-number" href="#L117">117</a>  | .always =&gt; true</span>
+<span class="code-line" id="L118"><a class="line-number" href="#L118">118</a>  | .pred index positive =&gt; s.preds index == positive</span>
+<span class="code-line" id="L119"><a class="line-number" href="#L119">119</a></span>
+<span class="code-line" id="L120"><a class="line-number" href="#L120">120</a>inductive Register where</span>
+<span class="code-line" id="L121"><a class="line-number" href="#L121">121</a>  | word (index : Nat)</span>
+<span class="code-line" id="L122"><a class="line-number" href="#L122">122</a>  | address (index : Nat)</span>
+<span class="code-line" id="L123"><a class="line-number" href="#L123">123</a>  | predicate (index : Nat)</span>
+<span class="code-line" id="L124"><a class="line-number" href="#L124">124</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L125"><a class="line-number" href="#L125">125</a></span>
+<span class="code-line" id="L126"><a class="line-number" href="#L126">126</a>def Operand32.reads : Operand32 → List Register</span>
+<span class="code-line" id="L127"><a class="line-number" href="#L127">127</a>  | .reg index =&gt; [.word index]</span>
+<span class="code-line" id="L128"><a class="line-number" href="#L128">128</a>  | .imm _ =&gt; []</span>
+<span class="code-line" id="L129"><a class="line-number" href="#L129">129</a></span>
+<span class="code-line" id="L130"><a class="line-number" href="#L130">130</a>def Operand64.reads : Operand64 → List Register</span>
+<span class="code-line" id="L131"><a class="line-number" href="#L131">131</a>  | .reg index =&gt; [.address index]</span>
+<span class="code-line" id="L132"><a class="line-number" href="#L132">132</a>  | .imm _ =&gt; []</span>
+<span class="code-line" id="L133"><a class="line-number" href="#L133">133</a></span>
+<span class="code-line" id="L134"><a class="line-number" href="#L134">134</a>def Guard.reads : Guard → List Register</span>
+<span class="code-line" id="L135"><a class="line-number" href="#L135">135</a>  | .always =&gt; []</span>
+<span class="code-line" id="L136"><a class="line-number" href="#L136">136</a>  | .pred index _ =&gt; [.predicate index]</span>
+<span class="code-line" id="L137"><a class="line-number" href="#L137">137</a></span>
+<span class="code-line" id="L138"><a class="line-number" href="#L138">138</a>def Op.reads : Op → List Register</span>
+<span class="code-line" id="L139"><a class="line-number" href="#L139">139</a>  | .mov32 _ source | .cvt64 _ source =&gt; source.reads</span>
+<span class="code-line" id="L140"><a class="line-number" href="#L140">140</a>  | .bin32 _ _ left right | .setp _ _ left right =&gt; left.reads ++ right.reads</span>
+<span class="code-line" id="L141"><a class="line-number" href="#L141">141</a>  | .unary32 _ _ source =&gt; source.reads</span>
+<span class="code-line" id="L142"><a class="line-number" href="#L142">142</a>  | .mov64 _ source =&gt; source.reads</span>
+<span class="code-line" id="L143"><a class="line-number" href="#L143">143</a>  | .add64 _ left right =&gt; left.reads ++ right.reads</span>
+<span class="code-line" id="L144"><a class="line-number" href="#L144">144</a>  | .load _ address =&gt; address.reads</span>
+<span class="code-line" id="L145"><a class="line-number" href="#L145">145</a>  | .store address source =&gt; address.reads ++ source.reads</span>
+<span class="code-line" id="L146"><a class="line-number" href="#L146">146</a>  | .bra _ | .exit | .unsupported _ =&gt; []</span>
+<span class="code-line" id="L147"><a class="line-number" href="#L147">147</a></span>
+<span class="code-line" id="L148"><a class="line-number" href="#L148">148</a>def Op.writes : Op → List Register</span>
+<span class="code-line" id="L149"><a class="line-number" href="#L149">149</a>  | .mov32 destination _ | .bin32 _ destination _ _ | .unary32 _ destination _ | .load destination _ =&gt; [.word destination]</span>
+<span class="code-line" id="L150"><a class="line-number" href="#L150">150</a>  | .mov64 destination _ | .add64 destination _ _ | .cvt64 destination _ =&gt; [.address destination]</span>
+<span class="code-line" id="L151"><a class="line-number" href="#L151">151</a>  | .setp _ destination _ _ =&gt; [.predicate destination]</span>
+<span class="code-line" id="L152"><a class="line-number" href="#L152">152</a>  | .store _ _ | .bra _ | .exit | .unsupported _ =&gt; []</span>
+<span class="code-line" id="L153"><a class="line-number" href="#L153">153</a></span>
+<span class="code-line" id="L154"><a class="line-number" href="#L154">154</a>inductive MemoryKind where</span>
+<span class="code-line" id="L155"><a class="line-number" href="#L155">155</a>  | load | store</span>
+<span class="code-line" id="L156"><a class="line-number" href="#L156">156</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L157"><a class="line-number" href="#L157">157</a></span>
+<span class="code-line" id="L158"><a class="line-number" href="#L158">158</a>structure MemoryEffect where</span>
+<span class="code-line" id="L159"><a class="line-number" href="#L159">159</a>  kind : MemoryKind</span>
+<span class="code-line" id="L160"><a class="line-number" href="#L160">160</a>  address : Address</span>
+<span class="code-line" id="L161"><a class="line-number" href="#L161">161</a>  value : Word</span>
+<span class="code-line" id="L162"><a class="line-number" href="#L162">162</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L163"><a class="line-number" href="#L163">163</a></span>
+<span class="code-line" id="L164"><a class="line-number" href="#L164">164</a>/-- Direct operand/register metadata, not a completed PTX dependency semantics.</span>
+<span class="code-line" id="L165"><a class="line-number" href="#L165">165</a>The trace order records dynamic control; skipped instructions only read their guard. -/</span>
+<span class="code-line" id="L166"><a class="line-number" href="#L166">166</a>structure Occurrence where</span>
+<span class="code-line" id="L167"><a class="line-number" href="#L167">167</a>  pc : Nat</span>
+<span class="code-line" id="L168"><a class="line-number" href="#L168">168</a>  instruction : Instr</span>
+<span class="code-line" id="L169"><a class="line-number" href="#L169">169</a>  executed : Bool</span>
+<span class="code-line" id="L170"><a class="line-number" href="#L170">170</a>  reads : List Register</span>
+<span class="code-line" id="L171"><a class="line-number" href="#L171">171</a>  writes : List Register</span>
+<span class="code-line" id="L172"><a class="line-number" href="#L172">172</a>  memory : Option MemoryEffect</span>
+<span class="code-line" id="L173"><a class="line-number" href="#L173">173</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L174"><a class="line-number" href="#L174">174</a></span>
+<span class="code-line" id="L175"><a class="line-number" href="#L175">175</a>def occurrence (s : State) (instruction : Instr) (executed : Bool)</span>
+<span class="code-line" id="L176"><a class="line-number" href="#L176">176</a>    (memory : Option MemoryEffect := none) : Occurrence :=</span>
+<span class="code-line" id="L177"><a class="line-number" href="#L177">177</a>  ⟨s.pc, instruction, executed,</span>
+<span class="code-line" id="L178"><a class="line-number" href="#L178">178</a>   instruction.guard.reads ++ if executed then instruction.op.reads else [],</span>
+<span class="code-line" id="L179"><a class="line-number" href="#L179">179</a>   if executed then instruction.op.writes else [], memory⟩</span>
+<span class="code-line" id="L180"><a class="line-number" href="#L180">180</a></span>
+<span class="code-line" id="L181"><a class="line-number" href="#L181">181</a>inductive Fault where</span>
+<span class="code-line" id="L182"><a class="line-number" href="#L182">182</a>  | invalidPC (pc : Nat)</span>
+<span class="code-line" id="L183"><a class="line-number" href="#L183">183</a>  | misaligned (address : Address)</span>
+<span class="code-line" id="L184"><a class="line-number" href="#L184">184</a>  | outOfBounds (address : Address)</span>
+<span class="code-line" id="L185"><a class="line-number" href="#L185">185</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L186"><a class="line-number" href="#L186">186</a></span>
+<span class="code-line" id="L187"><a class="line-number" href="#L187">187</a>inductive StepResult where</span>
+<span class="code-line" id="L188"><a class="line-number" href="#L188">188</a>  | next (state : State) (event : Occurrence)</span>
+<span class="code-line" id="L189"><a class="line-number" href="#L189">189</a>  | halted (state : State) (event : Occurrence)</span>
+<span class="code-line" id="L190"><a class="line-number" href="#L190">190</a>  | fault (reason : Fault)</span>
+<span class="code-line" id="L191"><a class="line-number" href="#L191">191</a>  | unsupported (spelling : String)</span>
+<span class="code-line" id="L192"><a class="line-number" href="#L192">192</a></span>
+<span class="code-line" id="L193"><a class="line-number" href="#L193">193</a>/-- Byte address validity in the caller-supplied arena. No wrapping arena extent. -/</span>
+<span class="code-line" id="L194"><a class="line-number" href="#L194">194</a>def ValidAddress (memory : List Word) (address : Address) : Prop :=</span>
+<span class="code-line" id="L195"><a class="line-number" href="#L195">195</a>  address.toNat % 4 = 0 ∧ address.toNat / 4 &lt; memory.length</span>
+<span class="code-line" id="L196"><a class="line-number" href="#L196">196</a></span>
+<span class="code-line" id="L197"><a class="line-number" href="#L197">197</a>instance (memory : List Word) (address : Address) : Decidable (ValidAddress memory address) := by</span>
+<span class="code-line" id="L198"><a class="line-number" href="#L198">198</a>  unfold ValidAddress; infer_instance</span>
+<span class="code-line" id="L199"><a class="line-number" href="#L199">199</a></span>
+<span class="code-line" id="L200"><a class="line-number" href="#L200">200</a>/-- A checked byte-to-word lookup retains the exact invalid-access reason. -/</span>
+<span class="code-line" id="L201"><a class="line-number" href="#L201">201</a>def addressIndex (memory : List Word) (address : Address) : Except Fault Nat :=</span>
+<span class="code-line" id="L202"><a class="line-number" href="#L202">202</a>  if address.toNat % 4 = 0 then</span>
+<span class="code-line" id="L203"><a class="line-number" href="#L203">203</a>    if address.toNat / 4 &lt; memory.length then .ok (address.toNat / 4)</span>
+<span class="code-line" id="L204"><a class="line-number" href="#L204">204</a>    else .error (.outOfBounds address)</span>
+<span class="code-line" id="L205"><a class="line-number" href="#L205">205</a>  else .error (.misaligned address)</span>
+<span class="code-line" id="L206"><a class="line-number" href="#L206">206</a></span>
+<span class="code-line" id="L207"><a class="line-number" href="#L207">207</a>theorem addressIndex_ok_iff : addressIndex memory address = .ok index ↔</span>
+<span class="code-line" id="L208"><a class="line-number" href="#L208">208</a>    ValidAddress memory address ∧ index = address.toNat / 4 := by</span>
+<span class="code-line" id="L209"><a class="line-number" href="#L209">209</a>  by_cases ha : address.toNat % 4 = 0 &lt;;&gt;</span>
+<span class="code-line" id="L210"><a class="line-number" href="#L210">210</a>    by_cases hb : address.toNat / 4 &lt; memory.length &lt;;&gt;</span>
+<span class="code-line" id="L211"><a class="line-number" href="#L211">211</a>    simp [addressIndex, ValidAddress, ha, hb, eq_comm]</span>
+<span class="code-line" id="L212"><a class="line-number" href="#L212">212</a></span>
+<span class="code-line" id="L213"><a class="line-number" href="#L213">213</a>/-- Execute one fetched instruction. `readOverride` is a candidate value for this</span>
+<span class="code-line" id="L214"><a class="line-number" href="#L214">214</a>step&#x27;s load; `none` selects the concrete current arena value. Both modes check bounds. -/</span>
+<span class="code-line" id="L215"><a class="line-number" href="#L215">215</a>def eval (readOverride : Option Word) (instruction : Instr) (s : State) : StepResult :=</span>
+<span class="code-line" id="L216"><a class="line-number" href="#L216">216</a>  match instruction.op with</span>
+<span class="code-line" id="L217"><a class="line-number" href="#L217">217</a>  | .unsupported spelling =&gt; .unsupported spelling</span>
+<span class="code-line" id="L218"><a class="line-number" href="#L218">218</a>  | _ =&gt;</span>
+<span class="code-line" id="L219"><a class="line-number" href="#L219">219</a>      if instruction.guard.eval s then</span>
+<span class="code-line" id="L220"><a class="line-number" href="#L220">220</a>        let advance := {s with pc := s.pc + 1}</span>
+<span class="code-line" id="L221"><a class="line-number" href="#L221">221</a>        let event := occurrence s instruction true</span>
+<span class="code-line" id="L222"><a class="line-number" href="#L222">222</a>        match instruction.op with</span>
+<span class="code-line" id="L223"><a class="line-number" href="#L223">223</a>        | .mov32 destination source =&gt;</span>
+<span class="code-line" id="L224"><a class="line-number" href="#L224">224</a>            .next {advance with regs := update s.regs destination (source.eval s)} event</span>
+<span class="code-line" id="L225"><a class="line-number" href="#L225">225</a>        | .bin32 operation destination left right =&gt;</span>
+<span class="code-line" id="L226"><a class="line-number" href="#L226">226</a>            .next {advance with regs := update s.regs destination (operation.eval (left.eval s) (right.eval s))} event</span>
+<span class="code-line" id="L227"><a class="line-number" href="#L227">227</a>        | .unary32 operation destination source =&gt;</span>
+<span class="code-line" id="L228"><a class="line-number" href="#L228">228</a>            .next {advance with regs := update s.regs destination (operation.eval (source.eval s))} event</span>
+<span class="code-line" id="L229"><a class="line-number" href="#L229">229</a>        | .mov64 destination source =&gt;</span>
+<span class="code-line" id="L230"><a class="line-number" href="#L230">230</a>            .next {advance with addrs := update s.addrs destination (source.eval s)} event</span>
+<span class="code-line" id="L231"><a class="line-number" href="#L231">231</a>        | .add64 destination left right =&gt;</span>
+<span class="code-line" id="L232"><a class="line-number" href="#L232">232</a>            .next {advance with addrs := update s.addrs destination (left.eval s + right.eval s)} event</span>
+<span class="code-line" id="L233"><a class="line-number" href="#L233">233</a>        | .cvt64 destination source =&gt;</span>
+<span class="code-line" id="L234"><a class="line-number" href="#L234">234</a>            .next {advance with addrs := update s.addrs destination (BitVec.ofNat 64 (source.eval s).toNat)} event</span>
+<span class="code-line" id="L235"><a class="line-number" href="#L235">235</a>        | .setp comparison destination left right =&gt;</span>
+<span class="code-line" id="L236"><a class="line-number" href="#L236">236</a>            .next {advance with preds := update s.preds destination (comparison.eval (left.eval s) (right.eval s))} event</span>
+<span class="code-line" id="L237"><a class="line-number" href="#L237">237</a>        | .load destination address =&gt;</span>
+<span class="code-line" id="L238"><a class="line-number" href="#L238">238</a>            let pointer := address.eval s</span>
+<span class="code-line" id="L239"><a class="line-number" href="#L239">239</a>            match addressIndex s.memory pointer with</span>
+<span class="code-line" id="L240"><a class="line-number" href="#L240">240</a>            | .error reason =&gt; .fault reason</span>
+<span class="code-line" id="L241"><a class="line-number" href="#L241">241</a>            | .ok index =&gt;</span>
+<span class="code-line" id="L242"><a class="line-number" href="#L242">242</a>                let value := readOverride.getD (s.memory[index]!)</span>
+<span class="code-line" id="L243"><a class="line-number" href="#L243">243</a>                .next {advance with regs := update s.regs destination value}</span>
+<span class="code-line" id="L244"><a class="line-number" href="#L244">244</a>                  (occurrence s instruction true (some ⟨.load, pointer, value⟩))</span>
+<span class="code-line" id="L245"><a class="line-number" href="#L245">245</a>        | .store address source =&gt;</span>
+<span class="code-line" id="L246"><a class="line-number" href="#L246">246</a>            let pointer := address.eval s</span>
+<span class="code-line" id="L247"><a class="line-number" href="#L247">247</a>            match addressIndex s.memory pointer with</span>
+<span class="code-line" id="L248"><a class="line-number" href="#L248">248</a>            | .error reason =&gt; .fault reason</span>
+<span class="code-line" id="L249"><a class="line-number" href="#L249">249</a>            | .ok index =&gt;</span>
+<span class="code-line" id="L250"><a class="line-number" href="#L250">250</a>                let value := source.eval s</span>
+<span class="code-line" id="L251"><a class="line-number" href="#L251">251</a>                .next {advance with memory := s.memory.set index value}</span>
+<span class="code-line" id="L252"><a class="line-number" href="#L252">252</a>                  (occurrence s instruction true (some ⟨.store, pointer, value⟩))</span>
+<span class="code-line" id="L253"><a class="line-number" href="#L253">253</a>        | .bra target =&gt; .next {s with pc := target} event</span>
+<span class="code-line" id="L254"><a class="line-number" href="#L254">254</a>        | .exit =&gt; .halted s event</span>
+<span class="code-line" id="L255"><a class="line-number" href="#L255">255</a>        | .unsupported spelling =&gt; .unsupported spelling</span>
+<span class="code-line" id="L256"><a class="line-number" href="#L256">256</a>      else .next {s with pc := s.pc + 1} (occurrence s instruction false)</span>
+<span class="code-line" id="L257"><a class="line-number" href="#L257">257</a></span>
+<span class="code-line" id="L258"><a class="line-number" href="#L258">258</a>def stepWith (readOverride : Option Word) (program : List Instr) (s : State) : StepResult :=</span>
+<span class="code-line" id="L259"><a class="line-number" href="#L259">259</a>  match program[s.pc]? with</span>
+<span class="code-line" id="L260"><a class="line-number" href="#L260">260</a>  | none =&gt; .fault (.invalidPC s.pc)</span>
+<span class="code-line" id="L261"><a class="line-number" href="#L261">261</a>  | some instruction =&gt; eval readOverride instruction s</span>
+<span class="code-line" id="L262"><a class="line-number" href="#L262">262</a></span>
+<span class="code-line" id="L263"><a class="line-number" href="#L263">263</a>def step (program : List Instr) (s : State) : StepResult := stepWith none program s</span>
+<span class="code-line" id="L264"><a class="line-number" href="#L264">264</a></span>
+<span class="code-line" id="L265"><a class="line-number" href="#L265">265</a>inductive Stop where</span>
+<span class="code-line" id="L266"><a class="line-number" href="#L266">266</a>  | exhausted</span>
+<span class="code-line" id="L267"><a class="line-number" href="#L267">267</a>  | halted</span>
+<span class="code-line" id="L268"><a class="line-number" href="#L268">268</a>  | fault (reason : Fault)</span>
+<span class="code-line" id="L269"><a class="line-number" href="#L269">269</a>  | unsupported (spelling : String)</span>
+<span class="code-line" id="L270"><a class="line-number" href="#L270">270</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L271"><a class="line-number" href="#L271">271</a></span>
+<span class="code-line" id="L272"><a class="line-number" href="#L272">272</a>structure RunResult where</span>
+<span class="code-line" id="L273"><a class="line-number" href="#L273">273</a>  state : State</span>
+<span class="code-line" id="L274"><a class="line-number" href="#L274">274</a>  status : Stop</span>
+<span class="code-line" id="L275"><a class="line-number" href="#L275">275</a>  trace : List Occurrence</span>
+<span class="code-line" id="L276"><a class="line-number" href="#L276">276</a></span>
+<span class="code-line" id="L277"><a class="line-number" href="#L277">277</a>/-- Fuel counts dispatches, including predicate-false instructions and explicit exit.</span>
+<span class="code-line" id="L278"><a class="line-number" href="#L278">278</a>A branch to an invalid PC faults at the next dispatch. Exhaustion is a separate status. -/</span>
+<span class="code-line" id="L279"><a class="line-number" href="#L279">279</a>def runWith : Nat → (Nat → Option Word) → List Instr → State → RunResult</span>
+<span class="code-line" id="L280"><a class="line-number" href="#L280">280</a>  | 0, _, _, s =&gt; ⟨s, .exhausted, []⟩</span>
+<span class="code-line" id="L281"><a class="line-number" href="#L281">281</a>  | fuel + 1, oracle, program, s =&gt;</span>
+<span class="code-line" id="L282"><a class="line-number" href="#L282">282</a>      match stepWith (oracle 0) program s with</span>
+<span class="code-line" id="L283"><a class="line-number" href="#L283">283</a>      | .next next event =&gt;</span>
+<span class="code-line" id="L284"><a class="line-number" href="#L284">284</a>          let rest := runWith fuel (fun index =&gt; oracle (index + 1)) program next</span>
+<span class="code-line" id="L285"><a class="line-number" href="#L285">285</a>          {rest with trace := event :: rest.trace}</span>
+<span class="code-line" id="L286"><a class="line-number" href="#L286">286</a>      | .halted final event =&gt; ⟨final, .halted, [event]⟩</span>
+<span class="code-line" id="L287"><a class="line-number" href="#L287">287</a>      | .fault reason =&gt; ⟨s, .fault reason, []⟩</span>
+<span class="code-line" id="L288"><a class="line-number" href="#L288">288</a>      | .unsupported spelling =&gt; ⟨s, .unsupported spelling, []⟩</span>
+<span class="code-line" id="L289"><a class="line-number" href="#L289">289</a></span>
+<span class="code-line" id="L290"><a class="line-number" href="#L290">290</a>def run (fuel : Nat) (program : List Instr) (s : State) : RunResult :=</span>
+<span class="code-line" id="L291"><a class="line-number" href="#L291">291</a>  runWith fuel (fun _ =&gt; none) program s</span>
+<span class="code-line" id="L292"><a class="line-number" href="#L292">292</a></span>
+<span class="code-line" id="L293"><a class="line-number" href="#L293">293</a>/-- The derivation retains the same oracle positions as the executable runner.</span>
+<span class="code-line" id="L294"><a class="line-number" href="#L294">294</a>Exhaustion is explicit; only `.halted` establishes completion. -/</span>
+<span class="code-line" id="L295"><a class="line-number" href="#L295">295</a>inductive Runs (program : List Instr) :</span>
+<span class="code-line" id="L296"><a class="line-number" href="#L296">296</a>    (Nat → Option Word) → State → RunResult → Prop where</span>
+<span class="code-line" id="L297"><a class="line-number" href="#L297">297</a>  | exhausted : Runs program oracle s ⟨s, .exhausted, []⟩</span>
+<span class="code-line" id="L298"><a class="line-number" href="#L298">298</a>  | next : stepWith (oracle 0) program s = .next next event →</span>
+<span class="code-line" id="L299"><a class="line-number" href="#L299">299</a>      Runs program (fun index =&gt; oracle (index + 1)) next rest →</span>
+<span class="code-line" id="L300"><a class="line-number" href="#L300">300</a>      Runs program oracle s {rest with trace := event :: rest.trace}</span>
+<span class="code-line" id="L301"><a class="line-number" href="#L301">301</a>  | halted : stepWith (oracle 0) program s = .halted final event →</span>
+<span class="code-line" id="L302"><a class="line-number" href="#L302">302</a>      Runs program oracle s ⟨final, .halted, [event]⟩</span>
+<span class="code-line" id="L303"><a class="line-number" href="#L303">303</a>  | fault : stepWith (oracle 0) program s = .fault reason →</span>
+<span class="code-line" id="L304"><a class="line-number" href="#L304">304</a>      Runs program oracle s ⟨s, .fault reason, []⟩</span>
+<span class="code-line" id="L305"><a class="line-number" href="#L305">305</a>  | unsupported : stepWith (oracle 0) program s = .unsupported spelling →</span>
+<span class="code-line" id="L306"><a class="line-number" href="#L306">306</a>      Runs program oracle s ⟨s, .unsupported spelling, []⟩</span>
+<span class="code-line" id="L307"><a class="line-number" href="#L307">307</a></span>
+<span class="code-line" id="L308"><a class="line-number" href="#L308">308</a>theorem runWith_sound (fuel : Nat) (oracle : Nat → Option Word) (program : List Instr) (s : State) :</span>
+<span class="code-line" id="L309"><a class="line-number" href="#L309">309</a>    Runs program oracle s (runWith fuel oracle program s) := by</span>
+<span class="code-line" id="L310"><a class="line-number" href="#L310">310</a>  induction fuel generalizing oracle s with</span>
+<span class="code-line" id="L311"><a class="line-number" href="#L311">311</a>  | zero =&gt; exact .exhausted</span>
+<span class="code-line" id="L312"><a class="line-number" href="#L312">312</a>  | succ fuel ih =&gt;</span>
+<span class="code-line" id="L313"><a class="line-number" href="#L313">313</a>      simp only [runWith]</span>
+<span class="code-line" id="L314"><a class="line-number" href="#L314">314</a>      split</span>
+<span class="code-line" id="L315"><a class="line-number" href="#L315">315</a>      · exact .next (by assumption) (ih _ _)</span>
+<span class="code-line" id="L316"><a class="line-number" href="#L316">316</a>      · exact .halted (by assumption)</span>
+<span class="code-line" id="L317"><a class="line-number" href="#L317">317</a>      · exact .fault (by assumption)</span>
+<span class="code-line" id="L318"><a class="line-number" href="#L318">318</a>      · exact .unsupported (by assumption)</span>
+<span class="code-line" id="L319"><a class="line-number" href="#L319">319</a></span>
+<span class="code-line" id="L320"><a class="line-number" href="#L320">320</a>theorem run_sound (fuel : Nat) (program : List Instr) (s : State) :</span>
+<span class="code-line" id="L321"><a class="line-number" href="#L321">321</a>    Runs program (fun _ =&gt; none) s (run fuel program s) := runWith_sound _ _ _ _</span>
+<span class="code-line" id="L322"><a class="line-number" href="#L322">322</a></span>
+<span class="code-line" id="L323"><a class="line-number" href="#L323">323</a>theorem runWith_trace_length (fuel : Nat) (oracle : Nat → Option Word)</span>
+<span class="code-line" id="L324"><a class="line-number" href="#L324">324</a>    (program : List Instr) (s : State) :</span>
+<span class="code-line" id="L325"><a class="line-number" href="#L325">325</a>    (runWith fuel oracle program s).trace.length ≤ fuel := by</span>
+<span class="code-line" id="L326"><a class="line-number" href="#L326">326</a>  induction fuel generalizing oracle s with</span>
+<span class="code-line" id="L327"><a class="line-number" href="#L327">327</a>  | zero =&gt; simp [runWith]</span>
+<span class="code-line" id="L328"><a class="line-number" href="#L328">328</a>  | succ fuel ih =&gt;</span>
+<span class="code-line" id="L329"><a class="line-number" href="#L329">329</a>      simp only [runWith]</span>
+<span class="code-line" id="L330"><a class="line-number" href="#L330">330</a>      split</span>
+<span class="code-line" id="L331"><a class="line-number" href="#L331">331</a>      · simpa using Nat.succ_le_succ (ih _ _)</span>
+<span class="code-line" id="L332"><a class="line-number" href="#L332">332</a>      · simp</span>
+<span class="code-line" id="L333"><a class="line-number" href="#L333">333</a>      · simp</span>
+<span class="code-line" id="L334"><a class="line-number" href="#L334">334</a>      · simp</span>
+<span class="code-line" id="L335"><a class="line-number" href="#L335">335</a></span>
+<span class="code-line" id="L336"><a class="line-number" href="#L336">336</a>/-- Resume only a fuel-exhausted prefix; terminal and error outcomes remain terminal. -/</span>
+<span class="code-line" id="L337"><a class="line-number" href="#L337">337</a>def resume (fuel : Nat) (program : List Instr) (prior : RunResult) : RunResult :=</span>
+<span class="code-line" id="L338"><a class="line-number" href="#L338">338</a>  if prior.status = .exhausted then</span>
+<span class="code-line" id="L339"><a class="line-number" href="#L339">339</a>    let suffix := run fuel program prior.state</span>
+<span class="code-line" id="L340"><a class="line-number" href="#L340">340</a>    {suffix with trace := prior.trace ++ suffix.trace}</span>
+<span class="code-line" id="L341"><a class="line-number" href="#L341">341</a>  else prior</span>
+<span class="code-line" id="L342"><a class="line-number" href="#L342">342</a></span>
+<span class="code-line" id="L343"><a class="line-number" href="#L343">343</a>theorem run_zero (program : List Instr) (s : State) : run 0 program s = ⟨s, .exhausted, []⟩ := rfl</span>
+<span class="code-line" id="L344"><a class="line-number" href="#L344">344</a></span>
+<span class="code-line" id="L345"><a class="line-number" href="#L345">345</a>/-- A false predicate skips a supported operation. Unknown instructions are</span>
+<span class="code-line" id="L346"><a class="line-number" href="#L346">346</a>rejected before predication, because their predication legality is not established. -/</span>
+<span class="code-line" id="L347"><a class="line-number" href="#L347">347</a>theorem eval_skipped (h : instruction.guard.eval s = false)</span>
+<span class="code-line" id="L348"><a class="line-number" href="#L348">348</a>    (supported : ∀ spelling, instruction.op ≠ .unsupported spelling) :</span>
+<span class="code-line" id="L349"><a class="line-number" href="#L349">349</a>    eval override instruction s =</span>
+<span class="code-line" id="L350"><a class="line-number" href="#L350">350</a>      .next {s with pc := s.pc + 1} (occurrence s instruction false) := by</span>
+<span class="code-line" id="L351"><a class="line-number" href="#L351">351</a>  cases hop : instruction.op &lt;;&gt; simp [eval, hop, h]</span>
+<span class="code-line" id="L352"><a class="line-number" href="#L352">352</a>  exact False.elim (supported _ hop)</span>
+<span class="code-line" id="L353"><a class="line-number" href="#L353">353</a></span>
+<span class="code-line" id="L354"><a class="line-number" href="#L354">354</a>theorem shift_left_clamped (value count : Word) (h : 32 ≤ count.toNat) :</span>
+<span class="code-line" id="L355"><a class="line-number" href="#L355">355</a>    BinOp.eval .shl value count = 0 := by simp [BinOp.eval, Nat.not_lt.mpr h]</span>
+<span class="code-line" id="L356"><a class="line-number" href="#L356">356</a></span>
+<span class="code-line" id="L357"><a class="line-number" href="#L357">357</a>theorem shift_right_clamped (value count : Word) (h : 32 ≤ count.toNat) :</span>
+<span class="code-line" id="L358"><a class="line-number" href="#L358">358</a>    BinOp.eval .shr value count = 0 := by simp [BinOp.eval, Nat.not_lt.mpr h]</span>
+<span class="code-line" id="L359"><a class="line-number" href="#L359">359</a></span>
+<span class="code-line" id="L360"><a class="line-number" href="#L360">360</a>theorem unary_exec (s : State) (operation : UnaryOp) (destination : Nat)</span>
+<span class="code-line" id="L361"><a class="line-number" href="#L361">361</a>    (source : Operand32) (guard : Guard) (h : guard.eval s = true)</span>
+<span class="code-line" id="L362"><a class="line-number" href="#L362">362</a>    (readOverride : Option Word) :</span>
+<span class="code-line" id="L363"><a class="line-number" href="#L363">363</a>    eval readOverride ⟨guard, .unary32 operation destination source⟩ s =</span>
+<span class="code-line" id="L364"><a class="line-number" href="#L364">364</a>      .next {({s with pc := s.pc + 1}) with</span>
+<span class="code-line" id="L365"><a class="line-number" href="#L365">365</a>        regs := update s.regs destination (operation.eval (source.eval s))}</span>
+<span class="code-line" id="L366"><a class="line-number" href="#L366">366</a>        (occurrence s ⟨guard, .unary32 operation destination source⟩ true) := by</span>
+<span class="code-line" id="L367"><a class="line-number" href="#L367">367</a>  simp [eval, h]</span>
+<span class="code-line" id="L368"><a class="line-number" href="#L368">368</a></span>
+<span class="code-line" id="L369"><a class="line-number" href="#L369">369</a>theorem unary_false (s : State) (operation : UnaryOp) (destination : Nat)</span>
+<span class="code-line" id="L370"><a class="line-number" href="#L370">370</a>    (source : Operand32) (guard : Guard) (h : guard.eval s = false)</span>
+<span class="code-line" id="L371"><a class="line-number" href="#L371">371</a>    (readOverride : Option Word) :</span>
+<span class="code-line" id="L372"><a class="line-number" href="#L372">372</a>    eval readOverride ⟨guard, .unary32 operation destination source⟩ s =</span>
+<span class="code-line" id="L373"><a class="line-number" href="#L373">373</a>      .next {s with pc := s.pc + 1}</span>
+<span class="code-line" id="L374"><a class="line-number" href="#L374">374</a>        (occurrence s ⟨guard, .unary32 operation destination source⟩ false) := by</span>
+<span class="code-line" id="L375"><a class="line-number" href="#L375">375</a>  simp [eval, h]</span>
+<span class="code-line" id="L376"><a class="line-number" href="#L376">376</a></span>
+<span class="code-line" id="L377"><a class="line-number" href="#L377">377</a>theorem unary_preserves_other (s : State) (operation : UnaryOp) (destination other : Nat)</span>
+<span class="code-line" id="L378"><a class="line-number" href="#L378">378</a>    (source : Operand32) (guard : Guard) (h : guard.eval s = true)</span>
+<span class="code-line" id="L379"><a class="line-number" href="#L379">379</a>    (different : other ≠ destination) (readOverride : Option Word) :</span>
+<span class="code-line" id="L380"><a class="line-number" href="#L380">380</a>    (match eval readOverride ⟨guard, .unary32 operation destination source⟩ s with</span>
+<span class="code-line" id="L381"><a class="line-number" href="#L381">381</a>      | .next next _ =&gt; next.regs other | _ =&gt; s.regs other) = s.regs other := by</span>
+<span class="code-line" id="L382"><a class="line-number" href="#L382">382</a>  rw [unary_exec s operation destination source guard h readOverride]</span>
+<span class="code-line" id="L383"><a class="line-number" href="#L383">383</a>  simp [update, different]</span>
+<span class="code-line" id="L384"><a class="line-number" href="#L384">384</a></span>
+<span class="code-line" id="L385"><a class="line-number" href="#L385">385</a></span>
+<span class="code-line" id="L386"><a class="line-number" href="#L386">386</a></span>
+<span class="code-line" id="L387"><a class="line-number" href="#L387">387</a>@[simp] theorem run_succ (fuel : Nat) (program : List Instr) (s : State) :</span>
+<span class="code-line" id="L388"><a class="line-number" href="#L388">388</a>    run (fuel + 1) program s =</span>
+<span class="code-line" id="L389"><a class="line-number" href="#L389">389</a>      match step program s with</span>
+<span class="code-line" id="L390"><a class="line-number" href="#L390">390</a>      | .next next event =&gt;</span>
+<span class="code-line" id="L391"><a class="line-number" href="#L391">391</a>          let rest := run fuel program next</span>
+<span class="code-line" id="L392"><a class="line-number" href="#L392">392</a>          {rest with trace := event :: rest.trace}</span>
+<span class="code-line" id="L393"><a class="line-number" href="#L393">393</a>      | .halted final event =&gt; ⟨final, .halted, [event]⟩</span>
+<span class="code-line" id="L394"><a class="line-number" href="#L394">394</a>      | .fault reason =&gt; ⟨s, .fault reason, []⟩</span>
+<span class="code-line" id="L395"><a class="line-number" href="#L395">395</a>      | .unsupported spelling =&gt; ⟨s, .unsupported spelling, []⟩ := rfl</span>
+<span class="code-line" id="L396"><a class="line-number" href="#L396">396</a></span>
+<span class="code-line" id="L397"><a class="line-number" href="#L397">397</a>/-- Splitting a budget preserves exact states, outcomes, and complete dynamic traces. -/</span>
+<span class="code-line" id="L398"><a class="line-number" href="#L398">398</a>theorem run_add (first second : Nat) (program : List Instr) (s : State) :</span>
+<span class="code-line" id="L399"><a class="line-number" href="#L399">399</a>    run (first + second) program s = resume second program (run first program s) := by</span>
+<span class="code-line" id="L400"><a class="line-number" href="#L400">400</a>  induction first generalizing s with</span>
+<span class="code-line" id="L401"><a class="line-number" href="#L401">401</a>  | zero =&gt; simp [run_zero, resume]</span>
+<span class="code-line" id="L402"><a class="line-number" href="#L402">402</a>  | succ first ih =&gt;</span>
+<span class="code-line" id="L403"><a class="line-number" href="#L403">403</a>      rw [Nat.succ_add, run_succ, run_succ]</span>
+<span class="code-line" id="L404"><a class="line-number" href="#L404">404</a>      cases hs : step program s with</span>
+<span class="code-line" id="L405"><a class="line-number" href="#L405">405</a>      | next next event =&gt;</span>
+<span class="code-line" id="L406"><a class="line-number" href="#L406">406</a>          simp only</span>
+<span class="code-line" id="L407"><a class="line-number" href="#L407">407</a>          rw [ih]</span>
+<span class="code-line" id="L408"><a class="line-number" href="#L408">408</a>          simp [resume]</span>
+<span class="code-line" id="L409"><a class="line-number" href="#L409">409</a>          split &lt;;&gt; rfl</span>
+<span class="code-line" id="L410"><a class="line-number" href="#L410">410</a>      | halted final event =&gt; simp [resume]</span>
+<span class="code-line" id="L411"><a class="line-number" href="#L411">411</a>      | fault reason =&gt; simp [resume]</span>
+<span class="code-line" id="L412"><a class="line-number" href="#L412">412</a>      | unsupported spelling =&gt; simp [resume]</span>
+<span class="code-line" id="L413"><a class="line-number" href="#L413">413</a></span>
+<span class="code-line" id="L414"><a class="line-number" href="#L414">414</a>/-- Every successful memory effect has passed alignment and arena-bounds checks,</span>
+<span class="code-line" id="L415"><a class="line-number" href="#L415">415</a>including effects from candidate loads whose values were overridden. -/</span>
+<span class="code-line" id="L416"><a class="line-number" href="#L416">416</a>theorem eval_memory_safe</span>
+<span class="code-line" id="L417"><a class="line-number" href="#L417">417</a>    (hstep : eval override instruction s = .next next event)</span>
+<span class="code-line" id="L418"><a class="line-number" href="#L418">418</a>    (hmemory : event.memory = some effect) : ValidAddress s.memory effect.address := by</span>
+<span class="code-line" id="L419"><a class="line-number" href="#L419">419</a>  cases instruction with</span>
+<span class="code-line" id="L420"><a class="line-number" href="#L420">420</a>  | mk guard op =&gt;</span>
+<span class="code-line" id="L421"><a class="line-number" href="#L421">421</a>    cases op &lt;;&gt; cases hguard : guard.eval s &lt;;&gt;</span>
+<span class="code-line" id="L422"><a class="line-number" href="#L422">422</a>      simp only [eval, hguard, ↓reduceIte] at hstep</span>
+<span class="code-line" id="L423"><a class="line-number" href="#L423">423</a>    all_goals first</span>
+<span class="code-line" id="L424"><a class="line-number" href="#L424">424</a>      | (obtain ⟨_, rfl⟩ := StepResult.next.inj hstep; simp [occurrence] at hmemory)</span>
+<span class="code-line" id="L425"><a class="line-number" href="#L425">425</a>      | contradiction</span>
+<span class="code-line" id="L426"><a class="line-number" href="#L426">426</a>      | skip</span>
+<span class="code-line" id="L427"><a class="line-number" href="#L427">427</a>    all_goals</span>
+<span class="code-line" id="L428"><a class="line-number" href="#L428">428</a>      split at hstep</span>
+<span class="code-line" id="L429"><a class="line-number" href="#L429">429</a>      · contradiction</span>
+<span class="code-line" id="L430"><a class="line-number" href="#L430">430</a>      · obtain ⟨_, rfl⟩ := StepResult.next.inj hstep</span>
+<span class="code-line" id="L431"><a class="line-number" href="#L431">431</a>        simp only [occurrence, Option.some.injEq] at hmemory</span>
+<span class="code-line" id="L432"><a class="line-number" href="#L432">432</a>        subst effect</span>
+<span class="code-line" id="L433"><a class="line-number" href="#L433">433</a>        exact (addressIndex_ok_iff.mp (by assumption)).1</span>
+<span class="code-line" id="L434"><a class="line-number" href="#L434">434</a></span>
+<span class="code-line" id="L435"><a class="line-number" href="#L435">435</a>/-- Store replacement cannot resize the arena. -/</span>
+<span class="code-line" id="L436"><a class="line-number" href="#L436">436</a>theorem eval_memory_length (hstep : eval override instruction s = .next next event) :</span>
+<span class="code-line" id="L437"><a class="line-number" href="#L437">437</a>    next.memory.length = s.memory.length := by</span>
+<span class="code-line" id="L438"><a class="line-number" href="#L438">438</a>  cases instruction with</span>
+<span class="code-line" id="L439"><a class="line-number" href="#L439">439</a>  | mk guard op =&gt;</span>
+<span class="code-line" id="L440"><a class="line-number" href="#L440">440</a>    cases op &lt;;&gt; cases hguard : guard.eval s &lt;;&gt;</span>
+<span class="code-line" id="L441"><a class="line-number" href="#L441">441</a>      simp only [eval, hguard, ↓reduceIte] at hstep</span>
+<span class="code-line" id="L442"><a class="line-number" href="#L442">442</a>    all_goals first</span>
+<span class="code-line" id="L443"><a class="line-number" href="#L443">443</a>      | (obtain ⟨rfl, _⟩ := StepResult.next.inj hstep; simp)</span>
+<span class="code-line" id="L444"><a class="line-number" href="#L444">444</a>      | contradiction</span>
+<span class="code-line" id="L445"><a class="line-number" href="#L445">445</a>      | skip</span>
+<span class="code-line" id="L446"><a class="line-number" href="#L446">446</a>    all_goals</span>
+<span class="code-line" id="L447"><a class="line-number" href="#L447">447</a>      split at hstep</span>
+<span class="code-line" id="L448"><a class="line-number" href="#L448">448</a>      · contradiction</span>
+<span class="code-line" id="L449"><a class="line-number" href="#L449">449</a>      · obtain ⟨rfl, _⟩ := StepResult.next.inj hstep</span>
+<span class="code-line" id="L450"><a class="line-number" href="#L450">450</a>        simp</span>
+<span class="code-line" id="L451"><a class="line-number" href="#L451">451</a></span>
+<span class="code-line" id="L452"><a class="line-number" href="#L452">452</a>theorem step_memory_safe</span>
+<span class="code-line" id="L453"><a class="line-number" href="#L453">453</a>    (hstep : stepWith override program s = .next next event)</span>
+<span class="code-line" id="L454"><a class="line-number" href="#L454">454</a>    (hmemory : event.memory = some effect) : ValidAddress s.memory effect.address := by</span>
+<span class="code-line" id="L455"><a class="line-number" href="#L455">455</a>  unfold stepWith at hstep</span>
+<span class="code-line" id="L456"><a class="line-number" href="#L456">456</a>  split at hstep</span>
+<span class="code-line" id="L457"><a class="line-number" href="#L457">457</a>  · contradiction</span>
+<span class="code-line" id="L458"><a class="line-number" href="#L458">458</a>  · exact eval_memory_safe hstep hmemory</span>
+<span class="code-line" id="L459"><a class="line-number" href="#L459">459</a></span>
+<span class="code-line" id="L460"><a class="line-number" href="#L460">460</a>theorem step_memory_length (hstep : stepWith override program s = .next next event) :</span>
+<span class="code-line" id="L461"><a class="line-number" href="#L461">461</a>    next.memory.length = s.memory.length := by</span>
+<span class="code-line" id="L462"><a class="line-number" href="#L462">462</a>  unfold stepWith at hstep</span>
+<span class="code-line" id="L463"><a class="line-number" href="#L463">463</a>  split at hstep</span>
+<span class="code-line" id="L464"><a class="line-number" href="#L464">464</a>  · contradiction</span>
+<span class="code-line" id="L465"><a class="line-number" href="#L465">465</a>  · exact eval_memory_length hstep</span>
+<span class="code-line" id="L466"><a class="line-number" href="#L466">466</a></span>
+<span class="code-line" id="L467"><a class="line-number" href="#L467">467</a></span>
+<span class="code-line" id="L468"><a class="line-number" href="#L468">468</a></span>
+<span class="code-line" id="L469"><a class="line-number" href="#L469">469</a>/-- Only explicit exit halts, and it does not change state or access memory. -/</span>
+<span class="code-line" id="L470"><a class="line-number" href="#L470">470</a>theorem eval_halted (hstep : eval override instruction s = .halted final event) :</span>
+<span class="code-line" id="L471"><a class="line-number" href="#L471">471</a>    final = s ∧ event.memory = none := by</span>
+<span class="code-line" id="L472"><a class="line-number" href="#L472">472</a>  cases instruction with</span>
+<span class="code-line" id="L473"><a class="line-number" href="#L473">473</a>  | mk guard op =&gt;</span>
+<span class="code-line" id="L474"><a class="line-number" href="#L474">474</a>    cases op &lt;;&gt; cases hguard : guard.eval s &lt;;&gt;</span>
+<span class="code-line" id="L475"><a class="line-number" href="#L475">475</a>      simp only [eval, hguard, ↓reduceIte] at hstep</span>
+<span class="code-line" id="L476"><a class="line-number" href="#L476">476</a>    all_goals first</span>
+<span class="code-line" id="L477"><a class="line-number" href="#L477">477</a>      | (obtain ⟨rfl, rfl⟩ := StepResult.halted.inj hstep; exact ⟨rfl, rfl⟩)</span>
+<span class="code-line" id="L478"><a class="line-number" href="#L478">478</a>      | contradiction</span>
+<span class="code-line" id="L479"><a class="line-number" href="#L479">479</a>      | skip</span>
+<span class="code-line" id="L480"><a class="line-number" href="#L480">480</a>    all_goals split at hstep &lt;;&gt; contradiction</span>
+<span class="code-line" id="L481"><a class="line-number" href="#L481">481</a></span>
+<span class="code-line" id="L482"><a class="line-number" href="#L482">482</a>theorem step_halted (hstep : stepWith override program s = .halted final event) :</span>
+<span class="code-line" id="L483"><a class="line-number" href="#L483">483</a>    final = s ∧ event.memory = none := by</span>
+<span class="code-line" id="L484"><a class="line-number" href="#L484">484</a>  unfold stepWith at hstep</span>
+<span class="code-line" id="L485"><a class="line-number" href="#L485">485</a>  split at hstep</span>
+<span class="code-line" id="L486"><a class="line-number" href="#L486">486</a>  · contradiction</span>
+<span class="code-line" id="L487"><a class="line-number" href="#L487">487</a>  · exact eval_halted hstep</span>
+<span class="code-line" id="L488"><a class="line-number" href="#L488">488</a></span>
+<span class="code-line" id="L489"><a class="line-number" href="#L489">489</a>theorem runWith_memory_length (fuel : Nat) (oracle : Nat → Option Word)</span>
+<span class="code-line" id="L490"><a class="line-number" href="#L490">490</a>    (program : List Instr) (s : State) :</span>
+<span class="code-line" id="L491"><a class="line-number" href="#L491">491</a>    (runWith fuel oracle program s).state.memory.length = s.memory.length := by</span>
+<span class="code-line" id="L492"><a class="line-number" href="#L492">492</a>  induction fuel generalizing oracle s with</span>
+<span class="code-line" id="L493"><a class="line-number" href="#L493">493</a>  | zero =&gt; rfl</span>
+<span class="code-line" id="L494"><a class="line-number" href="#L494">494</a>  | succ fuel ih =&gt;</span>
+<span class="code-line" id="L495"><a class="line-number" href="#L495">495</a>      cases hs : stepWith (oracle 0) program s with</span>
+<span class="code-line" id="L496"><a class="line-number" href="#L496">496</a>      | next next event =&gt;</span>
+<span class="code-line" id="L497"><a class="line-number" href="#L497">497</a>          simp only [runWith, hs]</span>
+<span class="code-line" id="L498"><a class="line-number" href="#L498">498</a>          exact (ih _ _).trans (step_memory_length hs)</span>
+<span class="code-line" id="L499"><a class="line-number" href="#L499">499</a>      | halted final event =&gt;</span>
+<span class="code-line" id="L500"><a class="line-number" href="#L500">500</a>          simp only [runWith, hs]</span>
+<span class="code-line" id="L501"><a class="line-number" href="#L501">501</a>          rw [(step_halted hs).1]</span>
+<span class="code-line" id="L502"><a class="line-number" href="#L502">502</a>      | fault reason =&gt; simp [runWith, hs]</span>
+<span class="code-line" id="L503"><a class="line-number" href="#L503">503</a>      | unsupported spelling =&gt; simp [runWith, hs]</span>
+<span class="code-line" id="L504"><a class="line-number" href="#L504">504</a></span>
+<span class="code-line" id="L505"><a class="line-number" href="#L505">505</a>theorem run_memory_length (fuel : Nat) (program : List Instr) (s : State) :</span>
+<span class="code-line" id="L506"><a class="line-number" href="#L506">506</a>    (run fuel program s).state.memory.length = s.memory.length := runWith_memory_length _ _ _ _</span>
+<span class="code-line" id="L507"><a class="line-number" href="#L507">507</a></span>
+<span class="code-line" id="L508"><a class="line-number" href="#L508">508</a>/-- Every emitted load/store is safe relative to the initial arena extent, even</span>
+<span class="code-line" id="L509"><a class="line-number" href="#L509">509</a>if the run later faults, is unsupported, exhausts its budget, or uses candidate reads. -/</span>
+<span class="code-line" id="L510"><a class="line-number" href="#L510">510</a>theorem runWith_trace_safe (fuel : Nat) (oracle : Nat → Option Word)</span>
+<span class="code-line" id="L511"><a class="line-number" href="#L511">511</a>    (program : List Instr) (s : State) :</span>
+<span class="code-line" id="L512"><a class="line-number" href="#L512">512</a>    ∀ event ∈ (runWith fuel oracle program s).trace,</span>
+<span class="code-line" id="L513"><a class="line-number" href="#L513">513</a>      ∀ effect, event.memory = some effect → ValidAddress s.memory effect.address := by</span>
+<span class="code-line" id="L514"><a class="line-number" href="#L514">514</a>  induction fuel generalizing oracle s with</span>
+<span class="code-line" id="L515"><a class="line-number" href="#L515">515</a>  | zero =&gt; simp [runWith]</span>
+<span class="code-line" id="L516"><a class="line-number" href="#L516">516</a>  | succ fuel ih =&gt;</span>
+<span class="code-line" id="L517"><a class="line-number" href="#L517">517</a>      cases hs : stepWith (oracle 0) program s with</span>
+<span class="code-line" id="L518"><a class="line-number" href="#L518">518</a>      | next next emitted =&gt;</span>
+<span class="code-line" id="L519"><a class="line-number" href="#L519">519</a>          simp only [runWith, hs, List.mem_cons]</span>
+<span class="code-line" id="L520"><a class="line-number" href="#L520">520</a>          intro event member effect memory</span>
+<span class="code-line" id="L521"><a class="line-number" href="#L521">521</a>          rcases member with rfl | member</span>
+<span class="code-line" id="L522"><a class="line-number" href="#L522">522</a>          · exact step_memory_safe hs memory</span>
+<span class="code-line" id="L523"><a class="line-number" href="#L523">523</a>          · have safe := ih _ next event member effect memory</span>
+<span class="code-line" id="L524"><a class="line-number" href="#L524">524</a>            simpa only [ValidAddress, step_memory_length hs] using safe</span>
+<span class="code-line" id="L525"><a class="line-number" href="#L525">525</a>      | halted final emitted =&gt;</span>
+<span class="code-line" id="L526"><a class="line-number" href="#L526">526</a>          simp only [runWith, hs, List.mem_singleton]</span>
+<span class="code-line" id="L527"><a class="line-number" href="#L527">527</a>          intro event member effect memory</span>
+<span class="code-line" id="L528"><a class="line-number" href="#L528">528</a>          subst event</span>
+<span class="code-line" id="L529"><a class="line-number" href="#L529">529</a>          rw [(step_halted hs).2] at memory</span>
+<span class="code-line" id="L530"><a class="line-number" href="#L530">530</a>          contradiction</span>
+<span class="code-line" id="L531"><a class="line-number" href="#L531">531</a>      | fault reason =&gt; simp [runWith, hs]</span>
+<span class="code-line" id="L532"><a class="line-number" href="#L532">532</a>      | unsupported spelling =&gt; simp [runWith, hs]</span>
+<span class="code-line" id="L533"><a class="line-number" href="#L533">533</a></span>
+<span class="code-line" id="L534"><a class="line-number" href="#L534">534</a>theorem run_trace_safe (fuel : Nat) (program : List Instr) (s : State) :</span>
+<span class="code-line" id="L535"><a class="line-number" href="#L535">535</a>    ∀ event ∈ (run fuel program s).trace,</span>
+<span class="code-line" id="L536"><a class="line-number" href="#L536">536</a>      ∀ effect, event.memory = some effect → ValidAddress s.memory effect.address :=</span>
+<span class="code-line" id="L537"><a class="line-number" href="#L537">537</a>  runWith_trace_safe _ _ _ _</span>
+<span class="code-line" id="L538"><a class="line-number" href="#L538">538</a></span>
+<span class="code-line" id="L539"><a class="line-number" href="#L539">539</a>/-- The inductive run relation has no extra executions beyond some finite budget</span>
+<span class="code-line" id="L540"><a class="line-number" href="#L540">540</a>of the executable semantics. This includes explicitly incomplete prefixes. -/</span>
+<span class="code-line" id="L541"><a class="line-number" href="#L541">541</a>theorem Runs.exists_run (h : Runs program oracle s result) :</span>
+<span class="code-line" id="L542"><a class="line-number" href="#L542">542</a>    ∃ fuel, runWith fuel oracle program s = result := by</span>
+<span class="code-line" id="L543"><a class="line-number" href="#L543">543</a>  induction h with</span>
+<span class="code-line" id="L544"><a class="line-number" href="#L544">544</a>  | exhausted =&gt; exact ⟨0, rfl⟩</span>
+<span class="code-line" id="L545"><a class="line-number" href="#L545">545</a>  | @next oracle s next event rest hs hr ih =&gt;</span>
+<span class="code-line" id="L546"><a class="line-number" href="#L546">546</a>      obtain ⟨fuel, hf⟩ := ih</span>
+<span class="code-line" id="L547"><a class="line-number" href="#L547">547</a>      exact ⟨fuel + 1, by simp [runWith, hs, hf]⟩</span>
+<span class="code-line" id="L548"><a class="line-number" href="#L548">548</a>  | halted hs =&gt; exact ⟨1, by simp [runWith, hs]⟩</span>
+<span class="code-line" id="L549"><a class="line-number" href="#L549">549</a>  | fault hs =&gt; exact ⟨1, by simp [runWith, hs]⟩</span>
+<span class="code-line" id="L550"><a class="line-number" href="#L550">550</a>  | unsupported hs =&gt; exact ⟨1, by simp [runWith, hs]⟩</span>
+<span class="code-line" id="L551"><a class="line-number" href="#L551">551</a></span>
+<span class="code-line" id="L552"><a class="line-number" href="#L552">552</a></span>
+<span class="code-line" id="L553"><a class="line-number" href="#L553">553</a></span>
+<span class="code-line" id="L554"><a class="line-number" href="#L554">554</a>/-- Unsaturated fixed-width integer operations expose their exact modular meaning. -/</span>
+<span class="code-line" id="L555"><a class="line-number" href="#L555">555</a>theorem add_modulo (a b : Word) :</span>
+<span class="code-line" id="L556"><a class="line-number" href="#L556">556</a>    (BinOp.eval .add a b).toNat = (a.toNat + b.toNat) % 2 ^ 32 := rfl</span>
+<span class="code-line" id="L557"><a class="line-number" href="#L557">557</a></span>
+<span class="code-line" id="L558"><a class="line-number" href="#L558">558</a>theorem sub_modulo (a b : Word) :</span>
+<span class="code-line" id="L559"><a class="line-number" href="#L559">559</a>    (BinOp.eval .sub a b).toNat = ((2 ^ 32 - b.toNat) + a.toNat) % 2 ^ 32 := rfl</span>
+<span class="code-line" id="L560"><a class="line-number" href="#L560">560</a></span>
+<span class="code-line" id="L561"><a class="line-number" href="#L561">561</a>theorem mul_low_modulo (a b : Word) :</span>
+<span class="code-line" id="L562"><a class="line-number" href="#L562">562</a>    (BinOp.eval .mulLo a b).toNat = (a.toNat * b.toNat) % 2 ^ 32 := rfl</span>
+<span class="code-line" id="L563"><a class="line-number" href="#L563">563</a></span>
+<span class="code-line" id="L564"><a class="line-number" href="#L564">564</a>/-- The address register operation wraps at 64 bits rather than growing in Nat. -/</span>
+<span class="code-line" id="L565"><a class="line-number" href="#L565">565</a>theorem add64_modulo (a b : Address) :</span>
+<span class="code-line" id="L566"><a class="line-number" href="#L566">566</a>    (a + b).toNat = (a.toNat + b.toNat) % 2 ^ 64 := rfl</span>
+<span class="code-line" id="L567"><a class="line-number" href="#L567">567</a></span>
+<span class="code-line" id="L568"><a class="line-number" href="#L568">568</a>/-- Validity covers the entire four-byte access, not just its first byte. -/</span>
+<span class="code-line" id="L569"><a class="line-number" href="#L569">569</a>theorem validAddress_bytes (h : ValidAddress memory address) :</span>
+<span class="code-line" id="L570"><a class="line-number" href="#L570">570</a>    address.toNat % 4 = 0 ∧ address.toNat + 4 ≤ 4 * memory.length := by</span>
+<span class="code-line" id="L571"><a class="line-number" href="#L571">571</a>  obtain ⟨aligned, bounded⟩ := h</span>
+<span class="code-line" id="L572"><a class="line-number" href="#L572">572</a>  have division := Nat.mod_add_div address.toNat 4</span>
+<span class="code-line" id="L573"><a class="line-number" href="#L573">573</a>  exact ⟨aligned, by omega⟩</span>
+<span class="code-line" id="L574"><a class="line-number" href="#L574">574</a></span>
+<span class="code-line" id="L575"><a class="line-number" href="#L575">575</a>theorem unsupported_not_hidden (s : State) (guard : Guard) (spelling : String) :</span>
+<span class="code-line" id="L576"><a class="line-number" href="#L576">576</a>    eval override ⟨guard, .unsupported spelling⟩ s = .unsupported spelling := rfl</span>
+<span class="code-line" id="L577"><a class="line-number" href="#L577">577</a></span>
+<span class="code-line" id="L578"><a class="line-number" href="#L578">578</a>/-- Shift counts at and beyond the width cannot be accidentally masked modulo 32. -/</span>
+<span class="code-line" id="L579"><a class="line-number" href="#L579">579</a>theorem shift_boundary_examples :</span>
+<span class="code-line" id="L580"><a class="line-number" href="#L580">580</a>    BinOp.eval .shl 1 31 = 2147483648 ∧</span>
+<span class="code-line" id="L581"><a class="line-number" href="#L581">581</a>    BinOp.eval .shl 1 32 = 0 ∧ BinOp.eval .shl 1 33 = 0 ∧</span>
+<span class="code-line" id="L582"><a class="line-number" href="#L582">582</a>    BinOp.eval .shr 4294967295 32 = 0 := by decide</span>
+<span class="code-line" id="L583"><a class="line-number" href="#L583">583</a></span>
+<span class="code-line" id="L584"><a class="line-number" href="#L584">584</a>theorem unsigned_wrap_examples :</span>
+<span class="code-line" id="L585"><a class="line-number" href="#L585">585</a>    BinOp.eval .add 4294967295 1 = 0 ∧</span>
+<span class="code-line" id="L586"><a class="line-number" href="#L586">586</a>    BinOp.eval .sub 0 1 = 4294967295 ∧</span>
+<span class="code-line" id="L587"><a class="line-number" href="#L587">587</a>    BinOp.eval .mulLo 4294967295 2 = 4294967294 := by decide</span>
+<span class="code-line" id="L588"><a class="line-number" href="#L588">588</a></span>
+<span class="code-line" id="L589"><a class="line-number" href="#L589">589</a>end Ptx.Scalar</span></code></pre><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>

@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ptx/Select32.lean · PTXLean</title><link rel="stylesheet" href="../style.css">
+<script src="../search.js" defer></script></head>
+<body class="code-source"><header><a href="../index.html"><strong>PTXLEAN</strong> / Instruction reference</a><span>PTX ISA 9.4 · Lean 4.34.0</span></header>
+<main><p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>Ptx/Select32.lean</h1><p><small>SHA-256 <code>4b8bc90df0d95d7f25a7e5d4512ad9f593466d5f1a008d1cf2c32214b9ea3152</code></small></p><pre><code><span class="code-line" id="L1"><a class="line-number" href="#L1">1</a>import Ptx.Pure32</span>
+<span class="code-line" id="L2"><a class="line-number" href="#L2">2</a>import Ptx.ScalarText</span>
+<span class="code-line" id="L3"><a class="line-number" href="#L3">3</a></span>
+<span class="code-line" id="L4"><a class="line-number" href="#L4">4</a>namespace Ptx.Scalar.Select32</span>
+<span class="code-line" id="L5"><a class="line-number" href="#L5">5</a></span>
+<span class="code-line" id="L6"><a class="line-number" href="#L6">6</a>open Pure32</span>
+<span class="code-line" id="L7"><a class="line-number" href="#L7">7</a></span>
+<span class="code-line" id="L8"><a class="line-number" href="#L8">8</a>private def w0 : Fin 2 := ⟨0, by decide⟩</span>
+<span class="code-line" id="L9"><a class="line-number" href="#L9">9</a>private def w1 : Fin 2 := ⟨1, by decide⟩</span>
+<span class="code-line" id="L10"><a class="line-number" href="#L10">10</a>private def p0 : Fin 1 := ⟨0, by decide⟩</span>
+<span class="code-line" id="L11"><a class="line-number" href="#L11">11</a></span>
+<span class="code-line" id="L12"><a class="line-number" href="#L12">12</a>def SupportedTarget (target : Ptx.Target) : Prop :=</span>
+<span class="code-line" id="L13"><a class="line-number" href="#L13">13</a>  target.isa = 94 ∧ 10 ≤ target.sm</span>
+<span class="code-line" id="L14"><a class="line-number" href="#L14">14</a></span>
+<span class="code-line" id="L15"><a class="line-number" href="#L15">15</a>inductive Operation where</span>
+<span class="code-line" id="L16"><a class="line-number" href="#L16">16</a>  | selp</span>
+<span class="code-line" id="L17"><a class="line-number" href="#L17">17</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L18"><a class="line-number" href="#L18">18</a></span>
+<span class="code-line" id="L19"><a class="line-number" href="#L19">19</a>structure Instr where</span>
+<span class="code-line" id="L20"><a class="line-number" href="#L20">20</a>  guard : Scalar.Guard := .always</span>
+<span class="code-line" id="L21"><a class="line-number" href="#L21">21</a>  destination : Nat</span>
+<span class="code-line" id="L22"><a class="line-number" href="#L22">22</a>  left : Scalar.Operand32</span>
+<span class="code-line" id="L23"><a class="line-number" href="#L23">23</a>  right : Scalar.Operand32</span>
+<span class="code-line" id="L24"><a class="line-number" href="#L24">24</a>  predicate : Nat</span>
+<span class="code-line" id="L25"><a class="line-number" href="#L25">25</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L26"><a class="line-number" href="#L26">26</a></span>
+<span class="code-line" id="L27"><a class="line-number" href="#L27">27</a>def compute (a b : Word) (c : Bool) : Word := if c then a else b</span>
+<span class="code-line" id="L28"><a class="line-number" href="#L28">28</a></span>
+<span class="code-line" id="L29"><a class="line-number" href="#L29">29</a>def family : Pure32.Family Operation :=</span>
+<span class="code-line" id="L30"><a class="line-number" href="#L30">30</a>  Pure32.Family.ofFunction (fun _ =&gt; 2) (fun _ =&gt; 1)</span>
+<span class="code-line" id="L31"><a class="line-number" href="#L31">31</a>    (fun _ words predicates =&gt; compute (words w0) (words w1) (predicates p0))</span>
+<span class="code-line" id="L32"><a class="line-number" href="#L32">32</a>    (fun target _ =&gt; SupportedTarget target)</span>
+<span class="code-line" id="L33"><a class="line-number" href="#L33">33</a></span>
+<span class="code-line" id="L34"><a class="line-number" href="#L34">34</a>def lower (i : Instr) : Pure32.Instr family :=</span>
+<span class="code-line" id="L35"><a class="line-number" href="#L35">35</a>  ⟨i.guard, .selp, i.destination,</span>
+<span class="code-line" id="L36"><a class="line-number" href="#L36">36</a>    fun index =&gt; if index.val = 0 then i.left else i.right,</span>
+<span class="code-line" id="L37"><a class="line-number" href="#L37">37</a>    fun _ =&gt; .reg i.predicate true⟩</span>
+<span class="code-line" id="L38"><a class="line-number" href="#L38">38</a></span>
+<span class="code-line" id="L39"><a class="line-number" href="#L39">39</a>def result (i : Instr) (s : Scalar.State) : Word :=</span>
+<span class="code-line" id="L40"><a class="line-number" href="#L40">40</a>  compute (i.left.eval s) (i.right.eval s) (s.preds i.predicate)</span>
+<span class="code-line" id="L41"><a class="line-number" href="#L41">41</a></span>
+<span class="code-line" id="L42"><a class="line-number" href="#L42">42</a>abbrev Occurrence := Pure32.Occurrence family</span>
+<span class="code-line" id="L43"><a class="line-number" href="#L43">43</a>abbrev Eval (i : Instr) := Pure32.Eval (lower i)</span>
+<span class="code-line" id="L44"><a class="line-number" href="#L44">44</a>abbrev Step (target : Ptx.Target) (program : List Instr) :=</span>
+<span class="code-line" id="L45"><a class="line-number" href="#L45">45</a>  Pure32.Step target (program.map lower)</span>
+<span class="code-line" id="L46"><a class="line-number" href="#L46">46</a></span>
+<span class="code-line" id="L47"><a class="line-number" href="#L47">47</a>def occurrence (s : Scalar.State) (i : Instr) (executed : Bool) : Occurrence :=</span>
+<span class="code-line" id="L48"><a class="line-number" href="#L48">48</a>  Pure32.occurrence s (lower i) executed</span>
+<span class="code-line" id="L49"><a class="line-number" href="#L49">49</a></span>
+<span class="code-line" id="L50"><a class="line-number" href="#L50">50</a>theorem compute_eq (a b : Word) (c : Bool) :</span>
+<span class="code-line" id="L51"><a class="line-number" href="#L51">51</a>    compute a b c = if c then a else b := rfl</span>
+<span class="code-line" id="L52"><a class="line-number" href="#L52">52</a></span>
+<span class="code-line" id="L53"><a class="line-number" href="#L53">53</a>theorem results_iff (op : Operation) (words : Fin 2 → Word) (predicates : Fin 1 → Bool) (value : Word) :</span>
+<span class="code-line" id="L54"><a class="line-number" href="#L54">54</a>    family.Results op words predicates value ↔ value = if predicates p0 then words w0 else words w1 := by</span>
+<span class="code-line" id="L55"><a class="line-number" href="#L55">55</a>  cases op</span>
+<span class="code-line" id="L56"><a class="line-number" href="#L56">56</a>  rfl</span>
+<span class="code-line" id="L57"><a class="line-number" href="#L57">57</a></span>
+<span class="code-line" id="L58"><a class="line-number" href="#L58">58</a>theorem lower_predicate (i : Instr) :</span>
+<span class="code-line" id="L59"><a class="line-number" href="#L59">59</a>    (lower i).operation = .selp ∧ (lower i).predicates p0 = .reg i.predicate true := by</span>
+<span class="code-line" id="L60"><a class="line-number" href="#L60">60</a>  simp [lower]</span>
+<span class="code-line" id="L61"><a class="line-number" href="#L61">61</a></span>
+<span class="code-line" id="L62"><a class="line-number" href="#L62">62</a>theorem lower_fields (i : Instr) :</span>
+<span class="code-line" id="L63"><a class="line-number" href="#L63">63</a>    (lower i).guard = i.guard ∧ (lower i).destination = i.destination ∧</span>
+<span class="code-line" id="L64"><a class="line-number" href="#L64">64</a>    (lower i).words w0 = i.left ∧ (lower i).words w1 = i.right := by</span>
+<span class="code-line" id="L65"><a class="line-number" href="#L65">65</a>  simp [lower, w0, w1]</span>
+<span class="code-line" id="L66"><a class="line-number" href="#L66">66</a></span>
+<span class="code-line" id="L67"><a class="line-number" href="#L67">67</a>theorem eval_true_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)</span>
+<span class="code-line" id="L68"><a class="line-number" href="#L68">68</a>    (enabled : i.guard.eval s = true) :</span>
+<span class="code-line" id="L69"><a class="line-number" href="#L69">69</a>    Eval i s next event ↔</span>
+<span class="code-line" id="L70"><a class="line-number" href="#L70">70</a>      next = Pure32.write s i.destination (result i s) ∧ event = occurrence s i true := by</span>
+<span class="code-line" id="L71"><a class="line-number" href="#L71">71</a>  change Pure32.Eval (lower i) s next event ↔ _</span>
+<span class="code-line" id="L72"><a class="line-number" href="#L72">72</a>  rw [Pure32.eval_true_iff (lower i) s next event (by simpa [lower] using enabled)]</span>
+<span class="code-line" id="L73"><a class="line-number" href="#L73">73</a>  constructor</span>
+<span class="code-line" id="L74"><a class="line-number" href="#L74">74</a>  · rintro ⟨value, h, hn, he⟩</span>
+<span class="code-line" id="L75"><a class="line-number" href="#L75">75</a>    have hv : value = result i s := by</span>
+<span class="code-line" id="L76"><a class="line-number" href="#L76">76</a>      simpa [Pure32.Instr.wordValues, Pure32.Instr.predicateValues, lower, result, w0, w1, p0,</span>
+<span class="code-line" id="L77"><a class="line-number" href="#L77">77</a>        family, Pure32.Family.ofFunction] using h</span>
+<span class="code-line" id="L78"><a class="line-number" href="#L78">78</a>    subst value</span>
+<span class="code-line" id="L79"><a class="line-number" href="#L79">79</a>    exact ⟨by simpa [lower, family, Pure32.Family.ofFunction,</span>
+<span class="code-line" id="L80"><a class="line-number" href="#L80">80</a>      Pure32.Instr.wordValues, Pure32.Instr.predicateValues, w0, w1, p0, result] using hn, he⟩</span>
+<span class="code-line" id="L81"><a class="line-number" href="#L81">81</a>  · rintro ⟨hn, he⟩</span>
+<span class="code-line" id="L82"><a class="line-number" href="#L82">82</a>    refine ⟨result i s, ?_, hn, he⟩</span>
+<span class="code-line" id="L83"><a class="line-number" href="#L83">83</a>    simpa [Pure32.Instr.wordValues, Pure32.Instr.predicateValues, lower, result, w0, w1, p0,</span>
+<span class="code-line" id="L84"><a class="line-number" href="#L84">84</a>      family, Pure32.Family.ofFunction]</span>
+<span class="code-line" id="L85"><a class="line-number" href="#L85">85</a></span>
+<span class="code-line" id="L86"><a class="line-number" href="#L86">86</a>theorem eval_false_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)</span>
+<span class="code-line" id="L87"><a class="line-number" href="#L87">87</a>    (disabled : i.guard.eval s = false) :</span>
+<span class="code-line" id="L88"><a class="line-number" href="#L88">88</a>    Eval i s next event ↔</span>
+<span class="code-line" id="L89"><a class="line-number" href="#L89">89</a>      next = {s with pc := s.pc + 1} ∧ event = occurrence s i false := by</span>
+<span class="code-line" id="L90"><a class="line-number" href="#L90">90</a>  change Pure32.Eval (lower i) s next event ↔ _</span>
+<span class="code-line" id="L91"><a class="line-number" href="#L91">91</a>  exact Pure32.eval_false_iff (lower i) s next event (by simpa [lower] using disabled)</span>
+<span class="code-line" id="L92"><a class="line-number" href="#L92">92</a></span>
+<span class="code-line" id="L93"><a class="line-number" href="#L93">93</a>theorem eval_destination (i : Instr) (s next : Scalar.State) (event : Occurrence)</span>
+<span class="code-line" id="L94"><a class="line-number" href="#L94">94</a>    (evaluated : Eval i s next event) (enabled : i.guard.eval s = true) :</span>
+<span class="code-line" id="L95"><a class="line-number" href="#L95">95</a>    next.regs i.destination = result i s := by</span>
+<span class="code-line" id="L96"><a class="line-number" href="#L96">96</a>  have h := (eval_true_iff i s next event enabled).mp evaluated</span>
+<span class="code-line" id="L97"><a class="line-number" href="#L97">97</a>  rw [h.1]</span>
+<span class="code-line" id="L98"><a class="line-number" href="#L98">98</a>  simp [Pure32.write]</span>
+<span class="code-line" id="L99"><a class="line-number" href="#L99">99</a></span>
+<span class="code-line" id="L100"><a class="line-number" href="#L100">100</a>theorem eval_frame (i : Instr) (s next : Scalar.State) (event : Occurrence)</span>
+<span class="code-line" id="L101"><a class="line-number" href="#L101">101</a>    (evaluated : Eval i s next event) :</span>
+<span class="code-line" id="L102"><a class="line-number" href="#L102">102</a>    next.pc = s.pc + 1 ∧ next.memory = s.memory ∧</span>
+<span class="code-line" id="L103"><a class="line-number" href="#L103">103</a>      next.addrs = s.addrs ∧ next.preds = s.preds :=</span>
+<span class="code-line" id="L104"><a class="line-number" href="#L104">104</a>  Pure32.eval_frame evaluated</span>
+<span class="code-line" id="L105"><a class="line-number" href="#L105">105</a></span>
+<span class="code-line" id="L106"><a class="line-number" href="#L106">106</a>theorem eval_other (i : Instr) (s next : Scalar.State) (event : Occurrence) (other : Nat)</span>
+<span class="code-line" id="L107"><a class="line-number" href="#L107">107</a>    (evaluated : Eval i s next event) (different : other ≠ i.destination) :</span>
+<span class="code-line" id="L108"><a class="line-number" href="#L108">108</a>    next.regs other = s.regs other :=</span>
+<span class="code-line" id="L109"><a class="line-number" href="#L109">109</a>  Pure32.eval_other evaluated (by simpa [lower] using different)</span>
+<span class="code-line" id="L110"><a class="line-number" href="#L110">110</a></span>
+<span class="code-line" id="L111"><a class="line-number" href="#L111">111</a>theorem eval_event (i : Instr) (s next : Scalar.State) (event : Occurrence)</span>
+<span class="code-line" id="L112"><a class="line-number" href="#L112">112</a>    (evaluated : Eval i s next event) :</span>
+<span class="code-line" id="L113"><a class="line-number" href="#L113">113</a>  event = occurrence s i (i.guard.eval s) := by</span>
+<span class="code-line" id="L114"><a class="line-number" href="#L114">114</a>  simpa [occurrence, lower] using (Pure32.eval_event evaluated)</span>
+<span class="code-line" id="L115"><a class="line-number" href="#L115">115</a></span>
+<span class="code-line" id="L116"><a class="line-number" href="#L116">116</a>theorem eval_deterministic (i : Instr) (s next₁ next₂ : Scalar.State) (event₁ event₂ : Occurrence)</span>
+<span class="code-line" id="L117"><a class="line-number" href="#L117">117</a>    (left : Eval i s next₁ event₁) (right : Eval i s next₂ event₂) :</span>
+<span class="code-line" id="L118"><a class="line-number" href="#L118">118</a>    next₁ = next₂ ∧ event₁ = event₂ := by</span>
+<span class="code-line" id="L119"><a class="line-number" href="#L119">119</a>  apply Pure32.eval_deterministic (i := lower i) (s := s) (functional := ?_) left right</span>
+<span class="code-line" id="L120"><a class="line-number" href="#L120">120</a>  intro words predicates a b ha hb</span>
+<span class="code-line" id="L121"><a class="line-number" href="#L121">121</a>  simpa [family, Pure32.Family.ofFunction] using (ha.trans hb.symm)</span>
+<span class="code-line" id="L122"><a class="line-number" href="#L122">122</a></span>
+<span class="code-line" id="L123"><a class="line-number" href="#L123">123</a>theorem eval_exists (i : Instr) (s : Scalar.State) :</span>
+<span class="code-line" id="L124"><a class="line-number" href="#L124">124</a>    ∃ next event, Eval i s next event := Pure32.eval_exists (lower i) s</span>
+<span class="code-line" id="L125"><a class="line-number" href="#L125">125</a></span>
+<span class="code-line" id="L126"><a class="line-number" href="#L126">126</a>theorem step_origin (target : Ptx.Target) (program : List Instr)</span>
+<span class="code-line" id="L127"><a class="line-number" href="#L127">127</a>    (s next : Scalar.State) (event : Occurrence) (stepped : Step target program s next event) :</span>
+<span class="code-line" id="L128"><a class="line-number" href="#L128">128</a>    SupportedTarget target ∧ ∃ i, program[s.pc]? = some i ∧</span>
+<span class="code-line" id="L129"><a class="line-number" href="#L129">129</a>      event.pc = s.pc ∧ event.instruction = lower i ∧ Eval i s next event := by</span>
+<span class="code-line" id="L130"><a class="line-number" href="#L130">130</a>  change Pure32.Step target (program.map lower) s next event at stepped</span>
+<span class="code-line" id="L131"><a class="line-number" href="#L131">131</a>  obtain ⟨j, fetch, supported, evaluated⟩ := Pure32.step_origin stepped</span>
+<span class="code-line" id="L132"><a class="line-number" href="#L132">132</a>  have hmap : (program[s.pc]?).map lower = some j := by simpa using fetch</span>
+<span class="code-line" id="L133"><a class="line-number" href="#L133">133</a>  cases h : program[s.pc]? with</span>
+<span class="code-line" id="L134"><a class="line-number" href="#L134">134</a>  | none =&gt; simp [h] at hmap</span>
+<span class="code-line" id="L135"><a class="line-number" href="#L135">135</a>  | some original =&gt;</span>
+<span class="code-line" id="L136"><a class="line-number" href="#L136">136</a>    have hj : lower original = j := Option.some.inj (by simpa [h] using hmap)</span>
+<span class="code-line" id="L137"><a class="line-number" href="#L137">137</a>    rcases evaluated with ⟨pc, ins, ev⟩</span>
+<span class="code-line" id="L138"><a class="line-number" href="#L138">138</a>    have ho : j.operation = .selp := by cases j.operation &lt;;&gt; rfl</span>
+<span class="code-line" id="L139"><a class="line-number" href="#L139">139</a>    change SupportedTarget target at supported</span>
+<span class="code-line" id="L140"><a class="line-number" href="#L140">140</a>    refine ⟨supported, original, ?_, pc, ?_, ?_⟩</span>
+<span class="code-line" id="L141"><a class="line-number" href="#L141">141</a>    · simpa [h]</span>
+<span class="code-line" id="L142"><a class="line-number" href="#L142">142</a>    · simpa [hj] using ins</span>
+<span class="code-line" id="L143"><a class="line-number" href="#L143">143</a>    · cases hj</span>
+<span class="code-line" id="L144"><a class="line-number" href="#L144">144</a>      exact ev</span>
+<span class="code-line" id="L145"><a class="line-number" href="#L145">145</a></span>
+<span class="code-line" id="L146"><a class="line-number" href="#L146">146</a>theorem step_exists (target : Ptx.Target) (program : List Instr) (s : Scalar.State) (i : Instr)</span>
+<span class="code-line" id="L147"><a class="line-number" href="#L147">147</a>    (supported : SupportedTarget target) (fetch : program[s.pc]? = some i) :</span>
+<span class="code-line" id="L148"><a class="line-number" href="#L148">148</a>    ∃ next event, Step target program s next event := by</span>
+<span class="code-line" id="L149"><a class="line-number" href="#L149">149</a>  have fetch&#x27; : (program.map lower)[s.pc]? = some (lower i) := by</span>
+<span class="code-line" id="L150"><a class="line-number" href="#L150">150</a>    simpa using congrArg (Option.map lower) fetch</span>
+<span class="code-line" id="L151"><a class="line-number" href="#L151">151</a>  obtain ⟨next, event, h⟩ := Pure32.step_exists (lower i) fetch&#x27; (by</span>
+<span class="code-line" id="L152"><a class="line-number" href="#L152">152</a>    change SupportedTarget target</span>
+<span class="code-line" id="L153"><a class="line-number" href="#L153">153</a>    exact supported)</span>
+<span class="code-line" id="L154"><a class="line-number" href="#L154">154</a>  exact ⟨next, event, h⟩</span>
+<span class="code-line" id="L155"><a class="line-number" href="#L155">155</a></span>
+<span class="code-line" id="L156"><a class="line-number" href="#L156">156</a>theorem step_no_fetch (target : Ptx.Target) (program : List Instr)</span>
+<span class="code-line" id="L157"><a class="line-number" href="#L157">157</a>    (s next : Scalar.State) (event : Occurrence) (missing : program[s.pc]? = none) :</span>
+<span class="code-line" id="L158"><a class="line-number" href="#L158">158</a>    ¬ Step target program s next event := by</span>
+<span class="code-line" id="L159"><a class="line-number" href="#L159">159</a>  apply Pure32.step_no_fetch (program := program.map lower)</span>
+<span class="code-line" id="L160"><a class="line-number" href="#L160">160</a>  simpa using congrArg (Option.map lower) missing</span>
+<span class="code-line" id="L161"><a class="line-number" href="#L161">161</a></span>
+<span class="code-line" id="L162"><a class="line-number" href="#L162">162</a>theorem step_unsupported_target (target : Ptx.Target) (program : List Instr)</span>
+<span class="code-line" id="L163"><a class="line-number" href="#L163">163</a>    (s next : Scalar.State) (event : Occurrence) (unsupported : ¬ SupportedTarget target) :</span>
+<span class="code-line" id="L164"><a class="line-number" href="#L164">164</a>    ¬ Step target program s next event := by</span>
+<span class="code-line" id="L165"><a class="line-number" href="#L165">165</a>  change ¬ Pure32.Step target (program.map lower) s next event</span>
+<span class="code-line" id="L166"><a class="line-number" href="#L166">166</a>  intro stepped</span>
+<span class="code-line" id="L167"><a class="line-number" href="#L167">167</a>  obtain ⟨found, fetch, supported, _⟩ := stepped</span>
+<span class="code-line" id="L168"><a class="line-number" href="#L168">168</a>  have ho : found.operation = .selp := by cases found.operation &lt;;&gt; rfl</span>
+<span class="code-line" id="L169"><a class="line-number" href="#L169">169</a>  change SupportedTarget target at supported</span>
+<span class="code-line" id="L170"><a class="line-number" href="#L170">170</a>  exact unsupported supported</span>
+<span class="code-line" id="L171"><a class="line-number" href="#L171">171</a></span>
+<span class="code-line" id="L172"><a class="line-number" href="#L172">172</a>namespace Text</span>
+<span class="code-line" id="L173"><a class="line-number" href="#L173">173</a></span>
+<span class="code-line" id="L174"><a class="line-number" href="#L174">174</a>def supportedMnemonic (mnemonic : String) : Bool := mnemonic == &quot;selp.b32&quot;</span>
+<span class="code-line" id="L175"><a class="line-number" href="#L175">175</a></span>
+<span class="code-line" id="L176"><a class="line-number" href="#L176">176</a>def encode (i : Instr) : Scalar.Text.Statement :=</span>
+<span class="code-line" id="L177"><a class="line-number" href="#L177">177</a>  ⟨i.guard, &quot;selp.b32&quot;, [.word (.reg i.destination), .word i.left,</span>
+<span class="code-line" id="L178"><a class="line-number" href="#L178">178</a>    .word i.right, .predicate i.predicate]⟩</span>
+<span class="code-line" id="L179"><a class="line-number" href="#L179">179</a></span>
+<span class="code-line" id="L180"><a class="line-number" href="#L180">180</a>def decode (statement : Scalar.Text.Statement) : Except Scalar.Text.DecodeError Instr :=</span>
+<span class="code-line" id="L181"><a class="line-number" href="#L181">181</a>  if supportedMnemonic statement.mnemonic then</span>
+<span class="code-line" id="L182"><a class="line-number" href="#L182">182</a>    match statement.operands with</span>
+<span class="code-line" id="L183"><a class="line-number" href="#L183">183</a>    | [.word (.reg destination), .word left, .word right, .predicate predicate] =&gt;</span>
+<span class="code-line" id="L184"><a class="line-number" href="#L184">184</a>      .ok ⟨statement.guard, destination, left, right, predicate⟩</span>
+<span class="code-line" id="L185"><a class="line-number" href="#L185">185</a>    | _ =&gt; .error (.invalidOperands statement.mnemonic)</span>
+<span class="code-line" id="L186"><a class="line-number" href="#L186">186</a>  else .error (.unsupportedMnemonic statement.mnemonic)</span>
+<span class="code-line" id="L187"><a class="line-number" href="#L187">187</a></span>
+<span class="code-line" id="L188"><a class="line-number" href="#L188">188</a>theorem decode_encode (i : Instr) : decode (encode i) = .ok i := by</span>
+<span class="code-line" id="L189"><a class="line-number" href="#L189">189</a>  simp [decode, encode, supportedMnemonic]</span>
+<span class="code-line" id="L190"><a class="line-number" href="#L190">190</a></span>
+<span class="code-line" id="L191"><a class="line-number" href="#L191">191</a>theorem decode_iff (statement : Scalar.Text.Statement) (i : Instr) :</span>
+<span class="code-line" id="L192"><a class="line-number" href="#L192">192</a>    decode statement = .ok i ↔ statement = encode i := by</span>
+<span class="code-line" id="L193"><a class="line-number" href="#L193">193</a>  constructor</span>
+<span class="code-line" id="L194"><a class="line-number" href="#L194">194</a>  · intro h</span>
+<span class="code-line" id="L195"><a class="line-number" href="#L195">195</a>    rcases statement with ⟨guard, mnemonic, operands⟩</span>
+<span class="code-line" id="L196"><a class="line-number" href="#L196">196</a>    simp only [decode] at h</span>
+<span class="code-line" id="L197"><a class="line-number" href="#L197">197</a>    by_cases hm : mnemonic = &quot;selp.b32&quot;</span>
+<span class="code-line" id="L198"><a class="line-number" href="#L198">198</a>    · subst mnemonic</span>
+<span class="code-line" id="L199"><a class="line-number" href="#L199">199</a>      simp [supportedMnemonic] at h</span>
+<span class="code-line" id="L200"><a class="line-number" href="#L200">200</a>      split at h</span>
+<span class="code-line" id="L201"><a class="line-number" href="#L201">201</a>      · injection h with hi</span>
+<span class="code-line" id="L202"><a class="line-number" href="#L202">202</a>        cases hi</span>
+<span class="code-line" id="L203"><a class="line-number" href="#L203">203</a>        rfl</span>
+<span class="code-line" id="L204"><a class="line-number" href="#L204">204</a>      · simp at h</span>
+<span class="code-line" id="L205"><a class="line-number" href="#L205">205</a>    · simp [supportedMnemonic, hm] at h</span>
+<span class="code-line" id="L206"><a class="line-number" href="#L206">206</a>  · intro h</span>
+<span class="code-line" id="L207"><a class="line-number" href="#L207">207</a>    subst statement</span>
+<span class="code-line" id="L208"><a class="line-number" href="#L208">208</a>    exact decode_encode i</span>
+<span class="code-line" id="L209"><a class="line-number" href="#L209">209</a></span>
+<span class="code-line" id="L210"><a class="line-number" href="#L210">210</a>end Text</span>
+<span class="code-line" id="L211"><a class="line-number" href="#L211">211</a>end Ptx.Scalar.Select32</span></code></pre><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>

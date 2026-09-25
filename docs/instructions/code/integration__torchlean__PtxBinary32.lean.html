@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>integration/torchlean/PtxBinary32.lean · PTXLean</title><link rel="stylesheet" href="../style.css">
+<script src="../search.js" defer></script></head>
+<body class="code-source"><header><a href="../index.html"><strong>PTXLEAN</strong> / Instruction reference</a><span>PTX ISA 9.4 · Lean 4.34.0</span></header>
+<main><p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>integration/torchlean/PtxBinary32.lean</h1><p><small>SHA-256 <code>652adf5073b937101b6f1f187719fd14dd9208f1105d39d0e72743916ecd5e13</code></small></p><pre><code><span class="code-line" id="L1"><a class="line-number" href="#L1">1</a>import Ptx.Language</span>
+<span class="code-line" id="L2"><a class="line-number" href="#L2">2</a>import NN.Floats.IEEEExec.Bridge.Finite</span>
+<span class="code-line" id="L3"><a class="line-number" href="#L3">3</a>import NN.Floats.FP32.Error</span>
+<span class="code-line" id="L4"><a class="line-number" href="#L4">4</a></span>
+<span class="code-line" id="L5"><a class="line-number" href="#L5">5</a>/-! Payload-preserving encoded binary32 and a conservative NaN-result envelope.</span>
+<span class="code-line" id="L6"><a class="line-number" href="#L6">6</a>This is a numerical foundation, not fetched PTX instruction semantics. The</span>
+<span class="code-line" id="L7"><a class="line-number" href="#L7">7</a>reference is checked software arithmetic; no host floating-point primitive is</span>
+<span class="code-line" id="L8"><a class="line-number" href="#L8">8</a>used. Finiteness remains an explicit premise of every real-error result. -/</span>
+<span class="code-line" id="L9"><a class="line-number" href="#L9">9</a>namespace Ptx.Binary32</span>
+<span class="code-line" id="L10"><a class="line-number" href="#L10">10</a></span>
+<span class="code-line" id="L11"><a class="line-number" href="#L11">11</a>open FloatLib.Floats (ExecFloat)</span>
+<span class="code-line" id="L12"><a class="line-number" href="#L12">12</a>open FloatLib.Floats.ExecFloat (Binary)</span>
+<span class="code-line" id="L13"><a class="line-number" href="#L13">13</a>open FloatLib.Floats.Formats.BinaryInterchange (Model FloatFormat)</span>
+<span class="code-line" id="L14"><a class="line-number" href="#L14">14</a>open TorchLean.Floats.IEEE754.IEEE32Exec</span>
+<span class="code-line" id="L15"><a class="line-number" href="#L15">15</a></span>
+<span class="code-line" id="L16"><a class="line-number" href="#L16">16</a>abbrev Value := ExecFloat.Binary 8 23</span>
+<span class="code-line" id="L17"><a class="line-number" href="#L17">17</a></span>
+<span class="code-line" id="L18"><a class="line-number" href="#L18">18</a>def decode (word : Word) : Value := Binary.ofBits32 (UInt32.ofBitVec word)</span>
+<span class="code-line" id="L19"><a class="line-number" href="#L19">19</a>def encode (value : Value) : Word := (Binary.toBits32 value).toBitVec</span>
+<span class="code-line" id="L20"><a class="line-number" href="#L20">20</a></span>
+<span class="code-line" id="L21"><a class="line-number" href="#L21">21</a>@[simp] theorem encode_decode (word : Word) : encode (decode word) = word := rfl</span>
+<span class="code-line" id="L22"><a class="line-number" href="#L22">22</a>@[simp] theorem decode_encode (value : Value) : decode (encode value) = value := by</span>
+<span class="code-line" id="L23"><a class="line-number" href="#L23">23</a>  simp [decode, encode]</span>
+<span class="code-line" id="L24"><a class="line-number" href="#L24">24</a></span>
+<span class="code-line" id="L25"><a class="line-number" href="#L25">25</a>def isNaN (word : Word) : Bool := Binary.isNaN (decode word)</span>
+<span class="code-line" id="L26"><a class="line-number" href="#L26">26</a>def isFinite (word : Word) : Bool := Binary.isFinite (decode word)</span>
+<span class="code-line" id="L27"><a class="line-number" href="#L27">27</a></span>
+<span class="code-line" id="L28"><a class="line-number" href="#L28">28</a>/-- No exceptional encoding is silently interpreted as real zero by this API. -/</span>
+<span class="code-line" id="L29"><a class="line-number" href="#L29">29</a>noncomputable def finiteReal (word : Word) : Option ℝ :=</span>
+<span class="code-line" id="L30"><a class="line-number" href="#L30">30</a>  if isFinite word then some (Binary.toModel (decode word)).toReal else none</span>
+<span class="code-line" id="L31"><a class="line-number" href="#L31">31</a></span>
+<span class="code-line" id="L32"><a class="line-number" href="#L32">32</a>theorem finiteReal_none (word : Word) (h : isFinite word = false) :</span>
+<span class="code-line" id="L33"><a class="line-number" href="#L33">33</a>    finiteReal word = none := by simp [finiteReal, h]</span>
+<span class="code-line" id="L34"><a class="line-number" href="#L34">34</a></span>
+<span class="code-line" id="L35"><a class="line-number" href="#L35">35</a>theorem finiteReal_some (word : Word) (h : isFinite word = true) :</span>
+<span class="code-line" id="L36"><a class="line-number" href="#L36">36</a>    finiteReal word = some (Binary.toModel (decode word)).toReal := by simp [finiteReal, h]</span>
+<span class="code-line" id="L37"><a class="line-number" href="#L37">37</a></span>
+<span class="code-line" id="L38"><a class="line-number" href="#L38">38</a>theorem finiteReal_isSome (word : Word) : (finiteReal word).isSome = isFinite word := by</span>
+<span class="code-line" id="L39"><a class="line-number" href="#L39">39</a>  simp [finiteReal]; split &lt;;&gt; simp_all</span>
+<span class="code-line" id="L40"><a class="line-number" href="#L40">40</a></span>
+<span class="code-line" id="L41"><a class="line-number" href="#L41">41</a>theorem finite_not_nan (word : Word) (h : isFinite word = true) : isNaN word = false :=</span>
+<span class="code-line" id="L42"><a class="line-number" href="#L42">42</a>  Model.isNaN_eq_false_of_isFinite_eq_true (Binary.toModel (decode word)) h</span>
+<span class="code-line" id="L43"><a class="line-number" href="#L43">43</a></span>
+<span class="code-line" id="L44"><a class="line-number" href="#L44">44</a>/-- Conservative over-approximation: NaN bit realizability is not asserted. -/</span>
+<span class="code-line" id="L45"><a class="line-number" href="#L45">45</a>def Envelope (reference output : Word) : Prop :=</span>
+<span class="code-line" id="L46"><a class="line-number" href="#L46">46</a>  if isNaN reference then isNaN output = true else output = reference</span>
+<span class="code-line" id="L47"><a class="line-number" href="#L47">47</a></span>
+<span class="code-line" id="L48"><a class="line-number" href="#L48">48</a>instance (reference output : Word) : Decidable (Envelope reference output) := by</span>
+<span class="code-line" id="L49"><a class="line-number" href="#L49">49</a>  unfold Envelope; infer_instance</span>
+<span class="code-line" id="L50"><a class="line-number" href="#L50">50</a></span>
+<span class="code-line" id="L51"><a class="line-number" href="#L51">51</a>theorem envelope_self (reference : Word) : Envelope reference reference := by</span>
+<span class="code-line" id="L52"><a class="line-number" href="#L52">52</a>  unfold Envelope; split &lt;;&gt; simp_all</span>
+<span class="code-line" id="L53"><a class="line-number" href="#L53">53</a></span>
+<span class="code-line" id="L54"><a class="line-number" href="#L54">54</a>theorem envelope_exists (reference : Word) : ∃ output, Envelope reference output :=</span>
+<span class="code-line" id="L55"><a class="line-number" href="#L55">55</a>  ⟨reference, envelope_self reference⟩</span>
+<span class="code-line" id="L56"><a class="line-number" href="#L56">56</a></span>
+<span class="code-line" id="L57"><a class="line-number" href="#L57">57</a>theorem envelope_nan (reference output : Word) (h : isNaN reference = true) :</span>
+<span class="code-line" id="L58"><a class="line-number" href="#L58">58</a>    Envelope reference output ↔ isNaN output = true := by simp [Envelope, h]</span>
+<span class="code-line" id="L59"><a class="line-number" href="#L59">59</a></span>
+<span class="code-line" id="L60"><a class="line-number" href="#L60">60</a>theorem envelope_non_nan (reference output : Word) (h : isNaN reference = false) :</span>
+<span class="code-line" id="L61"><a class="line-number" href="#L61">61</a>    Envelope reference output ↔ output = reference := by simp [Envelope, h]</span>
+<span class="code-line" id="L62"><a class="line-number" href="#L62">62</a></span>
+<span class="code-line" id="L63"><a class="line-number" href="#L63">63</a>theorem envelope_finite_eq (reference output : Word) (h : isFinite reference = true)</span>
+<span class="code-line" id="L64"><a class="line-number" href="#L64">64</a>    (allowed : Envelope reference output) : output = reference :=</span>
+<span class="code-line" id="L65"><a class="line-number" href="#L65">65</a>  (envelope_non_nan reference output (finite_not_nan reference h)).mp allowed</span>
+<span class="code-line" id="L66"><a class="line-number" href="#L66">66</a></span>
+<span class="code-line" id="L67"><a class="line-number" href="#L67">67</a>theorem envelope_finite (reference output : Word) (h : isFinite reference = true)</span>
+<span class="code-line" id="L68"><a class="line-number" href="#L68">68</a>    (allowed : Envelope reference output) : isFinite output = true := by</span>
+<span class="code-line" id="L69"><a class="line-number" href="#L69">69</a>  rw [envelope_finite_eq reference output h allowed]; exact h</span>
+<span class="code-line" id="L70"><a class="line-number" href="#L70">70</a></span>
+<span class="code-line" id="L71"><a class="line-number" href="#L71">71</a>/-- Selected reference operations; this enum is not a PTX decoder. -/</span>
+<span class="code-line" id="L72"><a class="line-number" href="#L72">72</a>inductive Operation where</span>
+<span class="code-line" id="L73"><a class="line-number" href="#L73">73</a>  | add | mul</span>
+<span class="code-line" id="L74"><a class="line-number" href="#L74">74</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L75"><a class="line-number" href="#L75">75</a></span>
+<span class="code-line" id="L76"><a class="line-number" href="#L76">76</a>def reference (op : Operation) (left right : Word) : Word :=</span>
+<span class="code-line" id="L77"><a class="line-number" href="#L77">77</a>  encode (match op with</span>
+<span class="code-line" id="L78"><a class="line-number" href="#L78">78</a>    | .add =&gt; ExecFloat.add (decode left) (decode right)</span>
+<span class="code-line" id="L79"><a class="line-number" href="#L79">79</a>    | .mul =&gt; ExecFloat.mul (decode left) (decode right))</span>
+<span class="code-line" id="L80"><a class="line-number" href="#L80">80</a></span>
+<span class="code-line" id="L81"><a class="line-number" href="#L81">81</a>def Results (op : Operation) (left right output : Word) : Prop :=</span>
+<span class="code-line" id="L82"><a class="line-number" href="#L82">82</a>  Envelope (reference op left right) output</span>
+<span class="code-line" id="L83"><a class="line-number" href="#L83">83</a></span>
+<span class="code-line" id="L84"><a class="line-number" href="#L84">84</a>theorem results_exists (op : Operation) (left right : Word) :</span>
+<span class="code-line" id="L85"><a class="line-number" href="#L85">85</a>    ∃ output, Results op left right output := envelope_exists _</span>
+<span class="code-line" id="L86"><a class="line-number" href="#L86">86</a></span>
+<span class="code-line" id="L87"><a class="line-number" href="#L87">87</a>/-- The real target is used only under explicit finite operand hypotheses. -/</span>
+<span class="code-line" id="L88"><a class="line-number" href="#L88">88</a>noncomputable def exact (op : Operation) (left right : Word) : ℝ :=</span>
+<span class="code-line" id="L89"><a class="line-number" href="#L89">89</a>  match op with</span>
+<span class="code-line" id="L90"><a class="line-number" href="#L90">90</a>  | .add =&gt; (Binary.toModel (decode left)).toReal + (Binary.toModel (decode right)).toReal</span>
+<span class="code-line" id="L91"><a class="line-number" href="#L91">91</a>  | .mul =&gt; (Binary.toModel (decode left)).toReal * (Binary.toModel (decode right)).toReal</span>
+<span class="code-line" id="L92"><a class="line-number" href="#L92">92</a></span>
+<span class="code-line" id="L93"><a class="line-number" href="#L93">93</a>theorem reference_round (op : Operation) (left right : Word)</span>
+<span class="code-line" id="L94"><a class="line-number" href="#L94">94</a>    (finite : isFinite (reference op left right) = true) :</span>
+<span class="code-line" id="L95"><a class="line-number" href="#L95">95</a>    (Binary.toModel (decode (reference op left right))).toReal =</span>
+<span class="code-line" id="L96"><a class="line-number" href="#L96">96</a>      fp32Round (exact op left right) := by</span>
+<span class="code-line" id="L97"><a class="line-number" href="#L97">97</a>  cases op with</span>
+<span class="code-line" id="L98"><a class="line-number" href="#L98">98</a>  | add =&gt;</span>
+<span class="code-line" id="L99"><a class="line-number" href="#L99">99</a>    simpa [reference, isFinite, exact] using</span>
+<span class="code-line" id="L100"><a class="line-number" href="#L100">100</a>      (toReal_add_eq_fp32Round_of_isFinite (x := decode left) (y := decode right)</span>
+<span class="code-line" id="L101"><a class="line-number" href="#L101">101</a>        (by simpa [reference, isFinite] using finite))</span>
+<span class="code-line" id="L102"><a class="line-number" href="#L102">102</a>  | mul =&gt;</span>
+<span class="code-line" id="L103"><a class="line-number" href="#L103">103</a>    simpa [reference, isFinite, exact] using</span>
+<span class="code-line" id="L104"><a class="line-number" href="#L104">104</a>      (toReal_mul_eq_fp32Round_of_isFinite (x := decode left) (y := decode right)</span>
+<span class="code-line" id="L105"><a class="line-number" href="#L105">105</a>        (by simpa [reference, isFinite] using finite))</span>
+<span class="code-line" id="L106"><a class="line-number" href="#L106">106</a></span>
+<span class="code-line" id="L107"><a class="line-number" href="#L107">107</a>/-- This covers all outputs in the envelope, not only the reference witness.</span>
+<span class="code-line" id="L108"><a class="line-number" href="#L108">108</a>The actual encoded result-finiteness obligation remains visible. -/</span>
+<span class="code-line" id="L109"><a class="line-number" href="#L109">109</a>theorem results_round (op : Operation) (left right output : Word)</span>
+<span class="code-line" id="L110"><a class="line-number" href="#L110">110</a>    (finite : isFinite (reference op left right) = true)</span>
+<span class="code-line" id="L111"><a class="line-number" href="#L111">111</a>    (allowed : Results op left right output) :</span>
+<span class="code-line" id="L112"><a class="line-number" href="#L112">112</a>    finiteReal output = some (fp32Round (exact op left right)) := by</span>
+<span class="code-line" id="L113"><a class="line-number" href="#L113">113</a>  have eq := envelope_finite_eq _ _ finite allowed</span>
+<span class="code-line" id="L114"><a class="line-number" href="#L114">114</a>  subst output</span>
+<span class="code-line" id="L115"><a class="line-number" href="#L115">115</a>  rw [finiteReal_some _ finite, reference_round op left right finite]</span>
+<span class="code-line" id="L116"><a class="line-number" href="#L116">116</a></span>
+<span class="code-line" id="L117"><a class="line-number" href="#L117">117</a>/-- Explicit real operands avoid any interpretation of exceptional inputs as</span>
+<span class="code-line" id="L118"><a class="line-number" href="#L118">118</a>zero. Finiteness of the encoded result must be established by the consumer. -/</span>
+<span class="code-line" id="L119"><a class="line-number" href="#L119">119</a>theorem results_abs_error (op : Operation) (left right output : Word) (x y : ℝ)</span>
+<span class="code-line" id="L120"><a class="line-number" href="#L120">120</a>    (leftReal : finiteReal left = some x) (rightReal : finiteReal right = some y)</span>
+<span class="code-line" id="L121"><a class="line-number" href="#L121">121</a>    (finite : isFinite (reference op left right) = true)</span>
+<span class="code-line" id="L122"><a class="line-number" href="#L122">122</a>    (allowed : Results op left right output) :</span>
+<span class="code-line" id="L123"><a class="line-number" href="#L123">123</a>    ∃ z : ℝ, finiteReal output = some z ∧</span>
+<span class="code-line" id="L124"><a class="line-number" href="#L124">124</a>      |z - (match op with | .add =&gt; x + y | .mul =&gt; x * y)| ≤</span>
+<span class="code-line" id="L125"><a class="line-number" href="#L125">125</a>        TorchLean.Floats.eps32 (match op with | .add =&gt; x + y | .mul =&gt; x * y) := by</span>
+<span class="code-line" id="L126"><a class="line-number" href="#L126">126</a>  have leftEq : (Binary.toModel (decode left)).toReal = x := by</span>
+<span class="code-line" id="L127"><a class="line-number" href="#L127">127</a>    unfold finiteReal at leftReal</span>
+<span class="code-line" id="L128"><a class="line-number" href="#L128">128</a>    split at leftReal &lt;;&gt; simp_all</span>
+<span class="code-line" id="L129"><a class="line-number" href="#L129">129</a>  have rightEq : (Binary.toModel (decode right)).toReal = y := by</span>
+<span class="code-line" id="L130"><a class="line-number" href="#L130">130</a>    unfold finiteReal at rightReal</span>
+<span class="code-line" id="L131"><a class="line-number" href="#L131">131</a>    split at rightReal &lt;;&gt; simp_all</span>
+<span class="code-line" id="L132"><a class="line-number" href="#L132">132</a>  refine ⟨fp32Round (exact op left right), results_round op left right output finite allowed, ?_⟩</span>
+<span class="code-line" id="L133"><a class="line-number" href="#L133">133</a>  have bound := TorchLean.Floats.FP32.round_abs_error (exact op left right)</span>
+<span class="code-line" id="L134"><a class="line-number" href="#L134">134</a>  cases op &lt;;&gt; simpa [exact, leftEq, rightEq, fp32Round, TorchLean.Floats.round32] using bound</span>
+<span class="code-line" id="L135"><a class="line-number" href="#L135">135</a></span>
+<span class="code-line" id="L136"><a class="line-number" href="#L136">136</a>end Ptx.Binary32</span></code></pre><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>

@@ -42,53 +42,131 @@ F(x,w,b) = A²
 ```
 
 TorchLean represents this computation as a graph and automatically constructs
-its real-valued backward. This takes the same three inputs and an incoming
-real-valued output weight `d`, and returns three real sensitivities:
+its real-valued backward:
 
 ```text
 backward : ℝ × ℝ × ℝ × ℝ → ℝ × ℝ × ℝ
-backward(x,w,b,d) = (dx,dw,db)
-dx = 2*d*A*w     dw = 2*d*A*x     db = 2*d*A
+backward(x,w,b,upstream) = (dx,dw,db)
+dx = 2*upstream*A*w     dw = 2*upstream*A*x     db = 2*upstream*A
 ```
 
-This is a vector–Jacobian product: `d` weights the output's sensitivity before it
-is propagated to the inputs and parameters. The proofs establish that the actual
-generated backward succeeds and computes these mathematical derivatives. The
-TorchLean graph also supports coordinatewise tensors; the PTX example here is scalar.
+`upstream` is the derivative arriving from the rest of a computation. If `F`
+feeds a final loss `L`, pass `upstream = ∂L/∂F`; the backward returns
+`(∂L/∂x, ∂L/∂w, ∂L/∂b)` by the chain rule. To compute the gradient of `F`
+itself, pass **1**. The Lean definitions call this argument `d`. It is an input
+to differentiation, not another parameter of the forward network. This interface
+is called a vector–Jacobian product: it propagates output sensitivities back to
+inputs and parameters, and also works when a network has several outputs.
 
-The forward implementation uses two serialized kernel launches: one computes
-and stores `A`, and the next reads and squares it. A separately supplied backward
-implementation uses five launches: recompute `A`, scale `d`, then compute `db`,
-`dx` and `dw`. Its instructions and correctness proofs are supplied separately
-from TorchLean's automatic backward construction.
+The proofs concern **arbitrary inputs**, under the stated execution and numerical
+conditions. TorchLean's generated backward computes the exact real derivatives.
+The separately authored PTX implementation uses binary32 (32-bit single-precision)
+operations; its proofs establish execution existence and bounds on the errors of
+the stored forward result and gradients. They do not differentiate floating-point
+rounding or assert bitwise equality with a PyTorch run.
 
-Each launch executes loads, a rounded binary32 multiply, a rounded binary32 add,
-a store and an exit. Binary32 is the usual 32-bit single-precision format.
-Multiplication and addition round separately to nearest, with ties to even;
-the model does not silently replace them with fused multiply-add. The proofs
-follow the stored bit patterns between launches, establish execution existence,
-and bound the final numerical errors under explicit input and range conditions.
+### Forward PTX
 
-Concrete checked instances include:
+The forward uses two serialized launches. The PTX below shows their instruction
+bodies, with symbolic 64-bit address registers such as `%x` and `%A` supplied at
+launch. `%r0` through `%r4` hold 32-bit words. The Lean programs construct these
+instructions directly; register declarations, address setup and host launch
+wrappers are not verified here. Each numbered launch is a **separate kernel**.
+The output location `%y` initially contains positive zero.
 
-| Example | Inputs | Stored result |
-| --- | --- | --- |
-| Forward | `x=1.5, w=2, b=0.25` | `A=3.25`, then `F=10.5625` |
-| Backward | `x=2, w=3, b=1, d=2` | `(dx,dw,db)=(84,56,28)` |
+```ptx
+// Launch 1: store A = round(round(x*w) + b).
+ld.relaxed.gpu.global.u32 %r0, [%x];
+ld.relaxed.gpu.global.u32 %r1, [%w];
+ld.relaxed.gpu.global.u32 %r2, [%b];
+mul.rn.f32 %r3, %r0, %r1;
+add.rn.f32 %r4, %r3, %r2;
+st.relaxed.gpu.global.u32 [%A], %r4;
+exit;
 
-These examples use initialized, aligned storage and one thread per launch.
-The serialized runtime contract requires completed, visible writes between
-launches and no interference. Proving this contract for a real host runtime,
-compiler or GPU is outside the example. An error bound relative to real-number
-derivatives is also distinct from bitwise equality with a PyTorch run.
+// Launch 2: store y = round(round(A*A) + 0).
+ld.relaxed.gpu.global.u32 %r0, [%A];
+ld.relaxed.gpu.global.u32 %r1, [%A];
+ld.relaxed.gpu.global.u32 %r2, [%y];
+mul.rn.f32 %r3, %r0, %r1;
+add.rn.f32 %r4, %r3, %r2;
+st.relaxed.gpu.global.u32 [%y], %r4;
+exit;
+```
 
+### Backward PTX
+
+The backward recomputes `A`, then computes `q = 2*upstream`, `db = q*A`,
+`dx = db*w` and `dw = db*x` in five serialized launches. `%b_A` names the
+initial bias slot, reused for `A` after its value has been loaded. `%two` and
+`%zero` hold binary32 positive two and positive zero. `%upstream` points to the
+incoming derivative. Register values are local to each launch; intermediate
+results are passed through the displayed stores and loads.
+
+```ptx
+// Launch 1: recompute A, overwriting the bias slot.
+ld.relaxed.gpu.global.u32 %r0, [%x];
+ld.relaxed.gpu.global.u32 %r1, [%w];
+ld.relaxed.gpu.global.u32 %r2, [%b_A];
+mul.rn.f32 %r3, %r0, %r1;
+add.rn.f32 %r4, %r3, %r2;
+st.relaxed.gpu.global.u32 [%b_A], %r4;
+exit;
+
+// Launch 2: q = round(round(2*upstream) + 0).
+ld.relaxed.gpu.global.u32 %r0, [%two];
+ld.relaxed.gpu.global.u32 %r1, [%upstream];
+ld.relaxed.gpu.global.u32 %r2, [%zero];
+mul.rn.f32 %r3, %r0, %r1;
+add.rn.f32 %r4, %r3, %r2;
+st.relaxed.gpu.global.u32 [%q], %r4;
+exit;
+
+// Launch 3: db = round(round(q*A) + 0).
+ld.relaxed.gpu.global.u32 %r0, [%q];
+ld.relaxed.gpu.global.u32 %r1, [%b_A];
+ld.relaxed.gpu.global.u32 %r2, [%zero];
+mul.rn.f32 %r3, %r0, %r1;
+add.rn.f32 %r4, %r3, %r2;
+st.relaxed.gpu.global.u32 [%db], %r4;
+exit;
+
+// Launch 4: dx = round(round(db*w) + 0).
+ld.relaxed.gpu.global.u32 %r0, [%db];
+ld.relaxed.gpu.global.u32 %r1, [%w];
+ld.relaxed.gpu.global.u32 %r2, [%zero];
+mul.rn.f32 %r3, %r0, %r1;
+add.rn.f32 %r4, %r3, %r2;
+st.relaxed.gpu.global.u32 [%dx], %r4;
+exit;
+
+// Launch 5: dw = round(round(db*x) + 0).
+ld.relaxed.gpu.global.u32 %r0, [%db];
+ld.relaxed.gpu.global.u32 %r1, [%x];
+ld.relaxed.gpu.global.u32 %r2, [%zero];
+mul.rn.f32 %r3, %r0, %r1;
+add.rn.f32 %r4, %r3, %r2;
+st.relaxed.gpu.global.u32 [%dw], %r4;
+exit;
+```
+
+Each multiply and add rounds separately to nearest, with ties to even. The zero
+additions remain real instructions; the model does not replace these pairs with
+fused multiply-add. The example uses one thread per launch, initialized aligned
+storage, and completed, visible writes between launches without interference.
+A real runtime must establish that serialization contract. Numerical error bounds
+add finite-input, input-encoding error and overflow-range conditions; execution
+existence applies even to bit patterns outside those numerical conditions.
+
+The general forward accuracy theorem is `stored_forward_error` in
+[PtxAffineSquareKernel.lean](integration/torchlean/PtxAffineSquareKernel.lean);
+the backward theorem is `stored_backward_approximation` in
+[PtxAffineBackward.lean](integration/torchlean/PtxAffineBackward.lean).
+Both modules separately prove `pipeline_exists` and `pipeline_correct`.
 The [forward walkthrough](docs/foundations/affine-square-kernel.md),
 [automatic backward](docs/foundations/affine-square-vjp.md), and
-[separately authored PTX backward](docs/foundations/recomputed-affine-backward.md)
-explain the proofs. The concrete Lean theorems are `two_launch_example` in
-[PtxAffineSquareKernel.lean](integration/torchlean/PtxAffineSquareKernel.lean) and
-`five_launch_example` in
-[PtxAffineBackward.lean](integration/torchlean/PtxAffineBackward.lean).
+[PTX backward walkthrough](docs/foundations/recomputed-affine-backward.md)
+explain their hypotheses and connections.
 
 ## Run the checks and examples
 
@@ -119,12 +197,23 @@ forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
 and `Integration check passed: 363 exact dependency reports, only standard Lean
-axioms.` respectively. Both concrete examples above are included.
+axioms.` respectively. The general forward and backward proofs above are included.
 
 A smaller [array-loop example](docs/foundations/array-mask-select.md) combines
 reviewed integer instructions with memory and branches, proving exact output,
 memory safety and termination. After `lake build`, check it with
 `lake env lean examples/array_mask_select.lean`.
+
+## Instruction reference
+
+The [HTML instruction reference](docs/instructions/index.html) lists every instruction
+entry from the pinned PTX 9.4 inventory. Documented forms have original explanations,
+explicit restrictions, and the associated Lean definitions and proofs. Reviewed
+leaf forms are distinguished from restricted core models.
+
+Open `docs/instructions/index.html` in a browser after cloning; no server or network
+is needed. Rebuild with `python3 scripts/build_instruction_docs.py`, or verify that
+the checked-in pages are current with `python3 scripts/build_instruction_docs.py --check`.
 
 ## Sources and license
 

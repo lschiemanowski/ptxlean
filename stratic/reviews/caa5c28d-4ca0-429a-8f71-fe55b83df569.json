@@ -1,0 +1,419 @@
+{
+  "id": "caa5c28d-4ca0-429a-8f71-fe55b83df569",
+  "base": "dda98ef837d48fe6f5545d7c177a3e6326d28817",
+  "contentTree": "3e6e950fb6996a48c621e52cf4e76d5288fa9733",
+  "reviewer": "Codex",
+  "summary": "Add offline PTX instruction reference with original explanations and Lean source; clarify the general squared-affine README example and incoming derivative.",
+  "examined": [
+    {
+      "id": "affine-square-vjp",
+      "outcome": "revised",
+      "reason": "Clarified the incoming derivative seed and chain rule without changing formulas or theorem scope."
+    },
+    {
+      "id": "instruction-reference",
+      "outcome": "revised",
+      "reason": "Added reproducible offline instruction index and original per-form explanations linked to checked Lean source, distinguishing reviewed forms from restricted models."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Documentation integrity checks add coverage, link, provenance and staleness validation; semantic fidelity and Lean proof checking remain separate."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "unchanged",
+      "reason": "Candidate runs still defer the accepted-form ledger, now including its derived documentation check; coordinator acceptance still requires the full check."
+    },
+    {
+      "id": "torchlean-backward",
+      "outcome": "unchanged",
+      "reason": "The child now explains an output weight as the incoming derivative; automatic exact-real construction, arbitrary tensor seed, and success/correctness obligations are unchanged."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "The HTML displays the existing 219 instruction sections and precise forms separately, preserving the inventory contract and making no full-section coverage claim."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "3e6e950fb6996a48c621e52cf4e76d5288fa9733",
+      "method": "bash scripts/check.sh; git diff --check; distribution guard on all proposed files; manual README/source comparison; browser layout, search, filters and source navigation",
+      "outcome": "pass",
+      "environment": "Linux; pinned Lean 4.34.0; system Python3; Codex in-app browser; no semantic Lean edits and no new model calls",
+      "evidence": "Root check passed: 29 accepted forms, 79 current generated files, 4 documentation tests, 7 inventory tests, 106 worker tests, 26 reviewer tests, build and 1643 declaration axiom audit. Before/after snapshot trees identical. Documentation tests check all local links/anchors and rebuild without vendor cache, rejecting changed source hashes. Proposed-file distribution guard passed on 91 files. Browser confirmed 219 entries, reviewed/restricted/empty filters, readable index/detail/source pages and source line navigation. README seven launch bodies and theorem names checked against existing Lean programs. TorchLean integration suite was not rerun; its code is unchanged. Stratic validation is also performed during preparation.",
+      "tests": [],
+      "id": "82d14b1b-e2d0-40e3-9c40-d0e770c88991",
+      "recordedAt": "2026-09-25T07:19:10.428Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T07:19:42.669Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Presentation of the existing general affine-square theorems and seven instruction bodies, checked against launch programs and memory layouts; adds offline reference instructions."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Bfe32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Bfi32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Bitwise32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Brev32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__IntegerBitCount.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__IntegerMinMax.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Language.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Lop3.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Memory.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__MessagePassing.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__MulHi32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Prmt32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Pure32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Scalar.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__ScalarRules.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__ScalarText.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Select32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__SharedBarrierMachine.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__SharedBarrierMemory.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Shf32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__Shift32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__SignedMinMax32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/Ptx__UnaryBits32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/integration__torchlean__PtxBinary32.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/code/integration__torchlean__PtxBinary32__Instructions.lean.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/add.rn.f32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/add.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/add.u64.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/and.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/bar.sync.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/bfe.s32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/bfe.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/bfi.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/bra.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/brev.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/clz.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/cnot.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/cvt.u64.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/exit.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/ld.acquire.gpu.global.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/ld.relaxed.cta.shared.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/ld.relaxed.gpu.global.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/lop3.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/max.s32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/max.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/min.s32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/min.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/mov.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/mov.b64.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/mul.hi.s32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/mul.hi.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/mul.lo.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/mul.rn.f32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/not.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/or.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/popc.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/prmt.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/selp.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/setp.eq.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/setp.ge.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/setp.gt.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/setp.le.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/setp.lt.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/setp.ne.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/shf.l.clamp.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/shf.l.wrap.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/shf.r.clamp.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/shf.r.wrap.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/shl.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/shr.s32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/shr.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/st.relaxed.cta.shared.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/st.relaxed.gpu.global.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/st.release.gpu.global.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/sub.u32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/forms/xor.b32.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/index.html",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/search.js",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/instructions/style.css",
+      "reason": "Deterministic generated reference output; exact regeneration and every local link/anchor checked against current public sources."
+    },
+    {
+      "path": "docs/reference/explanations.json",
+      "reason": "Original explanations and explicit restricted-model mappings reviewed against the accepted-form ledger and linked Lean definitions, not vendor prose."
+    },
+    {
+      "path": "docs/reference/restricted-models.json",
+      "reason": "Original explanations and explicit restricted-model mappings reviewed against the accepted-form ledger and linked Lean definitions, not vendor prose."
+    },
+    {
+      "path": "scripts/build_instruction_docs.py",
+      "reason": "Static generator validates public ledger hashes and section identity, declaration references and scalar frontend mappings, and emits escaped offline pages without reading vendor manual content."
+    },
+    {
+      "path": "scripts/check.sh",
+      "reason": "Runs reference freshness and four regression tests alongside accepted-form ledger validation; preserves candidate deferral behavior."
+    },
+    {
+      "path": "scripts/instruction_docs.css",
+      "reason": "Reference layout and client-side search/filter implementation checked in browser; generated assets have exact-byte freshness checks."
+    },
+    {
+      "path": "scripts/instruction_docs.js",
+      "reason": "Reference layout and client-side search/filter implementation checked in browser; generated assets have exact-byte freshness checks."
+    },
+    {
+      "path": "stratic/descriptions/affine-square-vjp.json",
+      "reason": "Description and metadata changes explain the new reference and the unchanged mathematical meaning of the backward seed; links and summaries validated."
+    },
+    {
+      "path": "stratic/descriptions/affine-square-vjp.md",
+      "reason": "Description and metadata changes explain the new reference and the unchanged mathematical meaning of the backward seed; links and summaries validated."
+    },
+    {
+      "path": "stratic/descriptions/instruction-reference.json",
+      "reason": "Description and metadata changes explain the new reference and the unchanged mathematical meaning of the backward seed; links and summaries validated."
+    },
+    {
+      "path": "stratic/descriptions/instruction-reference.md",
+      "reason": "Description and metadata changes explain the new reference and the unchanged mathematical meaning of the backward seed; links and summaries validated."
+    },
+    {
+      "path": "tests/test_instruction_docs.py",
+      "reason": "Checks inventory completeness, all local links and anchors, deterministic output, source hash rejection and rebuild without the private manual cache."
+    }
+  ]
+}

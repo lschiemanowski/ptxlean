@@ -28,6 +28,8 @@ if [[ "$defer_form_ledger" == true ]]; then
   echo 'Accepted-form ledger deferred: candidate replay requires coordinator revalidation before integration.'
 else
   python3 scripts/check_implemented_forms.py
+  python3 scripts/build_instruction_docs.py --check
+  python3 -m unittest discover -s tests -p 'test_instruction_docs.py'
 fi
 python3 scripts/test_coverage_inventory.py
 python3 -m unittest discover -s tests -p 'test_worker*.py'

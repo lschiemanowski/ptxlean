@@ -1,0 +1,66 @@
+{
+  "id": "instruction-reference",
+  "parent": {
+    "description": "coverage-inventory",
+    "passage": {
+      "quote": "Every section within the manual's Instructions chapter remains visible."
+    }
+  },
+  "summary": [
+    "Browse every pinned instruction entry and distinguish accepted forms, restricted core models and entries without a documented mapping.",
+    "Read original explanations alongside exact project Lean code and proof links, without distributing the vendor manual.",
+    "Rebuild a portable static site deterministically and reject stale generated pages or source mappings."
+  ],
+  "realization": "implemented",
+  "remaining": "All instruction-section entries are indexed. Accepted leaf forms and explicitly mapped restricted models have pages; this does not enumerate every PTX type/modifier combination or certify hardware behavior.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The HTML reference makes every instruction entry from the pinned PTX9.4\ninstruction-section inventory discoverable in a searchable table."
+      },
+      "to": {
+        "path": "scripts/build_instruction_docs.py",
+        "passage": {
+          "quote": "def render(root=ROOT):"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Restricted core models also have pages, clearly separated from accepted leaf\nforms."
+      },
+      "to": {
+        "path": "docs/reference/restricted-models.json",
+        "passage": {
+          "quote": "\"schema_version\": 1"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "That page explains its behavior in\nproject-authored words, gives operand and target restrictions, distinguishes\nsource review from Lean proof validity, and displays the associated Lean\ncomputation with links to the full definitions and proofs."
+      },
+      "to": {
+        "path": "docs/reference/explanations.json",
+        "passage": {
+          "quote": "\"shf.l.wrap.b32\": ["
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A stale output, missing mapping or stale accepted\nsource hash must fail the documentation check rather than silently show old code."
+      },
+      "to": {
+        "path": "tests/test_instruction_docs.py",
+        "passage": {
+          "quote": "class InstructionDocsTests(unittest.TestCase):"
+        }
+      }
+    }
+  ]
+}

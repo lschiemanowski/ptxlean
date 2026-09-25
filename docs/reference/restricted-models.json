@@ -1,0 +1,445 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "spelling": "mov.b32",
+      "source_anchor": "data-movement-and-conversion-instructions-mov",
+      "meaning": "Copy a 32-bit word into a register, preserving its bits.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "mov.b64",
+      "source_anchor": "data-movement-and-conversion-instructions-mov",
+      "meaning": "Copy a 64-bit address-register value, preserving its bits.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "add.u32",
+      "source_anchor": "integer-arithmetic-instructions-add",
+      "meaning": "Add two unsigned 32-bit words. Keep the low 32 result bits, so overflow wraps modulo 2^32.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "add.u64",
+      "source_anchor": "integer-arithmetic-instructions-add",
+      "meaning": "Add two 64-bit address values, with overflow wrapping modulo 2^64.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "sub.u32",
+      "source_anchor": "integer-arithmetic-instructions-sub",
+      "meaning": "Subtract the second unsigned word from the first, wrapping the result modulo 2^32.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "mul.lo.u32",
+      "source_anchor": "integer-arithmetic-instructions-mul",
+      "meaning": "Multiply two unsigned words and keep the low 32 bits of the product.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "cvt.u64.u32",
+      "source_anchor": "data-movement-and-conversion-instructions-cvt",
+      "meaning": "Widen an unsigned 32-bit word to a 64-bit address value by adding zero bits at the high end.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "bra",
+      "source_anchor": "control-flow-instructions-bra",
+      "meaning": "When enabled by its guard, replace the next-instruction position with a supplied label index. A false guard continues to the following instruction.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "exit",
+      "source_anchor": "control-flow-instructions-exit",
+      "meaning": "End the represented thread execution. This does not establish completion or visibility for an external host runtime.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "setp.eq.u32",
+      "source_anchor": "comparison-and-selection-instructions-setp",
+      "meaning": "Compare two unsigned words and write a true-or-false predicate: the first must be equal to the second.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "setp.ne.u32",
+      "source_anchor": "comparison-and-selection-instructions-setp",
+      "meaning": "Compare two unsigned words and write a true-or-false predicate: the first must be unequal to the second.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "setp.lt.u32",
+      "source_anchor": "comparison-and-selection-instructions-setp",
+      "meaning": "Compare two unsigned words and write a true-or-false predicate: the first must be less than the second.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "setp.le.u32",
+      "source_anchor": "comparison-and-selection-instructions-setp",
+      "meaning": "Compare two unsigned words and write a true-or-false predicate: the first must be less than or equal to the second.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "setp.gt.u32",
+      "source_anchor": "comparison-and-selection-instructions-setp",
+      "meaning": "Compare two unsigned words and write a true-or-false predicate: the first must be greater than the second.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "setp.ge.u32",
+      "source_anchor": "comparison-and-selection-instructions-setp",
+      "meaning": "Compare two unsigned words and write a true-or-false predicate: the first must be greater than or equal to the second.",
+      "boundary": "Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "ld.relaxed.gpu.global.u32",
+      "source_anchor": "data-movement-and-conversion-instructions-ld",
+      "meaning": "Read an aligned 32-bit word from the represented global-memory arena into a register. Relaxed accesses alone do not synchronize communicating threads.",
+      "boundary": "This typed scalar frontend models an initialized, aligned whole-word arena, bounds checks and guard behavior. A separate memory-graph validity argument is needed for concurrent observations; an execution of the scalar evaluator alone is not PTX weak-memory admission.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "st.relaxed.gpu.global.u32",
+      "source_anchor": "data-movement-and-conversion-instructions-st",
+      "meaning": "Write a register word to an aligned location in the represented global-memory arena. Relaxed accesses alone do not synchronize communicating threads.",
+      "boundary": "This typed scalar frontend models an initialized, aligned whole-word arena, bounds checks and guard behavior. A separate memory-graph validity argument is needed for concurrent observations; an execution of the scalar evaluator alone is not PTX weak-memory admission.",
+      "code": [
+        {
+          "path": "Ptx/Scalar.lean",
+          "declaration": "Ptx.Scalar.eval"
+        },
+        {
+          "path": "Ptx/ScalarText.lean",
+          "declaration": "Ptx.Scalar.Text.decodeOp"
+        },
+        {
+          "path": "Ptx/ScalarRules.lean",
+          "declaration": "Ptx.Scalar.Rules.eval_frame"
+        }
+      ]
+    },
+    {
+      "spelling": "bar.sync",
+      "source_anchor": "parallel-synchronization-and-communication-instructions-bar",
+      "meaning": "Wait at a barrier until every participant in the represented thread block has arrived. The checked program uses barrier resource zero between a shared store and a shared load.",
+      "boundary": "A CTA is a launched thread block. This fragment has fixed full participation, no early exit, one barrier visit, resource zero, and initialized aligned shared storage with explicit ownership and size bounds. It does not cover arbitrary barrier counts, divergence, general reuse, raw PTX parsing or scheduling fairness.",
+      "code": [
+        {
+          "path": "Ptx/SharedBarrierMachine.lean",
+          "declaration": "Ptx.SharedBarrier.program"
+        },
+        {
+          "path": "Ptx/SharedBarrierMachine.lean",
+          "declaration": "Ptx.SharedBarrier.decode"
+        },
+        {
+          "path": "Ptx/SharedBarrierMemory.lean",
+          "declaration": "Ptx.SharedBarrierMemory.read_after_barrier"
+        }
+      ]
+    },
+    {
+      "spelling": "ld.relaxed.cta.shared.u32",
+      "source_anchor": "data-movement-and-conversion-instructions-ld",
+      "meaning": "Read a 32-bit word from memory shared within a thread block; the publication example reads a partner thread's slot after the common barrier.",
+      "boundary": "A CTA is a launched thread block. This fragment has fixed full participation, no early exit, one barrier visit, resource zero, and initialized aligned shared storage with explicit ownership and size bounds. It does not cover arbitrary barrier counts, divergence, general reuse, raw PTX parsing or scheduling fairness.",
+      "code": [
+        {
+          "path": "Ptx/SharedBarrierMachine.lean",
+          "declaration": "Ptx.SharedBarrier.program"
+        },
+        {
+          "path": "Ptx/SharedBarrierMachine.lean",
+          "declaration": "Ptx.SharedBarrier.decode"
+        },
+        {
+          "path": "Ptx/SharedBarrierMemory.lean",
+          "declaration": "Ptx.SharedBarrierMemory.read_after_barrier"
+        }
+      ]
+    },
+    {
+      "spelling": "st.relaxed.cta.shared.u32",
+      "source_anchor": "data-movement-and-conversion-instructions-st",
+      "meaning": "Write a 32-bit register word into memory shared within a thread block; each thread writes its own slot before the common barrier.",
+      "boundary": "A CTA is a launched thread block. This fragment has fixed full participation, no early exit, one barrier visit, resource zero, and initialized aligned shared storage with explicit ownership and size bounds. It does not cover arbitrary barrier counts, divergence, general reuse, raw PTX parsing or scheduling fairness.",
+      "code": [
+        {
+          "path": "Ptx/SharedBarrierMachine.lean",
+          "declaration": "Ptx.SharedBarrier.program"
+        },
+        {
+          "path": "Ptx/SharedBarrierMachine.lean",
+          "declaration": "Ptx.SharedBarrier.decode"
+        },
+        {
+          "path": "Ptx/SharedBarrierMemory.lean",
+          "declaration": "Ptx.SharedBarrierMemory.read_after_barrier"
+        }
+      ]
+    },
+    {
+      "spelling": "ld.acquire.gpu.global.u32",
+      "source_anchor": "data-movement-and-conversion-instructions-ld",
+      "meaning": "An acquire read can take part in synchronization with a qualifying release. Its observed value and resulting ordering are checked by the memory graph; seeing a flag is not assumed to make data current.",
+      "boundary": "Restricted global-memory message-passing model: aligned non-overlapping words, GPU scope, ordinary memory-access mechanism, and finite straight-line programs. The basic store syntax uses internal literal values rather than actual PTX register syntax. It is not a complete PTX parser or unrestricted dependent-concurrency model.",
+      "code": [
+        {
+          "path": "Ptx/Language.lean",
+          "declaration": "Ptx.Instr.step"
+        },
+        {
+          "path": "Ptx/Memory.lean",
+          "declaration": "Ptx.Graph.Valid"
+        },
+        {
+          "path": "Ptx/MessagePassing.lean",
+          "declaration": "Ptx.MessagePassing.publication"
+        }
+      ]
+    },
+    {
+      "spelling": "st.release.gpu.global.u32",
+      "source_anchor": "data-movement-and-conversion-instructions-st",
+      "meaning": "A release write can publish preceding accesses to a qualifying acquire. Synchronization depends on the memory model's source and ordering conditions, not just on chronological execution.",
+      "boundary": "Restricted global-memory message-passing model: aligned non-overlapping words, GPU scope, ordinary memory-access mechanism, and finite straight-line programs. The basic store syntax uses internal literal values rather than actual PTX register syntax. It is not a complete PTX parser or unrestricted dependent-concurrency model.",
+      "code": [
+        {
+          "path": "Ptx/Language.lean",
+          "declaration": "Ptx.Instr.step"
+        },
+        {
+          "path": "Ptx/Memory.lean",
+          "declaration": "Ptx.Graph.Valid"
+        },
+        {
+          "path": "Ptx/MessagePassing.lean",
+          "declaration": "Ptx.MessagePassing.publication"
+        }
+      ]
+    }
+  ]
+}

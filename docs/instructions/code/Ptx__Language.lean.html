@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ptx/Language.lean · PTXLean</title><link rel="stylesheet" href="../style.css">
+<script src="../search.js" defer></script></head>
+<body class="code-source"><header><a href="../index.html"><strong>PTXLEAN</strong> / Instruction reference</a><span>PTX ISA 9.4 · Lean 4.34.0</span></header>
+<main><p class="back"><a href="../index.html">← Instruction index</a></p><div class="eyebrow">Project Lean source · full file</div><h1>Ptx/Language.lean</h1><p><small>SHA-256 <code>5a0bd03b96e861fd17272c8ad0f57bd448661b5f816a3c246e10c50f2887cc15</code></small></p><pre><code><span class="code-line" id="L1"><a class="line-number" href="#L1">1</a>import Std</span>
+<span class="code-line" id="L2"><a class="line-number" href="#L2">2</a></span>
+<span class="code-line" id="L3"><a class="line-number" href="#L3">3</a>/-!</span>
+<span class="code-line" id="L4"><a class="line-number" href="#L4">4</a># Local execution for the message-passing fragment</span>
+<span class="code-line" id="L5"><a class="line-number" href="#L5">5</a></span>
+<span class="code-line" id="L6"><a class="line-number" href="#L6">6</a>This typed, straight-line language has aligned, non-overlapping 32-bit accesses</span>
+<span class="code-line" id="L7"><a class="line-number" href="#L7">7</a>to a single global-memory arena. Addresses are word indices, not raw pointers.</span>
+<span class="code-line" id="L8"><a class="line-number" href="#L8">8</a>Stores use immediate operands. Loads receive a candidate value from an oracle;</span>
+<span class="code-line" id="L9"><a class="line-number" href="#L9">9</a>the global memory model separately decides whether those values are permitted.</span>
+<span class="code-line" id="L10"><a class="line-number" href="#L10">10</a>There is no branch, address arithmetic, parsing, allocation, or GPU scheduler.</span>
+<span class="code-line" id="L11"><a class="line-number" href="#L11">11</a>-/</span>
+<span class="code-line" id="L12"><a class="line-number" href="#L12">12</a></span>
+<span class="code-line" id="L13"><a class="line-number" href="#L13">13</a>namespace Ptx</span>
+<span class="code-line" id="L14"><a class="line-number" href="#L14">14</a></span>
+<span class="code-line" id="L15"><a class="line-number" href="#L15">15</a>abbrev Word := BitVec 32</span>
+<span class="code-line" id="L16"><a class="line-number" href="#L16">16</a>abbrev Registers := Nat → Word</span>
+<span class="code-line" id="L17"><a class="line-number" href="#L17">17</a></span>
+<span class="code-line" id="L18"><a class="line-number" href="#L18">18</a>inductive LoadOrder where</span>
+<span class="code-line" id="L19"><a class="line-number" href="#L19">19</a>  | relaxed</span>
+<span class="code-line" id="L20"><a class="line-number" href="#L20">20</a>  | acquire</span>
+<span class="code-line" id="L21"><a class="line-number" href="#L21">21</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L22"><a class="line-number" href="#L22">22</a></span>
+<span class="code-line" id="L23"><a class="line-number" href="#L23">23</a>inductive StoreOrder where</span>
+<span class="code-line" id="L24"><a class="line-number" href="#L24">24</a>  | relaxed</span>
+<span class="code-line" id="L25"><a class="line-number" href="#L25">25</a>  | release</span>
+<span class="code-line" id="L26"><a class="line-number" href="#L26">26</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L27"><a class="line-number" href="#L27">27</a></span>
+<span class="code-line" id="L28"><a class="line-number" href="#L28">28</a>inductive EventOp where</span>
+<span class="code-line" id="L29"><a class="line-number" href="#L29">29</a>  | load (order : LoadOrder)</span>
+<span class="code-line" id="L30"><a class="line-number" href="#L30">30</a>  | store (order : StoreOrder)</span>
+<span class="code-line" id="L31"><a class="line-number" href="#L31">31</a>  | init</span>
+<span class="code-line" id="L32"><a class="line-number" href="#L32">32</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L33"><a class="line-number" href="#L33">33</a></span>
+<span class="code-line" id="L34"><a class="line-number" href="#L34">34</a>structure Effect where</span>
+<span class="code-line" id="L35"><a class="line-number" href="#L35">35</a>  op : EventOp</span>
+<span class="code-line" id="L36"><a class="line-number" href="#L36">36</a>  address : Nat</span>
+<span class="code-line" id="L37"><a class="line-number" href="#L37">37</a>  value : Word</span>
+<span class="code-line" id="L38"><a class="line-number" href="#L38">38</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L39"><a class="line-number" href="#L39">39</a></span>
+<span class="code-line" id="L40"><a class="line-number" href="#L40">40</a>inductive Instr where</span>
+<span class="code-line" id="L41"><a class="line-number" href="#L41">41</a>  | load (order : LoadOrder) (address destination : Nat)</span>
+<span class="code-line" id="L42"><a class="line-number" href="#L42">42</a>  | store (order : StoreOrder) (address : Nat) (value : Word)</span>
+<span class="code-line" id="L43"><a class="line-number" href="#L43">43</a>  deriving DecidableEq, Repr</span>
+<span class="code-line" id="L44"><a class="line-number" href="#L44">44</a></span>
+<span class="code-line" id="L45"><a class="line-number" href="#L45">45</a>def Instr.address : Instr → Nat</span>
+<span class="code-line" id="L46"><a class="line-number" href="#L46">46</a>  | .load _ address _ =&gt; address</span>
+<span class="code-line" id="L47"><a class="line-number" href="#L47">47</a>  | .store _ address _ =&gt; address</span>
+<span class="code-line" id="L48"><a class="line-number" href="#L48">48</a></span>
+<span class="code-line" id="L49"><a class="line-number" href="#L49">49</a>/-- The memory event requested by an instruction, before global validation. -/</span>
+<span class="code-line" id="L50"><a class="line-number" href="#L50">50</a>def Instr.effect (instruction : Instr) (readValue : Word) : Effect :=</span>
+<span class="code-line" id="L51"><a class="line-number" href="#L51">51</a>  match instruction with</span>
+<span class="code-line" id="L52"><a class="line-number" href="#L52">52</a>  | .load order address _ =&gt; ⟨.load order, address, readValue⟩</span>
+<span class="code-line" id="L53"><a class="line-number" href="#L53">53</a>  | .store order address value =&gt; ⟨.store order, address, value⟩</span>
+<span class="code-line" id="L54"><a class="line-number" href="#L54">54</a></span>
+<span class="code-line" id="L55"><a class="line-number" href="#L55">55</a>/-- One local instruction. Only loads consume the candidate read value. -/</span>
+<span class="code-line" id="L56"><a class="line-number" href="#L56">56</a>def Instr.step (instruction : Instr) (registers : Registers) (readValue : Word) :</span>
+<span class="code-line" id="L57"><a class="line-number" href="#L57">57</a>    Registers × Effect :=</span>
+<span class="code-line" id="L58"><a class="line-number" href="#L58">58</a>  match instruction with</span>
+<span class="code-line" id="L59"><a class="line-number" href="#L59">59</a>  | .load order address destination =&gt;</span>
+<span class="code-line" id="L60"><a class="line-number" href="#L60">60</a>      (fun register =&gt; if register = destination then readValue else registers register,</span>
+<span class="code-line" id="L61"><a class="line-number" href="#L61">61</a>       ⟨.load order, address, readValue⟩)</span>
+<span class="code-line" id="L62"><a class="line-number" href="#L62">62</a>  | .store order address value =&gt;</span>
+<span class="code-line" id="L63"><a class="line-number" href="#L63">63</a>      (registers, ⟨.store order, address, value⟩)</span>
+<span class="code-line" id="L64"><a class="line-number" href="#L64">64</a></span>
+<span class="code-line" id="L65"><a class="line-number" href="#L65">65</a>/-- A local transition is precisely the graph of the instruction operation. -/</span>
+<span class="code-line" id="L66"><a class="line-number" href="#L66">66</a>def Step (instruction : Instr) (registers : Registers) (readValue : Word)</span>
+<span class="code-line" id="L67"><a class="line-number" href="#L67">67</a>    (next : Registers) (effect : Effect) : Prop :=</span>
+<span class="code-line" id="L68"><a class="line-number" href="#L68">68</a>  instruction.step registers readValue = (next, effect)</span>
+<span class="code-line" id="L69"><a class="line-number" href="#L69">69</a></span>
+<span class="code-line" id="L70"><a class="line-number" href="#L70">70</a>theorem step_exists (instruction : Instr) (registers : Registers) (readValue : Word) :</span>
+<span class="code-line" id="L71"><a class="line-number" href="#L71">71</a>    ∃ next effect, Step instruction registers readValue next effect := by</span>
+<span class="code-line" id="L72"><a class="line-number" href="#L72">72</a>  exact ⟨(instruction.step registers readValue).1,</span>
+<span class="code-line" id="L73"><a class="line-number" href="#L73">73</a>    (instruction.step registers readValue).2, rfl⟩</span>
+<span class="code-line" id="L74"><a class="line-number" href="#L74">74</a></span>
+<span class="code-line" id="L75"><a class="line-number" href="#L75">75</a>theorem step_deterministic</span>
+<span class="code-line" id="L76"><a class="line-number" href="#L76">76</a>    (h₁ : Step instruction registers readValue next₁ effect₁)</span>
+<span class="code-line" id="L77"><a class="line-number" href="#L77">77</a>    (h₂ : Step instruction registers readValue next₂ effect₂) :</span>
+<span class="code-line" id="L78"><a class="line-number" href="#L78">78</a>    next₁ = next₂ ∧ effect₁ = effect₂ := by</span>
+<span class="code-line" id="L79"><a class="line-number" href="#L79">79</a>  have h : (next₁, effect₁) = (next₂, effect₂) := h₁.symm.trans h₂</span>
+<span class="code-line" id="L80"><a class="line-number" href="#L80">80</a>  exact Prod.mk.inj h</span>
+<span class="code-line" id="L81"><a class="line-number" href="#L81">81</a></span>
+<span class="code-line" id="L82"><a class="line-number" href="#L82">82</a>@[simp] theorem step_address (instruction : Instr) (registers : Registers)</span>
+<span class="code-line" id="L83"><a class="line-number" href="#L83">83</a>    (readValue : Word) :</span>
+<span class="code-line" id="L84"><a class="line-number" href="#L84">84</a>    (instruction.step registers readValue).2.address = instruction.address := by</span>
+<span class="code-line" id="L85"><a class="line-number" href="#L85">85</a>  cases instruction &lt;;&gt; rfl</span>
+<span class="code-line" id="L86"><a class="line-number" href="#L86">86</a></span>
+<span class="code-line" id="L87"><a class="line-number" href="#L87">87</a>@[simp] theorem step_effect (instruction : Instr) (registers : Registers) (readValue : Word) :</span>
+<span class="code-line" id="L88"><a class="line-number" href="#L88">88</a>    (instruction.step registers readValue).2 = instruction.effect readValue := by</span>
+<span class="code-line" id="L89"><a class="line-number" href="#L89">89</a>  cases instruction &lt;;&gt; rfl</span>
+<span class="code-line" id="L90"><a class="line-number" href="#L90">90</a></span>
+<span class="code-line" id="L91"><a class="line-number" href="#L91">91</a>@[simp] theorem load_writes_destination (order : LoadOrder) (address destination : Nat)</span>
+<span class="code-line" id="L92"><a class="line-number" href="#L92">92</a>    (registers : Registers) (readValue : Word) :</span>
+<span class="code-line" id="L93"><a class="line-number" href="#L93">93</a>    ((Instr.load order address destination).step registers readValue).1 destination =</span>
+<span class="code-line" id="L94"><a class="line-number" href="#L94">94</a>      readValue := by</span>
+<span class="code-line" id="L95"><a class="line-number" href="#L95">95</a>  simp [Instr.step]</span>
+<span class="code-line" id="L96"><a class="line-number" href="#L96">96</a></span>
+<span class="code-line" id="L97"><a class="line-number" href="#L97">97</a>theorem load_preserves_other_register (order : LoadOrder) (address destination register : Nat)</span>
+<span class="code-line" id="L98"><a class="line-number" href="#L98">98</a>    (registers : Registers) (readValue : Word) (h : register ≠ destination) :</span>
+<span class="code-line" id="L99"><a class="line-number" href="#L99">99</a>    ((Instr.load order address destination).step registers readValue).1 register =</span>
+<span class="code-line" id="L100"><a class="line-number" href="#L100">100</a>      registers register := by</span>
+<span class="code-line" id="L101"><a class="line-number" href="#L101">101</a>  simp [Instr.step, h]</span>
+<span class="code-line" id="L102"><a class="line-number" href="#L102">102</a></span>
+<span class="code-line" id="L103"><a class="line-number" href="#L103">103</a>@[simp] theorem store_emits_operand (order : StoreOrder) (address : Nat) (value : Word)</span>
+<span class="code-line" id="L104"><a class="line-number" href="#L104">104</a>    (registers : Registers) (readValue : Word) :</span>
+<span class="code-line" id="L105"><a class="line-number" href="#L105">105</a>    ((Instr.store order address value).step registers readValue).2 =</span>
+<span class="code-line" id="L106"><a class="line-number" href="#L106">106</a>      ⟨.store order, address, value⟩ := rfl</span>
+<span class="code-line" id="L107"><a class="line-number" href="#L107">107</a></span>
+<span class="code-line" id="L108"><a class="line-number" href="#L108">108</a>@[simp] theorem store_preserves_registers (order : StoreOrder) (address : Nat) (value : Word)</span>
+<span class="code-line" id="L109"><a class="line-number" href="#L109">109</a>    (registers : Registers) (readValue : Word) :</span>
+<span class="code-line" id="L110"><a class="line-number" href="#L110">110</a>    ((Instr.store order address value).step registers readValue).1 = registers := rfl</span>
+<span class="code-line" id="L111"><a class="line-number" href="#L111">111</a></span>
+<span class="code-line" id="L112"><a class="line-number" href="#L112">112</a>/-- Oracle position is instruction position; values at store positions are ignored. -/</span>
+<span class="code-line" id="L113"><a class="line-number" href="#L113">113</a>def execute : List Instr → Registers → (Nat → Word) → Registers × List Effect</span>
+<span class="code-line" id="L114"><a class="line-number" href="#L114">114</a>  | [], registers, _ =&gt; (registers, [])</span>
+<span class="code-line" id="L115"><a class="line-number" href="#L115">115</a>  | instruction :: rest, registers, oracle =&gt;</span>
+<span class="code-line" id="L116"><a class="line-number" href="#L116">116</a>      let (next, effect) := instruction.step registers (oracle 0)</span>
+<span class="code-line" id="L117"><a class="line-number" href="#L117">117</a>      let (final, effects) := execute rest next (fun i =&gt; oracle (i + 1))</span>
+<span class="code-line" id="L118"><a class="line-number" href="#L118">118</a>      (final, effect :: effects)</span>
+<span class="code-line" id="L119"><a class="line-number" href="#L119">119</a></span>
+<span class="code-line" id="L120"><a class="line-number" href="#L120">120</a>/-- Finite local executions compose instruction transitions in program order. -/</span>
+<span class="code-line" id="L121"><a class="line-number" href="#L121">121</a>inductive Runs : List Instr → Registers → (Nat → Word) → Registers → List Effect → Prop</span>
+<span class="code-line" id="L122"><a class="line-number" href="#L122">122</a>  | nil (registers : Registers) (oracle : Nat → Word) :</span>
+<span class="code-line" id="L123"><a class="line-number" href="#L123">123</a>      Runs [] registers oracle registers []</span>
+<span class="code-line" id="L124"><a class="line-number" href="#L124">124</a>  | cons : Step instruction registers (oracle 0) next effect →</span>
+<span class="code-line" id="L125"><a class="line-number" href="#L125">125</a>      Runs rest next (fun i =&gt; oracle (i + 1)) final effects →</span>
+<span class="code-line" id="L126"><a class="line-number" href="#L126">126</a>      Runs (instruction :: rest) registers oracle final (effect :: effects)</span>
+<span class="code-line" id="L127"><a class="line-number" href="#L127">127</a></span>
+<span class="code-line" id="L128"><a class="line-number" href="#L128">128</a>theorem execute_runs (program : List Instr) (registers : Registers) (oracle : Nat → Word) :</span>
+<span class="code-line" id="L129"><a class="line-number" href="#L129">129</a>    Runs program registers oracle (execute program registers oracle).1</span>
+<span class="code-line" id="L130"><a class="line-number" href="#L130">130</a>      (execute program registers oracle).2 := by</span>
+<span class="code-line" id="L131"><a class="line-number" href="#L131">131</a>  induction program generalizing registers oracle with</span>
+<span class="code-line" id="L132"><a class="line-number" href="#L132">132</a>  | nil =&gt; exact .nil registers oracle</span>
+<span class="code-line" id="L133"><a class="line-number" href="#L133">133</a>  | cons instruction rest ih =&gt;</span>
+<span class="code-line" id="L134"><a class="line-number" href="#L134">134</a>      exact .cons rfl (ih _ _)</span>
+<span class="code-line" id="L135"><a class="line-number" href="#L135">135</a></span>
+<span class="code-line" id="L136"><a class="line-number" href="#L136">136</a>theorem runs_eq_execute</span>
+<span class="code-line" id="L137"><a class="line-number" href="#L137">137</a>    (h : Runs program registers oracle final effects) :</span>
+<span class="code-line" id="L138"><a class="line-number" href="#L138">138</a>    execute program registers oracle = (final, effects) := by</span>
+<span class="code-line" id="L139"><a class="line-number" href="#L139">139</a>  induction h with</span>
+<span class="code-line" id="L140"><a class="line-number" href="#L140">140</a>  | nil =&gt; rfl</span>
+<span class="code-line" id="L141"><a class="line-number" href="#L141">141</a>  | @cons instruction registers oracle next effect rest final effects hs hr ih =&gt;</span>
+<span class="code-line" id="L142"><a class="line-number" href="#L142">142</a>      simp only [execute, Step] at *</span>
+<span class="code-line" id="L143"><a class="line-number" href="#L143">143</a>      rw [hs]</span>
+<span class="code-line" id="L144"><a class="line-number" href="#L144">144</a>      simp only [ih]</span>
+<span class="code-line" id="L145"><a class="line-number" href="#L145">145</a></span>
+<span class="code-line" id="L146"><a class="line-number" href="#L146">146</a>theorem runs_exists (program : List Instr) (registers : Registers) (oracle : Nat → Word) :</span>
+<span class="code-line" id="L147"><a class="line-number" href="#L147">147</a>    ∃ final effects, Runs program registers oracle final effects :=</span>
+<span class="code-line" id="L148"><a class="line-number" href="#L148">148</a>  ⟨_, _, execute_runs program registers oracle⟩</span>
+<span class="code-line" id="L149"><a class="line-number" href="#L149">149</a></span>
+<span class="code-line" id="L150"><a class="line-number" href="#L150">150</a>theorem runs_deterministic</span>
+<span class="code-line" id="L151"><a class="line-number" href="#L151">151</a>    (h₁ : Runs program registers oracle final₁ effects₁)</span>
+<span class="code-line" id="L152"><a class="line-number" href="#L152">152</a>    (h₂ : Runs program registers oracle final₂ effects₂) :</span>
+<span class="code-line" id="L153"><a class="line-number" href="#L153">153</a>    final₁ = final₂ ∧ effects₁ = effects₂ := by</span>
+<span class="code-line" id="L154"><a class="line-number" href="#L154">154</a>  exact Prod.mk.inj ((runs_eq_execute h₁).symm.trans (runs_eq_execute h₂))</span>
+<span class="code-line" id="L155"><a class="line-number" href="#L155">155</a></span>
+<span class="code-line" id="L156"><a class="line-number" href="#L156">156</a>theorem execute_addresses (program : List Instr) (registers : Registers) (oracle : Nat → Word) :</span>
+<span class="code-line" id="L157"><a class="line-number" href="#L157">157</a>    ((execute program registers oracle).2.map Effect.address) = program.map Instr.address := by</span>
+<span class="code-line" id="L158"><a class="line-number" href="#L158">158</a>  induction program generalizing registers oracle with</span>
+<span class="code-line" id="L159"><a class="line-number" href="#L159">159</a>  | nil =&gt; rfl</span>
+<span class="code-line" id="L160"><a class="line-number" href="#L160">160</a>  | cons instruction rest ih =&gt;</span>
+<span class="code-line" id="L161"><a class="line-number" href="#L161">161</a>      simp only [execute, List.map_cons, step_address, ih]</span>
+<span class="code-line" id="L162"><a class="line-number" href="#L162">162</a></span>
+<span class="code-line" id="L163"><a class="line-number" href="#L163">163</a>/-- Every instruction emits exactly one event, in instruction order. -/</span>
+<span class="code-line" id="L164"><a class="line-number" href="#L164">164</a>theorem execute_effects (program : List Instr) (registers : Registers) (oracle : Nat → Word) :</span>
+<span class="code-line" id="L165"><a class="line-number" href="#L165">165</a>    (execute program registers oracle).2 =</span>
+<span class="code-line" id="L166"><a class="line-number" href="#L166">166</a>      program.mapIdx (fun i instruction =&gt; instruction.effect (oracle i)) := by</span>
+<span class="code-line" id="L167"><a class="line-number" href="#L167">167</a>  induction program generalizing registers oracle with</span>
+<span class="code-line" id="L168"><a class="line-number" href="#L168">168</a>  | nil =&gt; simp [execute]</span>
+<span class="code-line" id="L169"><a class="line-number" href="#L169">169</a>  | cons instruction rest ih =&gt;</span>
+<span class="code-line" id="L170"><a class="line-number" href="#L170">170</a>      simp only [execute, step_effect, List.mapIdx_cons, ih]</span>
+<span class="code-line" id="L171"><a class="line-number" href="#L171">171</a></span>
+<span class="code-line" id="L172"><a class="line-number" href="#L172">172</a>@[simp] theorem execute_length (program : List Instr) (registers : Registers)</span>
+<span class="code-line" id="L173"><a class="line-number" href="#L173">173</a>    (oracle : Nat → Word) :</span>
+<span class="code-line" id="L174"><a class="line-number" href="#L174">174</a>    (execute program registers oracle).2.length = program.length := by</span>
+<span class="code-line" id="L175"><a class="line-number" href="#L175">175</a>  rw [execute_effects]</span>
+<span class="code-line" id="L176"><a class="line-number" href="#L176">176</a>  simp</span>
+<span class="code-line" id="L177"><a class="line-number" href="#L177">177</a></span>
+<span class="code-line" id="L178"><a class="line-number" href="#L178">178</a>theorem execute_getElem? (program : List Instr) (registers : Registers)</span>
+<span class="code-line" id="L179"><a class="line-number" href="#L179">179</a>    (oracle : Nat → Word) (index : Nat) :</span>
+<span class="code-line" id="L180"><a class="line-number" href="#L180">180</a>    (execute program registers oracle).2[index]? =</span>
+<span class="code-line" id="L181"><a class="line-number" href="#L181">181</a>      program[index]?.map (fun instruction =&gt; instruction.effect (oracle index)) := by</span>
+<span class="code-line" id="L182"><a class="line-number" href="#L182">182</a>  rw [execute_effects]</span>
+<span class="code-line" id="L183"><a class="line-number" href="#L183">183</a>  simp</span>
+<span class="code-line" id="L184"><a class="line-number" href="#L184">184</a></span>
+<span class="code-line" id="L185"><a class="line-number" href="#L185">185</a>/-- Byte addresses are mathematical naturals; no finite-pointer arithmetic is modeled. -/</span>
+<span class="code-line" id="L186"><a class="line-number" href="#L186">186</a>def byteAddress (wordIndex : Nat) : Nat := 4 * wordIndex</span>
+<span class="code-line" id="L187"><a class="line-number" href="#L187">187</a></span>
+<span class="code-line" id="L188"><a class="line-number" href="#L188">188</a>def AccessSafe (nWords : Nat) (effect : Effect) : Prop :=</span>
+<span class="code-line" id="L189"><a class="line-number" href="#L189">189</a>  byteAddress effect.address % 4 = 0 ∧</span>
+<span class="code-line" id="L190"><a class="line-number" href="#L190">190</a>    byteAddress effect.address + 4 ≤ 4 * nWords</span>
+<span class="code-line" id="L191"><a class="line-number" href="#L191">191</a></span>
+<span class="code-line" id="L192"><a class="line-number" href="#L192">192</a>theorem access_safe_of_index_lt (effect : Effect) (h : effect.address &lt; nWords) :</span>
+<span class="code-line" id="L193"><a class="line-number" href="#L193">193</a>    AccessSafe nWords effect := by</span>
+<span class="code-line" id="L194"><a class="line-number" href="#L194">194</a>  constructor</span>
+<span class="code-line" id="L195"><a class="line-number" href="#L195">195</a>  · simp [byteAddress]</span>
+<span class="code-line" id="L196"><a class="line-number" href="#L196">196</a>  · simp only [byteAddress]</span>
+<span class="code-line" id="L197"><a class="line-number" href="#L197">197</a>    omega</span>
+<span class="code-line" id="L198"><a class="line-number" href="#L198">198</a></span>
+<span class="code-line" id="L199"><a class="line-number" href="#L199">199</a>/-- Arena bounds on typed instructions imply alignment and bounds for all emitted accesses. -/</span>
+<span class="code-line" id="L200"><a class="line-number" href="#L200">200</a>theorem execute_access_safe (program : List Instr) (registers : Registers) (oracle : Nat → Word)</span>
+<span class="code-line" id="L201"><a class="line-number" href="#L201">201</a>    (bounded : ∀ instruction ∈ program, instruction.address &lt; nWords) :</span>
+<span class="code-line" id="L202"><a class="line-number" href="#L202">202</a>    ∀ effect ∈ (execute program registers oracle).2, AccessSafe nWords effect := by</span>
+<span class="code-line" id="L203"><a class="line-number" href="#L203">203</a>  intro effect he</span>
+<span class="code-line" id="L204"><a class="line-number" href="#L204">204</a>  apply access_safe_of_index_lt</span>
+<span class="code-line" id="L205"><a class="line-number" href="#L205">205</a>  have ha : effect.address ∈ (execute program registers oracle).2.map Effect.address :=</span>
+<span class="code-line" id="L206"><a class="line-number" href="#L206">206</a>    List.mem_map.mpr ⟨effect, he, rfl⟩</span>
+<span class="code-line" id="L207"><a class="line-number" href="#L207">207</a>  rw [execute_addresses] at ha</span>
+<span class="code-line" id="L208"><a class="line-number" href="#L208">208</a>  obtain ⟨instruction, hi, haddr⟩ := List.mem_map.mp ha</span>
+<span class="code-line" id="L209"><a class="line-number" href="#L209">209</a>  rw [← haddr]</span>
+<span class="code-line" id="L210"><a class="line-number" href="#L210">210</a>  exact bounded instruction hi</span>
+<span class="code-line" id="L211"><a class="line-number" href="#L211">211</a></span>
+<span class="code-line" id="L212"><a class="line-number" href="#L212">212</a>def InWordFootprint (wordIndex byte : Nat) : Prop :=</span>
+<span class="code-line" id="L213"><a class="line-number" href="#L213">213</a>  ∃ offset, offset &lt; 4 ∧ byte = byteAddress wordIndex + offset</span>
+<span class="code-line" id="L214"><a class="line-number" href="#L214">214</a></span>
+<span class="code-line" id="L215"><a class="line-number" href="#L215">215</a>/-- Distinct word indices name disjoint complete four-byte footprints. -/</span>
+<span class="code-line" id="L216"><a class="line-number" href="#L216">216</a>theorem word_footprints_disjoint (different : left ≠ right)</span>
+<span class="code-line" id="L217"><a class="line-number" href="#L217">217</a>    (hl : InWordFootprint left byte) (hr : InWordFootprint right byte) : False := by</span>
+<span class="code-line" id="L218"><a class="line-number" href="#L218">218</a>  obtain ⟨lo, hlo, heql⟩ := hl</span>
+<span class="code-line" id="L219"><a class="line-number" href="#L219">219</a>  obtain ⟨ro, hro, heqr⟩ := hr</span>
+<span class="code-line" id="L220"><a class="line-number" href="#L220">220</a>  simp only [byteAddress] at *</span>
+<span class="code-line" id="L221"><a class="line-number" href="#L221">221</a>  omega</span>
+<span class="code-line" id="L222"><a class="line-number" href="#L222">222</a></span>
+<span class="code-line" id="L223"><a class="line-number" href="#L223">223</a>end Ptx</span></code></pre><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>

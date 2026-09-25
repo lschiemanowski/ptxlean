@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>add.u64 · PTXLean</title><link rel="stylesheet" href="../style.css">
+<script src="../search.js" defer></script></head>
+<body><header><a href="../index.html"><strong>PTXLEAN</strong> / Instruction reference</a><span>PTX ISA 9.4 · Lean 4.34.0</span></header>
+<main><p class="back"><a href="../index.html#integer-arithmetic-instructions-add">← All instruction entries</a></p><div class="eyebrow">9.7.1.1 · Restricted core model</div><h1>add.u64</h1><p class="intro">Add two 64-bit address values, with overflow wrapping modulo 2^64.</p><details><summary>Model restrictions</summary><p>Restricted sequential scalar machine with caller-supplied registers and initialized whole-word storage. This is not an accepted-form ledger entry, raw-module validator, or full concurrent PTX model.</p></details><p class="muted">This page documents an existing bounded formalization. It is not promoted to the independently accepted instruction-form ledger. Read its module comments and proof hypotheses for the precise execution restrictions.</p><h2>Lean definitions</h2><p><a href="../code/Ptx__Scalar.lean.html#L215"><code>Ptx.Scalar.eval</code></a> <small>· opening excerpt; follow the link for full source</small></p><pre><code>def eval (readOverride : Option Word) (instruction : Instr) (s : State) : StepResult :=
+  match instruction.op with
+  | .unsupported spelling =&gt; .unsupported spelling
+  | _ =&gt;
+      if instruction.guard.eval s then
+        let advance := {s with pc := s.pc + 1}
+        let event := occurrence s instruction true
+        match instruction.op with
+        | .mov32 destination source =&gt;
+            .next {advance with regs := update s.regs destination (source.eval s)} event
+        | .bin32 operation destination left right =&gt;
+            .next {advance with regs := update s.regs destination (operation.eval (left.eval s) (right.eval s))} event
+        | .unary32 operation destination source =&gt;
+            .next {advance with regs := update s.regs destination (operation.eval (source.eval s))} event
+        | .mov64 destination source =&gt;
+            .next {advance with addrs := update s.addrs destination (source.eval s)} event
+        | .add64 destination left right =&gt;
+            .next {advance with addrs := update s.addrs destination (left.eval s + right.eval s)} event</code></pre><h2>Definitions and proofs</h2><ul class="proofs"><li><a href="../code/Ptx__Scalar.lean.html#L215"><code>Ptx.Scalar.eval</code></a></li><li><a href="../code/Ptx__ScalarText.lean.html#L64"><code>Ptx.Scalar.Text.decodeOp</code></a></li><li><a href="../code/Ptx__ScalarRules.lean.html#L64"><code>Ptx.Scalar.Rules.eval_frame</code></a></li></ul><h2>Complete Lean source</h2><p>Browse the actual modules, including all proof bodies and shared execution rules.</p><ul><li><a href="../code/Ptx__Scalar.lean.html">Ptx/Scalar.lean</a></li><li><a href="../code/Ptx__ScalarText.lean.html">Ptx/ScalarText.lean</a></li><li><a href="../code/Ptx__ScalarRules.lean.html">Ptx/ScalarRules.lean</a></li></ul><h2>Source provenance</h2><p><a href="https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#integer-arithmetic-instructions-add">NVIDIA instruction reference</a> · section 9.7.1.1. The online manual may change; the project reviewed the pinned ISA 9.4 source.</p><p><small>Reviewed section SHA-256: <code>443b1e7b2ed3c5e295617aedd5a00337f604969e1c59c7bc71ba64b3350acb8d</code></small></p><footer>Project-authored explanations and project Lean source. Lean proof validity, interpretation of PTX, and hardware conformance are separate claims. No vendor manual prose is embedded.</footer></main></body></html>
