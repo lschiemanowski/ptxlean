@@ -8,10 +8,10 @@
   },
   "summary": [
     "Connect a vector-output dense–ReLU layer and all its gradients to an actual TorchLean graph and automatically generated backward.",
-    "Verify a separately supplied parallel binary32 implementation with an explicit reduction tree, synchronization, storage and numerical conditions; defer GPU execution and benchmarking."
+    "Verify a separately supplied parallel binary32 implementation with a fixed reduction tree, fresh scratch per round, synchronization and explicit storage and numerical conditions; defer GPU execution and benchmarking."
   ],
   "realization": "partial",
-  "remaining": "Implemented: actual TorchLean matrix graph, generated VJP and derivative identification away from every ReLU kink; balanced-tree arithmetic existence and universal error bounds; bias/ReLU/gate bounds; reusable fetched mixed-thread control, barrier reuse witnesses and arena bounds. Missing: the parallel layer program and its completed execution, trace-derived multi-round memory admission and visibility, scratch ownership/lifetimes, padding and dimension/launch bounds, and stored forward/backward numerical correspondence. Arithmetic existence is not execution existence; address safety is not read-value correctness.",
+  "remaining": "Implemented: actual TorchLean matrix graph, generated VJP and derivative identification away from every ReLU kink; balanced-tree arithmetic existence and universal error bounds; bias/ReLU/gate bounds; reusable fetched mixed-thread control, trace-derived repeated-barrier ordering, complete memory projection, single-writer source forcing and a completed admitted two-round publication witness. Missing: the parallel layer program and its completed admitted execution, layer-specific scratch ownership and phase timing, padding and dimension/launch bounds, and stored forward/backward numerical correspondence. The publication witness is not a layer kernel; arithmetic existence is not layer execution existence.",
   "links": [
     {
       "kind": "implementation",

@@ -7,11 +7,12 @@
     }
   },
   "summary": [
-    "Fetch integer, binary32 and full-group barrier instructions for cooperating threads with separate global and shared storage.",
-    "Prove barrier-site agreement, repeated barrier execution witnesses and address bounds while retaining proposed load values that still require a memory-model justification."
+    "Fetch integer, binary32 and full-group barrier instructions for cooperating threads with separate global and shared storage and checked access bounds.",
+    "Derive repeated-barrier ordering and complete memory labels from actual executions; force single-writer publication through the existing memory constraints.",
+    "Construct a completed two-thread, two-round computed-publication witness with checked read sources and no circular dependencies; concrete layer ownership, timing and execution proofs remain separate."
   ],
   "realization": "partial",
-  "remaining": "Multi-round memory admission and its control-history derivation, kernel program proofs, launch validation and general barrier forms remain unimplemented.",
+  "remaining": "Layer-specific multi-round ownership, timing and admitted execution proofs, launch validation and general barrier forms remain unimplemented. The completed two-round publication witness is not a dense-layer implementation.",
   "links": [
     {
       "kind": "implementation",
@@ -82,6 +83,90 @@
         "path": "integration/torchlean/PtxBinary32/ParallelBarrier.lean",
         "passage": {
           "quote": "theorem two_barriers_exist (cfg : Config n) (s : State n)\n    (pcs : ∀ t, (s.lanes t).scalar.pc = 0) (live : ∀ t, (s.lanes t).halted = false)\n    (reset : s.barrier = Barrier.reset 0) (site : s.site = none) (eligible : Mixed.Eligible cfg.target) :\n    ∃ events, Runs cfg [.sync 0,.sync 0,.exit] s events (afterRound (afterRound s 0) 1) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each recorded barrier completion is justified by earlier, actually emitted\narrivals from every participant, with the same CTA, resource, generation and\ninstruction site. This history property survives arbitrary scheduling and\nresource reuse. A memory-ordering certificate uses those arrival positions and\nthe completion position; it cannot introduce a completion that the machine did\nnot execute. Memory labels retain their actual address, value, thread and\nposition. Connecting the certificate to memory constraints is separate from\nproving a concrete kernel's write ownership and scratch-storage lifetimes."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelHistory.lean",
+        "passage": {
+          "quote": "theorem completed_arrivals {cfg : Config n} {s : State n}\n    (run : Runs cfg program s events final) (reset : s.barrier = Barrier.reset generation) :\n    CompleteOrigins events :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A load may use a proposed value. This makes it possible to describe candidate\nexecutions before asking whether PTX's memory rules permit them. A successful\nload's address check does not justify its value. The memory graph records every\nsuccessful access at its actual position in the execution. Initial contents are\nseparate writes with no issuing thread. Global and shared locations remain\ndistinct even when they have the same numeric address. The selected forms are\nexplicitly relaxed accesses at GPU scope for global storage and CTA scope for\nshared storage; the generic word graph represents their common in-scope fragment."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelMemory.lean",
+        "passage": {
+          "quote": "theorem run_graph_complete {s : State n} {events : List (Event n)}\n    (run : Runs cfg program s events final) (source co)\n    (position : Nat) (thread : Fin n) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atIndex : events[position]? = some (.scalar thread (some space) occ))\n    (memory : occ.memory = some effect) :\n    ∃ r : Fin (labels program s.global s.shared events).length,\n      (graph program s.global s.shared events source co).event r =\n        ⟨some thread.val,position,(ofEffect space effect).effect⟩ :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "If a location has exactly one program writer, that writer stores before its\narrival, and a consumer loads after the completed barrier, the memory constraints\nforce the consumer to read that writer. Initialization cannot supply a stale\nvalue. The unique-writer condition includes the entire execution: a later\noverwrite would violate it. Fresh scratch for each round makes this a useful\nrule for reductions, but a kernel must still prove ownership and timing."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelMemory.lean",
+        "passage": {
+          "quote": "theorem run_read_from_unique_writer {cfg : Config n} {s : State n} {events : List (Event n)}\n    (run : Runs cfg program s events final) (reset : s.barrier = Barrier.reset generation)\n    (source co) (phase : History.Phase events)\n    (w r : Fin (labels program s.global s.shared events).length) (writer reader : Fin n)\n    (valid : Graph.Ordered.Valid (graph program s.global s.shared events source co) (runOrder run reset source co).cross)\n    (wo : owner n ((graph program s.global s.shared events source co).event w) = some writer)\n    (ro : owner n ((graph program s.global s.shared events source co).event r) = some reader)\n    (before : ((graph program s.global s.shared events source co).event w).position <\n      History.arrivalPosition (History.completed_arrivals run reset) phase writer)\n    (after : phase.position < ((graph program s.global s.shared events source co).event r).position)\n    (written : (graph program s.global s.shared events source co).write w)\n    (read : (graph program s.global s.shared events source co).read r)\n    (same : (graph program s.global s.shared events source co).sameAddress w r)\n    (unique : ∀ v, (graph program s.global s.shared events source co).write v →\n      (graph program s.global s.shared events source co).sameAddress v r →\n      ¬(graph program s.global s.shared events source co).initial v → v=w) :\n    (graph program s.global s.shared events source co).source r=w ∧\n      ((graph program s.global s.shared events source co).event r).effect.value =\n      ((graph program s.global s.shared events source co).event w).effect.value :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A two-thread\nwitness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelReference.lean",
+        "passage": {
+          "quote": "theorem run_sound (cfg : Config n) (program : List Instr) (s : State n) (schedule : List (Fin n))\n    (eligible : Mixed.Eligible cfg.target) :\n    Runs cfg program s (run cfg program s schedule).2.1 (run cfg program s schedule).1 :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A two-thread\nwitness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelPublication.lean",
+        "passage": {
+          "quote": "theorem admitted_execution (a b : Word) :\n    ∃ final events,\n      Runs config program (initial a b) events final ∧\n      (∀ t, (final.lanes t).halted = true) ∧\n      final.global = [a,b,Ptx.Binary32.reference .add b a,Ptx.Binary32.reference .add a b] ∧\n      Memory.labels program (initial a b).global (initial a b).shared events = List.ofFn (graph a b).event ∧\n      Graph.Ordered.Valid (graph a b) (order a b).cross :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A two-thread\nwitness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelPublication.lean",
+        "passage": {
+          "quote": "theorem grounded (a b : Word) (i : Fin 20) :\n    ¬Path (SharedReduction.Machine.Memory.grounding (graph a b) (order a b).cross) i i :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A selected software runner reads the current arrays and chooses the checked\nbinary32 reference result. Its steps are proved to be candidate-machine steps;\nthis alone does not make the resulting memory graph admissible. A two-thread\nwitness supplies that additional proof: threads publish inputs, synchronize,\ncompute sums, publish to fresh locations, synchronize again and store the peer's\nresult to separate outputs. It works for arbitrary input words, reaches exit in\nboth threads, and satisfies the original memory constraints. A chronological\ncertificate also excludes circular dependence through read sources. This is an\nexistence example, not a restriction on all candidate executions or a full layer\nimplementation."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelPublication.lean",
+        "passage": {
+          "quote": "theorem graph_actual (a b : Word) : List.ofFn (graph a b).event =\n    Memory.labels program (initial a b).global (initial a b).shared (execution a b).2.1 :="
         }
       }
     }

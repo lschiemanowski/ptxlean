@@ -11,7 +11,9 @@ x\in\mathbb R^n,\quad W\in\mathbb R^{m\times n},\quad b\in\mathbb R^m,
 rounded reduction arithmetic, and reusable parallel control and address-safety
 proofs. It does not yet implement or verify the parallel dense-layer kernel.**
 In particular, there is no claim about a completed layer's stored outputs,
-multi-round PTX memory admission, GPU execution, or speed.
+a completed dense-layer execution, GPU execution, or speed.
+The cooperating-thread foundations now include a memory graph derived from
+actual repeated barriers and a separately checked two-round execution witness.
 
 ## The mathematical computation and its backward
 
@@ -131,28 +133,85 @@ all-thread condition specializes the full-CTA/no-early-exit discipline; it is no
 a model of arbitrary warp divergence or barrier forms. The protocol's existing
 `complete_iff_all_warps` relates all-thread completion to all represented warps.
 
-A future instruction-to-memory connection must use the reviewed access forms,
-such as explicit `st.relaxed.cta.shared.u32` and `ld.relaxed.cta.shared.u32`, rather
-than silently interpreting weak shared loads/stores as relaxed operations.
-The new machine's space tags alone do not establish those PTX memory labels.
-No vendor prose or source artifact is added to the repository by this change.
+The instruction-to-memory adapter selects explicitly relaxed access forms:
+`st.relaxed.cta.shared.u32` and `ld.relaxed.cta.shared.u32` for the single CTA's
+shared storage, and GPU-scoped relaxed global accesses. These are not silently
+substituted for weak shared instructions. The common graph uses disjoint location
+codes for the two allocations and the existing all-in-scope word constraints.
+It does not extend those constraints to mixed sizes, aliases, proxy changes or
+arbitrary PTX dependent concurrency. No vendor prose is redistributed.
+
+## Deriving memory order from the execution
+
+`ParallelHistory.completed_arrivals` proves a property of every candidate run
+from a reset barrier: any recorded completion has earlier actual arrivals by
+every thread with exactly the same CTA, resource, generation and instruction
+site. A completed phase is therefore an event in the trace, not a convenient
+annotation supplied by the proof's caller. Arbitrary schedules and resource
+reuse are allowed.
+
+`ParallelMemory` projects the actual accesses into one graph. Non-memory events
+still take up positions, so a store's place relative to a barrier is preserved.
+The projection checks the issuing thread, fetched instruction, executed
+predicate and access direction. `run_graph_complete` proves that a successful
+memory access cannot be silently dropped.
+
+`run_read_from_unique_writer` connects this graph to the existing memory rules.
+Suppose exactly one program instruction writes a scratch location during the
+execution. If the store precedes its thread's arrival and the load follows the
+completed phase, every admitted read-source choice must choose that store.
+Initialization is a competing write, but the coherence and no-stale-read rules
+exclude it as the load's source. The theorem does not assume the loaded value.
+Ownership and timing are explicit structural obligations for the concrete
+kernel; a later overwrite would violate the uniqueness premise.
+
+The reduction design consequently chooses fresh scratch for every round. This
+spends more shared storage and needs an explicit total storage bound, but no
+round can overwrite a previous round's input. Reusing storage later would need
+a separate proof that every reader has finished.
+
+## A completed two-round witness
+
+`ParallelReference` chooses concrete array reads and the checked software FP32
+result. Its soundness theorem shows that the selected steps belong to the
+candidate execution relation. This is useful for existence, but does not by
+itself prove memory admission or restrict the universal candidate relation.
+
+`ParallelPublication` supplies both execution and admission proofs for a small
+program. Its inputs `a` and `b` are arbitrary binary32 words. Define
+`ab = add.rn.f32(a,b)` and `ba = add.rn.f32(b,a)` using the software reference;
+the proof does not rely on their encodings being identical.
+
+| Stage | Thread 0 | Thread 1 | Shared storage afterwards |
+| --- | --- | --- | --- |
+| Input publication | Load `a`, store slot 0 | Load `b`, store slot 1 | `[a,b,0,0]` |
+| First `bar.sync 0` | Arrive and wait | Arrive and release | Same contents |
+| Computation | Load slot 1, compute `ab`, store slot 2 | Load slot 0, compute `ba`, store slot 3 | `[a,b,ab,ba]` |
+| Second `bar.sync 0` | Arrive and wait | Arrive and release | Same contents |
+| Output | Load slot 3, store output 0, exit | Load slot 2, store output 1, exit | Same contents |
+
+Both threads execute the same ten-instruction list with different supplied
+address registers. The witness uses an alternating schedule; the interpreter
+does not require lockstep execution. `successful` checks every dispatch status,
+`completed` checks both exits and both arrays, and `memory_safe` derives the
+alignment and bounds of every access.
+
+The memory graph contains eight initial writes and twelve program accesses.
+`graph_actual` equates its labels with the actual trace projection.
+`serial_certificate` checks the sources, their values, coherence and ordering
+against a chronological rank. `admitted` derives the original memory constraints;
+`grounded` separately excludes cycles through ordering and read-source edges.
+`admitted_execution` collects the execution, output and admission results.
+These proofs are symbolic in `a` and `b`, including exceptional encodings; they
+make no claim of real-valued accuracy for such encodings.
 
 ## The exact remaining obligation
 
-A full parallel-layer theorem still needs a fetched kernel program and a
-multi-round memory argument. The existing concrete shared-memory proofs cover a
-single publication window. The new generic machine deliberately allows proposed
-read values; its barrier witness does **not** prove that a consumer receives the
-preceding round's sum.
-
-The next connection must derive a completed-phase ordering certificate from the
-actual instruction history, label every memory event, establish write ownership
-and lifetime for each scratch location, and show that every admitted graph forces
-each consumer to read its producer. It must also construct an admitted complete
-execution. Reused scratch needs protection against overwriting a value before
-all readers finish; fresh per-round storage is another possible design with an
-explicit size cost. No choice between those storage designs is hidden in the
-current proofs.
+A full parallel-layer theorem still needs its fetched kernel program. The
+generic history, event-projection and single-writer publication results are
+available, and the computed two-round witness demonstrates their compatibility.
+They do not yet establish the layer's scratch ownership, phase timing, padded
+reduction values, or an admitted complete layer execution.
 
 Only then can the layer connect stored `y`, `dx`, `dW`, and `db` to the graph and
 the error bounds, with padding, address calculations and dimension/launch limits
@@ -176,7 +235,7 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxDenseVJP PtxBinary32.ReductionRelu PtxBinary32.ParallelBarrier
+lake build PtxDenseVJP PtxBinary32.ReductionRelu PtxBinary32.ParallelPublication
 ```
 
 Lean checking establishes the stated formal results. Source review assesses the

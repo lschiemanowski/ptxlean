@@ -81,6 +81,10 @@ TARGETS.update({'PtxVectorKernel', 'PtxVectorVJP', 'PtxVectorAccuracy'})
 COUNTS.update({'PtxTorchLean.TensorContext': 3, 'PtxTorchLean.DenseVJP': 22, 'Ptx.Binary32.Reduction': 19, 'Ptx.Binary32.Reduction.Tree': 3, 'Ptx.Binary32.Reduction.RowInput': 3, 'Ptx.Scalar.Parallel': 42})
 TARGETS.update({'PtxDenseVJP', 'PtxTensorContext', 'PtxBinary32.Reduction', 'PtxBinary32.ParallelBarrier', 'PtxBinary32.ReductionRelu', 'PtxBinary32.Parallel'})
 
+# Repeated-barrier histories and a completed admitted computed-publication witness.
+COUNTS.update({'Ptx.Scalar.Parallel.History': 13, 'Ptx.Scalar.Parallel.Memory': 21, 'Ptx.Scalar.Parallel.Reference': 8, 'Ptx.Scalar.Parallel.Publication': 21, 'Ptx.Scalar.Parallel.Memory.Prior': 4})
+TARGETS.update({'PtxBinary32.ParallelReference', 'PtxBinary32.ParallelPublication', 'PtxBinary32.ParallelMemory', 'PtxBinary32.ParallelHistory'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

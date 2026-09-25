@@ -1,3 +1,7 @@
+import PtxBinary32.ParallelHistory
+import PtxBinary32.ParallelMemory
+import PtxBinary32.ParallelReference
+import PtxBinary32.ParallelPublication
 import PtxTensorContext
 import PtxDenseVJP
 import PtxBinary32.Reduction
@@ -722,3 +726,72 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.two_barriers_exist
 #print axioms PtxTorchLean.DenseVJP.column
 #print axioms PtxTorchLean.DenseVJP.matrix
+
+-- Actual repeated-barrier histories, memory projection and computed publication.
+#print axioms Ptx.Scalar.Parallel.History.activeKey
+#print axioms Ptx.Scalar.Parallel.History.WaitingOrigin
+#print axioms Ptx.Scalar.Parallel.History.CompleteOrigins
+#print axioms Ptx.Scalar.Parallel.History.FreshCompletions
+#print axioms Ptx.Scalar.Parallel.History.step_history
+#print axioms Ptx.Scalar.Parallel.History.runs_history
+#print axioms Ptx.Scalar.Parallel.History.completed_arrivals
+#print axioms Ptx.Scalar.Parallel.History.Phase
+#print axioms Ptx.Scalar.Parallel.History.arrivalPosition
+#print axioms Ptx.Scalar.Parallel.History.arrival_position_spec
+#print axioms Ptx.Scalar.Parallel.History.certificate
+#print axioms Ptx.Scalar.Parallel.History.before_certificate
+#print axioms Ptx.Scalar.Parallel.History.after_certificate
+#print axioms Ptx.Scalar.Parallel.Memory.slot
+#print axioms Ptx.Scalar.Parallel.Memory.location
+#print axioms Ptx.Scalar.Parallel.Memory.spaces_distinct
+#print axioms Ptx.Scalar.Parallel.Memory.ofEffect
+#print axioms Ptx.Scalar.Parallel.Memory.access
+#print axioms Ptx.Scalar.Parallel.Memory.access_origin
+#print axioms Ptx.Scalar.Parallel.Memory.labels
+#print axioms Ptx.Scalar.Parallel.Memory.graph
+#print axioms Ptx.Scalar.Parallel.Memory.labels_unique
+#print axioms Ptx.Scalar.Parallel.Memory.labels_origin
+#print axioms Ptx.Scalar.Parallel.Memory.step_access_complete
+#print axioms Ptx.Scalar.Parallel.Memory.run_access_complete
+#print axioms Ptx.Scalar.Parallel.Memory.owner
+#print axioms Ptx.Scalar.Parallel.Memory.owner_program
+#print axioms Ptx.Scalar.Parallel.Memory.order
+#print axioms Ptx.Scalar.Parallel.Memory.read_from_unique_writer
+#print axioms Ptx.Scalar.Parallel.Memory.run_memory_has_space
+#print axioms Ptx.Scalar.Parallel.Memory.run_graph_complete
+#print axioms Ptx.Scalar.Parallel.Memory.program_write_origin
+#print axioms Ptx.Scalar.Parallel.Memory.runOrder
+#print axioms Ptx.Scalar.Parallel.Memory.run_read_from_unique_writer
+#print axioms Ptx.Scalar.Parallel.Reference.binary32
+#print axioms Ptx.Scalar.Parallel.Reference.binary32_sound
+#print axioms Ptx.Scalar.Parallel.Reference.dispatch
+#print axioms Ptx.Scalar.Parallel.Reference.dispatch_sound
+#print axioms Ptx.Scalar.Parallel.Reference.step
+#print axioms Ptx.Scalar.Parallel.Reference.step_sound
+#print axioms Ptx.Scalar.Parallel.Reference.run
+#print axioms Ptx.Scalar.Parallel.Reference.run_sound
+#print axioms Ptx.Scalar.Parallel.Publication.config
+#print axioms Ptx.Scalar.Parallel.Publication.program
+#print axioms Ptx.Scalar.Parallel.Publication.initial
+#print axioms Ptx.Scalar.Parallel.Publication.schedule
+#print axioms Ptx.Scalar.Parallel.Publication.execution
+#print axioms Ptx.Scalar.Parallel.Publication.execution_sound
+#print axioms Ptx.Scalar.Parallel.Publication.completed
+#print axioms Ptx.Scalar.Parallel.Publication.successful
+#print axioms Ptx.Scalar.Parallel.Publication.labels
+#print axioms Ptx.Scalar.Parallel.Publication.labels_actual
+#print axioms Ptx.Scalar.Parallel.Publication.source
+#print axioms Ptx.Scalar.Parallel.Publication.rank
+#print axioms Ptx.Scalar.Parallel.Publication.coherent
+#print axioms Ptx.Scalar.Parallel.Publication.graph
+#print axioms Ptx.Scalar.Parallel.Publication.order
+#print axioms Ptx.Scalar.Parallel.Publication.serial_certificate
+#print axioms Ptx.Scalar.Parallel.Publication.admitted
+#print axioms Ptx.Scalar.Parallel.Publication.grounded
+#print axioms Ptx.Scalar.Parallel.Publication.graph_actual
+#print axioms Ptx.Scalar.Parallel.Publication.admitted_execution
+#print axioms Ptx.Scalar.Parallel.Publication.memory_safe
+#print axioms Ptx.Scalar.Parallel.Memory.Prior.initial
+#print axioms Ptx.Scalar.Parallel.Memory.Prior.initial_unique
+#print axioms Ptx.Scalar.Parallel.Memory.Prior.memoryKind
+#print axioms Ptx.Scalar.Parallel.Memory.Prior.eval_effect_origin

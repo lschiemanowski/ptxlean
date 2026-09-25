@@ -18,10 +18,12 @@ initialization, or successful program completion.
 
 A load may use a proposed value. This makes it possible to describe candidate
 executions before asking whether PTX's memory rules permit them. A successful
-load's address check does not justify its value. This layer currently has no
-complete connection from its traces to the permitted memory observations for
-several dependent barrier rounds. Treating the current list contents as the
-only allowed observations would hide that missing obligation.
+load's address check does not justify its value. The memory graph records every
+successful access at its actual position in the execution. Initial contents are
+separate writes with no issuing thread. Global and shared locations remain
+distinct even when they have the same numeric address. The selected forms are
+explicitly relaxed accesses at GPU scope for global storage and CTA scope for
+shared storage; the generic word graph represents their common in-scope fragment.
 
 A full-group barrier uses resource zero, a named synchronization slot, repeatedly.
 Each completed use advances a generation number so that separate uses are not
@@ -33,6 +35,33 @@ release advances all participants from the same instruction. A finite schedule
 witness fetches and completes two successive barriers at different sites using
 the same resource and successive generations. It proves existence of that
 control execution, not scheduler fairness or memory visibility.
+
+Each recorded barrier completion is justified by earlier, actually emitted
+arrivals from every participant, with the same CTA, resource, generation and
+instruction site. This history property survives arbitrary scheduling and
+resource reuse. A memory-ordering certificate uses those arrival positions and
+the completion position; it cannot introduce a completion that the machine did
+not execute. Memory labels retain their actual address, value, thread and
+position. Connecting the certificate to memory constraints is separate from
+proving a concrete kernel's write ownership and scratch-storage lifetimes.
+
+If a location has exactly one program writer, that writer stores before its
+arrival, and a consumer loads after the completed barrier, the memory constraints
+force the consumer to read that writer. Initialization cannot supply a stale
+value. The unique-writer condition includes the entire execution: a later
+overwrite would violate it. Fresh scratch for each round makes this a useful
+rule for reductions, but a kernel must still prove ownership and timing.
+
+A selected software runner reads the current arrays and chooses the checked
+binary32 reference result. Its steps are proved to be candidate-machine steps;
+this alone does not make the resulting memory graph admissible. A two-thread
+witness supplies that additional proof: threads publish inputs, synchronize,
+compute sums, publish to fresh locations, synchronize again and store the peer's
+result to separate outputs. It works for arbitrary input words, reaches exit in
+both threads, and satisfies the original memory constraints. A chronological
+certificate also excludes circular dependence through read sources. This is an
+existence example, not a restriction on all candidate executions or a full layer
+implementation.
 
 The represented barrier discipline requires full participation without early
 thread exits. General barriers with explicit participant counts, divergent

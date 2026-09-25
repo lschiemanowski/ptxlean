@@ -19,7 +19,11 @@ W-transpose times g, and computes weight-gradient entries independently.
 
 The implementation fixes matrix layout, thread ownership, reduction order,
 scratch lifetimes, dimension and address bounds, and the sequence of completed
-launches. Non-power-of-two reduction lengths use positive-zero padding. Empty
+launches. Each reduction round uses fresh shared scratch locations, with one
+program writer per location. This makes the lifetime rule simple: no later
+round overwrites a value that another thread may still read. The storage bound
+must include all rounds; reusing scratch would require a separate lifetime proof.
+Non-power-of-two reduction lengths use positive-zero padding. Empty
 reductions have value zero. Each memory access must be justified by the supplied
 storage and computed address. Execution existence, correctness of completed
 executions, synchronization and memory safety are separate proof obligations;

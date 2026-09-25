@@ -1,0 +1,106 @@
+{
+  "id": "f0c3f0ff-e455-41c7-ac6a-b52f6af9fc55",
+  "base": "8e7257d1603acd178fc33e9cd9356d6d7fc1915e",
+  "contentTree": "82317bab14b292001a50809e9d1b751c9698c0c9",
+  "reviewer": "Codex",
+  "summary": "Derive repeated-barrier memory order and verify a completed computed-publication witness.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Select fresh scratch for each reduction round; distinguish the generic completed publication witness from the remaining layer-specific ownership, timing and kernel correctness proofs."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Actual histories now justify completion phases, complete memory labels and the single-writer publication theorem. A selected reference execution is separately proved admitted and grounded."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The strict source guard and standard-axiom policy are unchanged. Audit coverage adds every new public declaration and helper alias; checked validity remains distinct from manual semantic fidelity review."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The parent already distinguishes small reusable kernel examples from end-to-end network verification. The publication witness supports the partial dense-layer child without claiming a full network result."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "Candidate reads, explicit outcomes, finite-run versus termination boundaries and separate memory admissibility remain unchanged. The child adds actual-history proofs and a sufficient selected witness under those contracts."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "82317bab14b292001a50809e9d1b751c9698c0c9",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual source and proof-boundary review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; pinned TorchLean and FloatLib dependencies; local PTX ISA 9.4 source hash 0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed. No GPU execution, benchmarking or external model calls.",
+      "evidence": "Root checks passed with 1643 audited declarations. Integration built all 39 targets and freshly reported 745 exact dependency endpoints, allowing only propext, Classical.choice and Quot.sound. No sorry or new unchecked axioms. Source guard, source hashes and dependency pins passed. Actual repeated-barrier history and complete memory projection reviewed against explicit relaxed global/GPU and shared/CTA forms and full-group bar.sync discipline. The arbitrary-word two-thread witness reaches both exits and has checked source/coherence constraints and acyclic grounding. The full dense layer remains partial; no layer output or arbitrary dependent-PTX completeness claim. Snapshots before and after checks match. Logs: /tmp/parallel-memory-root-final.log and /tmp/parallel-memory-integration-final.log.",
+      "tests": [],
+      "id": "d6bb2a95-6228-4865-89a0-1b94b448aea8",
+      "recordedAt": "2026-09-25T14:01:42.993Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T14:02:23.382Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Update the reproducible integration audit count only; retain the existing neuron example and release claims."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Explain actual-history certificates, the arbitrary-word publication witness and exact remaining layer obligations; extended walkthrough supplements self-contained Stratic contracts."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelHistory.lean",
+      "reason": "Inspect all helper invariants and preservation proofs behind the linked completion-origin theorem and derived certificate; phases require actual recorded completions."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelMemory.lean",
+      "reason": "Inspect projection typing, initialization, distinct location codes and source-forcing helpers; no load freshness is assumed and concrete ownership and timing remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelReference.lean",
+      "reason": "Inspect each selected dispatch and retained statuses; this is a sound candidate witness runner, not a replacement for the nondeterministic machine or a memory-admission theorem."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelPublication.lean",
+      "reason": "Inspect common fetched program, all arbitrary-word initial inputs, the complete trace projection and every serial-certificate obligation. Terminal states, statuses and memory safety are proved separately."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Add exact dependency reports for all 67 new public declarations and aliases; no omitted proof endpoints or weakened axiom policy."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Describe the new witness and remaining dense-layer work, with current target and audit counts."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Extend explicit target and namespace counts only; all pin, source hash and forbidden-axiom checks remain intact."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Add four default build targets without changing toolchain or dependency pins."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Update summary and partial-realization remainder to match the scratch design and completed generic memory foundations."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Choose fresh per-round scratch and keep all layer execution and numerical obligations explicit."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Map the new public guarantees to exact theorem passages and retain layer-specific and launch limitations."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Provide a self-contained account of the generic memory bridge and completed two-round witness, separate from full layer verification."
+    }
+  ]
+}
