@@ -5,7 +5,18 @@ This separate Lean package uses real upstream TorchLean at the revision pinned i
 4.34 toolchain matches the root PTX project. A local path dependency imports the
 actual root `ptxlean` package alongside TorchLean in the same Lean build.
 
-The example computes `(x * weight + bias)^2` independently at each coordinate of
+The introductory [ReLU-neuron example](../../docs/foundations/relu-neuron.md)
+computes `max(w*x+b,0)`. `PtxReluVJP.lean` proves the actual generated backward,
+including its zero convention and derivative interpretation away from zero.
+`PtxReluKernel.lean` supplies separately authored forward and recomputing backward
+executions; `PtxReluAccuracy.lean` connects their stored results to TorchLean.
+The numerical backward theorem requires an explicit margin preventing rounding
+from changing the activation branch. The finite bit gate is implemented in
+`PtxBinary32/Relu.lean` and `PtxBinary32/ReluGate.lean` using existing instructions.
+
+## Retained squared-affine graph
+
+The original example computes `(x * weight + bias)^2` independently at each coordinate of
 an arbitrary tensor shape. It is a diagonal affine map followed by squaring, not
 a dense matrix layer. All three tensors are variable inputs, so the generated
 backward computation includes weight and bias sensitivities. The seed is an
@@ -144,13 +155,14 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 17 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 363
+All 22 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 439
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward
 implementation with a stored-gradient observation interface. `check.py` fixes the endpoint
-counts by namespace, and the audit driver lists every name. Only the three
+counts by namespace, and the audit driver lists every name, including the ReLU
+graph, finite gate, execution and numerical endpoints. Only the three
 standard Lean axioms listed below are permitted.
 
 The same command scans this package's own Lean sources, including its audit

@@ -1,3 +1,4 @@
+import PtxReluAccuracy
 import PtxAffineBackward
 import PtxAffineSquareKernel
 import PtxBinary32.Affine
@@ -388,3 +389,81 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.AffineBackward.stored_backward_approximation
 #print axioms PtxTorchLean.AffineBackward.fixture
 #print axioms PtxTorchLean.AffineBackward.five_launch_example
+
+-- ReLU neuron: actual generated backward, finite gate, execution and accuracy.
+#print axioms PtxTorchLean.ReluVJP.scalarShape
+#print axioms Ptx.Binary32.Relu.positive
+#print axioms Ptx.Binary32.Relu.gate
+#print axioms Ptx.Binary32.Relu.forward
+#print axioms Ptx.Binary32.Relu.positive_iff
+#print axioms Ptx.Binary32.Relu.zero_real
+#print axioms Ptx.Binary32.Relu.gate_real
+#print axioms Ptx.Binary32.Relu.forward_real
+#print axioms Ptx.Binary32.Relu.forward_error
+#print axioms Ptx.Binary32.Relu.sign_stable
+#print axioms Ptx.Scalar.ReluGate.load
+#print axioms Ptx.Scalar.ReluGate.zeroTest
+#print axioms Ptx.Scalar.ReluGate.signTest
+#print axioms Ptx.Scalar.ReluGate.clear
+#print axioms Ptx.Scalar.ReluGate.store
+#print axioms Ptx.Scalar.ReluGate.exit
+#print axioms Ptx.Scalar.ReluGate.program
+#print axioms Ptx.Scalar.ReluGate.Initial
+#print axioms Ptx.Scalar.ReluGate.input
+#print axioms Ptx.Scalar.ReluGate.afterLeft
+#print axioms Ptx.Scalar.ReluGate.afterRight
+#print axioms Ptx.Scalar.ReluGate.afterZeroTest
+#print axioms Ptx.Scalar.ReluGate.afterZero
+#print axioms Ptx.Scalar.ReluGate.afterSignTest
+#print axioms Ptx.Scalar.ReluGate.afterClear
+#print axioms Ptx.Scalar.ReluGate.finish
+#print axioms Ptx.Scalar.ReluGate.run_iff
+#print axioms Ptx.Scalar.ReluGate.run_exists
+#print axioms Ptx.Scalar.ReluGate.run_memory
+#print axioms PtxTorchLean.ReluVJP.inputs
+#print axioms PtxTorchLean.ReluVJP.rawGraph
+#print axioms PtxTorchLean.ReluVJP.graph
+#print axioms PtxTorchLean.ReluVJP.gate
+#print axioms PtxTorchLean.ReluVJP.sensitivities
+#print axioms PtxTorchLean.ReluVJP.generated_vjp
+#print axioms PtxTorchLean.ReluVJP.forward_value
+#print axioms PtxTorchLean.ReluVJP.checked_result
+#print axioms PtxTorchLean.ReluVJP.graph_correct_at
+#print axioms PtxTorchLean.ReluVJP.sensitivities_adjoint
+#print axioms PtxTorchLean.ReluKernel.Data
+#print axioms PtxTorchLean.ReluKernel.Data.words
+#print axioms PtxTorchLean.ReluKernel.Stage
+#print axioms PtxTorchLean.ReluKernel.Stage.isGate
+#print axioms PtxTorchLean.ReluKernel.program
+#print axioms PtxTorchLean.ReluKernel.arguments
+#print axioms PtxTorchLean.ReluKernel.Data.update
+#print axioms PtxTorchLean.ReluKernel.Results
+#print axioms PtxTorchLean.ReluKernel.stageStart
+#print axioms PtxTorchLean.ReluKernel.request
+#print axioms PtxTorchLean.ReluKernel.forwardStages
+#print axioms PtxTorchLean.ReluKernel.backwardStages
+#print axioms PtxTorchLean.ReluKernel.Evaluation
+#print axioms PtxTorchLean.ReluKernel.run_correct
+#print axioms PtxTorchLean.ReluKernel.run_exists
+#print axioms PtxTorchLean.ReluKernel.launch_correct
+#print axioms PtxTorchLean.ReluKernel.launch_exists
+#print axioms PtxTorchLean.ReluKernel.pipeline_correct
+#print axioms PtxTorchLean.ReluKernel.pipeline_exists
+#print axioms PtxTorchLean.ReluKernel.launch_memory_safe
+#print axioms PtxTorchLean.ReluKernel.pipeline_frame
+#print axioms PtxTorchLean.ReluKernel.Evaluation.inputs_frame
+#print axioms PtxTorchLean.ReluKernel.forward_values
+#print axioms PtxTorchLean.ReluKernel.backward_values
+#print axioms PtxTorchLean.ReluKernel.Inputs
+#print axioms PtxTorchLean.ReluKernel.Inputs.budget
+#print axioms PtxTorchLean.ReluKernel.Inputs.affine
+#print axioms PtxTorchLean.ReluKernel.forward_accuracy
+#print axioms PtxTorchLean.ReluKernel.BackwardInputs
+#print axioms PtxTorchLean.ReluKernel.BackwardInputs.actualGate
+#print axioms PtxTorchLean.ReluKernel.BackwardInputs.idealGate
+#print axioms PtxTorchLean.ReluKernel.BackwardInputs.dxBudget
+#print axioms PtxTorchLean.ReluKernel.BackwardInputs.dwBudget
+#print axioms PtxTorchLean.ReluKernel.BackwardInputs.away
+#print axioms PtxTorchLean.ReluKernel.backward_accuracy
+#print axioms PtxTorchLean.ReluKernel.stored_forward_accuracy
+#print axioms PtxTorchLean.ReluKernel.stored_backward_accuracy

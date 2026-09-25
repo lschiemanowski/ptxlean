@@ -30,108 +30,103 @@ represent NVIDIA's specification is a separate question, addressed through pinne
 source passages, semantic review and distinguishing examples. The project records
 both kinds of evidence.
 
-## Example: squared affine, forward and backward
+## Example: a ReLU neuron and its backward
 
-The function takes three real scalars—an input `x`, a weight `w` and a bias
-`b`—and returns one real scalar:
+A single neuron multiplies its input by a trainable weight, adds a trainable bias,
+and applies ReLU, which replaces negative values with zero:
 
 ```text
 F : ℝ × ℝ × ℝ → ℝ
-A = x*w + b
-F(x,w,b) = A²
-```
+A = w*x + b
+F(x,w,b) = ReLU(A) = max(A, 0)
 
-TorchLean represents this computation as a graph and automatically constructs
-its real-valued backward:
-
-```text
 backward : ℝ × ℝ × ℝ × ℝ → ℝ × ℝ × ℝ
 backward(x,w,b,upstream) = (dx,dw,db)
-dx = 2*upstream*A*w     dw = 2*upstream*A*x     db = 2*upstream*A
+g = upstream if A > 0, otherwise 0
+dx = g*w     dw = g*x     db = g
 ```
 
-`upstream` is the derivative arriving from the rest of a computation. If `F`
-feeds a final loss `L`, pass `upstream = ∂L/∂F`; the backward returns
-`(∂L/∂x, ∂L/∂w, ∂L/∂b)` by the chain rule. To compute the gradient of `F`
-itself, pass **1**. The Lean definitions call this argument `d`. It is an input
-to differentiation, not another parameter of the forward network. This interface
-is called a vector–Jacobian product: it propagates output sensitivities back to
-inputs and parameters, and also works when a network has several outputs.
+`upstream` is the gradient arriving from the rest of the network. If `F` feeds a
+loss `L`, it is `∂L/∂F`, and the backward returns `(∂L/∂x, ∂L/∂w, ∂L/∂b)`.
+Use **1** to obtain the gradient of `F` itself. The Lean definitions call this
+argument `d`; it is a backward input, not another trainable parameter.
 
-The proofs concern **arbitrary inputs**, under the stated execution and numerical
-conditions. TorchLean's generated backward computes the exact real derivatives.
-The separately authored PTX implementation uses binary32 (32-bit single-precision)
-operations; its proofs establish execution existence and bounds on the errors of
-the stored forward result and gradients. They do not differentiate floating-point
-rounding or assert bitwise equality with a PyTorch run.
+TorchLean automatically constructs this backward from its multiplication,
+addition and ReLU nodes. Its checked backward succeeds for every real input and
+uses the convention **zero gradient at `A = 0`**. ReLU has no ordinary derivative
+there: the mathematical derivative theorem requires **`A ≠ 0`**. These are general
+results, not tests at a few selected numbers.
+
+The separately authored PTX kernels use binary32 (32-bit single precision).
+Multiplication and addition round separately to nearest, with ties to even.
+The forward error bound applies on either side of zero and across the kink.
+The backward error bound additionally requires the affine error budget to be
+smaller than `|A|`, so rounding cannot change the activation decision. Finite
+input values, input encoding errors and overflow-range conditions are explicit.
+These proofs do not differentiate floating-point rounding or claim bitwise
+agreement with a PyTorch run.
 
 ### Forward PTX
 
-The forward uses two serialized launches. The PTX below shows their instruction
-bodies, with symbolic 64-bit address registers such as `%x` and `%A` supplied at
-launch. `%r0` through `%r4` hold 32-bit words. The Lean programs construct these
-instructions directly; register declarations, address setup and host launch
-wrappers are not verified here. Each numbered launch is a **separate kernel**.
-The output location `%y` initially contains positive zero.
+The following are the actual instruction bodies of **two separate launches**.
+Symbolic address registers such as `%x` are supplied at launch; `%r0`–`%r4` hold
+32-bit words. Register declarations, address setup and host launch wrappers are
+outside the verified example.
+
+The ReLU gate uses existing integer comparisons on binary32 encodings: zero has
+all bits clear, and the high bit marks a negative value. For finite values, this
+implements ReLU exactly, including returning positive zero for negative zero.
+It is a small reference implementation, not an optimized kernel.
 
 ```ptx
-// Launch 1: store A = round(round(x*w) + b).
-ld.relaxed.gpu.global.u32 %r0, [%x];
-ld.relaxed.gpu.global.u32 %r1, [%w];
+// Launch 1: A = round(round(w*x) + b).
+ld.relaxed.gpu.global.u32 %r0, [%w];
+ld.relaxed.gpu.global.u32 %r1, [%x];
 ld.relaxed.gpu.global.u32 %r2, [%b];
 mul.rn.f32 %r3, %r0, %r1;
 add.rn.f32 %r4, %r3, %r2;
 st.relaxed.gpu.global.u32 [%A], %r4;
 exit;
 
-// Launch 2: store y = round(round(A*A) + 0).
+// Launch 2: y = ReLU(A).
 ld.relaxed.gpu.global.u32 %r0, [%A];
 ld.relaxed.gpu.global.u32 %r1, [%A];
-ld.relaxed.gpu.global.u32 %r2, [%y];
-mul.rn.f32 %r3, %r0, %r1;
-add.rn.f32 %r4, %r3, %r2;
-st.relaxed.gpu.global.u32 [%y], %r4;
+setp.eq.u32 %p0, %r0, 0;
+@%p0 mov.b32 %r1, 0;
+setp.ge.u32 %p0, %r0, 0x80000000;
+@%p0 mov.b32 %r1, 0;
+st.relaxed.gpu.global.u32 [%y], %r1;
 exit;
 ```
 
 ### Backward PTX
 
-The backward recomputes `A`, then computes `q = 2*upstream`, `db = q*A`,
-`dx = db*w` and `dw = db*x` in five serialized launches. `%b_A` names the
-initial bias slot, reused for `A` after its value has been loaded. `%two` and
-`%zero` hold binary32 positive two and positive zero. `%upstream` points to the
-incoming derivative. Register values are local to each launch; intermediate
-results are passed through the displayed stores and loads.
+The backward recomputes `A` from `x,w,b`, gates the incoming gradient, and computes
+the input and weight gradients. It uses **four separate launches** and does not
+reuse a cached forward value. `%zero` holds positive zero; every displayed zero
+addition is part of the implementation and its proof.
 
 ```ptx
-// Launch 1: recompute A, overwriting the bias slot.
-ld.relaxed.gpu.global.u32 %r0, [%x];
-ld.relaxed.gpu.global.u32 %r1, [%w];
-ld.relaxed.gpu.global.u32 %r2, [%b_A];
+// Launch 1: recompute A = round(round(w*x) + b).
+ld.relaxed.gpu.global.u32 %r0, [%w];
+ld.relaxed.gpu.global.u32 %r1, [%x];
+ld.relaxed.gpu.global.u32 %r2, [%b];
 mul.rn.f32 %r3, %r0, %r1;
 add.rn.f32 %r4, %r3, %r2;
-st.relaxed.gpu.global.u32 [%b_A], %r4;
+st.relaxed.gpu.global.u32 [%A], %r4;
 exit;
 
-// Launch 2: q = round(round(2*upstream) + 0).
-ld.relaxed.gpu.global.u32 %r0, [%two];
+// Launch 2: db = upstream if A > 0, otherwise 0.
+ld.relaxed.gpu.global.u32 %r0, [%A];
 ld.relaxed.gpu.global.u32 %r1, [%upstream];
-ld.relaxed.gpu.global.u32 %r2, [%zero];
-mul.rn.f32 %r3, %r0, %r1;
-add.rn.f32 %r4, %r3, %r2;
-st.relaxed.gpu.global.u32 [%q], %r4;
+setp.eq.u32 %p0, %r0, 0;
+@%p0 mov.b32 %r1, 0;
+setp.ge.u32 %p0, %r0, 0x80000000;
+@%p0 mov.b32 %r1, 0;
+st.relaxed.gpu.global.u32 [%db], %r1;
 exit;
 
-// Launch 3: db = round(round(q*A) + 0).
-ld.relaxed.gpu.global.u32 %r0, [%q];
-ld.relaxed.gpu.global.u32 %r1, [%b_A];
-ld.relaxed.gpu.global.u32 %r2, [%zero];
-mul.rn.f32 %r3, %r0, %r1;
-add.rn.f32 %r4, %r3, %r2;
-st.relaxed.gpu.global.u32 [%db], %r4;
-exit;
-
-// Launch 4: dx = round(round(db*w) + 0).
+// Launch 3: dx = round(round(db*w) + 0).
 ld.relaxed.gpu.global.u32 %r0, [%db];
 ld.relaxed.gpu.global.u32 %r1, [%w];
 ld.relaxed.gpu.global.u32 %r2, [%zero];
@@ -140,7 +135,7 @@ add.rn.f32 %r4, %r3, %r2;
 st.relaxed.gpu.global.u32 [%dx], %r4;
 exit;
 
-// Launch 5: dw = round(round(db*x) + 0).
+// Launch 4: dw = round(round(db*x) + 0).
 ld.relaxed.gpu.global.u32 %r0, [%db];
 ld.relaxed.gpu.global.u32 %r1, [%x];
 ld.relaxed.gpu.global.u32 %r2, [%zero];
@@ -150,23 +145,19 @@ st.relaxed.gpu.global.u32 [%dw], %r4;
 exit;
 ```
 
-Each multiply and add rounds separately to nearest, with ties to even. The zero
-additions remain real instructions; the model does not replace these pairs with
-fused multiply-add. The example uses one thread per launch, initialized aligned
-storage, and completed, visible writes between launches without interference.
-A real runtime must establish that serialization contract. Numerical error bounds
-add finite-input, input-encoding error and overflow-range conditions; execution
-existence applies even to bit patterns outside those numerical conditions.
+The execution model uses one thread per launch and initialized, aligned storage.
+Launches complete with visible writes and no interference before the next begins;
+a real runtime must establish that contract. Execution existence covers arbitrary
+initial bit patterns, while the ReLU and numerical interpretations require finite
+values. No claim about floating-point ReLU's NaN policy is made by this bit gate.
 
-The general forward accuracy theorem is `stored_forward_error` in
-[PtxAffineSquareKernel.lean](integration/torchlean/PtxAffineSquareKernel.lean);
-the backward theorem is `stored_backward_approximation` in
-[PtxAffineBackward.lean](integration/torchlean/PtxAffineBackward.lean).
-Both modules separately prove `pipeline_exists` and `pipeline_correct`.
-The [forward walkthrough](docs/foundations/affine-square-kernel.md),
-[automatic backward](docs/foundations/affine-square-vjp.md), and
-[PTX backward walkthrough](docs/foundations/recomputed-affine-backward.md)
-explain their hypotheses and connections.
+[PtxReluVJP.lean](integration/torchlean/PtxReluVJP.lean) proves the generated backward
+and its mathematical meaning. [PtxReluKernel.lean](integration/torchlean/PtxReluKernel.lean)
+proves execution existence and correspondence; [PtxReluAccuracy.lean](integration/torchlean/PtxReluAccuracy.lean)
+connects the stored forward result and gradients to TorchLean with error bounds.
+The [study guide](docs/foundations/relu-neuron.md) explains the proof conditions.
+The earlier [squared-affine example](docs/foundations/affine-square-kernel.md) remains
+in the verification suite.
 
 ## Run the checks and examples
 
@@ -196,7 +187,7 @@ mathlib build artifacts, and check the TorchLean examples, numerical bounds and
 forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
-and `Integration check passed: 363 exact dependency reports, only standard Lean
+and `Integration check passed: 439 exact dependency reports, only standard Lean
 axioms.` respectively. The general forward and backward proofs above are included.
 
 A smaller [array-loop example](docs/foundations/array-mask-select.md) combines

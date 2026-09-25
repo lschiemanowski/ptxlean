@@ -50,6 +50,20 @@ COUNTS.update({
 })
 TARGETS.update({"PtxBinary32.BackwardError", "PtxBinary32.BackwardPipeline", "PtxGradientView", "PtxAffineBackward"})
 
+# ReLU neuron, including its explicit differentiability and activation margin.
+COUNTS.update({
+    "Ptx.Binary32.Relu": 9,
+    "Ptx.Scalar.ReluGate": 19,
+    "PtxTorchLean.ReluVJP": 11,
+    "PtxTorchLean.ReluKernel": 26,
+    "PtxTorchLean.ReluKernel.BackwardInputs": 5,
+    "PtxTorchLean.ReluKernel.Data": 2,
+    "PtxTorchLean.ReluKernel.Evaluation": 1,
+    "PtxTorchLean.ReluKernel.Inputs": 2,
+    "PtxTorchLean.ReluKernel.Stage": 1,
+})
+TARGETS.update({"PtxBinary32.Relu", "PtxBinary32.ReluGate", "PtxReluVJP", "PtxReluKernel", "PtxReluAccuracy"})
+
 
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()

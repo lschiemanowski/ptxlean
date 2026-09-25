@@ -11,7 +11,7 @@
     "Explain assumptions specific to each application and distinguish proved guarantees from experimental evidence."
   ],
   "realization": "partial",
-  "remaining": "The affine, serialized squared-affine forward and independently selected recomputing backward examples supply actual instruction execution, storage handoff, existence and initial-input numerical bounds against real TorchLean computations. Full-network examples including Gemma, general layouts and precision policies remain unfinished.",
+  "remaining": "The affine, squared-affine and ReLU-neuron examples connect actual instruction execution and serialized storage to real TorchLean computations and generated backward results, with execution existence and explicit numerical conditions. The ReLU backward accuracy theorem requires a strict activation margin. Full-network examples including Gemma, general layouts and precision policies remain unfinished.",
   "links": [
     {
       "kind": "depends-on",

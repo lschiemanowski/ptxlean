@@ -1,0 +1,125 @@
+{
+  "id": "relu-neuron",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "A network example reaches from its specified computation to the stated\nkernel behavior, giving an end-to-end verification result."
+    }
+  },
+  "summary": [
+    "Compute a scalar ReLU neuron and its TorchLean-generated backward, distinguishing the zero-gradient convention from differentiability away from zero.",
+    "Connect separately authored binary32 forward and cache-free backward kernels to numerical and execution guarantees with explicit rounding and activation conditions."
+  ],
+  "realization": "implemented",
+  "remaining": "Complete for the scalar finite-value numerical domain and bounded sequential launch model. Numerical backward agreement outside the strict activation margin, a NaN policy, tensor-wide kernels, runtime launch wrappers and hardware conformance are outside this example.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "TorchLean constructs the real-valued backward from its own multiplication,\naddition and ReLU nodes. The generated computation uses zero at the ReLU kink.\nThat convention defines a backward result at zero, but does not make ReLU\nmathematically differentiable there. The ordinary derivative theorem requires\nw*x+b to be nonzero. Successful construction and this analytic claim are distinct."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxReluVJP.lean",
+        "passage": {
+          "quote": "theorem checked_result (x w b d : ℝ) :\n    graph.vjpChecked (inputs x w b) () (Tensor.scalar d) =\n      .ok (sensitivities x w b d, Tensor.scalar (max (w*x+b) 0)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "TorchLean constructs the real-valued backward from its own multiplication,\naddition and ReLU nodes. The generated computation uses zero at the ReLU kink.\nThat convention defines a backward result at zero, but does not make ReLU\nmathematically differentiable there. The ordinary derivative theorem requires\nw*x+b to be nonzero. Successful construction and this analytic claim are distinct."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxReluVJP.lean",
+        "passage": {
+          "quote": "theorem sensitivities_adjoint (x w b d : ℝ) (away : w*x+b ≠ 0) :\n    flattenCtx (sensitivities x w b d) =\n      (fderiv ℝ (fun v => tensorToVec (graph.forward (unflattenCtx v)))\n        (flattenCtx (inputs x w b))).adjoint (tensorToVec (Tensor.scalar d)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The separately authored PTX computation rounds multiplication and addition\nseparately in binary32, the usual 32-bit floating-point format. A finite-value\nReLU gate uses existing unsigned comparisons and predicated moves on the stored\nbits, avoiding a new unreviewed floating-point instruction. The forward computes\nand stores the affine value, then gates it. The cache-free backward recomputes\nthe affine value, gates the incoming derivative, then multiplies it by the weight\nand input in separate launches. Initialized, aligned storage and completed,\nvisible writes between launches are explicit execution conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Relu.lean",
+        "passage": {
+          "quote": "theorem gate_real (a payload : Word) (x d : ℝ)\n    (real : finiteReal a = some x) (seed : finiteReal payload = some d) :\n    finiteReal (gate a payload) = some (if 0 < x then d else 0) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The separately authored PTX computation rounds multiplication and addition\nseparately in binary32, the usual 32-bit floating-point format. A finite-value\nReLU gate uses existing unsigned comparisons and predicated moves on the stored\nbits, avoiding a new unreviewed floating-point instruction. The forward computes\nand stores the affine value, then gates it. The cache-free backward recomputes\nthe affine value, gates the incoming derivative, then multiplies it by the weight\nand input in separate launches. Initialized, aligned storage and completed,\nvisible writes between launches are explicit execution conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxReluKernel.lean",
+        "passage": {
+          "quote": "theorem pipeline_correct (stages : List Stage)\n    (present : before.cells allocation = some ⟨thread.device,d.words⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before (stages.map (request target thread allocation registers)) after) :\n    ∃ out, Evaluation d stages out ∧ after.cells allocation = some ⟨thread.device,out.words⟩ :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The separately authored PTX computation rounds multiplication and addition\nseparately in binary32, the usual 32-bit floating-point format. A finite-value\nReLU gate uses existing unsigned comparisons and predicated moves on the stored\nbits, avoiding a new unreviewed floating-point instruction. The forward computes\nand stores the affine value, then gates it. The cache-free backward recomputes\nthe affine value, gates the incoming derivative, then multiplies it by the weight\nand input in separate launches. Initialized, aligned storage and completed,\nvisible writes between launches are explicit execution conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxReluKernel.lean",
+        "passage": {
+          "quote": "theorem pipeline_exists (stages : List Stage)\n    (present : before.cells allocation = some ⟨thread.device,d.words⟩)\n    (eligible : Mixed.Eligible target) :\n    ∃ after, Chain before (stages.map (request target thread allocation registers)) after :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The separately authored PTX computation rounds multiplication and addition\nseparately in binary32, the usual 32-bit floating-point format. A finite-value\nReLU gate uses existing unsigned comparisons and predicated moves on the stored\nbits, avoiding a new unreviewed floating-point instruction. The forward computes\nand stores the affine value, then gates it. The cache-free backward recomputes\nthe affine value, gates the incoming derivative, then multiplies it by the weight\nand input in separate launches. Initialized, aligned storage and completed,\nvisible writes between launches are explicit execution conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxReluKernel.lean",
+        "passage": {
+          "quote": "theorem launch_memory_safe (present : before.cells allocation = some ⟨thread.device,d.words⟩)\n    (launch : SuccessfulLaunch (request target thread allocation registers stage) before after final events)\n    (member : event ∈ events) (access : event.memory = some effect) :\n    ValidAddress d.words effect.address :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Forward error is bounded relative to the ideal real neuron even near zero.\nBackward accuracy must account for rounding changing the activation decision:\nwhere the affine error is smaller than the distance of the ideal affine value\nfrom zero, both decisions agree. Outside that region the backward convention\nstill executes, but agreement with the real derivative is not silently assumed.\nFinite inputs, overflow conditions and input encoding errors remain explicit.\nExecution existence and memory safety concern the bounded sequential model;\nthey do not establish a real GPU launch contract or bitwise PyTorch equivalence."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxReluAccuracy.lean",
+        "passage": {
+          "quote": "theorem stored_forward_accuracy (i : Inputs d)\n    (present : before.cells allocation = some ⟨thread.device,d.words⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before (forwardStages.map (request target thread allocation registers)) after) :\n    ∃ (out : Data) (y : ℝ), after.cells allocation = some ⟨thread.device,out.words⟩ ∧ finiteReal out.y = some y ∧\n      |y-TorchLean.Tensor.item (ReluVJP.graph.forward (ReluVJP.inputs i.x i.w i.b))| ≤ i.budget :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Forward error is bounded relative to the ideal real neuron even near zero.\nBackward accuracy must account for rounding changing the activation decision:\nwhere the affine error is smaller than the distance of the ideal affine value\nfrom zero, both decisions agree. Outside that region the backward convention\nstill executes, but agreement with the real derivative is not silently assumed.\nFinite inputs, overflow conditions and input encoding errors remain explicit.\nExecution existence and memory safety concern the bounded sequential model;\nthey do not establish a real GPU launch contract or bitwise PyTorch equivalence."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxReluAccuracy.lean",
+        "passage": {
+          "quote": "theorem stored_backward_accuracy (i : BackwardInputs d)\n    (present : before.cells allocation = some ⟨thread.device,d.words⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before (backwardStages.map (request target thread allocation registers)) after) :\n    ∃ (out : Data) (dx dw db : ℝ), after.cells allocation = some ⟨thread.device,out.words⟩ ∧\n      finiteReal out.dx = some dx ∧ finiteReal out.dw = some dw ∧ finiteReal out.db = some db ∧\n      |dx-i.idealGate*i.w| ≤ i.dxBudget ∧ |dw-i.idealGate*i.x| ≤ i.dwBudget ∧ |db-i.idealGate| ≤ i.ed ∧\n      ReluVJP.graph.vjpWithSeed (ReluVJP.inputs i.x i.w i.b) (TorchLean.Tensor.scalar i.upstream) =\n        ReluVJP.inputs (i.idealGate*i.w) (i.idealGate*i.x) i.idealGate :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The separately authored PTX computation rounds multiplication and addition\nseparately in binary32, the usual 32-bit floating-point format. A finite-value\nReLU gate uses existing unsigned comparisons and predicated moves on the stored\nbits, avoiding a new unreviewed floating-point instruction. The forward computes\nand stores the affine value, then gates it. The cache-free backward recomputes\nthe affine value, gates the incoming derivative, then multiplies it by the weight\nand input in separate launches. Initialized, aligned storage and completed,\nvisible writes between launches are explicit execution conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReluGate.lean",
+        "passage": {
+          "quote": "theorem run_iff (s : State) (target : Target) (h : Initial s)\n    (eligible : Mixed.Eligible target) (final : State) (status : Scalar.Stop) :\n    (∃ events, Mixed.Run target program s final status events) ↔\n      final = finish s ∧ status = .halted :="
+        }
+      }
+    }
+  ]
+}

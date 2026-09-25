@@ -1,0 +1,106 @@
+{
+  "id": "3cb5e614-059e-40bc-b323-1649ca40a037",
+  "base": "87da0d775201e33f90dd60f21dc231bb06f69567",
+  "contentTree": "599c083ee5de1ebe686176d1adb064c2c94f6949",
+  "reviewer": "Codex",
+  "summary": "Add a verified ReLU-neuron forward and backward example",
+  "examined": [
+    {
+      "id": "relu-neuron",
+      "outcome": "revised",
+      "reason": "New scalar example links actual upstream generated backward, finite bit gate, independently authored instruction runs, execution existence and input-conditioned numerical bounds."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Updated implementation status to include ReLU and its backward activation margin; summary and broad example contract remain accurate."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Added explicit audit endpoints and build targets without relaxing the source guard or permitted axiom list. The audit rejected native bit-vector evaluation; replaced it with ordinary proved field and arithmetic lemmas."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "The new scalar example fulfills existing numerical/execution responsibilities without expanding the stated ISA or hardware coverage."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "The existing serialized-storage interface is reused unchanged; completion and visibility remain external launch contracts."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "599c083ee5de1ebe686176d1adb064c2c94f6949",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; local documentation link check and manual theorem/PTX walkthrough",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; pinned unmodified TorchLean/FloatLib dependencies; local Linux; no external model calls.",
+      "evidence": "Root source/build/evidence/regression suite passed with 1643 audited declarations. Integration built 22 default targets and freshly audited 439 exact dependency reports, allowing only propext, Classical.choice and Quot.sound. No source or configuration changes during checks; before/after Stratic tree 599c083ee5de1ebe686176d1adb064c2c94f6949. Stratic links valid; diff whitespace clean; local documentation links resolve. Manual review checked stage offsets and PTX instruction bodies, finite gate interpretation, explicit zero convention, nonzero derivative domain and strict activation margin.",
+      "tests": [],
+      "id": "123f6683-8154-4383-8441-10bdd0e4fd0b",
+      "recordedAt": "2026-09-25T08:28:48.888Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T08:29:21.968Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Replaced introductory example and general PTX bodies; preserved introduction and setup; audit count updated."
+    },
+    {
+      "path": "docs/foundations/relu-neuron.md",
+      "reason": "Extended teaching walkthrough and theorem map; checked memory offsets, stage order and numerical boundaries against definitions."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Relu.lean",
+      "reason": "Finite sign interpretation and ReLU Lipschitz/sign-stability helper proofs substantiate the linked gate theorem."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ReluGate.lean",
+      "reason": "Concrete eight-instruction body and intermediate-state lemmas derive linked run characterization without assuming gate output."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Explicit fresh axiom inspection of all 76 new public declarations; original endpoints preserved."
+    },
+    {
+      "path": "integration/torchlean/PtxReluAccuracy.lean",
+      "reason": "Initial-value finite/range/encoding structures and derived arithmetic lemmas support linked stored-result bounds; strict margin is explicit."
+    },
+    {
+      "path": "integration/torchlean/PtxReluKernel.lean",
+      "reason": "Allocation offsets, stage definitions and preservation lemmas connect actual runs to arithmetic; no final correctness assumption."
+    },
+    {
+      "path": "integration/torchlean/PtxReluVJP.lean",
+      "reason": "Actual upstream graph and shape-indexed helper proofs support generated and derivative endpoints; elaborator-only settings retain kernel checking."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Extended exact target and endpoint-count sets while retaining dependency, forbidden-token and axiom guards."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Include five new modules in the default build without changing dependency pins."
+    },
+    {
+      "path": "stratic/descriptions/relu-neuron.json",
+      "reason": "New implemented example with reviewed summary, exact passage links and explicit remaining limits."
+    },
+    {
+      "path": "stratic/descriptions/relu-neuron.md",
+      "reason": "Self-contained mathematical, execution and numerical description created before implementation."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Parent status updated; broader contract and summary still apply."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Added ReLU module orientation and updated current build-target/audit counts; retained old squared-affine documentation and historical receipts."
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 name = "ptxlean_torchlean_integration"
 version = "0.1.0"
-defaultTargets = ["PtxTorchLean", "PtxTensorBridge", "PtxBinary32", "PtxBinary32Bounds", "PtxBinary32Examples", "PtxBinary32Error", "PtxBinary32.Instructions", "PtxBinary32.Mixed", "PtxBinary32.Affine", "PtxBinary32.SquareError", "PtxBinary32.Sequential", "PtxAffineSquareVJP", "PtxAffineSquareKernel", "PtxBinary32.BackwardError", "PtxBinary32.BackwardPipeline", "PtxGradientView", "PtxAffineBackward"]
+defaultTargets = ["PtxTorchLean", "PtxTensorBridge", "PtxBinary32", "PtxBinary32Bounds", "PtxBinary32Examples", "PtxBinary32Error", "PtxBinary32.Instructions", "PtxBinary32.Mixed", "PtxBinary32.Affine", "PtxBinary32.SquareError", "PtxBinary32.Sequential", "PtxAffineSquareVJP", "PtxAffineSquareKernel", "PtxBinary32.BackwardError", "PtxBinary32.BackwardPipeline", "PtxGradientView", "PtxAffineBackward", "PtxBinary32.Relu", "PtxBinary32.ReluGate", "PtxReluVJP", "PtxReluKernel", "PtxReluAccuracy"]
 
 [[require]]
 name = "ptxlean"
@@ -40,3 +40,12 @@ name = "PtxGradientView"
 
 [[lean_lib]]
 name = "PtxAffineBackward"
+
+[[lean_lib]]
+name = "PtxReluVJP"
+
+[[lean_lib]]
+name = "PtxReluKernel"
+
+[[lean_lib]]
+name = "PtxReluAccuracy"
