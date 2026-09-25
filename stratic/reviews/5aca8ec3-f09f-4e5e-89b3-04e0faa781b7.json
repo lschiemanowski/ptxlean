@@ -1,0 +1,114 @@
+{
+  "id": "5aca8ec3-f09f-4e5e-89b3-04e0faa781b7",
+  "base": "699406f6cd4f0c0b2fc95ed2a34d17007abc06db",
+  "contentTree": "276ff34abf59d4afe5a7f6c34ac56be157f1fe5f",
+  "reviewer": "Codex",
+  "summary": "Establish dense-layer mathematical and parallel-execution foundations; preserve the unimplemented multi-round memory and kernel obligations. No end-to-end parallel layer claim.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "New partial example: actual dense graph/generated backward and derivative, tree arithmetic bounds; the intended parallel forward/backward kernel remains unimplemented."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "New reusable fetched mixed-thread execution component with repeated resource-zero barriers and arena safety, explicitly without multi-round memory admission."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Strict pinned build and fresh exact endpoint auditing remain the same contract; coverage increases from 586 to 678 declarations without changing accepted axioms or semantic-fidelity claims."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The parent promises example-specific architecture, execution and numerical claims. The new dense child is explicitly partial and does not advertise the missing kernel bridge as an end-to-end result."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The parent already requires explicit memory and scheduling justification when combining per-thread computations. The new child adds control and bounds while preserving that unresolved admission obligation."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "276ff34abf59d4afe5a7f6c34ac56be157f1fe5f",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual review of new definitions, proofs, guide and Stratic links against pinned PTX 9.4 barrier interpretation",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; unchanged pinned TorchLean/mathlib/FloatLib checkouts; local CPU proof checking, no external model calls or GPU execution",
+      "evidence": "Root check: 1643 audited declarations and all source/build/dependency checks passed. Integration: 35 default targets and 678 exact dependency reports; only propext, Classical.choice and Quot.sound permitted. No proof placeholders, unchecked axioms or native_decide. All 92 new public declarations included. Before/after Stratic tree identical. Stratic validation and whitespace check passed. Review preserves missing multi-round admission and parallel dense-kernel correspondence explicitly; no end-to-end layer claim.",
+      "tests": [],
+      "id": "d8436842-d538-40ec-85ec-cd3945b4d8a8",
+      "recordedAt": "2026-09-25T12:15:12.102Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T12:15:43.103Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Preserved the user-requested removal of the old example sentence; updated the expected integration report count to 678. No claim of a complete dense kernel was added."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Reviewed the guide against the checked graph, arithmetic and machine statements and the pinned barrier source interpretation. It identifies the exact missing multi-round memory and stored-kernel obligations; no GPU execution or benchmark claim."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Parallel.lean",
+      "reason": "Reviewed the entire new machine and proof bodies: common fetch, distinct arena tags, candidate reads, resource-zero rejection, site alignment, preserved arena sizes and extent checks. Runs are finite prefixes, not a termination or memory-admission promise."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelBarrier.lean",
+      "reason": "Reviewed the prefix schedule and two-site witness: each arrival comes from an actual fetched sync, final arrival advances all PCs and generation, and the witness stops before exit. It does not claim memory visibility."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Reduction.lean",
+      "reason": "Reviewed tree shape, leaf multiplication and fork addition relations, result existence and induction over real-value/error bounds. The relation is arithmetic only and preserves admitted result choices."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ReductionRelu.lean",
+      "reason": "Reviewed bias-addition range condition, derived rounded value, ReLU error bound and strict branch margin. Conditions are expressions in initial operands; no intermediate numerical accuracy is assumed."
+    },
+    {
+      "path": "integration/torchlean/PtxDenseVJP.lean",
+      "reason": "Reviewed actual upstream matmul/add/ReLU graph, shape indices, generated VJP reduction, checked result, derivative certificate and coordinate identities including rectangular and empty dimensions. ReLU zero convention is separate from differentiability."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed 92 new public declaration endpoints including the two shape abbreviations; retained all 586 existing endpoints. Fresh checker output must match 678 unique names exactly."
+    },
+    {
+      "path": "integration/torchlean/PtxTensorContext.lean",
+      "reason": "Reviewed the three general flatten/unflatten seed and addition identities, proved via existing context inner-product and inverse identities rather than new assumptions."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updated reproduction counts to 35 targets and 678 reports and linked the guide with an explicit partial-status statement."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Namespace endpoint counts and the six new default targets match the new modules. Pin, source-mutation, placeholder and axiom guards are unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Added two local libraries and six default verification targets; dependency and toolchain pins are unchanged."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Updated partial realization and exact remaining obligations; summary and links distinguish checked graph/arithmetic from unfinished kernel correspondence."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "The dense-layer design contract was introduced before the implementation; it retains the full target rather than weakening it to arithmetic or sequential execution."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Parent passage, summary, partial status and links identify the reusable execution responsibility, not an end-to-end kernel proof."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "The reusable execution child was reconciled after its concrete API stabilized. It explains jargon, scope, checked control/bounds and missing memory admission without deferring essential meaning to the guide."
+    }
+  ]
+}

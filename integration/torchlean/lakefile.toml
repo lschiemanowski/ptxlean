@@ -1,6 +1,6 @@
 name = "ptxlean_torchlean_integration"
 version = "0.1.0"
-defaultTargets = ["PtxTorchLean", "PtxTensorBridge", "PtxBinary32", "PtxBinary32Bounds", "PtxBinary32Examples", "PtxBinary32Error", "PtxBinary32.Instructions", "PtxBinary32.Mixed", "PtxBinary32.Affine", "PtxBinary32.SquareError", "PtxBinary32.Sequential", "PtxAffineSquareVJP", "PtxAffineSquareKernel", "PtxBinary32.BackwardError", "PtxBinary32.BackwardPipeline", "PtxGradientView", "PtxAffineBackward", "PtxBinary32.Relu", "PtxBinary32.ReluGate", "PtxReluVJP", "PtxReluKernel", "PtxReluAccuracy", "PtxBinary32.Total", "PtxBinary32.Dot", "PtxBinary32.DotError", "PtxBinary32.DotExamples", "PtxVectorVJP", "PtxVectorKernel", "PtxVectorAccuracy"]
+defaultTargets = ["PtxTorchLean", "PtxTensorBridge", "PtxBinary32", "PtxBinary32Bounds", "PtxBinary32Examples", "PtxBinary32Error", "PtxBinary32.Instructions", "PtxBinary32.Mixed", "PtxBinary32.Affine", "PtxBinary32.SquareError", "PtxBinary32.Sequential", "PtxAffineSquareVJP", "PtxAffineSquareKernel", "PtxBinary32.BackwardError", "PtxBinary32.BackwardPipeline", "PtxGradientView", "PtxAffineBackward", "PtxBinary32.Relu", "PtxBinary32.ReluGate", "PtxReluVJP", "PtxReluKernel", "PtxReluAccuracy", "PtxBinary32.Total", "PtxBinary32.Dot", "PtxBinary32.DotError", "PtxBinary32.DotExamples", "PtxVectorVJP", "PtxVectorKernel", "PtxVectorAccuracy", "PtxTensorContext", "PtxDenseVJP", "PtxBinary32.Reduction", "PtxBinary32.ReductionRelu", "PtxBinary32.Parallel", "PtxBinary32.ParallelBarrier"]
 
 [[require]]
 name = "ptxlean"
@@ -58,3 +58,9 @@ name = "PtxVectorKernel"
 
 [[lean_lib]]
 name = "PtxVectorAccuracy"
+
+[[lean_lib]]
+name = "PtxTensorContext"
+
+[[lean_lib]]
+name = "PtxDenseVJP"

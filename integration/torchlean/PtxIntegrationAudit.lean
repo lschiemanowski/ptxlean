@@ -1,3 +1,9 @@
+import PtxTensorContext
+import PtxDenseVJP
+import PtxBinary32.Reduction
+import PtxBinary32.ReductionRelu
+import PtxBinary32.Parallel
+import PtxBinary32.ParallelBarrier
 import PtxVectorVJP
 import PtxVectorKernel
 import PtxVectorAccuracy
@@ -622,3 +628,97 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.VectorKernel.kink_backward
 #print axioms PtxTorchLean.VectorVJP.scalar
 #print axioms PtxTorchLean.VectorKernel.Buffer
+
+-- Dense graph, tree arithmetic and fetched repeated-barrier foundations.
+#print axioms PtxTorchLean.TensorContext.single_flatten
+#print axioms PtxTorchLean.TensorContext.unflatten_single
+#print axioms PtxTorchLean.TensorContext.unflatten_add
+#print axioms PtxTorchLean.DenseVJP.inputs
+#print axioms PtxTorchLean.DenseVJP.rawGraph
+#print axioms PtxTorchLean.DenseVJP.output
+#print axioms PtxTorchLean.DenseVJP.graph
+#print axioms PtxTorchLean.DenseVJP.affine
+#print axioms PtxTorchLean.DenseVJP.gate
+#print axioms PtxTorchLean.DenseVJP.sensitivities
+#print axioms PtxTorchLean.DenseVJP.forward_value
+#print axioms PtxTorchLean.DenseVJP.generated_vjp
+#print axioms PtxTorchLean.DenseVJP.checked_result
+#print axioms PtxTorchLean.DenseVJP.graph_correct_at
+#print axioms PtxTorchLean.DenseVJP.sensitivities_adjoint
+#print axioms PtxTorchLean.DenseVJP.tensorToVec_get2
+#print axioms PtxTorchLean.DenseVJP.affine_coordinate
+#print axioms PtxTorchLean.DenseVJP.gate_coordinate
+#print axioms PtxTorchLean.DenseVJP.forward_coordinate
+#print axioms PtxTorchLean.DenseVJP.backward_coordinates
+#print axioms PtxTorchLean.DenseVJP.empty_input_forward
+#print axioms PtxTorchLean.DenseVJP.empty_output_dx
+#print axioms PtxTorchLean.DenseVJP.gate_at_zero
+#print axioms Ptx.Binary32.Reduction.Tree
+#print axioms Ptx.Binary32.Reduction.Tree.map
+#print axioms Ptx.Binary32.Reduction.Tree.leaves
+#print axioms Ptx.Binary32.Reduction.Tree.depth
+#print axioms Ptx.Binary32.Reduction.balanced
+#print axioms Ptx.Binary32.Reduction.balanced_depth
+#print axioms Ptx.Binary32.Reduction.balanced_leaves
+#print axioms Ptx.Binary32.Reduction.Eval
+#print axioms Ptx.Binary32.Reduction.eval_exists
+#print axioms Ptx.Binary32.Reduction.ideal
+#print axioms Ptx.Binary32.Reduction.rounded
+#print axioms Ptx.Binary32.Reduction.Safe
+#print axioms Ptx.Binary32.Reduction.budget
+#print axioms Ptx.Binary32.Reduction.words
+#print axioms Ptx.Binary32.Reduction.accuracy
+#print axioms Ptx.Binary32.Reduction.ideal_leaves
+#print axioms Ptx.Binary32.Reduction.RowInput
+#print axioms Ptx.Binary32.Reduction.RowInput.affine
+#print axioms Ptx.Binary32.Reduction.RowInput.idealAffine
+#print axioms Ptx.Binary32.Reduction.RowInput.error
+#print axioms Ptx.Binary32.Reduction.RowEval
+#print axioms Ptx.Binary32.Reduction.row_eval_exists
+#print axioms Ptx.Binary32.Reduction.row_affine_accuracy
+#print axioms Ptx.Binary32.Reduction.row_forward_accuracy
+#print axioms Ptx.Binary32.Reduction.row_gate_accuracy
+#print axioms Ptx.Scalar.Parallel.Space
+#print axioms Ptx.Scalar.Parallel.Instr
+#print axioms Ptx.Scalar.Parallel.Config
+#print axioms Ptx.Scalar.Parallel.Lane
+#print axioms Ptx.Scalar.Parallel.State
+#print axioms Ptx.Scalar.Parallel.Event
+#print axioms Ptx.Scalar.Parallel.Status
+#print axioms Ptx.Scalar.Parallel.Outcome
+#print axioms Ptx.Scalar.Parallel.setLane
+#print axioms Ptx.Scalar.Parallel.arena
+#print axioms Ptx.Scalar.Parallel.scalarStep
+#print axioms Ptx.Scalar.Parallel.barrierConfig
+#print axioms Ptx.Scalar.Parallel.barrierRequest
+#print axioms Ptx.Scalar.Parallel.synchronize
+#print axioms Ptx.Scalar.Parallel.Dispatch
+#print axioms Ptx.Scalar.Parallel.Step
+#print axioms Ptx.Scalar.Parallel.Runs
+#print axioms Ptx.Scalar.Parallel.dispatch_exists
+#print axioms Ptx.Scalar.Parallel.step_exists
+#print axioms Ptx.Scalar.Parallel.waiting_blocks
+#print axioms Ptx.Scalar.Parallel.fetch_origin
+#print axioms Ptx.Scalar.Parallel.Aligned
+#print axioms Ptx.Scalar.Parallel.release_aligned
+#print axioms Ptx.Scalar.Parallel.reset_aligned
+#print axioms Ptx.Scalar.Parallel.setLane_aligned
+#print axioms Ptx.Scalar.Parallel.synchronize_aligned
+#print axioms Ptx.Scalar.Parallel.dispatch_aligned
+#print axioms Ptx.Scalar.Parallel.step_aligned
+#print axioms Ptx.Scalar.Parallel.runs_aligned
+#print axioms Ptx.Scalar.Parallel.AccessSafe
+#print axioms Ptx.Scalar.Parallel.OutcomeSafe
+#print axioms Ptx.Scalar.Parallel.scalarStep_safe
+#print axioms Ptx.Scalar.Parallel.synchronize_safe
+#print axioms Ptx.Scalar.Parallel.dispatch_safe
+#print axioms Ptx.Scalar.Parallel.step_safe
+#print axioms Ptx.Scalar.Parallel.runs_memory_length
+#print axioms Ptx.Scalar.Parallel.runs_access_safe
+#print axioms Ptx.Scalar.Parallel.afterRound
+#print axioms Ptx.Scalar.Parallel.roundPrefix
+#print axioms Ptx.Scalar.Parallel.runs_append
+#print axioms Ptx.Scalar.Parallel.barrier_round_exists
+#print axioms Ptx.Scalar.Parallel.two_barriers_exist
+#print axioms PtxTorchLean.DenseVJP.column
+#print axioms PtxTorchLean.DenseVJP.matrix

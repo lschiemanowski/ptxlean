@@ -1,0 +1,89 @@
+{
+  "id": "mixed-parallel-execution",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "Combining per-thread results\nrequires explicit conditions on who can write which locations and how the\nthreads may be scheduled."
+    }
+  },
+  "summary": [
+    "Fetch integer, binary32 and full-group barrier instructions for cooperating threads with separate global and shared storage.",
+    "Prove barrier-site agreement, repeated barrier execution witnesses and address bounds while retaining proposed load values that still require a memory-model justification."
+  ],
+  "realization": "partial",
+  "remaining": "Multi-round memory admission and its control-history derivation, kernel program proofs, launch validation and general barrier forms remain unimplemented.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This execution layer lets\nthreads fetch integer, binary32 and barrier instructions from one common\ninstruction list."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Parallel.lean",
+        "passage": {
+          "quote": "def Step (cfg : Config n) (program : List Instr) (candidate : Option Word) (thread : Fin n)\n    (s : State n) (outcome : Outcome n) : Prop :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every emitted access is four-byte aligned and within the selected list;\nstores preserve both list lengths."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Parallel.lean",
+        "passage": {
+          "quote": "theorem runs_access_safe {s final : State n} {events : List (Event n)} (run : Runs cfg program s events final) (event : Event n) (member : event ∈ events) :\n    AccessSafe s event :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every emitted access is four-byte aligned and within the selected list;\nstores preserve both list lengths."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Parallel.lean",
+        "passage": {
+          "quote": "theorem runs_memory_length (run : Runs cfg program s events final) :\n    final.global.length = s.global.length ∧ final.shared.length = s.shared.length :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "From a reset barrier, every execution\npreserves the invariant that waiting threads remain at the recorded site; hence\nrelease advances all participants from the same instruction."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Parallel.lean",
+        "passage": {
+          "quote": "theorem runs_aligned (run : Runs cfg program s events final) (aligned : Aligned s) : Aligned final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "From a reset barrier, every execution\npreserves the invariant that waiting threads remain at the recorded site; hence\nrelease advances all participants from the same instruction."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Parallel.lean",
+        "passage": {
+          "quote": "theorem release_aligned (cfg : Config n) (s : State n) (thread : Fin n) (resource : Fin 16)\n    (aligned : Aligned s)\n    (released : (Barrier.step (barrierConfig cfg s thread) s.barrier\n      (barrierRequest cfg s thread resource)).disposition = .released) :\n    ∀ t, (s.lanes t).scalar.pc = (s.lanes thread).scalar.pc :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite schedule\nwitness fetches and completes two successive barriers at different sites using\nthe same resource and successive generations."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelBarrier.lean",
+        "passage": {
+          "quote": "theorem two_barriers_exist (cfg : Config n) (s : State n)\n    (pcs : ∀ t, (s.lanes t).scalar.pc = 0) (live : ∀ t, (s.lanes t).halted = false)\n    (reset : s.barrier = Barrier.reset 0) (site : s.site = none) (eligible : Mixed.Eligible cfg.target) :\n    ∃ events, Runs cfg [.sync 0,.sync 0,.exit] s events (afterRound (afterRound s 0) 1) :="
+        }
+      }
+    }
+  ]
+}

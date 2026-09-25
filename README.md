@@ -156,8 +156,6 @@ and its mathematical meaning. [PtxReluKernel.lean](integration/torchlean/PtxRelu
 proves execution existence and correspondence; [PtxReluAccuracy.lean](integration/torchlean/PtxReluAccuracy.lean)
 connects the stored forward result and gradients to TorchLean with error bounds.
 The [study guide](docs/foundations/relu-neuron.md) explains the proof conditions.
-The earlier [squared-affine example](docs/foundations/affine-square-kernel.md) remains
-in the verification suite.
 
 ## Run the checks and examples
 
@@ -187,7 +185,7 @@ mathlib build artifacts, and check the TorchLean examples, numerical bounds and
 forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
-and `Integration check passed: 586 exact dependency reports, only standard Lean
+and `Integration check passed: 678 exact dependency reports, only standard Lean
 axioms.` respectively. The general forward and backward proofs above are included.
 
 A smaller [array-loop example](docs/foundations/array-mask-select.md) combines

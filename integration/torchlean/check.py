@@ -77,6 +77,10 @@ TARGETS.update({"PtxBinary32.Total", "PtxBinary32.Dot", "PtxBinary32.DotError", 
 COUNTS.update({'PtxTorchLean.VectorVJP': 13, 'PtxTorchLean.VectorKernel': 49, 'PtxTorchLean.VectorKernel.Gradient': 6, 'PtxTorchLean.VectorKernel.Stage': 3, 'PtxTorchLean.VectorKernel.Evaluation': 3, 'PtxTorchLean.VectorKernel.Inputs': 12, 'PtxTorchLean.VectorKernel.BackwardInputs': 7})
 TARGETS.update({'PtxVectorKernel', 'PtxVectorVJP', 'PtxVectorAccuracy'})
 
+# Dense-layer foundations; no parallel-kernel correspondence claim.
+COUNTS.update({'PtxTorchLean.TensorContext': 3, 'PtxTorchLean.DenseVJP': 22, 'Ptx.Binary32.Reduction': 19, 'Ptx.Binary32.Reduction.Tree': 3, 'Ptx.Binary32.Reduction.RowInput': 3, 'Ptx.Scalar.Parallel': 42})
+TARGETS.update({'PtxDenseVJP', 'PtxTensorContext', 'PtxBinary32.Reduction', 'PtxBinary32.ParallelBarrier', 'PtxBinary32.ReductionRelu', 'PtxBinary32.Parallel'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

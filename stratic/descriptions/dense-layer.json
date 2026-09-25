@@ -1,0 +1,126 @@
+{
+  "id": "dense-layer",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "A network example reaches from its specified computation to the stated\nkernel behavior, giving an end-to-end verification result."
+    }
+  },
+  "summary": [
+    "Connect a vector-output dense–ReLU layer and all its gradients to an actual TorchLean graph and automatically generated backward.",
+    "Verify a separately supplied parallel binary32 implementation with an explicit reduction tree, synchronization, storage and numerical conditions; defer GPU execution and benchmarking."
+  ],
+  "realization": "partial",
+  "remaining": "Implemented: actual TorchLean matrix graph, generated VJP and derivative identification away from every ReLU kink; balanced-tree arithmetic existence and universal error bounds; bias/ReLU/gate bounds; reusable fetched mixed-thread control, barrier reuse witnesses and arena bounds. Missing: the parallel layer program and its completed execution, trace-derived multi-round memory admission and visibility, scratch ownership/lifetimes, padding and dimension/launch bounds, and stored forward/backward numerical correspondence. Arithmetic existence is not execution existence; address safety is not read-value correctness.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The layer takes an input vector x of length n, a trainable m-by-n weight matrix W,\nand a bias vector b of length m. It returns y_i=max(sum_j W_ij*x_j+b_i,0).\nIts automatically generated TorchLean backward takes an incoming sensitivity\nvector d of length m. With g_i=d_i on a positive affine value and zero otherwise,\nit returns dx_j=sum_i W_ij*g_i, dW_ij=g_i*x_j and db_i=g_i. A zero derivative at\nan exactly zero affine value is a chosen convention; ordinary mathematical\ndifferentiation requires every relevant affine value to be nonzero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseVJP.lean",
+        "passage": {
+          "quote": "theorem forward_coordinate (x : Tensor ℝ (column n)) (w : Tensor ℝ (matrix m n))\n    (b : Tensor ℝ (column m)) (row : Fin m) :\n    Spec.get2 ((graph m n).forward (inputs x w b)) row 0 =\n      max ((∑ j : Fin n, Spec.get2 w row j * Spec.get2 x j 0) + Spec.get2 b row 0) 0 :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The layer takes an input vector x of length n, a trainable m-by-n weight matrix W,\nand a bias vector b of length m. It returns y_i=max(sum_j W_ij*x_j+b_i,0).\nIts automatically generated TorchLean backward takes an incoming sensitivity\nvector d of length m. With g_i=d_i on a positive affine value and zero otherwise,\nit returns dx_j=sum_i W_ij*g_i, dW_ij=g_i*x_j and db_i=g_i. A zero derivative at\nan exactly zero affine value is a chosen convention; ordinary mathematical\ndifferentiation requires every relevant affine value to be nonzero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseVJP.lean",
+        "passage": {
+          "quote": "theorem backward_coordinates (x : Tensor ℝ (column n)) (w : Tensor ℝ (matrix m n))\n    (b d : Tensor ℝ (column m)) :\n    let result :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The layer takes an input vector x of length n, a trainable m-by-n weight matrix W,\nand a bias vector b of length m. It returns y_i=max(sum_j W_ij*x_j+b_i,0).\nIts automatically generated TorchLean backward takes an incoming sensitivity\nvector d of length m. With g_i=d_i on a positive affine value and zero otherwise,\nit returns dx_j=sum_i W_ij*g_i, dW_ij=g_i*x_j and db_i=g_i. A zero derivative at\nan exactly zero affine value is a chosen convention; ordinary mathematical\ndifferentiation requires every relevant affine value to be nonzero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseVJP.lean",
+        "passage": {
+          "quote": "theorem checked_result (x : Tensor ℝ (column n)) (w : Tensor ℝ (matrix m n)) (b d : Tensor ℝ (column m)) :\n    (graph m n).vjpChecked (inputs x w b) () d =\n      .ok (sensitivities x w b d, vecToTensor (vecOfFun fun i => max (tensorToVec (affine x w b) i) 0)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The layer takes an input vector x of length n, a trainable m-by-n weight matrix W,\nand a bias vector b of length m. It returns y_i=max(sum_j W_ij*x_j+b_i,0).\nIts automatically generated TorchLean backward takes an incoming sensitivity\nvector d of length m. With g_i=d_i on a positive affine value and zero otherwise,\nit returns dx_j=sum_i W_ij*g_i, dW_ij=g_i*x_j and db_i=g_i. A zero derivative at\nan exactly zero affine value is a chosen convention; ordinary mathematical\ndifferentiation requires every relevant affine value to be nonzero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseVJP.lean",
+        "passage": {
+          "quote": "theorem sensitivities_adjoint (x : Tensor ℝ (column n)) (w : Tensor ℝ (matrix m n))\n    (b d : Tensor ℝ (column m)) (away : ∀ i, tensorToVec (affine x w b) i ≠ 0) :\n    flattenCtx (sensitivities x w b d) =\n      (fderiv ℝ (fun v => tensorToVec ((graph m n).forward (unflattenCtx v)))\n        (flattenCtx (inputs x w b))).adjoint (tensorToVec d) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Bounds\nfollow the actual multiplication and tree-addition order, including bias and\nbackward arithmetic."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Reduction.lean",
+        "passage": {
+          "quote": "theorem balanced_leaves (d offset : Nat) (f : Nat → α) :\n    (balanced d offset f).leaves = (List.range (2^d)).map (fun i => f (offset+i)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Bounds\nfollow the actual multiplication and tree-addition order, including bias and\nbackward arithmetic."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Reduction.lean",
+        "passage": {
+          "quote": "theorem accuracy (tree : Tree DotError.Input) (safe : Safe tree) (allowed : Eval (words tree) out) :\n    finiteReal out = some (rounded tree) ∧ |rounded tree-ideal tree| ≤ budget tree :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A strict error margin at each activation proves that\nrounding cannot change its branch."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReductionRelu.lean",
+        "passage": {
+          "quote": "theorem row_forward_accuracy (i : RowInput) (allowed : RowEval i a) :\n    finiteReal (Relu.forward a) = some (max i.affine 0) ∧\n      |max i.affine 0-max i.idealAffine 0| ≤ i.error :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A strict error margin at each activation proves that\nrounding cannot change its branch."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReductionRelu.lean",
+        "passage": {
+          "quote": "theorem row_gate_accuracy (i : RowInput) (allowed : RowEval i a)\n    (seed : finiteReal d = some dh) (seedError : |dh-dIdeal| ≤ ed)\n    (margin : i.error < |i.idealAffine|) :\n    finiteReal (Relu.gate a d) = some (if 0 < i.affine then dh else 0) ∧\n      |(if 0 < i.affine then dh else 0)-(if 0 < i.idealAffine then dIdeal else 0)| ≤ ed ∧\n      i.idealAffine ≠ 0 :="
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Execution existence, correctness of completed\nexecutions, synchronization and memory safety are separate proof obligations;\nno desired numerical result substitutes for an instruction execution or a\nmemory-visibility argument."
+      },
+      "to": {
+        "description": "mixed-parallel-execution",
+        "passage": {
+          "quote": "A successful\nload's address check does not justify its value."
+        }
+      },
+      "reason": "A parallel arithmetic result must come from fetched instructions and permitted memory observations; the execution layer preserves this separate obligation."
+    }
+  ]
+}
