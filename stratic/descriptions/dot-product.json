@@ -11,7 +11,7 @@
     "Prove execution existence, bounded termination for every instruction choice, memory safety and stored-result error bounds under explicit input and range conditions."
   ],
   "realization": "implemented",
-  "remaining": "Complete for the isolated one-thread binary32 loop and stated initial-input numerical conditions. Activation/bias composition, a TorchLean dot-product graph and backward, parallel reductions, fused/mixed-precision arithmetic, launch ABI and hardware conformance remain outside this component.",
+  "remaining": "Complete for the isolated one-thread binary32 loop and stated initial-input numerical conditions. The separate vector-neuron component supplies activation/bias and graph/backward composition. Parallel reductions, fused/mixed-precision arithmetic, launch ABI and hardware conformance remain outside this component.",
   "links": [
     {
       "kind": "implementation",

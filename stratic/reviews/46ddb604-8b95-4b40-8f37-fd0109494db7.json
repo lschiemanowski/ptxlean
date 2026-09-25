@@ -1,0 +1,107 @@
+{
+  "id": "46ddb604-8b95-4b40-8f37-fd0109494db7",
+  "base": "06596f10687bdb8e0f19efaac4f5d7334a7f36f1",
+  "contentTree": "ea29f331b8dc0c9c82a06c4b6fe7bb4e03611bc9",
+  "reviewer": "Codex",
+  "summary": "Verify a vector-input ReLU neuron through actual TorchLean autograd and separately authored serialized PTX forward/backward kernels, with storage, execution existence and coordinatewise numerical proofs.",
+  "examined": [
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "Adds a bounded reference neuron within existing example responsibilities; mathematical, numerical, execution, semantic-fidelity and hardware claims remain distinct."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Updated coverage to include the vector neuron and its generated-backward and separate PTX composition."
+    },
+    {
+      "id": "dot-product",
+      "outcome": "revised",
+      "reason": "The loop contract and implementation are unchanged; remaining-work metadata now points to the completed separate vector-neuron composition."
+    },
+    {
+      "id": "vector-neuron",
+      "outcome": "revised",
+      "reason": "Description preceded code; inspected actual upstream graph construction, coordinate derivatives, fetched stage runs, layout preservation, independent launch existence and initial-input-only numerical guards. Added complete theorem-statement links and explicit implementation limits."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Added every new public definition and theorem to the exact dependency audit and all three libraries to the default build; proof validity still does not establish instruction fidelity or hardware conformance."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "Reuses serialized launch/store contracts with explicit contiguous vector layout, seed and gradient buffers; no broader orchestration or tensor-layout contract is claimed."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "ea29f331b8dc0c9c82a06c4b6fe7bb4e03611bc9",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual full-source and guide-link review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; unchanged pinned TorchLean and transitive dependencies; local CPU proof checks; no external model calls.",
+      "evidence": "Core checks passed with 1643 audited declarations. Integration passed all 29 targets and 586 exact dependency reports (93 added); only propext, Classical.choice and Quot.sound allowed. Empty graph and kink convention proofs compile. Stratic valid; guide links resolve; diff clean; content tree unchanged across checks. Reviewed actual graph vs supplied kernel separation, storage/launch existence, initial-input-only range conditions, strict activation margin and hardware/runtime restrictions.",
+      "tests": [],
+      "id": "f893dd57-78a1-4de2-abd0-9cb29690b860",
+      "recordedAt": "2026-09-25T10:58:47.103Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T10:59:18.474Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Reviewed reproduction instructions, guide links, launch/layout walkthrough, error conditions and updated audit count; no additional semantic promise."
+    },
+    {
+      "path": "docs/foundations/vector-neuron.md",
+      "reason": "Reviewed reproduction instructions, guide links, launch/layout walkthrough, error conditions and updated audit count; no additional semantic promise."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Build and audit registration covers all 93 new public endpoints and three libraries; no semantics change."
+    },
+    {
+      "path": "integration/torchlean/PtxVectorAccuracy.lean",
+      "reason": "Reviewed complete definitions and proof bodies outside the linked public theorem statements; these implement the vector-neuron graph, launch composition and numerical contract."
+    },
+    {
+      "path": "integration/torchlean/PtxVectorKernel.lean",
+      "reason": "Reviewed complete definitions and proof bodies outside the linked public theorem statements; these implement the vector-neuron graph, launch composition and numerical contract."
+    },
+    {
+      "path": "integration/torchlean/PtxVectorVJP.lean",
+      "reason": "Reviewed complete definitions and proof bodies outside the linked public theorem statements; these implement the vector-neuron graph, launch composition and numerical contract."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Reviewed reproduction instructions, guide links, launch/layout walkthrough, error conditions and updated audit count; no additional semantic promise."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Build and audit registration covers all 93 new public endpoints and three libraries; no semantics change."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Build and audit registration covers all 93 new public endpoints and three libraries; no semantics change."
+    },
+    {
+      "path": "stratic/descriptions/dot-product.json",
+      "reason": "Reviewed description and metadata coverage, summaries, parent passages, implementation links and stated limitations."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Reviewed description and metadata coverage, summaries, parent passages, implementation links and stated limitations."
+    },
+    {
+      "path": "stratic/descriptions/vector-neuron.json",
+      "reason": "Reviewed description and metadata coverage, summaries, parent passages, implementation links and stated limitations."
+    },
+    {
+      "path": "stratic/descriptions/vector-neuron.md",
+      "reason": "Reviewed description and metadata coverage, summaries, parent passages, implementation links and stated limitations."
+    }
+  ]
+}

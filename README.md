@@ -187,7 +187,7 @@ mathlib build artifacts, and check the TorchLean examples, numerical bounds and
 forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
-and `Integration check passed: 493 exact dependency reports, only standard Lean
+and `Integration check passed: 586 exact dependency reports, only standard Lean
 axioms.` respectively. The general forward and backward proofs above are included.
 
 A smaller [array-loop example](docs/foundations/array-mask-select.md) combines
@@ -198,7 +198,9 @@ memory safety and termination. After `lake build`, check it with
 The [sequential dot-product example](docs/foundations/dot-product.md) extends the
 arithmetic to array inputs, with a PTX loop, termination for every permitted
 instruction result, and accumulated floating-point error bounds. It is included
-in the integration check above.
+in the integration check above. The [vector-input ReLU neuron](docs/foundations/vector-neuron.md)
+composes it with bias, activation and a cache-free backward, connecting stored
+coordinate gradients to TorchLean's generated backward with explicit error bounds.
 
 ## Instruction reference
 

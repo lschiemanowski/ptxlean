@@ -1,3 +1,6 @@
+import PtxVectorVJP
+import PtxVectorKernel
+import PtxVectorAccuracy
 import PtxBinary32.DotExamples
 import PtxReluAccuracy
 import PtxAffineBackward
@@ -524,3 +527,98 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Dot.Examples.cancellation_execution
 #print axioms Ptx.Scalar.Dot.Examples.zeroInput
 #print axioms Ptx.Scalar.Dot.Examples.nonempty_numerical_domain
+
+-- Vector neuron: graph, separately supplied execution, and numerical contracts.
+#print axioms PtxTorchLean.VectorVJP.inputs
+#print axioms PtxTorchLean.VectorVJP.rawGraph
+#print axioms PtxTorchLean.VectorVJP.output
+#print axioms PtxTorchLean.VectorVJP.graph
+#print axioms PtxTorchLean.VectorVJP.affine
+#print axioms PtxTorchLean.VectorVJP.scale
+#print axioms PtxTorchLean.VectorVJP.sensitivities
+#print axioms PtxTorchLean.VectorVJP.forward_value
+#print axioms PtxTorchLean.VectorVJP.generated_vjp
+#print axioms PtxTorchLean.VectorVJP.checked_result
+#print axioms PtxTorchLean.VectorVJP.graph_correct_at
+#print axioms PtxTorchLean.VectorVJP.sensitivities_adjoint
+#print axioms PtxTorchLean.VectorKernel.words
+#print axioms PtxTorchLean.VectorKernel.slot
+#print axioms PtxTorchLean.VectorKernel.weight
+#print axioms PtxTorchLean.VectorKernel.input
+#print axioms PtxTorchLean.VectorKernel.dx
+#print axioms PtxTorchLean.VectorKernel.dw
+#print axioms PtxTorchLean.VectorKernel.pairs
+#print axioms PtxTorchLean.VectorKernel.Gradient
+#print axioms PtxTorchLean.VectorKernel.Gradient.source
+#print axioms PtxTorchLean.VectorKernel.Gradient.dest
+#print axioms PtxTorchLean.VectorKernel.Stage
+#print axioms PtxTorchLean.VectorKernel.Stage.dest
+#print axioms PtxTorchLean.VectorKernel.Stage.args
+#print axioms PtxTorchLean.VectorKernel.Stage.program
+#print axioms PtxTorchLean.VectorKernel.arguments
+#print axioms PtxTorchLean.VectorKernel.registers
+#print axioms PtxTorchLean.VectorKernel.stageStart
+#print axioms PtxTorchLean.VectorKernel.request
+#print axioms PtxTorchLean.VectorKernel.Results
+#print axioms PtxTorchLean.VectorKernel.Evaluation
+#print axioms PtxTorchLean.VectorKernel.forwardStages
+#print axioms PtxTorchLean.VectorKernel.gradients
+#print axioms PtxTorchLean.VectorKernel.backwardStages
+#print axioms PtxTorchLean.VectorKernel.words_length
+#print axioms PtxTorchLean.VectorKernel.words_get
+#print axioms PtxTorchLean.VectorKernel.words_getBang
+#print axioms PtxTorchLean.VectorKernel.words_update
+#print axioms PtxTorchLean.VectorKernel.run_correct
+#print axioms PtxTorchLean.VectorKernel.run_exists
+#print axioms PtxTorchLean.VectorKernel.launch_correct
+#print axioms PtxTorchLean.VectorKernel.launch_exists
+#print axioms PtxTorchLean.VectorKernel.pipeline_correct
+#print axioms PtxTorchLean.VectorKernel.pipeline_exists
+#print axioms PtxTorchLean.VectorKernel.launch_memory_safe
+#print axioms PtxTorchLean.VectorKernel.pipeline_frame
+#print axioms PtxTorchLean.VectorKernel.Evaluation.frame
+#print axioms PtxTorchLean.VectorKernel.Gradient.source_ne_slot
+#print axioms PtxTorchLean.VectorKernel.Gradient.dest_ne_slot
+#print axioms PtxTorchLean.VectorKernel.Gradient.source_ne_dest
+#print axioms PtxTorchLean.VectorKernel.Gradient.dest_injective
+#print axioms PtxTorchLean.VectorKernel.Evaluation.sources_frame
+#print axioms PtxTorchLean.VectorKernel.Evaluation.constants_frame
+#print axioms PtxTorchLean.VectorKernel.forward_launches
+#print axioms PtxTorchLean.VectorKernel.backward_launches
+#print axioms PtxTorchLean.VectorKernel.gradient_values
+#print axioms PtxTorchLean.VectorKernel.gradient_header
+#print axioms PtxTorchLean.VectorKernel.gradient_mem
+#print axioms PtxTorchLean.VectorKernel.forward_values
+#print axioms PtxTorchLean.VectorKernel.backward_values
+#print axioms PtxTorchLean.VectorKernel.one_real
+#print axioms PtxTorchLean.VectorKernel.Inputs
+#print axioms PtxTorchLean.VectorKernel.Inputs.x
+#print axioms PtxTorchLean.VectorKernel.Inputs.w
+#print axioms PtxTorchLean.VectorKernel.Inputs.dot
+#print axioms PtxTorchLean.VectorKernel.Inputs.dotBudget
+#print axioms PtxTorchLean.VectorKernel.Inputs.idealDot
+#print axioms PtxTorchLean.VectorKernel.Inputs.affine
+#print axioms PtxTorchLean.VectorKernel.Inputs.budget
+#print axioms PtxTorchLean.VectorKernel.Inputs.graph_affine
+#print axioms PtxTorchLean.VectorKernel.Inputs.dot_facts
+#print axioms PtxTorchLean.VectorKernel.Inputs.affine_facts
+#print axioms PtxTorchLean.VectorKernel.forward_accuracy
+#print axioms PtxTorchLean.VectorKernel.BackwardInputs
+#print axioms PtxTorchLean.VectorKernel.BackwardInputs.actualGate
+#print axioms PtxTorchLean.VectorKernel.BackwardInputs.idealGate
+#print axioms PtxTorchLean.VectorKernel.BackwardInputs.dxBudget
+#print axioms PtxTorchLean.VectorKernel.BackwardInputs.dwBudget
+#print axioms PtxTorchLean.VectorKernel.BackwardInputs.dxValue
+#print axioms PtxTorchLean.VectorKernel.BackwardInputs.dwValue
+#print axioms PtxTorchLean.VectorKernel.BackwardAccuracy
+#print axioms PtxTorchLean.VectorKernel.backward_accuracy
+#print axioms PtxTorchLean.VectorKernel.BackwardInputs.generated
+#print axioms PtxTorchLean.VectorKernel.stored_forward_accuracy
+#print axioms PtxTorchLean.VectorKernel.stored_backward_accuracy
+#print axioms PtxTorchLean.VectorKernel.Inputs.x_coordinate
+#print axioms PtxTorchLean.VectorKernel.Inputs.w_coordinate
+#print axioms PtxTorchLean.VectorKernel.stored_backward_adjoint
+#print axioms PtxTorchLean.VectorKernel.empty_forward
+#print axioms PtxTorchLean.VectorKernel.kink_backward
+#print axioms PtxTorchLean.VectorVJP.scalar
+#print axioms PtxTorchLean.VectorKernel.Buffer

@@ -73,6 +73,10 @@ COUNTS["Ptx.Scalar.Mixed.Total"] = 8
 TARGETS.update({"PtxBinary32.Total", "PtxBinary32.Dot", "PtxBinary32.DotError", "PtxBinary32.DotExamples"})
 
 
+# Vector-input ReLU neuron, including all new public definitions and proof endpoints.
+COUNTS.update({'PtxTorchLean.VectorVJP': 13, 'PtxTorchLean.VectorKernel': 49, 'PtxTorchLean.VectorKernel.Gradient': 6, 'PtxTorchLean.VectorKernel.Stage': 3, 'PtxTorchLean.VectorKernel.Evaluation': 3, 'PtxTorchLean.VectorKernel.Inputs': 12, 'PtxTorchLean.VectorKernel.BackwardInputs': 7})
+TARGETS.update({'PtxVectorKernel', 'PtxVectorVJP', 'PtxVectorAccuracy'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

@@ -17,8 +17,14 @@ from changing the activation branch. The finite bit gate is implemented in
 The [sequential dot-product kernel](../../docs/foundations/dot-product.md) adds
 array traversal and left-to-right binary32 accumulation. `PtxBinary32.Total`
 provides termination certificates covering every dispatch result; `Dot`, `DotError` and `DotExamples`
-prove execution, numerical bounds and boundary examples. This component does
-not yet supply a TorchLean dot-product graph or its backward.
+prove execution, numerical bounds and boundary examples.
+
+The [vector-input ReLU neuron](../../docs/foundations/vector-neuron.md) then
+computes `max(sum_i w[i]*x[i]+b,0)` using an actual multiply/sum/add/ReLU graph.
+`PtxVectorVJP`, `PtxVectorKernel` and `PtxVectorAccuracy` connect the generated
+backward to separate forward and cache-free backward kernels, array storage,
+execution existence and coordinatewise error bounds. The reference implementation
+uses three forward launches and `3+2*n` backward launches, with one thread each.
 
 ## Retained squared-affine graph
 
@@ -161,8 +167,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 26 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 493
+All 29 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 586
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward

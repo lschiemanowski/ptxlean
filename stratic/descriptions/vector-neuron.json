@@ -1,0 +1,221 @@
+{
+  "id": "vector-neuron",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "A network example reaches from its specified computation to the stated\nkernel behavior, giving an end-to-end verification result."
+    }
+  },
+  "summary": [
+    "Connect a vector-input ReLU neuron to an actual TorchLean graph and generated backward, distinguishing the zero convention from ordinary differentiation.",
+    "Verify separately authored binary32 forward and recomputing backward launches with preserved tensor storage, execution existence and explicit numerical conditions."
+  ],
+  "realization": "implemented",
+  "remaining": "Complete for the serialized one-thread binary32 reference pipeline and its stated initial-input numerical domain. Efficient parallel kernels, fused or mixed-precision arithmetic, CUDA launch/runtime correspondence, bitwise PyTorch equality and hardware conformance remain outside this component.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The neuron takes an input vector x, a trainable weight vector w of the same\nlength, and a scalar bias b. It returns max(sum_i w_i*x_i+b,0). An empty vector\nhas an empty sum of zero, so the output is ReLU(b). TorchLean builds the actual\ngraph from its multiplication, sum, addition and ReLU nodes and constructs its\nbackward automatically. Given an incoming loss sensitivity d, the backward\nreturns dx_i=g*w_i, dw_i=g*x_i and db=g, where g=d for a positive affine value\nand g=0 otherwise. The zero result at the kink is a convention. Ordinary\nmathematical differentiation requires the affine value to be nonzero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorVJP.lean",
+        "passage": {
+          "quote": "theorem forward_value (x w : Tensor ℝ s) (b : ℝ) :\n    Tensor.item ((graph s).forward (inputs x w b)) = max (affine x w b) 0 :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The neuron takes an input vector x, a trainable weight vector w of the same\nlength, and a scalar bias b. It returns max(sum_i w_i*x_i+b,0). An empty vector\nhas an empty sum of zero, so the output is ReLU(b). TorchLean builds the actual\ngraph from its multiplication, sum, addition and ReLU nodes and constructs its\nbackward automatically. Given an incoming loss sensitivity d, the backward\nreturns dx_i=g*w_i, dw_i=g*x_i and db=g, where g=d for a positive affine value\nand g=0 otherwise. The zero result at the kink is a convention. Ordinary\nmathematical differentiation requires the affine value to be nonzero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorVJP.lean",
+        "passage": {
+          "quote": "theorem generated_vjp (x w : Tensor ℝ s) (b d : ℝ) :\n    (graph s).vjpWithSeed (inputs x w b) (Tensor.scalar d) = sensitivities x w b d :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The neuron takes an input vector x, a trainable weight vector w of the same\nlength, and a scalar bias b. It returns max(sum_i w_i*x_i+b,0). An empty vector\nhas an empty sum of zero, so the output is ReLU(b). TorchLean builds the actual\ngraph from its multiplication, sum, addition and ReLU nodes and constructs its\nbackward automatically. Given an incoming loss sensitivity d, the backward\nreturns dx_i=g*w_i, dw_i=g*x_i and db=g, where g=d for a positive affine value\nand g=0 otherwise. The zero result at the kink is a convention. Ordinary\nmathematical differentiation requires the affine value to be nonzero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorVJP.lean",
+        "passage": {
+          "quote": "theorem checked_result (x w : Tensor ℝ s) (b d : ℝ) :\n    (graph s).vjpChecked (inputs x w b) () (Tensor.scalar d) =\n      .ok (sensitivities x w b d, Tensor.scalar (max (affine x w b) 0)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The neuron takes an input vector x, a trainable weight vector w of the same\nlength, and a scalar bias b. It returns max(sum_i w_i*x_i+b,0). An empty vector\nhas an empty sum of zero, so the output is ReLU(b). TorchLean builds the actual\ngraph from its multiplication, sum, addition and ReLU nodes and constructs its\nbackward automatically. Given an incoming loss sensitivity d, the backward\nreturns dx_i=g*w_i, dw_i=g*x_i and db=g, where g=d for a positive affine value\nand g=0 otherwise. The zero result at the kink is a convention. Ordinary\nmathematical differentiation requires the affine value to be nonzero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorVJP.lean",
+        "passage": {
+          "quote": "theorem sensitivities_adjoint (x w : Tensor ℝ s) (b d : ℝ) (away : affine x w b ≠ 0) :\n    flattenCtx (sensitivities x w b d) =\n      (fderiv ℝ (fun v => tensorToVec ((graph s).forward (unflattenCtx v)))\n        (flattenCtx (inputs x w b))).adjoint (tensorToVec (Tensor.scalar d)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The separately authored PTX computation first runs the sequential binary32 dot\nproduct, then computes the bias step and applies the finite-value ReLU gate.\nThe bias step reuses the scalar affine kernel: multiply the dot result by one,\nthen add the bias. Those are actual separately rounded instructions. The\ncache-free backward recomputes the dot product and affine value, gates d, then\nruns the scalar affine kernel twice per coordinate to compute g*w_i+0 and g*x_i+0.\nThe one and positive-zero constants are initialized storage values. This uses\nthree forward launches and 3+2*n backward launches, including for empty vectors.\nIt favors reuse and a transparent correctness argument over launch efficiency."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorKernel.lean",
+        "passage": {
+          "quote": "def forwardStages (n : Nat) : List (Stage n) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The separately authored PTX computation first runs the sequential binary32 dot\nproduct, then computes the bias step and applies the finite-value ReLU gate.\nThe bias step reuses the scalar affine kernel: multiply the dot result by one,\nthen add the bias. Those are actual separately rounded instructions. The\ncache-free backward recomputes the dot product and affine value, gates d, then\nruns the scalar affine kernel twice per coordinate to compute g*w_i+0 and g*x_i+0.\nThe one and positive-zero constants are initialized storage values. This uses\nthree forward launches and 3+2*n backward launches, including for empty vectors.\nIt favors reuse and a transparent correctness argument over launch efficiency."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorKernel.lean",
+        "passage": {
+          "quote": "def backwardStages (n : Nat) : List (Stage n) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The separately authored PTX computation first runs the sequential binary32 dot\nproduct, then computes the bias step and applies the finite-value ReLU gate.\nThe bias step reuses the scalar affine kernel: multiply the dot result by one,\nthen add the bias. Those are actual separately rounded instructions. The\ncache-free backward recomputes the dot product and affine value, gates d, then\nruns the scalar affine kernel twice per coordinate to compute g*w_i+0 and g*x_i+0.\nThe one and positive-zero constants are initialized storage values. This uses\nthree forward launches and 3+2*n backward launches, including for empty vectors.\nIt favors reuse and a transparent correctness argument over launch efficiency."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorKernel.lean",
+        "passage": {
+          "quote": "def request (target : Target) (thread : ThreadLocation) (allocation : Nat)\n    (seeds : Stage n → Seed) (stage : Stage n) : Request :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One allocation holds scalar scratch, constants, bias and incoming sensitivity,\nthen contiguous weight, input, input-gradient and weight-gradient arrays. The\narrays have equal length and distinct storage. The kernel sequence preserves the\ninputs, parameters, constants, incoming sensitivity and trailing storage. Launch\narguments and the dot-product count are supplied explicitly; other registers can\nstart arbitrarily. Each launch contains an actual instruction run and publishes\nits writes before the next launch, without interference. Existence and memory\nsafety are proved in this bounded sequential model, not assumed from the desired\nnumeric result. Actual instruction result choices remain represented."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorKernel.lean",
+        "passage": {
+          "quote": "theorem pipeline_correct (small : n < 2^32) (stages : List (Stage n))\n    (present : before.cells allocation = some ⟨thread.device,words d tail⟩)\n    (eligible : Mixed.Eligible target)\n    (chain : Chain before (stages.map (request target thread allocation registers)) after) :\n    ∃ out, Evaluation d stages out ∧ after.cells allocation = some ⟨thread.device,words out tail⟩ :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One allocation holds scalar scratch, constants, bias and incoming sensitivity,\nthen contiguous weight, input, input-gradient and weight-gradient arrays. The\narrays have equal length and distinct storage. The kernel sequence preserves the\ninputs, parameters, constants, incoming sensitivity and trailing storage. Launch\narguments and the dot-product count are supplied explicitly; other registers can\nstart arbitrarily. Each launch contains an actual instruction run and publishes\nits writes before the next launch, without interference. Existence and memory\nsafety are proved in this bounded sequential model, not assumed from the desired\nnumeric result. Actual instruction result choices remain represented."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorKernel.lean",
+        "passage": {
+          "quote": "theorem pipeline_exists (small : n < 2^32) (stages : List (Stage n))\n    (present : before.cells allocation = some ⟨thread.device,words d tail⟩)\n    (eligible : Mixed.Eligible target) :\n    ∃ after, Chain before (stages.map (request target thread allocation registers)) after :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One allocation holds scalar scratch, constants, bias and incoming sensitivity,\nthen contiguous weight, input, input-gradient and weight-gradient arrays. The\narrays have equal length and distinct storage. The kernel sequence preserves the\ninputs, parameters, constants, incoming sensitivity and trailing storage. Launch\narguments and the dot-product count are supplied explicitly; other registers can\nstart arbitrarily. Each launch contains an actual instruction run and publishes\nits writes before the next launch, without interference. Existence and memory\nsafety are proved in this bounded sequential model, not assumed from the desired\nnumeric result. Actual instruction result choices remain represented."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorKernel.lean",
+        "passage": {
+          "quote": "theorem Evaluation.sources_frame (ev : Evaluation d stages out) (g : Gradient n) :\n    out g.source = d g.source :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One allocation holds scalar scratch, constants, bias and incoming sensitivity,\nthen contiguous weight, input, input-gradient and weight-gradient arrays. The\narrays have equal length and distinct storage. The kernel sequence preserves the\ninputs, parameters, constants, incoming sensitivity and trailing storage. Launch\narguments and the dot-product count are supplied explicitly; other registers can\nstart arbitrarily. Each launch contains an actual instruction run and publishes\nits writes before the next launch, without interference. Existence and memory\nsafety are proved in this bounded sequential model, not assumed from the desired\nnumeric result. Actual instruction result choices remain represented."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorKernel.lean",
+        "passage": {
+          "quote": "theorem Evaluation.constants_frame (ev : Evaluation d stages out) (k : Fin 8)\n    (constant : k = 1 ∨ k = 2 ∨ k = 5 ∨ k = 7) : out (slot k) = d (slot k) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One allocation holds scalar scratch, constants, bias and incoming sensitivity,\nthen contiguous weight, input, input-gradient and weight-gradient arrays. The\narrays have equal length and distinct storage. The kernel sequence preserves the\ninputs, parameters, constants, incoming sensitivity and trailing storage. Launch\narguments and the dot-product count are supplied explicitly; other registers can\nstart arbitrarily. Each launch contains an actual instruction run and publishes\nits writes before the next launch, without interference. Existence and memory\nsafety are proved in this bounded sequential model, not assumed from the desired\nnumeric result. Actual instruction result choices remain represented."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorKernel.lean",
+        "passage": {
+          "quote": "theorem launch_memory_safe (present : before.cells allocation = some ⟨thread.device,words d tail⟩)\n    (launch : SuccessfulLaunch (request target thread allocation registers stage) before after final events)\n    (member : event ∈ events) (access : event.memory = some effect) :\n    ValidAddress (words d tail) effect.address :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One allocation holds scalar scratch, constants, bias and incoming sensitivity,\nthen contiguous weight, input, input-gradient and weight-gradient arrays. The\narrays have equal length and distinct storage. The kernel sequence preserves the\ninputs, parameters, constants, incoming sensitivity and trailing storage. Launch\narguments and the dot-product count are supplied explicitly; other registers can\nstart arbitrarily. Each launch contains an actual instruction run and publishes\nits writes before the next launch, without interference. Existence and memory\nsafety are proved in this bounded sequential model, not assumed from the desired\nnumeric result. Actual instruction result choices remain represented."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorKernel.lean",
+        "passage": {
+          "quote": "theorem pipeline_frame (stages : List (Stage n))\n    (chain : Chain before (stages.map (request target thread allocation registers)) after)\n    (other : Nat) (different : other ≠ allocation) : after.cells other = before.cells other :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Numerical conditions refer to finite encoded inputs, their deviations from ideal\nreal inputs, and explicit rounded expressions in those initial values. The dot\nproduct contributes its accumulated error; the bias step contributes its input\nand rounding errors. ReLU cannot enlarge the forward absolute error. Backward\nagreement requires that affine error budget to be smaller than the magnitude of\nthe ideal affine value, which proves that rounding cannot change the activation\nbranch. Gradient multiplication/addition ranges and incoming sensitivity error\nare explicit. The resulting stored gradients approximate the actual generated\nTorchLean backward, with ordinary derivative meaning on this same domain."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorAccuracy.lean",
+        "passage": {
+          "quote": "theorem stored_forward_accuracy (i : Inputs (s :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Numerical conditions refer to finite encoded inputs, their deviations from ideal\nreal inputs, and explicit rounded expressions in those initial values. The dot\nproduct contributes its accumulated error; the bias step contributes its input\nand rounding errors. ReLU cannot enlarge the forward absolute error. Backward\nagreement requires that affine error budget to be smaller than the magnitude of\nthe ideal affine value, which proves that rounding cannot change the activation\nbranch. Gradient multiplication/addition ranges and incoming sensitivity error\nare explicit. The resulting stored gradients approximate the actual generated\nTorchLean backward, with ordinary derivative meaning on this same domain."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorAccuracy.lean",
+        "passage": {
+          "quote": "theorem stored_backward_accuracy (i : BackwardInputs (s :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Numerical conditions refer to finite encoded inputs, their deviations from ideal\nreal inputs, and explicit rounded expressions in those initial values. The dot\nproduct contributes its accumulated error; the bias step contributes its input\nand rounding errors. ReLU cannot enlarge the forward absolute error. Backward\nagreement requires that affine error budget to be smaller than the magnitude of\nthe ideal affine value, which proves that rounding cannot change the activation\nbranch. Gradient multiplication/addition ranges and incoming sensitivity error\nare explicit. The resulting stored gradients approximate the actual generated\nTorchLean backward, with ordinary derivative meaning on this same domain."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorAccuracy.lean",
+        "passage": {
+          "quote": "theorem BackwardInputs.generated (i : BackwardInputs (s :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Numerical conditions refer to finite encoded inputs, their deviations from ideal\nreal inputs, and explicit rounded expressions in those initial values. The dot\nproduct contributes its accumulated error; the bias step contributes its input\nand rounding errors. ReLU cannot enlarge the forward absolute error. Backward\nagreement requires that affine error budget to be smaller than the magnitude of\nthe ideal affine value, which proves that rounding cannot change the activation\nbranch. Gradient multiplication/addition ranges and incoming sensitivity error\nare explicit. The resulting stored gradients approximate the actual generated\nTorchLean backward, with ordinary derivative meaning on this same domain."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxVectorAccuracy.lean",
+        "passage": {
+          "quote": "theorem stored_backward_adjoint (i : BackwardInputs (s :="
+        }
+      }
+    }
+  ]
+}
