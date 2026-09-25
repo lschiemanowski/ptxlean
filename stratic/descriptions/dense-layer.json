@@ -8,10 +8,10 @@
   },
   "summary": [
     "Connect a vector-output dense–ReLU layer and all its gradients to an actual TorchLean graph and automatically generated backward.",
-    "Verify a separately supplied parallel binary32 forward implementation with a fixed reduction tree and fresh scratch in one bounded cooperating thread array; prove a complete admitted execution and conditional stored-word bounds while distinguishing correctness for all admitted executions."
+    "Verify a separately supplied parallel binary32 forward implementation with a fixed reduction tree and fresh scratch in one bounded cooperating thread array; prove a complete admitted execution whose stored outputs approximate the actual TorchLean real graph under explicit encoding and range conditions, while distinguishing correctness for all admitted executions."
   ],
   "realization": "partial",
-  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Selected stored-word accuracy follows under the existing explicit RowInput encoding and range conditions. Missing: full-layer actual-writer and barrier-timing proofs for arbitrary admitted executions; universal stored numerical correspondence to TorchLean including the padded real-tree identity; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy or memory validity are assumed by the selected execution proof.",
+  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Its stored words approximate the actual TorchLean real tensor graph under explicit entry-encoding and calculated finite-range conditions; zero-padding removal and the tensor/tree identity are proved, including empty inputs. Missing: full-layer actual-writer and barrier-timing proofs for arbitrary admitted executions and their universal stored numerical correspondence; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy, tensor/tree identity or memory validity are assumed by the selected execution proof.",
   "links": [
     {
       "kind": "implementation",
@@ -287,6 +287,54 @@
         "path": "integration/torchlean/PtxBinary32/DenseAdmission.lean",
         "passage": {
           "quote": "theorem selected_forward_admitted (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, ∃ run : ConcreteRuns (config s b) (program s) (initial s global shared seeds) events final,\n      ∃ source co,\n      Graph.Ordered.Valid (Memory.graph (program s) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross ∧\n      (∀ i, ¬Path (SharedReduction.Machine.Memory.grounding\n        (Memory.graph (program s) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross) i i) ∧\n      (∀ t, (final.lanes t).halted = true ∧ (final.lanes t).scalar.pc = (program s).length-1) ∧\n      (∀ r, r<s.rows → final.global[s.outputBase+r]? = some (forwardWord s global r)) ∧\n      (∀ i, i<s.outputBase → final.global[i]? = global[i]?) ∧\n      final.global.length = global.length ∧ final.shared.length = shared.length ∧\n      final.barrier = Barrier.reset (s.depth+1) ∧ final.site = none ∧\n      (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) ∧\n      (∀ r, r<s.rows → ∀ i : Ptx.Binary32.Reduction.RowInput,\n        Ptx.Binary32.Reduction.words i.tree =\n          Ptx.Binary32.Reduction.balanced s.depth 0 (operands s global r) →\n        i.bias = global[s.biasBase+r]! →\n        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (max i.affine 0) ∧\n          |max i.affine 0-max i.idealAffine 0| ≤ i.error) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each unpadded leaf\nmatches one stored weight and input word to the corresponding real tensor\nentries, with explicit encoding errors. Padded leaves contain exact positive\nzero operands."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseForward.lean",
+        "passage": {
+          "quote": "structure Encoding (s : Dense.Shape) (global : List Word)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) where\n  entry : Fin s.rows → Fin s.columns → DotError.Input\n  weightWord : ∀ r c, (entry r c).left = global[s.weight r.val c.val]!\n  inputWord : ∀ r c, (entry r c).right = global[c.val]!\n  weightIdeal : ∀ r c, (entry r c).l = Spec.get2 w r c\n  inputIdeal : ∀ r c, (entry r c).r = Spec.get2 x c 0\n  biasValue : Fin s.rows → ℝ\n  biasError : Fin s.rows → ℝ\n  biasReal : ∀ r, finiteReal global[s.biasBase+r.val]! = some (biasValue r)\n  biasApprox : ∀ r, |biasValue r-Spec.get2 b r 0| ≤ biasError r\n  treeSafe : ∀ r, Reduction.Safe (Reduction.balanced s.depth 0 (Reduction.paddedInput (entry r)))\n  additionRange : ∀ r, |Reduction.rounded (Reduction.balanced s.depth 0 (Reduction.paddedInput (entry r)))+\n    biasValue r| ≤ Bounds.maxFinite"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The proof removes those zero terms from the ideal real sum and\nidentifies each row with the actual TorchLean matrix-vector, bias and ReLU\ngraph."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseForward.lean",
+        "passage": {
+          "quote": "theorem Encoding.row_ideal (encoding : Encoding s global x w b) (r : Fin s.rows) :\n    (encoding.row r).idealAffine = Spec.get2 (DenseVJP.affine x w b) r 0 := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Padded leaves contain exact positive\nzero operands. The proof removes those zero terms from the ideal real sum and\nidentifies each row with the actual TorchLean matrix-vector, bias and ReLU\ngraph."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReductionPadding.lean",
+        "passage": {
+          "quote": "theorem padded_ideal (f : Fin n → DotError.Input) (depth : Nat) (bound : n≤2^depth) :\n    ideal (balanced depth 0 (paddedInput f)) = ∑ i : Fin n, (f i).l*(f i).r := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The resulting bound concerns the output words of the same admitted\nexecution; it is agreement within an error bound, not bitwise agreement with\nan external PyTorch implementation."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseForward.lean",
+        "passage": {
+          "quote": "theorem selected_forward (s : Dense.Shape) (bounds : Dense.Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, ∃ run : ConcreteRuns (Dense.config s bounds) (Dense.program s)\n      (Dense.initial s global shared seeds) events final, ∃ source co,\n      Graph.Ordered.Valid (Memory.graph (Dense.program s) global shared events source co)\n        (Memory.runOrder run.toRuns\n          (show (Dense.initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross ∧\n      (∀ i, ¬Path (Ptx.Scalar.SharedReduction.Machine.Memory.grounding\n        (Memory.graph (Dense.program s) global shared events source co)\n        (Memory.runOrder run.toRuns\n          (show (Dense.initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross) i i) ∧\n      (∀ t, (final.lanes t).halted = true ∧ (final.lanes t).scalar.pc = (Dense.program s).length-1) ∧\n      (∀ row : Fin s.rows, ∃ word, final.global[s.outputBase+row.val]? = some word ∧\n        finiteReal word = some (max (encoding.row row).affine 0) ∧\n        |max (encoding.row row).affine 0 -\n          Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤\n          (encoding.row row).error) ∧\n      (∀ i, i<s.outputBase → final.global[i]? = global[i]?) ∧\n      final.global.length = global.length ∧ final.shared.length = shared.length ∧\n      final.barrier = Barrier.reset (s.depth+1) ∧ final.site = none ∧\n      (∀ event ∈ events, AccessSafe (Dense.initial s global shared seeds) event) := by"
         }
       }
     }

@@ -1,3 +1,5 @@
+import PtxBinary32.ReductionPadding
+import PtxDenseForward
 import PtxBinary32.ParallelChronology
 import PtxBinary32.ParallelSources
 import PtxBinary32.ParallelAdmission
@@ -1009,3 +1011,16 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Memory.Chronology.concrete_certificate
 #print axioms Ptx.Scalar.Parallel.Memory.Chronology.concrete_admitted
 #print axioms Ptx.Scalar.Parallel.Dense.selected_forward_admitted
+
+-- Zero padding and the admitted forward connection to the actual tensor graph.
+#print axioms Ptx.Binary32.Reduction.zeroInput
+#print axioms Ptx.Binary32.Reduction.paddedInput
+#print axioms Ptx.Binary32.Reduction.map_balanced
+#print axioms Ptx.Binary32.Reduction.balanced_ideal
+#print axioms Ptx.Binary32.Reduction.padded_ideal
+#print axioms PtxTorchLean.DenseForward.Encoding
+#print axioms PtxTorchLean.DenseForward.Encoding.row
+#print axioms PtxTorchLean.DenseForward.Encoding.row_words
+#print axioms PtxTorchLean.DenseForward.Encoding.row_ideal
+#print axioms PtxTorchLean.DenseForward.forward_word_accuracy
+#print axioms PtxTorchLean.DenseForward.selected_forward

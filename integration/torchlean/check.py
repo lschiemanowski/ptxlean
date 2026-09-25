@@ -108,6 +108,11 @@ COUNTS["Ptx.Scalar.Parallel.Memory.Chronology"] = COUNTS.get("Ptx.Scalar.Paralle
 COUNTS["Ptx.Scalar.Parallel.Dense"] = COUNTS.get("Ptx.Scalar.Parallel.Dense", 0) + 1
 TARGETS.update({'PtxBinary32.ParallelChronology', 'PtxBinary32.ParallelSources', 'PtxBinary32.DenseAdmission', 'PtxBinary32.ParallelAdmission'})
 
+# Selected admitted forward outputs compared to the actual TorchLean tensor graph.
+COUNTS["Ptx.Binary32.Reduction"] += 5
+COUNTS.update({"PtxTorchLean.DenseForward": 3, "PtxTorchLean.DenseForward.Encoding": 3})
+TARGETS.update({"PtxBinary32.ReductionPadding", "PtxDenseForward"})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

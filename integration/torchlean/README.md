@@ -167,8 +167,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 60 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 930
+All 62 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 941
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward
@@ -216,12 +216,14 @@ binary32 arithmetic, and a complete selected forward execution admitted by the
 existing restricted memory model.
 The proof reaches every thread's exit, derives stored row words, preserves
 inputs and allocation lengths, and proves access safety for the full trace.
-The existing explicit encoding/range conditions give bounds for those stored
-words. The complete witness now retains concrete-read evidence: checked replay
+Explicit entry-encoding and calculated range conditions give bounds for those
+stored words against the actual TorchLean real tensor graph. Zero-padding
+removal and the tensor/tree identity are proved, including empty inputs. The complete witness now retains concrete-read evidence: checked replay
 reproduces both final arrays, and each load has a proved initial or last-store
 origin in the trace. Four complete software-interpreter cases also check replay.
 The graph's read sources, chronological write ordering and actual barrier edges
 satisfy the existing memory constraints, with no admission assumption added to
-the layer theorem. Correctness over all admitted executions, the real padded
-row-tree identity connecting to TorchLean, and the backward kernel remain open.
+the layer theorem. `PtxDenseForward.selected_forward` combines these guarantees
+and the tensor error bound on the same trace. Correctness over all admitted
+executions, an empty-output wrapper and the backward kernel remain open.
 No GPU execution or benchmarking is included.

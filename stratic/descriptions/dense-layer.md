@@ -69,8 +69,15 @@ gradients are related to the actual TorchLean forward and generated backward.
 
 The bound for a selected stored row follows from finite input interpretations,
 explicit encoding errors and checks on the calculated intermediate ranges.
-It does not assume the accuracy of intermediate results. Matching that ideal
-padded row tree to the tensor graph is an additional identity to prove.
+It does not assume the accuracy of intermediate results. Each unpadded leaf
+matches one stored weight and input word to the corresponding real tensor
+entries, with explicit encoding errors. Padded leaves contain exact positive
+zero operands. The proof removes those zero terms from the ideal real sum and
+identifies each row with the actual TorchLean matrix-vector, bias and ReLU
+graph. The resulting bound concerns the output words of the same admitted
+execution; it is agreement within an error bound, not bitwise agreement with
+an external PyTorch implementation. Tree-rounding and finite-range conditions
+remain explicit and follow the implementation's fixed reduction order.
 
 The first implementation uses binary32 with explicit separate rounding, fixed
 contiguous layouts, and a bounded cooperating thread group for each reduction.

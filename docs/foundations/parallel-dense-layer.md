@@ -7,15 +7,14 @@ x\in\mathbb R^n,\quad W\in\mathbb R^{m\times n},\quad b\in\mathbb R^m,
 \qquad y=\operatorname{ReLU}(Wx+b)\in\mathbb R^m.
 \]
 
-**The complete selected forward execution is now checked in Lean, including
-all reduction rounds, barriers, bias/ReLU stores and every thread's exit.**
-The proof derives the stored binary32 words from the original inputs and connects
-them to the existing conditional row error bound. It also preserves inputs and
-proves access safety for the whole trace. **The same selected execution now has
-a proved admission certificate under the existing restricted memory model.**
-Correctness for every admitted execution remains unproved. The final real-valued
-padding identity connecting these row bounds to TorchLean's tensor graph is also
-still open. There is no GPU execution or speed claim.
+**The complete selected forward execution is checked in Lean, including all
+reduction rounds, barriers, bias/ReLU stores and every thread's exit.** The same
+trace has a proved admission certificate under the existing restricted memory
+model, preserves inputs and satisfies access safety. **Its stored binary32
+outputs approximate the actual TorchLean real tensor graph**, under explicit
+input-encoding and calculated finite-range conditions. The proof removes padded
+zero terms from the real sum, including for an empty input. Correctness for every
+admitted execution remains unproved. There is no GPU execution or speed claim.
 
 ## The mathematical computation and its backward
 
@@ -48,7 +47,8 @@ When every `a_i` is nonzero, `sensitivities_adjoint` identifies that result with
 the adjoint of the ordinary real derivative. At zero, `gate_at_zero` establishes
 the chosen zero convention, without claiming differentiability there. The empty
 inner dimension gives `ReLU(b)`; with no outputs, all input sensitivities are
-zero. These are mathematical graph results, not yet kernel edge-case results.
+zero. The selected forward kernel also covers empty inputs; an empty-output
+no-launch wrapper remains to be supplied.
 
 `PtxTensorContext.lean` supplies reusable identities for handling the graph's
 collection of differently shaped tensors. It allows the proof to follow tensor
@@ -89,9 +89,50 @@ accuracy of an intermediate result.
 `ReductionRelu.lean` adds the bias, activation and backward gate. ReLU does not
 increase the forward error. A strict margin `error < abs(idealAffine)` guarantees
 that rounding cannot change the backward's branch. The seed's incoming error
-then bounds the gate error. Propagation through the full matrix backward, padding
-for non-power-of-two lengths, and the corresponding kernel proofs remain to be
-connected; this arithmetic API does not claim those results.
+then bounds the gate error. Propagation through the full matrix backward and its corresponding kernel
+proofs remain to be connected. The forward padding and tensor connection are
+proved separately, as described below.
+
+## From stored words to the actual tensor graph
+
+`PtxDenseForward.Encoding` states how the initial words represent `x`, `W` and
+`b`. Each weight/input pair carries its finite real interpretation, the ideal
+tensor entries, their encoding errors and a product-range check. Biases have
+the same kind of interpretation and error bound. The remaining range checks
+apply to the explicit rounded reduction tree and its bias addition. These are
+conditions on calculations from the original operands, not assumptions that
+unknown execution intermediates already have the desired accuracy.
+
+`ReductionPadding.paddedInput` fills columns beyond the input length with exact
+positive-zero operand pairs. `padded_ideal` proves that their ideal real sum is
+just the sum over the original input coordinates. This also handles zero input
+columns: all leaves are zero and the ideal affine value is the bias. It permits
+real-number associativity only. The binary32 calculation still contains every
+padded leaf and addition, in the fixed tree order, and its error budget retains
+those nodes. The bound is conservative; it need not be zero for an exactly
+representable result.
+
+`Encoding.row_words` connects that numerical tree to the actual operands loaded
+by the kernel. `Encoding.row_ideal` identifies its ideal sum plus bias with the
+coordinate of the actual TorchLean affine graph. `forward_word_accuracy` then
+uses ReLU's non-expansion of error to compare the reference output word with the
+actual TorchLean graph output. No activation margin or nonzero-affine premise is
+needed for this forward result; those conditions belong to backward branch and
+derivative arguments.
+
+Finally, `PtxTorchLean.DenseForward.selected_forward` returns one admitted,
+terminating instruction execution whose stored output at every row is a finite
+binary32 word within the derived error bound of that graph coordinate. Its
+memory-admission certificate, stored values, preserved inputs, final allocation
+lengths, barrier state and access-safety proof all refer to the same execution.
+The caller supplies the initial encoding and range conditions, not a tensor/tree
+identity, desired load values or a premise about intermediate accuracy.
+
+The comparison is to TorchLean's real-valued tensor specification. It is neither
+bitwise agreement with a concrete PyTorch run nor a theorem about all admitted
+kernel executions. Arithmetic bounds already quantify over permitted arithmetic
+results, but that alone does not prove the necessary memory observations for
+arbitrary thread schedules.
 
 ## Threads, storage and repeated barriers
 
@@ -448,9 +489,10 @@ and completion. The existing generic memory-order results can then force the
 permitted read sources. The selected array-read calculation must not be used as
 a premise that an arbitrary read is fresh.
 
-The stored row bounds must then be connected to the actual TorchLean matrix
-graph, including the identity removing the padded zero terms, while preserving
-permitted arithmetic results. The empty-output no-launch wrapper and the
+The selected stored row bounds are now connected to the actual TorchLean
+matrix graph, including zero-padding removal. Extending that correspondence to
+every admitted execution must preserve permitted arithmetic results and prove
+the required memory observations. The empty-output no-launch wrapper and the
 separately supplied parallel backward kernel with stored `dx`, `dW`, and `db`
 correspondence remain additional work. The Stratic component stays partial.
 No GPU run or benchmark is needed for these proof obligations.
@@ -470,7 +512,7 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxBinary32.DenseAdmission
+lake build PtxDenseForward
 lake env lean PtxBinary32/DenseChecks.lean
 ```
 

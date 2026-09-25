@@ -1,0 +1,85 @@
+{
+  "id": "84dfa23a-7dac-495c-bdcf-28ce2f7744ef",
+  "base": "bb18a6086e565ea5972617e6728653cd35e0142b",
+  "contentTree": "395870d5d207cdfde9b1e6202cf2a191ee650ccf",
+  "reviewer": "Codex",
+  "summary": "Connect the admitted parallel dense forward execution to the actual TorchLean real tensor graph.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "The selected admitted execution now has stored-word error bounds against the actual TorchLean graph. The proof derives tensor/tree equality and zero-padding removal from explicit operand encodings; universal execution correctness, the empty-output wrapper and parallel backward remain open."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Eleven new public declarations enter the unchanged pinned-build and exact standard-axiom dependency audit. This is a checked connection within existing semantics, with no new claim about source fidelity or hardware conformance."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The child now connects an actual admitted instruction trace to its tensor specification under explicit numerical conditions. This advances the parent end-to-end example responsibility while keeping selected existence separate from universal correctness and broader coverage."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "unchanged",
+      "reason": "The existing concrete-read admitted execution is reused without modifying its machine, read choices, graph constraints, barrier history or safety contract. The new tensor result adds numerical encoding premises only; it does not assume memory visibility for arbitrary reads."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "395870d5d207cdfde9b1e6202cf2a191ee650ccf",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual proof, scope and public declaration coverage review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, unchanged TorchLean and numerical dependency revisions; 62 default integration targets. No GPU execution, benchmarking, external model calls or dependency updates.",
+      "evidence": "Both full suites exited 0 on the final snapshot. Root source/build/proof checks passed with 1643 reports; integration passed with 941 exact transitive dependency reports, only propext/Classical.choice/Quot.sound. All four complete dense interpreter/replay cases passed. All eleven new public declarations are explicitly audited. Proof-placeholder and unchecked-axiom guards pass. Stratic validation and diff whitespace checks pass; before/after snapshots are identical. Reviewed encoded/ideal tensor matching, real zero-padding removal including empty inputs, retained binary32 tree order and selected same-trace execution/admission/finite-word/error guarantees. Logs: /tmp/tensor-root-check.log and /tmp/tensor-integration-check.log.",
+      "tests": [],
+      "id": "52de9029-e248-4eae-8104-339ef2e6b93c",
+      "recordedAt": "2026-09-25T17:42:02.762Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T17:42:35.796Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Only the expected exact integration dependency count changes to 941."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Explains entry encodings, finite-range checks, proved real zero-padding removal, retained floating-point tree order, same-trace graph connection and remaining universal and backward obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ReductionPadding.lean",
+      "reason": "Reviewed exact zero operand construction, map compatibility, real ideal sum identity and finite padding removal for any n including zero. Only ideal real arithmetic is reassociated; rounded values and error budgets are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxDenseForward.lean",
+      "reason": "Reviewed all Encoding fields and composition. Initial words match actual tensor entries with explicit finite interpretations, encoding errors and calculated range guards. row_words and row_ideal derive both matching identities. selected_forward retains the original same-trace admission, grounding, exits, input preservation, extents, barrier and safety guarantees, and uses optional array lookup to assert an actual stored finite word and its graph error bound. No intermediate accuracy, desired load value, tensor/tree identity or memory validity is a new premise."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Every one of the eleven new public declaration sites is covered by a fresh transitive axiom report."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updated 62-target and 941-report counts and the selected admitted graph correspondence boundary; universal correctness, empty-output handling and backward remain open."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Added eleven exact namespace endpoints and two default targets. Dependency pins, source guards, allowed logical axioms and stable-source checks are unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Added the new bridge library and two default module targets under the existing pinned dependencies."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Reviewed summary and remaining obligations; linked complete meaningful passages to Encoding, real padding identity, tensor identity and same-trace theorem. Component remains partial."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Description-first refinement connects initial encodings to the real tensor graph while keeping rounded tree order, range conditions and selected-execution scope explicit."
+    }
+  ]
+}
