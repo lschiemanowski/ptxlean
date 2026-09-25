@@ -1,0 +1,64 @@
+{
+  "id": "baafb91e-10ce-4a2b-82e2-ea5e4b0d0d05",
+  "base": "59a058f30a5e683904a82ca9a6b2036eabc3f1b6",
+  "contentTree": "b9fcd8a5d06cf5244e8718a3a6455ddb74365931",
+  "reviewer": "Codex coordinator",
+  "summary": "Freeze funnel-shift family contracts and independent boundary checks.",
+  "examined": [
+    {
+      "id": "shf",
+      "outcome": "revised",
+      "reason": "New four-form all-input contract and rotation example responsibility, both pending implementation."
+    },
+    {
+      "id": "pure-instruction-families",
+      "outcome": "unchanged",
+      "reason": "Uses existing three-word pure-family interface."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "No accepted coverage or hardware claim added."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "b9fcd8a5d06cf5244e8718a3a6455ddb74365931",
+      "method": "Pinned source inspection; 656 independent concatenation/formula oracle comparisons; contract/driver signature review; stratic validate; git diff --check",
+      "outcome": "pass",
+      "environment": "Pinned local PTX ISA9.4, Lean4.34.0 project",
+      "evidence": "All 656 arithmetic comparisons pass. Four all-input result equations and 17 common execution/decoder obligations frozen. Full Lean driver has not been preflighted against a complete reference candidate; it will be checked in fresh replay. Source introduction PTX3.1 and numeric SM32 floor are distinguished from selected ISA94. No implementation claimed.",
+      "tests": [],
+      "id": "e4195282-0ec5-4bac-a0b6-d01bdaa9ae0c",
+      "recordedAt": "2026-09-25T06:36:31.609Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T06:36:56.689Z",
+  "unmapped": [
+    {
+      "path": "formalization/checks/shf-concrete-v1.lean",
+      "reason": "Reviewed frozen worker contract/protocol or independently computed acceptance driver."
+    },
+    {
+      "path": "formalization/checks/shf-v1.lean",
+      "reason": "Reviewed frozen worker contract/protocol or independently computed acceptance driver."
+    },
+    {
+      "path": "formalization/contracts/shf-v1-protocol.md",
+      "reason": "Reviewed frozen worker contract/protocol or independently computed acceptance driver."
+    },
+    {
+      "path": "formalization/contracts/shf-v1.md",
+      "reason": "Reviewed frozen worker contract/protocol or independently computed acceptance driver."
+    },
+    {
+      "path": "stratic/descriptions/shf.json",
+      "reason": "Reviewed frozen worker contract/protocol or independently computed acceptance driver."
+    },
+    {
+      "path": "stratic/descriptions/shf.md",
+      "reason": "Reviewed frozen worker contract/protocol or independently computed acceptance driver."
+    }
+  ]
+}
