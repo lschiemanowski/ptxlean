@@ -11,8 +11,9 @@ x\in\mathbb R^n,\quad W\in\mathbb R^{m\times n},\quad b\in\mathbb R^m,
 all reduction rounds, barriers, bias/ReLU stores and every thread's exit.**
 The proof derives the stored binary32 words from the original inputs and connects
 them to the existing conditional row error bound. It also preserves inputs and
-proves access safety for the whole trace. **PTX memory-model admission and
-correctness for every admitted execution remain unproved.** The final real-valued
+proves access safety for the whole trace. **The same selected execution now has
+a proved admission certificate under the existing restricted memory model.**
+Correctness for every admitted execution remains unproved. The final real-valued
 padding identity connecting these row bounds to TorchLean's tensor graph is also
 still open. There is no GPU execution or speed claim.
 
@@ -334,10 +335,10 @@ assume intermediate numerical accuracy. The real tensor/padded-tree identity
 still needs to be proved before claiming the TorchLean correspondence.
 
 The witness chooses concrete array reads and the checked software binary32
-results. That is sufficient to construct steps in the candidate machine. It is
-not yet a certificate that the trace's memory graph satisfies PTX's memory rules.
-Nor does one selected completed execution prove that every permitted execution
-has the same numerical guarantees. The unrestricted candidate relation and its
+results. Constructing those steps alone does not establish memory admission.
+The separate certificate below now supplies that proof. One selected completed
+execution still does not prove that every permitted execution has the same
+numerical guarantees. The unrestricted candidate relation and its
 arithmetic result freedom have not been narrowed to obtain this proof.
 
 ## Checked memory replay and read origins
@@ -372,10 +373,54 @@ bounds and register seeds as before.
 
 Replay alone does not check instruction fetches or synchronization, and does
 not prove PTX memory admission. The execution proof supplies the former facts;
-the remaining admission proof must map the derived sources into the existing
-memory graph, construct the order of writes to each location, and discharge all
-memory and barrier constraints. These obligations have not been replaced with
-replay or added as assumptions of the dense theorem.
+the admission proof below maps the derived sources into the existing memory
+graph and discharges its memory and barrier constraints. These obligations have
+not been replaced with replay or added as assumptions of the dense theorem.
+
+## From read origins to an admitted execution
+
+`ParallelChronology` gives each graph event a position in a strict chronological
+order. Initial writes come first; program events use their positions in the full
+instruction trace. The graph's existing list groups accesses by thread, so list
+indices themselves would not give the required chronology. The proof retains
+that list and adds a separate rank. Initial location codes occupy a bounded
+range; program ranks start beyond that range. Two distinct graph entries cannot
+have the same rank, because one trace position identifies one issuing thread
+and one memory event.
+
+Program-order edges point forward in this ranking. So do the cross-thread edges
+obtained from actual barrier arrivals and completions. The represented accesses
+are relaxed loads and stores, so no release/acquire-pattern edge is silently
+assumed. Global and shared addresses continue to use distinct location codes.
+
+`ParallelSources.source_exists` converts the replay origin of each load into an
+index in this exact graph. The source is a write to the same location, with the
+observed value, strictly before the read. Every other write to that location
+before the read is no later than the source. This covers both initialization
+and repeated program stores; it does not require the kernel to have only one
+writer per address.
+
+`ParallelAdmission` selects these proved sources and orders same-location writes
+chronologically. The source selection uses Lean's ordinary classical choice:
+it is an existence proof, not an executable graph-extraction tool. The theorem
+`concrete_certificate` proves every field of the existing `SerialCertificate`,
+including initial-write order and the barrier-induced edges. Its existing
+soundness theorem gives `Graph.Ordered.Valid`; the memory constraints themselves
+are unchanged. The same ranks exclude cycles made from those order edges and
+read-source edges. This is a sufficient selected witness, not a proposed rule
+that all PTX executions must follow one global sequential order.
+
+`DenseAdmission.selected_forward_admitted` applies that reusable result to the
+complete dense-forward execution. Its admission graph, terminating instruction
+run, stored row words, unchanged inputs, allocation lengths and access safety
+all concern the same trace. The theorem also gives the existing `RowInput`
+error bound for its actual stored words. Shape, storage and numerical premises
+are unchanged; graph validity, desired read values and output accuracy are not
+new assumptions.
+
+The admission theorem is relative to the restricted memory model described in
+this project. It does not establish hardware conformance or full dependent PTX
+semantics, scheduler fairness, or correctness of every admitted layer execution.
 
 ## Software regression checks
 
@@ -396,11 +441,8 @@ or performance measurements.
 
 ## The exact remaining obligation
 
-The next step is a memory-admission certificate for the complete selected trace.
-Concrete-read replay and latest preceding store origins are proved; constructing
-the indexed graph sources and write ordering and proving their compatibility
-with the actual barrier certificate remain open.
-For correctness over arbitrary admitted executions, the proof must additionally
+The complete selected trace is admitted. For correctness over arbitrary
+admitted executions, the proof must additionally
 derive each actual writer and the access positions relative to barrier arrivals
 and completion. The existing generic memory-order results can then force the
 permitted read sources. The selected array-read calculation must not be used as
@@ -428,7 +470,7 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxBinary32.DenseForward
+lake build PtxBinary32.DenseAdmission
 lake env lean PtxBinary32/DenseChecks.lean
 ```
 

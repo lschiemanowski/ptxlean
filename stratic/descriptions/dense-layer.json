@@ -8,10 +8,10 @@
   },
   "summary": [
     "Connect a vector-output dense–ReLU layer and all its gradients to an actual TorchLean graph and automatically generated backward.",
-    "Verify a separately supplied parallel binary32 implementation with a fixed reduction tree and fresh scratch in one bounded cooperating thread array; distinguish a complete selected candidate execution, checked read origins and stored-word bounds from PTX memory admission and correctness of all admitted executions."
+    "Verify a separately supplied parallel binary32 forward implementation with a fixed reduction tree and fresh scratch in one bounded cooperating thread array; prove a complete admitted execution and conditional stored-word bounds while distinguishing correctness for all admitted executions."
   ],
   "realization": "partial",
-  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected candidate execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. Selected stored-word accuracy follows under the existing explicit RowInput encoding and range conditions. Missing: admission of the complete candidate memory graph; full-layer actual-writer and barrier-timing proofs for arbitrary admitted executions; universal stored numerical correspondence to TorchLean including the padded real-tree identity; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values or intermediate accuracy are assumed by the selected execution proof.",
+  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Selected stored-word accuracy follows under the existing explicit RowInput encoding and range conditions. Missing: full-layer actual-writer and barrier-timing proofs for arbitrary admitted executions; universal stored numerical correspondence to TorchLean including the padded real-tree identity; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy or memory validity are assumed by the selected execution proof.",
   "links": [
     {
       "kind": "implementation",
@@ -275,6 +275,18 @@
         "path": "integration/torchlean/PtxBinary32/DenseReplay.lean",
         "passage": {
           "quote": "theorem selected_forward_checked (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, ConcreteRuns (config s b) (program s) (initial s global shared seeds) events final ∧\n      Replay.trace ⟨global,shared⟩ events = some (Replay.arrays final) ∧\n      Replay.ReadOrigins ⟨global,shared⟩ events ∧\n      (∀ t, (final.lanes t).halted = true ∧ (final.lanes t).scalar.pc = (program s).length-1) ∧\n      (∀ r, r<s.rows → final.global[s.outputBase+r]? = some (forwardWord s global r)) ∧\n      (∀ i, i<s.outputBase → final.global[i]? = global[i]?) ∧\n      final.global.length = global.length ∧ final.shared.length = shared.length ∧\n      final.barrier = Barrier.reset (s.depth+1) ∧ final.site = none ∧\n      (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The selected witness also supplies a graph on exactly those memory\nevents, with a proved read source for every load and an order for writes to the\nsame location. A chronological certificate proves that this graph satisfies the\nexisting memory constraints and the ordering derived from its actual completed\nbarriers. It also excludes circular chains through those order and read-source\nedges. This establishes an admitted execution with the stated stored outputs."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseAdmission.lean",
+        "passage": {
+          "quote": "theorem selected_forward_admitted (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, ∃ run : ConcreteRuns (config s b) (program s) (initial s global shared seeds) events final,\n      ∃ source co,\n      Graph.Ordered.Valid (Memory.graph (program s) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross ∧\n      (∀ i, ¬Path (SharedReduction.Machine.Memory.grounding\n        (Memory.graph (program s) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross) i i) ∧\n      (∀ t, (final.lanes t).halted = true ∧ (final.lanes t).scalar.pc = (program s).length-1) ∧\n      (∀ r, r<s.rows → final.global[s.outputBase+r]? = some (forwardWord s global r)) ∧\n      (∀ i, i<s.outputBase → final.global[i]? = global[i]?) ∧\n      final.global.length = global.length ∧ final.shared.length = shared.length ∧\n      final.barrier = Barrier.reset (s.depth+1) ∧ final.site = none ∧\n      (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) ∧\n      (∀ r, r<s.rows → ∀ i : Ptx.Binary32.Reduction.RowInput,\n        Ptx.Binary32.Reduction.words i.tree =\n          Ptx.Binary32.Reduction.balanced s.depth 0 (operands s global r) →\n        i.bias = global[s.biasBase+r]! →\n        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (max i.affine 0) ∧\n          |max i.affine 0-max i.idealAffine 0| ≤ i.error) :="
         }
       }
     }

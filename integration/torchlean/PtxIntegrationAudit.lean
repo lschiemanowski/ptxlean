@@ -1,3 +1,7 @@
+import PtxBinary32.ParallelChronology
+import PtxBinary32.ParallelSources
+import PtxBinary32.ParallelAdmission
+import PtxBinary32.DenseAdmission
 import PtxBinary32.ParallelConcrete
 import PtxBinary32.ParallelReplay
 import PtxBinary32.ParallelReplaySources
@@ -978,3 +982,30 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.ConcreteSegment.compile
 #print axioms Ptx.Scalar.Parallel.segmentReference_concrete
 #print axioms Ptx.Scalar.Parallel.Dense.selected_forward_concrete
+
+-- Chronological graph construction and admitted dense forward execution.
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.rank
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.program_origin
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.initial_origin
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.initial_bound
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.initial_rank
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.program_same_position
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.rank_injective
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.program_before
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.initial_iff
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.no_release
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.initial_position
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.initial_before
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.base_before
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.split_at
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.initial_member
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.initial_graph_member
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.writtenAt_of_address
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.SourceFor
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.source_exists
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.chosenSource
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.chronologicalCoherence
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.chosenSource_spec
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.concrete_certificate
+#print axioms Ptx.Scalar.Parallel.Memory.Chronology.concrete_admitted
+#print axioms Ptx.Scalar.Parallel.Dense.selected_forward_admitted

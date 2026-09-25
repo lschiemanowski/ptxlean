@@ -51,10 +51,14 @@ The witness retains concrete-read evidence through every instruction and
 barrier. Replaying its emitted memory events checks every load value and
 reproduces the final arrays. Each load is traced to the initial contents or the
 last preceding store to that location, with global and shared storage kept
-separate. This establishes a complete candidate execution with checked read
-origins. Showing that PTX's memory rules admit that candidate, and proving
-correctness for all admitted executions, requires separate arguments about the
-memory graph, actual writers and barrier timing.
+separate. The selected witness also supplies a graph on exactly those memory
+events, with a proved read source for every load and an order for writes to the
+same location. A chronological certificate proves that this graph satisfies the
+existing memory constraints and the ordering derived from its actual completed
+barriers. It also excludes circular chains through those order and read-source
+edges. This establishes an admitted execution with the stated stored outputs.
+Correctness for all admitted executions remains a separate obligation: their
+reads need not follow the witness's selected chronology.
 
 Numerical contracts relate finite encoded inputs to ideal real tensors. Bounds
 follow the actual multiplication and tree-addition order, including bias and

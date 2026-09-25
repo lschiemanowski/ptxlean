@@ -70,7 +70,19 @@ the value observed by each load. This supplies evidence for constructing read
 sources: every load must use the initial word when there is no preceding store,
 or the value of the last preceding store to that location in the trace. Global
 and shared locations are tracked separately. This does not itself discharge the
-memory constraints.
+memory constraints. A selected concrete-read trace can supply a chronological
+certificate: initial writes precede program events, each load uses its last
+preceding write, and writes to the same location follow their trace order.
+The certificate must also respect the ordering derived from actual barrier
+arrivals and completions. Graph entries are grouped by thread, so their list
+indices are not a global chronology. Each program event instead keeps its
+position in the full instruction trace, including non-memory events; initial
+writes occupy a separate earlier range. A proved source function selects a
+compatible initial or last program write for every read. This is a mathematical
+existence construction, not an executable graph-extraction tool. Its proof
+establishes the existing restricted memory constraints and excludes circular
+chains through order and read-source edges. It does not impose this selected
+chronology on all permitted executions or establish general PTX semantics.
 
 A two-thread witness supplies that additional proof: threads publish inputs, synchronize,
 compute sums, publish to fresh locations, synchronize again and store the peer's

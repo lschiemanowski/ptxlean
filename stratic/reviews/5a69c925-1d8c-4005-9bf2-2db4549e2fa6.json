@@ -1,0 +1,106 @@
+{
+  "id": "5a69c925-1d8c-4005-9bf2-2db4549e2fa6",
+  "base": "1062b7dc72764136033c7260ff9661029228c26b",
+  "contentTree": "78234ce8fa7077cfd6aec346dc2b1681e6d4efea",
+  "reviewer": "Codex",
+  "summary": "Prove admission of the complete parallel dense forward execution under the existing memory constraints.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "The complete selected instruction witness now supplies an admitted memory graph, actual barrier order, acyclic order/read-source grounding and the same stored-word error conditions. Caller shape/storage premises are unchanged. Universal correctness, the real tensor-tree identity, the empty-output wrapper and parallel backward remain open."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Generic concrete-read admission now derives graph sources from actual replay origins, proves chronological latest-write and initial ordering, and proves actual program/barrier edges increase rank. The original graph labels, admission constraints and candidate relation are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The same pinned builds and exact standard-axiom dependency audit cover 25 added declarations. Admission is relative to the existing restricted model; it is not new source-fidelity or hardware-conformance evidence."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The child now discharges its selected memory-admission obligation while preserving explicit distinction from correctness over every admitted execution and from TorchLean numerical correspondence."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "Concrete-read and candidate semantics are unchanged. The child adds a sufficient chronological witness proof and does not impose its read choices on general candidates or claim general dependent PTX semantics."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "78234ce8fa7077cfd6aec346dc2b1681e6d4efea",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual proof and scope review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, unchanged numerical and TorchLean dependency revisions; 60 default integration targets. No GPU execution, benchmarking, external model calls or dependency updates.",
+      "evidence": "Both suites exited 0. Root source/build/proof checks passed, with 1643 dependency reports; integration passed with 930 exact reports, only propext/Classical.choice/Quot.sound. All four complete dense interpreter/replay checks passed. Source guards rejected proof placeholders and unchecked axioms. Stratic validation reported no issues; diff whitespace check passed. Selected snapshots before and after verification are identical. Reviewed graph source existence, last-write chronology, actual barrier edges and the same-trace dense admission/numerical theorem. Logs: /tmp/admission-root-check.log and /tmp/admission-integration-check.log.",
+      "tests": [],
+      "id": "7a7a5786-5cfb-496a-88e5-2ec20f32298e",
+      "recordedAt": "2026-09-25T17:24:51.852Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T17:25:12.231Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Only the exact integration audit count changes to 930."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Updated the proved admission boundary and explained graph indexing versus chronology, actual barrier order, latest-write sources, classical witness selection and all remaining universal/TorchLean obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseAdmission.lean",
+      "reason": "Reviewed composition with the complete selected forward witness and its actual reset initial state. The returned same trace has validity, grounding, all exits, stored outputs, preserved input/extents, barriers and safety. Conditional numerical accuracy derives from stored words and existing RowInput matching/range conditions."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelAdmission.lean",
+      "reason": "Reviewed classical selection from proved SourceFor witnesses and chronological coherence. Every existing SerialCertificate field is discharged, yielding original Ordered.Valid plus no cycle in base/order and read-source edges. The reset premise supplies actual completion origins; finite candidate prefixes need not terminate."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelChronology.lean",
+      "reason": "Reviewed label origins, disjoint initial/program rank ranges, rank injectivity using actual single-event trace positions, initial-before ordering, absence of release-pattern edges in the relaxed forms and strictly increasing actual barrier edges."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelSources.lean",
+      "reason": "Reviewed construction of initial graph events and actual store labels from replay sources. Every source has equal address/value and precedes its load; a hypothetical intervening graph write is mapped to the actual prefix/suffix event and contradicted by replay latest-write evidence. No source or visibility premise is assumed."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Lists every new public definition and theorem for exact fresh transitive axiom reports."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updates target/report counts and explains admitted selected execution while retaining universal correctness and TorchLean/backward gaps."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Adds 25 explicit namespace endpoints and four build targets; forbidden proof tokens, allowed logical axioms, pin checks and snapshot guards unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Adds four default theorem modules; dependency and toolchain pins unchanged."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Description-first refinement of the selected admission responsibility; reviewed summary, remaining obligations and exact theorem passage links. The component remains partial for universal correctness and broader model coverage."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Description-first refinement of the selected admission responsibility; reviewed summary, remaining obligations and exact theorem passage links. The component remains partial for universal correctness and broader model coverage."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Description-first refinement of the selected admission responsibility; reviewed summary, remaining obligations and exact theorem passage links. The component remains partial for universal correctness and broader model coverage."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Description-first refinement of the selected admission responsibility; reviewed summary, remaining obligations and exact theorem passage links. The component remains partial for universal correctness and broader model coverage."
+    }
+  ]
+}

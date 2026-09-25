@@ -103,6 +103,11 @@ COUNTS["Ptx.Scalar.Parallel.Dense"] = COUNTS.get("Ptx.Scalar.Parallel.Dense", 0)
 COUNTS["Ptx.Scalar.Parallel.ConcreteSegment"] = COUNTS.get("Ptx.Scalar.Parallel.ConcreteSegment", 0) + 4
 TARGETS.update({'PtxBinary32.DenseReplay', 'PtxBinary32.ParallelReplay', 'PtxBinary32.ParallelReplaySources', 'PtxBinary32.ParallelConcrete'})
 
+# Sources and barrier order discharge the existing memory constraints.
+COUNTS["Ptx.Scalar.Parallel.Memory.Chronology"] = COUNTS.get("Ptx.Scalar.Parallel.Memory.Chronology", 0) + 24
+COUNTS["Ptx.Scalar.Parallel.Dense"] = COUNTS.get("Ptx.Scalar.Parallel.Dense", 0) + 1
+TARGETS.update({'PtxBinary32.ParallelChronology', 'PtxBinary32.ParallelSources', 'PtxBinary32.DenseAdmission', 'PtxBinary32.ParallelAdmission'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 
