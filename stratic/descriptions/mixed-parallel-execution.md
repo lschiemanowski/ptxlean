@@ -43,6 +43,22 @@ witness fetches and completes two successive barriers at different sites using
 the same resource and successive generations. It proves existence of that
 control execution, not scheduler fairness or memory visibility.
 
+For an instruction list without jumps or scalar exits, each thread's recorded
+instruction positions increase strictly, including its barrier arrivals and
+final exit. A skipped instruction still advances its position. A waiting or
+halted thread cannot emit another instruction event, and barrier completion
+advances every participant past that barrier. Thus a thread cannot execute the
+same store site twice. These facts concern arbitrary candidate reads and
+permitted arithmetic results, without assuming that a read is fresh or that the
+whole execution finishes. They establish control order; the kernel must still
+connect each store's computed address to its owner.
+For each observed completion, earlier thread events have instruction positions
+at or before its barrier site, and later events have positions beyond it.
+A barrier site cannot complete twice in such a program. These results turn
+producer and consumer instruction positions into the timing facts required by
+the visibility rule. The existence of the required phase and the identity of
+its unique writer still need to be proved for the concrete kernel.
+
 Each recorded barrier completion is justified by earlier, actually emitted
 arrivals from every participant, with the same CTA, resource, generation and
 instruction site. This history property survives arbitrary scheduling and

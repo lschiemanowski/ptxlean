@@ -10,10 +10,11 @@
     "Fetch integer, binary32 and full-group barrier instructions for cooperating threads with separate global and shared storage and checked access bounds; compose instruction segments only after matching their actual program positions.",
     "Derive repeated-barrier ordering and complete memory labels from actual executions; force single-writer publication through the existing memory constraints.",
     "Construct a completed two-thread, two-round computed-publication witness with checked read sources and no circular dependencies; concrete layer ownership, timing and execution proofs remain separate.",
-    "Derive initial or last-store read origins from concrete executions, construct chronological graph certificates, and prove admission under the existing restricted memory constraints with actual barrier order."
+    "Derive initial or last-store read origins from concrete executions, construct chronological graph certificates, and prove admission under the existing restricted memory constraints with actual barrier order.",
+    "For programs without jumps or scalar exits, derive strict per-thread instruction order and timing around actual barrier completions for arbitrary candidate runs; visibility still requires a proved unique writer for each location."
   ],
   "realization": "partial",
-  "remaining": "Layer-specific ownership and barrier timing for arbitrary admitted executions, launch validation and general barrier forms remain unimplemented. Concrete-read admission is a sufficient witness construction, not a characterization of all PTX executions.",
+  "remaining": "Straight-line candidate traces now have strict per-thread instruction order, unique execution of each thread/site pair and strict ordering of completed barrier sites. Actual completion splits derive producer/consumer timing from instruction sites, and the visibility rule uses those derived facts. Layer-specific computed-address ownership, existence of required producers and phases in arbitrary completed executions, launch validation and general barrier forms remain unimplemented. Concrete-read admission is a sufficient witness construction, not a characterization of all PTX executions.",
   "links": [
     {
       "kind": "implementation",
@@ -276,6 +277,54 @@
         "path": "integration/torchlean/PtxBinary32/ParallelChronology.lean",
         "passage": {
           "quote": "theorem base_before (program : List Instr) (global shared : List Word) (events : List (Event n))\n    (complete : History.CompleteOrigins events) (source co)\n    (a b : Fin (labels program global shared events).length)\n    (edge : Graph.Ordered.baseEdge (graph program global shared events source co)\n      (order complete (graph program global shared events source co)).cross a b) :\n    rank global shared ((graph program global shared events source co).event a) <\n      rank global shared ((graph program global shared events source co).event b) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For an instruction list without jumps or scalar exits, each thread's recorded\ninstruction positions increase strictly, including its barrier arrivals and\nfinal exit."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelControl.lean",
+        "passage": {
+          "quote": "theorem runs_progress (run : Runs cfg program s events final) (straight : Straight program) :\n    TraceProgress s events final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For each observed completion, earlier thread events have instruction positions\nat or before its barrier site, and later events have positions beyond it."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelCompletion.lean",
+        "passage": {
+          "quote": "theorem completion_orders_sites {s final : State n} {events : List (Event n)}\n    (run : Runs cfg program s events final) (straight : Straight program) (aligned : Aligned s)\n    (c p : Nat) (key : Barrier.Key) (e : Event n) (t : Fin n) (pc : Nat)\n    (hc : events[c]? = some (.barrier (.completion key)))\n    (hp : events[p]? = some e) (tag : stamp e = some (t,pc)) :\n    (p<c → pc≤key.site) ∧ (c<p → key.site<pc) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A barrier site cannot complete twice in such a program."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelCompletion.lean",
+        "passage": {
+          "quote": "theorem completion_site_unique {s final : State n} {events : List (Event n)}\n    (run : Runs cfg program s events final) (straight : Straight program) (aligned : Aligned s)\n    (c d : Nat) (key other : Barrier.Key)\n    (hc : events[c]? = some (.barrier (.completion key)))\n    (hd : events[d]? = some (.barrier (.completion other))) (same : key.site=other.site) : c=d :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "These results turn\nproducer and consumer instruction positions into the timing facts required by\nthe visibility rule. The existence of the required phase and the identity of\nits unique writer still need to be proved for the concrete kernel."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelVisibility.lean",
+        "passage": {
+          "quote": "theorem run_read_from_unique_writer_sites {cfg : Config n} {s final : State n} {events : List (Event n)}\n    (run : Runs cfg program s events final) (reset : s.barrier=Barrier.reset generation)\n    (straight : Control.Straight program) (source co) (phase : History.Phase events)\n    (w r : Fin (labels program s.global s.shared events).length) (writer reader : Fin n)\n    (valid : Graph.Ordered.Valid (graph program s.global s.shared events source co) (runOrder run reset source co).cross)\n    (wo : owner n ((graph program s.global s.shared events source co).event w)=some writer)\n    (ro : owner n ((graph program s.global s.shared events source co).event r)=some reader)\n    (producer : ∃ space occ, events[((graph program s.global s.shared events source co).event w).position]? =\n      some (.scalar writer space occ) ∧ occ.pc<phase.key.site)\n    (consumer : ∃ space occ, events[((graph program s.global s.shared events source co).event r).position]? =\n      some (.scalar reader space occ) ∧ phase.key.site<occ.pc)\n    (written : (graph program s.global s.shared events source co).write w)\n    (read : (graph program s.global s.shared events source co).read r)\n    (same : (graph program s.global s.shared events source co).sameAddress w r)\n    (unique : ∀ v, (graph program s.global s.shared events source co).write v →\n      (graph program s.global s.shared events source co).sameAddress v r →\n      ¬(graph program s.global s.shared events source co).initial v → v=w) :\n    (graph program s.global s.shared events source co).source r=w ∧\n      ((graph program s.global s.shared events source co).event r).effect.value =\n      ((graph program s.global s.shared events source co).event w).effect.value :="
         }
       }
     }

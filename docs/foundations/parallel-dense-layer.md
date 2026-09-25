@@ -213,6 +213,63 @@ spends more shared storage and needs an explicit total storage bound, but no
 round can overwrite a previous round's input. Reusing storage later would need
 a separate proof that every reader has finished.
 
+## Control facts for arbitrary forward executions
+
+An instruction position identifies a slot in the common program; a trace
+position identifies an event in one particular interleaving of threads. They
+are different numbers. A store at instruction 20 can appear anywhere in the
+combined trace, depending on which other instructions ran first.
+
+The dense instruction list has no jumps. Its scalar instructions either
+advance to the next slot, fail without emitting an event, or are skipped by a
+false predicate and still advance. Its explicit parallel exit halts the thread.
+`DenseControl.program_straight` checks this property against the complete list,
+including every reduction round.
+
+`ParallelControl.runs_progress` proves that each thread's recorded instruction
+positions increase strictly. The argument permits arbitrary load candidates,
+all allowed binary32 result choices, arbitrary scheduling and incomplete runs.
+For the proof, a thread has a measure `2*pc` while runnable and `2*pc+1` while
+waiting or halted. Ordinary instructions advance the position; arrival or exit
+consumes its current position; completion advances all participants past the
+barrier. The measure never decreases. It is derived from the existing machine
+state and introduces no new scheduling rule.
+
+Consequently, `DenseControl.scalar_site_unique` rules out two occurrences of
+one thread's store site. `trace_store_site` also classifies every actual store,
+using its fetched instruction and emitted memory effect:
+
+| Instruction position (starting at zero) | Storage | Role |
+| --- | --- | --- |
+| `20` | Shared | Product publication |
+| `22 + 16*k + 14`, for `k < depth` | Shared | Reduction-round publication |
+| `22 + 16*depth + 18` | Global | Row output |
+
+This is not yet a proof that two different threads cannot calculate the same
+address. Site uniqueness and location ownership are distinct obligations.
+
+`ParallelCompletion.completion_split` locates the actual release step in an
+arbitrary trace. Alignment, which is already proved from the reset state,
+places every participant at that barrier site before release and at its next
+instruction afterwards. `completion_orders_sites` therefore proves that events
+before completion have instruction positions at or below that site, and events
+after completion have positions strictly beyond it. A barrier site cannot
+complete twice in this program.
+
+These facts discharge timing from instruction-site inequalities. A producer
+at an earlier site precedes its own actual arrival, and a consumer at a later
+site follows the observed completion. `ParallelVisibility.run_read_from_unique_writer_sites`
+uses these derived facts in the existing memory rule, preserving its explicit
+requirements for an admitted graph, actual producer and consumer occurrences,
+and exactly one program writer to the location. It does not assume that the
+load used the desired value.
+
+What remains for the dense kernel is to derive computed-address ownership,
+show that the required producers and completed phases occur in every completed
+execution, and connect the forced read values and allowed arithmetic results
+to the stored outputs. The general control facts do not establish those
+application-specific conditions by themselves.
+
 ## A completed two-round witness
 
 `ParallelReference` chooses concrete array reads and the checked software FP32
@@ -482,12 +539,14 @@ or performance measurements.
 
 ## The exact remaining obligation
 
-The complete selected trace is admitted. For correctness over arbitrary
-admitted executions, the proof must additionally
-derive each actual writer and the access positions relative to barrier arrivals
-and completion. The existing generic memory-order results can then force the
-permitted read sources. The selected array-read calculation must not be used as
-a premise that an arbitrary read is fresh.
+The complete selected trace is admitted. Arbitrary candidate traces now have
+proved instruction order, unique thread/store-site occurrences, exhaustive
+store-site classification and derived timing around observed completed barriers.
+For correctness over every admitted completed execution, the proof must still
+derive computed-address ownership and existence of each required producer and
+completed phase. The visibility rule can then force read sources and connect
+the allowed arithmetic results to each stored output. The selected array-read
+calculation must not be used as a premise that an arbitrary read is fresh.
 
 The selected stored row bounds are now connected to the actual TorchLean
 matrix graph, including zero-padding removal. Extending that correspondence to
@@ -512,7 +571,7 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxDenseForward
+lake build PtxDenseForward PtxBinary32.DenseControl PtxBinary32.ParallelVisibility
 lake env lean PtxBinary32/DenseChecks.lean
 ```
 

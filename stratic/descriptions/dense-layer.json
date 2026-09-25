@@ -8,10 +8,11 @@
   },
   "summary": [
     "Connect a vector-output dense–ReLU layer and all its gradients to an actual TorchLean graph and automatically generated backward.",
-    "Verify a separately supplied parallel binary32 forward implementation with a fixed reduction tree and fresh scratch in one bounded cooperating thread array; prove a complete admitted execution whose stored outputs approximate the actual TorchLean real graph under explicit encoding and range conditions, while distinguishing correctness for all admitted executions."
+    "Verify a separately supplied parallel binary32 forward implementation with a fixed reduction tree and fresh scratch in one bounded cooperating thread array; prove a complete admitted execution whose stored outputs approximate the actual TorchLean real graph under explicit encoding and range conditions, while distinguishing correctness for all admitted executions.",
+    "For arbitrary candidate forward traces, prove strict per-thread instruction order, classify every emitted store site and derive timing around observed barrier completions; computed-address ownership and universal stored-output correctness remain open."
   ],
   "realization": "partial",
-  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Its stored words approximate the actual TorchLean real tensor graph under explicit entry-encoding and calculated finite-range conditions; zero-padding removal and the tensor/tree identity are proved, including empty inputs. Missing: full-layer actual-writer and barrier-timing proofs for arbitrary admitted executions and their universal stored numerical correspondence; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy, tensor/tree identity or memory validity are assumed by the selected execution proof.",
+  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Its stored words approximate the actual TorchLean real tensor graph under explicit entry-encoding and calculated finite-range conditions; zero-padding removal and the tensor/tree identity are proved, including empty inputs. Arbitrary candidate traces now have strict per-thread instruction order, at-most-once execution of each store site, exhaustive emitted-store site classification and timing derived around observed completed barriers. Missing: computed-address ownership and existence of each required producer and phase in arbitrary completed executions, the resulting read-source and arithmetic-tree correspondence, and universal stored numerical correspondence; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy, tensor/tree identity or memory validity are assumed by the selected execution proof.",
   "links": [
     {
       "kind": "implementation",
@@ -335,6 +336,66 @@
         "path": "integration/torchlean/PtxDenseForward.lean",
         "passage": {
           "quote": "theorem selected_forward (s : Dense.Shape) (bounds : Dense.Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, ∃ run : ConcreteRuns (Dense.config s bounds) (Dense.program s)\n      (Dense.initial s global shared seeds) events final, ∃ source co,\n      Graph.Ordered.Valid (Memory.graph (Dense.program s) global shared events source co)\n        (Memory.runOrder run.toRuns\n          (show (Dense.initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross ∧\n      (∀ i, ¬Path (Ptx.Scalar.SharedReduction.Machine.Memory.grounding\n        (Memory.graph (Dense.program s) global shared events source co)\n        (Memory.runOrder run.toRuns\n          (show (Dense.initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross) i i) ∧\n      (∀ t, (final.lanes t).halted = true ∧ (final.lanes t).scalar.pc = (Dense.program s).length-1) ∧\n      (∀ row : Fin s.rows, ∃ word, final.global[s.outputBase+row.val]? = some word ∧\n        finiteReal word = some (max (encoding.row row).affine 0) ∧\n        |max (encoding.row row).affine 0 -\n          Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤\n          (encoding.row row).error) ∧\n      (∀ i, i<s.outputBase → final.global[i]? = global[i]?) ∧\n      final.global.length = global.length ∧ final.shared.length = shared.length ∧\n      final.barrier = Barrier.reset (s.depth+1) ∧ final.site = none ∧\n      (∀ event ∈ events, AccessSafe (Dense.initial s global shared seeds) event) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The supplied forward instruction list contains no jumps or scalar exits."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseControl.lean",
+        "passage": {
+          "quote": "theorem program_straight (s : Shape) : Control.Straight (program s) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Its\narbitrary candidate traces therefore inherit strict instruction order within\neach thread: each store site can occur at most once, and a store at an earlier\ninstruction position precedes that thread's later barrier arrival."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseControl.lean",
+        "passage": {
+          "quote": "theorem scalar_site_unique (s : Shape) {cfg : Config s.threads} {start final : Parallel.State s.threads}\n    {events : List (Event s.threads)} (run : Runs cfg (program s) start events final)\n    (p q : Nat) (t : Fin s.threads) (space otherSpace : Option Space)\n    (e f : Scalar.Occurrence)\n    (hp : events[p]? = some (.scalar t space e))\n    (hq : events[q]? = some (.scalar t otherSpace f)) (same : e.pc=f.pc) : p=q :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "a store at an earlier\ninstruction position precedes that thread's later barrier arrival."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseControl.lean",
+        "passage": {
+          "quote": "theorem scalar_before_arrival (s : Shape) {cfg : Config s.threads} {start final : Parallel.State s.threads}\n    {events : List (Event s.threads)} (run : Runs cfg (program s) start events final)\n    (p a : Nat) (t : Fin s.threads) (space : Option Space) (e : Scalar.Occurrence) (key : Barrier.Key)\n    (hp : events[p]? = some (.scalar t space e))\n    (ha : events[a]? = some (.barrier (.arrival key t))) (before : e.pc<key.site) : p<a :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For an\nobserved completed barrier, a consumer at a later instruction site must occur\nafter its completion."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseControl.lean",
+        "passage": {
+          "quote": "theorem scalar_after_completion (s : Shape) {cfg : Config s.threads} {start final : Parallel.State s.threads}\n    {events : List (Event s.threads)} (run : Runs cfg (program s) start events final)\n    (aligned : Aligned start) (c p : Nat) (t : Fin s.threads) (space : Option Space)\n    (e : Scalar.Occurrence) (key : Barrier.Key)\n    (hc : events[c]? = some (.barrier (.completion key)))\n    (hp : events[p]? = some (.scalar t space e)) (later : key.site<e.pc) : c<p :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The actual emitted stores are classified exhaustively: one product-store site,\none store site per reduction round, and one global output-store site."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseControl.lean",
+        "passage": {
+          "quote": "theorem trace_store_site (s : Shape) {cfg : Config s.threads} {start final : Parallel.State s.threads}\n    {events : List (Event s.threads)} (run : Runs cfg (program s) start events final)\n    (t : Fin s.threads) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (member : .scalar t (some space) occ ∈ events) (memory : occ.memory=some effect)\n    (store : effect.kind=.store) :\n    (occ.pc=20 ∧ space=.shared) ∨\n    (∃ k, k<s.depth ∧ occ.pc=22+16*k+14 ∧ space=.shared) ∨\n    (occ.pc=22+16*s.depth+18 ∧ space=.global) :="
         }
       }
     }

@@ -60,6 +60,18 @@ edges. This establishes an admitted execution with the stated stored outputs.
 Correctness for all admitted executions remains a separate obligation: their
 reads need not follow the witness's selected chronology.
 
+The supplied forward instruction list contains no jumps or scalar exits. Its
+arbitrary candidate traces therefore inherit strict instruction order within
+each thread: each store site can occur at most once, and a store at an earlier
+instruction position precedes that thread's later barrier arrival. This removes
+repeated execution of a store site as a possible source of competing writes.
+The actual emitted stores are classified exhaustively: one product-store site,
+one store site per reduction round, and one global output-store site. For an
+observed completed barrier, a consumer at a later instruction site must occur
+after its completion. These results do not yet prove that stores from different
+threads or rounds have different computed addresses, or that every required
+producer and completed phase exists in an arbitrary finished execution.
+
 Numerical contracts relate finite encoded inputs to ideal real tensors. Bounds
 follow the actual multiplication and tree-addition order, including bias and
 backward arithmetic. A strict error margin at each activation proves that

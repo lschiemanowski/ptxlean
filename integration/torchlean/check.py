@@ -113,6 +113,13 @@ COUNTS["Ptx.Binary32.Reduction"] += 5
 COUNTS.update({"PtxTorchLean.DenseForward": 3, "PtxTorchLean.DenseForward.Encoding": 3})
 TARGETS.update({"PtxBinary32.ReductionPadding", "PtxDenseForward"})
 
+# Arbitrary candidate control order and derived barrier timing; address ownership stays separate.
+COUNTS["Ptx.Scalar.Parallel.Control"] = 20
+COUNTS["Ptx.Scalar.Parallel.Memory"] += 1
+COUNTS["Ptx.Scalar.Parallel.Dense"] += 6
+TARGETS.update({"PtxBinary32.ParallelControl", "PtxBinary32.ParallelCompletion",
+                "PtxBinary32.ParallelVisibility", "PtxBinary32.DenseControl"})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

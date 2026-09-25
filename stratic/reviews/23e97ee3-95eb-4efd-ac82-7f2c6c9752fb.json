@@ -1,0 +1,106 @@
+{
+  "id": "23e97ee3-95eb-4efd-ac82-7f2c6c9752fb",
+  "base": "db2550707cdff4bf6e825cd20edd1c35a3de87d2",
+  "contentTree": "2c0e405744b37c89c43c343dd299a8b04bbb8b30",
+  "reviewer": "Codex",
+  "summary": "Prove arbitrary candidate instruction order and derive barrier timing for the parallel dense forward kernel.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "All candidate forward traces now inherit strict per-thread site order; every emitted store is classified against the actual instruction list and each thread/site pair occurs at most once. Timing around observed phases is derived. Computed-address ownership, required producer/phase existence and universal stored-output correctness remain open."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Reusable straight-line control proofs derive event-site ordering and completion timing from existing machine steps, with arbitrary reads, arithmetic results and schedules. The visibility rule uses site evidence instead of assumed trace timing while retaining explicit graph validity, unique-location writer and actual phase obligations. No semantics changed."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The same pinned build, no-placeholder guards and exact standard-axiom audit cover 27 new public declarations. These are internal model theorems; no new source-fidelity or hardware-conformance claim."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The child strengthens its universal-execution infrastructure while preserving explicit computation, numerical and scheduling boundaries. Its selected end-to-end result remains unchanged; the broader example responsibility still distinguishes implemented and missing obligations."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The child derives facts from the unchanged fetched machine, preserving arbitrary load candidates and binary32 results. No claim of general straight-line behavior is applied to programs with branches, no runtime or hardware correspondence is added, and no fairness or termination premise is inferred."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "2c0e405744b37c89c43c343dd299a8b04bbb8b30",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual proof and scope review; explicit public-declaration inventory comparison.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and unchanged TorchLean/numerical dependency revisions; 66 default integration targets. No GPU execution, benchmarking, external model calls or dependency updates.",
+      "evidence": "Both full suites exited 0. Root source/build/proof checks passed with 1643 dependency reports. Integration passed with 968 exact reports; all 27 new public declarations use only standard Lean axioms (propext, Classical.choice, Quot.sound), with no proof placeholders or new unchecked axioms. All four dense interpreter/replay checks passed. Stratic validation and whitespace checks pass. Before/after snapshots are identical. Manual review checked unrestricted candidate choices, all dispatch outcomes, trace-site uniqueness, actual completion timing, preserved explicit visibility obligations and full emitted-store site classification. Logs: /tmp/control-root-check.log and /tmp/control-integration-check.log.",
+      "tests": [],
+      "id": "ef9add0d-7de1-42f8-9e80-94f966f4e057",
+      "recordedAt": "2026-09-25T19:25:13.427Z"
+    }
+  ],
+  "recordedAt": "2026-09-25T19:25:48.919Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Only the expected integration audit count changes from 941 to 968."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Explains program versus trace positions, the derived cursor measure, exact zero-based store sites, actual release splitting and the remaining computed-address, phase-existence and universal-value obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseControl.lean",
+      "reason": "Reviewed complete program membership check for absence of jumps/scalar exits; universal site and timing corollaries; exhaustive scalar store classification using program slices, round offsets and emitted-event completeness. Same-site uniqueness is not presented as computed-address ownership."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelCompletion.lean",
+      "reason": "Reviewed release inversion and alignment use, indexed split through actual run prefixes/suffixes, cursor bounds around completion, strict increase of completed sites and completion-site uniqueness. Observed phase existence is retained as evidence; no missing completed barrier is invented."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelControl.lean",
+      "reason": "Reviewed scalar next-PC inversion, rejection of scalar exits and branches, all dispatch cases including skips/faults/stuttering, one owned event per dispatch, monotone cursor with blocked bit, trace induction, same-site uniqueness and PC/trace-order equivalence. The cursor is derived state; machine semantics and candidate choices are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelVisibility.lean",
+      "reason": "Reviewed derivation of producer-before-arrival and consumer-after-completion from actual scalar event sites. The existing graph rule retains admission, matching location, actual write/read and globally unique program writer premises. These conditions are explicit remaining kernel obligations, not assumed dense correctness."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "All 27 new public declaration sites are explicitly imported and receive fresh exact transitive-axiom reports."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updates 66-target and 968-report counts and clearly separates universal control/timing results from universal stored-output correctness."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Adds 27 namespace endpoints and four targets. Dependency pins, forbidden proof-token guards, allowed logical axioms and source-stability guards are unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Adds four default module targets under existing libraries; no dependency or toolchain changes."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Reviewed the summary, explicit remaining universal obligations and precise implementation passage links. Component remains partial."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Description-first refinement distinguishes instruction-site uniqueness, actual completion timing and still-unproved computed-address ownership."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Reviewed summary, remaining layer-specific obligations and links to derived control, completion and visibility rules."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Description-first account of arbitrary candidate control order; names excluded jumps/scalar exits and retained writer/phase obligations without changing the machine or memory semantics."
+    }
+  ]
+}

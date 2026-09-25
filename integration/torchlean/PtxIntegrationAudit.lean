@@ -1,3 +1,7 @@
+import PtxBinary32.ParallelControl
+import PtxBinary32.ParallelCompletion
+import PtxBinary32.ParallelVisibility
+import PtxBinary32.DenseControl
 import PtxBinary32.ReductionPadding
 import PtxDenseForward
 import PtxBinary32.ParallelChronology
@@ -1024,3 +1028,32 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.DenseForward.Encoding.row_ideal
 #print axioms PtxTorchLean.DenseForward.forward_word_accuracy
 #print axioms PtxTorchLean.DenseForward.selected_forward
+
+-- Arbitrary candidate control order, actual completion timing and dense store sites.
+#print axioms Ptx.Scalar.Parallel.Control.StraightOp
+#print axioms Ptx.Scalar.Parallel.Control.StraightInstr
+#print axioms Ptx.Scalar.Parallel.Control.Straight
+#print axioms Ptx.Scalar.Parallel.Control.stamp
+#print axioms Ptx.Scalar.Parallel.Control.cursor
+#print axioms Ptx.Scalar.Parallel.Control.cursor_bounds
+#print axioms Ptx.Scalar.Parallel.Control.Progress
+#print axioms Ptx.Scalar.Parallel.Control.dispatch_progress
+#print axioms Ptx.Scalar.Parallel.Control.step_progress
+#print axioms Ptx.Scalar.Parallel.Control.TraceProgress
+#print axioms Ptx.Scalar.Parallel.Control.runs_progress
+#print axioms Ptx.Scalar.Parallel.Control.same_site_unique
+#print axioms Ptx.Scalar.Parallel.Control.position_iff_pc
+#print axioms Ptx.Scalar.Parallel.Control.dispatch_completion
+#print axioms Ptx.Scalar.Parallel.Control.step_completion
+#print axioms Ptx.Scalar.Parallel.Control.completion_split
+#print axioms Ptx.Scalar.Parallel.Control.completion_orders_sites
+#print axioms Ptx.Scalar.Parallel.Control.site_after_completion
+#print axioms Ptx.Scalar.Parallel.Control.completed_sites_ordered
+#print axioms Ptx.Scalar.Parallel.Control.completion_site_unique
+#print axioms Ptx.Scalar.Parallel.Memory.run_read_from_unique_writer_sites
+#print axioms Ptx.Scalar.Parallel.Dense.program_straight
+#print axioms Ptx.Scalar.Parallel.Dense.scalar_site_unique
+#print axioms Ptx.Scalar.Parallel.Dense.scalar_before_arrival
+#print axioms Ptx.Scalar.Parallel.Dense.scalar_after_completion
+#print axioms Ptx.Scalar.Parallel.Dense.fetched_store_site
+#print axioms Ptx.Scalar.Parallel.Dense.trace_store_site
