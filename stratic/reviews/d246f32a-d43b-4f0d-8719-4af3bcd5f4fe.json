@@ -1,0 +1,170 @@
+{
+  "id": "d246f32a-d43b-4f0d-8719-4af3bcd5f4fe",
+  "base": "696d73a9458463355c11ff496a80583872c68dd4",
+  "contentTree": "009a887ec07e04c70db935e5a47e7a948cd5e5f5",
+  "reviewer": "Codex",
+  "summary": "Compact row-distributed dense scratch: compute local shared offsets, preserve universal forward/backward correctness and admitted execution existence, and reduce allocation to one row of fresh planes per group.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "The grid kernel now computes row-local shared offsets and allocates (depth+1)*width words per group. Reviewed the actual instruction lists, address bounds, per-group producer identity, universal output and VJP contracts, and finite admitted execution construction. Numerical hypotheses and the independent single-group implementation are unchanged."
+    },
+    {
+      "id": "grid-execution",
+      "outcome": "revised",
+      "reason": "Dense launches use the compact kernel in the same grid semantics. Shared location identity still includes the group; candidate reads, graph admission, barriers, schedules and pointwise stages are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The check now audits 53 additional public compact-kernel declarations and builds six added modules, preserving exact endpoint matching, pinned dependencies, source guards and the distinction from hardware conformance."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The example still provides the same dense-ReLU computation, generated backward correspondence, explicit numerical conditions and reproducible evidence. The improved internal allocation does not change this parent responsibility."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "unchanged",
+      "reason": "No instruction, memory, barrier, arithmetic result relation, or scheduling rule changed. The compact program uses the same operations, now computing local shared offsets in registers; the instruction-level existence and universal correctness proofs check this implementation."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "009a887ec07e04c70db935e5a47e7a948cd5e5f5",
+      "method": "stratic validate; git diff --check; git diff --name-only ce1a06b6a411cedf87c9be23ac1444eda2235ff9 CURRENT_TREE; manual review of repaired prose selectors",
+      "outcome": "pass",
+      "environment": "Same pinned local environment as the completed root and integration checks.",
+      "evidence": "Stratic validation now passes with zero issues after repairing a missing space in seven new passage selectors and a conjunction in the dense-layer prose. The only changed files since tree ce1a06b6a411cedf87c9be23ac1444eda2235ff9 are stratic/descriptions/dense-layer.md and dense-layer.json; all checked Lean sources, checker code, pins and fixtures are byte-identical. Root and integration checks on that earlier tree passed with 1643 and 1578 exact dependency reports respectively. The earlier result text incorrectly described Stratic validation as passing; this record corrects that statement. No individual test outcome is newly recorded.",
+      "tests": [],
+      "id": "f9872000-6a05-44b6-ae28-d99648cdb8bc",
+      "recordedAt": "2026-09-26T17:28:32.889Z"
+    }
+  ],
+  "recordedAt": "2026-09-26T17:29:11.117Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/grid-dense-layer.md",
+      "reason": "Extended teaching explanation, concrete footprint comparison, and remaining limits agree with the self-contained dense-layer description."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/CompactDenseAddressControl.lean",
+      "reason": "Linked public contracts select coherent proof interfaces. Reviewed the surrounding fetched instructions and proof bodies for local shared coordinates, allocated storage, actual execution, unchanged relational arithmetic and noncircular read obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/CompactDenseControl.lean",
+      "reason": "Linked public contracts select coherent proof interfaces. Reviewed the surrounding fetched instructions and proof bodies for local shared coordinates, allocated storage, actual execution, unchanged relational arithmetic and noncircular read obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/CompactDenseDataRules.lean",
+      "reason": "Linked public contracts select coherent proof interfaces. Reviewed the surrounding fetched instructions and proof bodies for local shared coordinates, allocated storage, actual execution, unchanged relational arithmetic and noncircular read obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/CompactDenseDataStep.lean",
+      "reason": "Linked public contracts select coherent proof interfaces. Reviewed the surrounding fetched instructions and proof bodies for local shared coordinates, allocated storage, actual execution, unchanged relational arithmetic and noncircular read obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/CompactDenseLocalSegments.lean",
+      "reason": "Linked public contracts select coherent proof interfaces. Reviewed the surrounding fetched instructions and proof bodies for local shared coordinates, allocated storage, actual execution, unchanged relational arithmetic and noncircular read obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/CompactDenseProgram.lean",
+      "reason": "Linked public contracts select coherent proof interfaces. Reviewed the surrounding fetched instructions and proof bodies for local shared coordinates, allocated storage, actual execution, unchanged relational arithmetic and noncircular read obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseAddress.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseBackwardChecks.lean",
+      "reason": "Fresh executable regressions select the compact kernel, check allocation lengths and every stage, and retain padded, empty, negative and large-grid fixtures; the new constant-footprint check is additional evidence, not a universal proof."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseChecks.lean",
+      "reason": "Fresh executable regressions select the compact kernel, check allocation lengths and every stage, and retain padded, empty, negative and large-grid fixtures; the new constant-footprint check is additional evidence, not a universal proof."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseCoverage.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseDataMachine.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseDataRun.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseExists.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseGlobalReads.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseLocalControl.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseLocalExists.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseOwnership.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseProgram.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseReadData.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseReadSources.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseUniversal.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseWriter.lean",
+      "reason": "Reviewed propagation of the compact instruction list through actual grid execution, ownership and load/store proofs. New same-row premises in internal pointer lemmas are discharged from group identity; no final theorem assumes desired reads or outputs."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Verification wiring explicitly includes all six new modules and all 53 new public definitions/theorems in exact dependency auditing; no logical trust policy changed."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Verification wiring explicitly includes all six new modules and all 53 new public definitions/theorems in exact dependency auditing; no logical trust policy changed."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Verification wiring explicitly includes all six new modules and all 53 new public definitions/theorems in exact dependency auditing; no logical trust policy changed."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Reviewed description and exact-selector changes; summary and implementation links now describe the compact per-group allocation. Stratic metadata is not itself a Lean implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Reviewed description and exact-selector changes; summary and implementation links now describe the compact per-group allocation. Stratic metadata is not itself a Lean implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/grid-execution.json",
+      "reason": "Reviewed description and exact-selector changes; summary and implementation links now describe the compact per-group allocation. Stratic metadata is not itself a Lean implementation passage."
+    },
+    {
+      "path": "stratic/descriptions/grid-execution.md",
+      "reason": "Reviewed description and exact-selector changes; summary and implementation links now describe the compact per-group allocation. Stratic metadata is not itself a Lean implementation passage."
+    }
+  ]
+}

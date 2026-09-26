@@ -242,14 +242,12 @@ scratch remains private to each group; its allocation bounds must cover the
 addresses the supplied reduction program actually computes.
 
 
-The first row-distributed reduction reuses the existing shape-specialized
-instruction list. Entry states supply the row/column work-item number, so each
-group executes exactly one row. Shared addresses retain the existing plane and
-row offsets inside each group's private allocation. Consequently each private
-allocation initially reserves the full indexed scratch extent, including unused
-row positions. This is an explicit storage cost of proof reuse, not a compact
-scratch layout or a claim that these allocations fit a particular GPU. The
-resource contract must cover that extent. Compact rebasing is a separate change.
+The row-distributed reduction has a shape-specialized instruction list with
+compact shared addresses. Entry states supply the row/column work-item number,
+so each group executes exactly one row. The row selects its weights, bias and
+output in common global storage; the local column selects its private scratch
+word. The proof tracks these two coordinate systems separately. Allocation
+bounds do not establish that the allocation fits a particular GPU.
 
 The multiple-group forward and backward have complete bounded launch contracts.
 Every completed admitted execution stores the specified outputs and gradients,
@@ -269,5 +267,14 @@ arithmetic and do not establish runtime allocation or transfer correctness.
 Forward and transposed reductions each use at most 1,024 lanes per row; the
 whole grid may contain more. Empty dimensions retain explicit no-launch cases.
 Numerical gradient agreement still requires the finite ranges and strict
-activation margin described above. General reductions spanning several groups,
-compact scratch rebasing and hardware performance remain separate extensions.
+activation margin described above. General reductions spanning several groups and
+hardware performance remain separate extensions.
+
+In the grid kernel, each group allocates only its own reduction planes: for
+padded width p and depth d, it uses (d+1)*p shared words, independently of the
+number of output rows. Plane k stores column c at k*p+c. The group identity
+distinguishes equal offsets in different groups. Global addresses still use
+the full logical row and column. The instruction list computes these compact
+shared addresses directly; storage is not silently translated by the machine
+semantics. Fresh planes preserve the existing reduction order and barrier
+lifetime argument. Forward and transposed backward reductions use this layout.

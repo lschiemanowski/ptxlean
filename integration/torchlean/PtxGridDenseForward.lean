@@ -14,7 +14,7 @@ theorem universal_forward (s : Dense.Shape) (bounds : GridDense.Bounds s) (globa
     (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))
     (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)
     {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (GridDense.config s bounds) (Dense.program s) (GridDense.initial s global seeds) events final)
+    (run : Grid.Runs (GridDense.config s bounds) (Dense.Compact.program s) (GridDense.initial s global seeds) events final)
     (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)
     (valid : GridDense.Admitted s global seeds events source co) :
     (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧
@@ -22,7 +22,7 @@ theorem universal_forward (s : Dense.Shape) (bounds : GridDense.Bounds s) (globa
       |max (encoding.row row).affine 0-
         Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧
     (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧
-    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=s.sharedWords) ∧
+    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=Dense.Compact.sharedWords s) ∧
     (∀ event ∈ events, Grid.AccessSafe (GridDense.initial s global seeds) event) := by
   obtain ⟨values,inputs,gl,sl,safe⟩ := GridDense.completed_forward s bounds global seeds run halted source co valid
   refine ⟨?_,inputs,gl,sl,safe⟩

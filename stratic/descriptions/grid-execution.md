@@ -90,3 +90,9 @@ tensors. A margin means the real affine value is far enough from zero that
 rounding cannot change its sign. Empty dimensions and spare pointwise lanes
 are covered. These bounds do not assert bitwise agreement with PyTorch or GPU
 hardware, and finite existence does not assert scheduler fairness.
+
+Dense groups compute global addresses from logical row-and-column coordinates,
+but shared addresses from their local column and reduction round. Their private
+shared allocation contains exactly one row of fresh reduction planes. Reducing
+this allocation must preserve actual fetched address checks, producer identity,
+barrier ordering, admitted execution existence and universal output correctness.

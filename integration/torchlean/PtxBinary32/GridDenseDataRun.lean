@@ -18,7 +18,7 @@ def Reads (s : Dense.Shape) (global : List Word) (events : List (Grid.Event s.ro
 
 theorem step_data (s : Dense.Shape) (b : Bounds s) (global : List Word)
     {state final : Grid.State s.rows s.width} {events : List (Grid.Event s.rows s.width)}
-    (step : Grid.Step (config s b) (program s) state events final)
+    (step : Grid.Step (config s b) (Dense.Compact.program s) state events final)
     (inv : DataInvariant s global state) (aligned : ∀ g, Parallel.Aligned (Grid.view state g))
     (reads : Reads s global events) : DataInvariant s global final ∧ Stores s global events := by
   cases step with
@@ -51,13 +51,13 @@ theorem scalar_step_singleton {state final : Grid.State groups n} {events : List
 used in the arithmetic induction for the combined grid execution. -/
 theorem run_data (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)
     (valid : Admitted s global seeds events source co) : DataInvariant s global final ∧ Stores s global events := by
   have aux (current : Grid.State s.rows s.width) (rest : List (Grid.Event s.rows s.width))
-      (tail : Grid.Runs (config s b) (program s) current rest final) :
+      (tail : Grid.Runs (config s b) (Dense.Compact.program s) current rest final) :
       ∀ before, events=before++rest →
-      Grid.Runs (config s b) (program s) (initial s global seeds) before current →
+      Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) before current →
       DataInvariant s global current → Stores s global before →
       DataInvariant s global final ∧ Stores s global events := by
     induction tail with

@@ -1,5 +1,5 @@
 import PtxBinary32.GridDenseProgram
-import PtxBinary32.DenseDataRules
+import PtxBinary32.CompactDenseDataRules
 import PtxBinary32.DenseStoreData
 
 /-! Per-group arithmetic invariants indexed by their global logical row/lane.
@@ -33,18 +33,18 @@ private theorem install (inv : DataInvariant s global g state) (t : Fin s.width)
   · simpa [setLane,Function.update,eq] using inv u
 
 private theorem local_no_memory (s : Dense.Shape) (pc : Nat) (i : Scalar.Instr)
-    (fetch : (program s)[pc]?=some (.localStep i)) : Memory.Prior.memoryKind i.op=none := by
-  rcases program_segment s pc _ fetch with ⟨bound,h⟩ | ⟨k,hk,j,hj,site,h⟩ | ⟨j,hj,site,h⟩
-  · interval_cases pc <;> simp [products,pointer,scalar,guarded] at h
+    (fetch : (Dense.Compact.program s)[pc]?=some (.localStep i)) : Memory.Prior.memoryKind i.op=none := by
+  rcases Dense.Compact.program_segment s pc _ fetch with ⟨bound,h⟩ | ⟨k,hk,j,hj,site,h⟩ | ⟨j,hj,site,h⟩
+  · interval_cases pc <;> simp [Dense.Compact.products,pointer,scalar,guarded] at h
     all_goals subst i; rfl
-  · interval_cases j <;> simp [Ptx.Scalar.Parallel.Dense.round,pointer,scalar,guarded] at h
+  · interval_cases j <;> simp [Dense.Compact.round,pointer,scalar,guarded] at h
     all_goals subst i; rfl
-  · interval_cases j <;> simp [output,pointer,scalar,guarded] at h
+  · interval_cases j <;> simp [Dense.Compact.output,pointer,scalar,guarded] at h
     all_goals subst i; rfl
 
-private theorem no_scalar_halt (s : Dense.Shape) (i : Scalar.Instr) {pc : Nat} {wrapped : Instr} (fetch : (program s)[pc]?=some wrapped)
+private theorem no_scalar_halt (s : Dense.Shape) (i : Scalar.Instr) {pc : Nat} {wrapped : Instr} (fetch : (Dense.Compact.program s)[pc]?=some wrapped)
     (form : wrapped=.localStep i ∨ ∃ space, wrapped=.memory space i) : Scalar.eval candidate i a≠.halted next occ := by
-  have straight := program_straight s _ (List.mem_of_getElem? fetch)
+  have straight := Dense.Compact.program_straight s _ (List.mem_of_getElem? fetch)
   have op : Control.StraightOp i.op := by rcases form with rfl | ⟨_,rfl⟩ <;> exact straight
   rcases i with ⟨guard,inst⟩
   cases inst <;> simp only [Control.StraightOp] at op
@@ -54,12 +54,12 @@ private theorem no_scalar_halt (s : Dense.Shape) (i : Scalar.Instr) {pc : Nat} {
 private theorem scalar_machine (s : Dense.Shape) (b : Bounds s) (global : List Word) (g : Fin s.rows)
     (state : Parallel.State s.width) (t : Fin s.width) (space : Option Space) (i : Scalar.Instr)
     (inv : DataInvariant s global g state)
-    (fetch : (program s)[(state.lanes t).scalar.pc]?=some (match space with | none => .localStep i | some sp => .memory sp i))
+    (fetch : (Dense.Compact.program s)[(state.lanes t).scalar.pc]?=some (match space with | none => .localStep i | some sp => .memory sp i))
     (reads : Reads s global g (scalarStep candidate t space i state).events) :
     DataInvariant s global g (scalarStep candidate t space i state).state ∧ Stores s global g (scalarStep candidate t space i state).events := by
   let a := {(state.lanes t).scalar with memory := arena state space}
   have old : Data s global (thread s g t) a := data_memory (inv t) _
-  have fetched : (program s)[a.pc]?=some (.localStep i) ∨ ∃ sp, (program s)[a.pc]?=some (.memory sp i) := by
+  have fetched : (Dense.Compact.program s)[a.pc]?=some (.localStep i) ∨ ∃ sp, (Dense.Compact.program s)[a.pc]?=some (.memory sp i) := by
     cases space with
     | none => exact .inl fetch
     | some sp => exact .inr ⟨sp,fetch⟩
@@ -77,7 +77,7 @@ private theorem scalar_machine (s : Dense.Shape) (b : Bounds s) (global : List W
       | some sp =>
         apply reads t sp occ effect _ memory load
         cases sp <;> simp [scalarStep,ev]
-    have data := scalar_data s b.arithmetic global (thread s g t) a next i occ old fetched ev readValues
+    have data := Dense.Compact.scalar_data s b.arithmetic global (thread s g t) a next i occ old fetched ev readValues
     have installed := install inv t {state.lanes t with scalar := next} data
     constructor
     · cases space with
@@ -89,7 +89,7 @@ private theorem scalar_machine (s : Dense.Shape) (b : Bounds s) (global : List W
         | none => simpa [scalarStep,ev] using member
         | some sp => cases sp <;> simpa [scalarStep,ev] using member
       obtain ⟨rfl,rfl,rfl⟩ := eq
-      exact scalar_store_data s global (thread s g owner) a next i seen _ effect old fetch ev memory store
+      exact Dense.Compact.scalar_store_data s global (thread s g owner) a next i seen _ effect old fetch ev memory store
   | halted next occ =>
     dsimp only [a] at ev
     exact False.elim (no_scalar_halt s i fetch (by cases space <;> simp) ev)
@@ -106,14 +106,14 @@ private theorem scalar_machine (s : Dense.Shape) (b : Bounds s) (global : List W
 
 theorem dispatch_data (s : Dense.Shape) (b : Bounds s) (global : List Word) (g : Fin s.rows)
     {state : Parallel.State s.width} {candidate : Option Word} {t : Fin s.width} {i : Instr} {out : Outcome s.width} (step : Dispatch ((config s b).group g) candidate t i state out)
-    (fetch : (program s)[(state.lanes t).scalar.pc]?=some i)
+    (fetch : (Dense.Compact.program s)[(state.lanes t).scalar.pc]?=some i)
     (inv : DataInvariant s global g state) (aligned : Aligned state) (reads : Reads s global g out.events) :
     DataInvariant s global g out.state ∧ Stores s global g out.events := by
   cases step with
   | localStep => exact scalar_machine s b global g state t none _ inv fetch reads
   | memory => exact scalar_machine s b global g state t (some _) _ inv fetch reads
   | binary32 ev =>
-    refine ⟨install inv t _ (fp_data s global (thread s g t) _ _ _ _ (inv t) fetch ev),?_⟩
+    refine ⟨install inv t _ (Dense.Compact.fp_data s global (thread s g t) _ _ _ _ (inv t) fetch ev),?_⟩
     intro owner space occ effect member; simp at member
   | exit =>
     refine ⟨install inv t _ (inv t),?_⟩
@@ -131,11 +131,11 @@ theorem dispatch_data (s : Dense.Shape) (b : Bounds s) (global : List Word) (g :
       have pcs := release_aligned ((config s b).group g) state t resource aligned hd
       constructor
       · intro u
-        simpa [synchronize,hd] using barrier_data s global (thread s g u) (state.lanes u).scalar resource (inv u) (by rw [pcs]; exact fetch)
+        simpa [synchronize,hd] using Dense.Compact.barrier_data s global (thread s g u) (state.lanes u).scalar resource (inv u) (by rw [pcs]; exact fetch)
       · intro owner space occ effect member; simp [synchronize,hd] at member
 
 theorem step_data (s : Dense.Shape) (b : Bounds s) (global : List Word) (g : Fin s.rows)
-    {state : Parallel.State s.width} {candidate : Option Word} {t : Fin s.width} {out : Outcome s.width} (step : Step ((config s b).group g) (program s) candidate t state out)
+    {state : Parallel.State s.width} {candidate : Option Word} {t : Fin s.width} {out : Outcome s.width} (step : Step ((config s b).group g) (Dense.Compact.program s) candidate t state out)
     (inv : DataInvariant s global g state) (aligned : Aligned state) (reads : Reads s global g out.events) :
     DataInvariant s global g out.state ∧ Stores s global g out.events := by
   have h := step.2

@@ -8,7 +8,7 @@ open Ptx.TraceMemory (Location Access Initial AccessKind)
 
 theorem global_load_index (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (group : Fin s.rows) (t : Fin s.width) (occ : Scalar.Occurrence) (effect : MemoryEffect)
     (member : (group,.scalar t (some .global) occ) ∈ events) (memory : occ.memory=some effect) (load : effect.kind=.load) :
     ∃ i, i<s.outputBase ∧ effect.address=bytePointer i := by
@@ -26,16 +26,16 @@ theorem global_load_index (s : Dense.Shape) (b : Bounds s) (global : List Word)
 /-- A noninitial graph write is never in the global operand prefix. -/
 theorem global_prefix_unwritten (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
-    (source co) (w : Fin (Grid.Memory.labels (program s) (initial s global seeds) events).length)
-    (write : (Grid.Memory.graph (program s) (initial s global seeds) events source co).write w)
-    (noninitial : ¬(Grid.Memory.graph (program s) (initial s global seeds) events source co).initial w)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
+    (source co) (w : Fin (Grid.Memory.labels (Dense.Compact.program s) (initial s global seeds) events).length)
+    (write : (Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co).write w)
+    (noninitial : ¬(Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co).initial w)
     (i : Nat) (hi : i<s.outputBase) :
-    ((Grid.Memory.graph (program s) (initial s global seeds) events source co).event w).effect.address ≠
+    ((Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co).event w).effect.address ≠
       (⟨0,i⟩ : Location (s.rows+1)).code := by
   intro eq
   obtain ⟨group,t,p,space,occ,effect,atP,_,_,memory,store,label⟩ :=
-    Grid.Memory.program_write_origin (program s) (initial s global seeds) events source co w write noninitial
+    Grid.Memory.program_write_origin (Dense.Compact.program s) (initial s global seeds) events source co w write noninitial
   have loc : Grid.location group space effect.address=(⟨0,i⟩ : Location (s.rows+1)) := by
     apply Location.code_injective
     simpa [label,Grid.Memory.ofEffect,Access.effect] using eq
@@ -55,15 +55,15 @@ theorem global_prefix_unwritten (s : Dense.Shape) (b : Bounds s) (global : List 
 Neither source identity nor the value is a premise. -/
 theorem global_read_source (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
-    (source co) (valid : Graph.Ordered.Valid (Grid.Memory.graph (program s) (initial s global seeds) events source co) (Grid.Memory.cross (program s) (initial s global seeds) events))
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
+    (source co) (valid : Graph.Ordered.Valid (Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co) (Grid.Memory.cross (Dense.Compact.program s) (initial s global seeds) events))
     (q : Nat) (group : Fin s.rows) (t : Fin s.width) (occ : Scalar.Occurrence) (effect : MemoryEffect)
     (atQ : events[q]?=some (group,.scalar t (some .global) occ))
     (memory : occ.memory=some effect) (load : effect.kind=.load) :
     ∃ i, i<s.outputBase ∧ i<global.length ∧ effect.address=bytePointer i ∧ effect.value=global[i]! := by
   obtain ⟨i,hi,addr⟩ := global_load_index s b global seeds run group t occ effect (List.mem_of_getElem? atQ) memory load
   obtain ⟨r,label⟩ := Grid.Memory.graph_complete run source co q group t .global occ effect atQ memory
-  let g := Grid.Memory.graph (program s) (initial s global seeds) events source co
+  let g := Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co
   have read : g.read r := by simp [g,Graph.read,label,Grid.Memory.ofEffect,Access.effect,AccessKind.op,load]
   obtain ⟨write,same,value⟩ := valid.sources.compatible r read
   have bound := b.arithmetic.arithmetic
@@ -75,8 +75,8 @@ theorem global_read_source (s : Dense.Shape) (b : Bounds s) (global : List Word)
   have init : g.initial (source r) := by
     by_contra no
     exact global_prefix_unwritten s b global seeds run source co _ write no i hi address
-  have member : g.event (source r) ∈ Grid.Memory.labels (program s) (initial s global seeds) events := List.getElem_mem _
-  obtain ⟨entry,inside,entryEq⟩ := Grid.Memory.initial_origin (program s) (initial s global seeds) events _ member init
+  have member : g.event (source r) ∈ Grid.Memory.labels (Dense.Compact.program s) (initial s global seeds) events := List.getElem_mem _
+  obtain ⟨entry,inside,entryEq⟩ := Grid.Memory.initial_origin (Dense.Compact.program s) (initial s global seeds) events _ member init
   have location : entry.location=(⟨0,i⟩ : Location (s.rows+1)) := by
     apply Location.code_injective
     simpa [entryEq,Initial.occurrence] using address

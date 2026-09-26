@@ -1,3 +1,9 @@
+import PtxBinary32.CompactDenseAddressControl
+import PtxBinary32.CompactDenseControl
+import PtxBinary32.CompactDenseDataRules
+import PtxBinary32.CompactDenseDataStep
+import PtxBinary32.CompactDenseLocalSegments
+import PtxBinary32.CompactDenseProgram
 import PtxBinary32.DenseLocalSegments
 import PtxBinary32.GridAdmission
 import PtxBinary32.GridChronology
@@ -1709,3 +1715,58 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.GridDenseBackward.universal_backward
 #print axioms PtxTorchLean.GridDenseBackward.backward_exists
 #print axioms PtxTorchLean.GridDenseForward.forward_exists
+
+-- Compact row-local scratch program and proofs.
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.program_address_compatible
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.products_control_coordinates
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_control_coordinates
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.rounds_control_coordinates
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.control_atPC_slice
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.product_control_address
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_control_address
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.output_control_address
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_control_active
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.product_read_control
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_read_control
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.output_read_control
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.program_straight
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.fetched_store_site
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.fetched_load_site
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.fetched_exit_site
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.program_segment
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.scalar_data
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.fp_data
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.barrier_data
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.scalar_store_data
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.product_scalar_data
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_scalar_data
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.output_scalar_data
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.afterSetup
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.setup_execution
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.productFinish
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.product_segment
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_regular
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.output_regular
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.sharedWords
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.shared_words_factor
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.scratch_bound
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.leftIndex
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.nextIndex
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.rootIndex
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.shared_le
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_indices
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.output_indices
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.products
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.output
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.program
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.products_length
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_length
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.program_length
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_barrier
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.product_barrier
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.output_exit
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.products_fetch
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.program_round_split
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.round_fetch
+#print axioms Ptx.Scalar.Parallel.Dense.Compact.output_fetch

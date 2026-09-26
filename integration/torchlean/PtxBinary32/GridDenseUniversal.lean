@@ -14,7 +14,7 @@ private theorem output_pointer_index (s : Dense.Shape) (b : Bounds s) (t : Fin s
 
 private theorem written_output (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (known : Stores s global events) (g : Fin s.rows) (event : Event s.width) (member : (g,event) ∈ events)
     (index : Nat) (value : Word) (written : Replay.writtenAt .global index event=some value) :
     index=s.outputBase+g.val ∧ Output s global g.val value := by
@@ -30,12 +30,12 @@ private theorem written_output (s : Dense.Shape) (b : Bounds s) (global : List W
 No load value, producer correctness or noninterference premise is supplied. -/
 theorem completed_forward (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)
     (valid : Admitted s global seeds events source co) :
     (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧ Output s global row.val value) ∧
     (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧
-    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=s.sharedWords) ∧
+    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=Dense.Compact.sharedWords s) ∧
     (∀ event ∈ events, Grid.AccessSafe (initial s global seeds) event) := by
   have known := (run_data s b global seeds run halted source co valid).2
   have lengths := Grid.runs_lengths run

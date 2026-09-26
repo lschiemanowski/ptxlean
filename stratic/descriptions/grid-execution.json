@@ -9,7 +9,7 @@
   "summary": [
     "Execute actual fetched instructions from several groups against one global array, with private scratch and barriers and checked per-group thread limits.",
     "Prove pointwise copy, multiplication and sensitivity gating correct for every completed admitted grid execution; separately construct admitted executions, including explicit padding storage.",
-    "Derive row-distributed dense forward outputs and TorchLean error bounds from actual combined admission and completion; construct finite admitted executions separately, then compose bounded-group backward stages without a hardware progress claim."
+    "Derive row-distributed dense forward outputs with compact per-group scratch and TorchLean error bounds from actual combined admission and completion; construct finite admitted executions separately, then compose bounded-group backward stages without a hardware progress claim."
   ],
   "realization": "implemented",
   "links": [
@@ -177,7 +177,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseUniversal.lean",
         "passage": {
-          "quote": "theorem completed_forward (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)\n    (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)\n    (valid : Admitted s global seeds events source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧ Output s global row.val value) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=s.sharedWords) ∧\n    (∀ event ∈ events, Grid.AccessSafe (initial s global seeds) event) :="
+          "quote": "theorem completed_forward (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)\n    (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)\n    (valid : Admitted s global seeds events source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧ Output s global row.val value) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=Dense.Compact.sharedWords s) ∧\n    (∀ event ∈ events, Grid.AccessSafe (initial s global seeds) event) :="
         }
       }
     },
@@ -189,7 +189,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseReadSources.lean",
         "passage": {
-          "quote": "theorem visible_store (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)\n    (source co) (valid : Admitted s global seeds events source co)\n    (g : Fin s.rows) (phase : Phase events g) (p q : Nat) (writer reader : Fin s.width)\n    (storeOcc loadOcc : Scalar.Occurrence) (stored loaded : MemoryEffect)\n    (atP : events[p]?=some (g,.scalar writer (some .shared) storeOcc))\n    (atQ : events[q]?=some (g,.scalar reader (some .shared) loadOcc))\n    (sm : storeOcc.memory=some stored) (lm : loadOcc.memory=some loaded)\n    (sk : stored.kind=.store) (lk : loaded.kind=.load) (same : stored.address=loaded.address)\n    (earlier : storeOcc.pc<phase.key.site) (later : phase.key.site<loadOcc.pc) :\n    loaded.value=stored.value ∧ p<q :="
+          "quote": "theorem visible_store (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)\n    (source co) (valid : Admitted s global seeds events source co)\n    (g : Fin s.rows) (phase : Phase events g) (p q : Nat) (writer reader : Fin s.width)\n    (storeOcc loadOcc : Scalar.Occurrence) (stored loaded : MemoryEffect)\n    (atP : events[p]?=some (g,.scalar writer (some .shared) storeOcc))\n    (atQ : events[q]?=some (g,.scalar reader (some .shared) loadOcc))\n    (sm : storeOcc.memory=some stored) (lm : loadOcc.memory=some loaded)\n    (sk : stored.kind=.store) (lk : loaded.kind=.load) (same : stored.address=loaded.address)\n    (earlier : storeOcc.pc<phase.key.site) (later : phase.key.site<loadOcc.pc) :\n    loaded.value=stored.value ∧ p<q :="
         }
       }
     },
@@ -201,7 +201,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseGlobalReads.lean",
         "passage": {
-          "quote": "theorem global_read_source (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)\n    (source co) (valid : Graph.Ordered.Valid (Grid.Memory.graph (program s) (initial s global seeds) events source co) (Grid.Memory.cross (program s) (initial s global seeds) events))\n    (q : Nat) (group : Fin s.rows) (t : Fin s.width) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atQ : events[q]?=some (group,.scalar t (some .global) occ))\n    (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    ∃ i, i<s.outputBase ∧ i<global.length ∧ effect.address=bytePointer i ∧ effect.value=global[i]! :="
+          "quote": "theorem global_read_source (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)\n    (source co) (valid : Graph.Ordered.Valid (Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co) (Grid.Memory.cross (Dense.Compact.program s) (initial s global seeds) events))\n    (q : Nat) (group : Fin s.rows) (t : Fin s.width) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atQ : events[q]?=some (group,.scalar t (some .global) occ))\n    (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    ∃ i, i<s.outputBase ∧ i<global.length ∧ effect.address=bytePointer i ∧ effect.value=global[i]! :="
         }
       }
     },
@@ -213,7 +213,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseWriter.lean",
         "passage": {
-          "quote": "theorem graph_writer_unique (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)\n    (source co) (v w : Fin (Grid.Memory.labels (program s) (initial s global seeds) events).length)\n    (hv : (Grid.Memory.graph (program s) (initial s global seeds) events source co).write v)\n    (hw : (Grid.Memory.graph (program s) (initial s global seeds) events source co).write w)\n    (nv : ¬(Grid.Memory.graph (program s) (initial s global seeds) events source co).initial v)\n    (nw : ¬(Grid.Memory.graph (program s) (initial s global seeds) events source co).initial w)\n    (same : (Grid.Memory.graph (program s) (initial s global seeds) events source co).sameAddress v w) : v=w :="
+          "quote": "theorem graph_writer_unique (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)\n    (source co) (v w : Fin (Grid.Memory.labels (Dense.Compact.program s) (initial s global seeds) events).length)\n    (hv : (Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co).write v)\n    (hw : (Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co).write w)\n    (nv : ¬(Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co).initial v)\n    (nw : ¬(Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co).initial w)\n    (same : (Grid.Memory.graph (Dense.Compact.program s) (initial s global seeds) events source co).sameAddress v w) : v=w :="
         }
       }
     },
@@ -225,7 +225,7 @@
       "to": {
         "path": "integration/torchlean/PtxGridDenseForward.lean",
         "passage": {
-          "quote": "theorem universal_forward (s : Dense.Shape) (bounds : GridDense.Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (GridDense.config s bounds) (Dense.program s) (GridDense.initial s global seeds) events final)\n    (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)\n    (valid : GridDense.Admitted s global seeds events source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧\n      finiteReal value=some (max (encoding.row row).affine 0) ∧\n      |max (encoding.row row).affine 0-\n        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=s.sharedWords) ∧\n    (∀ event ∈ events, Grid.AccessSafe (GridDense.initial s global seeds) event) :="
+          "quote": "theorem universal_forward (s : Dense.Shape) (bounds : GridDense.Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (GridDense.config s bounds) (Dense.Compact.program s) (GridDense.initial s global seeds) events final)\n    (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)\n    (valid : GridDense.Admitted s global seeds events source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧\n      finiteReal value=some (max (encoding.row row).affine 0) ∧\n      |max (encoding.row row).affine 0-\n        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=Dense.Compact.sharedWords s) ∧\n    (∀ event ∈ events, Grid.AccessSafe (GridDense.initial s global seeds) event) :="
         }
       }
     },
@@ -309,7 +309,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseLocalExists.lean",
         "passage": {
-          "quote": "theorem completed_exists (s : Shape) (b : GridDense.Bounds s) (g : Fin s.rows)\n    (global shared : List Word) (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords≤global.length) (sharedBound : s.sharedWords≤shared.length) :\n    ∃ events final, Parallel.ConcreteRuns ((GridDense.config s b).group g) (program s)\n      (initial s g global shared seeds) events final ∧ ∀ t, (final.lanes t).halted=true :="
+          "quote": "theorem completed_exists (s : Shape) (b : GridDense.Bounds s) (g : Fin s.rows)\n    (global shared : List Word) (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords≤global.length) (sharedBound : Dense.Compact.sharedWords s≤shared.length) :\n    ∃ events final, Parallel.ConcreteRuns ((GridDense.config s b).group g) (Dense.Compact.program s)\n      (initial s g global shared seeds) events final ∧ ∀ t, (final.lanes t).halted=true :="
         }
       }
     },
@@ -321,7 +321,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseExists.lean",
         "passage": {
-          "quote": "theorem completed_admitted_exists (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) (size : s.globalWords≤global.length) :\n    ∃ events final, Grid.ConcreteRuns (config s b) (Dense.program s) (initial s global seeds) events final ∧\n      (∀ g t, ((final.blocks g).lanes t).halted=true) ∧\n      Grid.Memory.Admitted (Dense.program s) (initial s global seeds) events :="
+          "quote": "theorem completed_admitted_exists (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) (size : s.globalWords≤global.length) :\n    ∃ events final, Grid.ConcreteRuns (config s b) (Dense.Compact.program s) (initial s global seeds) events final ∧\n      (∀ g t, ((final.blocks g).lanes t).halted=true) ∧\n      Grid.Memory.Admitted (Dense.Compact.program s) (initial s global seeds) events :="
         }
       }
     },

@@ -10,20 +10,20 @@ open Ptx.Scalar.Parallel.Dense
 
 theorem candidate_shared_owner (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (g : Fin s.rows) (t : Fin s.width) (occ : Scalar.Occurrence) (effect : MemoryEffect)
     (member : (g,.scalar t (some .shared) occ) ∈ events) (memory : occ.memory=some effect)
     (store : effect.kind=.store) :
-    ∃ phase, phase≤s.depth ∧ occ.pc=sharedStorePC phase ∧ effect.address=bytePointer (phase*s.threads+(thread s g t).val) := by
+    ∃ phase, phase≤s.depth ∧ occ.pc=sharedStorePC phase ∧ effect.address=bytePointer (phase*s.width+(thread s g t).val%s.width) := by
   rcases candidate_store_address s b global seeds run g t .shared occ effect member memory store with h | h | h
   · exact ⟨0,Nat.zero_le _,by simpa [sharedStorePC] using h.1,by simpa using h.2.2⟩
   · obtain ⟨k,hk,pc,_,addr⟩ := h
-    exact ⟨k+1,hk,by simpa [sharedStorePC] using pc,by simpa [nextIndex,Nat.add_comm] using addr⟩
+    exact ⟨k+1,hk,by simpa [sharedStorePC] using pc,by simpa [Dense.Compact.nextIndex,Nat.add_comm] using addr⟩
   · cases h.2.1
 
 theorem candidate_global_owner (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (g : Fin s.rows) (t : Fin s.width) (occ : Scalar.Occurrence) (effect : MemoryEffect)
     (member : (g,.scalar t (some .global) occ) ∈ events) (memory : occ.memory=some effect)
     (store : effect.kind=.store) :
@@ -46,27 +46,27 @@ private theorem same_pointer_index (g h : Fin groups) (i j : Nat) (hi : i<2^32) 
   simpa [pointer_word g i hi space,pointer_word h j hj space] using eq
 
 private theorem scratch_index_fits (s : Dense.Shape) (b : Bounds s) (t : Fin s.threads) (p : Nat) (hp : p≤s.depth) :
-    p*s.threads+t.val<2^32 := by
-  have ht := t.isLt
-  have mul := Nat.mul_le_mul_right s.threads hp
+    p*s.width+t.val%s.width<2^32 := by
+  have ht := (coordinates s t).2.1
+  have mul := Nat.mul_le_mul_right s.width hp
   have bound := b.arithmetic.arithmetic
-  dsimp [Shape.sharedWords] at bound
-  rw [Nat.add_mul] at bound
+  have small := Dense.Compact.shared_le s t
+  have extent : Dense.Compact.sharedWords s=s.depth*s.width+s.width := by simp [Dense.Compact.sharedWords,Nat.add_mul]
   omega
 
 theorem scalar_site_unique (s : Dense.Shape) {cfg : Grid.Config s.width} {start final : Grid.State s.rows s.width}
-    {events : List (Grid.Event s.rows s.width)} (run : Grid.Runs cfg (program s) start events final)
+    {events : List (Grid.Event s.rows s.width)} (run : Grid.Runs cfg (Dense.Compact.program s) start events final)
     (p q : Nat) (g : Fin s.rows) (t : Fin s.width) (space otherSpace : Option Space)
     (e f : Scalar.Occurrence)
     (hp : events[p]?=some (g,.scalar t space e)) (hq : events[q]?=some (g,.scalar t otherSpace f))
     (same : e.pc=f.pc) : p=q :=
-  Grid.Control.same_site_unique run (program_straight s) p q _ _ (g,t) e.pc hp hq rfl (by simp [Grid.Control.stamp,Control.stamp,same])
+  Grid.Control.same_site_unique run (Dense.Compact.program_straight s) p q _ _ (g,t) e.pc hp hq rfl (by simp [Grid.Control.stamp,Control.stamp,same])
 
 /-- Location identity includes the CTA, and a private plane/word identifies its
 sole issuing instruction. Repeating that site is ruled out by the actual trace. -/
 theorem shared_store_unique (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (p q : Nat) (g h : Fin s.rows) (t u : Fin s.width) (e f : Scalar.Occurrence) (a z : MemoryEffect)
     (hp : events[p]?=some (g,.scalar t (some .shared) e)) (hq : events[q]?=some (h,.scalar u (some .shared) f))
     (he : e.memory=some a) (hf : f.memory=some z) (ha : a.kind=.store) (hz : z.kind=.store)
@@ -79,12 +79,13 @@ theorem shared_store_unique (s : Dense.Shape) (b : Bounds s) (global : List Word
   obtain ⟨j,hj,qc,bddr⟩ := candidate_shared_owner s b global seeds run g u f z (List.mem_of_getElem? hq) hf hz
   rw [addr,bddr] at same
   have indices := same_pointer_index g g _ _ (scratch_index_fits s b (thread s g t) i hi) (scratch_index_fits s b (thread s g u) j hj) .shared same
-  have tn := (thread s g t).isLt
-  have un := (thread s g u).isLt
-  have pos : 0<s.threads := by omega
-  have owner := congrArg (· % s.threads) indices
+  rw [(thread_coordinates s g t).2,(thread_coordinates s g u).2] at indices
+  have tn := t.isLt
+  have un := u.isLt
+  have pos := width_positive s
+  have owner := congrArg (· % s.width) indices
   simp [Nat.add_mod,Nat.mod_eq_of_lt tn,Nat.mod_eq_of_lt un] at owner
-  have tid := (thread_unique s g g t u (Fin.ext owner)).2
+  have tid : t=u := Fin.ext owner
   subst u
   have phase : i=j := Nat.mul_right_cancel pos (by omega)
   exact scalar_site_unique s run p q g t _ _ e f hp hq (by rw [pc,qc,phase])
@@ -93,7 +94,7 @@ theorem shared_store_unique (s : Dense.Shape) (b : Bounds s) (global : List Word
 writer. Foreign groups cannot write that output, regardless of schedule. -/
 theorem global_store_unique (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (p q : Nat) (g h : Fin s.rows) (t u : Fin s.width) (e f : Scalar.Occurrence) (a z : MemoryEffect)
     (hp : events[p]?=some (g,.scalar t (some .global) e)) (hq : events[q]?=some (h,.scalar u (some .global) f))
     (he : e.memory=some a) (hf : f.memory=some z) (ha : a.kind=.store) (hz : z.kind=.store)

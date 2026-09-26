@@ -8,10 +8,10 @@ namespace Ptx.Scalar.Parallel.GridDense
 
 theorem completed_concrete_exists (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) (size : s.globalWords≤global.length) :
-    ∃ events final, Grid.ConcreteRuns (config s b) (Dense.program s) (initial s global seeds) events final ∧
+    ∃ events final, Grid.ConcreteRuns (config s b) (Dense.Compact.program s) (initial s global seeds) events final ∧
       ∀ g t, ((final.blocks g).lanes t).halted=true := by
   have sweep : ∀ count, count≤s.rows → ∃ events state,
-      Grid.ConcreteRuns (config s b) (Dense.program s) (initial s global seeds) events state ∧
+      Grid.ConcreteRuns (config s b) (Dense.Compact.program s) (initial s global seeds) events state ∧
       (∀ g : Fin s.rows, g.val<count → ∀ t, ((state.blocks g).lanes t).halted=true) ∧
       (∀ g : Fin s.rows, count≤g.val → state.blocks g=(initial s global seeds).blocks g) := by
     intro count bound
@@ -25,8 +25,8 @@ theorem completed_concrete_exists (s : Dense.Shape) (b : Bounds s) (global : Lis
         simp only [initial] at lengths
         omega
       obtain ⟨next,final,localRun,halted⟩ := Local.completed_exists s b g state.global
-        (List.replicate s.sharedWords 0) seeds gs (by simp)
-      have viewEq : Grid.view state g=Local.initial s g state.global (List.replicate s.sharedWords 0) seeds := by
+        (List.replicate (Dense.Compact.sharedWords s) 0) seeds gs (by simp)
+      have viewEq : Grid.view state g=Local.initial s g state.global (List.replicate (Dense.Compact.sharedWords s) 0) seeds := by
         simp [Grid.view,untouched g (by rfl),initial,Local.initial]
       rw [← viewEq] at localRun
       have tail := Grid.embed_concrete g localRun
@@ -48,9 +48,9 @@ theorem completed_concrete_exists (s : Dense.Shape) (b : Bounds s) (global : Lis
 assumed for isolated groups. The witness is finite, not a fairness assertion. -/
 theorem completed_admitted_exists (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) (size : s.globalWords≤global.length) :
-    ∃ events final, Grid.ConcreteRuns (config s b) (Dense.program s) (initial s global seeds) events final ∧
+    ∃ events final, Grid.ConcreteRuns (config s b) (Dense.Compact.program s) (initial s global seeds) events final ∧
       (∀ g t, ((final.blocks g).lanes t).halted=true) ∧
-      Grid.Memory.Admitted (Dense.program s) (initial s global seeds) events := by
+      Grid.Memory.Admitted (Dense.Compact.program s) (initial s global seeds) events := by
   obtain ⟨events,final,run,halted⟩ := completed_concrete_exists s b global seeds size
   exact ⟨events,final,run,halted,Grid.Memory.Chronology.concrete_admitted_exists run⟩
 end Ptx.Scalar.Parallel.GridDense

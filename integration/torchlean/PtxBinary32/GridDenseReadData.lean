@@ -14,25 +14,32 @@ private theorem pointer_injective (i j : Nat) (hi : i<2^32) (hj : j<2^32)
   omega
 
 private theorem scratch_fits (s : Shape) (b : Dense.ArithmeticBounds s) (plane : Nat) (hp : plane≤s.depth) (t : Fin s.threads) :
-    plane*s.threads+t.val<2^32 := by
-  have ht := t.isLt
-  have mul := Nat.mul_le_mul_right s.threads hp
+    plane*s.width+t.val%s.width<2^32 := by
+  have ht := (coordinates s t).2.1
+  have mul := Nat.mul_le_mul_right s.width hp
   have bound := b.arithmetic
-  dsimp [Shape.sharedWords] at bound
-  rw [Nat.add_mul] at bound
+  have small := Dense.Compact.shared_le s t
+  have extent : Dense.Compact.sharedWords s=s.depth*s.width+s.width := by simp [Dense.Compact.sharedWords,Nat.add_mul]
   omega
 
-/-- Same scratch address identifies both its stage and its supplying thread. -/
+/-- A compact pointer identifies a phase and column. The group supplies the row. -/
 theorem scratch_pointer_owner (s : Shape) (b : Dense.ArithmeticBounds s) (p q : Nat) (hp : p≤s.depth) (hq : q≤s.depth)
-    (t u : Fin s.threads) (same : bytePointer (p*s.threads+t.val)=bytePointer (q*s.threads+u.val)) : p=q ∧ t=u := by
+    (t u : Fin s.threads) (row : t.val/s.width=u.val/s.width)
+    (same : bytePointer (p*s.width+t.val%s.width)=bytePointer (q*s.width+u.val%s.width)) : p=q ∧ t=u := by
   have eq := pointer_injective _ _ (scratch_fits s b p hp t) (scratch_fits s b q hq u) same
-  have ht := t.isLt
-  have hu := u.isLt
-  have pos : 0<s.threads := by omega
-  have indices := congrArg (· % s.threads) eq
+  have ht := (coordinates s t).2.1
+  have hu := (coordinates s u).2.1
+  have pos := width_positive s
+  have indices := congrArg (· % s.width) eq
   simp [Nat.add_mod,Nat.mod_eq_of_lt ht,Nat.mod_eq_of_lt hu] at indices
-  have phases := Nat.mul_right_cancel pos (show p*s.threads=q*s.threads by omega)
-  exact ⟨phases,Fin.ext indices⟩
+  have phases := Nat.mul_right_cancel pos (show p*s.width=q*s.width by omega)
+  have tid : t=u := by
+    apply Fin.ext
+    have a := (coordinates s t).2.2
+    have b := (coordinates s u).2.2
+    rw [row,indices] at a
+    exact a.symm.trans b
+  exact ⟨phases,tid⟩
 
 /-- Turn the store-site certificate into its scratch-plane arithmetic contract. -/
 theorem store_node (s : Shape) (global : List Word) (t : Fin s.threads) (plane pc : Nat) (value : Word)
@@ -46,7 +53,7 @@ theorem store_node (s : Shape) (global : List Word) (t : Fin s.threads) (plane p
 strictly earlier producer. The induction premise concerns past actual stores. -/
 theorem shared_load_node (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co) (valid : Admitted s global seeds events source co)
     (q : Nat) (g : Fin s.rows) (reader : Fin s.width) (occ : Scalar.Occurrence) (effect : MemoryEffect)
     (atQ : events[q]?=some (g,.scalar reader (some .shared) occ))
@@ -54,14 +61,14 @@ theorem shared_load_node (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (past : ∀ p<q, ∀ (writer : Fin s.width) (so : Scalar.Occurrence) (stored : MemoryEffect),
       events[p]?=some (g,.scalar writer (some .shared) so) → so.memory=some stored → stored.kind=.store →
       StoreData s global (thread s g writer) so.pc stored.value)
-    (plane : Nat) (hp : plane≤s.depth) (u : Fin s.threads)
-    (address : effect.address=bytePointer (plane*s.threads+u.val)) :
+    (plane : Nat) (hp : plane≤s.depth) (u : Fin s.threads) (row : u.val/s.width=g.val)
+    (address : effect.address=bytePointer (plane*s.width+u.val%s.width)) :
     Node s global (u.val/s.width) plane (u.val%s.width) effect.value := by
   obtain ⟨p,writer,so,stored,atP,sm,sk,sa,value,before⟩ :=
     shared_read_source s b global seeds run halted source co valid q g reader occ effect atQ memory load
   obtain ⟨stage,hs,site,addr⟩ := candidate_shared_owner s b global seeds run g writer so stored (List.mem_of_getElem? atP) sm sk
-  have eq : bytePointer (stage*s.threads+(thread s g writer).val)=bytePointer (plane*s.threads+u.val) := by rw [← addr,sa,address]
-  obtain ⟨rfl,rfl⟩ := scratch_pointer_owner s b.arithmetic stage plane hs hp (thread s g writer) u eq
+  have eq : bytePointer (stage*s.width+(thread s g writer).val%s.width)=bytePointer (plane*s.width+u.val%s.width) := by rw [← addr,sa,address]
+  obtain ⟨rfl,rfl⟩ := scratch_pointer_owner s b.arithmetic stage plane hs hp (thread s g writer) u ((thread_coordinates s g writer).1.trans row.symm) eq
   rw [value]
   exact store_node s global (thread s g writer) _ so.pc stored.value hp site (past p before writer so stored atP sm sk)
 
@@ -69,25 +76,25 @@ private theorem child_coordinates (s : Dense.Shape) (k : Nat) (hk : k<s.depth) (
     (active : t.val%s.width<2^(s.depth-(k+1))) :
     ∃ u : Fin s.threads, u.val/s.width=t.val/s.width ∧
       u.val%s.width=2*(t.val%s.width)+(if right then 1 else 0) ∧
-      k*s.threads+u.val=leftIndex s k t+(if right then 1 else 0) := by
-  obtain ⟨u,ua,index⟩ := Dense.child_owner s k hk t right active
+      k*s.width+u.val%s.width=Dense.Compact.leftIndex s k t+(if right then 1 else 0) := by
   have children := children_bound s k (t.val%s.width) hk active
   have width : 2^(s.depth-k)≤s.width := Nat.pow_le_pow_right (by decide) (Nat.sub_le _ _)
-  have small : 2*(t.val%s.width)+(if right then 1 else 0)<s.width := by cases right <;> simp <;> omega
-  have eq : u.val=s.thread (t.val/s.width) (2*(t.val%s.width)+(if right then 1 else 0)) := by
-    have coords := (coordinates s t).2.2
-    dsimp [Shape.thread] at coords ⊢
-    unfold leftIndex at index
-    omega
-  refine ⟨u,?_,?_,index⟩
-  · simp [eq,Shape.thread,Nat.add_div,Nat.div_eq_of_lt small,Nat.mod_eq_of_lt small,Nat.not_le.mpr small,width_positive]
-  · simp [eq,Shape.thread,Nat.add_mod,Nat.mod_eq_of_lt small]
+  let c := 2*(t.val%s.width)+(if right then 1 else 0)
+  have small : c<s.width := by cases right <;> dsimp [c] <;> omega
+  let u : Fin s.threads := ⟨s.thread (t.val/s.width) c,thread_bound s _ c (coordinates s t).1 small⟩
+  have row : u.val/s.width=t.val/s.width := by
+    simp [u,Shape.thread,Nat.add_div,Nat.div_eq_of_lt small,Nat.mod_eq_of_lt small,Nat.not_le.mpr small,width_positive]
+  have col : u.val%s.width=c := by simp [u,Shape.thread,Nat.add_mod,Nat.mod_eq_of_lt small]
+  refine ⟨u,row,col,?_⟩
+  rw [col]
+  dsimp [c,Dense.Compact.leftIndex]
+  omega
 
 /-- All load-value obligations for the next data-flow step follow from the full
 run's admission and arithmetic facts already established for earlier stores. -/
 theorem read_data (s : Dense.Shape) (b : Bounds s) (global : List Word)
     (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)
+    (run : Grid.Runs (config s b) (Dense.Compact.program s) (initial s global seeds) events final)
     (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co) (valid : Admitted s global seeds events source co)
     (q : Nat) (g : Fin s.rows) (reader : Fin s.width) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)
     (atQ : events[q]?=some (g,.scalar reader (some space) occ))
@@ -148,7 +155,7 @@ theorem read_data (s : Dense.Shape) (b : Bounds s) (global : List Word)
     rcases classified with ⟨_,_,sp,_⟩ | ⟨k,hk,right,site,_,active,addr⟩ | ⟨bias,site,sp,leader,addr⟩
     · cases sp
     · obtain ⟨u,row,col,index⟩ := child_coordinates s k hk (thread s g reader) right active
-      have node := shared_load_node s b global seeds run halted source co valid q g reader occ effect atQ memory load past k (by omega) u (by rw [addr,index])
+      have node := shared_load_node s b global seeds run halted source co valid q g reader occ effect atQ memory load past k (by omega) u (row.trans (thread_coordinates s g reader).1) (by rw [addr,index])
       rw [row,col] at node
       cases right <;> simp only [Bool.false_eq_true,↓reduceIte,Nat.add_zero] at node site
       all_goals
@@ -162,7 +169,7 @@ theorem read_data (s : Dense.Shape) (b : Bounds s) (global : List Word)
     · cases bias with
       | true => cases sp
       | false =>
-        have node := shared_load_node s b global seeds run halted source co valid q g reader occ effect atQ memory load past s.depth (Nat.le_refl _) (thread s g reader) (by simpa [rootIndex,Nat.add_comm] using addr)
+        have node := shared_load_node s b global seeds run halted source co valid q g reader occ effect atQ memory load past s.depth (Nat.le_refl _) (thread s g reader) (thread_coordinates s g reader).1 (by simpa [Dense.Compact.rootIndex,Nat.add_comm] using addr)
         rw [leader] at node
         refine ⟨?_,?_,?_,?_,?_,?_⟩
         · intro h; simp only [Bool.false_eq_true,↓reduceIte] at site; omega

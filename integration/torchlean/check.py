@@ -183,6 +183,10 @@ COUNTS['PtxTorchLean.GridDenseBackward'] = COUNTS.get('PtxTorchLean.GridDenseBac
 COUNTS['PtxTorchLean.GridDenseForward'] = COUNTS.get('PtxTorchLean.GridDenseForward', 0) + 1
 TARGETS.update({'PtxBinary32.GridReplay', 'PtxBinary32.GridDenseLocalControl', 'PtxBinary32.GridAdmission', 'PtxBinary32.GridSources', 'PtxBinary32.GridDenseExists', 'PtxBinary32.ParallelSegmentSweep', 'PtxBinary32.GridChronology', 'PtxBinary32.GridDenseLocalExists', 'PtxBinary32.GridDenseBackwardLayout', 'PtxBinary32.GridDenseBackwardStorage', 'PtxBinary32.GridPointwiseLogical', 'PtxBinary32.GridDenseBackwardChecks', 'PtxBinary32.GridDenseLaunch', 'PtxBinary32.DenseLocalSegments', 'PtxGridDenseBackward', 'PtxBinary32.GridConcrete'})
 
+# Compact row-local scratch: every new public declaration is audited.
+COUNTS["Ptx.Scalar.Parallel.Dense.Compact"] = 53
+TARGETS.update({'PtxBinary32.CompactDenseDataRules', 'PtxBinary32.CompactDenseControl', 'PtxBinary32.CompactDenseLocalSegments', 'PtxBinary32.CompactDenseAddressControl', 'PtxBinary32.CompactDenseProgram', 'PtxBinary32.CompactDenseDataStep'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

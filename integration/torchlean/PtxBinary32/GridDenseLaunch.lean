@@ -8,9 +8,9 @@ inductive Launch (s : Dense.Shape) (before : List Word) : List Word → Prop
   | empty (zero : s.rows=0) : Launch s before before
   | kernel (bounds : Bounds s) (seeds : Fin s.threads → Scalar.State)
       {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}
-      (run : Grid.Runs (config s bounds) (Dense.program s) (initial s before seeds) events final)
+      (run : Grid.Runs (config s bounds) (Dense.Compact.program s) (initial s before seeds) events final)
       (halted : ∀ g t, ((final.blocks g).lanes t).halted=true)
-      (admitted : Grid.Memory.Admitted (Dense.program s) (initial s before seeds) events) :
+      (admitted : Grid.Memory.Admitted (Dense.Compact.program s) (initial s before seeds) events) :
       Launch s before final.global
 
 theorem launch_exists (s : Dense.Shape) (before : List Word) (bounds : 0<s.rows → Bounds s)

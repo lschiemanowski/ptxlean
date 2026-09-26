@@ -22,7 +22,7 @@ private def execute (cfg : Grid.Config width) (program : List Instr) (start : Gr
 
 private def denseRun (s : Dense.Shape) (bounds : 0<s.rows → GridDense.Bounds s) (memory : List Word) : IO (List Word) := do
   if h : s.rows=0 then return memory
-  else execute (GridDense.config s (bounds (by omega))) (Dense.program s) (GridDense.initial s memory seeds)
+  else execute (GridDense.config s (bounds (by omega))) (Dense.Compact.program s) (GridDense.initial s memory seeds)
 
 private def pointwiseRun (op : Pointwise.Op) (l : Pointwise.Layout n) (memory : List Word)
     (margin : l.prefixWords+n+32<2^30) : IO (List Word) := do

@@ -42,12 +42,18 @@ the same balanced order used by the single-group proof. The row leader adds the
 bias, applies ReLU (or the explicit affine-only variant), and stores its output.
 Groups can finish at different times.
 
-For now, each private scratch allocation retains the original plane and row
-offsets: `(depth+1)*m*width` words **per group**, including unused row positions.
-This preserves the instruction list but is a substantial storage cost. The
-model proves address bounds within those explicit arrays. It does not establish
-that the allocation fits any GPU's shared-memory capacity. Compact per-group
-addressing is a separate representation improvement.
+Each group allocates `(depth+1)*width` shared words. Round `k`, column `c`
+uses word `k*width+c`, with a separate plane for the initial products and each
+addition round. Global row numbers appear only in global addresses; equal
+shared offsets in different groups are different locations. The instructions
+compute these offsets directly, using the local-column register and `width` as
+the plane stride. The memory semantics does not translate them.
+
+For a 33-by-32 layer, this is 192 words per group instead of the former 6336.
+The transposed 32-by-33 reduction pads to width 64 and uses 448 words per group.
+`Dense.Compact.shared_words_factor` proves the factor-of-rows saving generally.
+Fresh planes leave the arithmetic order, unique-writer argument and barriers
+unchanged. This still does not establish GPU shared-memory capacity or speed.
 
 ## Why arbitrary read candidates cannot spoil the forward result
 
@@ -176,7 +182,7 @@ and copy stages exceed 1,024 total lanes. Its 33-element gate uses a partial fin
 remain in the suite. These examples supplement the general proofs.
 
 Each individual reduction still fits one group of at most 1,024 lanes. Scratch
-retains the full indexed extent per group, as described above; no shared-memory
-capacity or performance claim follows. Reductions split across groups, compact
-scratch addressing, general communicating CTAs, runtime/ABI correspondence,
+uses one row of fresh planes per group; no hardware shared-memory capacity or
+performance claim follows. Reductions split across groups, general communicating
+CTAs, runtime/ABI correspondence,
 GPU execution and benchmarking remain outside this completed bounded milestone.

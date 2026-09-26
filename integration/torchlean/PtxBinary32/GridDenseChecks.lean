@@ -10,22 +10,29 @@ def check (name : String) (s : Dense.Shape) (bounds : Bounds s) (input expected 
   let global := input++List.replicate s.rows 0xdeadbeef
   let threads := (List.finRange s.rows).flatMap (fun g => (List.finRange s.width).map (fun t => (g,t)))
   let schedule := if serialGroups then
-      (List.finRange s.rows).flatMap (fun g => (List.range (Dense.program s).length).flatMap
+      (List.finRange s.rows).flatMap (fun g => (List.range (Dense.Compact.program s).length).flatMap
         (fun _ => (List.finRange s.width).map (fun t => (g,t))))
-    else (List.range (Dense.program s).length).flatMap (fun _ => threads)
-  let result := Grid.Reference.run (config s bounds) (Dense.program s) (initial s global seeds) schedule
+    else (List.range (Dense.Compact.program s).length).flatMap (fun _ => threads)
+  let result := Grid.Reference.run (config s bounds) (Dense.Compact.program s) (initial s global seeds) schedule
   let statuses := result.2.2.all fun status => match status with
     | .advanced | .waiting | .released | .halted => true
     | _ => false
   let done := threads.all (fun gt => ((result.1.blocks gt.1).lanes gt.2).halted)
   if !statuses || !done || result.1.global.drop s.outputBase != expected ||
       result.1.global.take s.outputBase != input || result.1.global.length != global.length ||
-      !(List.finRange s.rows).all (fun g => (result.1.blocks g).shared.length == s.sharedWords &&
+      !(List.finRange s.rows).all (fun g => (result.1.blocks g).shared.length == Dense.Compact.sharedWords s &&
         (result.1.blocks g).barrier.generation == s.depth+1) then
     throw (IO.userError s!"grid dense regression failed: {name}")
   IO.println s!"Grid dense interpreter check passed: {name}"
 
 def run : IO Unit := do
+  let compact : Dense.Shape := ⟨33,32,5,by decide,true⟩
+  let memory := initial compact [] seeds
+  if compact.sharedWords != 6336 ||
+      !(List.finRange 33).all (fun g => (memory.blocks g).shared.length == 192) then
+    throw (IO.userError "compact scratch allocation regression")
+  IO.println "Compact allocation check passed: 192 words per group for 33 by 32"
+
   let s : Dense.Shape := ⟨2,3,2,by decide,true⟩
   let bounds : Bounds s := ⟨⟨by decide,by decide⟩,by decide⟩
   let input := [0x3f800000,0x40000000,0x40400000,
