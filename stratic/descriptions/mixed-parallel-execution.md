@@ -65,8 +65,8 @@ predicate. It omits tensor registers and floating-point results. Before using it
 every instruction in the program must be checked: a retained value may depend
 only on retained inputs, and a tensor load or floating-point instruction may not
 overwrite one. Agreement with this calculation is preserved by actual thread
-steps, skipped instructions and barrier release. An emitted store then has the
-address calculated by its thread's instruction prefix; an emitted store guarded
+steps, skipped instructions and barrier release. An emitted memory access then has the
+address calculated by its thread's instruction prefix; an emitted access guarded
 by the retained predicate also proves that predicate true. This is a proof aid
 for the existing machine, not an alternate execution or memory rule. The current
 projection retains the register set used by the dense kernel; other layouts need
@@ -96,6 +96,12 @@ force the consumer to read that writer. Initialization cannot supply a stale
 value. The unique-writer condition includes the entire execution: a later
 overwrite would violate it. Fresh scratch for each round makes this a useful
 rule for reductions, but a kernel must still prove ownership and timing.
+
+The final contents of a memory word follow the actual stores: the last store
+to that word supplies its final value, and a word with no store keeps its initial
+contents. This fact holds even when load values are freely proposed. It does not
+assert that a load reads the latest store; admission and synchronization provide
+that separate argument when a kernel needs it.
 
 A selected software runner reads the current arrays and chooses the checked
 binary32 reference result. Its steps are proved to be candidate-machine steps;

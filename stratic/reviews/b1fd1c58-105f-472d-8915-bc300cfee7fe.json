@@ -1,0 +1,158 @@
+{
+  "id": "b1fd1c58-105f-472d-8915-bc300cfee7fe",
+  "base": "67d9140084dc4e97afbb7159ac01ac2395cc4430",
+  "contentTree": "bc479d49072e3292a792e2a5b6415cd1f2eb710a",
+  "reviewer": "Codex",
+  "summary": "Complete universal correctness of the bounded parallel dense forward kernel and empty-output wrapper.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Every admitted completed forward run now has derived load sources, relational arithmetic values and stored numerical accuracy against the actual TorchLean graph. Existing selected execution witness remains, empty outputs have a no-launch wrapper, and parallel backward and broader launches remain incomplete."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Adds reusable actual-load address projection and last-write final-memory lemmas without changing candidate read freedom, instruction semantics, admission or scheduling guarantees."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Exact pinned dependency audit expands to all 60 new public declarations. Internal proof validity remains distinct from source fidelity and hardware conformance; allowed axioms and guards are unchanged."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The bounded dense forward example now combines universal correctness, existence, numerical accuracy and safety. Its coverage does not enlarge ISA, hardware, backward or runtime claims."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "Candidate loads remain unrestricted until graph admission; actual memory writes determine final storage. Existing scalar faults, predicates, finite completion and checked access semantics are unchanged."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "bc479d49072e3292a792e2a5b6415cd1f2eb710a",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual proof, contract and expanded-impact review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and unchanged locked root/TorchLean dependencies. Local CPU verification; no GPU execution, benchmarks or external model calls.",
+      "evidence": "Both full check suites exited 0. Root: 1643 dependency reports. Integration: 88 default targets, fresh DenseChecks and 1096 exact dependency reports including all 60 new public declarations. Only propext, Classical.choice and Quot.sound permitted; no proof placeholders or new unchecked axioms. Manually inspected universal_forward, wrapper_forward, completed_forward, run_data and source-forcing dependencies. Existing instruction and memory semantics retained; load arithmetic premises discharged by actual earlier stores. Stratic validates with no issues; git diff --check clean; before and after snapshots identical. Existing tactic-linter warnings in new case-analysis proofs do not affect checking. Logs: /tmp/forward-root-check.log and /tmp/forward-integration-check.log.",
+      "tests": [],
+      "id": "612fffa1-19b2-414f-a1b9-9aff736bc3a6",
+      "recordedAt": "2026-09-26T09:48:27.053Z"
+    }
+  ],
+  "recordedAt": "2026-09-26T09:49:03.076Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Updates only the integration dependency-report total to 1096."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Explains all six actual load roles, barrier-forced earlier sources, register and past-store induction, final stored values, TorchLean numerical interpretation, execution witness and empty-output no-launch case. Keeps one-CTA bounds, completion versus fairness, software semantics versus hardware, and unfinished backward explicit."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseData.lean",
+      "reason": "Relational subtree/output meaning and live-register intervals preserve Results freedom; zero padding and tree composition are derived."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseDataFP.lean",
+      "reason": "Actual FP Eval cases preserve the register invariant using permitted multiplication/addition results and ReLU word behavior."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseDataMachine.lean",
+      "reason": "Dispatch and step cases preserve arithmetic meaning and actual emitted stores; Reads is discharged in run_data rather than assumed by the final theorem."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseDataRules.lean",
+      "reason": "Exhaustive program segmentation connects instruction-level preservation across scalar, FP and barrier steps."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseDataRun.lean",
+      "reason": "Induction over the actual interleaving derives next-step load meaning from strictly earlier actual stores and admission; no circular arithmetic premise."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseDataStep.lean",
+      "reason": "Checks every scalar instruction in product, reduction and output segments against live-register intervals, including guards, padding and data movement."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseGlobalReads.lean",
+      "reason": "Proves no noninitial global write reaches the operand prefix and derives load values from initialization through existing source compatibility."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseLaunch.lean",
+      "reason": "Explicit empty-output no-launch wrapper returns initial storage; positive kernels retain existing run/completion/admission contracts. No CUDA ABI or zero-thread configuration claim."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseLoadControl.lean",
+      "reason": "Derives actual addresses and active guards at each load from the existing control projection and shape no-wrap bounds."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseLoadSites.lean",
+      "reason": "Exhaustively classifies six load roles, with derived addresses and guards for actual emitted loads."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseReadData.lean",
+      "reason": "Identifies scratch owner/stage by bounded address injectivity, then translates actual prior-store contracts into load arithmetic meaning."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseReadSources.lean",
+      "reason": "Admitted abbreviates the existing Graph.Ordered.Valid with run-derived order. Completed barriers and proved unique writers force earlier producer values; no desired source/value assumption."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseStoreData.lean",
+      "reason": "Connects actual emitted stores to live-register arithmetic meaning at the fetched, enabled instruction."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseUniversal.lean",
+      "reason": "Derives output existence from actual completed output stores and final values from actual last writes; universal relational output, unchanged input prefix, array extents and access safety."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelLoadControl.lean",
+      "reason": "Reusable address-control lemmas recover actual load addresses and guard truth from the compatible local projection."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelWriteValues.lean",
+      "reason": "Generic final-memory summary uses actual stores while leaving candidate read values unrestricted; covers scalar/FP/barrier/exit/fault cases."
+    },
+    {
+      "path": "integration/torchlean/PtxDenseForward.lean",
+      "reason": "Maps any relational stored output to the actual TorchLean graph using existing encoding and finite-range premises. Universal and empty-wrapper contracts retain selected execution existence."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Adds imports and exact dependency reports for all 60 new public definitions/theorems, including helper invariants and wrapper definitions."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updates 88 targets/1096 reports and describes universal forward, witness and empty wrapper with unchanged bounded scope."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Adds 60 public-declaration counts and 16 default targets; dependency pins, source guards, exact-report matching and allowed logical axioms unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers all 16 new modules as default targets without changing toolchain or dependencies."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Description-first contract, summary, remaining scope and exact passage links reconciled with completed forward proofs; broader unimplemented responsibilities remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Description-first contract, summary, remaining scope and exact passage links reconciled with completed forward proofs; broader unimplemented responsibilities remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Description-first contract, summary, remaining scope and exact passage links reconciled with completed forward proofs; broader unimplemented responsibilities remain explicit."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Description-first contract, summary, remaining scope and exact passage links reconciled with completed forward proofs; broader unimplemented responsibilities remain explicit."
+    }
+  ]
+}

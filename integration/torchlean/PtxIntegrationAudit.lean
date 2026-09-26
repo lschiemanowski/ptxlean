@@ -1,3 +1,19 @@
+import PtxBinary32.DenseData
+import PtxBinary32.DenseDataFP
+import PtxBinary32.DenseDataMachine
+import PtxBinary32.DenseDataRules
+import PtxBinary32.DenseDataRun
+import PtxBinary32.DenseDataStep
+import PtxBinary32.DenseGlobalReads
+import PtxBinary32.DenseLaunch
+import PtxBinary32.DenseLoadControl
+import PtxBinary32.DenseLoadSites
+import PtxBinary32.DenseReadData
+import PtxBinary32.DenseReadSources
+import PtxBinary32.DenseStoreData
+import PtxBinary32.DenseUniversal
+import PtxBinary32.ParallelLoadControl
+import PtxBinary32.ParallelWriteValues
 import PtxBinary32.ParallelCoverage
 import PtxBinary32.DenseCoverage
 import PtxBinary32.ParallelAddressControl
@@ -1135,3 +1151,65 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Dense.completed_output_store
 #print axioms Ptx.Scalar.Parallel.Dense.completed_product_publication
 #print axioms Ptx.Scalar.Parallel.Dense.completed_round_publication
+
+-- Universal completed dense forward execution, forced sources, and no-launch wrapper.
+#print axioms Ptx.Scalar.Parallel.Dense.Node
+#print axioms Ptx.Scalar.Parallel.Dense.Output
+#print axioms Ptx.Scalar.Parallel.Dense.node_leaf
+#print axioms Ptx.Scalar.Parallel.Dense.node_fork
+#print axioms Ptx.Scalar.Parallel.Dense.Data
+#print axioms Ptx.Scalar.Parallel.Dense.ReadData
+#print axioms Ptx.Scalar.Parallel.Dense.StoreData
+#print axioms Ptx.Scalar.Parallel.Dense.initial_data
+#print axioms Ptx.Scalar.Parallel.Dense.product_fp_data
+#print axioms Ptx.Scalar.Parallel.Dense.round_fp_data
+#print axioms Ptx.Scalar.Parallel.Dense.output_fp_data
+#print axioms Ptx.Scalar.Parallel.Dense.DataInvariant
+#print axioms Ptx.Scalar.Parallel.Dense.Stores
+#print axioms Ptx.Scalar.Parallel.Dense.Reads
+#print axioms Ptx.Scalar.Parallel.Dense.dispatch_data
+#print axioms Ptx.Scalar.Parallel.Dense.step_data
+#print axioms Ptx.Scalar.Parallel.Dense.scalar_step_singleton
+#print axioms Ptx.Scalar.Parallel.Dense.program_segment
+#print axioms Ptx.Scalar.Parallel.Dense.scalar_data
+#print axioms Ptx.Scalar.Parallel.Dense.fp_data
+#print axioms Ptx.Scalar.Parallel.Dense.barrier_data
+#print axioms Ptx.Scalar.Parallel.Dense.run_data
+#print axioms Ptx.Scalar.Parallel.Dense.product_scalar_data
+#print axioms Ptx.Scalar.Parallel.Dense.round_scalar_data
+#print axioms Ptx.Scalar.Parallel.Dense.output_scalar_data
+#print axioms Ptx.Scalar.Parallel.Dense.global_load_index
+#print axioms Ptx.Scalar.Parallel.Dense.global_prefix_unwritten
+#print axioms Ptx.Scalar.Parallel.Dense.global_read_source
+#print axioms Ptx.Scalar.Parallel.Dense.launchPlan
+#print axioms Ptx.Scalar.Parallel.Dense.launchPlan_empty
+#print axioms Ptx.Scalar.Parallel.Dense.launchPlan_kernel
+#print axioms Ptx.Scalar.Parallel.Dense.ForwardRun
+#print axioms Ptx.Scalar.Parallel.Dense.empty_forward
+#print axioms Ptx.Scalar.Parallel.Dense.empty_forward_unique
+#print axioms Ptx.Scalar.Parallel.Dense.product_read_control
+#print axioms Ptx.Scalar.Parallel.Dense.round_read_control
+#print axioms Ptx.Scalar.Parallel.Dense.output_read_control
+#print axioms Ptx.Scalar.Parallel.Dense.productLoad
+#print axioms Ptx.Scalar.Parallel.Dense.roundLoad
+#print axioms Ptx.Scalar.Parallel.Dense.outputLoad
+#print axioms Ptx.Scalar.Parallel.Dense.fetched_load_site
+#print axioms Ptx.Scalar.Parallel.Dense.candidate_load_address
+#print axioms Ptx.Scalar.Parallel.Dense.scratch_pointer_owner
+#print axioms Ptx.Scalar.Parallel.Dense.store_node
+#print axioms Ptx.Scalar.Parallel.Dense.shared_load_node
+#print axioms Ptx.Scalar.Parallel.Dense.read_data
+#print axioms Ptx.Scalar.Parallel.Dense.Admitted
+#print axioms Ptx.Scalar.Parallel.Dense.visible_store
+#print axioms Ptx.Scalar.Parallel.Dense.plane_publication
+#print axioms Ptx.Scalar.Parallel.Dense.child_owner
+#print axioms Ptx.Scalar.Parallel.Dense.shared_read_source
+#print axioms Ptx.Scalar.Parallel.Dense.scalar_store_data
+#print axioms Ptx.Scalar.Parallel.Dense.completed_forward
+#print axioms Ptx.Scalar.Parallel.AddressControl.step_load
+#print axioms Ptx.Scalar.Parallel.AddressControl.run_load
+#print axioms Ptx.Scalar.Parallel.Replay.latestWrite_append
+#print axioms Ptx.Scalar.Parallel.Replay.run_value
+#print axioms PtxTorchLean.DenseForward.output_accuracy
+#print axioms PtxTorchLean.DenseForward.universal_forward
+#print axioms PtxTorchLean.DenseForward.wrapper_forward

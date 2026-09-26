@@ -7,12 +7,12 @@
     }
   },
   "summary": [
-    "Connect a vector-output dense–ReLU layer and all its gradients to an actual TorchLean graph and automatically generated backward.",
-    "Verify a separately supplied parallel binary32 forward implementation with a fixed reduction tree and fresh scratch in one bounded cooperating thread array; prove a complete admitted execution whose stored outputs approximate the actual TorchLean real graph under explicit encoding and range conditions, while distinguishing correctness for all admitted executions.",
-    "For arbitrary candidate forward traces, derive instruction order, actual store addresses and at most one program write per location; completed runs contain all required stores and barrier completions, with each scratch producer before its actual arrival. Universal stored-output correctness remains open."
+    "Connect a vector-output dense–ReLU layer and its automatically generated gradients to the actual TorchLean graph.",
+    "For the supplied binary32 forward kernel, every admitted completed execution stores outputs within the derived bound of the TorchLean real graph, under explicit encoding and calculated range conditions; inputs and memory extents are preserved and every emitted access is in bounds.",
+    "Keep a complete admitted execution witness separate from universal correctness. Zero output rows require no launch. The kernel uses one bounded cooperating thread array, a fixed reduction tree and fresh scratch planes; parallel backward implementation and proofs remain unfinished."
   ],
   "realization": "partial",
-  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Its stored words approximate the actual TorchLean real tensor graph under explicit entry-encoding and calculated finite-range conditions; zero-padding removal and the tensor/tree identity are proved, including empty inputs. Arbitrary candidate traces now have strict per-thread instruction order, at-most-once execution of each store site, exhaustive emitted-store site classification and timing derived around observed completed barriers. The address-control projection is proved against the complete instruction list and derives actual shared-stage/thread addresses and global row-leader stores. The exact memory graph has at most one noninitial write per location, independently of source/coherence choices or admission. Completed candidate executions now supply actual product, active-round and row-output stores and every required completed barrier, with scratch producers before their actual arrivals. Store predicates are proved from the address-control calculation, rather than assumed true. Missing: matching consumer loads to these unique producers, the resulting read-source and arithmetic-tree correspondence, and universal stored numerical correspondence; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy, tensor/tree identity or memory validity are assumed by the selected execution proof.",
+  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; the supplied shape-specialized forward instruction list; a complete admitted execution witness; and universal stored-output correctness for every admitted completed candidate execution. Computed load and store addresses, producer existence, unique ownership and actual completed barriers force global initialization reads and shared producer reads. Induction over the actual interleaving proves the arithmetic meaning of live registers and emitted stores, retaining all permitted binary32 result choices. Final-memory correspondence, unchanged input words, preserved extents and access safety follow. Encoding and calculated range conditions connect every stored row to the actual TorchLean graph, including zero padding and empty inputs. The empty-output wrapper has no launch or memory change and satisfies the same forward contract. Missing: the separately supplied parallel backward kernel and its stored dx, dW and db proofs. Larger multi-array launches, runtime/ABI correspondence, hardware conformance and benchmarks are outside this first forward kernel.",
   "links": [
     {
       "kind": "implementation",
@@ -258,7 +258,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The bound for a selected stored row follows from finite input interpretations,\nexplicit encoding errors and checks on the calculated intermediate ranges."
+        "quote": "The bound for every stored row follows from finite input interpretations,\nexplicit encoding errors and checks on the calculated intermediate ranges."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/DenseForward.lean",
@@ -504,6 +504,102 @@
         "path": "integration/torchlean/PtxBinary32/DenseCoverage.lean",
         "passage": {
           "quote": "theorem completed_round_publication (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (k : Nat) (hk : k<s.depth) :\n    ∃ phase : History.Phase events, phase.key.site=22+16*k+15 ∧ ∀ t,\n      t.val%s.width<2^(s.depth-(k+1)) →\n      ∃ (p : Nat) (occ : Scalar.Occurrence) (effect : MemoryEffect),\n        events[p]?=some (.scalar t (some .shared) occ) ∧ occ.pc=22+16*k+14 ∧\n        occ.memory=some effect ∧ effect.kind=.store ∧ effect.address=bytePointer (nextIndex s k t) ∧\n        p<History.arrivalPosition (History.completed_arrivals run rfl) phase t :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every actual load must be tied to its computed address and enabled predicate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseLoadSites.lean",
+        "passage": {
+          "quote": "theorem candidate_load_address (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (t : Fin s.threads) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (member : .scalar t (some space) occ ∈ events) (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    (∃ weight : Bool, occ.pc=(if weight then 15 else 11) ∧ space=.global ∧ t.val%s.width<s.columns ∧\n      effect.address=bytePointer (if weight then s.weight (t.val/s.width) (t.val%s.width) else t.val%s.width)) ∨\n    (∃ k, k<s.depth ∧ ∃ right : Bool, occ.pc=22+16*k+(if right then 8 else 7) ∧ space=.shared ∧\n      t.val%s.width<2^(s.depth-(k+1)) ∧ effect.address=bytePointer (leftIndex s k t+if right then 1 else 0)) ∨\n    (∃ bias : Bool, occ.pc=22+16*s.depth+(if bias then 10 else 5) ∧ space=(if bias then .global else .shared) ∧\n      t.val%s.width=0 ∧ effect.address=bytePointer (if bias then biasIndex s t else rootIndex s t)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Input, weight and bias loads refer to unchanged initial global words."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseGlobalReads.lean",
+        "passage": {
+          "quote": "theorem global_read_source (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (source co) (valid : Admitted s b global shared seeds run source co)\n    (q : Nat) (t : Fin s.threads) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atQ : events[q]?=some (.scalar t (some .global) occ))\n    (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    ∃ i, i<s.outputBase ∧ i<global.length ∧ effect.address=bytePointer i ∧ effect.value=global[i]! :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Shared\nloads refer to active producers in the preceding scratch plane."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseReadSources.lean",
+        "passage": {
+          "quote": "theorem shared_read_source (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co) (valid : Admitted s b global shared seeds run source co)\n    (q : Nat) (reader : Fin s.threads) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atQ : events[q]?=some (.scalar reader (some .shared) occ))\n    (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    ∃ (p : Nat) (writer : Fin s.threads) (storeOcc : Scalar.Occurrence) (stored : MemoryEffect),\n      events[p]?=some (.scalar writer (some .shared) storeOcc) ∧ storeOcc.memory=some stored ∧\n      stored.kind=.store ∧ stored.address=effect.address ∧ effect.value=stored.value ∧ p<q :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The value proof proceeds through the actual interleaving of instructions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseDataRun.lean",
+        "passage": {
+          "quote": "theorem run_data (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co) (valid : Admitted s b global shared seeds run source co) :\n    DataInvariant s global final ∧ Stores s global events :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A separate final-memory\nargument identifies the words actually left in the output slice."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseUniversal.lean",
+        "passage": {
+          "quote": "theorem completed_forward (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co) (valid : Admitted s b global shared seeds run source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧ Output s global row.val value) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ final.shared.length=shared.length ∧\n    (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every admitted completed execution, the resulting instruction arithmetic\nmust establish the stated bound for the words actually stored in output memory,\nwhile preserving inputs and both storage extents."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseForward.lean",
+        "passage": {
+          "quote": "theorem universal_forward (s : Dense.Shape) (bounds : Dense.Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    {events : List (Event s.threads)} {final : State s.threads}\n    (run : Runs (Dense.config s bounds) (Dense.program s) (Dense.initial s global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co)\n    (valid : Dense.Admitted s bounds global shared seeds run source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧\n      finiteReal value=some (max (encoding.row row).affine 0) ∧\n      |max (encoding.row row).affine 0-\n        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ final.shared.length=shared.length ∧\n    (∀ event ∈ events, AccessSafe (Dense.initial s global shared seeds) event) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An empty output bypasses the\nkernel entirely and returns an empty tensor without a launch or memory change."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseLaunch.lean",
+        "passage": {
+          "quote": "theorem empty_forward_unique (s : Shape) (global shared : List Word) (seeds : Fin s.threads → Scalar.State)\n    {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (empty : s.rows=0) (run : ForwardRun s global shared seeds events final) :\n    events=[] ∧ final=initial s global shared seeds :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An empty output bypasses the\nkernel entirely and returns an empty tensor without a launch or memory change."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseForward.lean",
+        "passage": {
+          "quote": "theorem wrapper_forward (s : Dense.Shape) (global shared : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    {events : List (Event s.threads)} {final : State s.threads}\n    (run : Dense.ForwardRun s global shared seeds events final) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧\n      finiteReal value=some (max (encoding.row row).affine 0) ∧\n      |max (encoding.row row).affine 0-\n        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ final.shared.length=shared.length ∧\n    (∀ event ∈ events, AccessSafe (Dense.initial s global shared seeds) event) :="
         }
       }
     }

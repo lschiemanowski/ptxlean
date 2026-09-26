@@ -130,6 +130,13 @@ COUNTS['Ptx.Scalar.Parallel.Dense'] += 11
 COUNTS['Ptx.Scalar.Parallel.Control'] += 7
 TARGETS.update({'PtxBinary32.ParallelCoverage', 'PtxBinary32.DenseCoverage'})
 
+# Universal dense forward correctness and explicit empty-output no-launch.
+COUNTS['Ptx.Scalar.Parallel.AddressControl'] = COUNTS.get('Ptx.Scalar.Parallel.AddressControl', 0) + 2
+COUNTS['Ptx.Scalar.Parallel.Dense'] = COUNTS.get('Ptx.Scalar.Parallel.Dense', 0) + 53
+COUNTS['Ptx.Scalar.Parallel.Replay'] = COUNTS.get('Ptx.Scalar.Parallel.Replay', 0) + 2
+COUNTS['PtxTorchLean.DenseForward'] = COUNTS.get('PtxTorchLean.DenseForward', 0) + 3
+TARGETS.update({'PtxBinary32.DenseDataRun', 'PtxBinary32.DenseGlobalReads', 'PtxBinary32.DenseReadData', 'PtxBinary32.DenseLaunch', 'PtxBinary32.DenseReadSources', 'PtxBinary32.DenseData', 'PtxBinary32.DenseDataMachine', 'PtxBinary32.DenseStoreData', 'PtxBinary32.DenseUniversal', 'PtxBinary32.ParallelWriteValues', 'PtxBinary32.ParallelLoadControl', 'PtxBinary32.DenseDataStep', 'PtxBinary32.DenseDataFP', 'PtxBinary32.DenseLoadControl', 'PtxBinary32.DenseLoadSites', 'PtxBinary32.DenseDataRules'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

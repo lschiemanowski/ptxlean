@@ -12,8 +12,9 @@
     "Construct a completed two-thread, two-round computed-publication witness with checked read sources and no circular dependencies; concrete layer ownership, timing and execution proofs remain separate.",
     "Derive initial or last-store read origins from concrete executions, construct chronological graph certificates, and prove admission under the existing restricted memory constraints with actual barrier order.",
     "For programs without jumps or scalar exits, derive strict per-thread instruction order and timing around actual barrier completions for arbitrary candidate runs; visibility still requires a proved unique writer for each location.",
-    "Prove agreement with a data-independent address calculation after checking every instruction, then recover actual emitted store addresses and retained predicate truth under arbitrary scheduling.",
-    "Recover the actual exit of a halted lane and the execution step at every earlier crossed site; passing a synchronization site requires an emitted collective completion, while an enabled memory store still needs its guard proved."
+    "Prove agreement with a data-independent address calculation after checking every instruction, then recover actual emitted load/store addresses and retained predicate truth under arbitrary scheduling.",
+    "Recover the actual exit of a halted lane and the execution step at every earlier crossed site; passing a synchronization site requires an emitted collective completion, while an enabled memory store still needs its guard proved.",
+    "Derive final memory contents from the actual stores independently of proposed load values; this does not impose chronological read semantics."
   ],
   "realization": "partial",
   "remaining": "Straight-line candidate traces now have strict per-thread instruction order, unique execution of each thread/site pair and strict ordering of completed barrier sites. Actual completion splits derive producer/consumer timing from instruction sites, and the visibility rule uses those derived facts. The address-control projection retains the dense kernel's chosen integer registers, all address registers and predicate zero; instruction compatibility is proved before use. Other register layouts require another compatibility check or generalization. Site-crossing and halt-origin rules recover actual memory evaluations and barrier completions. Kernel proofs must still discharge guard conditions and connect consumer addresses and allowed values to their producers. Launch validation and general barrier forms remain unimplemented. Concrete-read admission is a sufficient witness construction, not a characterization of all PTX executions.",
@@ -345,7 +346,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "An emitted store then has the\naddress calculated by its thread's instruction prefix; an emitted store guarded\nby the retained predicate also proves that predicate true."
+        "quote": "An emitted memory access then has the\naddress calculated by its thread's instruction prefix; an emitted access guarded\nby the retained predicate also proves that predicate true."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/ParallelStoreControl.lean",
@@ -387,6 +388,30 @@
         "path": "integration/torchlean/PtxBinary32/ParallelCoverage.lean",
         "passage": {
           "quote": "theorem memory_crossing (step : Step cfg program candidate selected s out) (straight : Straight program) (aligned : Aligned s)\n    (fetch : program[(s.lanes t).scalar.pc]?=some (.memory space i))\n    (advance : (out.state.lanes t).scalar.pc=(s.lanes t).scalar.pc+1) :\n    selected=t ∧ ∃ next occ,\n      Scalar.eval candidate i {(s.lanes t).scalar with memory :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An emitted memory access then has the\naddress calculated by its thread's instruction prefix; an emitted access guarded\nby the retained predicate also proves that predicate true."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelLoadControl.lean",
+        "passage": {
+          "quote": "theorem run_load {s final : State n} {events : List (Event n)} {seeds : Fin n → Scalar.State}\n    (run : Runs cfg program s events final) (compatible : ProgramCompatible program)\n    (inv : Invariant program seeds s) (aligned : Aligned s)\n    (member : .scalar owner space occ ∈ events) (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    ∃ destination address, occ.instruction.op=.load destination address ∧\n      effect.address=address.eval (atPC program (seeds owner) occ.pc) ∧\n      (occ.instruction.guard=.pred 0 true → (atPC program (seeds owner) occ.pc).preds 0=true) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The final contents of a memory word follow the actual stores: the last store\nto that word supplies its final value, and a word with no store keeps its initial\ncontents. This fact holds even when load values are freely proposed. It does not\nassert that a load reads the latest store; admission and synchronization provide\nthat separate argument when a kernel needs it."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelWriteValues.lean",
+        "passage": {
+          "quote": "theorem run_value (run : Runs cfg code state events final) (space : Space) (index : Nat) :\n    (arena (arrays final) space)[index]?=(latestWrite space index events).or ((arena (arrays state) space)[index]?) :="
         }
       }
     }

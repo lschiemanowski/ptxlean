@@ -1,10 +1,11 @@
 import PtxDenseVJP
 import PtxBinary32.DenseAdmission
 import PtxBinary32.ReductionPadding
+import PtxBinary32.DenseUniversal
 
 /-! Actual admitted dense-forward output words compared to the actual TorchLean
 real tensor graph. Entry encodings and range checks are explicit; the tensor/tree
-identity is proved, not a premise. This concerns a selected execution. -/
+identity is proved, not a premise. Both an execution witness and universal completed-execution correctness are provided. -/
 namespace PtxTorchLean.DenseForward
 open Ptx Ptx.Binary32 Ptx.Scalar.Parallel
 open TorchLean TorchLean.Tensor
@@ -103,5 +104,72 @@ theorem selected_forward (s : Dense.Shape) (bounds : Dense.Bounds s) (global sha
   refine ⟨events,final,run,source,co,valid,grounded,done,?_,inputs,gl,sl,barrier,site,safe⟩
   intro row
   exact ⟨Dense.forwardWord s global row.val,values row.val row.isLt,forward_word_accuracy encoding row⟩
+
+/-- Interpret any permitted stored arithmetic result, preserving instruction
+choices until the finite-range theorem establishes the numerical conclusion. -/
+theorem output_accuracy (encoding : Encoding s global x w b) (r : Fin s.rows) (value : Word)
+    (correct : Dense.Output s global r.val value) :
+    finiteReal value=some (max (encoding.row r).affine 0) ∧
+      |max (encoding.row r).affine 0-
+        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) r 0| ≤ (encoding.row r).error := by
+  obtain ⟨dot,affine,node,addition,rfl⟩ := correct
+  have allowed : Reduction.RowEval (encoding.row r) affine := by
+    refine ⟨dot,?_,addition⟩
+    rw [encoding.row_words]
+    simpa [Dense.Node] using node
+  have accuracy := Reduction.row_forward_accuracy (encoding.row r) allowed
+  refine ⟨accuracy.1,?_⟩
+  rw [encoding.row_ideal] at accuracy
+  simpa [DenseVJP.forward_coordinate,DenseVJP.affine_coordinate] using accuracy.2
+
+/-- Every admitted completed execution approximates the actual TorchLean graph.
+No desired load values, intermediate arithmetic identities, concrete-read
+policy or selected schedule appear among the premises. -/
+theorem universal_forward (s : Dense.Shape) (bounds : Dense.Bounds s) (global shared : List Word)
+    (seeds : Fin s.threads → Ptx.Scalar.State)
+    (x : Tensor ℝ (DenseVJP.column s.columns))
+    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))
+    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)
+    {events : List (Event s.threads)} {final : State s.threads}
+    (run : Runs (Dense.config s bounds) (Dense.program s) (Dense.initial s global shared seeds) events final)
+    (halted : ∀ t, (final.lanes t).halted=true) (source co)
+    (valid : Dense.Admitted s bounds global shared seeds run source co) :
+    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧
+      finiteReal value=some (max (encoding.row row).affine 0) ∧
+      |max (encoding.row row).affine 0-
+        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧
+    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧
+    final.global.length=global.length ∧ final.shared.length=shared.length ∧
+    (∀ event ∈ events, AccessSafe (Dense.initial s global shared seeds) event) := by
+  obtain ⟨values,inputs,gl,sl,safe⟩ := Dense.completed_forward s bounds global shared seeds run halted source co valid
+  refine ⟨?_,inputs,gl,sl,safe⟩
+  intro row
+  obtain ⟨value,stored,correct⟩ := values row
+  exact ⟨value,stored,output_accuracy encoding row value correct⟩
+
+/-- The same forward contract covers the no-launch wrapper's empty-output case.
+The caller need not fabricate a nonempty launch configuration for zero rows. -/
+theorem wrapper_forward (s : Dense.Shape) (global shared : List Word)
+    (seeds : Fin s.threads → Ptx.Scalar.State)
+    (x : Tensor ℝ (DenseVJP.column s.columns))
+    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))
+    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)
+    {events : List (Event s.threads)} {final : State s.threads}
+    (run : Dense.ForwardRun s global shared seeds events final) :
+    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧
+      finiteReal value=some (max (encoding.row row).affine 0) ∧
+      |max (encoding.row row).affine 0-
+        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧
+    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧
+    final.global.length=global.length ∧ final.shared.length=shared.length ∧
+    (∀ event ∈ events, AccessSafe (Dense.initial s global shared seeds) event) := by
+  cases run with
+  | empty zero =>
+    refine ⟨?_,fun _ _ => rfl,rfl,rfl,?_⟩
+    · intro row; have := row.isLt; omega
+    · intro event member; simp at member
+  | kernel bounds run halted admitted =>
+    obtain ⟨source,co,valid⟩ := admitted
+    exact universal_forward s bounds global shared seeds x w b encoding run halted source co valid
 
 end PtxTorchLean.DenseForward

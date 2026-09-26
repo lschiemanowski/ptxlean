@@ -7,14 +7,19 @@ x\in\mathbb R^n,\quad W\in\mathbb R^{m\times n},\quad b\in\mathbb R^m,
 \qquad y=\operatorname{ReLU}(Wx+b)\in\mathbb R^m.
 \]
 
-**The complete selected forward execution is checked in Lean, including all
-reduction rounds, barriers, bias/ReLU stores and every thread's exit.** The same
-trace has a proved admission certificate under the existing restricted memory
-model, preserves inputs and satisfies access safety. **Its stored binary32
-outputs approximate the actual TorchLean real tensor graph**, under explicit
-input-encoding and calculated finite-range conditions. The proof removes padded
-zero terms from the real sum, including for an empty input. Correctness for every
-admitted execution remains unproved. There is no GPU execution or speed claim.
+**Every admitted, completed execution of the supplied forward kernel has a
+proved numerical bound against the actual TorchLean real tensor graph.** Inputs
+are preserved, both storage lengths stay fixed, and every emitted access is
+aligned and in bounds. A separate theorem constructs a completed admitted
+execution, so the universal result is not merely conditional on an impossible
+run. An empty output has a proved no-launch wrapper.
+
+The conditions are explicit: finite initial encodings with error bounds,
+calculated intermediate-range checks, and the bounded single-CTA layout below.
+The memory semantics and instruction result relations are unchanged. This is
+not hardware conformance, bitwise correspondence with PyTorch, a scheduler
+fairness result, or verification of the parallel backward kernel. No GPU run or
+benchmark is part of this milestone.
 
 ## The mathematical computation and its backward
 
@@ -47,8 +52,8 @@ When every `a_i` is nonzero, `sensitivities_adjoint` identifies that result with
 the adjoint of the ordinary real derivative. At zero, `gate_at_zero` establishes
 the chosen zero convention, without claiming differentiability there. The empty
 inner dimension gives `ReLU(b)`; with no outputs, all input sensitivities are
-zero. The selected forward kernel also covers empty inputs; an empty-output
-no-launch wrapper remains to be supplied.
+zero. The forward kernel also covers empty inputs. With zero output rows,
+`DenseLaunch` returns without launching a kernel or changing either memory arena.
 
 `PtxTensorContext.lean` supplies reusable identities for handling the graph's
 collection of differently shaped tensors. It allows the proof to follow tensor
@@ -128,11 +133,12 @@ lengths, barrier state and access-safety proof all refer to the same execution.
 The caller supplies the initial encoding and range conditions, not a tensor/tree
 identity, desired load values or a premise about intermediate accuracy.
 
-The comparison is to TorchLean's real-valued tensor specification. It is neither
-bitwise agreement with a concrete PyTorch run nor a theorem about all admitted
-kernel executions. Arithmetic bounds already quantify over permitted arithmetic
-results, but that alone does not prove the necessary memory observations for
-arbitrary thread schedules.
+`universal_forward` establishes the same numerical conclusion for every
+admitted completed execution, using the memory and data-flow proofs below.
+`wrapper_forward` extends it to the empty-output no-launch case. The comparison
+is to TorchLean's real-valued tensor specification; it does not claim bitwise
+agreement with a concrete PyTorch run. The existing `Encoding` conditions are
+unchanged, and no activation-margin or nonzero-affine condition is added.
 
 ## Threads, storage and repeated barriers
 
@@ -265,8 +271,8 @@ and exactly one program writer to the location. It does not assume that the
 load used the desired value.
 
 Computed-address ownership and existence of producers and completed phases
-are established below. Connecting each consumer load to its producer and the
-allowed arithmetic results to stored outputs remains a separate argument.
+are established below. The subsequent load-source and data-flow proofs connect
+those facts to the values actually stored by every completed admitted execution.
 
 ## Why arbitrary tensor values cannot change store ownership
 
@@ -390,10 +396,10 @@ zero has the product barrier and no reduction-round obligations; padded inactive
 columns are not incorrectly required to emit a guarded round store. The existing
 selected execution still supplies the independent nonvacuous completed witness.
 
-The next obligation is to derive consumer-load addresses and active-column
-relationships, match each to one of these producers, and apply memory admission
-to force the read source. Only then can the permitted floating-point operations
-be connected to the numerical reduction tree for every admitted execution.
+The load-source proof below derives consumer addresses and active-column
+relationships, matches each to these producers, and applies memory admission
+to force its source. The data-flow proof then connects the permitted arithmetic
+to the reduction tree for every admitted completed execution.
 
 ## A completed two-round witness
 
@@ -469,8 +475,9 @@ The program has `42+16*depth` instructions. The domain requires positive `m`,
 `globalWords+sharedWords+2*p < 2^30`. The actual supplied arrays must cover their
 required word counts. These bounds justify represented arithmetic; they are not
 a GPU resource or launch-conformance theorem. An empty input can use `p=1` and
-then computes ReLU of the bias. An empty output requires no launch, but a
-formal wrapper for that case has not yet been added.
+then computes ReLU of the bias. `DenseLaunch.launchPlan` returns no instruction
+list for zero output rows; `empty_forward_unique` proves that the wrapper then
+emits no events and leaves the initial state intact.
 
 Only the thread ID and entry program counter are installed initially. Other
 registers may contain arbitrary caller values. The program initializes every
@@ -480,7 +487,7 @@ twice. `DenseAddress.decoded_coordinates` proves the bit mask and shift compute
 the intended row and column; `pointer_arithmetic` and `pointer_index` establish
 the byte conversion and access bounds. `DenseLayout.scratch_injective` proves
 that distinct round/row/column owners name distinct shared words. This layout
-fact still needs to be connected to every later instruction's emitted access.
+fact is connected to actual emitted accesses by the address-control proofs.
 
 ## From individual instructions to a complete selected execution
 
@@ -555,7 +562,7 @@ stored by the complete candidate**, under the existing `RowInput` conditions:
 finite operand interpretations, encoding errors, calculated intermediate-range
 checks, and a tree and bias that match the original input array. It does not
 assume intermediate numerical accuracy. The real tensor/padded-tree identity
-still needs to be proved before claiming the TorchLean correspondence.
+is supplied by `Encoding.row_words` and `Encoding.row_ideal`, as explained above.
 
 The witness chooses concrete array reads and the checked software binary32
 results. Constructing those steps alone does not establish memory admission.
@@ -643,7 +650,8 @@ new assumptions.
 
 The admission theorem is relative to the restricted memory model described in
 this project. It does not establish hardware conformance or full dependent PTX
-semantics, scheduler fairness, or correctness of every admitted layer execution.
+semantics or scheduler fairness. Universal layer correctness uses the additional
+load-source and data-flow argument below.
 
 ## Software regression checks
 
@@ -662,26 +670,93 @@ Lean build artifacts are cached. These are executable tests of the selected
 software semantics, not general Lean proofs, memory-admission proofs, GPU runs
 or performance measurements.
 
-## The exact remaining obligation
+## From admitted loads to every stored output
 
-The complete selected trace is admitted. Arbitrary candidate traces now have
-proved instruction order, unique thread/store-site occurrences, exhaustive
-store-site classification, computed-address ownership, at most one program writer
-per memory location and derived timing around observed completed barriers.
-Completed executions also supply every required producer and completed phase,
-with scratch stores before their actual arrivals. For correctness over every
-admitted completed execution, the proof must still derive consumer addresses
-and match each load to its unique producer. The visibility rule can then force
-read sources and connect the allowed arithmetic results to each stored output.
-The selected array-read calculation must not be used as a premise that an arbitrary read is fresh.
+The universal proof does not replay a preferred schedule. It starts with any
+finite `Runs` execution from the actual initial state, evidence that every
+thread has exited, and `Admitted`: the existing `Graph.Ordered.Valid` constraints
+on exactly that execution's memory graph and recovered barrier order. `Admitted`
+is only an abbreviation for those constraints; it adds no memory rule.
 
-The selected stored row bounds are now connected to the actual TorchLean
-matrix graph, including zero-padding removal. Extending that correspondence to
-every admitted execution must preserve permitted arithmetic results and prove
-the required memory observations. The empty-output no-launch wrapper and the
-separately supplied parallel backward kernel with stored `dx`, `dW`, and `db`
-correspondence remain additional work. The Stratic component stays partial.
-No GPU run or benchmark is needed for these proof obligations.
+`DenseLoadSites.candidate_load_address` classifies the six roles of actual loads:
+
+| Load | Instruction position | Source |
+| --- | --- | --- |
+| Input | `11` | `x[c]`, only when `c<n` |
+| Weight | `15` | `W[r,c]`, only when `c<n` |
+| Left child | `22+16*k+7` | Plane k, column `2*c` |
+| Right child | `22+16*k+8` | Plane k, column `2*c+1` |
+| Reduction root | `22+16*depth+5` | Final plane, column zero |
+| Bias | `22+16*depth+10` | `b[r]` |
+
+`ParallelLoadControl` connects their addresses and guards to the already proved
+address projection. `DenseGlobalReads.global_prefix_unwritten` excludes every
+program store from the input/weight/bias prefix. Source compatibility in the
+memory graph therefore makes each global load observe its actual initial word.
+This result does not assume a desired read value or initial-source identity.
+
+For a shared load, `DenseReadSources` identifies the active producer in the
+preceding plane. Completion supplies the actual store and barrier; ownership
+supplies uniqueness. The memory rule then forces the store's value and proves
+that its trace position is strictly earlier than the load. Initialization is
+not an alternative source after that synchronization. The row and child-column
+identities are arithmetic consequences of the computed addresses.
+
+Consider row r at the first addition. Its two loads obtain the actual stores by
+threads `r*p+2*c` and `r*p+2*c+1` from plane zero. Those stores contain results of
+their actual multiplications. The addition therefore combines exactly those two
+permitted multiplication results and publishes the corresponding two-leaf tree.
+Repeating the same argument at the next plane produces a four-leaf tree, then
+eight leaves, until column zero holds the whole row's tree.
+
+`DenseData.Data` makes this reasoning precise by recording facts about a register
+only over the instruction positions where its value is still needed. Arbitrary
+caller registers and inactive lanes need no invented arithmetic meaning.
+`DenseDataStep`, `DenseDataFP`, and `DenseStoreData` check the scalar operations,
+actual FP result relations, skipped instructions, ReLU sign test, and stores.
+`DenseDataMachine` lifts those facts through all actual dispatches, including
+barrier release. The proof uses the supplied instruction list unchanged.
+
+`DenseDataRun.run_data` then inducts through the actual interleaving. Its history
+contains proved facts about earlier emitted stores. An admitted shared load can
+use that history because its producer is strictly earlier; it cannot justify
+itself using a future or unproved store. Global loads use initialization. The
+result is a permitted ordered-tree evaluation for every actual scratch store
+and a permitted tree/bias/ReLU evaluation for every output store. Multiplication
+and addition retain the full `Results` relations throughout; neither is silently
+replaced by equality to the software reference.
+
+`ParallelWriteValues.run_value` separately proves which word remains in an
+arena: the last actual store to that word, or its initial contents when there
+is no store. It allows arbitrary candidate load values and does not turn reads
+into sequential reads. `DenseUniversal.completed_forward` combines that fact
+with actual output-store existence and the data proof. It yields stored output
+correspondence, unchanged input words, unchanged lengths and access safety for
+every admitted completed run. Numerical interpretation happens afterwards in
+`PtxDenseForward.output_accuracy` and `universal_forward`, using the same entry
+encodings, tree-range checks and TorchLean identities as the witness proof.
+
+Completion and existence remain separate. The universal theorem assumes that
+the given execution finishes; it does not promise that every schedule does so.
+The selected witness constructs one completed admitted execution when the
+required arrays are allocated. Its bounds prevent vacuity for that input domain.
+The universal theorem needs no extra storage-size premise: its actual completed
+accesses already passed the machine's address checks.
+
+`DenseLaunch.ForwardRun` adds an explicit no-launch constructor for zero rows.
+It constructs no zero-thread configuration and makes no runtime/ABI claim.
+`empty_forward_unique` proves no events and no state change in that case;
+`PtxDenseForward.wrapper_forward` gives the same output-and-memory contract for
+both the no-launch case and completed admitted nonempty launches.
+
+## Where this milestone stops
+
+The first parallel **forward** layer is complete within the stated fragment.
+The separately supplied parallel backward kernel and proofs for stored `dx`,
+`dW`, and `db` remain unfinished, so the broader Stratic component stays partial.
+Multi-CTA layers, reused scratch, mixed precision, text/ABI correspondence and
+hardware execution require their own contracts and proofs. They are not hidden
+in assumptions of the forward theorem. No GPU run or benchmark is claimed.
 
 ## Reproduce the checks
 
@@ -698,7 +773,7 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxDenseForward PtxBinary32.DenseCoverage PtxBinary32.ParallelVisibility
+lake build PtxDenseForward PtxBinary32.DenseUniversal PtxBinary32.DenseLaunch
 lake env lean PtxBinary32/DenseChecks.lean
 ```
 

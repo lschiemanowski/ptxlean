@@ -57,8 +57,8 @@ same location. A chronological certificate proves that this graph satisfies the
 existing memory constraints and the ordering derived from its actual completed
 barriers. It also excludes circular chains through those order and read-source
 edges. This establishes an admitted execution with the stated stored outputs.
-Correctness for all admitted executions remains a separate obligation: their
-reads need not follow the witness's selected chronology.
+Universal correctness also covers admitted executions whose read choices need
+not follow the witness's selected chronology.
 
 The supplied forward instruction list contains no jumps or scalar exits. Its
 arbitrary candidate traces therefore inherit strict instruction order within
@@ -98,8 +98,31 @@ its address check succeeded, so these conditional results need no extra promise
 that an access succeeds. They do not claim every schedule finishes. Every
 required barrier completion and producer is recovered from the actual trace.
 Together with single-writer ownership and instruction order, this supplies the
-execution evidence needed for visibility; numerical correspondence still
-requires connecting the observed loads and arithmetic to the reduction tree.
+execution evidence needed for visibility. The observed loads and actual
+arithmetic are then connected to the reduction tree.
+
+Every actual load must be tied to its computed address and enabled predicate.
+Input, weight and bias loads refer to unchanged initial global words. Shared
+loads refer to active producers in the preceding scratch plane. The producer
+and consumer belong to the same row, and the completed barrier separates their
+accesses. Admission under the memory constraints must force the observed value;
+the selected execution's read choices are not a substitute for that argument.
+For every admitted completed execution, the resulting instruction arithmetic
+must establish the stated bound for the words actually stored in output memory,
+while preserving inputs and both storage extents. An empty output bypasses the
+kernel entirely and returns an empty tensor without a launch or memory change.
+
+The value proof proceeds through the actual interleaving of instructions.
+At each step, a register invariant records only values that later instructions
+still need. A shared read inherits its arithmetic meaning from an earlier actual
+store, whose value has already been proved; global reads inherit the original
+input encoding. Multiplication and addition use their permitted-result relations,
+not equality to one chosen software result. Stores therefore contain evaluations
+of the specified reduction tree, bias addition and ReLU. A separate final-memory
+argument identifies the words actually left in the output slice. No assumptions
+about desired load values, intermediate accuracy, or a preferred schedule enter
+the completed-execution theorem. Completion is still a premise of this theorem;
+the separate witness proves that a completed admitted execution exists.
 
 Numerical contracts relate finite encoded inputs to ideal real tensors. Bounds
 follow the actual multiplication and tree-addition order, including bias and
@@ -108,7 +131,7 @@ rounding cannot change its branch. Result freedom in the underlying instruction
 contracts is retained. The stored forward outputs and all input, weight and bias
 gradients are related to the actual TorchLean forward and generated backward.
 
-The bound for a selected stored row follows from finite input interpretations,
+The bound for every stored row follows from finite input interpretations,
 explicit encoding errors and checks on the calculated intermediate ranges.
 It does not assume the accuracy of intermediate results. Each unpadded leaf
 matches one stored weight and input word to the corresponding real tensor

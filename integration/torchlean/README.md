@@ -167,8 +167,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 72 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1036
+All 88 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1096
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward
@@ -208,31 +208,27 @@ The joint build is recorded separately in `verification-joint.json` and
 `proof-audit-joint.txt`, including the root PTX source snapshot used in that build.
 Neither receipt is a substitute for rerunning checks after changing its inputs.
 
-## Parallel dense-layer foundations
+## Parallel dense forward layer
 
-The [dense-layer study](../../docs/foundations/parallel-dense-layer.md) covers the
-actual TorchLean graph for `ReLU(Wx+b)` and its generated backward, balanced-tree
-binary32 arithmetic, and a complete selected forward execution admitted by the
-existing restricted memory model.
-The proof reaches every thread's exit, derives stored row words, preserves
-inputs and allocation lengths, and proves access safety for the full trace.
-Explicit entry-encoding and calculated range conditions give bounds for those
-stored words against the actual TorchLean real tensor graph. Zero-padding
-removal and the tensor/tree identity are proved, including empty inputs. The complete witness now retains concrete-read evidence: checked replay
-reproduces both final arrays, and each load has a proved initial or last-store
-origin in the trace. Four complete software-interpreter cases also check replay.
-The graph's read sources, chronological write ordering and actual barrier edges
-satisfy the existing memory constraints, with no admission assumption added to
-the layer theorem. `PtxDenseForward.selected_forward` combines these guarantees
-and the tensor error bound on the same trace. For arbitrary candidate runs,
-`DenseControl` proves strict per-thread instruction order and classifies every
-store site; `ParallelCompletion` derives timing around actual completed barriers.
-The visibility rule can now use those site facts instead of assumed timing.
-`DenseOwnership` derives actual store addresses and at most one program write
-per location in every candidate trace and its memory graph, independently of
-loaded tensor values. `DenseCoverage` recovers all product, active-round and
-row-output stores and every barrier completion from arbitrary completed runs,
-and proves each scratch publication precedes its producer's actual arrival.
-Connecting consumer loads to these producers and deriving universal stored-output
-correctness remain open, along with an empty-output wrapper and the backward kernel.
-No GPU execution or benchmarking is included.
+The [dense-layer study](../../docs/foundations/parallel-dense-layer.md) explains
+the actual TorchLean graph for `ReLU(Wx+b)`, its generated backward, and the
+supplied parallel binary32 forward kernel. `PtxDenseForward.universal_forward`
+proves that every admitted completed execution stores outputs within the derived
+error bound of that graph, preserves inputs and storage lengths, and satisfies
+access safety. The existing entry encodings and calculated finite-range
+conditions are explicit. The proof covers arbitrary schedules, proposed load
+values and permitted arithmetic results; it derives the required read sources
+from actual addresses, unique writers and completed barriers.
+
+`selected_forward` separately constructs a completed admitted execution with
+those guarantees. Its concrete-read trace also passes checked memory replay;
+four software-interpreter cases exercise the full program. Empty inputs are
+covered through zero padding. `DenseLaunch` supplies a no-launch case for empty
+outputs, with no events or memory change; `wrapper_forward` covers both cases.
+The integration audit includes every new public proof and definition.
+
+The kernel uses one bounded cooperating thread array, fixed contiguous layouts,
+separately rounded binary32 operations and fresh scratch planes. The parallel
+backward kernel remains unfinished. There is no GPU run, benchmark, runtime/ABI
+or hardware-conformance claim. The candidate machine and memory constraints have
+not been narrowed to obtain universal correctness.
