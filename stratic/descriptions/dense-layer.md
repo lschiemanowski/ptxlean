@@ -68,9 +68,26 @@ repeated execution of a store site as a possible source of competing writes.
 The actual emitted stores are classified exhaustively: one product-store site,
 one store site per reduction round, and one global output-store site. For an
 observed completed barrier, a consumer at a later instruction site must occur
-after its completion. These results do not yet prove that stores from different
-threads or rounds have different computed addresses, or that every required
-producer and completed phase exists in an arbitrary finished execution.
+after its completion. Instruction order alone does not identify a store's address;
+address ownership supplies that separate argument. The existence of every required
+producer and completed phase in an arbitrary finished execution remains open.
+
+Address ownership is proved independently of the values loaded from tensors.
+Registers holding thread identity, row and column coordinates, and address
+arithmetic cannot acquire a loaded tensor value or a floating-point result.
+A separate calculation retains those registers, address registers and the
+predicate controlling active columns, while omitting tensor data. Each fetched
+instruction must preserve agreement with this calculation, including skipped
+instructions and barrier release. The calculation is a proof aid, not a
+replacement for the kernel's execution or memory semantics. Its result must be
+connected to the addresses of actual emitted stores before layout injectivity
+can establish a unique writer. Every shared store has byte address
+4*(stage*threadCount+threadNumber). Different stages occupy
+separate planes. Every global store addresses its row's output word and is
+issued by column zero. Together with at-most-once execution of a store site,
+these facts give at most one program write to each memory location over an
+arbitrary candidate trace. Initial contents remain a separate write; uniqueness
+does not by itself prove that a required producer or completed barrier exists.
 
 Numerical contracts relate finite encoded inputs to ideal real tensors. Bounds
 follow the actual multiplication and tree-addition order, including bias and

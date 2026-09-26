@@ -59,6 +59,19 @@ producer and consumer instruction positions into the timing facts required by
 the visibility rule. The existence of the required phase and the identity of
 its unique writer still need to be proved for the concrete kernel.
 
+Address calculations can be proved separately from tensor values. A projection
+keeps a chosen set of integer registers, all address registers and one active-lane
+predicate. It omits tensor registers and floating-point results. Before using it,
+every instruction in the program must be checked: a retained value may depend
+only on retained inputs, and a tensor load or floating-point instruction may not
+overwrite one. Agreement with this calculation is preserved by actual thread
+steps, skipped instructions and barrier release. An emitted store then has the
+address calculated by its thread's instruction prefix; an emitted store guarded
+by the retained predicate also proves that predicate true. This is a proof aid
+for the existing machine, not an alternate execution or memory rule. The current
+projection retains the register set used by the dense kernel; other layouts need
+their own compatibility check or a generalized projection.
+
 Each recorded barrier completion is justified by earlier, actually emitted
 arrivals from every participant, with the same CTA, resource, generation and
 instruction site. This history property survives arbitrary scheduling and

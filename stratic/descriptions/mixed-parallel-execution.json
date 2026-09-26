@@ -11,10 +11,11 @@
     "Derive repeated-barrier ordering and complete memory labels from actual executions; force single-writer publication through the existing memory constraints.",
     "Construct a completed two-thread, two-round computed-publication witness with checked read sources and no circular dependencies; concrete layer ownership, timing and execution proofs remain separate.",
     "Derive initial or last-store read origins from concrete executions, construct chronological graph certificates, and prove admission under the existing restricted memory constraints with actual barrier order.",
-    "For programs without jumps or scalar exits, derive strict per-thread instruction order and timing around actual barrier completions for arbitrary candidate runs; visibility still requires a proved unique writer for each location."
+    "For programs without jumps or scalar exits, derive strict per-thread instruction order and timing around actual barrier completions for arbitrary candidate runs; visibility still requires a proved unique writer for each location.",
+    "Prove agreement with a data-independent address calculation after checking every instruction, then recover actual emitted store addresses and retained predicate truth under arbitrary scheduling."
   ],
   "realization": "partial",
-  "remaining": "Straight-line candidate traces now have strict per-thread instruction order, unique execution of each thread/site pair and strict ordering of completed barrier sites. Actual completion splits derive producer/consumer timing from instruction sites, and the visibility rule uses those derived facts. Layer-specific computed-address ownership, existence of required producers and phases in arbitrary completed executions, launch validation and general barrier forms remain unimplemented. Concrete-read admission is a sufficient witness construction, not a characterization of all PTX executions.",
+  "remaining": "Straight-line candidate traces now have strict per-thread instruction order, unique execution of each thread/site pair and strict ordering of completed barrier sites. Actual completion splits derive producer/consumer timing from instruction sites, and the visibility rule uses those derived facts. The address-control projection retains the dense kernel's chosen integer registers, all address registers and predicate zero; instruction compatibility is proved before use. Other register layouts require another compatibility check or generalization. Layer-specific existence of required producers and phases in arbitrary completed executions, launch validation and general barrier forms remain unimplemented. Concrete-read admission is a sufficient witness construction, not a characterization of all PTX executions.",
   "links": [
     {
       "kind": "implementation",
@@ -325,6 +326,30 @@
         "path": "integration/torchlean/PtxBinary32/ParallelVisibility.lean",
         "passage": {
           "quote": "theorem run_read_from_unique_writer_sites {cfg : Config n} {s final : State n} {events : List (Event n)}\n    (run : Runs cfg program s events final) (reset : s.barrier=Barrier.reset generation)\n    (straight : Control.Straight program) (source co) (phase : History.Phase events)\n    (w r : Fin (labels program s.global s.shared events).length) (writer reader : Fin n)\n    (valid : Graph.Ordered.Valid (graph program s.global s.shared events source co) (runOrder run reset source co).cross)\n    (wo : owner n ((graph program s.global s.shared events source co).event w)=some writer)\n    (ro : owner n ((graph program s.global s.shared events source co).event r)=some reader)\n    (producer : ∃ space occ, events[((graph program s.global s.shared events source co).event w).position]? =\n      some (.scalar writer space occ) ∧ occ.pc<phase.key.site)\n    (consumer : ∃ space occ, events[((graph program s.global s.shared events source co).event r).position]? =\n      some (.scalar reader space occ) ∧ phase.key.site<occ.pc)\n    (written : (graph program s.global s.shared events source co).write w)\n    (read : (graph program s.global s.shared events source co).read r)\n    (same : (graph program s.global s.shared events source co).sameAddress w r)\n    (unique : ∀ v, (graph program s.global s.shared events source co).write v →\n      (graph program s.global s.shared events source co).sameAddress v r →\n      ¬(graph program s.global s.shared events source co).initial v → v=w) :\n    (graph program s.global s.shared events source co).source r=w ∧\n      ((graph program s.global s.shared events source co).event r).effect.value =\n      ((graph program s.global s.shared events source co).event w).effect.value :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Agreement with this calculation is preserved by actual thread\nsteps, skipped instructions and barrier release."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelAddressControl.lean",
+        "passage": {
+          "quote": "theorem runs_invariant (run : Runs cfg program s events final) (compatible : ProgramCompatible program)\n    (inv : Invariant program seeds s) (aligned : Aligned s) : Invariant program seeds final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An emitted store then has the\naddress calculated by its thread's instruction prefix; an emitted store guarded\nby the retained predicate also proves that predicate true."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelStoreControl.lean",
+        "passage": {
+          "quote": "theorem run_store {s final : State n} {events : List (Event n)} {seeds : Fin n → Scalar.State}\n    (run : Runs cfg program s events final) (compatible : ProgramCompatible program)\n    (inv : Invariant program seeds s) (aligned : Aligned s)\n    (member : .scalar owner space occ ∈ events) (memory : occ.memory=some effect) (store : effect.kind=.store) :\n    ∃ address value, occ.instruction.op=.store address value ∧\n      effect.address=address.eval (atPC program (seeds owner) occ.pc) ∧\n      (occ.instruction.guard=.pred 0 true → (atPC program (seeds owner) occ.pc).preds 0=true) :="
         }
       }
     }

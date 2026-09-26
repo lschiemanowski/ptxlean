@@ -120,6 +120,11 @@ COUNTS["Ptx.Scalar.Parallel.Dense"] += 6
 TARGETS.update({"PtxBinary32.ParallelControl", "PtxBinary32.ParallelCompletion",
                 "PtxBinary32.ParallelVisibility", "PtxBinary32.DenseControl"})
 
+# Actual emitted addresses and single program writers, independent of candidate values.
+COUNTS['Ptx.Scalar.Parallel.AddressControl'] = COUNTS.get('Ptx.Scalar.Parallel.AddressControl', 0) + 31
+COUNTS['Ptx.Scalar.Parallel.Dense'] = COUNTS.get('Ptx.Scalar.Parallel.Dense', 0) + 19
+TARGETS.update({'PtxBinary32.ParallelAddressControl', 'PtxBinary32.ParallelStoreControl', 'PtxBinary32.DenseAddressControl', 'PtxBinary32.DenseOwnership'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

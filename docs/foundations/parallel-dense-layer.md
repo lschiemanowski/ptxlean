@@ -264,11 +264,73 @@ requirements for an admitted graph, actual producer and consumer occurrences,
 and exactly one program writer to the location. It does not assume that the
 load used the desired value.
 
-What remains for the dense kernel is to derive computed-address ownership,
+Computed-address ownership is established below. What remains is to
 show that the required producers and completed phases occur in every completed
 execution, and connect the forced read values and allowed arithmetic results
 to the stored outputs. The general control facts do not establish those
 application-specific conditions by themselves.
+
+## Why arbitrary tensor values cannot change store ownership
+
+`DenseOwnership.graph_writer_unique` proves that two noninitial writes to the
+same location in the exact memory graph must be the same graph entry. It covers
+arbitrary candidate schedules, proposed load words and permitted binary32
+results. It does not assume admission, successful completion, desired outputs,
+zero-initialized registers or the selected software runner's read choices.
+
+The proof separates the values being computed from the addresses that carry
+them. The dense program keeps its thread number in register 0, column in 1,
+row in 2, weight index in 3 and temporary address index in 7. Data registers
+4, 5, 6 and 8 contain tensor values and arithmetic results. Predicate 0 decides
+which columns are active. Predicate 1 tests the sign of a tensor result and
+only controls a data-register update for ReLU.
+
+`ParallelAddressControl.Agree` compares only the program counter, integer
+registers 0/1/2/3/7, all address registers and predicate 0. The projection
+calculates pure address/control arithmetic, omits memory data and floating-point
+results, and ignores guards on writes to omitted state. This is sound only under
+`ProgramCompatible`: retained updates must be unconditional and depend only on
+retained inputs; loads and floating-point operations cannot overwrite retained
+registers. `DenseAddressControl.program_address_compatible` checks every
+instruction of the supplied list. Compatibility is proved, not added as a caller
+assumption to the dense theorem. The current retained set fits this kernel;
+another register convention would need a generalized projection or another
+compatibility proof. This keeps the proof aid small without changing the machine.
+
+Induction over actual machine steps preserves agreement with the projected
+prefix at each thread's current instruction. A scalar skip still advances;
+an arbitrary floating-point result changes only omitted data; barrier release
+advances every waiting participant from the aligned barrier site. A tensor load
+may propose any word, but cannot alter the address calculation.
+`ParallelStoreControl.run_store` then connects each emitted store's actual byte
+address to that prefix. If the store is guarded by predicate 0, it also recovers
+that the projected predicate is true. Ignoring this last condition would allow
+nonleader output stores into the ownership argument.
+
+Writing `T=rows*width` and `t` for the thread number gives:
+
+| Store | Derived byte address | Additional fact |
+| --- | --- | --- |
+| Product | `4*t` | Scratch plane 0 |
+| Round `k` | `4*((k+1)*T+t)` | Scratch plane `k+1` |
+| Output | `4*(outputBase+t/width)` | `t % width = 0` |
+
+All formulas are derived at the actual store sites, using the existing shape
+bounds to rule out 32-bit index or 64-bit pointer wraparound. Dividing a shared
+word offset by `T` identifies its plane; the remainder identifies its thread.
+For global output, equal offsets identify equal rows, and the proved column-zero
+condition identifies the issuing thread. Strict instruction order then rules
+out a second execution of that thread's store site. Global and shared memory
+have distinct location codes even when their numeric byte addresses match.
+
+Finally, `Memory.program_write_origin` traces each noninitial graph write back
+to its actual scalar store. Trace-position uniqueness and the graph's existing
+unique labels give `graph_writer_unique`. Initial contents are deliberately
+excluded: initialization and the later program store are distinct writes.
+The result proves **at most one** program write, not that the required write
+exists or is visible to a consumer. Those require the remaining producer,
+barrier and admission arguments. In particular, it does not turn a faulting or
+incomplete prefix into a completed forward computation.
 
 ## A completed two-round witness
 
@@ -541,10 +603,10 @@ or performance measurements.
 
 The complete selected trace is admitted. Arbitrary candidate traces now have
 proved instruction order, unique thread/store-site occurrences, exhaustive
-store-site classification and derived timing around observed completed barriers.
+store-site classification, computed-address ownership, at most one program writer
+per memory location and derived timing around observed completed barriers.
 For correctness over every admitted completed execution, the proof must still
-derive computed-address ownership and existence of each required producer and
-completed phase. The visibility rule can then force read sources and connect
+derive existence of each required producer and completed phase. The visibility rule can then force read sources and connect
 the allowed arithmetic results to each stored output. The selected array-read
 calculation must not be used as a premise that an arbitrary read is fresh.
 
@@ -571,7 +633,7 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxDenseForward PtxBinary32.DenseControl PtxBinary32.ParallelVisibility
+lake build PtxDenseForward PtxBinary32.DenseOwnership PtxBinary32.ParallelVisibility
 lake env lean PtxBinary32/DenseChecks.lean
 ```
 

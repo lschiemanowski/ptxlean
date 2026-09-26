@@ -1,0 +1,106 @@
+{
+  "id": "8e50fbf6-2515-4bca-af28-d8a89d5db6d9",
+  "base": "ed8f41abcc3e0b98350aea1c46c58b372a802b96",
+  "contentTree": "c4a3ed7886574c72b557c0688386c9882c6f5863",
+  "reviewer": "Codex",
+  "summary": "Derive computed-address ownership and unique program writers for arbitrary candidate dense forward executions.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Derived actual store addresses from the checked instruction list and arbitrary candidate runs; shared stage/thread and global row-leader ownership imply at most one program write per location, including the exact memory graph. Required producer/phase existence and universal stored numerical correctness remain explicit open obligations."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Added a projection theorem retaining the dense address-control registers and predicate zero. Per-instruction compatibility, skipped instructions, arbitrary candidate reads and binary32 results, actual barrier release and emitted store/predicate inversion are proved from the unchanged machine. The fixed register convention is explicit."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The unchanged no-placeholder guard and exact standard-axiom audit now cover 50 added public declarations. These are internal model theorems, with no new PTX source-fidelity or hardware-conformance claim."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The child proves a further universal execution property while retaining the selected admitted numerical witness and explicit incomplete universal output and backward obligations. Parent example contracts remain accurate."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "Derived address-control independence and store ownership under the existing fetched machine. Candidate read freedom, numerical result freedom, memory admission and execution existence remain separate; scalar instruction and scheduling semantics are unchanged."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "c4a3ed7886574c72b557c0688386c9882c6f5863",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual review of actual store ownership, projection compatibility and all changed passages",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and unchanged locked root/TorchLean dependencies; local CPU checks, no GPU execution or external model calls.",
+      "evidence": "Both full check commands exited 0. Root audit: 1643 declarations; integration: 70 default targets, four fresh DenseChecks evaluations, 1018 exact dependency reports including every one of the 50 added public declarations. No forbidden proof tokens or nonstandard axioms. No warnings from the four new modules. Stratic valid with no issues; diff whitespace clean. Exact before/after snapshot tree matches. Logs: /tmp/ownership-root-check.log and /tmp/ownership-integration-check.log. Reviewed retained-state compatibility, emitted guard truth, index/pointer no-wrap bounds, graph write origins and identity uniqueness; no machine, memory-admission or numerical contract changed.",
+      "tests": [],
+      "id": "cd0787a2-a689-4ae7-a9ee-da4e58d0d472",
+      "recordedAt": "2026-09-26T07:41:45.281Z"
+    }
+  ],
+  "recordedAt": "2026-09-26T07:42:18.317Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Updates only the expected integration audit count from 968 to 1018."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Explains retained versus omitted state, the fixed register convention, instruction compatibility, actual predicate truth, store formulas and wraparound bounds, trace/graph uniqueness, and the exact remaining producer/phase and universal arithmetic obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseAddressControl.lean",
+      "reason": "Exhaustive membership checks establish compatibility for products, all rounds and output. Caller register seeds remain arbitrary except the existing installed thread ID and entry PC. Prefix decomposition and existing no-wrap bounds derive retained coordinate and pointer formulas."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseOwnership.lean",
+      "reason": "Every actual emitted store is fetched from a classified program site. Output predicate inversion proves column zero. Word-location injection uses no-wrap bounds, shared stage/thread separation and output row uniqueness. At-most-once site execution yields trace identity; actual write origins and unique graph labels yield noninitial graph-write identity for arbitrary source/coherence choices."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelAddressControl.lean",
+      "reason": "Reviewed every scalar operation case, rejected incompatible operations, invisible guarded updates, load/FP frame preservation, memory-array omission, actual PC prefix recurrence, aligned barrier release, faults/stuttering and arbitrary interleaving induction. Projection is a proof aid; no machine rule is altered."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelStoreControl.lean",
+      "reason": "Inverts actual scalar store evaluation, retains address equality and predicate-zero truth, recovers actual owner/PC and propagates through dispatch, step and run membership. Store values remain actual; no selected read assumption."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Imports all four modules and explicitly audits all 50 new public declaration sites with fresh transitive-axiom reports."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updates 70-target and 1018-report counts and distinguishes achieved ownership from remaining producer/phase and universal stored-output correctness."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Adds 50 exact namespace endpoints and four targets; dependency pins, proof-token guard, allowed axioms and source-stability checks are unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Adds four default module targets under existing libraries, without changing dependency or toolchain pins."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Summary, remaining obligations and implementation links match actual address and graph ownership results; description remains partial."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Description-first account explains data-independent addresses and single program writers, with initial writes and producer/phase existence distinguished."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Summary, remaining conditions and exact links cover the address-control projection and emitted-store connection; fixed register convention remains explicit."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Description-first account states instruction compatibility and unchanged-machine agreement, including predicate truth and limitations for other register layouts."
+    }
+  ]
+}

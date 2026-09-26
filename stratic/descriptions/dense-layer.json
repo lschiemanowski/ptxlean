@@ -9,10 +9,10 @@
   "summary": [
     "Connect a vector-output dense–ReLU layer and all its gradients to an actual TorchLean graph and automatically generated backward.",
     "Verify a separately supplied parallel binary32 forward implementation with a fixed reduction tree and fresh scratch in one bounded cooperating thread array; prove a complete admitted execution whose stored outputs approximate the actual TorchLean real graph under explicit encoding and range conditions, while distinguishing correctness for all admitted executions.",
-    "For arbitrary candidate forward traces, prove strict per-thread instruction order, classify every emitted store site and derive timing around observed barrier completions; computed-address ownership and universal stored-output correctness remain open."
+    "For arbitrary candidate forward traces, derive instruction order, actual store addresses, at most one program write per location and timing around observed barrier completions; producer/phase existence and universal stored-output correctness remain open."
   ],
   "realization": "partial",
-  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Its stored words approximate the actual TorchLean real tensor graph under explicit entry-encoding and calculated finite-range conditions; zero-padding removal and the tensor/tree identity are proved, including empty inputs. Arbitrary candidate traces now have strict per-thread instruction order, at-most-once execution of each store site, exhaustive emitted-store site classification and timing derived around observed completed barriers. Missing: computed-address ownership and existence of each required producer and phase in arbitrary completed executions, the resulting read-source and arithmetic-tree correspondence, and universal stored numerical correspondence; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy, tensor/tree identity or memory validity are assumed by the selected execution proof.",
+  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Its stored words approximate the actual TorchLean real tensor graph under explicit entry-encoding and calculated finite-range conditions; zero-padding removal and the tensor/tree identity are proved, including empty inputs. Arbitrary candidate traces now have strict per-thread instruction order, at-most-once execution of each store site, exhaustive emitted-store site classification and timing derived around observed completed barriers. The address-control projection is proved against the complete instruction list and derives actual shared-stage/thread addresses and global row-leader stores. The exact memory graph has at most one noninitial write per location, independently of source/coherence choices or admission. Missing: existence of each required producer and phase in arbitrary completed executions, the resulting read-source and arithmetic-tree correspondence, and universal stored numerical correspondence; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy, tensor/tree identity or memory validity are assumed by the selected execution proof.",
   "links": [
     {
       "kind": "implementation",
@@ -396,6 +396,42 @@
         "path": "integration/torchlean/PtxBinary32/DenseControl.lean",
         "passage": {
           "quote": "theorem trace_store_site (s : Shape) {cfg : Config s.threads} {start final : Parallel.State s.threads}\n    {events : List (Event s.threads)} (run : Runs cfg (program s) start events final)\n    (t : Fin s.threads) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (member : .scalar t (some space) occ ∈ events) (memory : occ.memory=some effect)\n    (store : effect.kind=.store) :\n    (occ.pc=20 ∧ space=.shared) ∨\n    (∃ k, k<s.depth ∧ occ.pc=22+16*k+14 ∧ space=.shared) ∨\n    (occ.pc=22+16*s.depth+18 ∧ space=.global) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each fetched\ninstruction must preserve agreement with this calculation, including skipped\ninstructions and barrier release."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseAddressControl.lean",
+        "passage": {
+          "quote": "theorem candidate_address_control (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final) :\n    AddressControl.Invariant (program s) (controlSeed s seeds) final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every shared store has byte address\n4*(stage*threadCount+threadNumber). Different stages occupy\nseparate planes. Every global store addresses its row's output word and is\nissued by column zero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseOwnership.lean",
+        "passage": {
+          "quote": "theorem candidate_store_address (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (t : Fin s.threads) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (member : .scalar t (some space) occ ∈ events) (memory : occ.memory=some effect)\n    (store : effect.kind=.store) :\n    (occ.pc=20 ∧ space=.shared ∧ effect.address=bytePointer t.val) ∨\n    (∃ k, k<s.depth ∧ occ.pc=22+16*k+14 ∧ space=.shared ∧ effect.address=bytePointer (nextIndex s k t)) ∨\n    (occ.pc=22+16*s.depth+18 ∧ space=.global ∧ effect.address=bytePointer (outputIndex s t) ∧ t.val%s.width=0) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Together with at-most-once execution of a store site,\nthese facts give at most one program write to each memory location over an\narbitrary candidate trace."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseOwnership.lean",
+        "passage": {
+          "quote": "theorem graph_writer_unique (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (source co) (v w : Fin (Memory.labels (program s) global shared events).length)\n    (hv : (Memory.graph (program s) global shared events source co).write v)\n    (hw : (Memory.graph (program s) global shared events source co).write w)\n    (nv : ¬(Memory.graph (program s) global shared events source co).initial v)\n    (nw : ¬(Memory.graph (program s) global shared events source co).initial w)\n    (same : (Memory.graph (program s) global shared events source co).sameAddress v w) : v=w :="
         }
       }
     }

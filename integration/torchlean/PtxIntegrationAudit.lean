@@ -1,3 +1,7 @@
+import PtxBinary32.ParallelAddressControl
+import PtxBinary32.ParallelStoreControl
+import PtxBinary32.DenseAddressControl
+import PtxBinary32.DenseOwnership
 import PtxBinary32.ParallelControl
 import PtxBinary32.ParallelCompletion
 import PtxBinary32.ParallelVisibility
@@ -1057,3 +1061,55 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Dense.scalar_after_completion
 #print axioms Ptx.Scalar.Parallel.Dense.fetched_store_site
 #print axioms Ptx.Scalar.Parallel.Dense.trace_store_site
+
+-- Computed-address ownership for arbitrary candidate dense forward traces.
+#print axioms Ptx.Scalar.Parallel.AddressControl.Visible
+#print axioms Ptx.Scalar.Parallel.AddressControl.Agree
+#print axioms Ptx.Scalar.Parallel.AddressControl.advance
+#print axioms Ptx.Scalar.Parallel.AddressControl.scalar
+#print axioms Ptx.Scalar.Parallel.AddressControl.instruction
+#print axioms Ptx.Scalar.Parallel.AddressControl.Known
+#print axioms Ptx.Scalar.Parallel.AddressControl.Allowed
+#print axioms Ptx.Scalar.Parallel.AddressControl.Compatible
+#print axioms Ptx.Scalar.Parallel.AddressControl.ProgramCompatible
+#print axioms Ptx.Scalar.Parallel.AddressControl.agree_refl
+#print axioms Ptx.Scalar.Parallel.AddressControl.agree_advance
+#print axioms Ptx.Scalar.Parallel.AddressControl.agree_word
+#print axioms Ptx.Scalar.Parallel.AddressControl.agree_word_left
+#print axioms Ptx.Scalar.Parallel.AddressControl.agree_word_right
+#print axioms Ptx.Scalar.Parallel.AddressControl.agree_address
+#print axioms Ptx.Scalar.Parallel.AddressControl.agree_predicate
+#print axioms Ptx.Scalar.Parallel.AddressControl.agree_predicate_right
+#print axioms Ptx.Scalar.Parallel.AddressControl.operand32_eq
+#print axioms Ptx.Scalar.Parallel.AddressControl.operand64_eq
+#print axioms Ptx.Scalar.Parallel.AddressControl.scalar_agrees
+#print axioms Ptx.Scalar.Parallel.AddressControl.evaluate
+#print axioms Ptx.Scalar.Parallel.AddressControl.atPC
+#print axioms Ptx.Scalar.Parallel.AddressControl.evaluate_append
+#print axioms Ptx.Scalar.Parallel.AddressControl.atPC_succ
+#print axioms Ptx.Scalar.Parallel.AddressControl.scalar_pc
+#print axioms Ptx.Scalar.Parallel.AddressControl.Invariant
+#print axioms Ptx.Scalar.Parallel.AddressControl.dispatch_invariant
+#print axioms Ptx.Scalar.Parallel.AddressControl.step_invariant
+#print axioms Ptx.Scalar.Parallel.AddressControl.runs_invariant
+#print axioms Ptx.Scalar.Parallel.AddressControl.step_store
+#print axioms Ptx.Scalar.Parallel.AddressControl.run_store
+#print axioms Ptx.Scalar.Parallel.Dense.program_address_compatible
+#print axioms Ptx.Scalar.Parallel.Dense.controlSeed
+#print axioms Ptx.Scalar.Parallel.Dense.initial_address_control
+#print axioms Ptx.Scalar.Parallel.Dense.candidate_address_control
+#print axioms Ptx.Scalar.Parallel.Dense.ControlCoordinates
+#print axioms Ptx.Scalar.Parallel.Dense.products_control_coordinates
+#print axioms Ptx.Scalar.Parallel.Dense.round_control_coordinates
+#print axioms Ptx.Scalar.Parallel.Dense.rounds_control_coordinates
+#print axioms Ptx.Scalar.Parallel.Dense.product_control_address
+#print axioms Ptx.Scalar.Parallel.Dense.round_control_address
+#print axioms Ptx.Scalar.Parallel.Dense.output_control_address
+#print axioms Ptx.Scalar.Parallel.Dense.candidate_store_address
+#print axioms Ptx.Scalar.Parallel.Dense.sharedStorePC
+#print axioms Ptx.Scalar.Parallel.Dense.candidate_shared_owner
+#print axioms Ptx.Scalar.Parallel.Dense.candidate_global_owner
+#print axioms Ptx.Scalar.Parallel.Dense.shared_store_unique
+#print axioms Ptx.Scalar.Parallel.Dense.global_store_unique
+#print axioms Ptx.Scalar.Parallel.Dense.candidate_store_unique
+#print axioms Ptx.Scalar.Parallel.Dense.graph_writer_unique
