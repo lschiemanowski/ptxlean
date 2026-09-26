@@ -1,0 +1,267 @@
+{
+  "id": "5bdd49c7-e3e4-49ba-a0f5-66a6e2cc1ce5",
+  "base": "d691cc1f1ec1b8194317358355cb14bb2bc2c1ca",
+  "contentTree": "81d52939d8250e4ac27a20ee9a6045971bdf39bd",
+  "reviewer": "Codex",
+  "summary": "Add actual grid semantics, complete admitted pointwise launches, and universal row-distributed dense forward correctness; explicitly retain grid reduction existence and backward composition as unfinished.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Separates arithmetic bounds from old single-CTA limits, adds actual multi-group forward universal accuracy and pointwise existence, documents full indexed private scratch cost, and explicitly leaves grid reduction admission/existence and multi-group backward unfinished."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Adds a child for actual independent-group transitions while retaining the existing instruction/barrier rules and exclusion of communicating CTAs and runtime/hardware correspondence."
+    },
+    {
+      "id": "grid-execution",
+      "outcome": "revised",
+      "reason": "New self-contained contract and exact links describe private state, full tagged traces, combined memory identities, global-only flattening, pointwise nonvacuity, padding, and conditional dense forward; realization remains partial."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Same pinned source interpretation and arithmetic/memory rules, preserved distinction between kernel-checked validity and source/hardware fidelity, and exact named dependency audit expanded to cover new endpoints. No independent model or hardware evidence is claimed."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "Application contracts still state their bounds, actual storage observations, numerical assumptions and missing work. Existing complete single-group examples are preserved; the grid extension is explicitly partial."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The parent already describes instruction state, actual memory effects and collective execution through the mixed child. The grid preserves these instructions and adds independent-group composition with explicit partial contracts; no scalar instruction semantics, general PTX coverage or runtime correspondence promise changes."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "81d52939d8250e4ac27a20ee9a6045971bdf39bd",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; manual contract and proof-chain review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 via elan/lake, unchanged dependency revisions and tracked dependency contents; local Linux software only. No paid model calls or GPU execution.",
+      "evidence": "Both full scripts exited 0. Root audited 1643 declarations and passed source/build/distribution/documentation/worker regression checks. Integration built all 133 declared default targets, reran 4 dense, 6 backward, 7 grid pointwise/private-state and 6 grid dense software cases, then audited exactly 1409 named dependencies with only propext, Classical.choice and Quot.sound. Source guards reject sorry and unchecked axioms; source/config snapshots match before/after. Stratic validated. Manual review confirms actual combined memory, ownership/read-source/last-store proof chain and explicit missing reduction execution-existence/backward obligations.",
+      "tests": [],
+      "id": "3e58ac69-7277-459b-9093-3f80a97907e8",
+      "recordedAt": "2026-09-26T15:07:27.953Z"
+    }
+  ],
+  "recordedAt": "2026-09-26T15:08:11.823Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Updates the reproducible integration dependency-report count from 1216 to 1409."
+    },
+    {
+      "path": "docs/foundations/grid-dense-layer.md",
+      "reason": "New readable execution/proof walkthrough with padding example, exact check commands, concrete storage costs and explicit missing admission witness/backward obligations; software tests are not promoted to proofs."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Retains complete single-group guarantees and links the separately scoped partial grid extension."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseAddress.lean",
+      "reason": "Generalizes pure scalar/address arithmetic helpers from launch Bounds to ArithmeticBounds; unchanged single-CTA Bounds remain enforced and coerce into those weaker arithmetic requirements. Existing program semantics and theorem conclusions are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseAddressControl.lean",
+      "reason": "Generalizes pure scalar/address arithmetic helpers from launch Bounds to ArithmeticBounds; unchanged single-CTA Bounds remain enforced and coerce into those weaker arithmetic requirements. Existing program semantics and theorem conclusions are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseDataRules.lean",
+      "reason": "Generalizes pure scalar/address arithmetic helpers from launch Bounds to ArithmeticBounds; unchanged single-CTA Bounds remain enforced and coerce into those weaker arithmetic requirements. Existing program semantics and theorem conclusions are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseDataStep.lean",
+      "reason": "Generalizes pure scalar/address arithmetic helpers from launch Bounds to ArithmeticBounds; unchanged single-CTA Bounds remain enforced and coerce into those weaker arithmetic requirements. Existing program semantics and theorem conclusions are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseLoadControl.lean",
+      "reason": "Generalizes pure scalar/address arithmetic helpers from launch Bounds to ArithmeticBounds; unchanged single-CTA Bounds remain enforced and coerce into those weaker arithmetic requirements. Existing program semantics and theorem conclusions are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProducts.lean",
+      "reason": "Generalizes pure scalar/address arithmetic helpers from launch Bounds to ArithmeticBounds; unchanged single-CTA Bounds remain enforced and coerce into those weaker arithmetic requirements. Existing program semantics and theorem conclusions are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProgram.lean",
+      "reason": "Generalizes pure scalar/address arithmetic helpers from launch Bounds to ArithmeticBounds; unchanged single-CTA Bounds remain enforced and coerce into those weaker arithmetic requirements. Existing program semantics and theorem conclusions are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseRounds.lean",
+      "reason": "Generalizes pure scalar/address arithmetic helpers from launch Bounds to ArithmeticBounds; unchanged single-CTA Bounds remain enforced and coerce into those weaker arithmetic requirements. Existing program semantics and theorem conclusions are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridAccessControl.lean",
+      "reason": "Recovers actual fetched memory instructions, guards and operands from the combined trace using the checked address projection."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridBarrierOrder.lean",
+      "reason": "Lifts actual arrival origins to full grid positions and proves they precede their own completed group barrier."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridChecks.lean",
+      "reason": "Fresh software examples cover global interleavings, 2080 threads, zero groups, padding outputs and private scratch/barriers; they do not claim admission."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridCompletion.lean",
+      "reason": "Splits actual group completion steps and derives before/after instruction order without imposing a grid-wide barrier."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridControl.lean",
+      "reason": "Lifts per-thread progress to globally tagged positions, deriving instruction-site uniqueness and order."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridCoverage.lean",
+      "reason": "Recovers actual exits and steps crossing instruction/barrier sites from completed grid traces."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseAddress.lean",
+      "reason": "Derives the exact fetched global/shared load and store addresses and active predicates using logical row/lane coordinates."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseChecks.lean",
+      "reason": "Fresh software examples test interleaved and serial row groups, padded columns, zero dimensions, negative affine outputs and 1056 total threads. Admission/existence is explicitly not inferred."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseCoverage.lean",
+      "reason": "Recovers product, round and output stores plus per-group barrier completions from actual exits; no producer-existence assumptions."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseDataMachine.lean",
+      "reason": "Reuses the per-thread permitted arithmetic contracts at globally indexed row/lane identities and proves preservation through the actual local machine dispatch."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseDataRun.lean",
+      "reason": "Inducts over combined grid execution; each load premise of local arithmetic preservation is discharged from initialization or proved earlier stores."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseGlobalReads.lean",
+      "reason": "Proves global operand locations are unwritten and graph source compatibility therefore yields original input/weight/bias values."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseOwnership.lean",
+      "reason": "Proves distinct global row outputs, private scratch plane ownership and unique actual store occurrences across all groups."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseProgram.lean",
+      "reason": "Installs global logical lane identities, per-group capped widths and explicit full indexed private scratch; unchanged instruction list and explicit no hardware-capacity claim."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseReadData.lean",
+      "reason": "Transfers earlier actual producer arithmetic to later loads using proved addresses and source identities."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseReadSources.lean",
+      "reason": "Builds barrier cross edges from the actual group history and derives producer read values through unique writers and memory constraints."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseUniversal.lean",
+      "reason": "Derives actual last-store output values, input preservation, storage lengths and safe accesses for every completed admitted grid run. It does not assert a reduction execution-existence witness."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseWriter.lean",
+      "reason": "Combines space separation, row ownership, scratch ownership and unique graph identities to establish one noninitial writer per cell."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridExecution.lean",
+      "reason": "Defines instruction-level shared-global grid transitions with private lanes/scratch/barriers; proves safety, lengths, private-state preservation and actual local embedding."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridFlatten.lean",
+      "reason": "Proves global-only barrier-free grid steps and traces flatten to the existing machine, preserving actual memory updates; no giant CTA is claimed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridGraph.lean",
+      "reason": "Projects actual tagged memory effects into one graph with shared global initialization and disjoint private initialization, retaining freely chosen read sources/coherence checked by existing constraints."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridGraphOrigins.lean",
+      "reason": "Derives graph writes from actual fetched stores or explicit initialization and proves global initial values."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridGraphUnique.lean",
+      "reason": "Proves initial cell and dynamic instruction identities cannot duplicate, using storage slots and full trace positions."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridHistory.lean",
+      "reason": "Derives each group barrier history from actual instruction steps while foreign groups alter only global state."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridInvariants.lean",
+      "reason": "Lifts local invariants only with explicit preservation under foreign global changes; applies the checked address-control invariant."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridMemory.lean",
+      "reason": "Separates private storage identities and relates final global words to the actual last store in the combined trace."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridPointwise.lean",
+      "reason": "Uses proved instruction-level flattening and reflection to derive combined pointwise memory admission, universal correctness and finite admitted existence."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridPointwiseLaunch.lean",
+      "reason": "Provides actual admitted grid launch and explicit zero-group no-launch contracts, with per-group resource bounds and preserved source storage."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridPointwisePadding.lean",
+      "reason": "Proves ceiling group-count bounds and extends logical pointwise inputs with allocated padding lanes. Extra outputs may change; logical outputs retain their contracts."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridReference.lean",
+      "reason": "Executable grid schedule interpreter and candidate-execution soundness; no automatic memory-admission conclusion."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridUnflatten.lean",
+      "reason": "Reflects actual flat global-only executions back into genuine grid transitions, enabling nonvacuity transfer for pointwise programs."
+    },
+    {
+      "path": "integration/torchlean/PtxGridDenseForward.lean",
+      "reason": "Reuses unchanged numerical row encoding and arithmetic-order bounds to prove universal stored forward accuracy against the actual TorchLean graph; reduction existence remains missing."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Adds exact dependency reports for 193 new public definitions and theorems without relaxing the standard axiom allowlist."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updates default-target/audit counts and explicitly distinguishes complete pointwise grid results, conditional dense forward, missing grid reduction existence/backward and full indexed scratch cost."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Checks 1409 exact dependencies and 133 default targets with pinned toolchain/dependencies; freshly executes both new grid check modules and existing regressions."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers all new grid modules and numerical bridge in the default build; no toolchain or dependency pin changes."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Description-first extension reconciled with exact proved endpoints and remaining obligations; summaries and implementation links checked. Full grid milestone is not reported complete."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Description-first extension reconciled with exact proved endpoints and remaining obligations; summaries and implementation links checked. Full grid milestone is not reported complete."
+    },
+    {
+      "path": "stratic/descriptions/grid-execution.json",
+      "reason": "Description-first extension reconciled with exact proved endpoints and remaining obligations; summaries and implementation links checked. Full grid milestone is not reported complete."
+    },
+    {
+      "path": "stratic/descriptions/grid-execution.md",
+      "reason": "Description-first extension reconciled with exact proved endpoints and remaining obligations; summaries and implementation links checked. Full grid milestone is not reported complete."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Description-first extension reconciled with exact proved endpoints and remaining obligations; summaries and implementation links checked. Full grid milestone is not reported complete."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Description-first extension reconciled with exact proved endpoints and remaining obligations; summaries and implementation links checked. Full grid milestone is not reported complete."
+    }
+  ]
+}

@@ -71,6 +71,14 @@ structure Bounds (s : Shape) : Prop where
   threads : s.threads ≤ 1024
   arithmetic : s.globalWords+s.sharedWords+2*s.width < 2^30
 
+/-- Address calculations do not require the whole layer to fit one CTA. The
+single-CTA launch contract retains its separate `Bounds.threads` requirement. -/
+structure ArithmeticBounds (s : Shape) : Prop where
+  depth : s.depth<32
+  arithmetic : s.globalWords+s.sharedWords+2*s.width<2^30
+
+instance : Coe (Bounds s) (ArithmeticBounds s) := ⟨fun b => ⟨b.depth,b.arithmetic⟩⟩
+
 def config (s : Shape) (bounds : Bounds s) : Config s.threads :=
   ⟨⟨94,70⟩,0,Nat.mul_pos bounds.nonempty (width_positive s)⟩
 

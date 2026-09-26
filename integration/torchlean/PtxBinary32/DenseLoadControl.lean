@@ -5,7 +5,7 @@ import PtxBinary32.ParallelLoadControl
 namespace Ptx.Scalar.Parallel.Dense
 open AddressControl (evaluate atPC)
 
-private theorem product_read_prefix (s : Shape) (b : Bounds s) (t : Fin s.threads) (seed : Scalar.State)
+private theorem product_read_prefix (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) (seed : Scalar.State)
     (tid : seed.regs 0=BitVec.ofNat 32 t.val) (weight : Bool) :
     let j := if weight then 15 else 11
     let a := if weight then 1 else 0
@@ -31,7 +31,7 @@ private theorem product_read_prefix (s : Shape) (b : Bounds s) (t : Fin s.thread
       BitVec.setWidth_ofNat_of_le_of_lt (by omega : 32≤64) wf,
       BitVec.toNat_ofNat,Nat.mod_eq_of_lt cf,Nat.mod_eq_of_lt nf,bytePointer,four]
 
-theorem product_read_control (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)
+theorem product_read_control (s : Shape) (b : ArithmeticBounds s) (seeds : Fin s.threads → Scalar.State)
     (t : Fin s.threads) (weight : Bool) :
     let j := if weight then 15 else 11
     let a := if weight then 1 else 0
@@ -43,7 +43,7 @@ theorem product_read_control (s : Shape) (b : Bounds s) (seeds : Fin s.threads �
   rw [program,List.append_assoc,List.take_append_of_le_length (show (if weight then 15 else 11)≤(products s).length by cases weight <;> simp)]
   exact product_read_prefix s b t _ (by simp [controlSeed]) weight
 
-private theorem round_read_prefix (s : Shape) (b : Bounds s) (t : Fin s.threads) (k : Nat) (hk : k<s.depth)
+private theorem round_read_prefix (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) (k : Nat) (hk : k<s.depth)
     (seed : Scalar.State) (coords : ControlCoordinates s t seed) (right : Bool) :
     let j := if right then 8 else 7
     let a := if right then 4 else 3
@@ -63,7 +63,7 @@ private theorem round_read_prefix (s : Shape) (b : Bounds s) (t : Fin s.threads)
       BitVec.setWidth_ofNat_of_le_of_lt (by omega : 32≤64) fit,
       BitVec.toNat_ofNat,Nat.mod_eq_of_lt cf,Nat.mod_eq_of_lt limit,bytePointer,four,successor]
 
-theorem round_read_control (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)
+theorem round_read_control (s : Shape) (b : ArithmeticBounds s) (seeds : Fin s.threads → Scalar.State)
     (t : Fin s.threads) (k : Nat) (hk : k<s.depth) (right : Bool) :
     let j := if right then 8 else 7
     let a := if right then 4 else 3
@@ -78,7 +78,7 @@ theorem round_read_control (s : Shape) (b : Bounds s) (seeds : Fin s.threads →
   exact round_read_prefix s b t k hk _ (rounds_control_coordinates s t _ _
     (products_control_coordinates s b t _ (by simp [controlSeed]))) right
 
-private theorem output_read_prefix (s : Shape) (b : Bounds s) (t : Fin s.threads) (seed : Scalar.State)
+private theorem output_read_prefix (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) (seed : Scalar.State)
     (coords : ControlCoordinates s t seed) (bias : Bool) :
     let j := if bias then 10 else 5
     let a := if bias then 5 else 2
@@ -103,7 +103,7 @@ private theorem output_read_prefix (s : Shape) (b : Bounds s) (t : Fin s.threads
       BitVec.setWidth_ofNat_of_le_of_lt (by omega : 32≤64) rf,
       BitVec.setWidth_ofNat_of_le_of_lt (by omega : 32≤64) bf,gate,bytePointer,four]
 
-theorem output_read_control (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)
+theorem output_read_control (s : Shape) (b : ArithmeticBounds s) (seeds : Fin s.threads → Scalar.State)
     (t : Fin s.threads) (bias : Bool) :
     let j := if bias then 10 else 5
     let a := if bias then 5 else 2

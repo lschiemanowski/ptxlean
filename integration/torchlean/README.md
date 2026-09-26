@@ -167,8 +167,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 101 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1216
+All 133 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1409
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward
@@ -239,3 +239,11 @@ ranges and the copy-packet thread bound. The host allocation/view interface is
 explicit; the copied values themselves come from actual instructions. There is no GPU run, benchmark, runtime/ABI
 or hardware-conformance claim. The candidate machine and memory constraints have
 not been narrowed to obtain universal correctness.
+
+The [grid extension](../../docs/foundations/grid-dense-layer.md) adds actual
+shared-global instruction interleavings, private group scratch and barriers,
+and pointwise correctness with admitted existence. The row-distributed dense
+forward has universal stored-output and TorchLean accuracy proofs conditional
+on completed admitted execution. Its admitted execution-existence construction
+and the multi-group backward remain unfinished. Private reduction scratch still
+uses the full indexed extent per group; no hardware capacity claim is made.

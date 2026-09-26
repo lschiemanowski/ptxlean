@@ -149,6 +149,21 @@ COUNTS['PtxTorchLean.DenseBackward'] = COUNTS.get('PtxTorchLean.DenseBackward', 
 COUNTS['PtxTorchLean.DenseBackward.Encoding'] = COUNTS.get('PtxTorchLean.DenseBackward.Encoding', 0) + 8
 TARGETS.update({'PtxBinary32.PointwiseProgram', 'PtxBinary32.PointwiseMachine', 'PtxBinary32.DenseBackwardLayout', 'PtxBinary32.PointwiseControl', 'PtxBinary32.DenseLaunchContract', 'PtxBinary32.PointwiseData', 'PtxBinary32.DenseBackwardChecks', 'PtxBinary32.DenseBackwardStorage', 'PtxBinary32.PointwiseExists', 'PtxBinary32.PointwiseLaunch', 'PtxBinary32.PointwiseReads', 'PtxBinary32.PointwiseUniversal', 'PtxDenseBackward'})
 
+# Grid foundations, admitted pointwise launches and universal completed dense forward.
+COUNTS['Ptx.Scalar.Parallel.Dense'] = COUNTS.get('Ptx.Scalar.Parallel.Dense', 0) + 1
+COUNTS['Ptx.Scalar.Parallel.Grid'] = COUNTS.get('Ptx.Scalar.Parallel.Grid', 0) + 77
+COUNTS['Ptx.Scalar.Parallel.Grid.Checks'] = COUNTS.get('Ptx.Scalar.Parallel.Grid.Checks', 0) + 1
+COUNTS['Ptx.Scalar.Parallel.Grid.Config'] = COUNTS.get('Ptx.Scalar.Parallel.Grid.Config', 0) + 1
+COUNTS['Ptx.Scalar.Parallel.Grid.Control'] = COUNTS.get('Ptx.Scalar.Parallel.Grid.Control', 0) + 19
+COUNTS['Ptx.Scalar.Parallel.Grid.Memory'] = COUNTS.get('Ptx.Scalar.Parallel.Grid.Memory', 0) + 21
+COUNTS['Ptx.Scalar.Parallel.Grid.Reference'] = COUNTS.get('Ptx.Scalar.Parallel.Grid.Reference', 0) + 4
+COUNTS['Ptx.Scalar.Parallel.GridDense'] = COUNTS.get('Ptx.Scalar.Parallel.GridDense', 0) + 44
+COUNTS['Ptx.Scalar.Parallel.GridDense.Checks'] = COUNTS.get('Ptx.Scalar.Parallel.GridDense.Checks', 0) + 2
+COUNTS['Ptx.Scalar.Parallel.GridDense.LocalData'] = COUNTS.get('Ptx.Scalar.Parallel.GridDense.LocalData', 0) + 5
+COUNTS['Ptx.Scalar.Parallel.GridPointwise'] = COUNTS.get('Ptx.Scalar.Parallel.GridPointwise', 0) + 17
+COUNTS['PtxTorchLean.GridDenseForward'] = COUNTS.get('PtxTorchLean.GridDenseForward', 0) + 1
+TARGETS.update({'PtxBinary32.GridControl', 'PtxBinary32.GridBarrierOrder', 'PtxBinary32.GridCoverage', 'PtxBinary32.GridDenseProgram', 'PtxBinary32.GridGraphOrigins', 'PtxBinary32.GridExecution', 'PtxBinary32.GridMemory', 'PtxBinary32.GridDenseOwnership', 'PtxBinary32.GridPointwise', 'PtxBinary32.GridCompletion', 'PtxBinary32.GridDenseChecks', 'PtxBinary32.GridDenseDataMachine', 'PtxBinary32.GridDenseGlobalReads', 'PtxBinary32.GridPointwiseLaunch', 'PtxBinary32.GridDenseCoverage', 'PtxBinary32.GridUnflatten', 'PtxBinary32.GridDenseReadSources', 'PtxBinary32.GridFlatten', 'PtxBinary32.GridGraph', 'PtxBinary32.GridHistory', 'PtxBinary32.GridReference', 'PtxBinary32.GridDenseAddress', 'PtxBinary32.GridDenseUniversal', 'PtxGridDenseForward', 'PtxBinary32.GridGraphUnique', 'PtxBinary32.GridDenseDataRun', 'PtxBinary32.GridPointwisePadding', 'PtxBinary32.GridInvariants', 'PtxBinary32.GridAccessControl', 'PtxBinary32.GridDenseReadData', 'PtxBinary32.GridChecks', 'PtxBinary32.GridDenseWriter'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 
@@ -228,6 +243,10 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/DenseChecks.lean"],
                        cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/DenseBackwardChecks.lean"],
+                       cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", 'PtxBinary32/GridChecks.lean'],
+                       cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", 'PtxBinary32/GridDenseChecks.lean'],
                        cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

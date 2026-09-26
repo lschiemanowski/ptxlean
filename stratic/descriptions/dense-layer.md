@@ -208,3 +208,55 @@ does not promise agreement with the real network's derivative near a ReLU corner
 The transposed reduction uses the same balanced addition order and a final
 addition of positive zero; that addition is included in its range and error
 accounting. Signed input gradients are preserved by disabling ReLU in that stage.
+
+
+The multiple-group extension distributes independent output rows across
+cooperating thread arrays, or CTAs: groups with their own shared scratch memory
+and barriers. All groups access one global allocation. They may read common
+inputs, but each output location has one owning group. Instructions from different
+groups may interleave; a collection of isolated group proofs alone does not
+establish correctness of the combined launch.
+
+Each row reduction remains entirely within one group, preserving its multiplication
+and balanced-addition order. Pointwise gate, weight-gradient and copy work is
+partitioned into bounded groups, including a partially used final group with allocated padding lanes. Input gradients
+use the same distribution of transposed rows. Group count is separate from the
+per-group thread limit; each individual reduction and each private scratch
+allocation still satisfies explicit resource and address bounds.
+
+The combined forward and backward contracts must derive actual stored outputs,
+unchanged operands, checked accesses, and numerical correspondence for every
+admitted completed grid execution. A separate construction must establish that
+such executions exist. Empty dimensions retain explicit no-launch behavior.
+Memory admission, inter-group noninterference and private barrier behavior must
+be proved from the fetched execution; no assumption may replace the desired
+result or the absence of interference. Runtime/ABI and hardware correspondence,
+splitting one reduction across groups, and benchmarking remain outside this
+extension.
+
+
+Address arithmetic bounds and per-group launch limits are separate obligations.
+The total number of row/column work items may exceed a single group's thread
+limit while its represented indices still fit the chosen integer widths. Shared
+scratch remains private to each group; its allocation bounds must cover the
+addresses the supplied reduction program actually computes.
+
+
+The first row-distributed reduction reuses the existing shape-specialized
+instruction list. Entry states supply the row/column work-item number, so each
+group executes exactly one row. Shared addresses retain the existing plane and
+row offsets inside each group's private allocation. Consequently each private
+allocation initially reserves the full indexed scratch extent, including unused
+row positions. This is an explicit storage cost of proof reuse, not a compact
+scratch layout or a claim that these allocations fit a particular GPU. The
+resource contract must cover that extent. Compact rebasing is a separate change.
+
+The implemented multiple-group slice provides actual grid transitions and
+pointwise copy, multiplication and gating, including their admitted execution
+existence proofs. The row-distributed forward theorem derives the prescribed
+stored reduction results and TorchLean error bounds for every completed admitted
+grid execution. Its execution-existence witness under the combined memory
+constraints remains unimplemented, as does the complete multi-group backward
+with its stored stage handoffs. These are missing obligations, not assumptions
+that the numerical conclusion has already been obtained. The existing complete
+single-group forward and backward results remain available.

@@ -1,0 +1,234 @@
+{
+  "id": "grid-execution",
+  "parent": {
+    "description": "mixed-parallel-execution",
+    "passage": {
+      "quote": "A schedule chooses one thread to take the next step; no\nsimultaneous or lockstep hardware execution is assumed."
+    }
+  },
+  "summary": [
+    "Execute actual fetched instructions from several groups against one global array, with private scratch and barriers and checked per-group thread limits.",
+    "Prove pointwise copy, multiplication and sensitivity gating correct for every completed admitted grid execution; separately construct admitted executions, including explicit padding storage.",
+    "Derive row-distributed dense forward outputs and TorchLean error bounds from actual combined admission and completion. Grid reduction existence and multi-group backward are still missing; no general hardware or progress claim follows."
+  ],
+  "realization": "partial",
+  "remaining": "Implemented: shared-global grid steps; private state and barrier histories; actual trace order and graph identities; pointwise correctness and admitted existence; dense-row ownership, actual publication/read sources and universal completed forward/TorchLean accuracy. Missing: a completed admitted grid-reduction execution witness and the full multi-group backward composition. General communicating CTAs, runtime/ABI correspondence, hardware progress and resource conformance are outside this fragment.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A grid step selects one group and one of its threads, fetches its instruction,\nand uses the existing mixed integer and floating-point instruction semantics.\nThe selected group sees the actual current global array. Its resulting global\narray becomes the grid's global array, while its local state is written back.\nOther groups retain their registers, scratch memory and barrier state. Their\nnext instruction sees the updated global array. This is instruction-level\ninterleaving, not atomic execution of a whole group."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridExecution.lean",
+        "passage": {
+          "quote": "inductive Step (cfg : Config n) (program : List Instr) : State groups n → List (Event groups n) → State groups n → Prop\n  | issue (g : Fin groups) (thread : Fin n) (candidate : Option Word) (out : Outcome n)\n      (step : Parallel.Step (cfg.group g) program candidate thread (view s g) out) :\n      Step cfg program s (tag g out.events) (install s g out.state)\ninductive Runs (cfg : Config n) (program : List Instr) : State groups n → List (Event groups n) → State groups n → Prop\n  | nil : Runs cfg program s [] s\n  | cons : Step cfg program s events middle → Runs cfg program middle rest final → Runs cfg program s (events++rest) final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Candidate load values remain unrestricted until memory admission. Successful\naddress checks establish alignment and bounds, not the value a load may observe.\nThe combined memory graph must distinguish group-local storage and actual\nthread identities, and derive barrier ordering from each group's executed\narrivals and completions. Admission must not be replaced by a requirement to\nread the current array."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridExecution.lean",
+        "passage": {
+          "quote": "theorem runs_access_safe (run : Runs cfg program s events final) : ∀ event ∈ events, AccessSafe s event :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A grid step selects one group and one of its threads, fetches its instruction,\nand uses the existing mixed integer and floating-point instruction semantics.\nThe selected group sees the actual current global array. Its resulting global\narray becomes the grid's global array, while its local state is written back.\nOther groups retain their registers, scratch memory and barrier state. Their\nnext instruction sees the updated global array. This is instruction-level\ninterleaving, not atomic execution of a whole group."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridExecution.lean",
+        "passage": {
+          "quote": "theorem install_local_other (s : State groups n) (g h : Fin groups) (next : Parallel.State n)\n    (different : h≠g) : (install s g next).blocks h=s.blocks h :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A grid step selects one group and one of its threads, fetches its instruction,\nand uses the existing mixed integer and floating-point instruction semantics.\nThe selected group sees the actual current global array. Its resulting global\narray becomes the grid's global array, while its local state is written back.\nOther groups retain their registers, scratch memory and barrier state. Their\nnext instruction sees the updated global array. This is instruction-level\ninterleaving, not atomic execution of a whole group."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridReference.lean",
+        "passage": {
+          "quote": "theorem run_sound (cfg : Config n) (program : List Instr) (s : State groups n)\n    (schedule : List (Fin groups × Fin n)) (eligible : Mixed.Eligible cfg.target) :\n    Runs cfg program s (run cfg program s schedule).2.1 (run cfg program s schedule).1 :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Candidate load values remain unrestricted until memory admission. Successful\naddress checks establish alignment and bounds, not the value a load may observe.\nThe combined memory graph must distinguish group-local storage and actual\nthread identities, and derive barrier ordering from each group's executed\narrivals and completions. Admission must not be replaced by a requirement to\nread the current array."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridBarrierOrder.lean",
+        "passage": {
+          "quote": "theorem completed_arrival {s final : State groups n} {events : List (Event groups n)}\n    (run : Runs cfg program s events final) (straight : Parallel.Control.Straight program)\n    (reset : ∀ g, (s.blocks g).barrier=Barrier.reset generation) (g : Fin groups)\n    (c : Nat) (key : Barrier.Key) (hc : events[c]?=some (g,.barrier (.completion key))) (t : Fin n) :\n    ∃ a, a<c ∧ events[a]?=some (g,.barrier (.arrival key t)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Candidate load values remain unrestricted until memory admission. Successful\naddress checks establish alignment and bounds, not the value a load may observe.\nThe combined memory graph must distinguish group-local storage and actual\nthread identities, and derive barrier ordering from each group's executed\narrivals and completions. Admission must not be replaced by a requirement to\nread the current array."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridGraph.lean",
+        "passage": {
+          "quote": "def Admitted (program : List Instr) (s : Grid.State groups n) (events : List (Grid.Event groups n)) : Prop :=\n  ∃ source co, Graph.Ordered.Valid (graph program s events source co) (cross program s events)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Candidate load values remain unrestricted until memory admission. Successful\naddress checks establish alignment and bounds, not the value a load may observe.\nThe combined memory graph must distinguish group-local storage and actual\nthread identities, and derive barrier ordering from each group's executed\narrivals and completions. Admission must not be replaced by a requirement to\nread the current array."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridGraphUnique.lean",
+        "passage": {
+          "quote": "theorem labels_unique (program : List Instr) (s : Grid.State groups n) (events : List (Grid.Event groups n)) :\n    ((labels program s events).map identity).Nodup :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For programs using only global memory and no barriers, the proof can give every\n(group, thread) pair a unique flat thread number. Flattening preserves every\nfetched instruction and actual global-memory update; it introduces no hardware\nthread group and no new synchronization. This permits reuse of the existing\nmemory graph and independent-thread arithmetic proofs. Shared-memory or barrier\nprograms cannot use this simplification: they retain private storage identities\nand group-specific arrival histories."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridFlatten.lean",
+        "passage": {
+          "quote": "theorem flatten_run {s final : State groups n} {events : List (Event groups n)}\n    {flatCfg : Parallel.Config (groups*n)} (target : flatCfg.target=cfg.target)\n    (run : Runs cfg program s events final) (only : ∀ i ∈ program, GlobalOnly i) (idle : IdleBarriers s) :\n    Parallel.Runs flatCfg program (flatten s) (flatEvents events) (flatten final) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For programs using only global memory and no barriers, the proof can give every\n(group, thread) pair a unique flat thread number. Flattening preserves every\nfetched instruction and actual global-memory update; it introduces no hardware\nthread group and no new synchronization. This permits reuse of the existing\nmemory graph and independent-thread arithmetic proofs. Shared-memory or barrier\nprograms cannot use this simplification: they retain private storage identities\nand group-specific arrival histories."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridUnflatten.lean",
+        "passage": {
+          "quote": "theorem reflect_run {s : State groups n} {flatCfg : Parallel.Config (groups*n)} (cfg : Config n)\n    (target : flatCfg.target=cfg.target)\n    (run : Parallel.Runs flatCfg program (flatten s) events final)\n    (only : ∀ i ∈ program, GlobalOnly i) (idle : IdleBarriers s) :\n    ∃ gridEvents gridFinal, Runs cfg program s gridEvents gridFinal ∧\n      flatEvents gridEvents=events ∧ flatten gridFinal=final :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For pointwise copy, multiplication and ReLU sensitivity gating, every completed\nadmitted grid execution stores the specified result, preserves the source words\nand the allocation length, and uses aligned addresses within allocated storage.\nA separate theorem constructs such an execution for every input word sequence\nthat meets the storage bounds. The total thread count can exceed 1,024; each\ngroup has at most 1,024 threads. For a partially used final group, spare lanes\nread an explicitly allocated source word and write distinct padding outputs.\nThose outputs require allocated storage and are excluded from the logical\nvector; they are not promised to retain their initial contents. Zero groups\nhave an explicit no-launch case."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridPointwiseLaunch.lean",
+        "passage": {
+          "quote": "theorem launch_correct (run : Launch op l before after) :\n    (∀ t, ∃ value, after[l.output t]?=some value ∧ Pointwise.Result op before[l.left t]! before[l.right t]! value) ∧\n    (∀ i, i<l.prefixWords → after[i]?=before[i]?) ∧ after.length=before.length :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For pointwise copy, multiplication and ReLU sensitivity gating, every completed\nadmitted grid execution stores the specified result, preserves the source words\nand the allocation length, and uses aligned addresses within allocated storage.\nA separate theorem constructs such an execution for every input word sequence\nthat meets the storage bounds. The total thread count can exceed 1,024; each\ngroup has at most 1,024 threads. For a partially used final group, spare lanes\nread an explicitly allocated source word and write distinct padding outputs.\nThose outputs require allocated storage and are excluded from the logical\nvector; they are not promised to retain their initial contents. Zero groups\nhave an explicit no-launch case."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridPointwiseLaunch.lean",
+        "passage": {
+          "quote": "theorem launch_exists (op : Pointwise.Op) (l : Layout groups n) (before : List Word)\n    (positive : 0<n) (resource : n≤1024) (size : l.prefixWords+groups*n≤before.length) :\n    ∃ after, Launch op l before after :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For pointwise copy, multiplication and ReLU sensitivity gating, every completed\nadmitted grid execution stores the specified result, preserves the source words\nand the allocation length, and uses aligned addresses within allocated storage.\nA separate theorem constructs such an execution for every input word sequence\nthat meets the storage bounds. The total thread count can exceed 1,024; each\ngroup has at most 1,024 threads. For a partially used final group, spare lanes\nread an explicitly allocated source word and write distinct padding outputs.\nThose outputs require allocated storage and are excluded from the logical\nvector; they are not promised to retain their initial contents. Zero groups\nhave an explicit no-launch case."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridPointwisePadding.lean",
+        "passage": {
+          "quote": "theorem padded_correct (op : Pointwise.Op) (l : Pointwise.Layout count) (width : Nat)\n    (positive : 0<width) (nonemptyPrefix : 0<l.prefixWords)\n    (small : l.prefixWords+groupCount count width*width<2^30) (before after : List Word)\n    (run : Launch op (paddedLayout l width positive nonemptyPrefix small) before after) :\n    (∀ t : Fin count, ∃ value, after[l.output t]?=some value ∧\n      Pointwise.Result op before[l.left t]! before[l.right t]! value) ∧\n    (∀ i, i<l.prefixWords → after[i]?=before[i]?) ∧ after.length=before.length :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For pointwise copy, multiplication and ReLU sensitivity gating, every completed\nadmitted grid execution stores the specified result, preserves the source words\nand the allocation length, and uses aligned addresses within allocated storage.\nA separate theorem constructs such an execution for every input word sequence\nthat meets the storage bounds. The total thread count can exceed 1,024; each\ngroup has at most 1,024 threads. For a partially used final group, spare lanes\nread an explicitly allocated source word and write distinct padding outputs.\nThose outputs require allocated storage and are excluded from the logical\nvector; they are not promised to retain their initial contents. Zero groups\nhave an explicit no-launch case."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridPointwisePadding.lean",
+        "passage": {
+          "quote": "theorem padded_exists (op : Pointwise.Op) (l : Pointwise.Layout count) (width : Nat)\n    (positive : 0<width) (resource : width≤1024) (nonemptyPrefix : 0<l.prefixWords)\n    (small : l.prefixWords+groupCount count width*width<2^30) (before : List Word)\n    (storage : l.prefixWords+groupCount count width*width≤before.length) :\n    ∃ after, Launch op (paddedLayout l width positive nonemptyPrefix small) before after :=\n  launch_exists op _ before positive resource storage"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseUniversal.lean",
+        "passage": {
+          "quote": "theorem completed_forward (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)\n    (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)\n    (valid : Admitted s global seeds events source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧ Output s global row.val value) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=s.sharedWords) ∧\n    (∀ event ∈ events, Grid.AccessSafe (initial s global seeds) event) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseReadSources.lean",
+        "passage": {
+          "quote": "theorem visible_store (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)\n    (source co) (valid : Admitted s global seeds events source co)\n    (g : Fin s.rows) (phase : Phase events g) (p q : Nat) (writer reader : Fin s.width)\n    (storeOcc loadOcc : Scalar.Occurrence) (stored loaded : MemoryEffect)\n    (atP : events[p]?=some (g,.scalar writer (some .shared) storeOcc))\n    (atQ : events[q]?=some (g,.scalar reader (some .shared) loadOcc))\n    (sm : storeOcc.memory=some stored) (lm : loadOcc.memory=some loaded)\n    (sk : stored.kind=.store) (lk : loaded.kind=.load) (same : stored.address=loaded.address)\n    (earlier : storeOcc.pc<phase.key.site) (later : phase.key.site<loadOcc.pc) :\n    loaded.value=stored.value ∧ p<q :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseGlobalReads.lean",
+        "passage": {
+          "quote": "theorem global_read_source (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)\n    (source co) (valid : Graph.Ordered.Valid (Grid.Memory.graph (program s) (initial s global seeds) events source co) (Grid.Memory.cross (program s) (initial s global seeds) events))\n    (q : Nat) (group : Fin s.rows) (t : Fin s.width) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atQ : events[q]?=some (group,.scalar t (some .global) occ))\n    (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    ∃ i, i<s.outputBase ∧ i<global.length ∧ effect.address=bytePointer i ∧ effect.value=global[i]! :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseWriter.lean",
+        "passage": {
+          "quote": "theorem graph_writer_unique (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)\n    (source co) (v w : Fin (Grid.Memory.labels (program s) (initial s global seeds) events).length)\n    (hv : (Grid.Memory.graph (program s) (initial s global seeds) events source co).write v)\n    (hw : (Grid.Memory.graph (program s) (initial s global seeds) events source co).write w)\n    (nv : ¬(Grid.Memory.graph (program s) (initial s global seeds) events source co).initial v)\n    (nw : ¬(Grid.Memory.graph (program s) (initial s global seeds) events source co).initial w)\n    (same : (Grid.Memory.graph (program s) (initial s global seeds) events source co).sameAddress v w) : v=w :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGridDenseForward.lean",
+        "passage": {
+          "quote": "theorem universal_forward (s : Dense.Shape) (bounds : GridDense.Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (GridDense.config s bounds) (Dense.program s) (GridDense.initial s global seeds) events final)\n    (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)\n    (valid : GridDense.Admitted s global seeds events source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧\n      finiteReal value=some (max (encoding.row row).affine 0) ∧\n      |max (encoding.row row).affine 0-\n        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=s.sharedWords) ∧\n    (∀ event ∈ events, Grid.AccessSafe (GridDense.initial s global seeds) event) :="
+        }
+      }
+    }
+  ]
+}

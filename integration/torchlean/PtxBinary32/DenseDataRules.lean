@@ -25,7 +25,7 @@ theorem program_segment (s : Shape) (pc : Nat) (i : Instr) (fetch : (program s)[
       have pj : pc=22+16*s.depth+j := by dsimp [j]; omega
       exact .inr (.inr ⟨j,hj,pj,by rw [← output_fetch s j (by simpa using hj),← pj]; exact fetch⟩)
 
-theorem scalar_data (s : Shape) (b : Bounds s) (global : List Word) (t : Fin s.threads)
+theorem scalar_data (s : Shape) (b : ArithmeticBounds s) (global : List Word) (t : Fin s.threads)
     (a next : Scalar.State) (i : Scalar.Instr) (occ : Scalar.Occurrence) (data : Data s global t a)
     (fetch : (program s)[a.pc]?=some (.localStep i) ∨ ∃ space, (program s)[a.pc]?=some (.memory space i))
     (evaluated : Scalar.eval candidate i a=.next next occ)

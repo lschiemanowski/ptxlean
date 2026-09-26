@@ -4,10 +4,14 @@ import PtxBinary32.DenseProgram
 kernel domain. Numeric address separation alone is not a memory-admission proof. -/
 namespace Ptx.Scalar.Parallel.Dense
 
-theorem thread_fits (s : Shape) (b : Bounds s) (t : Fin s.threads) : t.val < 2^32 := by
-  have := t.isLt; have := b.threads; omega
+theorem thread_fits (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) : t.val < 2^32 := by
+  have inside := t.isLt
+  have allocated : s.threads≤s.sharedWords := by
+    unfold Shape.sharedWords; nlinarith
+  have large := b.arithmetic
+  omega
 
-theorem width_fits (s : Shape) (b : Bounds s) : s.width < 2^32 := by
+theorem width_fits (s : Shape) (b : ArithmeticBounds s) : s.width < 2^32 := by
   have := b.arithmetic; omega
 
 theorem coordinates (s : Shape) (t : Fin s.threads) :
@@ -18,7 +22,7 @@ theorem coordinates (s : Shape) (t : Fin s.threads) :
   simpa [Shape.thread,Nat.mul_comm] using Nat.div_add_mod t.val s.width
 
 /-- Bit masking calculates the within-row column; logical shift calculates row. -/
-theorem decoded_coordinates (s : Shape) (b : Bounds s) (t : Fin s.threads) :
+theorem decoded_coordinates (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) :
     (Scalar.BinOp.eval .and (BitVec.ofNat 32 t.val) (BitVec.ofNat 32 (s.width-1))).toNat = t.val % s.width ∧
     (Scalar.BinOp.eval .shr (BitVec.ofNat 32 t.val) (BitVec.ofNat 32 s.depth)).toNat = t.val / s.width := by
   have ht := thread_fits s b t

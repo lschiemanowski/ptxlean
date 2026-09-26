@@ -9,10 +9,11 @@
   "summary": [
     "Connect the vector-output dense–ReLU layer and its automatically generated backward to the actual TorchLean graph.",
     "For the supplied binary32 forward and five-stage parallel backward, every admitted completed execution stores outputs and all three gradients within calculated bounds, under explicit encodings, ranges and a backward activation margin.",
-    "Prove completed admitted executions exist separately from universal correctness, derive actual memory handoffs and preserve original operands. Empty dimensions are covered. Each kernel uses a bounded thread group; runtime and hardware correspondence remain outside the fragment."
+    "Prove completed admitted executions exist separately from universal correctness, derive actual memory handoffs and preserve original operands. Empty dimensions are covered. Each kernel uses a bounded thread group; runtime and hardware correspondence remain outside the fragment.",
+    "Distribute independent rows and pointwise work across groups sharing global memory. Pointwise correctness and existence and universal completed dense-forward correctness are implemented; grid reduction execution existence and multi-group backward remain unfinished."
   ],
-  "realization": "implemented",
-  "remaining": "The stated bounded forward/backward fragment is implemented, including actual copy, gate and product instructions; the transposed parallel reduction; existence, universal stored numerical correspondence, unchanged original operands, access safety and empty dimensions. Bounds include both reduction groups and the full copy packet (at most 1024 threads each). Larger/chunked launches, scratch reuse, fused or mixed precision, runtime/ABI and hardware correspondence and benchmarks are outside this contract.",
+  "realization": "partial",
+  "remaining": "The multiple-group row-distributed forward has universal stored-output and TorchLean accuracy proofs conditional on completion and combined admission, but its completed admitted execution witness remains unimplemented. The full multi-group backward and stored stage composition are also unfinished. Pointwise grid launches have universal correctness and admitted existence, including allocated padding. Single-group forward and backward remain complete. Compact private-scratch rebasing, reductions spanning groups, runtime/ABI and hardware correspondence and benchmarks are outside this slice.",
   "links": [
     {
       "kind": "implementation",
@@ -155,7 +156,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/DenseAddress.lean",
         "passage": {
-          "quote": "theorem decoded_coordinates (s : Shape) (b : Bounds s) (t : Fin s.threads) :\n    (Scalar.BinOp.eval .and (BitVec.ofNat 32 t.val) (BitVec.ofNat 32 (s.width-1))).toNat = t.val % s.width ∧\n    (Scalar.BinOp.eval .shr (BitVec.ofNat 32 t.val) (BitVec.ofNat 32 s.depth)).toNat = t.val / s.width :="
+          "quote": "theorem decoded_coordinates (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) :\n    (Scalar.BinOp.eval .and (BitVec.ofNat 32 t.val) (BitVec.ofNat 32 (s.width-1))).toNat = t.val % s.width ∧\n    (Scalar.BinOp.eval .shr (BitVec.ofNat 32 t.val) (BitVec.ofNat 32 s.depth)).toNat = t.val / s.width :="
         }
       }
     },
@@ -455,7 +456,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/DenseAddressControl.lean",
         "passage": {
-          "quote": "theorem round_control_active (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)\n    (t : Fin s.threads) (k : Nat) (hk : k<s.depth) :\n    (atPC (program s) (controlSeed s seeds t) (22+16*k+14)).preds 0 =\n      decide (t.val%s.width<2^(s.depth-(k+1))) :="
+          "quote": "theorem round_control_active (s : Shape) (b : ArithmeticBounds s) (seeds : Fin s.threads → Scalar.State)\n    (t : Fin s.threads) (k : Nat) (hk : k<s.depth) :\n    (atPC (program s) (controlSeed s seeds t) (22+16*k+14)).preds 0 =\n      decide (t.val%s.width<2^(s.depth-(k+1))) :="
         }
       }
     },
@@ -672,6 +673,42 @@
         "path": "integration/torchlean/PtxBinary32/DenseBackwardStorage.lean",
         "passage": {
           "quote": "theorem input_frame (e : Execution s b before incoming) (size : before.length=s.forward.globalWords)\n    (i : Nat) (hi : i<s.forward.outputBase) : e.weighted[i]?=before[i]? :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The implemented multiple-group slice provides actual grid transitions and\npointwise copy, multiplication and gating, including their admitted execution\nexistence proofs. The row-distributed forward theorem derives the prescribed\nstored reduction results and TorchLean error bounds for every completed admitted\ngrid execution. Its execution-existence witness under the combined memory\nconstraints remains unimplemented, as does the complete multi-group backward\nwith its stored stage handoffs. These are missing obligations, not assumptions\nthat the numerical conclusion has already been obtained. The existing complete\nsingle-group forward and backward results remain available."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseUniversal.lean",
+        "passage": {
+          "quote": "theorem completed_forward (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (config s b) (program s) (initial s global seeds) events final)\n    (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)\n    (valid : Admitted s global seeds events source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧ Output s global row.val value) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=s.sharedWords) ∧\n    (∀ event ∈ events, Grid.AccessSafe (initial s global seeds) event) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The implemented multiple-group slice provides actual grid transitions and\npointwise copy, multiplication and gating, including their admitted execution\nexistence proofs. The row-distributed forward theorem derives the prescribed\nstored reduction results and TorchLean error bounds for every completed admitted\ngrid execution. Its execution-existence witness under the combined memory\nconstraints remains unimplemented, as does the complete multi-group backward\nwith its stored stage handoffs. These are missing obligations, not assumptions\nthat the numerical conclusion has already been obtained. The existing complete\nsingle-group forward and backward results remain available."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGridDenseForward.lean",
+        "passage": {
+          "quote": "theorem universal_forward (s : Dense.Shape) (bounds : GridDense.Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (GridDense.config s bounds) (Dense.program s) (GridDense.initial s global seeds) events final)\n    (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)\n    (valid : GridDense.Admitted s global seeds events source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧\n      finiteReal value=some (max (encoding.row row).affine 0) ∧\n      |max (encoding.row row).affine 0-\n        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=s.sharedWords) ∧\n    (∀ event ∈ events, Grid.AccessSafe (GridDense.initial s global seeds) event) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The implemented multiple-group slice provides actual grid transitions and\npointwise copy, multiplication and gating, including their admitted execution\nexistence proofs. The row-distributed forward theorem derives the prescribed\nstored reduction results and TorchLean error bounds for every completed admitted\ngrid execution. Its execution-existence witness under the combined memory\nconstraints remains unimplemented, as does the complete multi-group backward\nwith its stored stage handoffs. These are missing obligations, not assumptions\nthat the numerical conclusion has already been obtained. The existing complete\nsingle-group forward and backward results remain available."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseProgram.lean",
+        "passage": {
+          "quote": "def initial (s : Dense.Shape) (global : List Word) (seeds : Fin s.threads → Scalar.State) : Grid.State s.rows s.width :=\n  ⟨global,fun g => ⟨fun t => ⟨Dense.controlSeed s seeds (thread s g t),false⟩,\n    List.replicate s.sharedWords 0,Barrier.reset 0,none⟩⟩"
         }
       }
     }

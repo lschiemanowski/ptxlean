@@ -48,7 +48,7 @@ def ControlCoordinates (s : Shape) (t : Fin s.threads) (state : Scalar.State) : 
   state.regs 1=BitVec.ofNat 32 (t.val%s.width) ∧
   state.regs 2=BitVec.ofNat 32 (t.val/s.width)
 
-theorem products_control_coordinates (s : Shape) (b : Bounds s) (t : Fin s.threads) (seed : Scalar.State)
+theorem products_control_coordinates (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) (seed : Scalar.State)
     (tid : seed.regs 0=BitVec.ofNat 32 t.val) : ControlCoordinates s t (evaluate (products s) seed) := by
   have coords := decoded_coordinates s b t
   have col := congrArg (BitVec.ofNat 32) coords.1
@@ -82,7 +82,7 @@ theorem control_atPC_slice (before code after : List Instr) (seed : Scalar.State
   rw [Nat.sub_eq_zero_of_le bound]
   simp [AddressControl.evaluate_append]
 
-private theorem product_pointer (s : Shape) (b : Bounds s) (t : Fin s.threads) (seed : Scalar.State)
+private theorem product_pointer (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) (seed : Scalar.State)
     (tid : seed.regs 0=BitVec.ofNat 32 t.val) :
     (evaluate ((products s).take 20) seed).addrs 2=bytePointer t.val := by
   have fits := thread_fits s b t
@@ -92,7 +92,7 @@ private theorem product_pointer (s : Shape) (b : Bounds s) (t : Fin s.threads) (
     Scalar.Instr.plain,Scalar.update,tid,
     bytePointer,BitVec.setWidth_ofNat_of_le_of_lt (by omega : 32≤64) fits,← BitVec.ofNat_add,four]
 
-private theorem round_pointer (s : Shape) (b : Bounds s) (t : Fin s.threads) (k : Nat)
+private theorem round_pointer (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) (k : Nat)
     (hk : k<s.depth) (seed : Scalar.State) (coords : ControlCoordinates s t seed) :
     (evaluate ((round s k).take 14) seed).addrs 2=bytePointer (nextIndex s k t) := by
   have fit : nextIndex s k t<4294967296 := by
@@ -104,7 +104,7 @@ private theorem round_pointer (s : Shape) (b : Bounds s) (t : Fin s.threads) (k 
     show t.val+(k+1)*s.threads=nextIndex s k t from rfl,
     bytePointer,BitVec.setWidth_ofNat_of_le_of_lt (by omega : 32≤64) fit,four]
 
-private theorem output_pointer (s : Shape) (b : Bounds s) (t : Fin s.threads) (seed : Scalar.State)
+private theorem output_pointer (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) (seed : Scalar.State)
     (coords : ControlCoordinates s t seed) :
     (evaluate ((output s).take 18) seed).addrs 6=bytePointer (outputIndex s t) ∧
     (evaluate ((output s).take 18) seed).preds 0=decide (t.val%s.width=0) := by
@@ -120,13 +120,13 @@ private theorem output_pointer (s : Shape) (b : Bounds s) (t : Fin s.threads) (s
     ← BitVec.ofNat_add,BitVec.toNat_ofNat,show t.val/s.width+s.outputBase=outputIndex s t from rfl,
     bytePointer,BitVec.setWidth_ofNat_of_le_of_lt (by omega : 32≤64) fit,four,gate]
 
-theorem product_control_address (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)
+theorem product_control_address (s : Shape) (b : ArithmeticBounds s) (seeds : Fin s.threads → Scalar.State)
     (t : Fin s.threads) : (atPC (program s) (controlSeed s seeds t) 20).addrs 2=bytePointer t.val := by
   unfold atPC
   rw [program,List.append_assoc,List.take_append_of_le_length (show 20≤(products s).length by simp)]
   exact product_pointer s b t _ (by simp [controlSeed])
 
-theorem round_control_address (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)
+theorem round_control_address (s : Shape) (b : ArithmeticBounds s) (seeds : Fin s.threads → Scalar.State)
     (t : Fin s.threads) (k : Nat) (hk : k<s.depth) :
     (atPC (program s) (controlSeed s seeds t) (22+16*k+14)).addrs 2=bytePointer (nextIndex s k t) := by
   rw [program_round_split s k hk]
@@ -136,7 +136,7 @@ theorem round_control_address (s : Shape) (b : Bounds s) (seeds : Fin s.threads 
   exact round_pointer s b t k hk _ (rounds_control_coordinates s t _ _
     (products_control_coordinates s b t _ (by simp [controlSeed])))
 
-theorem output_control_address (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)
+theorem output_control_address (s : Shape) (b : ArithmeticBounds s) (seeds : Fin s.threads → Scalar.State)
     (t : Fin s.threads) :
     (atPC (program s) (controlSeed s seeds t) (22+16*s.depth+18)).addrs 6=bytePointer (outputIndex s t) ∧
     (atPC (program s) (controlSeed s seeds t) (22+16*s.depth+18)).preds 0=decide (t.val%s.width=0) := by
@@ -148,7 +148,7 @@ theorem output_control_address (s : Shape) (b : Bounds s) (seeds : Fin s.threads
     (products_control_coordinates s b t _ (by simp [controlSeed])))
 
 /-- Predicate zero selects exactly the active columns of this reduction round. -/
-theorem round_control_active (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)
+theorem round_control_active (s : Shape) (b : ArithmeticBounds s) (seeds : Fin s.threads → Scalar.State)
     (t : Fin s.threads) (k : Nat) (hk : k<s.depth) :
     (atPC (program s) (controlSeed s seeds t) (22+16*k+14)).preds 0 =
       decide (t.val%s.width<2^(s.depth-(k+1))) := by

@@ -864,3 +864,11 @@ Lean checking establishes the stated formal results. Source review assesses the
 connection to documented PTX semantics; neither establishes hardware conformance.
 
 [barrier]: https://docs.nvidia.com/cuda/parallel-thread-execution/index.html#parallel-synchronization-and-communication-instructions-bar
+
+## Extension to several groups
+
+The [grid extension study](grid-dense-layer.md) explains actual shared-global
+interleavings, private scratch/barriers, admitted pointwise existence and
+universal row-distributed forward correctness. The grid reduction's admitted
+execution witness and the complete multi-group backward remain unfinished;
+the complete single-group guarantees in this guide are unchanged.

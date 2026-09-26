@@ -10,7 +10,7 @@ set_option maxHeartbeats 2000000
 def leftIndex (s : Shape) (k : Nat) (t : Fin s.threads) : Nat := t.val+t.val%s.width+k*s.threads
 def nextIndex (s : Shape) (k : Nat) (t : Fin s.threads) : Nat := t.val+(k+1)*s.threads
 
-theorem round_indices (s : Shape) (b : Bounds s) (k : Nat) (hk : k < s.depth) (t : Fin s.threads) :
+theorem round_indices (s : Shape) (b : ArithmeticBounds s) (k : Nat) (hk : k < s.depth) (t : Fin s.threads) :
     leftIndex s k t < 2^32 ∧ nextIndex s k t < s.sharedWords ∧
     (t.val%s.width < 2^(s.depth-(k+1)) → leftIndex s k t+1 < s.sharedWords) := by
   obtain ⟨hr,hc,ht⟩ := coordinates s t

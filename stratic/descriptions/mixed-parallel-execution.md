@@ -138,8 +138,11 @@ implementation.
 
 The represented barrier discipline requires full participation without early
 thread exits. General barriers with explicit participant counts, divergent
-barriers, other resources, asynchronous barriers and multiple CTAs interacting
-are outside this layer. Initial registers and memory are supplied explicitly.
+barriers, other resources, asynchronous barriers and communicating CTAs
+are outside this layer. The independent-group extension retains one private
+barrier per group while interleaving actual instructions against one global
+array; its separately stated contracts distinguish proved guarantees from
+unimplemented execution-existence and composition obligations. Initial registers and memory are supplied explicitly.
 The selected numerical target check is PTX 9.4 with sm_70 or newer; full GPU
 launch limits, register declarations, PTX text parsing and runtime calling
 conventions remain separate obligations. Fault and rejected-barrier outcomes

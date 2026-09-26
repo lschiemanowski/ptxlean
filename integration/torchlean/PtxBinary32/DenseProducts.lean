@@ -7,7 +7,7 @@ set_option maxHeartbeats 1500000
 
 /-- Register addresses are computed even for padding, but padded loads are
 predicated off. Their intermediate index still fits the chosen word arithmetic. -/
-theorem weight_index_fits (s : Shape) (b : Bounds s) (t : Fin s.threads) :
+theorem weight_index_fits (s : Shape) (b : ArithmeticBounds s) (t : Fin s.threads) :
     s.weight (t.val / s.width) (t.val % s.width) < 2^32 := by
   obtain ⟨hr,hc,_⟩ := coordinates s t
   have hmul := Nat.mul_le_mul_right s.columns hr

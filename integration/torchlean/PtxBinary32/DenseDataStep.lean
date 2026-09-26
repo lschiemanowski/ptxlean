@@ -5,7 +5,7 @@ open Ptx.Binary32
 set_option maxHeartbeats 2000000
 set_option maxRecDepth 4000
 
-theorem product_scalar_data (s : Shape) (b : Bounds s) (global : List Word) (t : Fin s.threads)
+theorem product_scalar_data (s : Shape) (b : ArithmeticBounds s) (global : List Word) (t : Fin s.threads)
     (a next : Scalar.State) (i : Scalar.Instr) (occ : Scalar.Occurrence)
     (data : Data s global t a)
     (fetch : (products s)[a.pc]?=some (.localStep i) ∨ ∃ space, (products s)[a.pc]?=some (.memory space i))
@@ -39,7 +39,7 @@ theorem product_scalar_data (s : Shape) (b : Bounds s) (global : List Word) (t :
 
   all_goals simp [show ¬t.val%s.width<s.columns by omega]
 
-theorem round_scalar_data (s : Shape) (b : Bounds s) (global : List Word) (t : Fin s.threads)
+theorem round_scalar_data (s : Shape) (b : ArithmeticBounds s) (global : List Word) (t : Fin s.threads)
     (a next : Scalar.State) (i : Scalar.Instr) (occ : Scalar.Occurrence) (k j : Nat) (hk : k<s.depth) (hj : j<16)
     (site : a.pc=22+16*k+j) (data : Data s global t a)
     (fetch : (round s k)[j]?=some (.localStep i) ∨ ∃ space, (round s k)[j]?=some (.memory space i))
@@ -73,7 +73,7 @@ theorem round_scalar_data (s : Shape) (b : Bounds s) (global : List Word) (t : F
     | (grind)
 
 
-theorem output_scalar_data (s : Shape) (b : Bounds s) (global : List Word) (t : Fin s.threads)
+theorem output_scalar_data (s : Shape) (b : ArithmeticBounds s) (global : List Word) (t : Fin s.threads)
     (a next : Scalar.State) (i : Scalar.Instr) (occ : Scalar.Occurrence) (j : Nat) (hj : j<20)
     (site : a.pc=22+16*s.depth+j) (data : Data s global t a)
     (fetch : (output s)[j]?=some (.localStep i) ∨ ∃ space, (output s)[j]?=some (.memory space i))
