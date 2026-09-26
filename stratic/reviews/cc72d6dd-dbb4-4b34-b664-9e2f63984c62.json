@@ -1,0 +1,102 @@
+{
+  "id": "cc72d6dd-dbb4-4b34-b664-9e2f63984c62",
+  "base": "8c3a5c1668844e3b45ce6dbf8712f4624987d972",
+  "contentTree": "23d0fc0669cf25151615b3b6f54111bbc389afb4",
+  "reviewer": "Codex",
+  "summary": "Recover producers and barrier completions from arbitrary completed dense forward executions.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Completed runs now supply actual unconditional product stores, active-round stores, row-leader output stores and all required barrier completions. Round guard truth is derived from the instruction projection; publication theorems put stores before their actual arrivals. Consumer-address matching, forced read sources and universal stored numerical correspondence remain explicit."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Reusable finite-run coverage locates the step crossing a site, proves a memory crossing is the selected thread scalar evaluation and a barrier crossing emits a real collective completion. Halt-origin evidence recovers actual fetched exits. No scheduler fairness, candidate load restriction or machine semantics change."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The unchanged exact dependency audit now covers 18 added public declarations with the pinned toolchain and no proof placeholders. These are internal machine theorems, not new source-fidelity or hardware-conformance evidence."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The child improves universal execution evidence while preserving the distinction from selected execution existence and numerical accuracy. No GPU execution, benchmark, full ISA claim or completed parallel backward is introduced."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The derived site-crossing theorem uses the existing straight-line restriction; branch-capable scalar semantics are unchanged. Memory occurrences, predicate skips, actual store effects and completed-program evidence remain distinct."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "23d0fc0669cf25151615b3b6f54111bbc389afb4",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual review of all changed proofs, descriptions and impact frontier",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, unchanged locked root and TorchLean dependencies; local CPU checks, no GPU execution, benchmark or external model call.",
+      "evidence": "Both full check suites exited 0. Root audit: 1643 declarations. Integration: 72 default targets, four fresh DenseChecks cases and 1036 exact dependency reports, including all 18 added public declarations; only propext, Classical.choice and Quot.sound permitted. Source guard found no proof placeholders or unchecked axioms. No warnings in the changed Lean modules. Stratic validates without issues; git diff --check clean. Before/after proposal snapshots match exactly. Reviewed actual halt events, no-skipping PC bounds, aligned barrier release, active-store guards, emitted store effects and producer-before-arrival proof; execution and memory semantics unchanged. Logs: /tmp/coverage-root-check.log and /tmp/coverage-integration-check.log.",
+      "tests": [],
+      "id": "7d5030ff-25e7-463a-b949-dc7b30782e06",
+      "recordedAt": "2026-09-26T08:07:45.563Z"
+    }
+  ],
+  "recordedAt": "2026-09-26T08:08:06.807Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Only the integration report count changes from 1018 to 1036."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Explains actual halt-origin evidence, one-step PC bounds, retained crossing prefixes/suffixes, barrier alignment, successful store evaluation and guard discharge. Notes depth zero, inactive padding, absence of fairness and conditional allocation safety, and remaining consumer matching/numerical obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseAddressControl.lean",
+      "reason": "Exposes the existing prefix slice lemma and derives round predicate zero at the store site from the actual unsigned comparison. Column and threshold no-wrap bounds follow from existing shape bounds; no active-mask premise is added."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseCoverage.lean",
+      "reason": "Exhaustively locates the only exit; uses actual halt events for final PC bounds; recovers product/round barriers; locates real scalar store evaluation and proves its guard from the compatible projection. Product, active-round and leader output stores carry actual memory effects and proved addresses. Publication bundles derive producer-before-arrival from actual history and existing site order."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelCoverage.lean",
+      "reason": "Reviewed scalar next-PC bound and exclusion of scalar halt under Straight, other-thread frame proofs, all dispatch/step cases, finite crossing-step induction, impossibility of barrier release at a memory site, actual release event reconstruction and halt-origin induction. No event list, successful accesses, desired reads or phase history is assumed."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Adds two imports and fresh transitive-axiom reports for all 18 added public declarations, including the promoted prefix lemma."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updates 72-target and 1036-report totals; describes completed-run producers and barriers while retaining open universal stored-output correspondence."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Adds exact namespace counts for 18 public declarations and two default targets. Dependency pins, proof-token guards, allowed logical axioms and source stability guards unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Adds two modules to existing default targets without dependency, library or toolchain changes."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Summary, partial status, remaining consumer/read-source obligations and exact passage links reflect the completed proofs."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Description-first refinement explains deriving actual producers and phases rather than assuming them; predicate truth, conditional success and remaining numerical obligations explicit."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.json",
+      "reason": "Summary, remaining scope and exact theorem links cover site crossings and halt-origin evidence."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Description-first account explains the reusable coverage argument and distinguishes an instruction occurrence from an enabled memory effect."
+    }
+  ]
+}

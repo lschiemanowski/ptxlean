@@ -73,7 +73,7 @@ theorem rounds_control_coordinates (s : Shape) (t : Fin s.threads) (ks : List Na
     simp only [List.flatMap_cons,AddressControl.evaluate_append]
     exact ih _ (round_control_coordinates s t k state coords)
 
-private theorem atPC_slice (before code after : List Instr) (seed : Scalar.State) (k : Nat)
+theorem control_atPC_slice (before code after : List Instr) (seed : Scalar.State) (k : Nat)
     (bound : k≤code.length) :
     atPC (before++code++after) seed (before.length+k)=evaluate (code.take k) (evaluate before seed) := by
   simp only [atPC,List.append_assoc,List.take_append]
@@ -132,7 +132,7 @@ theorem round_control_address (s : Shape) (b : Bounds s) (seeds : Fin s.threads 
   rw [program_round_split s k hk]
   have len : (products s ++ (List.range k).flatMap (round s)).length=22+16*k := by
     simp [List.length_flatMap,List.sum_replicate,Nat.mul_comm]
-  rw [← len,atPC_slice _ _ _ _ 14 (by simp),AddressControl.evaluate_append]
+  rw [← len,control_atPC_slice _ _ _ _ 14 (by simp),AddressControl.evaluate_append]
   exact round_pointer s b t k hk _ (rounds_control_coordinates s t _ _
     (products_control_coordinates s b t _ (by simp [controlSeed])))
 
@@ -143,8 +143,31 @@ theorem output_control_address (s : Shape) (b : Bounds s) (seeds : Fin s.threads
   have len : (products s ++ (List.range s.depth).flatMap (round s)).length=22+16*s.depth := by
     simp [List.length_flatMap,List.sum_replicate,Nat.mul_comm]
   have shape : program s=(products s ++ (List.range s.depth).flatMap (round s)) ++ output s ++ [] := by simp [program]
-  rw [shape,← len,atPC_slice _ _ _ _ 18 (by simp),AddressControl.evaluate_append]
+  rw [shape,← len,control_atPC_slice _ _ _ _ 18 (by simp),AddressControl.evaluate_append]
   exact output_pointer s b t _ (rounds_control_coordinates s t _ _
     (products_control_coordinates s b t _ (by simp [controlSeed])))
+
+/-- Predicate zero selects exactly the active columns of this reduction round. -/
+theorem round_control_active (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)
+    (t : Fin s.threads) (k : Nat) (hk : k<s.depth) :
+    (atPC (program s) (controlSeed s seeds t) (22+16*k+14)).preds 0 =
+      decide (t.val%s.width<2^(s.depth-(k+1))) := by
+  rw [program_round_split s k hk]
+  have len : (products s ++ (List.range k).flatMap (round s)).length=22+16*k := by
+    simp [List.length_flatMap,List.sum_replicate,Nat.mul_comm]
+  rw [← len,control_atPC_slice _ _ _ _ 14 (by simp),AddressControl.evaluate_append]
+  have coords := rounds_control_coordinates s t (List.range k) _
+    (products_control_coordinates s b t (controlSeed s seeds t) (by simp [controlSeed]))
+  have colFit : t.val%s.width<2^32 := lt_trans (coordinates s t).2.1 (width_fits s b)
+  have limitFit : 2^(s.depth-(k+1))<2^32 := lt_of_le_of_lt
+    (Nat.pow_le_pow_right (by decide : 1≤2) (Nat.sub_le _ _)) (width_fits s b)
+  norm_num at colFit limitFit
+  have active (state : Scalar.State) (hc : ControlCoordinates s t state) :
+      (evaluate ((round s k).take 14) state).preds 0=decide (t.val%s.width<2^(s.depth-(k+1))) := by
+    simp [evaluate,round,pointer,scalar,guarded,word,AddressControl.instruction,
+      AddressControl.scalar,AddressControl.advance,Scalar.Operand32.eval,Scalar.Operand64.eval,
+      Scalar.Instr.plain,Scalar.update,hc.2.1,Scalar.Compare.eval,
+      BitVec.toNat_ofNat,Nat.mod_eq_of_lt colFit,Nat.mod_eq_of_lt limitFit]
+  exact active _ coords
 
 end Ptx.Scalar.Parallel.Dense

@@ -9,10 +9,10 @@
   "summary": [
     "Connect a vector-output dense–ReLU layer and all its gradients to an actual TorchLean graph and automatically generated backward.",
     "Verify a separately supplied parallel binary32 forward implementation with a fixed reduction tree and fresh scratch in one bounded cooperating thread array; prove a complete admitted execution whose stored outputs approximate the actual TorchLean real graph under explicit encoding and range conditions, while distinguishing correctness for all admitted executions.",
-    "For arbitrary candidate forward traces, derive instruction order, actual store addresses, at most one program write per location and timing around observed barrier completions; producer/phase existence and universal stored-output correctness remain open."
+    "For arbitrary candidate forward traces, derive instruction order, actual store addresses and at most one program write per location; completed runs contain all required stores and barrier completions, with each scratch producer before its actual arrival. Universal stored-output correctness remains open."
   ],
   "realization": "partial",
-  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Its stored words approximate the actual TorchLean real tensor graph under explicit entry-encoding and calculated finite-range conditions; zero-padding removal and the tensor/tree identity are proved, including empty inputs. Arbitrary candidate traces now have strict per-thread instruction order, at-most-once execution of each store site, exhaustive emitted-store site classification and timing derived around observed completed barriers. The address-control projection is proved against the complete instruction list and derives actual shared-stage/thread addresses and global row-leader stores. The exact memory graph has at most one noninitial write per location, independently of source/coherence choices or admission. Missing: existence of each required producer and phase in arbitrary completed executions, the resulting read-source and arithmetic-tree correspondence, and universal stored numerical correspondence; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy, tensor/tree identity or memory validity are assumed by the selected execution proof.",
+  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; balanced-tree numerical bounds; the shape-specialized forward instruction list and complete selected execution through every reduction round, barrier, bias/ReLU output store and thread exit; derived stored reference words, unchanged inputs, preserved extents and full-trace access safety. The same trace has a proved graph admission certificate, using derived read sources, chronological write ordering and actual barrier edges, with no circular order/read-source chain. Its stored words approximate the actual TorchLean real tensor graph under explicit entry-encoding and calculated finite-range conditions; zero-padding removal and the tensor/tree identity are proved, including empty inputs. Arbitrary candidate traces now have strict per-thread instruction order, at-most-once execution of each store site, exhaustive emitted-store site classification and timing derived around observed completed barriers. The address-control projection is proved against the complete instruction list and derives actual shared-stage/thread addresses and global row-leader stores. The exact memory graph has at most one noninitial write per location, independently of source/coherence choices or admission. Completed candidate executions now supply actual product, active-round and row-output stores and every required completed barrier, with scratch producers before their actual arrivals. Store predicates are proved from the address-control calculation, rather than assumed true. Missing: matching consumer loads to these unique producers, the resulting read-source and arithmetic-tree correspondence, and universal stored numerical correspondence; an empty-output no-launch wrapper; and the parallel backward kernel and its proofs. No desired load values, intermediate accuracy, tensor/tree identity or memory validity are assumed by the selected execution proof.",
   "links": [
     {
       "kind": "implementation",
@@ -432,6 +432,78 @@
         "path": "integration/torchlean/PtxBinary32/DenseOwnership.lean",
         "passage": {
           "quote": "theorem graph_writer_unique (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (source co) (v w : Fin (Memory.labels (program s) global shared events).length)\n    (hv : (Memory.graph (program s) global shared events source co).write v)\n    (hw : (Memory.graph (program s) global shared events source co).write w)\n    (nv : ¬(Memory.graph (program s) global shared events source co).initial v)\n    (nw : ¬(Memory.graph (program s) global shared events source co).initial w)\n    (same : (Memory.graph (program s) global shared events source co).sameAddress v w) : v=w :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For a completed forward execution, each thread's exit supplies evidence that it\npassed every preceding store and barrier site."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseCoverage.lean",
+        "passage": {
+          "quote": "theorem completed_phases (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (t : Fin s.threads) (halted : (final.lanes t).halted=true) :\n    (∃ phase : History.Phase events, phase.key.site=21) ∧\n    (∀ k, k<s.depth → ∃ phase : History.Phase events, phase.key.site=22+16*k+15) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "a reduction store is enabled precisely for columns active in that round;"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseAddressControl.lean",
+        "passage": {
+          "quote": "theorem round_control_active (s : Shape) (b : Bounds s) (seeds : Fin s.threads → Scalar.State)\n    (t : Fin s.threads) (k : Nat) (hk : k<s.depth) :\n    (atPC (program s) (controlSeed s seeds t) (22+16*k+14)).preds 0 =\n      decide (t.val%s.width<2^(s.depth-(k+1))) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Product stores are unconditional;"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseCoverage.lean",
+        "passage": {
+          "quote": "theorem completed_product_store (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (t : Fin s.threads) (halted : (final.lanes t).halted=true) :\n    ∃ (p : Nat) (occ : Scalar.Occurrence) (effect : MemoryEffect), events[p]?=some (.scalar t (some .shared) occ) ∧ occ.pc=20 ∧\n      occ.memory=some effect ∧ effect.kind=.store ∧ effect.address=bytePointer t.val :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "a reduction store is enabled precisely for columns active in that round;"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseCoverage.lean",
+        "passage": {
+          "quote": "theorem completed_round_store (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (t : Fin s.threads) (halted : (final.lanes t).halted=true) (k : Nat) (hk : k<s.depth)\n    (active : t.val%s.width<2^(s.depth-(k+1))) :\n    ∃ (p : Nat) (occ : Scalar.Occurrence) (effect : MemoryEffect), events[p]?=some (.scalar t (some .shared) occ) ∧ occ.pc=22+16*k+14 ∧\n      occ.memory=some effect ∧ effect.kind=.store ∧ effect.address=bytePointer (nextIndex s k t) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "output\nstores are enabled for column zero."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseCoverage.lean",
+        "passage": {
+          "quote": "theorem completed_output_store (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (t : Fin s.threads) (halted : (final.lanes t).halted=true) (leader : t.val%s.width=0) :\n    ∃ (p : Nat) (occ : Scalar.Occurrence) (effect : MemoryEffect), events[p]?=some (.scalar t (some .global) occ) ∧ occ.pc=22+16*s.depth+18 ∧\n      occ.memory=some effect ∧ effect.kind=.store ∧ effect.address=bytePointer (outputIndex s t) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every\nrequired barrier completion and producer is recovered from the actual trace."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseCoverage.lean",
+        "passage": {
+          "quote": "theorem completed_round_publication (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State) {events : List (Event s.threads)} {final : Parallel.State s.threads}\n    (run : Runs (config s b) (program s) (initial s global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (k : Nat) (hk : k<s.depth) :\n    ∃ phase : History.Phase events, phase.key.site=22+16*k+15 ∧ ∀ t,\n      t.val%s.width<2^(s.depth-(k+1)) →\n      ∃ (p : Nat) (occ : Scalar.Occurrence) (effect : MemoryEffect),\n        events[p]?=some (.scalar t (some .shared) occ) ∧ occ.pc=22+16*k+14 ∧\n        occ.memory=some effect ∧ effect.kind=.store ∧ effect.address=bytePointer (nextIndex s k t) ∧\n        p<History.arrivalPosition (History.completed_arrivals run rfl) phase t :="
         }
       }
     }

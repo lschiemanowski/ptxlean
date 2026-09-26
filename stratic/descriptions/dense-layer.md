@@ -69,8 +69,8 @@ The actual emitted stores are classified exhaustively: one product-store site,
 one store site per reduction round, and one global output-store site. For an
 observed completed barrier, a consumer at a later instruction site must occur
 after its completion. Instruction order alone does not identify a store's address;
-address ownership supplies that separate argument. The existence of every required
-producer and completed phase in an arbitrary finished execution remains open.
+address ownership supplies that separate argument. A finished execution must
+also supply actual producers and completed phases, not merely possible sites.
 
 Address ownership is proved independently of the values loaded from tensors.
 Registers holding thread identity, row and column coordinates, and address
@@ -88,6 +88,18 @@ issued by column zero. Together with at-most-once execution of a store site,
 these facts give at most one program write to each memory location over an
 arbitrary candidate trace. Initial contents remain a separate write; uniqueness
 does not by itself prove that a required producer or completed barrier exists.
+
+For a completed forward execution, each thread's exit supplies evidence that it
+passed every preceding store and barrier site. Product stores are unconditional;
+a reduction store is enabled precisely for columns active in that round; output
+stores are enabled for column zero. The address-control calculation must prove
+these predicates before an instruction occurrence counts as a producer. Passing a store means
+its address check succeeded, so these conditional results need no extra promise
+that an access succeeds. They do not claim every schedule finishes. Every
+required barrier completion and producer is recovered from the actual trace.
+Together with single-writer ownership and instruction order, this supplies the
+execution evidence needed for visibility; numerical correspondence still
+requires connecting the observed loads and arithmetic to the reduction tree.
 
 Numerical contracts relate finite encoded inputs to ideal real tensors. Bounds
 follow the actual multiplication and tree-addition order, including bias and

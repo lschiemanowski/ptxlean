@@ -1,3 +1,5 @@
+import PtxBinary32.ParallelCoverage
+import PtxBinary32.DenseCoverage
 import PtxBinary32.ParallelAddressControl
 import PtxBinary32.ParallelStoreControl
 import PtxBinary32.DenseAddressControl
@@ -1113,3 +1115,23 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Dense.global_store_unique
 #print axioms Ptx.Scalar.Parallel.Dense.candidate_store_unique
 #print axioms Ptx.Scalar.Parallel.Dense.graph_writer_unique
+
+-- Actual producers and barrier completions in arbitrary finished dense executions.
+#print axioms Ptx.Scalar.Parallel.Dense.control_atPC_slice
+#print axioms Ptx.Scalar.Parallel.Dense.round_control_active
+#print axioms Ptx.Scalar.Parallel.Control.dispatch_pc_bound
+#print axioms Ptx.Scalar.Parallel.Control.step_pc_bound
+#print axioms Ptx.Scalar.Parallel.Control.crossing_step
+#print axioms Ptx.Scalar.Parallel.Control.memory_crossing
+#print axioms Ptx.Scalar.Parallel.Control.barrier_crossing
+#print axioms Ptx.Scalar.Parallel.Control.crossed_barrier_exists
+#print axioms Ptx.Scalar.Parallel.Control.halted_exit_origin
+#print axioms Ptx.Scalar.Parallel.Dense.fetched_exit_site
+#print axioms Ptx.Scalar.Parallel.Dense.completed_pc_bound
+#print axioms Ptx.Scalar.Parallel.Dense.completed_barrier_exists
+#print axioms Ptx.Scalar.Parallel.Dense.completed_phases
+#print axioms Ptx.Scalar.Parallel.Dense.completed_product_store
+#print axioms Ptx.Scalar.Parallel.Dense.completed_round_store
+#print axioms Ptx.Scalar.Parallel.Dense.completed_output_store
+#print axioms Ptx.Scalar.Parallel.Dense.completed_product_publication
+#print axioms Ptx.Scalar.Parallel.Dense.completed_round_publication

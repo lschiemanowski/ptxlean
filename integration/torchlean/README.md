@@ -167,8 +167,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 70 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1018
+All 72 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1036
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward
@@ -230,7 +230,9 @@ store site; `ParallelCompletion` derives timing around actual completed barriers
 The visibility rule can now use those site facts instead of assumed timing.
 `DenseOwnership` derives actual store addresses and at most one program write
 per location in every candidate trace and its memory graph, independently of
-loaded tensor values. Required producer/phase existence and universal
-stored-output correctness remain open, along with an empty-output wrapper and
-the backward kernel.
+loaded tensor values. `DenseCoverage` recovers all product, active-round and
+row-output stores and every barrier completion from arbitrary completed runs,
+and proves each scratch publication precedes its producer's actual arrival.
+Connecting consumer loads to these producers and deriving universal stored-output
+correctness remain open, along with an empty-output wrapper and the backward kernel.
 No GPU execution or benchmarking is included.

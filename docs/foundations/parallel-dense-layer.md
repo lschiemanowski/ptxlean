@@ -264,11 +264,9 @@ requirements for an admitted graph, actual producer and consumer occurrences,
 and exactly one program writer to the location. It does not assume that the
 load used the desired value.
 
-Computed-address ownership is established below. What remains is to
-show that the required producers and completed phases occur in every completed
-execution, and connect the forced read values and allowed arithmetic results
-to the stored outputs. The general control facts do not establish those
-application-specific conditions by themselves.
+Computed-address ownership and existence of producers and completed phases
+are established below. Connecting each consumer load to its producer and the
+allowed arithmetic results to stored outputs remains a separate argument.
 
 ## Why arbitrary tensor values cannot change store ownership
 
@@ -327,10 +325,75 @@ Finally, `Memory.program_write_origin` traces each noninitial graph write back
 to its actual scalar store. Trace-position uniqueness and the graph's existing
 unique labels give `graph_writer_unique`. Initial contents are deliberately
 excluded: initialization and the later program store are distinct writes.
-The result proves **at most one** program write, not that the required write
-exists or is visible to a consumer. Those require the remaining producer,
-barrier and admission arguments. In particular, it does not turn a faulting or
+The result proves **at most one** program write. The next section supplies
+producer and barrier existence for completed runs. Visibility still requires
+matching the consumer's address and applying the admission constraints. In particular, it does not turn a faulting or
 incomplete prefix into a completed forward computation.
+
+## Recovering producers and barriers from a finished execution
+
+A proposed read value may be arbitrary before memory admission, and a schedule
+may leave a thread waiting indefinitely. Neither fact permits a completed run
+to omit an earlier instruction. `ParallelCoverage` makes that distinction
+precise without restricting read values or assuming scheduler fairness.
+
+The argument starts with the actual `halted` flag. In a program without scalar
+exits or jumps, a lane can become halted only by executing a fetched parallel
+exit. `halted_exit_origin` recovers that event. `DenseCoverage.fetched_exit_site`
+checks the complete dense list: its only exit is at `22+16*depth+19`. The earlier
+control-order theorem then bounds the final instruction counter below by that
+site. The caller supplies completion, not a desired final counter or a list of
+instructions claimed to have executed.
+
+`crossing_step` uses a simple discrete fact: a machine step advances any given
+thread's instruction counter by at most one. If a run starts before a site and
+ends beyond it, some actual step changes its counter from that site to the next.
+The theorem retains the run prefix, crossing step and suffix. Other threads'
+steps, faults, waiting and halted stutters cannot skip over the site. A barrier
+release advances every participant by one; alignment proves that all of them
+were at the same synchronization site.
+
+Two cases then matter:
+
+- At a memory instruction, the crossing step is that same thread's scalar
+  evaluation, with its actual emitted occurrence. Another thread's barrier
+  release cannot impersonate a memory instruction because its fetched site
+  contains a barrier instead.
+- At a synchronization instruction, crossing requires an actual release and
+  completion event. An arrival alone leaves the instruction counter unchanged.
+  `completed_phases` therefore recovers the product barrier and every reduction
+  barrier from the trace. The existing history theorem recovers every
+  participant's earlier arrival with exactly that completion's key.
+
+A scalar occurrence alone does not prove a store happened: a false predicate
+also advances the instruction counter. `completed_store_exists` inverts the
+successful scalar evaluation only after establishing its guard. The dense
+corollaries discharge that condition from the previously proved projection:
+products are unconditional, round `k` uses columns below `2^(depth-(k+1))`, and
+output stores use column zero. The projection's round predicate is proved from
+its comparison instruction with no-wrap bounds; it is not an assumed active
+thread mask. Thus `completed_product_store`, `completed_round_store` and
+`completed_output_store` recover real memory effects at their proved addresses.
+Initial contents and skipped instructions cannot stand in for these stores.
+
+The publication theorems package each shared-store producer with the actual
+phase it precedes. Strict instruction order proves the producer occurs before
+its own arrival, using the barrier-history theorem's arrival position. This
+holds across arbitrary interleavings and arbitrary candidate tensor values.
+Combined with ownership, it supplies existence, uniqueness and producer timing.
+
+These are conditional facts about runs that reached exit. They require no new
+allocation-length premise because crossing a store already entails a successful
+address check. This does not establish termination for an arbitrary schedule,
+produce a new execution witness, or bypass the memory-admission check. Depth
+zero has the product barrier and no reduction-round obligations; padded inactive
+columns are not incorrectly required to emit a guarded round store. The existing
+selected execution still supplies the independent nonvacuous completed witness.
+
+The next obligation is to derive consumer-load addresses and active-column
+relationships, match each to one of these producers, and apply memory admission
+to force the read source. Only then can the permitted floating-point operations
+be connected to the numerical reduction tree for every admitted execution.
 
 ## A completed two-round witness
 
@@ -605,10 +668,12 @@ The complete selected trace is admitted. Arbitrary candidate traces now have
 proved instruction order, unique thread/store-site occurrences, exhaustive
 store-site classification, computed-address ownership, at most one program writer
 per memory location and derived timing around observed completed barriers.
-For correctness over every admitted completed execution, the proof must still
-derive existence of each required producer and completed phase. The visibility rule can then force read sources and connect
-the allowed arithmetic results to each stored output. The selected array-read
-calculation must not be used as a premise that an arbitrary read is fresh.
+Completed executions also supply every required producer and completed phase,
+with scratch stores before their actual arrivals. For correctness over every
+admitted completed execution, the proof must still derive consumer addresses
+and match each load to its unique producer. The visibility rule can then force
+read sources and connect the allowed arithmetic results to each stored output.
+The selected array-read calculation must not be used as a premise that an arbitrary read is fresh.
 
 The selected stored row bounds are now connected to the actual TorchLean
 matrix graph, including zero-padding removal. Extending that correspondence to
@@ -633,7 +698,7 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxDenseForward PtxBinary32.DenseOwnership PtxBinary32.ParallelVisibility
+lake build PtxDenseForward PtxBinary32.DenseCoverage PtxBinary32.ParallelVisibility
 lake env lean PtxBinary32/DenseChecks.lean
 ```
 

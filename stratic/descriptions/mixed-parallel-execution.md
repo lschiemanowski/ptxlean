@@ -72,6 +72,15 @@ for the existing machine, not an alternate execution or memory rule. The current
 projection retains the register set used by the dense kernel; other layouts need
 their own compatibility check or a generalized projection.
 
+A finished thread must have emitted an actual exit. For an instruction list
+without jumps or scalar exits, moving past an earlier instruction cannot skip
+it: ordinary steps advance by one, and only a completed barrier can move all
+participants past a synchronization site. Crossing a memory instruction yields
+its actual scalar evaluation and trace occurrence. A false predicate can still
+skip that instruction, so a producer-existence proof must separately establish
+that the store's predicate is true. These facts recover required events from
+execution, without assuming successful scheduling of an unfinished run.
+
 Each recorded barrier completion is justified by earlier, actually emitted
 arrivals from every participant, with the same CTA, resource, generation and
 instruction site. This history property survives arbitrary scheduling and
