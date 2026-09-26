@@ -868,7 +868,8 @@ connection to documented PTX semantics; neither establishes hardware conformance
 ## Extension to several groups
 
 The [grid extension study](grid-dense-layer.md) explains actual shared-global
-interleavings, private scratch/barriers, admitted pointwise existence and
-universal row-distributed forward correctness. The grid reduction's admitted
-execution witness and the complete multi-group backward remain unfinished;
-the complete single-group guarantees in this guide are unchanged.
+instruction interleavings, private group scratch and barriers, and complete
+row-distributed forward and backward contracts. Universal stored-result and
+TorchLean accuracy proofs are paired with admitted execution-existence proofs.
+The grid removes the single-group bound on total launch threads, while retaining
+bounded individual reductions and explicit scratch/padding costs.

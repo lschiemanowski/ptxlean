@@ -1,3 +1,19 @@
+import PtxBinary32.DenseLocalSegments
+import PtxBinary32.GridAdmission
+import PtxBinary32.GridChronology
+import PtxBinary32.GridConcrete
+import PtxBinary32.GridDenseBackwardChecks
+import PtxBinary32.GridDenseBackwardLayout
+import PtxBinary32.GridDenseBackwardStorage
+import PtxBinary32.GridDenseExists
+import PtxBinary32.GridDenseLaunch
+import PtxBinary32.GridDenseLocalControl
+import PtxBinary32.GridDenseLocalExists
+import PtxBinary32.GridPointwiseLogical
+import PtxBinary32.GridReplay
+import PtxBinary32.GridSources
+import PtxBinary32.ParallelSegmentSweep
+import PtxGridDenseBackward
 import PtxBinary32.GridAccessControl
 import PtxBinary32.GridBarrierOrder
 import PtxBinary32.GridChecks
@@ -1575,3 +1591,121 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Grid.local_step_reflect
 #print axioms Ptx.Scalar.Parallel.Grid.reflect_run
 #print axioms PtxTorchLean.GridDenseForward.universal_forward
+
+-- Combined grid admission, complete dense launch existence and five-stage backward.
+#print axioms Ptx.Scalar.Parallel.Dense.Local.afterSetup
+#print axioms Ptx.Scalar.Parallel.Dense.Local.setup_execution
+#print axioms Ptx.Scalar.Parallel.Dense.Local.productFinish
+#print axioms Ptx.Scalar.Parallel.Dense.Local.product_segment
+#print axioms Ptx.Scalar.Parallel.Dense.Local.round_regular
+#print axioms Ptx.Scalar.Parallel.Dense.Local.output_regular
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.chosenSource
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.chronologicalCoherence
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.chosenSource_spec
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.concrete_certificate
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.concrete_admitted
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.concrete_admitted_exists
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.ceiling
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.rank
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.program_origin
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.initial_origin
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.initial_bound
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.initial_rank
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.program_same_position
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.rank_injective
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.program_before
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.initial_iff
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.no_release
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.initial_position
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.initial_before
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.base_before
+#print axioms Ptx.Scalar.Parallel.Grid.ConcreteRuns
+#print axioms Ptx.Scalar.Parallel.Grid.ConcreteRuns.toRuns
+#print axioms Ptx.Scalar.Parallel.Grid.concrete_runs_append
+#print axioms Ptx.Scalar.Parallel.Grid.embed_concrete
+#print axioms Ptx.Scalar.Parallel.Grid.Reference.run_concrete
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.Checks.run
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.Checks.large_execution_exists
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.Bounds
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.gateLayout
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.weightLayout
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.copySource
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.copy_source_bound
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.copyLayout
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.gateInput
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.weightInput
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.copyInput
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.packet
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.Execution
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.execution_exists
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.Execution.g
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.Execution.dw
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.Execution.dx
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.lengths
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.input_frame
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.gate_frame
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.gate_result
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.weight_result
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.packet_word
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.packet_input
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.packet_weight
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.packet_bias
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.input_result
+#print axioms Ptx.Scalar.Parallel.GridDenseBackward.gradients_stored
+#print axioms Ptx.Scalar.Parallel.GridDense.completed_concrete_exists
+#print axioms Ptx.Scalar.Parallel.GridDense.completed_admitted_exists
+#print axioms Ptx.Scalar.Parallel.GridDense.Launch
+#print axioms Ptx.Scalar.Parallel.GridDense.launch_exists
+#print axioms Ptx.Scalar.Parallel.GridDense.launch_correct
+#print axioms Ptx.Scalar.Parallel.GridDense.Local.initial
+#print axioms Ptx.Scalar.Parallel.GridDense.Local.candidate_control
+#print axioms Ptx.Scalar.Parallel.GridDense.Local.coordinates_at_entry
+#print axioms Ptx.Scalar.Parallel.GridDense.Local.entry_regs
+#print axioms Ptx.Scalar.Parallel.GridDense.Local.initial_reg
+#print axioms Ptx.Scalar.Parallel.GridDense.Local.product_exists
+#print axioms Ptx.Scalar.Parallel.GridDense.Local.reduction_exists
+#print axioms Ptx.Scalar.Parallel.GridDense.Local.completed_exists
+#print axioms Ptx.Scalar.Parallel.GridPointwise.extend
+#print axioms Ptx.Scalar.Parallel.GridPointwise.LogicalLaunch
+#print axioms Ptx.Scalar.Parallel.GridPointwise.logical_exists
+#print axioms Ptx.Scalar.Parallel.GridPointwise.logical_correct
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.Arrays
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.arrays
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.view
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.install
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.arena
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.event
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.trace
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.trace_append
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.trace_tag
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.arrays_install
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.concrete_replays
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.writtenAt
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.latestWrite
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.latestWrite_none
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.latestWrite_origin
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.event_value
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.trace_value
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.load_prefix
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.load_source
+#print axioms Ptx.Scalar.Parallel.Grid.Replay.writtenAt_some
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.split_at
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.cell
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.initial_member
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.initial_graph_member
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.writtenAt_of_address
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.SourceFor
+#print axioms Ptx.Scalar.Parallel.Grid.Memory.Chronology.source_exists
+#print axioms Ptx.Scalar.Parallel.NoSync
+#print axioms Ptx.Scalar.Parallel.ConcreteSegment.frame_extra
+#print axioms Ptx.Scalar.Parallel.segment_sweep
+#print axioms Ptx.Scalar.Parallel.exit_sweep
+#print axioms PtxTorchLean.GridDenseBackward.stored_gate
+#print axioms PtxTorchLean.GridDenseBackward.input_words
+#print axioms PtxTorchLean.GridDenseBackward.weight_accuracy
+#print axioms PtxTorchLean.GridDenseBackward.input_accuracy
+#print axioms PtxTorchLean.GridDenseBackward.bias_accuracy
+#print axioms PtxTorchLean.GridDenseBackward.Correct
+#print axioms PtxTorchLean.GridDenseBackward.universal_backward
+#print axioms PtxTorchLean.GridDenseBackward.backward_exists
+#print axioms PtxTorchLean.GridDenseForward.forward_exists

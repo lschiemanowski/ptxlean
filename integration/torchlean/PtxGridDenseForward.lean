@@ -1,5 +1,5 @@
 import PtxDenseForward
-import PtxBinary32.GridDenseUniversal
+import PtxBinary32.GridDenseLaunch
 
 namespace PtxTorchLean.GridDenseForward
 open Ptx Ptx.Binary32 Ptx.Scalar.Parallel PtxTorchLean.DenseForward
@@ -29,5 +29,22 @@ theorem universal_forward (s : Dense.Shape) (bounds : GridDense.Bounds s) (globa
   intro row
   obtain ⟨value,stored,correct⟩ := values row
   exact ⟨value,stored,output_accuracy encoding row value correct⟩
+
+/-- Nonvacuity under storage/resource bounds. Numerical conditions only interpret
+outputs; they are not needed by the instruction-execution construction. -/
+theorem forward_exists (s : Dense.Shape) (bounds : 0<s.rows → GridDense.Bounds s) (global : List Word)
+    (x : Tensor ℝ (DenseVJP.column s.columns)) (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))
+    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)
+    (size : s.globalWords≤global.length) :
+    ∃ after, GridDense.Launch s global after ∧
+      ∀ row : Fin s.rows, ∃ value, after[s.outputBase+row.val]?=some value ∧
+        finiteReal value=some (max (encoding.row row).affine 0) ∧
+        |max (encoding.row row).affine 0-
+          Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0|≤(encoding.row row).error := by
+  obtain ⟨after,run⟩ := GridDense.launch_exists s global bounds size
+  refine ⟨after,run,?_⟩
+  intro row
+  obtain ⟨value,saved,correct⟩ := (GridDense.launch_correct run).1 row
+  exact ⟨value,saved,output_accuracy encoding row value correct⟩
 
 end PtxTorchLean.GridDenseForward

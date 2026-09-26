@@ -9,11 +9,10 @@
   "summary": [
     "Connect the vector-output dense–ReLU layer and its automatically generated backward to the actual TorchLean graph.",
     "For the supplied binary32 forward and five-stage parallel backward, every admitted completed execution stores outputs and all three gradients within calculated bounds, under explicit encodings, ranges and a backward activation margin.",
-    "Prove completed admitted executions exist separately from universal correctness, derive actual memory handoffs and preserve original operands. Empty dimensions are covered. Each kernel uses a bounded thread group; runtime and hardware correspondence remain outside the fragment.",
-    "Distribute independent rows and pointwise work across groups sharing global memory. Pointwise correctness and existence and universal completed dense-forward correctness are implemented; grid reduction execution existence and multi-group backward remain unfinished."
+    "Construct completed admitted executions separately from universal correctness, derive actual stored handoffs and preserve operands. Empty dimensions are covered; runtime and hardware correspondence remain outside the fragment.",
+    "Distribute rows and pointwise work across bounded groups sharing global memory. Prove combined forward/backward correctness and admitted existence with explicit padding, private scratch cost and unchanged numerical conditions."
   ],
-  "realization": "partial",
-  "remaining": "The multiple-group row-distributed forward has universal stored-output and TorchLean accuracy proofs conditional on completion and combined admission, but its completed admitted execution witness remains unimplemented. The full multi-group backward and stored stage composition are also unfinished. Pointwise grid launches have universal correctness and admitted existence, including allocated padding. Single-group forward and backward remain complete. Compact private-scratch rebasing, reductions spanning groups, runtime/ABI and hardware correspondence and benchmarks are outside this slice.",
+  "realization": "implemented",
   "links": [
     {
       "kind": "implementation",
@@ -679,7 +678,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The implemented multiple-group slice provides actual grid transitions and\npointwise copy, multiplication and gating, including their admitted execution\nexistence proofs. The row-distributed forward theorem derives the prescribed\nstored reduction results and TorchLean error bounds for every completed admitted\ngrid execution. Its execution-existence witness under the combined memory\nconstraints remains unimplemented, as does the complete multi-group backward\nwith its stored stage handoffs. These are missing obligations, not assumptions\nthat the numerical conclusion has already been obtained. The existing complete\nsingle-group forward and backward results remain available."
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results.\n\nThe grid backward recomputes the activation, gates sensitivities, forms weight\ngradients, copies transposed operands and reduces input gradients. Pointwise\nstages use groups of 32 lanes. The host model temporarily appends spare output\ncells for the last group, then returns the logical prefix containing every\nsource and requested result. Padding writes remain part of the proved physical\nlaunch. Bounds reserve 32 additional representable words, although fewer than\n32 padding cells are allocated. These host storage views do not perform\narithmetic and do not establish runtime allocation or transfer correctness.\nForward and transposed reductions each use at most 1,024 lanes per row; the\nwhole grid may contain more. Empty dimensions retain explicit no-launch cases.\nNumerical gradient agreement still requires the finite ranges and strict\nactivation margin described above. General reductions spanning several groups,\ncompact scratch rebasing and hardware performance remain separate extensions."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseUniversal.lean",
@@ -691,7 +690,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The implemented multiple-group slice provides actual grid transitions and\npointwise copy, multiplication and gating, including their admitted execution\nexistence proofs. The row-distributed forward theorem derives the prescribed\nstored reduction results and TorchLean error bounds for every completed admitted\ngrid execution. Its execution-existence witness under the combined memory\nconstraints remains unimplemented, as does the complete multi-group backward\nwith its stored stage handoffs. These are missing obligations, not assumptions\nthat the numerical conclusion has already been obtained. The existing complete\nsingle-group forward and backward results remain available."
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results.\n\nThe grid backward recomputes the activation, gates sensitivities, forms weight\ngradients, copies transposed operands and reduces input gradients. Pointwise\nstages use groups of 32 lanes. The host model temporarily appends spare output\ncells for the last group, then returns the logical prefix containing every\nsource and requested result. Padding writes remain part of the proved physical\nlaunch. Bounds reserve 32 additional representable words, although fewer than\n32 padding cells are allocated. These host storage views do not perform\narithmetic and do not establish runtime allocation or transfer correctness.\nForward and transposed reductions each use at most 1,024 lanes per row; the\nwhole grid may contain more. Empty dimensions retain explicit no-launch cases.\nNumerical gradient agreement still requires the finite ranges and strict\nactivation margin described above. General reductions spanning several groups,\ncompact scratch rebasing and hardware performance remain separate extensions."
       },
       "to": {
         "path": "integration/torchlean/PtxGridDenseForward.lean",
@@ -703,12 +702,120 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The implemented multiple-group slice provides actual grid transitions and\npointwise copy, multiplication and gating, including their admitted execution\nexistence proofs. The row-distributed forward theorem derives the prescribed\nstored reduction results and TorchLean error bounds for every completed admitted\ngrid execution. Its execution-existence witness under the combined memory\nconstraints remains unimplemented, as does the complete multi-group backward\nwith its stored stage handoffs. These are missing obligations, not assumptions\nthat the numerical conclusion has already been obtained. The existing complete\nsingle-group forward and backward results remain available."
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results.\n\nThe grid backward recomputes the activation, gates sensitivities, forms weight\ngradients, copies transposed operands and reduces input gradients. Pointwise\nstages use groups of 32 lanes. The host model temporarily appends spare output\ncells for the last group, then returns the logical prefix containing every\nsource and requested result. Padding writes remain part of the proved physical\nlaunch. Bounds reserve 32 additional representable words, although fewer than\n32 padding cells are allocated. These host storage views do not perform\narithmetic and do not establish runtime allocation or transfer correctness.\nForward and transposed reductions each use at most 1,024 lanes per row; the\nwhole grid may contain more. Empty dimensions retain explicit no-launch cases.\nNumerical gradient agreement still requires the finite ranges and strict\nactivation margin described above. General reductions spanning several groups,\ncompact scratch rebasing and hardware performance remain separate extensions."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseProgram.lean",
         "passage": {
           "quote": "def initial (s : Dense.Shape) (global : List Word) (seeds : Fin s.threads → Scalar.State) : Grid.State s.rows s.width :=\n  ⟨global,fun g => ⟨fun t => ⟨Dense.controlSeed s seeds (thread s g t),false⟩,\n    List.replicate s.sharedWords 0,Barrier.reset 0,none⟩⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseExists.lean",
+        "passage": {
+          "quote": "theorem completed_admitted_exists (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) (size : s.globalWords≤global.length) :\n    ∃ events final, Grid.ConcreteRuns (config s b) (Dense.program s) (initial s global seeds) events final ∧\n      (∀ g t, ((final.blocks g).lanes t).halted=true) ∧\n      Grid.Memory.Admitted (Dense.program s) (initial s global seeds) events :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseLaunch.lean",
+        "passage": {
+          "quote": "inductive Launch (s : Dense.Shape) (before : List Word) : List Word → Prop\n  | empty (zero : s.rows=0) : Launch s before before\n  | kernel (bounds : Bounds s) (seeds : Fin s.threads → Scalar.State)\n      {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n      (run : Grid.Runs (config s bounds) (Dense.program s) (initial s before seeds) events final)\n      (halted : ∀ g t, ((final.blocks g).lanes t).halted=true)\n      (admitted : Grid.Memory.Admitted (Dense.program s) (initial s before seeds) events) :\n      Launch s before final.global"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The grid backward recomputes the activation, gates sensitivities, forms weight\ngradients, copies transposed operands and reduces input gradients. Pointwise\nstages use groups of 32 lanes. The host model temporarily appends spare output\ncells for the last group, then returns the logical prefix containing every\nsource and requested result. Padding writes remain part of the proved physical\nlaunch. Bounds reserve 32 additional representable words, although fewer than\n32 padding cells are allocated. These host storage views do not perform\narithmetic and do not establish runtime allocation or transfer correctness.\nForward and transposed reductions each use at most 1,024 lanes per row; the\nwhole grid may contain more. Empty dimensions retain explicit no-launch cases.\nNumerical gradient agreement still requires the finite ranges and strict\nactivation margin described above. General reductions spanning several groups,\ncompact scratch rebasing and hardware performance remain separate extensions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseBackwardLayout.lean",
+        "passage": {
+          "quote": "structure Execution (s : Shape) (b : Bounds s) (before : List Word) (incoming : Fin s.rows → Word) where\n  forward : List Word\n  gated : List Word\n  weighted : List Word\n  copied : List Word\n  inputGradient : List Word\n  forwardRun : GridDense.Launch s.forward before forward\n  gateRun : GridPointwise.LogicalLaunch .gate (gateLayout s b) (gateInput s forward incoming) gated\n  weightRun : GridPointwise.LogicalLaunch .mul (weightLayout s b) (weightInput s gated) weighted\n  copyRun : GridPointwise.LogicalLaunch .copy (copyLayout s b) (copyInput s weighted) copied\n  inputRun : GridDense.Launch s.transposed (packet s copied) inputGradient"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The grid backward recomputes the activation, gates sensitivities, forms weight\ngradients, copies transposed operands and reduces input gradients. Pointwise\nstages use groups of 32 lanes. The host model temporarily appends spare output\ncells for the last group, then returns the logical prefix containing every\nsource and requested result. Padding writes remain part of the proved physical\nlaunch. Bounds reserve 32 additional representable words, although fewer than\n32 padding cells are allocated. These host storage views do not perform\narithmetic and do not establish runtime allocation or transfer correctness.\nForward and transposed reductions each use at most 1,024 lanes per row; the\nwhole grid may contain more. Empty dimensions retain explicit no-launch cases.\nNumerical gradient agreement still requires the finite ranges and strict\nactivation margin described above. General reductions spanning several groups,\ncompact scratch rebasing and hardware performance remain separate extensions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseBackwardLayout.lean",
+        "passage": {
+          "quote": "theorem execution_exists (s : Shape) (b : Bounds s) (before : List Word) (incoming : Fin s.rows → Word)\n    (size : before.length=s.forward.globalWords) : Nonempty (Execution s b before incoming) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseBackwardStorage.lean",
+        "passage": {
+          "quote": "theorem gradients_stored (e : Execution s b before incoming) (size : before.length=s.forward.globalWords) :\n    (∀ r, e.gated[s.gateBase+r.val]?=some (e.g r)) ∧\n    (∀ r c, e.weighted[s.weightBase+r.val*s.columns+c.val]?=some (e.dw r c)) ∧\n    (∀ c, e.inputGradient[s.transposed.outputBase+c.val]?=some (e.dx c)) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseBackwardStorage.lean",
+        "passage": {
+          "quote": "theorem input_frame (e : Execution s b before incoming) (size : before.length=s.forward.globalWords)\n    (i : Nat) (hi : i<s.forward.outputBase) : e.weighted[i]?=before[i]? :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGridDenseForward.lean",
+        "passage": {
+          "quote": "theorem forward_exists (s : Dense.Shape) (bounds : 0<s.rows → GridDense.Bounds s) (global : List Word)\n    (x : Tensor ℝ (DenseVJP.column s.columns)) (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    (size : s.globalWords≤global.length) :\n    ∃ after, GridDense.Launch s global after ∧\n      ∀ row : Fin s.rows, ∃ value, after[s.outputBase+row.val]?=some value ∧\n        finiteReal value=some (max (encoding.row row).affine 0) ∧\n        |max (encoding.row row).affine 0-\n          Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0|≤(encoding.row row).error :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGridDenseBackward.lean",
+        "passage": {
+          "quote": "theorem universal_backward (i : Encoding s memory incoming x w bias d) (range : Ranges i)\n    {bounds : Ptx.Scalar.Parallel.GridDenseBackward.Bounds s}\n    (e : Ptx.Scalar.Parallel.GridDenseBackward.Execution s bounds memory incoming)\n    (size : memory.length=s.forward.globalWords) : Correct i range e :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The multiple-group forward and backward have complete bounded launch contracts.\nEvery completed admitted execution stores the specified outputs and gradients,\npreserves original operands, and satisfies the same numerical error policy as\nthe single-group version. A separate finite construction supplies actual\ninstruction executions and the combined memory-admission certificate; it does\nnot assume desired reads or completed isolated group results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGridDenseBackward.lean",
+        "passage": {
+          "quote": "theorem backward_exists (i : Encoding s memory incoming x w bias d) (range : Ranges i)\n    (bounds : Ptx.Scalar.Parallel.GridDenseBackward.Bounds s) (size : memory.length=s.forward.globalWords) :\n    ∃ e : Ptx.Scalar.Parallel.GridDenseBackward.Execution s bounds memory incoming, Correct i range e :="
         }
       }
     }

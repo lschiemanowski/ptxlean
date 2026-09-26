@@ -167,8 +167,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 133 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1409
+All 149 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1525
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward
@@ -240,10 +240,14 @@ explicit; the copied values themselves come from actual instructions. There is n
 or hardware-conformance claim. The candidate machine and memory constraints have
 not been narrowed to obtain universal correctness.
 
-The [grid extension](../../docs/foundations/grid-dense-layer.md) adds actual
-shared-global instruction interleavings, private group scratch and barriers,
-and pointwise correctness with admitted existence. The row-distributed dense
-forward has universal stored-output and TorchLean accuracy proofs conditional
-on completed admitted execution. Its admitted execution-existence construction
-and the multi-group backward remain unfinished. Private reduction scratch still
-uses the full indexed extent per group; no hardware capacity claim is made.
+The [grid extension](../../docs/foundations/grid-dense-layer.md) proves actual
+shared-global instruction interleavings with private scratch and barriers.
+Row-distributed forward and five-stage backward both have universal stored-output
+and TorchLean accuracy proofs, plus separate completed admitted execution
+witnesses. Pointwise stages use padded 32-lane groups with explicit physical
+storage and logical views. Seven grid backward interpreter checks cover empty
+dimensions, padding, negative gradients, zero gating and a 33-by-32 matrix with
+more than 1,024 total lanes in both reductions, weight products and copying. Individual reductions remain bounded;
+private scratch still uses the full indexed extent per group, without a GPU
+capacity or performance claim. Numerical range and ReLU-margin policies are
+unchanged, and no runtime/ABI or hardware correspondence is asserted.

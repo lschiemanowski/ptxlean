@@ -1,0 +1,171 @@
+{
+  "id": "07f6ec1b-e6c7-4e6b-a25e-a82add9ff0a9",
+  "base": "2d5a8e2fbcc9e56bdabb54057b2442aced352c68",
+  "contentTree": "b88976c07d99b96fbbe602245c6c6ced0958f0ba",
+  "reviewer": "Codex",
+  "summary": "Complete bounded grid dense forward and backward: construct combined memory admission and terminating reductions, compose padded pointwise stages, and prove stored TorchLean VJP correspondence with unchanged numerical conditions.",
+  "examined": [
+    {
+      "id": "grid-execution",
+      "outcome": "revised",
+      "reason": "Complete finite combined grid admission and row-reduction execution existence; expose completed grid launch contracts, explicit physical padding/logical views and backward composition. Summaries, exact links and implemented status match the bounded scope."
+    },
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "The multi-group forward and all five backward stages now have universal stored-result/numerical contracts and separate admitted witnesses, including empty dimensions. Numerical policy and exclusions remain unchanged; full private scratch cost and padding margin are explicit."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "revised",
+      "reason": "Reconciles the parent reference to the child: bounded grid existence and stored composition are now proved. The instruction, candidate read and barrier semantics are unchanged, as are exclusions for general communicating groups and hardware/runtime behavior. Existing summary remains accurate."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The integration checker retains pinned versions, exact source hashes, forbidden-proof guard and standard-only axiom policy. New admission and existence are internal adequacy results, not new source-fidelity or hardware-conformance evidence."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "This example continues to identify concrete tensors, actual stored handoffs, numerical conditions, reproducible checks and bounded scope; its expanded implementation does not redefine the PTX ISA coverage."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The scalar instruction/state contract is unchanged. New witnesses combine actual bounded fetched steps, maintain the distinction between memory admission and address safety, and prove completion separately from finite running procedures."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "b88976c07d99b96fbbe602245c6c6ced0958f0ba",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual review of source/graph/witness composition and description links",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and project-pinned numerical/TorchLean dependencies; existing local dependencies checked for exact clean revisions. No external model calls, GPU execution or benchmarking.",
+      "evidence": "Root source/build suite and 1643 exact dependency reports passed. Integration built all 149 default targets, freshly executed 4 dense, 6 single-group backward, 7 grid pointwise/private, 6 grid forward and 7 grid backward interpreter cases, and checked 1525 exact dependency reports with only propext, Classical.choice and Quot.sound. The grid backward includes a 33x32 matrix and all empty-dimension combinations, plus an arbitrary-word large-shape existence instantiation. Integration source/configuration hashes were unchanged across checks. Final parent-description clarification and guide wording received fresh root/Stratic validation; final snapshots before and after that verification match. New generic grid chronology and source construction preserve existing admission constraints; unchanged Encoding and Ranges supply numerical interpretation. No sorry or new unchecked axiom.",
+      "tests": [],
+      "id": "06b9ad71-9917-4adf-b736-d9eb6341d15e",
+      "recordedAt": "2026-09-26T16:40:27.467Z"
+    }
+  ],
+  "recordedAt": "2026-09-26T16:41:14.661Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Updates integration check counts or documents the complete bounded grid contracts, explicit limitations and software checks; no stronger hardware claim is made."
+    },
+    {
+      "path": "docs/foundations/grid-dense-layer.md",
+      "reason": "Replaces explicitly partial status with the proved admission/existence and five-stage backward chain; explains physical padding, logical views, unchanged numeric policy, full private scratch cost and excluded hardware/runtime scope."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Retains complete original single-group study and links the now complete bounded grid milestone, with per-reduction limits and explicit storage costs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseLocalSegments.lean",
+      "reason": "Separates physical lane identity from logical dense index in concrete ordinary segments. Uses unchanged instruction lists, arithmetic bounds, address checks and floating-point reference; no desired data are premises."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridAdmission.lean",
+      "reason": "Instantiates the existing serial certificate with derived sources and chronological coherence; proves ordered admission and absence of grounding cycles for concrete grid runs without assuming memory admission."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridChronology.lean",
+      "reason": "Assigns initial cells a finite rank ceiling and program events their full-trace position; proves injectivity and that existing initial/program/barrier base edges increase rank."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridConcrete.lean",
+      "reason": "Retains current-array read evidence in real grid instruction steps, proves forgetting and concatenation, embeds actual group instructions, and connects reference schedules. It does not assert completion."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseBackwardChecks.lean",
+      "reason": "Seven fresh full five-stage interpreter cases check statuses, completion, chronological replay, gradients and operand preservation. Adds arbitrary-word theorem instantiation for 33x32 existence; examples are not substituted for generic proofs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseBackwardLayout.lean",
+      "reason": "Five actual grid launches are linked by actual final arrays. Copies perform the transpose through instructions. Bounds apply to individual row reductions and explicitly reserve padding address margin; empty dimensions are included."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseBackwardStorage.lean",
+      "reason": "Derives stored gate, weight and input gradients, transposed packet values, lengths and original operand preservation from the actual grid launch contracts."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseExists.lean",
+      "reason": "Combines each actual group run against the current shared global array, preserves idle private states, and constructs one admission certificate for the whole completed trace; empty groups are included."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseLaunch.lean",
+      "reason": "Array wrapper retains actual completed admitted grid execution or explicit empty launch; exposes separate existence and universal result/frame contracts."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseLocalControl.lean",
+      "reason": "Derives logical control registers from actual fetched local prefixes using the existing address projection; registers and memory are not supplied as favorable intermediate facts."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridDenseLocalExists.lean",
+      "reason": "Constructs product, reduction and output segments, actual barrier rounds and all exits for arbitrary stored words, assuming only explicit resource/storage/arithmetic bounds."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridPointwiseLogical.lean",
+      "reason": "Explicitly appends physical padding outputs for 32-lane groups and takes the original-length logical view. Correctness proves all logical outputs and source words retained; no claim that padding stays unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridReplay.lean",
+      "reason": "Checks each tagged event against one global array and the selected private scratch, derives replay from concrete steps and the last preceding write or initial cell for every load."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/GridSources.lean",
+      "reason": "Recovers read sources as actual initialization or preceding stores in the combined tagged trace. Same-location checks use group-private storage identities, and latest-write obligations are proved."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelSegmentSweep.lean",
+      "reason": "Constructs finite fetched ordinary-segment and exit sweeps. Proves untouched lanes and barrier-site framing; barriers are deliberately separate actual rounds."
+    },
+    {
+      "path": "integration/torchlean/PtxGridDenseBackward.lean",
+      "reason": "Reuses existing Encoding, Ranges and pure numerical lemmas; connects actual grid stored words to TorchLean generated VJP and proves universal numerical correctness plus a separate composed witness. ReLU corner margin is unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxGridDenseForward.lean",
+      "reason": "Adds numerical nonvacuity using the new actual admitted grid launch existence; existing universal theorem and DenseForward.Encoding remain unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Adds 116 exact named dependency reports for all new public declarations and endpoint, keeping only the existing standard Lean axiom allowlist."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updates integration check counts or documents the complete bounded grid contracts, explicit limitations and software checks; no stronger hardware claim is made."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Expands the expected audit to 1525 exact reports and the default build to 149 targets, and freshly runs all seven grid backward checks without changing pins, source guards or allowlist."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers the 16 new targets and the grid backward library while preserving pinned dependency/toolchain versions."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Description-first planned witness and padding representation reconciled with completed proofs; self-contained contracts, summaries, realization metadata and exact links are mechanically validated and manually reviewed."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Description-first planned witness and padding representation reconciled with completed proofs; self-contained contracts, summaries, realization metadata and exact links are mechanically validated and manually reviewed."
+    },
+    {
+      "path": "stratic/descriptions/grid-execution.json",
+      "reason": "Description-first planned witness and padding representation reconciled with completed proofs; self-contained contracts, summaries, realization metadata and exact links are mechanically validated and manually reviewed."
+    },
+    {
+      "path": "stratic/descriptions/grid-execution.md",
+      "reason": "Description-first planned witness and padding representation reconciled with completed proofs; self-contained contracts, summaries, realization metadata and exact links are mechanically validated and manually reviewed."
+    },
+    {
+      "path": "stratic/descriptions/mixed-parallel-execution.md",
+      "reason": "Description-first planned witness and padding representation reconciled with completed proofs; self-contained contracts, summaries, realization metadata and exact links are mechanically validated and manually reviewed."
+    }
+  ]
+}

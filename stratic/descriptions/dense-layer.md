@@ -46,8 +46,8 @@ the barrier. Column zero of each row adds bias, applies ReLU and stores output.
 Shared storage reserves a full padded plane for each round, including the
 initial products. Bounds must cover that total allocation and prevent address
 arithmetic from wrapping. An empty output requires no launch; an empty input
-can use a one-leaf zero reduction. This bounded single-array layout does not yet
-cover larger layers split across multiple cooperating arrays.
+can use a one-leaf zero reduction. This single-array variant has a bound on the
+total thread count; the grid variant below distributes rows across arrays.
 
 The implementation fixes matrix layout, thread ownership, reduction order,
 scratch lifetimes, dimension and address bounds, and the sequence of completed
@@ -189,14 +189,14 @@ rounded multiplication, or the ReLU sensitivity gate using existing instructions
 Their correctness covers all admitted completed interleavings; their witnesses
 supply finite admitted executions. Zero threads mean no launch.
 
-The backward's size limits cover each actual thread group. Forward reduction
+The single-group backward's size limits cover each actual thread group. Forward reduction
 uses m*2^forwardDepth threads, and input-gradient reduction uses n*2^backwardDepth.
 The copy stage uses m+n*m+2*n threads, one for every word in its destination
 packet, including its zero bias and output slots. Every group is at most 1024
 threads. Pointer calculations must fit the stated arithmetic bounds, and scratch
 storage includes all reduction rounds. These explicit limits can exclude shapes
-that fit the forward kernel alone. Chunked copies, larger launches and scratch
-reuse are separate extensions.
+that fit the forward kernel alone. The grid variant below removes this bound on
+total launch threads; scratch reuse remains a separate extension.
 
 For finite encodings and the calculated range conditions, every stored dx, dW
 and db has a proved error bound relative to the actual TorchLean generated
@@ -251,12 +251,23 @@ row positions. This is an explicit storage cost of proof reuse, not a compact
 scratch layout or a claim that these allocations fit a particular GPU. The
 resource contract must cover that extent. Compact rebasing is a separate change.
 
-The implemented multiple-group slice provides actual grid transitions and
-pointwise copy, multiplication and gating, including their admitted execution
-existence proofs. The row-distributed forward theorem derives the prescribed
-stored reduction results and TorchLean error bounds for every completed admitted
-grid execution. Its execution-existence witness under the combined memory
-constraints remains unimplemented, as does the complete multi-group backward
-with its stored stage handoffs. These are missing obligations, not assumptions
-that the numerical conclusion has already been obtained. The existing complete
-single-group forward and backward results remain available.
+The multiple-group forward and backward have complete bounded launch contracts.
+Every completed admitted execution stores the specified outputs and gradients,
+preserves original operands, and satisfies the same numerical error policy as
+the single-group version. A separate finite construction supplies actual
+instruction executions and the combined memory-admission certificate; it does
+not assume desired reads or completed isolated group results.
+
+The grid backward recomputes the activation, gates sensitivities, forms weight
+gradients, copies transposed operands and reduces input gradients. Pointwise
+stages use groups of 32 lanes. The host model temporarily appends spare output
+cells for the last group, then returns the logical prefix containing every
+source and requested result. Padding writes remain part of the proved physical
+launch. Bounds reserve 32 additional representable words, although fewer than
+32 padding cells are allocated. These host storage views do not perform
+arithmetic and do not establish runtime allocation or transfer correctness.
+Forward and transposed reductions each use at most 1,024 lanes per row; the
+whole grid may contain more. Empty dimensions retain explicit no-launch cases.
+Numerical gradient agreement still requires the finite ranges and strict
+activation margin described above. General reductions spanning several groups,
+compact scratch rebasing and hardware performance remain separate extensions.

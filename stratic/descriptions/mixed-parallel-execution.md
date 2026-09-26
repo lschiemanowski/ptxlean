@@ -141,8 +141,9 @@ thread exits. General barriers with explicit participant counts, divergent
 barriers, other resources, asynchronous barriers and communicating CTAs
 are outside this layer. The independent-group extension retains one private
 barrier per group while interleaving actual instructions against one global
-array; its separately stated contracts distinguish proved guarantees from
-unimplemented execution-existence and composition obligations. Initial registers and memory are supplied explicitly.
+array. Its bounded dense forward and backward contracts include both universal
+correctness of completed admitted runs and separate finite existence proofs.
+Initial registers and memory are supplied explicitly.
 The selected numerical target check is PTX 9.4 with sm_70 or newer; full GPU
 launch limits, register declarations, PTX text parsing and runtime calling
 conventions remain separate obligations. Fault and rejected-barrier outcomes

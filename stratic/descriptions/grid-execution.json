@@ -9,10 +9,9 @@
   "summary": [
     "Execute actual fetched instructions from several groups against one global array, with private scratch and barriers and checked per-group thread limits.",
     "Prove pointwise copy, multiplication and sensitivity gating correct for every completed admitted grid execution; separately construct admitted executions, including explicit padding storage.",
-    "Derive row-distributed dense forward outputs and TorchLean error bounds from actual combined admission and completion. Grid reduction existence and multi-group backward are still missing; no general hardware or progress claim follows."
+    "Derive row-distributed dense forward outputs and TorchLean error bounds from actual combined admission and completion; construct finite admitted executions separately, then compose bounded-group backward stages without a hardware progress claim."
   ],
-  "realization": "partial",
-  "remaining": "Implemented: shared-global grid steps; private state and barrier histories; actual trace order and graph identities; pointwise correctness and admitted existence; dense-row ownership, actual publication/read sources and universal completed forward/TorchLean accuracy. Missing: a completed admitted grid-reduction execution witness and the full multi-group backward composition. General communicating CTAs, runtime/ABI correspondence, hardware progress and resource conformance are outside this fragment.",
+  "realization": "implemented",
   "links": [
     {
       "kind": "implementation",
@@ -173,7 +172,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+        "quote": "The row-distributed dense program has a complete launch contract. Every completed\nadmitted combined execution stores the prescribed reduction results, preserves\nits operands, and performs aligned accesses within allocated arrays. Its proof\nderives input reads, scratch producers, barrier ordering and unique output\nwriters from that same trace. A separate finite construction reaches every\nthread's exit and supplies read sources and write ordering satisfying the\ncombined memory constraints. It also covers an empty grid."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseUniversal.lean",
@@ -185,7 +184,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+        "quote": "The row-distributed dense program has a complete launch contract. Every completed\nadmitted combined execution stores the prescribed reduction results, preserves\nits operands, and performs aligned accesses within allocated arrays. Its proof\nderives input reads, scratch producers, barrier ordering and unique output\nwriters from that same trace. A separate finite construction reaches every\nthread's exit and supplies read sources and write ordering satisfying the\ncombined memory constraints. It also covers an empty grid."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseReadSources.lean",
@@ -197,7 +196,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+        "quote": "The row-distributed dense program has a complete launch contract. Every completed\nadmitted combined execution stores the prescribed reduction results, preserves\nits operands, and performs aligned accesses within allocated arrays. Its proof\nderives input reads, scratch producers, barrier ordering and unique output\nwriters from that same trace. A separate finite construction reaches every\nthread's exit and supplies read sources and write ordering satisfying the\ncombined memory constraints. It also covers an empty grid."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseGlobalReads.lean",
@@ -209,7 +208,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+        "quote": "The row-distributed dense program has a complete launch contract. Every completed\nadmitted combined execution stores the prescribed reduction results, preserves\nits operands, and performs aligned accesses within allocated arrays. Its proof\nderives input reads, scratch producers, barrier ordering and unique output\nwriters from that same trace. A separate finite construction reaches every\nthread's exit and supplies read sources and write ordering satisfying the\ncombined memory constraints. It also covers an empty grid."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/GridDenseWriter.lean",
@@ -221,12 +220,204 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The row-distributed dense program also has a universal forward theorem: whenever\nits actual combined execution completes and satisfies its memory constraints,\nits stored outputs have the prescribed arithmetic meaning and TorchLean error\nbound. Its proof derives the input reads, each scratch producer, actual barrier\nordering and unique output writers from that same trace. A construction of a\ncompleted admitted grid reduction is still missing, so this conditional theorem\nis not yet a complete launch contract. Software interpreter examples do not\nsupply that missing proof. The multi-group backward composition is also unfinished."
+        "quote": "The row-distributed dense program has a complete launch contract. Every completed\nadmitted combined execution stores the prescribed reduction results, preserves\nits operands, and performs aligned accesses within allocated arrays. Its proof\nderives input reads, scratch producers, barrier ordering and unique output\nwriters from that same trace. A separate finite construction reaches every\nthread's exit and supplies read sources and write ordering satisfying the\ncombined memory constraints. It also covers an empty grid."
       },
       "to": {
         "path": "integration/torchlean/PtxGridDenseForward.lean",
         "passage": {
           "quote": "theorem universal_forward (s : Dense.Shape) (bounds : GridDense.Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    {events : List (Grid.Event s.rows s.width)} {final : Grid.State s.rows s.width}\n    (run : Grid.Runs (GridDense.config s bounds) (Dense.program s) (GridDense.initial s global seeds) events final)\n    (halted : ∀ g t, ((final.blocks g).lanes t).halted=true) (source co)\n    (valid : GridDense.Admitted s global seeds events source co) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧\n      finiteReal value=some (max (encoding.row row).affine 0) ∧\n      |max (encoding.row row).affine 0-\n        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ (∀ g, (final.blocks g).shared.length=s.sharedWords) ∧\n    (∀ event ∈ events, Grid.AccessSafe (GridDense.initial s global seeds) event) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For finite execution witnesses, a selected schedule may read the current arrays.\nA checked replay must then recover every read's last preceding store, or its\ninitial cell, across the combined trace. Giving those stores chronological\norder supplies a sufficient memory-admission certificate, including actual\nwithin-group barrier edges. This construction does not change the permitted\ncandidate reads or assert that every admitted execution follows that schedule.\nThe dense witness runs one group at a time. Within that group it executes each\nlane's product segment, completes the barrier, repeats the reduction segments\nand their barriers, and then executes the output segments and exits. Physical\nlane numbers select registers and barrier participants; logical row-and-column\nindices determine arithmetic and addresses. The construction must prove both\nparts agree, without applying the 1,024-thread group limit to the grid total.\nAddress-representation and allocation bounds still apply."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridConcrete.lean",
+        "passage": {
+          "quote": "inductive ConcreteRuns (cfg : Config n) (program : List Instr) : State groups n → List (Event groups n) → State groups n → Prop\n  | nil : ConcreteRuns cfg program s [] s\n  | cons (g : Fin groups) (thread : Fin n) (out : Outcome n)\n      (step : Parallel.Step (cfg.group g) program none thread (view s g) out)\n      (rest : ConcreteRuns cfg program (install s g out.state) events final) :\n      ConcreteRuns cfg program s (tag g out.events++events) final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For finite execution witnesses, a selected schedule may read the current arrays.\nA checked replay must then recover every read's last preceding store, or its\ninitial cell, across the combined trace. Giving those stores chronological\norder supplies a sufficient memory-admission certificate, including actual\nwithin-group barrier edges. This construction does not change the permitted\ncandidate reads or assert that every admitted execution follows that schedule.\nThe dense witness runs one group at a time. Within that group it executes each\nlane's product segment, completes the barrier, repeats the reduction segments\nand their barriers, and then executes the output segments and exits. Physical\nlane numbers select registers and barrier participants; logical row-and-column\nindices determine arithmetic and addresses. The construction must prove both\nparts agree, without applying the 1,024-thread group limit to the grid total.\nAddress-representation and allocation bounds still apply."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridReplay.lean",
+        "passage": {
+          "quote": "theorem concrete_replays {s final : Grid.State groups n} {events : List (Grid.Event groups n)}\n    (run : Grid.ConcreteRuns cfg program s events final) : trace (arrays s) events=some (arrays final) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For finite execution witnesses, a selected schedule may read the current arrays.\nA checked replay must then recover every read's last preceding store, or its\ninitial cell, across the combined trace. Giving those stores chronological\norder supplies a sufficient memory-admission certificate, including actual\nwithin-group barrier edges. This construction does not change the permitted\ncandidate reads or assert that every admitted execution follows that schedule.\nThe dense witness runs one group at a time. Within that group it executes each\nlane's product segment, completes the barrier, repeats the reduction segments\nand their barriers, and then executes the output segments and exits. Physical\nlane numbers select registers and barrier participants; logical row-and-column\nindices determine arithmetic and addresses. The construction must prove both\nparts agree, without applying the 1,024-thread group limit to the grid total.\nAddress-representation and allocation bounds still apply."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridReplay.lean",
+        "passage": {
+          "quote": "theorem load_source (s final : Arrays groups) (before after : List (Grid.Event groups n))\n    (g : Fin groups) (t : Fin n) (space : Space) (occ : Scalar.Occurrence) (address : Address) (value : Word)\n    (load : occ.memory=some ⟨.load,address,value⟩)\n    (checked : trace s (before++(g,.scalar t (some space) occ)::after)=some final) :\n    ((arena s g space)[address.toNat/4]?=some value ∧ ∀ e ∈ before, writtenAt g space (address.toNat/4) e=none) ∨\n    (∃ pre writer suffix, before=pre++writer::suffix ∧ writtenAt g space (address.toNat/4) writer=some value ∧\n      ∀ e ∈ suffix, writtenAt g space (address.toNat/4) e=none) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For finite execution witnesses, a selected schedule may read the current arrays.\nA checked replay must then recover every read's last preceding store, or its\ninitial cell, across the combined trace. Giving those stores chronological\norder supplies a sufficient memory-admission certificate, including actual\nwithin-group barrier edges. This construction does not change the permitted\ncandidate reads or assert that every admitted execution follows that schedule.\nThe dense witness runs one group at a time. Within that group it executes each\nlane's product segment, completes the barrier, repeats the reduction segments\nand their barriers, and then executes the output segments and exits. Physical\nlane numbers select registers and barrier participants; logical row-and-column\nindices determine arithmetic and addresses. The construction must prove both\nparts agree, without applying the 1,024-thread group limit to the grid total.\nAddress-representation and allocation bounds still apply."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridSources.lean",
+        "passage": {
+          "quote": "theorem source_exists {cfg : Config n} {start final : Grid.State groups n}\n    (run : Grid.ConcreteRuns cfg program start events final)\n    (r : Fin (labels program start events).length)\n    (read : (graph program start events id (fun _ _ => false)).read r) :\n    ∃ w, SourceFor program start events r w :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For finite execution witnesses, a selected schedule may read the current arrays.\nA checked replay must then recover every read's last preceding store, or its\ninitial cell, across the combined trace. Giving those stores chronological\norder supplies a sufficient memory-admission certificate, including actual\nwithin-group barrier edges. This construction does not change the permitted\ncandidate reads or assert that every admitted execution follows that schedule.\nThe dense witness runs one group at a time. Within that group it executes each\nlane's product segment, completes the barrier, repeats the reduction segments\nand their barriers, and then executes the output segments and exits. Physical\nlane numbers select registers and barrier participants; logical row-and-column\nindices determine arithmetic and addresses. The construction must prove both\nparts agree, without applying the 1,024-thread group limit to the grid total.\nAddress-representation and allocation bounds still apply."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridAdmission.lean",
+        "passage": {
+          "quote": "theorem concrete_certificate (run : Grid.ConcreteRuns cfg program start events final) :\n    SharedReduction.Machine.Memory.SerialCertificate\n      (graph program start events (chosenSource run)\n        (chronologicalCoherence program start events))\n      (cross program start events)\n      (fun i => rank start (labels program start events)[i.val]) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For finite execution witnesses, a selected schedule may read the current arrays.\nA checked replay must then recover every read's last preceding store, or its\ninitial cell, across the combined trace. Giving those stores chronological\norder supplies a sufficient memory-admission certificate, including actual\nwithin-group barrier edges. This construction does not change the permitted\ncandidate reads or assert that every admitted execution follows that schedule.\nThe dense witness runs one group at a time. Within that group it executes each\nlane's product segment, completes the barrier, repeats the reduction segments\nand their barriers, and then executes the output segments and exits. Physical\nlane numbers select registers and barrier participants; logical row-and-column\nindices determine arithmetic and addresses. The construction must prove both\nparts agree, without applying the 1,024-thread group limit to the grid total.\nAddress-representation and allocation bounds still apply."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridAdmission.lean",
+        "passage": {
+          "quote": "theorem concrete_admitted (run : Grid.ConcreteRuns cfg program start events final) :\n    ∃ source co,\n      Graph.Ordered.Valid (graph program start events source co)\n        (cross program start events) ∧\n      ∀ i, ¬Path (SharedReduction.Machine.Memory.grounding\n        (graph program start events source co)\n        (cross program start events)) i i :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For finite execution witnesses, a selected schedule may read the current arrays.\nA checked replay must then recover every read's last preceding store, or its\ninitial cell, across the combined trace. Giving those stores chronological\norder supplies a sufficient memory-admission certificate, including actual\nwithin-group barrier edges. This construction does not change the permitted\ncandidate reads or assert that every admitted execution follows that schedule.\nThe dense witness runs one group at a time. Within that group it executes each\nlane's product segment, completes the barrier, repeats the reduction segments\nand their barriers, and then executes the output segments and exits. Physical\nlane numbers select registers and barrier participants; logical row-and-column\nindices determine arithmetic and addresses. The construction must prove both\nparts agree, without applying the 1,024-thread group limit to the grid total.\nAddress-representation and allocation bounds still apply."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseLocalExists.lean",
+        "passage": {
+          "quote": "theorem completed_exists (s : Shape) (b : GridDense.Bounds s) (g : Fin s.rows)\n    (global shared : List Word) (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords≤global.length) (sharedBound : s.sharedWords≤shared.length) :\n    ∃ events final, Parallel.ConcreteRuns ((GridDense.config s b).group g) (program s)\n      (initial s g global shared seeds) events final ∧ ∀ t, (final.lanes t).halted=true :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The row-distributed dense program has a complete launch contract. Every completed\nadmitted combined execution stores the prescribed reduction results, preserves\nits operands, and performs aligned accesses within allocated arrays. Its proof\nderives input reads, scratch producers, barrier ordering and unique output\nwriters from that same trace. A separate finite construction reaches every\nthread's exit and supplies read sources and write ordering satisfying the\ncombined memory constraints. It also covers an empty grid."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseExists.lean",
+        "passage": {
+          "quote": "theorem completed_admitted_exists (s : Dense.Shape) (b : Bounds s) (global : List Word)\n    (seeds : Fin s.threads → Scalar.State) (size : s.globalWords≤global.length) :\n    ∃ events final, Grid.ConcreteRuns (config s b) (Dense.program s) (initial s global seeds) events final ∧\n      (∀ g t, ((final.blocks g).lanes t).halted=true) ∧\n      Grid.Memory.Admitted (Dense.program s) (initial s global seeds) events :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The row-distributed dense program has a complete launch contract. Every completed\nadmitted combined execution stores the prescribed reduction results, preserves\nits operands, and performs aligned accesses within allocated arrays. Its proof\nderives input reads, scratch producers, barrier ordering and unique output\nwriters from that same trace. A separate finite construction reaches every\nthread's exit and supplies read sources and write ordering satisfying the\ncombined memory constraints. It also covers an empty grid."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseLaunch.lean",
+        "passage": {
+          "quote": "theorem launch_correct (run : Launch s before after) :\n    (∀ row : Fin s.rows, ∃ value, after[s.outputBase+row.val]?=some value ∧ Dense.Output s before row.val value) ∧\n    (∀ i, i<s.outputBase → after[i]?=before[i]?) ∧ after.length=before.length :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The row-distributed dense program has a complete launch contract. Every completed\nadmitted combined execution stores the prescribed reduction results, preserves\nits operands, and performs aligned accesses within allocated arrays. Its proof\nderives input reads, scratch producers, barrier ordering and unique output\nwriters from that same trace. A separate finite construction reaches every\nthread's exit and supplies read sources and write ordering satisfying the\ncombined memory constraints. It also covers an empty grid."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridDenseLaunch.lean",
+        "passage": {
+          "quote": "theorem launch_exists (s : Dense.Shape) (before : List Word) (bounds : 0<s.rows → Bounds s)\n    (size : s.globalWords≤before.length) : ∃ after, Launch s before after :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A composed pointwise stage uses groups of 32 lanes. Its host-side storage view\nappends enough spare output cells to fill the last group, runs the actual padded\nlaunch, and returns the original-length prefix. Every logical output and source\nword remains in that prefix. The proof accounts for the larger physical array;\ndiscarded padding cells are neither gradients nor preserved application data.\nThis allocation-and-view operation belongs to the host model, not a proved\nCUDA memory allocator."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridPointwiseLogical.lean",
+        "passage": {
+          "quote": "inductive LogicalLaunch (op : Pointwise.Op) (l : Pointwise.Layout count) (before : List Word) : List Word → Prop\n  | empty (zero : count=0) : LogicalLaunch op l before before\n  | kernel (width : Nat) (positive : 0<width) (nonemptyPrefix : 0<l.prefixWords)\n      (small : l.prefixWords+groupCount count width*width<2^30)\n      (size : before.length=l.prefixWords+count) {physical : List Word}\n      (run : Launch op (paddedLayout l width positive nonemptyPrefix small) (extend l width before) physical) :\n      LogicalLaunch op l before (physical.take before.length)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A composed pointwise stage uses groups of 32 lanes. Its host-side storage view\nappends enough spare output cells to fill the last group, runs the actual padded\nlaunch, and returns the original-length prefix. Every logical output and source\nword remains in that prefix. The proof accounts for the larger physical array;\ndiscarded padding cells are neither gradients nor preserved application data.\nThis allocation-and-view operation belongs to the host model, not a proved\nCUDA memory allocator."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridPointwiseLogical.lean",
+        "passage": {
+          "quote": "theorem logical_correct (run : LogicalLaunch op l before after) :\n    (∀ t, ∃ value, after[l.output t]?=some value ∧ Pointwise.Result op before[l.left t]! before[l.right t]! value) ∧\n    (∀ i, i<l.prefixWords → after[i]?=before[i]?) ∧ after.length=before.length :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A composed pointwise stage uses groups of 32 lanes. Its host-side storage view\nappends enough spare output cells to fill the last group, runs the actual padded\nlaunch, and returns the original-length prefix. Every logical output and source\nword remains in that prefix. The proof accounts for the larger physical array;\ndiscarded padding cells are neither gradients nor preserved application data.\nThis allocation-and-view operation belongs to the host model, not a proved\nCUDA memory allocator."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/GridPointwiseLogical.lean",
+        "passage": {
+          "quote": "theorem logical_exists (op : Pointwise.Op) (l : Pointwise.Layout count) (before : List Word)\n    (margin : l.prefixWords+count+32<2^30) (size : before.length=l.prefixWords+count) :\n    ∃ after, LogicalLaunch op l before after :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The row-distributed dense program has a complete launch contract. Every completed\nadmitted combined execution stores the prescribed reduction results, preserves\nits operands, and performs aligned accesses within allocated arrays. Its proof\nderives input reads, scratch producers, barrier ordering and unique output\nwriters from that same trace. A separate finite construction reaches every\nthread's exit and supplies read sources and write ordering satisfying the\ncombined memory constraints. It also covers an empty grid."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGridDenseForward.lean",
+        "passage": {
+          "quote": "theorem forward_exists (s : Dense.Shape) (bounds : 0<s.rows → GridDense.Bounds s) (global : List Word)\n    (x : Tensor ℝ (DenseVJP.column s.columns)) (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    (size : s.globalWords≤global.length) :\n    ∃ after, GridDense.Launch s global after ∧\n      ∀ row : Fin s.rows, ∃ value, after[s.outputBase+row.val]?=some value ∧\n        finiteReal value=some (max (encoding.row row).affine 0) ∧\n        |max (encoding.row row).affine 0-\n          Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0|≤(encoding.row row).error :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The backward composes five actual launches: recompute the forward activation,\ngate the incoming sensitivity, multiply weight gradients, copy transposed\noperands, and reduce input gradients. Each next launch receives the earlier\nlaunch's stored arrays through explicit allocation views. Completed execution\nexists without numerical assumptions. Under the existing finite encoding,\nrange and strict ReLU-margin conditions, every completed admitted composition\nhas error bounds against TorchLean's generated backward for all three gradient\ntensors. A margin means the real affine value is far enough from zero that\nrounding cannot change its sign. Empty dimensions and spare pointwise lanes\nare covered. These bounds do not assert bitwise agreement with PyTorch or GPU\nhardware, and finite existence does not assert scheduler fairness."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGridDenseBackward.lean",
+        "passage": {
+          "quote": "theorem universal_backward (i : Encoding s memory incoming x w bias d) (range : Ranges i)\n    {bounds : Ptx.Scalar.Parallel.GridDenseBackward.Bounds s}\n    (e : Ptx.Scalar.Parallel.GridDenseBackward.Execution s bounds memory incoming)\n    (size : memory.length=s.forward.globalWords) : Correct i range e :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The backward composes five actual launches: recompute the forward activation,\ngate the incoming sensitivity, multiply weight gradients, copy transposed\noperands, and reduce input gradients. Each next launch receives the earlier\nlaunch's stored arrays through explicit allocation views. Completed execution\nexists without numerical assumptions. Under the existing finite encoding,\nrange and strict ReLU-margin conditions, every completed admitted composition\nhas error bounds against TorchLean's generated backward for all three gradient\ntensors. A margin means the real affine value is far enough from zero that\nrounding cannot change its sign. Empty dimensions and spare pointwise lanes\nare covered. These bounds do not assert bitwise agreement with PyTorch or GPU\nhardware, and finite existence does not assert scheduler fairness."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxGridDenseBackward.lean",
+        "passage": {
+          "quote": "theorem backward_exists (i : Encoding s memory incoming x w bias d) (range : Ranges i)\n    (bounds : Ptx.Scalar.Parallel.GridDenseBackward.Bounds s) (size : memory.length=s.forward.globalWords) :\n    ∃ e : Ptx.Scalar.Parallel.GridDenseBackward.Execution s bounds memory incoming, Correct i range e :="
         }
       }
     }

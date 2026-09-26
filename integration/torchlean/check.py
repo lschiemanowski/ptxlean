@@ -164,6 +164,25 @@ COUNTS['Ptx.Scalar.Parallel.GridPointwise'] = COUNTS.get('Ptx.Scalar.Parallel.Gr
 COUNTS['PtxTorchLean.GridDenseForward'] = COUNTS.get('PtxTorchLean.GridDenseForward', 0) + 1
 TARGETS.update({'PtxBinary32.GridControl', 'PtxBinary32.GridBarrierOrder', 'PtxBinary32.GridCoverage', 'PtxBinary32.GridDenseProgram', 'PtxBinary32.GridGraphOrigins', 'PtxBinary32.GridExecution', 'PtxBinary32.GridMemory', 'PtxBinary32.GridDenseOwnership', 'PtxBinary32.GridPointwise', 'PtxBinary32.GridCompletion', 'PtxBinary32.GridDenseChecks', 'PtxBinary32.GridDenseDataMachine', 'PtxBinary32.GridDenseGlobalReads', 'PtxBinary32.GridPointwiseLaunch', 'PtxBinary32.GridDenseCoverage', 'PtxBinary32.GridUnflatten', 'PtxBinary32.GridDenseReadSources', 'PtxBinary32.GridFlatten', 'PtxBinary32.GridGraph', 'PtxBinary32.GridHistory', 'PtxBinary32.GridReference', 'PtxBinary32.GridDenseAddress', 'PtxBinary32.GridDenseUniversal', 'PtxGridDenseForward', 'PtxBinary32.GridGraphUnique', 'PtxBinary32.GridDenseDataRun', 'PtxBinary32.GridPointwisePadding', 'PtxBinary32.GridInvariants', 'PtxBinary32.GridAccessControl', 'PtxBinary32.GridDenseReadData', 'PtxBinary32.GridChecks', 'PtxBinary32.GridDenseWriter'})
 
+# Completed bounded grid forward and backward, including padded physical storage.
+COUNTS['Ptx.Scalar.Parallel'] = COUNTS.get('Ptx.Scalar.Parallel', 0) + 3
+COUNTS['Ptx.Scalar.Parallel.ConcreteSegment'] = COUNTS.get('Ptx.Scalar.Parallel.ConcreteSegment', 0) + 1
+COUNTS['Ptx.Scalar.Parallel.Dense.Local'] = COUNTS.get('Ptx.Scalar.Parallel.Dense.Local', 0) + 6
+COUNTS['Ptx.Scalar.Parallel.Grid'] = COUNTS.get('Ptx.Scalar.Parallel.Grid', 0) + 3
+COUNTS['Ptx.Scalar.Parallel.Grid.ConcreteRuns'] = COUNTS.get('Ptx.Scalar.Parallel.Grid.ConcreteRuns', 0) + 1
+COUNTS['Ptx.Scalar.Parallel.Grid.Memory.Chronology'] = COUNTS.get('Ptx.Scalar.Parallel.Grid.Memory.Chronology', 0) + 27
+COUNTS['Ptx.Scalar.Parallel.Grid.Reference'] = COUNTS.get('Ptx.Scalar.Parallel.Grid.Reference', 0) + 1
+COUNTS['Ptx.Scalar.Parallel.Grid.Replay'] = COUNTS.get('Ptx.Scalar.Parallel.Grid.Replay', 0) + 20
+COUNTS['Ptx.Scalar.Parallel.GridDense'] = COUNTS.get('Ptx.Scalar.Parallel.GridDense', 0) + 5
+COUNTS['Ptx.Scalar.Parallel.GridDense.Local'] = COUNTS.get('Ptx.Scalar.Parallel.GridDense.Local', 0) + 8
+COUNTS['Ptx.Scalar.Parallel.GridDenseBackward'] = COUNTS.get('Ptx.Scalar.Parallel.GridDenseBackward', 0) + 23
+COUNTS['Ptx.Scalar.Parallel.GridDenseBackward.Checks'] = COUNTS.get('Ptx.Scalar.Parallel.GridDenseBackward.Checks', 0) + 2
+COUNTS['Ptx.Scalar.Parallel.GridDenseBackward.Execution'] = COUNTS.get('Ptx.Scalar.Parallel.GridDenseBackward.Execution', 0) + 3
+COUNTS['Ptx.Scalar.Parallel.GridPointwise'] = COUNTS.get('Ptx.Scalar.Parallel.GridPointwise', 0) + 4
+COUNTS['PtxTorchLean.GridDenseBackward'] = COUNTS.get('PtxTorchLean.GridDenseBackward', 0) + 8
+COUNTS['PtxTorchLean.GridDenseForward'] = COUNTS.get('PtxTorchLean.GridDenseForward', 0) + 1
+TARGETS.update({'PtxBinary32.GridReplay', 'PtxBinary32.GridDenseLocalControl', 'PtxBinary32.GridAdmission', 'PtxBinary32.GridSources', 'PtxBinary32.GridDenseExists', 'PtxBinary32.ParallelSegmentSweep', 'PtxBinary32.GridChronology', 'PtxBinary32.GridDenseLocalExists', 'PtxBinary32.GridDenseBackwardLayout', 'PtxBinary32.GridDenseBackwardStorage', 'PtxBinary32.GridPointwiseLogical', 'PtxBinary32.GridDenseBackwardChecks', 'PtxBinary32.GridDenseLaunch', 'PtxBinary32.DenseLocalSegments', 'PtxGridDenseBackward', 'PtxBinary32.GridConcrete'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 
@@ -247,6 +266,8 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", 'PtxBinary32/GridChecks.lean'],
                        cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", 'PtxBinary32/GridDenseChecks.lean'],
+                       cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/GridDenseBackwardChecks.lean"],
                        cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
