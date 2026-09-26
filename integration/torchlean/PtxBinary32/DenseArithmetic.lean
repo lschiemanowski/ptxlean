@@ -1,4 +1,4 @@
-import PtxBinary32.DenseLayout
+import PtxBinary32.DenseProgram
 import PtxBinary32.ReductionRelu
 
 /-! Arithmetic indexed exactly as the fresh shared planes. These are reduction
@@ -19,7 +19,7 @@ def affineWord (s : Shape) (global : List Word) (row : Nat) : Word :=
   reference .add (nodeValue s global row s.depth 0) global[s.biasBase+row]!
 
 def forwardWord (s : Shape) (global : List Word) (row : Nat) : Word :=
-  Relu.forward (affineWord s global row)
+  activate s (affineWord s global row)
 
 theorem node_tree (s : Shape) (global : List Word) (row round column : Nat) :
     Reduction.Eval (Reduction.balanced round (column*2^round) (operands s global row))
@@ -40,11 +40,15 @@ theorem forward_accuracy (s : Shape) (global : List Word) (row : Nat)
     (i : Reduction.RowInput)
     (tree : Reduction.words i.tree = Reduction.balanced s.depth 0 (operands s global row))
     (bias : i.bias = global[s.biasBase+row]!) :
-    finiteReal (forwardWord s global row) = some (max i.affine 0) ∧
-      |max i.affine 0-max i.idealAffine 0| ≤ i.error := by
-  apply Reduction.row_forward_accuracy i
-  refine ⟨nodeValue s global row s.depth 0,?_,?_⟩
-  · rw [tree]; simpa using node_tree s global row s.depth 0
-  · rw [bias]; exact envelope_self _
+    finiteReal (forwardWord s global row) = some (activateReal s i.affine) ∧
+      |activateReal s i.affine-activateReal s i.idealAffine| ≤ i.error := by
+  have allowed : Reduction.RowEval i (affineWord s global row) := by
+    refine ⟨nodeValue s global row s.depth 0,?_,?_⟩
+    · rw [tree]; simpa using node_tree s global row s.depth 0
+    · rw [bias]; exact envelope_self _
+
+  cases mode : s.relu
+  · simpa [forwardWord,activate,activateReal,mode] using Reduction.row_affine_accuracy i allowed
+  · simpa [forwardWord,activate,activateReal,mode] using Reduction.row_forward_accuracy i allowed
 
 end Ptx.Scalar.Parallel.Dense

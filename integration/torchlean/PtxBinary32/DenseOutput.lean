@@ -23,7 +23,7 @@ def outputFinish (s : Shape) (b : Bounds s) (state : Parallel.State s.threads) (
   (segmentReference (config s b) t ((output s).take 19) state).1
 
 def outputValue (s : Shape) (state : Parallel.State s.threads) (t : Fin s.threads) : Word :=
-  Ptx.Binary32.Relu.forward (Ptx.Binary32.reference .add state.shared[rootIndex s t]! state.global[biasIndex s t]!)
+  activate s (Ptx.Binary32.reference .add state.shared[rootIndex s t]! state.global[biasIndex s t]!)
 
 theorem output_regular (s : Shape) (b : Bounds s) (state : Parallel.State s.threads) (t : Fin s.threads)
     (regs : (state.lanes t).scalar.regs 0 = BitVec.ofNat 32 t.val ∧
@@ -55,12 +55,13 @@ theorem output_regular (s : Shape) (b : Bounds s) (state : Parallel.State s.thre
   have iszero : BitVec.ofNat 32 (t.val%s.width) = (BitVec.ofNat 32 0) ↔ t.val%s.width=0 := by
     simp [BitVec.toNat_eq,BitVec.toNat_ofNat,Nat.mod_eq_of_lt cf]
   by_cases leader : t.val%s.width=0
+  all_goals cases mode : s.relu
   all_goals by_cases neg : 2147483648 ≤ (Ptx.Binary32.reference .add state.shared[rootIndex s t]! state.global[biasIndex s t]!).toNat
   all_goals by_cases oldneg : 2147483648 ≤ ((state.lanes t).scalar.regs 6).toNat
   all_goals dsimp [rootIndex,biasIndex] at neg
   all_goals simp only [List.getElem!_eq_getElem?_getD,List.getElem?_eq_getElem rb,List.getElem?_eq_getElem bb,Option.getD_some] at neg
   all_goals
-    simp [SegmentRegular,output,pointer,scalar,guarded,word,Reference.dispatch,Reference.binary32,
+    simp [mode,SegmentRegular,output,pointer,scalar,guarded,word,Reference.dispatch,Reference.binary32,
       scalarStep,Scalar.eval,Scalar.Instr.plain,Scalar.Guard.eval,Scalar.Operand32.eval,
       Scalar.Operand64.eval,Scalar.BinOp.eval,Scalar.Compare.eval,setLane,arena,Scalar.update,
       regs.1,regs.2.1,regs.2.2,gate,iszero,neg,oldneg,rootIndex,biasIndex,← BitVec.ofNat_add,Nat.mod_eq_of_lt cf,leader,four,
@@ -102,12 +103,13 @@ theorem output_effect (s : Shape) (b : Bounds s) (state : Parallel.State s.threa
   have iszero : BitVec.ofNat 32 (t.val%s.width) = (BitVec.ofNat 32 0) ↔ t.val%s.width=0 := by
     simp [BitVec.toNat_eq,BitVec.toNat_ofNat,Nat.mod_eq_of_lt cf]
   by_cases leader : t.val%s.width=0
+  all_goals cases mode : s.relu
   all_goals by_cases neg : 2147483648 ≤ (Ptx.Binary32.reference .add state.shared[rootIndex s t]! state.global[biasIndex s t]!).toNat
   all_goals by_cases oldneg : 2147483648 ≤ ((state.lanes t).scalar.regs 6).toNat
   all_goals dsimp [rootIndex,biasIndex] at neg
   all_goals simp only [List.getElem!_eq_getElem?_getD,List.getElem?_eq_getElem rb,List.getElem?_eq_getElem bb,Option.getD_some] at neg
   all_goals
-    simp [outputFinish,segmentReference,outputValue,← relu_bits,outputIndex,output,pointer,scalar,guarded,word,Reference.dispatch,Reference.binary32,
+    simp [mode,activate,outputFinish,segmentReference,outputValue,← relu_bits,outputIndex,output,pointer,scalar,guarded,word,Reference.dispatch,Reference.binary32,
       scalarStep,Scalar.eval,Scalar.Instr.plain,Scalar.Guard.eval,Scalar.Operand32.eval,
       Scalar.Operand64.eval,Scalar.BinOp.eval,Scalar.Compare.eval,setLane,arena,Scalar.update,
       regs.1,regs.2.1,regs.2.2,gate,iszero,neg,oldneg,rootIndex,biasIndex,← BitVec.ofNat_add,Nat.mod_eq_of_lt cf,leader,four,

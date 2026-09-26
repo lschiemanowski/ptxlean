@@ -17,6 +17,24 @@ Bias and activation belong to the same forward computation. The cache-free
 backward recomputes affine values and gates, uses another parallel reduction for
 W-transpose times g, and computes weight-gradient entries independently.
 
+The backward uses a sequence of completed kernels with explicit intermediate
+storage. It recomputes the forward activation, gates the incoming sensitivity,
+forms independent weight-gradient products, and reduces transposed weight rows
+against the gated sensitivities to form input gradients. Bias gradients are the
+gated sensitivities themselves. Passing storage between completed kernels is a
+model-level composition contract; it is not a CUDA runtime implementation.
+
+The reduction kernel also offers an affine-only output option that leaves signed
+results intact. The ReLU forward variant retains its existing computation. This
+shared implementation avoids duplicating the reduction and synchronization
+proofs for the transposed matrix-vector product. A copy kernel constructs the
+transposed operand buffer from the actual stored
+gated sensitivities and original weights. Each copied word comes from a fetched
+load and store. Appending freshly allocated zero words and selecting the copied
+buffer as the next kernel's allocation are explicit operations of the host model.
+They perform no gradient arithmetic and do not constitute a CUDA allocation,
+transfer, synchronization or pointer-ABI implementation.
+
 The first forward kernel places all output rows in one cooperating thread array.
 For a padded row width p=2^d, thread number r*p+c owns column c of row r.
 The matrix is stored row by row. Global storage contains x, then W, then b,
@@ -150,3 +168,43 @@ GPU execution, benchmarking, CUDA runtime correspondence, mixed precision,
 tensor-core instructions, batched matrix multiplication and hardware conformance
 are outside this component. Proof checking and fidelity to documented PTX
 semantics remain distinct.
+
+The backward has five completed stages: recompute ReLU(Wx+b), gate the incoming
+sensitivities, multiply the weight-gradient entries, copy the transposed operands,
+and reduce the input gradients. The gated buffer is also the bias-gradient
+buffer, so a separate copy for db is unnecessary. Each stage starts with the
+actual final words of the preceding stage. Every completed launch is admitted
+under the existing memory constraints; no assumed intermediate gradient or
+preferred schedule substitutes for that evidence. A separate construction
+proves that all stages can complete. Every emitted access is checked, and each
+launch preserves its allocation lengths. New buffers are allocated explicitly
+between launches, and the original x, W and b words remain unchanged.
+
+The small elementwise kernels assign one output word to each thread. Each thread
+receives entry pointers computed from the stated layout, independently of tensor
+values. Their input region is read-only and their output words are distinct.
+The formal entry state installs those pointers; correspondence to a runtime's
+argument passing remains outside the model. They implement a word copy, a
+rounded multiplication, or the ReLU sensitivity gate using existing instructions.
+Their correctness covers all admitted completed interleavings; their witnesses
+supply finite admitted executions. Zero threads mean no launch.
+
+The backward's size limits cover each actual thread group. Forward reduction
+uses m*2^forwardDepth threads, and input-gradient reduction uses n*2^backwardDepth.
+The copy stage uses m+n*m+2*n threads, one for every word in its destination
+packet, including its zero bias and output slots. Every group is at most 1024
+threads. Pointer calculations must fit the stated arithmetic bounds, and scratch
+storage includes all reduction rounds. These explicit limits can exclude shapes
+that fit the forward kernel alone. Chunked copies, larger launches and scratch
+reuse are separate extensions.
+
+For finite encodings and the calculated range conditions, every stored dx, dW
+and db has a proved error bound relative to the actual TorchLean generated
+backward. The strict activation margin implies that each real affine value is
+nonzero and its sign agrees with the recomputed rounded value. Without that
+margin, the instruction and storage theorems still describe the actual gated
+computation, including the zero convention, but the numerical gradient theorem
+does not promise agreement with the real network's derivative near a ReLU corner.
+The transposed reduction uses the same balanced addition order and a final
+addition of positive zero; that addition is included in its range and error
+accounting. Signed input gradients are preserved by disabling ReLU in that stage.

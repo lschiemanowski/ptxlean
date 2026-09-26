@@ -1,3 +1,16 @@
+import PtxBinary32.DenseBackwardChecks
+import PtxBinary32.DenseBackwardLayout
+import PtxBinary32.DenseBackwardStorage
+import PtxBinary32.DenseLaunchContract
+import PtxBinary32.PointwiseControl
+import PtxBinary32.PointwiseData
+import PtxBinary32.PointwiseExists
+import PtxBinary32.PointwiseLaunch
+import PtxBinary32.PointwiseMachine
+import PtxBinary32.PointwiseProgram
+import PtxBinary32.PointwiseReads
+import PtxBinary32.PointwiseUniversal
+import PtxDenseBackward
 import PtxBinary32.DenseData
 import PtxBinary32.DenseDataFP
 import PtxBinary32.DenseDataMachine
@@ -1213,3 +1226,125 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.DenseForward.output_accuracy
 #print axioms PtxTorchLean.DenseForward.universal_forward
 #print axioms PtxTorchLean.DenseForward.wrapper_forward
+
+-- Completed parallel dense backward: stored handoffs, universal accuracy, and existence.
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Checks.run
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Shape
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Shape.transposed
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Shape.gateBase
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Shape.weightBase
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Shape.weightCount
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Shape.copyBase
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Bounds
+#print axioms Ptx.Scalar.Parallel.DenseBackward.gateLayout
+#print axioms Ptx.Scalar.Parallel.DenseBackward.weightLayout
+#print axioms Ptx.Scalar.Parallel.DenseBackward.copySource
+#print axioms Ptx.Scalar.Parallel.DenseBackward.copy_source_bound
+#print axioms Ptx.Scalar.Parallel.DenseBackward.copyLayout
+#print axioms Ptx.Scalar.Parallel.DenseBackward.gateInput
+#print axioms Ptx.Scalar.Parallel.DenseBackward.weightInput
+#print axioms Ptx.Scalar.Parallel.DenseBackward.copyInput
+#print axioms Ptx.Scalar.Parallel.DenseBackward.packet
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Execution
+#print axioms Ptx.Scalar.Parallel.DenseBackward.execution_exists
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Execution.g
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Execution.dw
+#print axioms Ptx.Scalar.Parallel.DenseBackward.Execution.dx
+#print axioms Ptx.Scalar.Parallel.DenseBackward.lengths
+#print axioms Ptx.Scalar.Parallel.DenseBackward.input_frame
+#print axioms Ptx.Scalar.Parallel.DenseBackward.gate_frame
+#print axioms Ptx.Scalar.Parallel.DenseBackward.gate_result
+#print axioms Ptx.Scalar.Parallel.DenseBackward.weight_result
+#print axioms Ptx.Scalar.Parallel.DenseBackward.packet_word
+#print axioms Ptx.Scalar.Parallel.DenseBackward.packet_input
+#print axioms Ptx.Scalar.Parallel.DenseBackward.packet_weight
+#print axioms Ptx.Scalar.Parallel.DenseBackward.packet_bias
+#print axioms Ptx.Scalar.Parallel.DenseBackward.input_result
+#print axioms Ptx.Scalar.Parallel.DenseBackward.gradients_stored
+#print axioms Ptx.Scalar.Parallel.Dense.Launch
+#print axioms Ptx.Scalar.Parallel.Dense.launch_exists
+#print axioms Ptx.Scalar.Parallel.Dense.launch_correct
+#print axioms Ptx.Scalar.Parallel.Dense.activate
+#print axioms Ptx.Scalar.Parallel.Dense.activateReal
+#print axioms Ptx.Scalar.Parallel.Pointwise.compatible
+#print axioms Ptx.Scalar.Parallel.Pointwise.control_addresses
+#print axioms Ptx.Scalar.Parallel.Pointwise.initial_control
+#print axioms Ptx.Scalar.Parallel.Pointwise.initial_aligned
+#print axioms Ptx.Scalar.Parallel.Pointwise.fetched_load
+#print axioms Ptx.Scalar.Parallel.Pointwise.fetched_store
+#print axioms Ptx.Scalar.Parallel.Pointwise.load_address
+#print axioms Ptx.Scalar.Parallel.Pointwise.store_address
+#print axioms Ptx.Scalar.Parallel.Pointwise.RegisterValue
+#print axioms Ptx.Scalar.Parallel.Pointwise.Data
+#print axioms Ptx.Scalar.Parallel.Pointwise.gate_bits
+#print axioms Ptx.Scalar.Parallel.Pointwise.scalar_data
+#print axioms Ptx.Scalar.Parallel.Pointwise.fp_data
+#print axioms Ptx.Scalar.Parallel.Pointwise.scalar_store_data
+#print axioms Ptx.Scalar.Parallel.Pointwise.Pointers
+#print axioms Ptx.Scalar.Parallel.Pointwise.finish
+#print axioms Ptx.Scalar.Parallel.Pointwise.lane_regular
+#print axioms Ptx.Scalar.Parallel.Pointwise.lane_effect
+#print axioms Ptx.Scalar.Parallel.Pointwise.done
+#print axioms Ptx.Scalar.Parallel.Pointwise.lane_run
+#print axioms Ptx.Scalar.Parallel.Pointwise.Progress
+#print axioms Ptx.Scalar.Parallel.Pointwise.execution_exists
+#print axioms Ptx.Scalar.Parallel.Pointwise.admitted_exists
+#print axioms Ptx.Scalar.Parallel.Pointwise.Launch
+#print axioms Ptx.Scalar.Parallel.Pointwise.launch_exists
+#print axioms Ptx.Scalar.Parallel.Pointwise.launch_correct
+#print axioms Ptx.Scalar.Parallel.Pointwise.launch_access_safe
+#print axioms Ptx.Scalar.Parallel.Pointwise.DataInvariant
+#print axioms Ptx.Scalar.Parallel.Pointwise.Stores
+#print axioms Ptx.Scalar.Parallel.Pointwise.Reads
+#print axioms Ptx.Scalar.Parallel.Pointwise.dispatch_data
+#print axioms Ptx.Scalar.Parallel.Pointwise.step_data
+#print axioms Ptx.Scalar.Parallel.Pointwise.scalar_step_singleton
+#print axioms Ptx.Scalar.Parallel.Pointwise.Op
+#print axioms Ptx.Scalar.Parallel.Pointwise.localOp
+#print axioms Ptx.Scalar.Parallel.Pointwise.clear
+#print axioms Ptx.Scalar.Parallel.Pointwise.body
+#print axioms Ptx.Scalar.Parallel.Pointwise.program
+#print axioms Ptx.Scalar.Parallel.Pointwise.storePC
+#print axioms Ptx.Scalar.Parallel.Pointwise.Result
+#print axioms Ptx.Scalar.Parallel.Pointwise.reference
+#print axioms Ptx.Scalar.Parallel.Pointwise.reference_result
+#print axioms Ptx.Scalar.Parallel.Pointwise.Layout
+#print axioms Ptx.Scalar.Parallel.Pointwise.Layout.output
+#print axioms Ptx.Scalar.Parallel.Pointwise.seed
+#print axioms Ptx.Scalar.Parallel.Pointwise.initial
+#print axioms Ptx.Scalar.Parallel.Pointwise.config
+#print axioms Ptx.Scalar.Parallel.Pointwise.length_program
+#print axioms Ptx.Scalar.Parallel.Pointwise.straight
+#print axioms Ptx.Scalar.Parallel.Pointwise.Admitted
+#print axioms Ptx.Scalar.Parallel.Pointwise.pointer_index
+#print axioms Ptx.Scalar.Parallel.Pointwise.prefix_unwritten
+#print axioms Ptx.Scalar.Parallel.Pointwise.read_source
+#print axioms Ptx.Scalar.Parallel.Pointwise.run_data
+#print axioms Ptx.Scalar.Parallel.Pointwise.completed_pc
+#print axioms Ptx.Scalar.Parallel.Pointwise.completed_store
+#print axioms Ptx.Scalar.Parallel.Pointwise.written_result
+#print axioms Ptx.Scalar.Parallel.Pointwise.completed
+#print axioms PtxTorchLean.DenseBackward.Encoding
+#print axioms PtxTorchLean.DenseBackward.Encoding.gWord
+#print axioms PtxTorchLean.DenseBackward.Encoding.gReal
+#print axioms PtxTorchLean.DenseBackward.Encoding.gIdeal
+#print axioms PtxTorchLean.DenseBackward.Encoding.g_real
+#print axioms PtxTorchLean.DenseBackward.Encoding.affine_accuracy
+#print axioms PtxTorchLean.DenseBackward.Encoding.g_error
+#print axioms PtxTorchLean.DenseBackward.Encoding.g_ideal
+#print axioms PtxTorchLean.DenseBackward.stored_gate
+#print axioms PtxTorchLean.DenseBackward.ProductRanges
+#print axioms PtxTorchLean.DenseBackward.weightEntry
+#print axioms PtxTorchLean.DenseBackward.inputEntry
+#print axioms PtxTorchLean.DenseBackward.inputTree
+#print axioms PtxTorchLean.DenseBackward.Ranges
+#print axioms PtxTorchLean.DenseBackward.inputRow
+#print axioms PtxTorchLean.DenseBackward.input_words
+#print axioms PtxTorchLean.DenseBackward.input_ideal
+#print axioms PtxTorchLean.DenseBackward.weight_accuracy
+#print axioms PtxTorchLean.DenseBackward.input_accuracy
+#print axioms PtxTorchLean.DenseBackward.bias_accuracy
+#print axioms PtxTorchLean.DenseBackward.Encoding.away
+#print axioms PtxTorchLean.DenseBackward.Correct
+#print axioms PtxTorchLean.DenseBackward.universal_backward
+#print axioms PtxTorchLean.DenseBackward.backward_exists

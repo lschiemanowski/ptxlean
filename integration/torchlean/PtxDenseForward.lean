@@ -16,6 +16,7 @@ structure Encoding (s : Dense.Shape) (global : List Word)
     (x : Tensor ℝ (DenseVJP.column s.columns))
     (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))
     (b : Tensor ℝ (DenseVJP.column s.rows)) where
+  relu : s.relu = true
   entry : Fin s.rows → Fin s.columns → DotError.Input
   weightWord : ∀ r c, (entry r c).left = global[s.weight r.val c.val]!
   inputWord : ∀ r c, (entry r c).right = global[c.val]!
@@ -67,9 +68,9 @@ theorem forward_word_accuracy (encoding : Encoding s global x w b) (r : Fin s.ro
       |max (encoding.row r).affine 0 -
         Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) r 0| ≤ (encoding.row r).error := by
   have accuracy := Dense.forward_accuracy s global r.val (encoding.row r) (encoding.row_words r) rfl
-  refine ⟨accuracy.1,?_⟩
+  refine ⟨by simpa [Dense.activateReal,encoding.relu] using accuracy.1,?_⟩
   rw [encoding.row_ideal] at accuracy
-  simpa [DenseVJP.forward_coordinate,DenseVJP.affine_coordinate] using accuracy.2
+  simpa [DenseVJP.forward_coordinate,DenseVJP.affine_coordinate,Dense.activateReal,encoding.relu] using accuracy.2
 
 /-- The actual upstream TorchLean output bounds the real interpretation of
 words stored by one complete admitted kernel execution. No graph-value or
@@ -118,9 +119,10 @@ theorem output_accuracy (encoding : Encoding s global x w b) (r : Fin s.rows) (v
     rw [encoding.row_words]
     simpa [Dense.Node] using node
   have accuracy := Reduction.row_forward_accuracy (encoding.row r) allowed
+  simp only [Dense.activate,encoding.relu,↓reduceIte]
   refine ⟨accuracy.1,?_⟩
   rw [encoding.row_ideal] at accuracy
-  simpa [DenseVJP.forward_coordinate,DenseVJP.affine_coordinate] using accuracy.2
+  simpa [DenseVJP.forward_coordinate,DenseVJP.affine_coordinate,Dense.activateReal,encoding.relu] using accuracy.2
 
 /-- Every admitted completed execution approximates the actual TorchLean graph.
 No desired load values, intermediate arithmetic identities, concrete-read

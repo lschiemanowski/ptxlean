@@ -137,6 +137,18 @@ COUNTS['Ptx.Scalar.Parallel.Replay'] = COUNTS.get('Ptx.Scalar.Parallel.Replay', 
 COUNTS['PtxTorchLean.DenseForward'] = COUNTS.get('PtxTorchLean.DenseForward', 0) + 3
 TARGETS.update({'PtxBinary32.DenseDataRun', 'PtxBinary32.DenseGlobalReads', 'PtxBinary32.DenseReadData', 'PtxBinary32.DenseLaunch', 'PtxBinary32.DenseReadSources', 'PtxBinary32.DenseData', 'PtxBinary32.DenseDataMachine', 'PtxBinary32.DenseStoreData', 'PtxBinary32.DenseUniversal', 'PtxBinary32.ParallelWriteValues', 'PtxBinary32.ParallelLoadControl', 'PtxBinary32.DenseDataStep', 'PtxBinary32.DenseDataFP', 'PtxBinary32.DenseLoadControl', 'PtxBinary32.DenseLoadSites', 'PtxBinary32.DenseDataRules'})
 
+# Bounded parallel dense backward and reusable pointwise launch contracts.
+COUNTS['Ptx.Scalar.Parallel.Dense'] = COUNTS.get('Ptx.Scalar.Parallel.Dense', 0) + 5
+COUNTS['Ptx.Scalar.Parallel.DenseBackward'] = COUNTS.get('Ptx.Scalar.Parallel.DenseBackward', 0) + 24
+COUNTS['Ptx.Scalar.Parallel.DenseBackward.Checks'] = COUNTS.get('Ptx.Scalar.Parallel.DenseBackward.Checks', 0) + 1
+COUNTS['Ptx.Scalar.Parallel.DenseBackward.Execution'] = COUNTS.get('Ptx.Scalar.Parallel.DenseBackward.Execution', 0) + 3
+COUNTS['Ptx.Scalar.Parallel.DenseBackward.Shape'] = COUNTS.get('Ptx.Scalar.Parallel.DenseBackward.Shape', 0) + 5
+COUNTS['Ptx.Scalar.Parallel.Pointwise'] = COUNTS.get('Ptx.Scalar.Parallel.Pointwise', 0) + 57
+COUNTS['Ptx.Scalar.Parallel.Pointwise.Layout'] = COUNTS.get('Ptx.Scalar.Parallel.Pointwise.Layout', 0) + 1
+COUNTS['PtxTorchLean.DenseBackward'] = COUNTS.get('PtxTorchLean.DenseBackward', 0) + 16
+COUNTS['PtxTorchLean.DenseBackward.Encoding'] = COUNTS.get('PtxTorchLean.DenseBackward.Encoding', 0) + 8
+TARGETS.update({'PtxBinary32.PointwiseProgram', 'PtxBinary32.PointwiseMachine', 'PtxBinary32.DenseBackwardLayout', 'PtxBinary32.PointwiseControl', 'PtxBinary32.DenseLaunchContract', 'PtxBinary32.PointwiseData', 'PtxBinary32.DenseBackwardChecks', 'PtxBinary32.DenseBackwardStorage', 'PtxBinary32.PointwiseExists', 'PtxBinary32.PointwiseLaunch', 'PtxBinary32.PointwiseReads', 'PtxBinary32.PointwiseUniversal', 'PtxDenseBackward'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 
@@ -214,6 +226,8 @@ def main():
         subprocess.run(["lake", "--no-cache", "build"], cwd=HERE, check=True)
         # Fresh evaluation is required even when the compiled module was cached.
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/DenseChecks.lean"],
+                       cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/DenseBackwardChecks.lean"],
                        cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

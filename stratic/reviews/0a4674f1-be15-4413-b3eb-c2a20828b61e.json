@@ -1,0 +1,186 @@
+{
+  "id": "0a4674f1-be15-4413-b3eb-c2a20828b61e",
+  "base": "101b53c253e653f6d8ac7394efe05b4dd07003bc",
+  "contentTree": "6df8fbe2e0c0573ce827e3e76839f30226f1365a",
+  "reviewer": "Codex",
+  "summary": "Complete the bounded parallel dense backward with stored handoffs, generated TorchLean VJP accuracy and execution existence.",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Completes independently supplied parallel backward with actual stored stage composition, universal numerical dx/dW/db correctness, margin and range obligations, finite execution existence, preservation, safe accesses and empty dimensions. Explicitly documents one-CTA limits and formal-host allocation/entry boundary."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Adds all 120 public endpoints to the exact dependency audit and six fresh software checks without changing instruction semantics, dependency pins, allowed axioms or the distinction between proof validity, source fidelity and hardware conformance."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The dense example now supplies backward as well as forward within its stated bounded execution and numerical domain; the parent already requires application-specific scope, numerical policy and reproducible guarantees."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "unchanged",
+      "reason": "New pointwise programs use the existing mixed machine, source admission, address projection and concrete schedule construction. Candidate read freedom, barrier semantics, checked access guarantees and absence of scheduler fairness or runtime conformance are unchanged."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "6df8fbe2e0c0573ce827e3e76839f30226f1365a",
+      "method": "bash scripts/check.sh; bash integration/torchlean/check.sh; stratic validate; git diff --check; manual contract and assumption review; matching Stratic snapshots before and after checks",
+      "outcome": "pass",
+      "environment": "Linux; pinned Lean 4.34.0 and unchanged integration Git dependency pins; local software execution only, no GPU or external model calls.",
+      "evidence": "Root check exited 0: 1643 exact dependency reports and all source, inventory, documentation, distribution and worker checks passed (4 documentation, 7 inventory, 106 worker, 26 ledger tests). Integration check exited 0: all 101 default targets built; 1216 exact dependency reports, including all 120 new public endpoints, only propext/Classical.choice/Quot.sound. Freshly evaluated four existing forward and six new backward interpreter cases with actual instruction execution and trace replay. Manual review traced pointwise reads to unchanged operands through admission, stored copies into the transposed packet, and all three gradient bounds to actual TorchLean VJP tensors. Execution existence has no numerical prerequisites. Numerical correctness retains encoding, range and strict ReLU-margin requirements. No instruction or memory semantics were changed; affine activation selection and formal-host allocation/entry boundaries are explicit. Exact before/after tree 6df8fbe2e0c0573ce827e3e76839f30226f1365a. Log SHA256: {\"root\": \"549e0aa8dd6ed0b19e5228040a8b635d40f4b041e0323a75caf25bafa71576ca\", \"integration\": \"2c43fd6eda1fe946e99f6771e88b45e43ad4e2bccf794bb2710a940ac315be08\"}",
+      "tests": [
+        {
+          "id": "dense-backward-interpreter: padded columns and inactive row",
+          "outcome": "pass"
+        },
+        {
+          "id": "dense-backward-interpreter: padded rows and negative input gradients",
+          "outcome": "pass"
+        },
+        {
+          "id": "dense-backward-interpreter: empty input dimension",
+          "outcome": "pass"
+        },
+        {
+          "id": "dense-backward-interpreter: empty output dimension",
+          "outcome": "pass"
+        },
+        {
+          "id": "dense-backward-interpreter: both dimensions empty",
+          "outcome": "pass"
+        },
+        {
+          "id": "dense-backward-interpreter: zero activation follows the zero convention",
+          "outcome": "pass"
+        }
+      ],
+      "id": "da29a917-1458-417f-a307-5354259af396",
+      "recordedAt": "2026-09-26T11:35:36.960Z"
+    }
+  ],
+  "recordedAt": "2026-09-26T11:36:11.354Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Updates the exact checked integration dependency report total to 1216."
+    },
+    {
+      "path": "docs/foundations/parallel-dense-layer.md",
+      "reason": "Explains the five actual launch stages, stored handoffs, pointwise source and arithmetic proofs, affine-only reduction, numerical margin and ranges, empty shapes, resource limits, and formal-host boundary. Removes the obsolete unfinished-backward claim."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseArithmetic.lean",
+      "reason": "Generalizes output postprocessing to the selected affine/ReLU variant while retaining the balanced tree and permitted-result relations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseBackwardChecks.lean",
+      "reason": "Fresh software evaluations cover actual five-stage fetched programs and trace replay, padded rows/columns, negative input gradients, exact-zero gating, zero rows, zero columns, and both empty."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseBackwardLayout.lean",
+      "reason": "Defines explicit buffers, addresses and resource bounds; five actual admitted launch contracts pass previous final arrays forward. Existence is independent of numerical assumptions. Host appends fresh storage and selects an allocation view, with no host gradient arithmetic."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseBackwardStorage.lean",
+      "reason": "Derives gate, product and copy values from actual final storage; proves transposed packet entries, original input preservation and in-bounds gradient observations. No desired intermediate is assumed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseChecks.lean",
+      "reason": "Adds the explicit true activation flag to existing test shapes without changing their four examples."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseData.lean",
+      "reason": "Relational output meaning follows the selected activation mode; reduction meaning remains unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseDataStep.lean",
+      "reason": "Handles the fetched conditional self-copy for affine-only output and retains live-register preservation for both activation modes."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseLaunchContract.lean",
+      "reason": "Provides array-level actual completed admitted launches for both dense modes and an empty-row no-launch case, plus unconditional existence under storage/resource bounds."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseLayout.lean",
+      "reason": "Adds a default-true activation selector so the original forward kernel retains ReLU while input gradients can be signed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseOutput.lean",
+      "reason": "Extends selected instruction and output proofs to both activation modes without changing synchronization or allocation."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/DenseProgram.lean",
+      "reason": "Adds the activation selector and replaces the negative-value zeroing instruction with a self-copy only in affine-only mode. Existing ReLU instruction sequence remains unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseControl.lean",
+      "reason": "Checks address-projection compatibility and classifies the actual fetched loads and stores; data does not determine pointers."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseData.lean",
+      "reason": "Tracks only live registers through copy, multiplication and ReLU gate instructions using permitted arithmetic results."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseExists.lean",
+      "reason": "Constructs actual finite instruction schedules and concrete load evidence, then derives chronological graph admission rather than assuming it."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseLaunch.lean",
+      "reason": "Actual completed admitted launch interface, arbitrary entry seed states after fixed pointer installation, empty no-launch case, universal correctness, finite existence and checked-access safety."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseMachine.lean",
+      "reason": "Preserves live-register and actual-store invariants across all actual machine dispatch and step cases. Read-value obligations are discharged by admission in the universal theorem."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseProgram.lean",
+      "reason": "Concrete short instruction sequences implement copy, multiplication and sensitivity gating with a read-only operand prefix and one disjoint output per lane. Entry addresses are installed from the fixed layout, not loaded tensor data."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseReads.lean",
+      "reason": "Derives unchanged input reads from graph source compatibility and the proof that no actual instruction writes the operand prefix."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseUniversal.lean",
+      "reason": "Proves all admitted completed interleavings produce the pointwise result in actual memory, preserve the input prefix and extents, and have checked accesses; recovers required store events from actual exits."
+    },
+    {
+      "path": "integration/torchlean/PtxDenseBackward.lean",
+      "reason": "Relates every actually stored dx/dW/db to the generated TorchLean VJP under initial encoding, calculated range and strict ReLU-margin premises. Gate equality is derived from finite real signs. Nonvacuity combines independent execution existence with numerical correctness."
+    },
+    {
+      "path": "integration/torchlean/PtxDenseForward.lean",
+      "reason": "Restricts the forward graph encoding to the ReLU variant and specializes generalized dense accuracy back to the unchanged original graph contract."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Adds exact dependency reports for all 120 new public definitions and theorems, including intermediate contracts."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Documents completed bounded backward and its limitations, with 101 default targets and 1216 exact dependency reports."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Audits exactly 1216 reports and 101 default targets, freshly runs six backward interpreter checks, and preserves dependency pin checks, source guards, source hashing and allowed standard logical axioms."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers all 13 new modules as default targets and the PtxDenseBackward library; toolchain and dependency pins remain unchanged."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Description-first scope now reconciled with completed backward, summary, remaining extension boundaries and exact definition/theorem passage links."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Description-first scope now reconciled with completed backward, summary, remaining extension boundaries and exact definition/theorem passage links."
+    }
+  ]
+}

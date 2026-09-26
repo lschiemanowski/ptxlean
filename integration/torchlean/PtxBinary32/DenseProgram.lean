@@ -18,6 +18,13 @@ def pointer (destination source : Nat) : List Parallel.Instr := [
   scalar (.add64 destination (.reg destination) (.reg destination)),
   scalar (.add64 destination (.reg destination) (.reg destination))]
 
+/-- Output postprocessing; the affine variant preserves signed words. -/
+def activate (s : Shape) (a : Word) : Word :=
+  if s.relu then Ptx.Binary32.Relu.forward a else a
+
+noncomputable def activateReal (s : Shape) (a : ℝ) : ℝ :=
+  if s.relu then max a 0 else a
+
 def products (s : Shape) : List Parallel.Instr := [
   scalar (.bin32 .and 1 (.reg 0) (word (s.width-1))),
   scalar (.bin32 .shr 2 (.reg 0) (word s.depth)),
@@ -49,7 +56,7 @@ def output (s : Shape) : List Parallel.Instr := [
   pointer 5 7 ++ [guarded .global (.load 8 (.reg 5)),
   .binary32 ⟨.pred 0 true,.add,6,.reg 6,.reg 8⟩,
   scalar (.setp .ge 1 (.reg 6) (word 0x80000000)),
-  .localStep ⟨.pred 1 true,.mov32 6 (word 0)⟩,
+  .localStep ⟨.pred 1 true,.mov32 6 (if s.relu then word 0 else .reg 6)⟩,
   scalar (.bin32 .add 7 (.reg 2) (word s.outputBase))] ++
   pointer 6 7 ++ [guarded .global (.store (.reg 6) (.reg 6)),.exit]
 

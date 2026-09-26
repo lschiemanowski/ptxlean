@@ -10,6 +10,8 @@ structure Shape where
   columns : Nat
   depth : Nat
   padded : columns ≤ 2^depth
+  /-- ReLU forward, or an unclamped affine result for reusable reductions. -/
+  relu : Bool := true
 
 def Shape.width (s : Shape) : Nat := 2^s.depth
 def Shape.threads (s : Shape) : Nat := s.rows*s.width

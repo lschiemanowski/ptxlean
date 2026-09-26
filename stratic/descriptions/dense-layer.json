@@ -7,12 +7,12 @@
     }
   },
   "summary": [
-    "Connect a vector-output dense–ReLU layer and its automatically generated gradients to the actual TorchLean graph.",
-    "For the supplied binary32 forward kernel, every admitted completed execution stores outputs within the derived bound of the TorchLean real graph, under explicit encoding and calculated range conditions; inputs and memory extents are preserved and every emitted access is in bounds.",
-    "Keep a complete admitted execution witness separate from universal correctness. Zero output rows require no launch. The kernel uses one bounded cooperating thread array, a fixed reduction tree and fresh scratch planes; parallel backward implementation and proofs remain unfinished."
+    "Connect the vector-output dense–ReLU layer and its automatically generated backward to the actual TorchLean graph.",
+    "For the supplied binary32 forward and five-stage parallel backward, every admitted completed execution stores outputs and all three gradients within calculated bounds, under explicit encodings, ranges and a backward activation margin.",
+    "Prove completed admitted executions exist separately from universal correctness, derive actual memory handoffs and preserve original operands. Empty dimensions are covered. Each kernel uses a bounded thread group; runtime and hardware correspondence remain outside the fragment."
   ],
-  "realization": "partial",
-  "remaining": "Implemented: actual TorchLean matrix graph and generated VJP; the supplied shape-specialized forward instruction list; a complete admitted execution witness; and universal stored-output correctness for every admitted completed candidate execution. Computed load and store addresses, producer existence, unique ownership and actual completed barriers force global initialization reads and shared producer reads. Induction over the actual interleaving proves the arithmetic meaning of live registers and emitted stores, retaining all permitted binary32 result choices. Final-memory correspondence, unchanged input words, preserved extents and access safety follow. Encoding and calculated range conditions connect every stored row to the actual TorchLean graph, including zero padding and empty inputs. The empty-output wrapper has no launch or memory change and satisfies the same forward contract. Missing: the separately supplied parallel backward kernel and its stored dx, dW and db proofs. Larger multi-array launches, runtime/ABI correspondence, hardware conformance and benchmarks are outside this first forward kernel.",
+  "realization": "implemented",
+  "remaining": "The stated bounded forward/backward fragment is implemented, including actual copy, gate and product instructions; the transposed parallel reduction; existence, universal stored numerical correspondence, unchanged original operands, access safety and empty dimensions. Bounds include both reduction groups and the full copy packet (at most 1024 threads each). Larger/chunked launches, scratch reuse, fused or mixed precision, runtime/ABI and hardware correspondence and benchmarks are outside this contract.",
   "links": [
     {
       "kind": "implementation",
@@ -203,7 +203,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/DenseArithmetic.lean",
         "passage": {
-          "quote": "theorem forward_accuracy (s : Shape) (global : List Word) (row : Nat)\n    (i : Reduction.RowInput)\n    (tree : Reduction.words i.tree = Reduction.balanced s.depth 0 (operands s global row))\n    (bias : i.bias = global[s.biasBase+row]!) :\n    finiteReal (forwardWord s global row) = some (max i.affine 0) ∧\n      |max i.affine 0-max i.idealAffine 0| ≤ i.error :="
+          "quote": "theorem forward_accuracy (s : Shape) (global : List Word) (row : Nat)\n    (i : Reduction.RowInput)\n    (tree : Reduction.words i.tree = Reduction.balanced s.depth 0 (operands s global row))\n    (bias : i.bias = global[s.biasBase+row]!) :\n    finiteReal (forwardWord s global row) = some (activateReal s i.affine) ∧\n      |activateReal s i.affine-activateReal s i.idealAffine| ≤ i.error :="
         }
       }
     },
@@ -263,7 +263,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/DenseForward.lean",
         "passage": {
-          "quote": "theorem selected_forward_accuracy (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, Runs (config s b) (program s) (initial s global shared seeds) events final ∧\n      (∀ t, (final.lanes t).halted = true) ∧\n      (∀ r, r<s.rows → ∀ i : Ptx.Binary32.Reduction.RowInput,\n        Ptx.Binary32.Reduction.words i.tree =\n          Ptx.Binary32.Reduction.balanced s.depth 0 (operands s global r) →\n        i.bias = global[s.biasBase+r]! →\n        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (max i.affine 0) ∧\n          |max i.affine 0-max i.idealAffine 0| ≤ i.error) :="
+          "quote": "theorem selected_forward_accuracy (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, Runs (config s b) (program s) (initial s global shared seeds) events final ∧\n      (∀ t, (final.lanes t).halted = true) ∧\n      (∀ r, r<s.rows → ∀ i : Ptx.Binary32.Reduction.RowInput,\n        Ptx.Binary32.Reduction.words i.tree =\n          Ptx.Binary32.Reduction.balanced s.depth 0 (operands s global r) →\n        i.bias = global[s.biasBase+r]! →\n        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (activateReal s i.affine) ∧\n          |activateReal s i.affine-activateReal s i.idealAffine| ≤ i.error) :="
         }
       }
     },
@@ -287,7 +287,7 @@
       "to": {
         "path": "integration/torchlean/PtxBinary32/DenseAdmission.lean",
         "passage": {
-          "quote": "theorem selected_forward_admitted (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, ∃ run : ConcreteRuns (config s b) (program s) (initial s global shared seeds) events final,\n      ∃ source co,\n      Graph.Ordered.Valid (Memory.graph (program s) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross ∧\n      (∀ i, ¬Path (SharedReduction.Machine.Memory.grounding\n        (Memory.graph (program s) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross) i i) ∧\n      (∀ t, (final.lanes t).halted = true ∧ (final.lanes t).scalar.pc = (program s).length-1) ∧\n      (∀ r, r<s.rows → final.global[s.outputBase+r]? = some (forwardWord s global r)) ∧\n      (∀ i, i<s.outputBase → final.global[i]? = global[i]?) ∧\n      final.global.length = global.length ∧ final.shared.length = shared.length ∧\n      final.barrier = Barrier.reset (s.depth+1) ∧ final.site = none ∧\n      (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) ∧\n      (∀ r, r<s.rows → ∀ i : Ptx.Binary32.Reduction.RowInput,\n        Ptx.Binary32.Reduction.words i.tree =\n          Ptx.Binary32.Reduction.balanced s.depth 0 (operands s global r) →\n        i.bias = global[s.biasBase+r]! →\n        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (max i.affine 0) ∧\n          |max i.affine 0-max i.idealAffine 0| ≤ i.error) :="
+          "quote": "theorem selected_forward_admitted (s : Shape) (b : Bounds s) (global shared : List Word)\n    (seeds : Fin s.threads → Scalar.State)\n    (globalBound : s.globalWords ≤ global.length) (sharedBound : s.sharedWords ≤ shared.length) :\n    ∃ events final, ∃ run : ConcreteRuns (config s b) (program s) (initial s global shared seeds) events final,\n      ∃ source co,\n      Graph.Ordered.Valid (Memory.graph (program s) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross ∧\n      (∀ i, ¬Path (SharedReduction.Machine.Memory.grounding\n        (Memory.graph (program s) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial s global shared seeds).barrier = Barrier.reset 0 from rfl) source co).cross) i i) ∧\n      (∀ t, (final.lanes t).halted = true ∧ (final.lanes t).scalar.pc = (program s).length-1) ∧\n      (∀ r, r<s.rows → final.global[s.outputBase+r]? = some (forwardWord s global r)) ∧\n      (∀ i, i<s.outputBase → final.global[i]? = global[i]?) ∧\n      final.global.length = global.length ∧ final.shared.length = shared.length ∧\n      final.barrier = Barrier.reset (s.depth+1) ∧ final.site = none ∧\n      (∀ event ∈ events, AccessSafe (initial s global shared seeds) event) ∧\n      (∀ r, r<s.rows → ∀ i : Ptx.Binary32.Reduction.RowInput,\n        Ptx.Binary32.Reduction.words i.tree =\n          Ptx.Binary32.Reduction.balanced s.depth 0 (operands s global r) →\n        i.bias = global[s.biasBase+r]! →\n        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (activateReal s i.affine) ∧\n          |activateReal s i.affine-activateReal s i.idealAffine| ≤ i.error) :="
         }
       }
     },
@@ -299,7 +299,7 @@
       "to": {
         "path": "integration/torchlean/PtxDenseForward.lean",
         "passage": {
-          "quote": "structure Encoding (s : Dense.Shape) (global : List Word)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) where\n  entry : Fin s.rows → Fin s.columns → DotError.Input\n  weightWord : ∀ r c, (entry r c).left = global[s.weight r.val c.val]!\n  inputWord : ∀ r c, (entry r c).right = global[c.val]!\n  weightIdeal : ∀ r c, (entry r c).l = Spec.get2 w r c\n  inputIdeal : ∀ r c, (entry r c).r = Spec.get2 x c 0\n  biasValue : Fin s.rows → ℝ\n  biasError : Fin s.rows → ℝ\n  biasReal : ∀ r, finiteReal global[s.biasBase+r.val]! = some (biasValue r)\n  biasApprox : ∀ r, |biasValue r-Spec.get2 b r 0| ≤ biasError r\n  treeSafe : ∀ r, Reduction.Safe (Reduction.balanced s.depth 0 (Reduction.paddedInput (entry r)))\n  additionRange : ∀ r, |Reduction.rounded (Reduction.balanced s.depth 0 (Reduction.paddedInput (entry r)))+\n    biasValue r| ≤ Bounds.maxFinite"
+          "quote": "structure Encoding (s : Dense.Shape) (global : List Word)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) where\n  relu : s.relu = true\n  entry : Fin s.rows → Fin s.columns → DotError.Input\n  weightWord : ∀ r c, (entry r c).left = global[s.weight r.val c.val]!\n  inputWord : ∀ r c, (entry r c).right = global[c.val]!\n  weightIdeal : ∀ r c, (entry r c).l = Spec.get2 w r c\n  inputIdeal : ∀ r c, (entry r c).r = Spec.get2 x c 0\n  biasValue : Fin s.rows → ℝ\n  biasError : Fin s.rows → ℝ\n  biasReal : ∀ r, finiteReal global[s.biasBase+r.val]! = some (biasValue r)\n  biasApprox : ∀ r, |biasValue r-Spec.get2 b r 0| ≤ biasError r\n  treeSafe : ∀ r, Reduction.Safe (Reduction.balanced s.depth 0 (Reduction.paddedInput (entry r)))\n  additionRange : ∀ r, |Reduction.rounded (Reduction.balanced s.depth 0 (Reduction.paddedInput (entry r)))+\n    biasValue r| ≤ Bounds.maxFinite\n\nnoncomputable def Encoding.row (encoding : Encoding s global x w b) (r : Fin s.rows) : Reduction.RowInput where\n  tree :="
         }
       }
     },
@@ -600,6 +600,78 @@
         "path": "integration/torchlean/PtxDenseForward.lean",
         "passage": {
           "quote": "theorem wrapper_forward (s : Dense.Shape) (global shared : List Word)\n    (seeds : Fin s.threads → Ptx.Scalar.State)\n    (x : Tensor ℝ (DenseVJP.column s.columns))\n    (w : Tensor ℝ (DenseVJP.matrix s.rows s.columns))\n    (b : Tensor ℝ (DenseVJP.column s.rows)) (encoding : Encoding s global x w b)\n    {events : List (Event s.threads)} {final : State s.threads}\n    (run : Dense.ForwardRun s global shared seeds events final) :\n    (∀ row : Fin s.rows, ∃ value, final.global[s.outputBase+row.val]?=some value ∧\n      finiteReal value=some (max (encoding.row row).affine 0) ∧\n      |max (encoding.row row).affine 0-\n        Spec.get2 ((DenseVJP.graph s.rows s.columns).forward (DenseVJP.inputs x w b)) row 0| ≤ (encoding.row row).error) ∧\n    (∀ i, i<s.outputBase → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ final.shared.length=shared.length ∧\n    (∀ event ∈ events, AccessSafe (Dense.initial s global shared seeds) event) :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For finite encodings and the calculated range conditions, every stored dx, dW\nand db has a proved error bound relative to the actual TorchLean generated\nbackward."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseBackward.lean",
+        "passage": {
+          "quote": "theorem universal_backward (i : Encoding s memory incoming x w bias d) (range : Ranges i)\n    {bounds : Ptx.Scalar.Parallel.DenseBackward.Bounds s}\n    (e : Ptx.Scalar.Parallel.DenseBackward.Execution s bounds memory incoming)\n    (size : memory.length=s.forward.globalWords) : Correct i range e :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A separate construction\nproves that all stages can complete."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseBackward.lean",
+        "passage": {
+          "quote": "theorem backward_exists (i : Encoding s memory incoming x w bias d) (range : Ranges i)\n    (bounds : Ptx.Scalar.Parallel.DenseBackward.Bounds s) (size : memory.length=s.forward.globalWords) :\n    ∃ e : Ptx.Scalar.Parallel.DenseBackward.Execution s bounds memory incoming, Correct i range e :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each stage starts with the\nactual final words of the preceding stage."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseBackwardLayout.lean",
+        "passage": {
+          "quote": "structure Execution (s : Shape) (b : Bounds s) (before : List Word) (incoming : Fin s.rows → Word) where\n  forward : List Word\n  gated : List Word\n  weighted : List Word\n  copied : List Word\n  inputGradient : List Word\n  forwardRun : Dense.Launch s.forward before forward\n  gateRun : Pointwise.Launch .gate (gateLayout s b) (gateInput s forward incoming) gated\n  weightRun : Pointwise.Launch .mul (weightLayout s b) (weightInput s gated) weighted\n  copyRun : Pointwise.Launch .copy (copyLayout s b) (copyInput s weighted) copied\n  inputRun : Dense.Launch s.transposed (packet s copied) inputGradient"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The copy stage uses m+n*m+2*n threads, one for every word in its destination\npacket, including its zero bias and output slots."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseBackwardLayout.lean",
+        "passage": {
+          "quote": "def copyLayout (s : Shape) (b : Bounds s) : Pointwise.Layout s.transposed.globalWords where\n  prefixWords :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The strict activation margin implies that each real affine value is\nnonzero and its sign agrees with the recomputed rounded value."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxDenseBackward.lean",
+        "passage": {
+          "quote": "theorem Encoding.away (i : Encoding s memory incoming x w bias d) (r : Fin s.rows) :\n    Spec.get2 (DenseVJP.affine x w bias) r 0≠0 :="
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "the original x, W and b words remain unchanged."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/DenseBackwardStorage.lean",
+        "passage": {
+          "quote": "theorem input_frame (e : Execution s b before incoming) (size : before.length=s.forward.globalWords)\n    (i : Nat) (hi : i<s.forward.outputBase) : e.weighted[i]?=before[i]? :="
         }
       }
     }

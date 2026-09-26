@@ -28,8 +28,8 @@ theorem selected_forward_admitted (s : Shape) (b : Bounds s) (global shared : Li
         Ptx.Binary32.Reduction.words i.tree =
           Ptx.Binary32.Reduction.balanced s.depth 0 (operands s global r) →
         i.bias = global[s.biasBase+r]! →
-        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (max i.affine 0) ∧
-          |max i.affine 0-max i.idealAffine 0| ≤ i.error) := by
+        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (activateReal s i.affine) ∧
+          |activateReal s i.affine-activateReal s i.idealAffine| ≤ i.error) := by
   obtain ⟨events,final,run,done,values,inputs,gl,sl,barrier,site,safe⟩ :=
     selected_forward_concrete s b global shared seeds globalBound sharedBound
   obtain ⟨source,co,valid,grounded⟩ := Memory.Chronology.concrete_admitted run

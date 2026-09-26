@@ -181,8 +181,8 @@ theorem selected_forward_accuracy (s : Shape) (b : Bounds s) (global shared : Li
         Ptx.Binary32.Reduction.words i.tree =
           Ptx.Binary32.Reduction.balanced s.depth 0 (operands s global r) →
         i.bias = global[s.biasBase+r]! →
-        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (max i.affine 0) ∧
-          |max i.affine 0-max i.idealAffine 0| ≤ i.error) := by
+        Ptx.Binary32.finiteReal final.global[s.outputBase+r]! = some (activateReal s i.affine) ∧
+          |activateReal s i.affine-activateReal s i.idealAffine| ≤ i.error) := by
   obtain ⟨events,final,run,done,values,_⟩ := selected_forward_exists s b global shared seeds globalBound sharedBound
   refine ⟨events,final,run,fun t => (done t).1,?_⟩
   intro r hr i tree bias

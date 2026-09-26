@@ -41,16 +41,16 @@ def check (label : String) (s : Shape) (b : Bounds s)
 
 def run : IO Unit := do
   -- x=(1,2,3); rows (1,2,3),(-1,-2,-3); biases (1,1).
-  check "two rows, three inputs, padded width four" ⟨2,3,2,by decide⟩
+  check "two rows, three inputs, padded width four" ⟨2,3,2,by decide,true⟩
     (by constructor <;> decide)
     [0x3f800000,0x40000000,0x40400000,
      0x3f800000,0x40000000,0x40400000,0xbf800000,0xc0000000,0xc0400000,
      0x3f800000,0x3f800000] [0x41700000,0]
-  check "empty input, two biases" ⟨2,0,0,by decide⟩
+  check "empty input, two biases" ⟨2,0,0,by decide,true⟩
     (by constructor <;> decide) [0x40000000,0xbf800000] [0x40000000,0]
-  check "one input, activation exactly zero" ⟨1,1,0,by decide⟩
+  check "one input, activation exactly zero" ⟨1,1,0,by decide,true⟩
     (by constructor <;> decide) [0x40000000,0xbf800000,0x40000000] [0]
-  check "two rows, power-of-two width" ⟨2,2,1,by decide⟩
+  check "two rows, power-of-two width" ⟨2,2,1,by decide,true⟩
     (by constructor <;> decide)
     [0x40400000,0x40800000,0x3f800000,0,0,0x3f800000,0,0xc0a00000] [0x40400000,0]
 

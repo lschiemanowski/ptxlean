@@ -18,7 +18,8 @@ The conditions are explicit: finite initial encodings with error bounds,
 calculated intermediate-range checks, and the bounded single-CTA layout below.
 The memory semantics and instruction result relations are unchanged. This is
 not hardware conformance, bitwise correspondence with PyTorch, a scheduler
-fairness result, or verification of the parallel backward kernel. No GPU run or
+fairness result. The separately authored parallel backward is now also verified
+under its explicit range and branch-margin conditions below. No GPU run or
 benchmark is part of this milestone.
 
 ## The mathematical computation and its backward
@@ -94,9 +95,10 @@ accuracy of an intermediate result.
 `ReductionRelu.lean` adds the bias, activation and backward gate. ReLU does not
 increase the forward error. A strict margin `error < abs(idealAffine)` guarantees
 that rounding cannot change the backward's branch. The seed's incoming error
-then bounds the gate error. Propagation through the full matrix backward and its corresponding kernel
-proofs remain to be connected. The forward padding and tensor connection are
-proved separately, as described below.
+then bounds the gate error. The complete backward below propagates that error
+through the weight products and transposed reduction and connects their stored
+results to TorchLean. The forward padding and tensor connection are proved
+separately, as described next.
 
 ## From stored words to the actual tensor graph
 
@@ -749,14 +751,94 @@ It constructs no zero-thread configuration and makes no runtime/ABI claim.
 `PtxDenseForward.wrapper_forward` gives the same output-and-memory contract for
 both the no-launch case and completed admitted nonempty launches.
 
+## The complete parallel backward
+
+The backward recomputes the activation from the original x, W and b. It does
+not take a caller-supplied activation or gradient certificate. Its instruction
+programs are independent of TorchLean's automatic backward construction.
+`PtxDenseBackward.universal_backward` then compares their actual stored results
+to the three tensors returned by that construction.
+
+The five stages are:
+
+| Stage | Computation | Evidence carried to the next stage |
+| --- | --- | --- |
+| Recompute | The existing parallel ReLU(Wx+b) program | Actual stored activation words |
+| Gate | Keep incoming sensitivity d_i when the activation is positive, else zero | Stored g, also used directly as db |
+| Weight gradient | One rounded g_i*x_j multiplication per matrix entry | Stored dW |
+| Copy | Copy g and W into the input and transposed-weight slots of a new packet; copy positive zero into bias/output slots | Actual fetched copies, not an assumed transposition |
+| Input gradient | Balanced reductions for W-transpose times g, followed by addition of positive zero | Stored dx, with signed outputs preserved |
+
+The first and last stages share the reduction implementation. The dense kernel
+shape descriptor has a `relu` switch: true for the existing forward, false for
+the last backward stage. Its false case preserves a negative result instead of
+clamping it. The actual instruction at the postprocessing site copies the value
+to itself in the affine variant. The forward tensor encoding explicitly selects
+the true variant. The shared proof preserves all permitted arithmetic choices.
+
+`DenseBackward.Execution` connects the five actual completed admitted launches.
+Its fields contain traces through the launch interfaces, not desired arithmetic
+results. Each next input is computed from the previous final arrays. The gate
+and multiplication kernels read a fixed prefix and each thread writes a distinct
+output word. Their entry pointers are calculated by the formal storage layout;
+no tensor-loaded value determines an address. Pointer installation is an explicit
+entry interface, not a verified CUDA ABI.
+
+`DenseBackwardStorage` proves that the original operands survive the stages,
+that the copy packet contains the actual gated words and original transposed
+weights, and that dx, dW and db observations select real stored words. Appending
+fresh zero storage and taking the copied packet's allocation view are explicit
+host-model operations. Allocation lengths stay fixed during each kernel; the
+host model allocates additional storage between kernels. This work does not
+claim a CUDA allocator, launch API, stream synchronization implementation, or
+physical transfer implementation.
+
+For m outputs and n inputs, the two reduction groups use m*2^forwardDepth and
+n*2^backwardDepth threads. The copy stage uses m+n*m+2*n threads, including zero
+bias and output slots. All groups must fit 1024 threads, and the combined buffer
+arithmetic must stay below the stated bound. This deliberately simple copy can
+limit shapes more than the forward alone. Copying in chunks is a later extension;
+the current bounds are part of the proved domain. Reduction scratch still uses
+fresh planes for each round.
+
+The numerical proof separates three effects. Initial tensors and incoming
+sensitivities have encoding errors. Products and the chosen addition trees have
+rounding errors. ReLU can change the selected branch near zero. The strict margin
+requires a real affine value's distance from zero to exceed the calculated
+forward affine error. It proves that the real and rounded gates agree and that
+the actual real graph is away from every ReLU corner. The resulting bounds refer
+to TorchLean's actual generated backward through its proved coordinate formulas;
+its existing derivative theorem applies away from those corners.
+
+Without the margin, the operational and memory theorems still hold for the
+supplied instruction programs, including their zero-derivative convention at
+zero. The numerical theorem does not promise agreement with the real derivative
+across a possible branch change. It also does not assert bitwise agreement with
+PyTorch. The final zero-bias addition in the input-gradient reduction remains in
+the numerical accounting rather than being silently erased.
+
+`DenseBackward.execution_exists` constructs all launches without numerical
+premises. `PtxDenseBackward.backward_exists` combines that witness with numerical
+correctness, while `universal_backward` covers every admitted completed choice
+of the five executions. These theorems do not promise completion under every
+scheduler. Memory-access safety follows for each actual launch trace from the
+unchanged machine's checked-access theorem.
+
+Empty input dimensions give empty dx and dW while db still follows the bias
+activation. Empty output dimensions give empty db and dW and a zero input
+gradient; the transposed zero-column reduction constructs that output. With both
+dimensions empty the wrappers bypass all zero-thread launches. Six interpreter
+regressions cover these cases, padded rows and columns, negative input gradients,
+and the zero activation convention. Sentinel entry registers and trace replay
+check that execution does not accidentally rely on zero initialization. These
+checks supplement the general Lean proofs.
+
 ## Where this milestone stops
 
-The first parallel **forward** layer is complete within the stated fragment.
-The separately supplied parallel backward kernel and proofs for stored `dx`,
-`dW`, and `db` remain unfinished, so the broader Stratic component stays partial.
-Multi-CTA layers, reused scratch, mixed precision, text/ABI correspondence and
-hardware execution require their own contracts and proofs. They are not hidden
-in assumptions of the forward theorem. No GPU run or benchmark is claimed.
+The bounded forward and backward layer are complete within the stated fragment.
+Larger or chunked launches, reused scratch, mixed precision, text/ABI
+correspondence and hardware execution require their own contracts and proofs.
+No GPU run or benchmark is claimed.
 
 ## Reproduce the checks
 
@@ -773,8 +855,9 @@ No external model, GPU kernel or benchmark is invoked. For a shorter local build
 
 ```sh
 cd integration/torchlean
-lake build PtxDenseForward PtxBinary32.DenseUniversal PtxBinary32.DenseLaunch
+lake build PtxDenseForward PtxDenseBackward PtxBinary32.DenseBackwardChecks
 lake env lean PtxBinary32/DenseChecks.lean
+lake env lean PtxBinary32/DenseBackwardChecks.lean
 ```
 
 Lean checking establishes the stated formal results. Source review assesses the

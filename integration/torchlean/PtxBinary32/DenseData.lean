@@ -13,7 +13,7 @@ def Node (s : Shape) (global : List Word) (row plane column : Nat) (value : Word
 /-- The actual bias addition, followed by the supplied bit-level ReLU. -/
 def Output (s : Shape) (global : List Word) (row : Nat) (value : Word) : Prop :=
   ∃ dot affine, Node s global row s.depth 0 dot ∧
-    Results .add dot global[s.biasBase+row]! affine ∧ value=Relu.forward affine
+    Results .add dot global[s.biasBase+row]! affine ∧ value=activate s affine
 
 theorem node_leaf (s : Shape) (global : List Word) (row column : Nat) (value : Word)
     (allowed : Results .mul (operands s global row column).1 (operands s global row column).2 value) :

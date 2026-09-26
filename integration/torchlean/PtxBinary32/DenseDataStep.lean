@@ -82,12 +82,12 @@ theorem output_scalar_data (s : Shape) (b : Bounds s) (global : List Word) (t : 
     Data s global t next := by
   have columnNow := data.column (by omega : 1≤a.pc)
   have current : 1≤j → a.preds 0=decide (t.val%s.width=0) := fun h => data.outputGate (by omega) (by omega)
-  have relu : j=13 → t.val%s.width=0 → Output s global (t.val/s.width) (if a.preds 1 then 0 else a.regs 6) := by
+  have relu : j=13 → t.val%s.width=0 → Output s global (t.val/s.width) (if a.preds 1 then (if s.relu then 0 else a.regs 6) else a.regs 6) := by
     intro at13 leader
     obtain ⟨dot,hd,ha⟩ := data.affine (by omega) (by omega) leader
     refine ⟨dot,a.regs 6,hd,ha,?_⟩
     rw [data.sign (by omega)]
-    simpa using relu_bits (a.regs 6)
+    cases mode : s.relu <;> simp [activate,mode,← relu_bits]
   rcases data with ⟨tid,col,pg,inp,wei,prod,rg,left,right,red,og,root,bias,aff,sign,out⟩
   have cf : t.val%s.width<4294967296 := lt_trans (coordinates s t).2.1 (width_fits s b)
   have iszero : (BitVec.ofNat 32 (t.val%s.width) == (0 : Word))=decide (t.val%s.width=0) := by
@@ -96,8 +96,9 @@ theorem output_scalar_data (s : Shape) (b : Bounds s) (global : List Word) (t : 
     constructor
     · intro h; have eq := congrArg BitVec.toNat h; simpa [BitVec.toNat_ofNat,Nat.mod_eq_of_lt cf] using eq
     · intro h; simp [h]
-  interval_cases j
-  all_goals simp [output,pointer,scalar,guarded] at fetch
+  cases mode : s.relu
+  all_goals interval_cases j
+  all_goals simp [mode,output,pointer,scalar,guarded] at fetch
   all_goals rcases fetch with rfl | ⟨_,rfl⟩
   all_goals simp only [Scalar.eval,Scalar.Instr.plain,Scalar.Guard.eval,word,Scalar.Operand32.eval,Scalar.Operand64.eval] at evaluated
   all_goals cases enabled : a.preds 0 <;> simp [enabled] at evaluated
@@ -108,7 +109,7 @@ theorem output_scalar_data (s : Shape) (b : Bounds s) (global : List Word) (t : 
   all_goals simp only [Scalar.occurrence,Scalar.update,site,ite_apply,↓reduceIte,Nat.reduceAdd] at *
   all_goals intros
   all_goals first | omega | assumption | (apply col; omega) | (apply og <;> omega) | (apply root <;> omega) | (apply aff <;> omega) | (apply out <;> omega) | skip
-  all_goals simp_all [ReadData,Scalar.occurrence,Scalar.Compare.eval,BitVec.toNat_ofNat,Nat.mod_eq_of_lt cf,iszero]
+  all_goals simp_all [mode,ReadData,Scalar.occurrence,Scalar.Compare.eval,BitVec.toNat_ofNat,Nat.mod_eq_of_lt cf,iszero]
   all_goals grind
 
 end Ptx.Scalar.Parallel.Dense

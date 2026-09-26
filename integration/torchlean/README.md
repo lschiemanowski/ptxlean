@@ -167,8 +167,8 @@ also be run; the root README gives the complete command sequence.
 It checks every manifest Git dependency's actual HEAD and rejects tracked file
 modifications before and after verification. The root PTX package remains an
 explicit local path dependency, whose separate root checks should also be run.
-All 88 declared default targets are built with `lake --no-cache build`.
-A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1096
+All 101 declared default targets are built with `lake --no-cache build`.
+A fresh elaboration of `PtxIntegrationAudit.lean` must then produce exactly 1216
 distinct dependency reports, covering the graph, tensor bridge, numerical
 adapters, instruction and execution layers, serialized launches, two-kernel
 forward bridge, scalar generated backward and independently authored backward
@@ -208,7 +208,7 @@ The joint build is recorded separately in `verification-joint.json` and
 `proof-audit-joint.txt`, including the root PTX source snapshot used in that build.
 Neither receipt is a substitute for rerunning checks after changing its inputs.
 
-## Parallel dense forward layer
+## Parallel dense forward and backward layer
 
 The [dense-layer study](../../docs/foundations/parallel-dense-layer.md) explains
 the actual TorchLean graph for `ReLU(Wx+b)`, its generated backward, and the
@@ -228,7 +228,14 @@ outputs, with no events or memory change; `wrapper_forward` covers both cases.
 The integration audit includes every new public proof and definition.
 
 The kernel uses one bounded cooperating thread array, fixed contiguous layouts,
-separately rounded binary32 operations and fresh scratch planes. The parallel
-backward kernel remains unfinished. There is no GPU run, benchmark, runtime/ABI
+separately rounded binary32 operations and fresh scratch planes. The separately supplied backward now recomputes the activation, gates incoming
+sensitivities, stores weight gradients, copies transposed operands and reduces
+input gradients. `PtxDenseBackward.universal_backward` bounds every stored
+gradient against the actual generated TorchLean backward; `backward_exists`
+provides a completed admitted witness. Six additional interpreter regressions
+cover padding, negative gradients, zero activation and empty dimensions.
+Backward conditions include the strict ReLU margin, calculated product/tree
+ranges and the copy-packet thread bound. The host allocation/view interface is
+explicit; the copied values themselves come from actual instructions. There is no GPU run, benchmark, runtime/ABI
 or hardware-conformance claim. The candidate machine and memory constraints have
 not been narrowed to obtain universal correctness.

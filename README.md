@@ -185,7 +185,7 @@ mathlib build artifacts, and check the TorchLean examples, numerical bounds and
 forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
-and `Integration check passed: 1096 exact dependency reports, only standard Lean
+and `Integration check passed: 1216 exact dependency reports, only standard Lean
 axioms.` respectively. The general forward and backward proofs above are included.
 
 A smaller [array-loop example](docs/foundations/array-mask-select.md) combines
