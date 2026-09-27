@@ -101,3 +101,11 @@ rounding. The resulting theorem applies to actual encoded multiplication and
 approximate outputs, but does not claim that a fetched kernel has performed the
 shift, multiplication, or exponential. It leaves the constant's error as an
 explicit real expression, not an unverified decimal estimate.
+
+The bounded exponential provider separates exact special cases from its finite
+approximation neighborhood. Signed-zero inputs return positive one exactly;
+infinities and NaN follow their documented cases. A strictly negative finite
+operand preserves every result in the two-policy neighborhood. Positive finite
+operands are explicitly unsupported by this initial fragment. Result existence
+is equivalent to the stated supported domain, so missing overflow semantics
+cannot disappear behind an unconditional existence assumption.

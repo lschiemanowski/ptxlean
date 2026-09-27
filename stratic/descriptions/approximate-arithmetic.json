@@ -12,7 +12,8 @@
     "Construct finite encoded rounded centers from input range bounds, and provide encoded nearest-even reciprocal arithmetic with explicit range/error guarantees.",
     "Distinguish center-spacing, output-spacing and neighboring-encoding interpretations of ULP; do not silently treat one as PTX semantics.",
     "Cover center-based and output-based ULP allowances in one finite relation and bound every permitted result without assuming its output range.",
-    "Derive natural-exponential error and encoded arithmetic witnesses from a concrete base-conversion constant, actual multiplication, and explicit input bounds; retain inherited shift error separately."
+    "Derive natural-exponential error and encoded arithmetic witnesses from a concrete base-conversion constant, actual multiplication, and explicit input bounds; retain inherited shift error separately.",
+    "Separate exact exponential special cases from the finite approximation relation and expose its bounded supported input domain."
   ],
   "realization": "partial",
   "remaining": "Conservative center/output ULP bounds and actual encoded base-conversion error/existence are proved, alongside finite centers and the accepted rounded reciprocal provider. Shift/subtraction, source interpretation and exceptional/overflow cases for a fetched exponential, and parallel kernel execution remain unfinished.",
@@ -338,6 +339,54 @@
         "path": "integration/torchlean/PtxBinary32/ExpArgument.lean",
         "passage": {
           "quote": "theorem bounded_product_range (x : ℝ) (small : |x| ≤ (2:ℝ)^(126:ℤ)) :\n    |x*constantValue| ≤ Bounds.maxFinite := by\n  rw [abs_mul,abs_of_pos constant_positive]\n  have h := mul_le_mul_of_nonneg_right small constant_positive.le\n  apply h.trans\n  rw [Bounds.maxFinite_eq]\n  norm_num [constantValue]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The bounded exponential provider separates exact special cases from its finite\napproximation neighborhood. Signed-zero inputs return positive one exactly;\ninfinities and NaN follow their documented cases. A strictly negative finite\noperand preserves every result in the two-policy neighborhood. Positive finite\noperands are explicitly unsupported by this initial fragment. Result existence\nis equivalent to the stated supported domain, so missing overflow semantics\ncannot disappear behind an unconditional existence assumption."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+        "passage": {
+          "quote": "def Supported (input : Word) : Prop :=\n  isNaN input = true ∨ input = 0xff800000 ∨ input = 0x7f800000 ∨\n    ∃ x : ℝ, finiteReal input = some x ∧ x ≤ 0"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The bounded exponential provider separates exact special cases from its finite\napproximation neighborhood. Signed-zero inputs return positive one exactly;\ninfinities and NaN follow their documented cases. A strictly negative finite\noperand preserves every result in the two-policy neighborhood. Positive finite\noperands are explicitly unsupported by this initial fragment. Result existence\nis equivalent to the stated supported domain, so missing overflow semantics\ncannot disappear behind an unconditional existence assumption."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+        "passage": {
+          "quote": "def Results (input output : Word) : Prop :=\n  (isNaN input = true ∧ isNaN output = true) ∨\n  (input = 0xff800000 ∧ output = 0) ∨\n  (input = 0x7f800000 ∧ output = 0x7f800000) ∨\n  ∃ x : ℝ, finiteReal input = some x ∧ x ≤ 0 ∧\n    if x = 0 then output = 0x3f800000 else ConservativeULP.Results ((2:ℝ)^x) output"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The bounded exponential provider separates exact special cases from its finite\napproximation neighborhood. Signed-zero inputs return positive one exactly;\ninfinities and NaN follow their documented cases. A strictly negative finite\noperand preserves every result in the two-policy neighborhood. Positive finite\noperands are explicitly unsupported by this initial fragment. Result existence\nis equivalent to the stated supported domain, so missing overflow semantics\ncannot disappear behind an unconditional existence assumption."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+        "passage": {
+          "quote": "theorem results_exists_iff (input : Word) : (∃ output, Results input output) ↔ Supported input := by\n  constructor\n  · rintro ⟨output, nan | negInf | posInf | ⟨x,value,nonpos,_⟩⟩\n    · exact Or.inl nan.1\n    · exact Or.inr (Or.inl negInf.1)\n    · exact Or.inr (Or.inr (Or.inl posInf.1))\n    · exact Or.inr (Or.inr (Or.inr ⟨x,value,nonpos⟩))\n  · intro supported\n    rcases supported with nan | negInf | posInf | ⟨x,value,nonpos⟩\n    · exact ⟨input, (nan_iff input input nan).mpr nan⟩\n    · subst input; exact ⟨0, (neg_inf_iff 0).mpr rfl⟩\n    · subst input; exact ⟨0x7f800000, (pos_inf_iff _).mpr rfl⟩\n    · by_cases zero : x = 0\n      · subst x; exact ⟨0x3f800000, (zero_iff _ _ value).mpr rfl⟩\n      · obtain ⟨output,h⟩ := ConservativeULP.exp2_results_exists x nonpos\n        exact ⟨output, (negative_iff _ _ x value (lt_of_le_of_ne nonpos zero)).mpr h⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The bounded exponential provider separates exact special cases from its finite\napproximation neighborhood. Signed-zero inputs return positive one exactly;\ninfinities and NaN follow their documented cases. A strictly negative finite\noperand preserves every result in the two-policy neighborhood. Positive finite\noperands are explicitly unsupported by this initial fragment. Result existence\nis equivalent to the stated supported domain, so missing overflow semantics\ncannot disappear behind an unconditional existence assumption."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+        "passage": {
+          "quote": "theorem finite_error (input output : Word) (x : ℝ) (value : finiteReal input = some x)\n    (allowed : Results input output) :\n    ∃ z : ℝ, finiteReal output = some z ∧ |z-(2:ℝ)^x| ≤ 5/(2:ℝ)^24 := by\n  obtain ⟨a,ha,nonpos,h⟩ := finiteExp2 input output x value allowed\n  have same : a = x := Option.some.inj (ha.symm.trans value)\n  subst a\n  exact ConservativeULP.exp2_error x output nonpos h"
         }
       }
     }

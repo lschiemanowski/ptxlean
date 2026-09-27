@@ -1,3 +1,5 @@
+import PtxBinary32.Exponential
+import PtxBinary32.ExponentialChecks
 import PtxBinary32.ConservativeULP
 import PtxBinary32.ConservativeULPChecks
 import PtxBinary32.ExpArgument
@@ -1980,3 +1982,31 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Binary32.ExpArgumentChecks.zero_product
 #print axioms Ptx.Binary32.ExpArgumentChecks.negative_one_stages
 #print axioms Ptx.Binary32.ExpArgumentChecks.negative_one_accuracy
+
+#print axioms Ptx.Binary32.Exponential.Supported
+#print axioms Ptx.Binary32.Exponential.Results
+#print axioms Ptx.Binary32.Exponential.finite_iff
+#print axioms Ptx.Binary32.Exponential.zero_iff
+#print axioms Ptx.Binary32.Exponential.negative_iff
+#print axioms Ptx.Binary32.Exponential.positive_unsupported
+#print axioms Ptx.Binary32.Exponential.nan_iff
+#print axioms Ptx.Binary32.Exponential.neg_inf_iff
+#print axioms Ptx.Binary32.Exponential.pos_inf_iff
+#print axioms Ptx.Binary32.Exponential.results_exists_iff
+#print axioms Ptx.Binary32.Exponential.results_supported
+#print axioms Ptx.Binary32.Exponential.results_exists
+#print axioms Ptx.Binary32.Exponential.one_allowed
+#print axioms Ptx.Binary32.Exponential.finiteExp2
+#print axioms Ptx.Binary32.Exponential.finite_error
+#print axioms Ptx.Binary32.Exponential.Checks.positive_zero_real
+#print axioms Ptx.Binary32.Exponential.Checks.negative_zero_real
+#print axioms Ptx.Binary32.Exponential.Checks.signed_zeros
+#print axioms Ptx.Binary32.Exponential.Checks.zero_neighbor_rejected
+#print axioms Ptx.Binary32.Exponential.Checks.signed_infinities
+#print axioms Ptx.Binary32.Exponential.Checks.nan_freedom
+#print axioms Ptx.Binary32.Exponential.Checks.positive_finite_rejected
+#print axioms Ptx.Binary32.Exponential.Checks.negative_one_real
+#print axioms Ptx.Binary32.Exponential.Checks.half_real
+#print axioms Ptx.Binary32.Exponential.Checks.negative_one_multiple_results
+#print axioms Ptx.Binary32.Exponential.Checks.negative_subnormal_real
+#print axioms Ptx.Binary32.Exponential.Checks.negative_subnormal_exists

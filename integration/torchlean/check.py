@@ -40,6 +40,13 @@ TARGETS.add("PtxBinary32.ExpArgument")
 COUNTS["Ptx.Binary32.ExpArgumentChecks"] = 4
 TARGETS.add("PtxBinary32.ExpArgumentChecks")
 
+
+# Bounded exponential numerical provider with exact special cases.
+COUNTS["Ptx.Binary32.Exponential"] = 15
+TARGETS.add("PtxBinary32.Exponential")
+COUNTS["Ptx.Binary32.Exponential.Checks"] = 12
+TARGETS.add("PtxBinary32.ExponentialChecks")
+
 # Explicit public coverage for the serialized two-kernel and exact VJP slice.
 COUNTS.update({'Ptx.Scalar.Reciprocal': 17, 'Ptx.Scalar.Reciprocal.Text': 6})
 TARGETS.add('PtxBinary32.ReciprocalInstruction')

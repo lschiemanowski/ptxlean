@@ -1,0 +1,16 @@
+{
+  "id": "exponential-instruction",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "The instruction representation has a documented relationship to textual PTX.\nUnsupported syntax and features cannot silently execute as supported operations."
+    }
+  },
+  "summary": [
+    "Execute a bounded approximate base-two exponential with exact special cases, original operands, predicates, actual fetch and precise effects.",
+    "Preserve both named ULP policies and expose positive finite inputs as missing coverage in every existence guarantee."
+  ],
+  "realization": "unimplemented",
+  "remaining": "Implement the reviewed numerical provider, preflight and delegate the bounded leaf, then independently check its source fidelity and proofs. Positive finite inputs, other forms, raw parsing and whole kernels remain outside the fragment.",
+  "links": []
+}

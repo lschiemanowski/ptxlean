@@ -1,0 +1,112 @@
+{
+  "id": "854f3710-ca58-4b67-85ef-a91e4f203096",
+  "base": "37aae275bd621d0690017e0b8ecb4287f2cc0759",
+  "contentTree": "3577264e63ce860823cb01e474e3a2e460c24d81",
+  "reviewer": "Codex",
+  "summary": "Add a reviewed bounded exponential numerical provider and preflighted instruction handoff, preserving explicit unsupported positive finite inputs.",
+  "examined": [
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "revised",
+      "reason": "Description-first exact exponential special cases and supported domain now have a checked provider, existence equivalence, all-result error and encoded edge checks."
+    },
+    {
+      "id": "exponential-instruction",
+      "outcome": "revised",
+      "reason": "New description states the bounded input domain, target policy, exact special cases, all-result preservation, fetch and conditional existence before worker implementation; remains unimplemented until acceptance."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "The separate floating leaf shares state and uses explicit unsupported coverage, actual fetch, predication and effects; the existing scalar layer contract remains valid."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Exact special cases and every permitted numerical output remain explicit; the provider does not assert instruction execution or hardware conformance."
+    },
+    {
+      "id": "softmax",
+      "outcome": "unchanged",
+      "reason": "The new provider is numerical preparation; current description already leaves fetched exponential and parallel softmax work outstanding."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Pinned source review, independent proof review, 27 additional audited provider declarations and full fixture/mutant preflight follow the existing assurance policy."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "Complete pre-dispatch reference and compiling-mutant calibration performed; worker sees fixed provider/contracts but not fixture. No new worker invocation or full-form coverage claimed by this foundation commit."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "3577264e63ce860823cb01e474e3a2e460c24d81",
+      "method": "./scripts/check.sh; integration/torchlean/./check.sh; complete reference/semantic-mutant calibration; independent source and proof reviews; stratic validate; git diff --check",
+      "outcome": "pass",
+      "environment": "Pinned Lean4.34.0 and16dependency revisions; no inference yet",
+      "evidence": "Root1643dependency reports; integration1793exactreports including27newprovider endpoints; only standard Lean axioms. Before/after snapshot identical. /tmp/ex2-preflight/calibration-final/report.json records full-driver control pass and four compiling/audited mutants rejected. The driver was repaired BEFORE dispatch (explicit instruction argument for predicate-polymorphic constructor); earlier diagnostic logs retained. Logs /tmp/ex2-foundation-root.log and /tmp/ex2-foundation-integration.log. Source and provider/API reviews passed.",
+      "tests": [],
+      "id": "7cd19924-aeb1-43cd-a471-a5519b381773",
+      "recordedAt": "2026-09-27T11:49:35.846Z"
+    }
+  ],
+  "recordedAt": "2026-09-27T11:50:01.121Z",
+  "unmapped": [
+    {
+      "path": "docs/formalization/exponential-instruction-source-review.md",
+      "reason": "Inspected supporting proof/helper, source review or pre-dispatch contract/check artifact. Complements the linked bounded numerical provider; no hidden execution or full-form claim."
+    },
+    {
+      "path": "formalization/checks/exponential-instruction-v1.lean",
+      "reason": "Inspected supporting proof/helper, source review or pre-dispatch contract/check artifact. Complements the linked bounded numerical provider; no hidden execution or full-form claim."
+    },
+    {
+      "path": "formalization/contracts/exponential-instruction-v1.md",
+      "reason": "Inspected supporting proof/helper, source review or pre-dispatch contract/check artifact. Complements the linked bounded numerical provider; no hidden execution or full-form claim."
+    },
+    {
+      "path": "formalization/review/check_exponential_instruction.py",
+      "reason": "Inspected supporting proof/helper, source review or pre-dispatch contract/check artifact. Complements the linked bounded numerical provider; no hidden execution or full-form claim."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+      "reason": "Inspected supporting proof/helper, source review or pre-dispatch contract/check artifact. Complements the linked bounded numerical provider; no hidden execution or full-form claim."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ExponentialChecks.lean",
+      "reason": "Inspected supporting proof/helper, source review or pre-dispatch contract/check artifact. Complements the linked bounded numerical provider; no hidden execution or full-form claim."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Registers two provider targets and all 27 public declarations in the pinned build/exact dependency audit."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Registers two provider targets and all 27 public declarations in the pinned build/exact dependency audit."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers two provider targets and all 27 public declarations in the pinned build/exact dependency audit."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.json",
+      "reason": "New/updated description metadata and summaries, including explicit remaining implementation and complete meaningful provider links."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.md",
+      "reason": "New/updated description metadata and summaries, including explicit remaining implementation and complete meaningful provider links."
+    },
+    {
+      "path": "stratic/descriptions/exponential-instruction.json",
+      "reason": "New/updated description metadata and summaries, including explicit remaining implementation and complete meaningful provider links."
+    },
+    {
+      "path": "stratic/descriptions/exponential-instruction.md",
+      "reason": "New/updated description metadata and summaries, including explicit remaining implementation and complete meaningful provider links."
+    }
+  ]
+}
