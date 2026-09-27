@@ -139,9 +139,31 @@ bits: positive and negative zero have the same real value.
 If a center is itself within error `E` of the ideal value, every neighborhood
 member is within `radius + E`. In particular, an approximation allowance around
 a correctly rounded result must include the center's rounding error when
-comparing with the ideal exponential. The current theorem requires an actual
-encoded center. The real grid-rounding theorem alone does not establish that
-an arbitrary exponential has a finite encoded rounded result.
+comparing with the ideal exponential. The bridge in
+[`RoundedReal.lean`](../../integration/torchlean/PtxBinary32/RoundedReal.lean)
+now constructs that encoded center whenever the ideal value's absolute value is
+at most binary32's maximum finite value. It rounds to an integer times a power
+of two, proves the rounded value stays in range by monotonicity, and packs it
+using FloatLib's checked dyadic rounding. Packing is exact because the value is
+already on the binary32 grid. Neither an output word nor its finiteness is a
+premise. This is a non-executable mathematical witness, suitable for relational
+semantics; it is not an executable exponential implementation.
+
+In particular, every nonpositive real base-two exponent has an encoded center
+and a nonempty approximate-result neighborhood. The bound is uniform over all
+admitted results: for an ideal value in `[0,1]`, a count-k neighborhood has
+absolute error at most `(k+1/2)*2^-23`. Thus the two-ULP convention gives
+`5*2^-24`, including the center's rounding error. This does not include argument
+preparation errors yet. The proofs include zero and gradual underflow.
+
+The ULP choice remains explicit. A checked boundary example shows that two
+center ULPs below the value one span four steps in the positive encoding order.
+Replacing the distance predicate by a difference between encoding integers
+would therefore change the contract. The pinned manual does not define these
+boundary conventions in the reviewed passages. We use center spacing for the
+numerical foundation, but do not mark a PTX instruction covered on that basis.
+An instruction review must justify the interpretation or a conservative envelope
+covering the intended source meanings.
 
 A future `ex2` path must also account for `exp(z) = 2^(z*log2(e))`: representing
 the conversion constant, multiplying by it, and perturbing the input all
@@ -166,10 +188,27 @@ structure contracts and fields. It rejects incomplete proofs and nonstandard
 axioms. These checks establish the stated Lean propositions, not fidelity to
 NVIDIA hardware or a performance result.
 
-The next instruction handoff to Luna needs a reviewed ULP convention, explicit
-special cases and architecture restrictions, finite encoded result-existence
-proofs, and a unary instruction interface with acceptance checks. No `ex2` or
-`rcp` coverage is claimed by this foundation. After instruction admission come
+The initial reciprocal path selects `rcp.rn.f32`, which has an explicit
+nearest-even rounding rule, rather than interpreting the approximate reciprocal's
+unspecified error reference. [`Reciprocal.lean`](../../integration/torchlean/PtxBinary32/Reciprocal.lean)
+supplies checked, executable encoded division of one by the actual input word,
+with the existing conservative NaN envelope. From a finite nonzero operand and
+an exact-quotient range bound it derives finite output, rounded-real equality
+and a half-ULP error bound. Its encoded checks include signed zeros, infinities,
+a rounded third, a subnormal result, overflow and alternative NaN payloads.
+This provider does not yet supply PTX instruction fetch, target checks or parsing.
+
+The positive-denominator proof alone is insufficient to rule out reciprocal
+overflow. A useful stronger guard is `D ≤ 1/2`: then the computed sum is at
+least `1/2`, its reciprocal is at most two, and the provider derives an actual
+finite result from these input conditions. Its `result_exists_of_sum_error`
+theorem makes this handoff explicit without an assumed successful reciprocal.
+
+The [unary-instruction preflight](../formalization/unary-floating-preflight.md)
+records the next Luna handoff requirements. The exponential still needs reviewed
+special/sign/overflow cases and an accepted source interpretation; the reciprocal
+provider is ready for a frozen instruction interface and independent acceptance
+checks. No `ex2` or `rcp` instruction coverage is claimed by this foundation. After instruction admission come
 parallel maximum and sum programs, forward and separately supplied backward
 programs, memory safety, admitted execution witnesses, and universal stored
 output bounds. The first row is nonempty and unmasked. Empty/all-masked rows,

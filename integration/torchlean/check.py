@@ -191,6 +191,10 @@ TARGETS.update({'PtxBinary32.CompactDenseDataRules', 'PtxBinary32.CompactDenseCo
 COUNTS.update({'Ptx.Binary32.Approximate': 17, 'Ptx.Numerics.Softmax': 18, 'Ptx.Numerics.Softmax.BackwardStages': 5, 'Ptx.Numerics.Softmax.Checks': 5, 'Ptx.Numerics.Softmax.Stages': 4, 'PtxTorchLean.Softmax': 12})
 TARGETS.update({'PtxBinary32.Approximate', 'PtxBinary32.SoftmaxError', 'PtxBinary32.SoftmaxChecks', 'PtxSoftmaxAccuracy'})
 
+# Input-range-derived encoding and rounded reciprocal numerical foundations.
+COUNTS.update({'Ptx.Binary32.ApproximateBounds': 6, 'Ptx.Binary32.Reciprocal': 12, 'Ptx.Binary32.Reciprocal.Checks': 9, 'Ptx.Binary32.RoundedReal': 19, 'Ptx.Binary32.RoundedRealChecks': 10})
+TARGETS.update({'PtxBinary32.RoundedRealChecks', 'PtxBinary32.ReciprocalChecks', 'PtxBinary32.Reciprocal', 'PtxBinary32.RoundedReal', 'PtxBinary32.ApproximateBounds'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

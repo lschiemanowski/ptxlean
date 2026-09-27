@@ -8,10 +8,11 @@
   },
   "summary": [
     "Represent a finite binary32 error neighborhood without selecting one permitted output or treating exceptional encodings as real numbers.",
-    "Combine the distance from a rounded center with the center’s error relative to the ideal real result; keep source interpretation and instruction execution separate."
+    "Combine the distance from a rounded center with the center’s error relative to the ideal real result; keep source interpretation and instruction execution separate.",
+    "Construct finite encoded rounded centers from input range bounds, and provide encoded nearest-even reciprocal arithmetic with explicit range/error guarantees."
   ],
   "realization": "partial",
-  "remaining": "Finite neighborhoods, monotonicity, nonemptiness for a supplied finite center, and accumulated center/approximation error are proved. PTX-specific ULP interpretation, exceptional and sign rules, rounded exponential center representability, instruction semantics and execution remain unfinished.",
+  "remaining": "Finite neighborhoods, actual encoded rounded centers under input range guards, unit-interval all-result bounds and an encoded nearest-even reciprocal provider are proved. The PTX interpretation of exponential ULP boundaries, full exponential exceptional/sign/overflow cases, fetched unary instructions and kernel execution remain unfinished.",
   "links": [
     {
       "kind": "implementation",
@@ -82,6 +83,126 @@
         "path": "integration/torchlean/PtxBinary32/Approximate.lean",
         "passage": {
           "quote": "theorem signed_zeros : (0 : Word) ≠ 0x80000000 ∧ Within 0 0 0x80000000 := by\n  refine ⟨by decide, 0, 0, ?_, ?_, by norm_num⟩\n  · rw [finiteReal_some _ (by decide)]\n    change some (Model.toReal (Model.posZero FloatFormat.binary32)) = some 0\n    rw [Model.toReal_posZero _ (by decide)]\n  · rw [finiteReal_some _ (by decide)]\n    change some (Model.toReal (Model.negZero FloatFormat.binary32)) = some 0\n    rw [Model.toReal_negZero _ (by decide)]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite center can be constructed from any real input whose absolute value is\nat most binary32's largest finite value. Round that input to the nearest grid\npoint, resolving exact halfway cases toward the value with an even final binary\ndigit, and encode the resulting integer times a power of two. Monotonicity of\nrounding proves that this grid point is still within the finite range. The\nencoding theorem returns an actual word and proves that its finite real value\nis the rounded input; it does not assume output finiteness or representability.\nThis is a mathematical, non-executable construction for relational semantics,\nnot a software implementation of an exponential."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/RoundedReal.lean",
+        "passage": {
+          "quote": "theorem exists_word (x : ℝ) (range : |x| ≤ Bounds.maxFinite) :\n    ∃ w : Word, finiteReal w = some (round32 x) :=\n  ⟨word x, word_real x range⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite center can be constructed from any real input whose absolute value is\nat most binary32's largest finite value. Round that input to the nearest grid\npoint, resolving exact halfway cases toward the value with an even final binary\ndigit, and encode the resulting integer times a power of two. Monotonicity of\nrounding proves that this grid point is still within the finite range. The\nencoding theorem returns an actual word and proves that its finite real value\nis the rounded input; it does not assume output finiteness or representability.\nThis is a mathematical, non-executable construction for relational semantics,\nnot a software implementation of an exponential."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/RoundedReal.lean",
+        "passage": {
+          "quote": "theorem word_real (x : ℝ) (range : |x| ≤ Bounds.maxFinite) :\n    finiteReal (word x) = some (round32 x) := by\n  rw [finiteReal_some _ (word_finite x range)]\n  have h := Model.isFinite_roundDyadic_of_isIEEE_of_abs_toReal_le_posMaxFinite\n    FloatFormat.binary32 (by decide) (roundedDyadic x)\n    (by rw [roundedDyadic_real]; exact round_range x range)\n  rw [word, decode_bits]\n  apply congrArg some\n  exact (Model.toReal_roundDyadic_eq_roundAt _ (by decide) _ h).trans\n    (by rw [roundedDyadic_real]; exact round_idempotent x)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For nonpositive arguments, a base-two exponential lies between zero and one;\nfor arguments at least one, a reciprocal lies between zero and one. These input\ndomains therefore admit finite rounded centers, including gradual underflow to\nzero. They are useful sufficient domains for stable softmax, not the full PTX\ninstruction domains. The approximate-result relation still permits every word\nin its stated neighborhood rather than replacing that relation by its center.\nFor an ideal value between zero and one, both it and its rounded center have\nULP at most 2^-23. A count-k neighborhood therefore has total absolute error at\nmost (k+1/2)*2^-23. For the two-ULP exponential allowance this is 5*2^-24.\nThis conservative estimate includes rounding and does not assert that an\ninstruction attains every included value."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/RoundedReal.lean",
+        "passage": {
+          "quote": "theorem exp2_results_exists (count : ℕ) (x : ℝ) (nonpos : x ≤ 0) :\n    ∃ output, Results count ((2:ℝ)^x) output :=\n  results_exists count _ (exp2_range x nonpos)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For nonpositive arguments, a base-two exponential lies between zero and one;\nfor arguments at least one, a reciprocal lies between zero and one. These input\ndomains therefore admit finite rounded centers, including gradual underflow to\nzero. They are useful sufficient domains for stable softmax, not the full PTX\ninstruction domains. The approximate-result relation still permits every word\nin its stated neighborhood rather than replacing that relation by its center.\nFor an ideal value between zero and one, both it and its rounded center have\nULP at most 2^-23. A count-k neighborhood therefore has total absolute error at\nmost (k+1/2)*2^-23. For the two-ULP exponential allowance this is 5*2^-24.\nThis conservative estimate includes rounding and does not assert that an\ninstruction attains every included value."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ApproximateBounds.lean",
+        "passage": {
+          "quote": "theorem results_error (count : ℕ) (x : ℝ) (output : Word)\n    (nonneg : 0 ≤ x) (upper : x ≤ 1) (allowed : RoundedReal.Results count x output) :\n    ∃ z : ℝ, finiteReal output = some z ∧\n      |z-x| ≤ ((count:ℝ)+1/2)*(2:ℝ)^(-23:ℤ) := by\n  obtain ⟨z,hz,bound⟩ := RoundedReal.results_error count x output\n    (RoundedReal.unit_range x nonneg upper) allowed\n  refine ⟨z,hz,bound.trans ?_⟩\n  have rounded := round_unit x nonneg upper\n  have allowance := mul_le_mul_of_nonneg_left\n    (ulp_unit (round32 x) rounded.1 rounded.2) (Nat.cast_nonneg count : (0:ℝ) ≤ count)\n  have rounding : eps32 x ≤ (2:ℝ)^(-23:ℤ)/2 :=\n    div_le_div_of_nonneg_right (ulp_unit x nonneg upper) (by norm_num)\n  calc\n    _ ≤ count * (2:ℝ)^(-23:ℤ) + (2:ℝ)^(-23:ℤ)/2 := add_le_add allowance rounding\n    _ = _ := by ring"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The distance can be expressed in units in the last place, abbreviated ULP. This\nis the spacing of the binary32 grid at a chosen real value, with a smallest step\nof 2^-149 near zero. The chosen convention uses the pinned FloatLib/TorchLean ULP\nat the center. At a power-of-two boundary, the spacing changes, so this convention\nis explicit. A numerical neighborhood is not a claim that NVIDIA uses exactly\nthis convention, nor that every included bit pattern is physically realizable."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/RoundedRealChecks.lean",
+        "passage": {
+          "quote": "theorem center_spacing_not_encoding_distance :\n    Approximate.WithinULP 2 0x3f800000 0x3f7ffffc ∧\n      (0x3f800000 : Word).toNat-(0x3f7ffffc : Word).toNat = 4 := by\n  refine ⟨⟨1, Approximate.one_real, 1, 1-(2:ℝ)^(-22:ℤ),\n    Approximate.one_real, below_one_real, ?_⟩, by decide⟩\n  rw [ApproximateBounds.ulp_one]\n  norm_num"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Reciprocal.lean",
+        "passage": {
+          "quote": "theorem results_real (input output : Word) (x : ℝ) (value : finiteReal input = some x)\n    (nonzero : x ≠ 0) (range : |1/x| ≤ Bounds.maxFinite) (allowed : Results input output) :\n    finiteReal output = some (round32 (1/x)) := by\n  rw [envelope_finite_eq _ _ (reference_finite input x value nonzero range) allowed]\n  exact reference_real input x value nonzero range"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Reciprocal.lean",
+        "passage": {
+          "quote": "theorem results_exists (input : Word) : ∃ output, Results input output := envelope_exists _"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Reciprocal.lean",
+        "passage": {
+          "quote": "theorem result_exists_of_sum_error (input : Word) (S Z D : ℝ)\n    (value : finiteReal input = some S) (exactLower : 1 ≤ Z)\n    (error : |S-Z| ≤ D) (small : D ≤ 1/2) :\n    ∃ output, Results input output ∧ finiteReal output = some (round32 (1/S)) := by\n  apply finite_result_exists input S value\n  have := abs_le.mp error\n  linarith"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalChecks.lean",
+        "passage": {
+          "quote": "theorem signed_zeros : reference 0 = 0x7f800000 ∧ reference 0x80000000 = 0xff800000 := by\n  decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalChecks.lean",
+        "passage": {
+          "quote": "theorem nan_freedom : Results 0x7fc00000 0x7fc00001 ∧ ¬ Results 0x7fc00000 0 := by\n  decide"
         }
       }
     }

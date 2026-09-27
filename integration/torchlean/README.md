@@ -262,6 +262,13 @@ vector–Jacobian product. `PtxBinary32.Approximate` supplies finite encoded err
 neighborhoods, preserving alternative results and signed-zero distinctions.
 These modules are included in `./check.sh` and its dependency audit.
 
-This is a numerical foundation: `ex2`/`rcp` instruction contracts, finite encoded
-exponential-result existence and softmax kernel execution/storage proofs remain
-open. No GPU run or benchmark is needed for these checks.
+`PtxBinary32.RoundedReal` now constructs a finite encoded rounded center from an
+input range bound, including nonpositive base-two exponentials.
+`PtxBinary32.ApproximateBounds` proves the all-result unit-interval error bound.
+`PtxBinary32.Reciprocal` supplies encoded nearest-even division of one, with range
+and accuracy proofs and signed-zero, subnormal, overflow and NaN checks.
+
+The initial reciprocal instruction target is `rcp.rn.f32`. Fetched unary
+instructions, source acceptance of the exponential ULP convention and softmax
+kernel execution/storage proofs remain open. No GPU run or benchmark is needed
+for these checks.

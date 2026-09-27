@@ -1,3 +1,8 @@
+import PtxBinary32.RoundedReal
+import PtxBinary32.ApproximateBounds
+import PtxBinary32.RoundedRealChecks
+import PtxBinary32.Reciprocal
+import PtxBinary32.ReciprocalChecks
 import PtxBinary32.Approximate
 import PtxBinary32.SoftmaxError
 import PtxBinary32.SoftmaxChecks
@@ -1837,3 +1842,61 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Numerics.Softmax.BackwardStages.reduction
 #print axioms Ptx.Numerics.Softmax.BackwardStages.subtraction
 #print axioms Ptx.Numerics.Softmax.BackwardStages.multiplication
+
+-- Encoded rounded-real centers and nearest-even reciprocal foundations.
+#print axioms Ptx.Binary32.RoundedReal.roundedDyadic
+#print axioms Ptx.Binary32.RoundedReal.scaledInt_real
+#print axioms Ptx.Binary32.RoundedReal.roundedDyadic_real
+#print axioms Ptx.Binary32.RoundedReal.round_idempotent
+#print axioms Ptx.Binary32.RoundedReal.round_range
+#print axioms Ptx.Binary32.RoundedReal.word
+#print axioms Ptx.Binary32.RoundedReal.decode_bits
+#print axioms Ptx.Binary32.RoundedReal.word_finite
+#print axioms Ptx.Binary32.RoundedReal.word_real
+#print axioms Ptx.Binary32.RoundedReal.exists_word
+#print axioms Ptx.Binary32.RoundedReal.word_preserves_value
+#print axioms Ptx.Binary32.RoundedReal.Results
+#print axioms Ptx.Binary32.RoundedReal.results_exists
+#print axioms Ptx.Binary32.RoundedReal.results_error
+#print axioms Ptx.Binary32.RoundedReal.unit_range
+#print axioms Ptx.Binary32.RoundedReal.exp2_range
+#print axioms Ptx.Binary32.RoundedReal.reciprocal_range
+#print axioms Ptx.Binary32.RoundedReal.exp2_results_exists
+#print axioms Ptx.Binary32.RoundedReal.reciprocal_word_exists
+#print axioms Ptx.Binary32.ApproximateBounds.ulp_one
+#print axioms Ptx.Binary32.ApproximateBounds.ulp_half
+#print axioms Ptx.Binary32.ApproximateBounds.ulp_unit
+#print axioms Ptx.Binary32.ApproximateBounds.round_unit
+#print axioms Ptx.Binary32.ApproximateBounds.results_error
+#print axioms Ptx.Binary32.ApproximateBounds.exp2_error
+#print axioms Ptx.Binary32.RoundedRealChecks.largest_finite
+#print axioms Ptx.Binary32.RoundedRealChecks.negative_endpoint
+#print axioms Ptx.Binary32.RoundedRealChecks.zero_center
+#print axioms Ptx.Binary32.RoundedRealChecks.smallest_subnormal_real
+#print axioms Ptx.Binary32.RoundedRealChecks.smallest_subnormal_preserved
+#print axioms Ptx.Binary32.RoundedRealChecks.fractional_exponent
+#print axioms Ptx.Binary32.RoundedRealChecks.deep_underflow_domain
+#print axioms Ptx.Binary32.RoundedRealChecks.out_of_range
+#print axioms Ptx.Binary32.RoundedRealChecks.below_one_real
+#print axioms Ptx.Binary32.RoundedRealChecks.center_spacing_not_encoding_distance
+#print axioms Ptx.Binary32.Reciprocal.reference
+#print axioms Ptx.Binary32.Reciprocal.Results
+#print axioms Ptx.Binary32.Reciprocal.instDecidableResults
+#print axioms Ptx.Binary32.Reciprocal.results_exists
+#print axioms Ptx.Binary32.Reciprocal.input_nonzero
+#print axioms Ptx.Binary32.Reciprocal.reference_finite
+#print axioms Ptx.Binary32.Reciprocal.reference_real
+#print axioms Ptx.Binary32.Reciprocal.results_real
+#print axioms Ptx.Binary32.Reciprocal.results_error
+#print axioms Ptx.Binary32.Reciprocal.half_range
+#print axioms Ptx.Binary32.Reciprocal.finite_result_exists
+#print axioms Ptx.Binary32.Reciprocal.result_exists_of_sum_error
+#print axioms Ptx.Binary32.Reciprocal.Checks.signed_zeros
+#print axioms Ptx.Binary32.Reciprocal.Checks.signed_infinities
+#print axioms Ptx.Binary32.Reciprocal.Checks.signs
+#print axioms Ptx.Binary32.Reciprocal.Checks.rounded_third
+#print axioms Ptx.Binary32.Reciprocal.Checks.subnormal_output
+#print axioms Ptx.Binary32.Reciprocal.Checks.overflow_from_subnormal
+#print axioms Ptx.Binary32.Reciprocal.Checks.nan_freedom
+#print axioms Ptx.Binary32.Reciprocal.Checks.finite_mismatch_rejected
+#print axioms Ptx.Binary32.Reciprocal.Checks.denominator_handoff

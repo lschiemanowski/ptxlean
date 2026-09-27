@@ -1,0 +1,129 @@
+{
+  "id": "6ee665cd-e25a-4392-965a-6282b92b8cb6",
+  "base": "ea38c30bfc068b6005ae141d1e566e85b5b39ae4",
+  "contentTree": "4d0cda41946ee91c439eb25fa70399e1318fa6d8",
+  "reviewer": "Codex",
+  "summary": "Construct finite binary32 rounded centers from input bounds and prove all-result approximation errors; add encoded nearest-even reciprocal arithmetic and boundary checks for the next unary instruction handoff.",
+  "examined": [
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "revised",
+      "reason": "Added input-only finite rounded-center construction, unit-interval error bounds and nearest-even reciprocal provider. Center and reciprocal descriptions preceded their implementation; the explicit uniform bound paragraph was completed alongside its proof. Summaries and complete source-passage links now match the completed slice. Source ULP ambiguity and pending fetched instruction semantics remain explicit."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "revised",
+      "reason": "Metadata now records completed bounded encoded-center existence and reciprocal arithmetic, without promoting the numerical proofs to PTX coverage or hardware conformance."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "Selects explicitly rounded reciprocal for the initial path and derives finite reciprocal existence from D<=1/2. Keeps the general D<1 numerical bound, argument errors, all-stage representability and fetched kernel obligations distinct."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Adds five targets and 56 exact public dependency requests, including the decidable reciprocal instance. Source guards, pins, accepted axioms and before/after hash checking remain unchanged; coverage ledger is unchanged."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "The numerical provider now derives representability and local error, while layout, fetched execution, storage and orchestration obligations remain independent. No interface promise changed."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "Existing true-VJP and conditional gradient error results are unchanged. Providing encoded forward arithmetic does not establish backward kernel execution or automatic PTX construction."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "No architecture, cache, mask, modality or full-network verification has been implemented by this bounded arithmetic work; all Gemma-specific responsibilities remain unchanged."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The existing distinction between illustrative numerical contracts and end-to-end kernel guarantees remains accurate; the softmax child explains its additional completed numerical foundations and missing kernel work."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "4d0cda41946ee91c439eb25fa70399e1318fa6d8",
+      "method": "python3 scripts/check_sources.py; ./scripts/check.sh; (cd integration/torchlean && ./check.sh); stratic validate; git diff --check; manual source and theorem-contract review",
+      "outcome": "pass",
+      "environment": "Lean 4.34.0, pinned clean TorchLean and FloatLib dependencies; PTX ISA 9.4 SHA-256 verified locally; Stratic 0.1.0 formatVersion 1. No external model calls or GPU execution.",
+      "evidence": "Pinned source verified (3928316 bytes, 23 anchors). Root check passed including 106 Python tests and 1643 exact dependency reports. Integration passed with 164 default targets and 1695 exact dependency reports, including all 56 added definition/theorem/instance endpoints; only standard Lean axioms. Existing dense/grid interpreter suites passed. New kernel-checked regressions cover signed zeros/infinities, NaN alternatives, subnormal and overflow reciprocal cases, finite endpoints and ULP boundary distinctions. Stratic validation true with no issues; no diff whitespace errors. Full proposed tree identical before and after checks. Source review retains unresolved exponential ULP interpretation and full special-case semantics as future work, with no instruction-coverage promotion.",
+      "tests": [],
+      "id": "e1545aca-0d05-4073-8efb-3f2969d74cc8",
+      "recordedAt": "2026-09-27T08:13:10.013Z"
+    }
+  ],
+  "recordedAt": "2026-09-27T08:14:08.456Z",
+  "unmapped": [
+    {
+      "path": "docs/formalization/unary-floating-preflight.md",
+      "reason": "Project-authored source interpretation and requirements for a future frozen Luna task; explicitly not dispatched, independently reviewed or covered. Documents the approximate exponential ambiguity and selected .rn reciprocal."
+    },
+    {
+      "path": "docs/foundations/stable-softmax.md",
+      "reason": "Updates the teaching guide with the proved encoding bridge, center-spacing boundary example, universal unit bound, stronger reciprocal range guard and remaining source/argument/execution obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/RoundedReal.lean",
+      "reason": "All public helpers implement or prove the linked input-bounded encoding construction and all-result numerical relation. Range bounds are input premises, not assumed output existence; construction is explicitly non-executable."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ApproximateBounds.lean",
+      "reason": "Supporting ULP-at-one/half, monotonicity and rounded-unit bounds derive the linked uniform error theorem and its base-two exponential instance."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/RoundedRealChecks.lean",
+      "reason": "Boundary regressions cover both maximum finite endpoints, zero, smallest subnormal, irrational exponential input value, deep-underflow domain, rejected range guard and center-spacing versus encoding-distance convention."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Reciprocal.lean",
+      "reason": "Unlinked helpers are exact encoded one/input division, NaN envelope, input nonzero and finite reference/real refinement proofs; finite equality/error never use real division at zero to claim machine behavior."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ReciprocalChecks.lean",
+      "reason": "Remaining kernel-checked encoded cases distinguish signs, rounded 1/3, subnormal output, overflow, incorrect finite outputs and denominator handoff."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Imports and exactly 56 public definition/theorem/instance endpoints for the five new modules."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Only explicit target and namespace counts changed; checking behavior and prohibition of unchecked proofs remain intact."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Five numerical modules added to default build; no dependency/toolchain pin or library interface changed."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updates reproducible integration status and links, without claiming fetched instructions or GPU runs."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.json",
+      "reason": "Reconciled numerical responsibility prose or metadata with the new results, meaningful summaries and still-partial realization. Mechanical validation confirms exact passage links."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.md",
+      "reason": "Reconciled numerical responsibility prose or metadata with the new results, meaningful summaries and still-partial realization. Mechanical validation confirms exact passage links."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.json",
+      "reason": "Reconciled numerical responsibility prose or metadata with the new results, meaningful summaries and still-partial realization. Mechanical validation confirms exact passage links."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Reconciled numerical responsibility prose or metadata with the new results, meaningful summaries and still-partial realization. Mechanical validation confirms exact passage links."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Reconciled numerical responsibility prose or metadata with the new results, meaningful summaries and still-partial realization. Mechanical validation confirms exact passage links."
+    }
+  ]
+}
