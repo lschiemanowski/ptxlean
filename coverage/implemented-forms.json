@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "scope": "selected_accepted_forms",
-  "qualification": "Twenty-nine reviewed forms: twenty-seven integer/bit/selection forms and two explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
+  "qualification": "Thirty reviewed forms: twenty-seven integer/bit/selection forms and three explicit scalar binary32 forms. This is not a census of all existing implementation, complete mnemonics, or PTX sections. FP output membership is a conservative NaN envelope, not exact hardware realizability. Historical replay and current file-site integrity remain distinct from current kernel checking and semantic fidelity.",
   "files": {
     "manual": {
       "path": ".ptx-source/9.4/index.html",
@@ -270,6 +270,26 @@
     "shf_review": {
       "path": "docs/formalization/shf-source-review.md",
       "sha256": "3d431dd3edfae1b9eb5b4b2efa08d7f9e1aa1c8cd42158b6dabc5c22e64f1c0d"
+    },
+    "reciprocal_instruction": {
+      "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+      "sha256": "162e27720a007177e253674f357a30614e160dc7256b59cf562b97fce0be073f"
+    },
+    "reciprocal_results": {
+      "path": "integration/torchlean/PtxBinary32/Reciprocal.lean",
+      "sha256": "d2ee41fcb18e97065fb5b14cd7e68cedc0edea614b3cefaf24af0585fc34432a"
+    },
+    "reciprocal_acceptance": {
+      "path": "formalization/results/reciprocal-instruction-v1/acceptance.json",
+      "sha256": "c4c0316028c46acafae1eedbceb1bf97383806e267b81500433a21af1211e9ac"
+    },
+    "reciprocal_evidence": {
+      "path": "formalization/results/reciprocal-instruction-v1/evidence-manifest.json",
+      "sha256": "0d11f96ce96edbaf9ecb8396a5eb91c1b8759eebec08257e452cf40d9097ba9d"
+    },
+    "reciprocal_review": {
+      "path": "docs/formalization/reciprocal-instruction-source-review.md",
+      "sha256": "18cfd15d08789fc3b5047fdc880d780f598a3d247e3de22f325b2b58b5e8ba46"
     }
   },
   "source": {
@@ -305,7 +325,8 @@
       "integer-arithmetic-instructions-bfi": "c3421a98b08fb3057289aa33538967c28314e176281817b5601b66efe8ce4859",
       "logic-and-shift-instructions-lop3": "4a886c092cb648517d3837a5ddb32db49958e3cdfb0d97b374ddd67a46f307cf",
       "data-movement-and-conversion-instructions-prmt": "0ddf874061fc8aa356ea0e167ec834ea8f28cb69e8623ed99cd8fc2a0fa02b4e",
-      "logic-and-shift-instructions-shf": "3dbb54947209e5144a5407d03642e7be049776fe90f5a7506965dd2168b3dfd1"
+      "logic-and-shift-instructions-shf": "3dbb54947209e5144a5407d03642e7be049776fe90f5a7506965dd2168b3dfd1",
+      "floating-point-instructions-rcp": "54df5ed301f162a6adc54baddef42571d4e201b3d33950edd06c1f9be0fb919e"
     },
     "common_operand_guard_anchors": [
       "operand-type-information",
@@ -436,6 +457,14 @@
       "patch_member": "attempts/shf-001/candidate.patch",
       "replay_member": "replays/shf-001/result.json",
       "patch_sha256": "708d72af7edfe8f7a295761b16d0c647c4909a50c0a732c97c524e2a6d6e3bc0"
+    },
+    "reciprocal": {
+      "acceptance": "reciprocal_acceptance",
+      "evidence": "reciprocal_evidence",
+      "source_review": "reciprocal_review",
+      "patch_member": "attempts/reciprocal-002/candidate.patch",
+      "replay_member": "replays/reciprocal-002-v3/result.json",
+      "patch_sha256": "87f4d2374e26836750de37a46e9bad082296a771c3dd5aea8be905ec3f100944"
     }
   },
   "forms": [
@@ -5015,6 +5044,147 @@
           "name": "lower_operation"
         }
       ]
+    },
+    {
+      "spelling": "rcp.rn.f32",
+      "status": "accepted",
+      "trial": "reciprocal",
+      "source_anchor": "floating-point-instructions-rcp",
+      "ptx_minimum": "2.0",
+      "target": "sm_20 feature floor; not target-name validation",
+      "selected_isa": "9.4",
+      "enforced_target_predicate": "target.isa = 94 and 20 <= target.sm",
+      "operands": {
+        "destination": "compatible b32/f32 word register",
+        "sources": [
+          "compatible b32/f32 word register or already-decoded exact 0f/0F bit literal"
+        ],
+        "aliasing": "Every source is read from the incoming state; source/destination overlap is unrestricted."
+      },
+      "guard": "Unconditional, positive predicate or negated predicate; false guard preserves all data and advances PC, with guard-only read metadata.",
+      "meaning": "Nearest-even binary32 reciprocal: divide exactly represented positive one by the input. Preserve gradual underflow, signed zeros and infinities, and the conservative all-NaN payload allowance. This does not model approximate reciprocal.",
+      "boundary": "Typed unary fetched leaf over supplied scalar state. Exact ISA94/SM>=20 feature condition on Step, even for disabled guards. No raw parsing, declaration or target-name validation, integer-to-float conversion, complete kernel execution or hardware conformance. Approximate, FTZ, other rounding modes and f64 forms remain unsupported.",
+      "semantics": [
+        {
+          "file": "reciprocal_results",
+          "namespace": "Ptx.Binary32.Reciprocal",
+          "name": "Results"
+        },
+        {
+          "file": "reciprocal_results",
+          "namespace": "Ptx.Binary32.Reciprocal",
+          "name": "reference"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "Eval"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "Step"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "SupportedTarget"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "occurrence"
+        }
+      ],
+      "frontend": [
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal.Text",
+          "name": "mnemonic"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal.Text",
+          "name": "supportedMnemonic"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal.Text",
+          "name": "decode"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal.Text",
+          "name": "encode"
+        }
+      ],
+      "proofs": [
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "eval_true_iff"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "eval_false_iff"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "eval_destination"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "eval_frame"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "eval_other"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "eval_event"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "eval_exists"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "step_origin"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "step_exists"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "step_no_fetch"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal",
+          "name": "step_unsupported_target"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal.Text",
+          "name": "decode_encode"
+        },
+        {
+          "file": "reciprocal_instruction",
+          "namespace": "Ptx.Scalar.Reciprocal.Text",
+          "name": "decode_iff"
+        }
+      ]
     }
   ],
   "uncovered_siblings": [
@@ -5276,6 +5446,20 @@
       ],
       "status": "unimplemented",
       "reason": "Specialized modes use different byte-selection controls and are not represented by the plain form."
+    },
+    {
+      "source_anchor": "floating-point-instructions-rcp",
+      "spellings": [
+        "rcp.approx.f32",
+        "rcp.approx.ftz.f32",
+        "rcp.rn.ftz.f32",
+        "rcp.rz.f32",
+        "rcp.rm.f32",
+        "rcp.rp.f32",
+        "rcp.rn.f64"
+      ],
+      "status": "unimplemented",
+      "reason": "Only explicit nearest-even binary32 without FTZ is admitted; approximate semantics, other rounding modes and double precision require separate reviewed contracts."
     }
   ]
 }

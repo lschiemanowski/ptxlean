@@ -55,15 +55,15 @@ the actual computed denominator. A sufficient input guard D<=1/2 makes that
 denominator at least one half, so its reciprocal is at most two and has a finite
 encoded rounded result. This stronger guard establishes representability, which
 does not follow merely from positivity. The provider's half-ULP rounding error
-can discharge the local reciprocal obligation once a fetched instruction is
-connected to it. Nonpositive base-two exponentials also have finite encoded
+discharges the local reciprocal obligation for the actual destination of an
+enabled fetched reciprocal instruction. Nonpositive base-two exponentials also have finite encoded
 rounded centers and a universal neighborhood error bound. Argument preparation,
 the interpretation of the PTX approximation allowance and the actual instruction
 connection remain separate obligations.
 
 The first scope is a nonempty unmasked row. Empty rows, masked-out positions and
-rows with no enabled positions need explicit separate policies. This numerical
-foundation does not yet claim that PTX instructions realize the stage contracts,
+rows with no enabled positions need explicit separate policies. The reciprocal leaf is connected to its numerical provider. The remaining
+foundation does not yet claim that PTX instructions realize all stage contracts,
 that all stage values are realizable binary32 words, or that a kernel executes.
 Remaining work is the source-reviewed approximate arithmetic, a parallel maximum
 and sum implementation with rounding/range bounds, fetched forward and backward

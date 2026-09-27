@@ -1,14 +1,14 @@
 # Accepted instruction forms
 
 An accepted form is a particular spelling and operand contract, not an entire
-instruction name. This ledger records twenty-nine independently reviewed forms:
+instruction name. This ledger records thirty independently reviewed forms:
 `min.u32`, `max.u32`, `clz.b32`, `popc.b32`, `add.rn.f32`, `mul.rn.f32`,
 `selp.b32`, `min.s32`, `max.s32`, `and.b32`, `or.b32`, `xor.b32`,
 `not.b32`, `cnot.b32`, `shl.b32`, `shr.u32`, `shr.s32`, `brev.b32`,
 `mul.hi.u32`, `mul.hi.s32`, `bfe.u32`, `bfe.s32`, `bfi.b32`, `lop3.b32`, `prmt.b32`, and the four
-`shf.l/r.clamp/wrap.b32` forms.
+`shf.l/r.clamp/wrap.b32` forms, plus `rcp.rn.f32`.
 The integer forms compare signed or unsigned words, count, reverse, extract, insert, shift or combine bits, take the upper half of a product, test whether a word is zero, or select a
-word using a predicate, with exact results for all input patterns. The floating forms add or multiply encoded binary32 values
+word using a predicate, with exact results for all input patterns. The floating forms add, multiply or take the reciprocal of encoded binary32 values
 with nearest-even rounding and preserved subnormal values. Their result relation
 keeps every non-NaN reference bit, including zero signs, and conservatively
 admits NaN encodings; it does not assert that every such encoding is realizable.
@@ -40,7 +40,7 @@ The ledger also lists uncovered sibling forms from the selected integer and
 floating instruction sections. A sibling is another type, width or modifier combination
 for the same instruction. These entries explain missing widths, packed values, saturation and 64-bit
 bit counts; they are not implementation
-claims. Other floating rounding modes, flush-to-zero, saturation, packed and
+claims. Approximate reciprocal, other floating rounding modes, flush-to-zero, saturation, packed and
 64-bit forms remain outside the accepted floating slice. No percentage or
 whole-section coverage follows from this ledger.
 

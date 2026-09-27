@@ -10,10 +10,10 @@
     "Use TorchLean’s stable real-valued softmax as the reference for a nonempty row, and derive normalization error from separate stage errors.",
     "Account for exponentials, summation, reciprocal and final multiplication; derive denominator positivity rather than assume the final normalization works.",
     "Keep real analysis and conditional numerical composition distinct from pending PTX instruction, execution and memory proofs.",
-    "Use explicitly rounded reciprocal arithmetic for the initial path; keep its encoded numerical guarantees separate from pending fetched instructions."
+    "Use the accepted explicitly rounded reciprocal instruction for the initial path; keep approximate exponential interpretation and complete kernel execution as separate obligations."
   ],
   "realization": "partial",
-  "remaining": "Conditional forward/backward composition and the exact TorchLean VJP are proved. Nonpositive base-two exponentials now have finite encoded centers, and a nearest-even encoded reciprocal provider derives finite output from denominator error at most one half. PTX exponential interpretation and exceptional cases, argument preparation, parallel maximum/sum bounds, fetched programs, admitted executions, memory safety and stored-output accuracy remain unfinished.",
+  "remaining": "The real softmax/VJP bridge, stage error composition and accepted fetched rounded reciprocal are available. Exponential source-policy acceptance, argument preparation, parallel reductions, forward/backward programs, memory safety and stored-output/existence proofs remain unfinished.",
   "links": [
     {
       "kind": "implementation",
@@ -139,7 +139,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The first reciprocal implementation uses explicitly nearest-even rounding, the\nPTX spelling rcp.rn.f32. Its encoded numerical provider is division of one by\nthe actual computed denominator. A sufficient input guard D<=1/2 makes that\ndenominator at least one half, so its reciprocal is at most two and has a finite\nencoded rounded result. This stronger guard establishes representability, which\ndoes not follow merely from positivity. The provider's half-ULP rounding error\ncan discharge the local reciprocal obligation once a fetched instruction is\nconnected to it. Nonpositive base-two exponentials also have finite encoded\nrounded centers and a universal neighborhood error bound. Argument preparation,\nthe interpretation of the PTX approximation allowance and the actual instruction\nconnection remain separate obligations."
+        "quote": "The first reciprocal implementation uses explicitly nearest-even rounding, the\nPTX spelling rcp.rn.f32. Its encoded numerical provider is division of one by\nthe actual computed denominator. A sufficient input guard D<=1/2 makes that\ndenominator at least one half, so its reciprocal is at most two and has a finite\nencoded rounded result. This stronger guard establishes representability, which\ndoes not follow merely from positivity. The provider's half-ULP rounding error\ndischarges the local reciprocal obligation for the actual destination of an\nenabled fetched reciprocal instruction. Nonpositive base-two exponentials also have finite encoded\nrounded centers and a universal neighborhood error bound. Argument preparation,\nthe interpretation of the PTX approximation allowance and the actual instruction\nconnection remain separate obligations."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/Reciprocal.lean",
@@ -151,12 +151,12 @@
     {
       "kind": "depends-on",
       "from": {
-        "quote": "The first reciprocal implementation uses explicitly nearest-even rounding, the\nPTX spelling rcp.rn.f32. Its encoded numerical provider is division of one by\nthe actual computed denominator. A sufficient input guard D<=1/2 makes that\ndenominator at least one half, so its reciprocal is at most two and has a finite\nencoded rounded result. This stronger guard establishes representability, which\ndoes not follow merely from positivity. The provider's half-ULP rounding error\ncan discharge the local reciprocal obligation once a fetched instruction is\nconnected to it. Nonpositive base-two exponentials also have finite encoded\nrounded centers and a universal neighborhood error bound. Argument preparation,\nthe interpretation of the PTX approximation allowance and the actual instruction\nconnection remain separate obligations."
+        "quote": "The first reciprocal implementation uses explicitly nearest-even rounding, the\nPTX spelling rcp.rn.f32. Its encoded numerical provider is division of one by\nthe actual computed denominator. A sufficient input guard D<=1/2 makes that\ndenominator at least one half, so its reciprocal is at most two and has a finite\nencoded rounded result. This stronger guard establishes representability, which\ndoes not follow merely from positivity. The provider's half-ULP rounding error\ndischarges the local reciprocal obligation for the actual destination of an\nenabled fetched reciprocal instruction. Nonpositive base-two exponentials also have finite encoded\nrounded centers and a universal neighborhood error bound. Argument preparation,\nthe interpretation of the PTX approximation allowance and the actual instruction\nconnection remain separate obligations."
       },
       "to": {
         "description": "approximate-arithmetic",
         "passage": {
-          "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+          "quote": "The reciprocal provider uses nearest-even division of the encoded value one by\nthe actual encoded operand. The fetched rcp.rn.f32 instruction preserves exactly\nthis result relation and checks the selected PTX version and target. A nonzero\nfinite operand and a bound on the exact quotient establish finite output and\nthe rounded-real meaning of every permitted result. These are numerical-analysis\nconditions, not restrictions on instruction execution. The NaN envelope preserves\nthe existing uncertainty about permitted NaN payloads. Approximate reciprocal\nand its error convention remain separate work."
         }
       },
       "reason": "Softmax needs finite encoded arithmetic results as well as real error composition; explicitly rounded reciprocal avoids the approximate form’s unresolved reference interpretation."

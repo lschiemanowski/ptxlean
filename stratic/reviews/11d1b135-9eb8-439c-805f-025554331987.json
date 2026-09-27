@@ -1,0 +1,262 @@
+{
+  "id": "11d1b135-9eb8-439c-805f-025554331987",
+  "base": "89a055b14238e8c3c3a7d43c7fcd314ccccde77d",
+  "contentTree": "a4b0a300fa3cdbf0f163871068b4b4055ae62903",
+  "reviewer": "Codex coordinator with independent source/policy and candidate-proof agents",
+  "summary": "Add reviewed rounded reciprocal and checked exponential ULP-policy boundary.\n\nIntegrate the unchanged Luna candidate, retain fresh replay and calibration evidence, fix generated dependency-cache accounting, and update Stratic and the instruction reference. Full softmax remains unfinished; exponential interpretation and kernel obligations are explicit. Record the missed pre-dispatch preflight and subsequent checker/setup failures without claiming first-pass acceptance.",
+  "examined": [
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "revised",
+      "reason": "Added a checked separation of center and output ULP conventions, with no claim of exponential-operand attainability; numerical provider now has a separately accepted fetched reciprocal leaf."
+    },
+    {
+      "id": "implemented-forms",
+      "outcome": "revised",
+      "reason": "Added only rcp.rn.f32, with source-section hash, exact provider/leaf sites, target policy, accepted patch and retained failed/successful replay evidence; sibling forms remain unsupported."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "Connected the accepted reciprocal leaf to the existing numeric handoff and kept exponential interpretation, argument preparation and actual forward/backward kernels explicitly unfinished."
+    },
+    {
+      "id": "worker-provisioning",
+      "outcome": "revised",
+      "reason": "Recognize only ProofWidgets package-lock generated hash cache; require tracked unchanged source, reject symlinks and pin cache bytes for dispatch drift checks. Two new regression tests pass."
+    },
+    {
+      "id": "worker-replay",
+      "outcome": "revised",
+      "reason": "Refreshed exact dependency-verification passage for the recognized auxiliary artifact; fresh replays still rebuild source with pinned revisions and independent proof checks."
+    },
+    {
+      "id": "reciprocal-instruction",
+      "outcome": "revised",
+      "reason": "New unary instruction contract and implementation links cover exact typed form, target/fetch, both guard polarities, original-state aliases, all numerical Results, frames and unconditional leaf existence. Independent source and candidate reviews passed."
+    },
+    {
+      "id": "instruction-reference",
+      "outcome": "unchanged",
+      "reason": "The new reciprocal page and source pages use the existing deterministic generator and project-authored explanation; no reference-site contract or styling changed."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Combined checker adds 30 exact audit endpoints and corrected independent driver; source fidelity remains separate, including the unresolved exponential ULP policy. No new axioms or hardware claims."
+    },
+    {
+      "id": "worker-runs",
+      "outcome": "unchanged",
+      "reason": "One counted Luna invocation at call32; preparation failures, checker repair, disk failure recovery and post-generation calibration retained. Dispatch, source/edit boundaries and no API fallback remain unchanged."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "Retain the required pre-dispatch reference preflight policy. This trial missed that step; record the process deviation and late calibration explicitly rather than retroactively claiming compliant preflight or a productivity result."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Every admitted result remains quantified; the counterexample prevents silently narrowing an ambiguous approximation allowance. Reciprocal error premises remain separate from unconditional execution."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "New leaf reuses the established scalar state and fetch boundary. Existing integer, mixed-program and parallel machines are unchanged; no complete reciprocal or softmax kernel is implied."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "Softmax remains a partial nonempty/unmasked example; its current progress and remaining kernel obligations are accurately stated in its child."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "Pinned instruction-section inventory is unchanged; only the separately reviewed selected-form ledger and generated pages gain one form."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "Restricted scalar result/fetch semantics and explicit source interpretation fit the existing execution contract; concurrent memory semantics and full ISA coverage are unchanged."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "No interface contract changed: the new leaf and numeric policy counterexample preserve the distinction between implementation correspondence and all-result numerical accuracy."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "This is incremental foundation/worker acceptance work, not a claim of complete PTX, hardware conformance or completed softmax execution."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "a4b0a300fa3cdbf0f163871068b4b4055ae62903",
+      "method": "./scripts/check.sh followed by (cd integration/torchlean && ./check.sh); stratic validate; git diff --check; independent source/policy and candidate/proof review with preserved fresh replay and post-generation calibration evidence.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and unchanged root/integration dependency revisions; local PTX9.4 input matches committed manifest; no GPU run or paid external review calls.",
+      "evidence": "Before/after full Stratic tree a4b0a300fa3cdbf0f163871068b4b4055ae62903 identical. Root checks pass: 30 selected accepted forms, 82 current reference files, 108 worker regression tests and 1643 exact axiom reports. Integration checks pass with 1725 exact reports and corrected independent reciprocal driver v2. Only propext, Classical.choice and Quot.sound permitted. Fresh accepted replay and three compiling/audited semantic mutation rejections archived; original checker timeout, disk recovery and missed pre-dispatch preflight explicitly retained. Exponential source-policy interpretation and full softmax execution remain unfinished, not assumed.",
+      "tests": [],
+      "id": "f268c65e-4327-419d-94eb-84a14ccd714d",
+      "recordedAt": "2026-09-27T11:10:29.638Z"
+    }
+  ],
+  "recordedAt": "2026-09-27T11:11:19.001Z",
+  "unmapped": [
+    {
+      "path": "coverage/implemented-forms.json",
+      "reason": "Reviewed reciprocal evidence, source-section hash and current declaration sites; selected-form count is 30, with explicit uncovered siblings and no section-coverage claim."
+    },
+    {
+      "path": "docs/formalization/reciprocal-instruction-source-review.md",
+      "reason": "Project-authored source review or study explanation: records accepted reciprocal, ULP-policy distinction and exact unfinished exponential/kernel obligations, including checker/preflight deviations."
+    },
+    {
+      "path": "docs/formalization/unary-floating-preflight.md",
+      "reason": "Project-authored source review or study explanation: records accepted reciprocal, ULP-policy distinction and exact unfinished exponential/kernel obligations, including checker/preflight deviations."
+    },
+    {
+      "path": "docs/foundations/stable-softmax.md",
+      "reason": "Project-authored source review or study explanation: records accepted reciprocal, ULP-policy distinction and exact unfinished exponential/kernel obligations, including checker/preflight deviations."
+    },
+    {
+      "path": "docs/instructions/code/integration__torchlean__PtxBinary32__Reciprocal.lean.html",
+      "reason": "Deterministically generated reciprocal form/source pages and table update; current-output and HTML regression checks validate them against project sources."
+    },
+    {
+      "path": "docs/instructions/code/integration__torchlean__PtxBinary32__ReciprocalInstruction.lean.html",
+      "reason": "Deterministically generated reciprocal form/source pages and table update; current-output and HTML regression checks validate them against project sources."
+    },
+    {
+      "path": "docs/instructions/forms/rcp.rn.f32.html",
+      "reason": "Deterministically generated reciprocal form/source pages and table update; current-output and HTML regression checks validate them against project sources."
+    },
+    {
+      "path": "docs/instructions/index.html",
+      "reason": "Deterministically generated reciprocal form/source pages and table update; current-output and HTML regression checks validate them against project sources."
+    },
+    {
+      "path": "docs/reference/explanations.json",
+      "reason": "Original prose explaining reciprocal rounding, special values, typed scope and limitations; reviewed against the pinned source and candidate."
+    },
+    {
+      "path": "formalization/checks/reciprocal-instruction-v1.lean",
+      "reason": "Original frozen v1 retained as failed history; v2 changes only two explicit theorem arguments, preserves every proposition and runs in the integration suite."
+    },
+    {
+      "path": "formalization/checks/reciprocal-instruction-v2.lean",
+      "reason": "Original frozen v1 retained as failed history; v2 changes only two explicit theorem arguments, preserves every proposition and runs in the integration suite."
+    },
+    {
+      "path": "formalization/contracts/reciprocal-instruction-v1.md",
+      "reason": "Frozen unary worker contract/task pins existing interfaces, numerical provider, source manifest and local-only vendor source; writable boundary is one module."
+    },
+    {
+      "path": "formalization/results/reciprocal-instruction-v1/README.md",
+      "reason": "Hash-verified selected trial evidence retains setup, original failing driver, disk recovery, passing replay and post-generation mutations; raw model events omitted with hashes. Scope and workflow deviation are explicit."
+    },
+    {
+      "path": "formalization/results/reciprocal-instruction-v1/acceptance.json",
+      "reason": "Hash-verified selected trial evidence retains setup, original failing driver, disk recovery, passing replay and post-generation mutations; raw model events omitted with hashes. Scope and workflow deviation are explicit."
+    },
+    {
+      "path": "formalization/results/reciprocal-instruction-v1/evidence-manifest.json",
+      "reason": "Hash-verified selected trial evidence retains setup, original failing driver, disk recovery, passing replay and post-generation mutations; raw model events omitted with hashes. Scope and workflow deviation are explicit."
+    },
+    {
+      "path": "formalization/results/reciprocal-instruction-v1/worker-evidence.tar.gz",
+      "reason": "Hash-verified selected trial evidence retains setup, original failing driver, disk recovery, passing replay and post-generation mutations; raw model events omitted with hashes. Scope and workflow deviation are explicit."
+    },
+    {
+      "path": "formalization/review/check_reciprocal_instruction.py",
+      "reason": "Offline post-generation calibration checks original success and three compiling/audited semantic mutants; full probe sources and logs archived. Not claimed as pre-dispatch preflight."
+    },
+    {
+      "path": "formalization/tasks/reciprocal-instruction-v1.json",
+      "reason": "Frozen unary worker contract/task pins existing interfaces, numerical provider, source manifest and local-only vendor source; writable boundary is one module."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ApproximatePolicyChecks.lean",
+      "reason": "Concrete encoded values, ULP computations and separation proof support the linked policy statement; all seven declarations independently audited and included in normal checks."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+      "reason": "Unchanged accepted worker module; all 23 public declarations inspected, replayed and audited. Linked key contracts cover subordinate data/decoder/frame helpers."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Build registration and exact audit coverage for two modules; corrected independent driver included in integration checking and before/after source snapshots."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Build registration and exact audit coverage for two modules; corrected independent driver included in integration checking and before/after source snapshots."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Build registration and exact audit coverage for two modules; corrected independent driver included in integration checking and before/after source snapshots."
+    },
+    {
+      "path": "scripts/worker_project.py",
+      "reason": "Known generated dependency cache is explicitly recognized and fingerprinted; remaining setup logic unchanged. Source drift and symlinks remain rejected by tests."
+    },
+    {
+      "path": "scripts/worker_provision.py",
+      "reason": "Known generated dependency cache is explicitly recognized and fingerprinted; remaining setup logic unchanged. Source drift and symlinks remain rejected by tests."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.json",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.md",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.json",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/implemented-forms.md",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/reciprocal-instruction.json",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/reciprocal-instruction.md",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/worker-provisioning.json",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/worker-provisioning.md",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "stratic/descriptions/worker-replay.json",
+      "reason": "Description or metadata reviewed through its explicit examined entry; meaningful passage links and summaries were reconciled and validated."
+    },
+    {
+      "path": "tests/test_implemented_forms.py",
+      "reason": "Adjust fixture form count only when reciprocal trial exists, preserving historical replay fixtures and selected-form provenance checks."
+    },
+    {
+      "path": "tests/test_worker_provision.py",
+      "reason": "Two regression tests use real Git fixtures to check cache fingerprint drift and reject source changes, unknown files and symlinks; existing worker tests pass."
+    }
+  ]
+}

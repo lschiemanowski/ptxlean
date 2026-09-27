@@ -9,10 +9,11 @@
   "summary": [
     "Represent a finite binary32 error neighborhood without selecting one permitted output or treating exceptional encodings as real numbers.",
     "Combine the distance from a rounded center with the center’s error relative to the ideal real result; keep source interpretation and instruction execution separate.",
-    "Construct finite encoded rounded centers from input range bounds, and provide encoded nearest-even reciprocal arithmetic with explicit range/error guarantees."
+    "Construct finite encoded rounded centers from input range bounds, and provide encoded nearest-even reciprocal arithmetic with explicit range/error guarantees.",
+    "Distinguish center-spacing, output-spacing and neighboring-encoding interpretations of ULP; do not silently treat one as PTX semantics."
   ],
   "realization": "partial",
-  "remaining": "Finite neighborhoods, actual encoded rounded centers under input range guards, unit-interval all-result bounds and an encoded nearest-even reciprocal provider are proved. The PTX interpretation of exponential ULP boundaries, full exponential exceptional/sign/overflow cases, fetched unary instructions and kernel execution remain unfinished.",
+  "remaining": "Finite neighborhoods, encoded centers under input range guards, unit-interval all-result bounds and the numerical provider for the accepted rounded reciprocal instruction are proved. Source interpretation and complete exceptional/overflow behavior for approximate exponential, argument preparation and kernel execution remain unfinished.",
   "links": [
     {
       "kind": "implementation",
@@ -149,7 +150,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+        "quote": "The reciprocal provider uses nearest-even division of the encoded value one by\nthe actual encoded operand. The fetched rcp.rn.f32 instruction preserves exactly\nthis result relation and checks the selected PTX version and target. A nonzero\nfinite operand and a bound on the exact quotient establish finite output and\nthe rounded-real meaning of every permitted result. These are numerical-analysis\nconditions, not restrictions on instruction execution. The NaN envelope preserves\nthe existing uncertainty about permitted NaN payloads. Approximate reciprocal\nand its error convention remain separate work."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/Reciprocal.lean",
@@ -161,7 +162,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+        "quote": "The reciprocal provider uses nearest-even division of the encoded value one by\nthe actual encoded operand. The fetched rcp.rn.f32 instruction preserves exactly\nthis result relation and checks the selected PTX version and target. A nonzero\nfinite operand and a bound on the exact quotient establish finite output and\nthe rounded-real meaning of every permitted result. These are numerical-analysis\nconditions, not restrictions on instruction execution. The NaN envelope preserves\nthe existing uncertainty about permitted NaN payloads. Approximate reciprocal\nand its error convention remain separate work."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/Reciprocal.lean",
@@ -173,7 +174,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+        "quote": "The reciprocal provider uses nearest-even division of the encoded value one by\nthe actual encoded operand. The fetched rcp.rn.f32 instruction preserves exactly\nthis result relation and checks the selected PTX version and target. A nonzero\nfinite operand and a bound on the exact quotient establish finite output and\nthe rounded-real meaning of every permitted result. These are numerical-analysis\nconditions, not restrictions on instruction execution. The NaN envelope preserves\nthe existing uncertainty about permitted NaN payloads. Approximate reciprocal\nand its error convention remain separate work."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/Reciprocal.lean",
@@ -185,7 +186,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+        "quote": "The reciprocal provider uses nearest-even division of the encoded value one by\nthe actual encoded operand. The fetched rcp.rn.f32 instruction preserves exactly\nthis result relation and checks the selected PTX version and target. A nonzero\nfinite operand and a bound on the exact quotient establish finite output and\nthe rounded-real meaning of every permitted result. These are numerical-analysis\nconditions, not restrictions on instruction execution. The NaN envelope preserves\nthe existing uncertainty about permitted NaN payloads. Approximate reciprocal\nand its error convention remain separate work."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/ReciprocalChecks.lean",
@@ -197,12 +198,24 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The initial reciprocal path uses nearest-even division of the encoded value one\nby the actual encoded operand. This selects the explicitly rounded PTX form as\nthe future instruction target and avoids assigning the approximate reciprocal\nan undocumented reference convention. A nonzero finite operand and a bound on\nthe exact quotient establish finite output and the rounded-real meaning of\nevery permitted result. The NaN envelope preserves the existing uncertainty\nabout permitted NaN payloads. This is a numerical provider; fetched reciprocal\ninstructions and their target checks remain separate work."
+        "quote": "The reciprocal provider uses nearest-even division of the encoded value one by\nthe actual encoded operand. The fetched rcp.rn.f32 instruction preserves exactly\nthis result relation and checks the selected PTX version and target. A nonzero\nfinite operand and a bound on the exact quotient establish finite output and\nthe rounded-real meaning of every permitted result. These are numerical-analysis\nconditions, not restrictions on instruction execution. The NaN envelope preserves\nthe existing uncertainty about permitted NaN payloads. Approximate reciprocal\nand its error convention remain separate work."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/ReciprocalChecks.lean",
         "passage": {
           "quote": "theorem nan_freedom : Results 0x7fc00000 0x7fc00001 ∧ ¬ Results 0x7fc00000 0 := by\n  decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Measuring ULP at the output can permit a value excluded by measuring it at the\ncenter. A checked boundary example uses center 1/2-2^-25 and output 1/2+2^-24:\ntheir distance is three center steps but only one and a half output steps.\nThus the center convention cannot be called a conservative replacement for the\noutput convention. This example distinguishes numerical policies; it does not\nclaim that a GPU produces that output or that this center is reached by an\nencoded exponential operand. A source-faithful exponential contract still needs\nan explicit interpretation policy and separate exceptional-value cases."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ApproximatePolicyChecks.lean",
+        "passage": {
+          "quote": "theorem output_spacing_not_center_spacing :\n    |output-center| ≤ 2*ulp32 output ∧\n      ¬ Approximate.WithinULP 2 0x3effffff 0x3f000001 := by\n  constructor\n  · rw [output_ulp]; norm_num [center, output]\n  · rintro ⟨c, hc, c', z, hc', hz, bound⟩\n    rw [center_real] at hc hc'\n    rw [output_real] at hz\n    cases Option.some.inj hc\n    cases Option.some.inj hc'\n    cases Option.some.inj hz\n    rw [center_ulp] at bound\n    norm_num [center, output] at bound"
         }
       }
     }

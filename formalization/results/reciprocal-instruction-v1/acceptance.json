@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "task": "reciprocal-instruction-v1",
+  "selected_forms": [
+    "rcp.rn.f32"
+  ],
+  "base_commit": "89a055b14238e8c3c3a7d43c7fcd314ccccde77d",
+  "accepted_patch_sha256": "87f4d2374e26836750de37a46e9bad082296a771c3dd5aea8be905ec3f100944",
+  "worker_attempt": "reciprocal-002",
+  "mechanical_replay": "replays/reciprocal-002-v3/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass",
+  "independent_proof_review": "pass",
+  "integration": "Exact worker candidate; combined checks recorded by Stratic.",
+  "reviewer": "Independent source/provider review and separate read-only candidate proof review; coordinator-owned frozen acceptance driver and fresh replay.",
+  "source_conditions": {
+    "ptx_minimum": "2.0",
+    "target_minimum": "sm_20 feature floor; not target-name validation",
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "floating-point-instructions-rcp",
+      "floating-point-instructions",
+      "predicated-execution"
+    ]
+  },
+  "trial_invocations": 1,
+  "repair_invocations": 0,
+  "campaign_call_numbers": [
+    32
+  ],
+  "qualification": "The first preparation and its retry failed before any model invocation because Lake generated a hash cache outside .lake. The coordinator fixed exact auxiliary-artifact accounting with regression tests and used a fresh preparation. Luna received a precise frozen contract and existing numerical provider. The original independently frozen driver timed out elaborating two calls with implicit instruction arguments. Driver v2 supplies those arguments explicitly; every proposition and the candidate are unchanged. The unchanged candidate passes driver v2 and all 23 public-declaration dependency audits in a third fresh replay. The second replay exhausted disk during dependency setup and could not persist its final state; a separate recovery record preserves that failure. All three replay records and the task-owned generated-cache cleanup are retained. Worker self-report covers build and direct checking, not its own dependency audit. No provider-confirmed model identity was reported. Reference preflight was omitted before dispatch, a recorded deviation from the required workflow. Post-generation calibration accepts the original candidate and rejects three independently compiling, axiom-audited mutations (ignored operand, approximate mnemonic and weakened target). This is not pre-dispatch evidence, unsupervised semantic discovery or a whole softmax kernel."
+}

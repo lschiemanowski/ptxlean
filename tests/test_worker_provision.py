@@ -77,18 +77,20 @@ else:
     def fake_session(self):
         return self.fake("print(json.dumps({'type':'thread.started','thread_id':'session-one'}))")
 
-    def dependency(self):
+    def dependency(self, name="mathlib"):
         source=self.home/'dep';source.mkdir()
         subprocess.run(['git','init','-q',str(source)],check=True)
         w.git(source,'config','user.name','test');w.git(source,'config','user.email','t@example.invalid')
         (source/'Proof.lean').write_text('def original := 1\n')
+        if name == 'proofwidgets':
+            (source/'widget').mkdir(); (source/'widget/package-lock.json').write_text('{}')
         w.git(source,'add','.');w.git(source,'commit','-qm','dependency')
         revision=w.git(source,'rev-parse','HEAD').decode().strip()
         manifest=self.repo/self.project/'lake-manifest.json'
-        data=w.read_json(manifest);data['packages']=[{'type':'git','name':'mathlib','url':'https://example.invalid/mathlib',
+        data=w.read_json(manifest);data['packages']=[{'type':'git','name':name,'url':'https://example.invalid/'+name,
                                                   'rev':revision,'subDir':None}]
         w.atomic_json(manifest,data);self.pin()
-        local=self.repo/self.project/'.lake/packages/mathlib';local.parent.mkdir(parents=True)
+        local=self.repo/self.project/'.lake/packages'/name;local.parent.mkdir(parents=True)
         local.symlink_to(source,target_is_directory=True)
         (source/'Proof.lean').write_text('dirty must not copy')
         (source/'.lake').mkdir();(source/'.lake/stale.olean').write_text('must not copy')
@@ -169,6 +171,38 @@ else:
             with self.assertRaisesRegex(ValueError,'Dependency .* sources changed'):
                 p.run(self.repo,self.campaign,attempt,self.fake_session())
             self.no_calls()
+
+    def test_auxiliary_hash_cache_is_pinned_and_source_stays_protected(self):
+        self.dependency('proofwidgets')
+        self.prepare()
+        record=w.read_json(self.campaign/'attempts/first/ready.json')
+        dependency=record['dependency_checkouts'][0]
+        root=Path(dependency['destination'])
+        cache=root/'widget/package-lock.json.hash'
+        cache.write_text('hash-cache')
+        p.verify_dependencies([dependency],self.tree())
+        before=p.artifact_hashes(self.tree(),self.project,[dependency])
+        self.assertIn(str(cache.relative_to(self.tree())),before)
+        cache.write_text('modified')
+        self.assertNotEqual(before,p.artifact_hashes(self.tree(),self.project,[dependency]))
+        with self.assertRaisesRegex(ValueError,'artifacts changed'):
+            p.run(self.repo,self.campaign,'first',self.fake_session())
+        (root/'widget/package-lock.json').write_text('source drift')
+        with self.assertRaisesRegex(ValueError,'tracked sources changed'):
+            p.verify_dependencies([dependency],self.tree())
+        self.no_calls()
+
+    def test_auxiliary_cache_symlink_and_other_files_rejected(self):
+        self.dependency('proofwidgets');self.prepare()
+        dependency=w.read_json(self.campaign/'attempts/first/ready.json')['dependency_checkouts'][0]
+        root=Path(dependency['destination']); cache=root/'widget/package-lock.json.hash'
+        cache.symlink_to(root/'widget/package-lock.json')
+        with self.assertRaisesRegex(ValueError,'symbolic'):
+            p.verify_dependencies([dependency],self.tree())
+        cache.unlink();(root/'widget/extra.hash').write_text('unknown')
+        with self.assertRaisesRegex(ValueError,'untracked sources changed'):
+            p.verify_dependencies([dependency],self.tree())
+        self.no_calls()
 
     def test_dependency_symlink_rejected_on_retry(self):
         self.dependency()

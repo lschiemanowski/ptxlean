@@ -1,3 +1,5 @@
+import PtxBinary32.ReciprocalInstruction
+import PtxBinary32.ApproximatePolicyChecks
 import PtxBinary32.RoundedReal
 import PtxBinary32.ApproximateBounds
 import PtxBinary32.RoundedRealChecks
@@ -1900,3 +1902,35 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Binary32.Reciprocal.Checks.nan_freedom
 #print axioms Ptx.Binary32.Reciprocal.Checks.finite_mismatch_rejected
 #print axioms Ptx.Binary32.Reciprocal.Checks.denominator_handoff
+
+#print axioms Ptx.Binary32.ApproximatePolicyChecks.center
+#print axioms Ptx.Binary32.ApproximatePolicyChecks.output
+#print axioms Ptx.Binary32.ApproximatePolicyChecks.center_real
+#print axioms Ptx.Binary32.ApproximatePolicyChecks.output_real
+#print axioms Ptx.Binary32.ApproximatePolicyChecks.center_ulp
+#print axioms Ptx.Binary32.ApproximatePolicyChecks.output_ulp
+#print axioms Ptx.Binary32.ApproximatePolicyChecks.output_spacing_not_center_spacing
+
+#print axioms Ptx.Scalar.Reciprocal.Instr
+#print axioms Ptx.Scalar.Reciprocal.Occurrence
+#print axioms Ptx.Scalar.Reciprocal.occurrence
+#print axioms Ptx.Scalar.Reciprocal.SupportedTarget
+#print axioms Ptx.Scalar.Reciprocal.Eval
+#print axioms Ptx.Scalar.Reciprocal.Step
+#print axioms Ptx.Scalar.Reciprocal.eval_true_iff
+#print axioms Ptx.Scalar.Reciprocal.eval_false_iff
+#print axioms Ptx.Scalar.Reciprocal.eval_destination
+#print axioms Ptx.Scalar.Reciprocal.eval_frame
+#print axioms Ptx.Scalar.Reciprocal.eval_other
+#print axioms Ptx.Scalar.Reciprocal.eval_event
+#print axioms Ptx.Scalar.Reciprocal.eval_exists
+#print axioms Ptx.Scalar.Reciprocal.step_origin
+#print axioms Ptx.Scalar.Reciprocal.step_exists
+#print axioms Ptx.Scalar.Reciprocal.step_no_fetch
+#print axioms Ptx.Scalar.Reciprocal.step_unsupported_target
+#print axioms Ptx.Scalar.Reciprocal.Text.mnemonic
+#print axioms Ptx.Scalar.Reciprocal.Text.supportedMnemonic
+#print axioms Ptx.Scalar.Reciprocal.Text.encode
+#print axioms Ptx.Scalar.Reciprocal.Text.decode
+#print axioms Ptx.Scalar.Reciprocal.Text.decode_encode
+#print axioms Ptx.Scalar.Reciprocal.Text.decode_iff

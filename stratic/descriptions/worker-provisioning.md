@@ -46,3 +46,9 @@ post-run source boundaries, independent replay, semantic review and integration
 remain required. Dependencies modified during a worker run make its submission
 ineligible. This workflow introduces no API-key fallback and does not make Git
 worktrees a security boundary.
+
+Lake can place a generated hash cache beside ProofWidgets' package-lock file.
+That exact auxiliary path is treated as a build artifact, provided the underlying
+lock file is tracked and unchanged. Its bytes are pinned with the prerequisite
+artifacts, and symbolic links are rejected. This exception does not admit other
+untracked dependency files or changes to the package lock itself.

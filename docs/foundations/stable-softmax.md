@@ -196,7 +196,10 @@ with the existing conservative NaN envelope. From a finite nonzero operand and
 an exact-quotient range bound it derives finite output, rounded-real equality
 and a half-ULP error bound. Its encoded checks include signed zeros, infinities,
 a rounded third, a subnormal result, overflow and alternative NaN payloads.
-This provider does not yet supply PTX instruction fetch, target checks or parsing.
+The accepted unary leaf in `PtxBinary32/ReciprocalInstruction.lean` now connects
+actual fetch, target checks, both predicate polarities and unrestricted aliases to
+this numerical relation. It preserves every admitted output. Its typed decoder
+accepts exactly `rcp.rn.f32`; raw PTX parsing remains outside this interface.
 
 The positive-denominator proof alone is insufficient to rule out reciprocal
 overflow. A useful stronger guard is `D ≤ 1/2`: then the computed sum is at
@@ -205,10 +208,13 @@ finite result from these input conditions. Its `result_exists_of_sum_error`
 theorem makes this handoff explicit without an assumed successful reciprocal.
 
 The [unary-instruction preflight](../formalization/unary-floating-preflight.md)
-records the next Luna handoff requirements. The exponential still needs reviewed
-special/sign/overflow cases and an accepted source interpretation; the reciprocal
-provider is ready for a frozen instruction interface and independent acceptance
-checks. No `ex2` or `rcp` instruction coverage is claimed by this foundation. After instruction admission come
+records the remaining exponential acceptance obligation. The reciprocal leaf
+was authored by Luna and accepted after fresh independent checks and separate
+source/proof reviews. Only `rcp.rn.f32` is covered; no `ex2` coverage is claimed.
+The checked `ApproximatePolicyChecks` example also shows that output-spacing
+ULPs can admit a pair excluded by center-spacing ULPs. Adopting the existing
+center relation as PTX would therefore require a source justification, not just
+a Lean proof. Remaining kernel work includes
 parallel maximum and sum programs, forward and separately supplied backward
 programs, memory safety, admitted execution witnesses, and universal stored
 output bounds. The first row is nonempty and unmasked. Empty/all-masked rows,

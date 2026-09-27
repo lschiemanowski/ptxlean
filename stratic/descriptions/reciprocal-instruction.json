@@ -1,0 +1,113 @@
+{
+  "id": "reciprocal-instruction",
+  "parent": {
+    "description": "scalar-execution",
+    "passage": {
+      "quote": "The instruction representation has a documented relationship to textual PTX.\nUnsupported syntax and features cannot silently execute as supported operations."
+    }
+  },
+  "summary": [
+    "Execute explicit nearest-even binary32 reciprocal with actual fetch, predication, source/destination aliasing and precise register effects.",
+    "Preserve the encoded numerical result relation, including NaN freedom, and reject unsupported typed instruction forms."
+  ],
+  "realization": "implemented",
+  "remaining": "The selected fetched unary form is complete. Other reciprocal forms, raw PTX parsing, whole-kernel execution and hardware conformance are outside this responsibility.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction reads one operand from the original scalar state and writes\none word register. That operand can be a register or an already decoded exact\nfloating-point bit literal. Reading and writing the same register is permitted.\nAn optional predicate, a true-or-false condition, chooses whether to execute: a false predicate advances the\ninstruction position without requiring arithmetic and preserves every register.\nAn enabled instruction advances and writes an output permitted by the numerical\nreciprocal relation. Other registers, address registers, predicates and memory\nremain unchanged. The occurrence records the actual instruction position,\nexecuted instruction, reads, writes and absence of memory access."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+        "passage": {
+          "quote": "inductive Eval (i : Instr) : Scalar.State → Scalar.State → Occurrence → Prop\n  | skipped {s} (disabled : i.guard.eval s = false) :\n      Eval i s {s with pc := s.pc + 1} (occurrence s i false)\n  | executed {s value} (enabled : i.guard.eval s = true)\n      (result : Ptx.Binary32.Reciprocal.Results (i.source.eval s) value) :\n      Eval i s {{s with pc := s.pc + 1} with\n        regs := Scalar.update s.regs i.destination value} (occurrence s i true)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction reads one operand from the original scalar state and writes\none word register. That operand can be a register or an already decoded exact\nfloating-point bit literal. Reading and writing the same register is permitted.\nAn optional predicate, a true-or-false condition, chooses whether to execute: a false predicate advances the\ninstruction position without requiring arithmetic and preserves every register.\nAn enabled instruction advances and writes an output permitted by the numerical\nreciprocal relation. Other registers, address registers, predicates and memory\nremain unchanged. The occurrence records the actual instruction position,\nexecuted instruction, reads, writes and absence of memory access."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+        "passage": {
+          "quote": "theorem eval_frame (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) :\n    next.pc = s.pc+1 ∧ next.memory = s.memory ∧ next.addrs = s.addrs ∧ next.preds = s.preds := by\n  cases hEval <;> simp_all"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction reads one operand from the original scalar state and writes\none word register. That operand can be a register or an already decoded exact\nfloating-point bit literal. Reading and writing the same register is permitted.\nAn optional predicate, a true-or-false condition, chooses whether to execute: a false predicate advances the\ninstruction position without requiring arithmetic and preserves every register.\nAn enabled instruction advances and writes an output permitted by the numerical\nreciprocal relation. Other registers, address registers, predicates and memory\nremain unchanged. The occurrence records the actual instruction position,\nexecuted instruction, reads, writes and absence of memory access."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+        "passage": {
+          "quote": "theorem eval_event (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) : event = occurrence s i (i.guard.eval s) := by\n  cases hEval with\n  | skipped h => simp [h]\n  | executed h _ => simp [h]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Execution of an instruction in a program requires that the instruction actually\noccurs at the current program position and that the target policy holds. Every\nfetched instruction on a supported target has a next state; this is one-step\nexistence, not a whole-kernel termination or hardware progress guarantee."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+        "passage": {
+          "quote": "def Step (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) : Prop :=\n  SupportedTarget target ∧ ∃ i, program[s.pc]? = some i ∧ Eval i s next event"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Execution of an instruction in a program requires that the instruction actually\noccurs at the current program position and that the target policy holds. Every\nfetched instruction on a supported target has a next state; this is one-step\nexistence, not a whole-kernel termination or hardware progress guarantee."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+        "passage": {
+          "quote": "theorem step_exists (target : Ptx.Target) (program : List Instr) (s : Scalar.State)\n    (i : Instr) (supported : SupportedTarget target) (fetch : program[s.pc]? = some i) :\n    ∃ next event, Step target program s next event := by\n  obtain ⟨next, event, he⟩ := eval_exists i s\n  exact ⟨next, event, supported, i, fetch, he⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical provider is encoded division of one by the operand, including\nsigned zeros and infinities. NaN, meaning not a number, results use the existing\nconservative allowance for alternative NaN bit patterns. The instruction must\nretain that freedom rather than substitute one NaN payload. Finite real equality\nand accuracy follow separately under the provider's finite-input, nonzero and\nrange conditions. Neither ordinary execution nor a disabled predicate requires\nthose numerical-analysis conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+        "passage": {
+          "quote": "theorem eval_destination (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) (enabled : i.guard.eval s = true) :\n    Ptx.Binary32.Reciprocal.Results (i.source.eval s) (next.regs i.destination) := by\n  cases hEval with\n  | skipped disabled => simp [enabled] at disabled\n  | executed _ result => simpa using result"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The text interface accepts a typed statement containing the exact mnemonic,\nword-register destination and one word operand. It is not a raw PTX parser or a\nchecker for register declarations and initialization. The supplied register\nbank represents compatible f32 floating-point or b32 untyped 32-bit registers; integer-to-float conversion is not\nimplicit. The numeric target check does not validate every real GPU target name.\nInstruction source review, checked Lean proofs and hardware conformance remain\ndifferent claims.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+        "passage": {
+          "quote": "def decode (statement : Scalar.Text.Statement) : Except Scalar.Text.DecodeError Instr :=\n  if statement.mnemonic == mnemonic then\n    match statement.operands with\n    | [.word (.reg d), .word source] => .ok ⟨statement.guard, d, source⟩\n    | _ => .error (.invalidOperands statement.mnemonic)\n  else .error (.unsupportedMnemonic statement.mnemonic)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The text interface accepts a typed statement containing the exact mnemonic,\nword-register destination and one word operand. It is not a raw PTX parser or a\nchecker for register declarations and initialization. The supplied register\nbank represents compatible f32 floating-point or b32 untyped 32-bit registers; integer-to-float conversion is not\nimplicit. The numeric target check does not validate every real GPU target name.\nInstruction source review, checked Lean proofs and hardware conformance remain\ndifferent claims.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ReciprocalInstruction.lean",
+        "passage": {
+          "quote": "theorem decode_iff (statement : Scalar.Text.Statement) (i : Instr) :\n    decode statement = .ok i ↔ statement = encode i := by\n  constructor\n  · intro h\n    cases statement with\n    | mk g m ops =>\n      cases i with\n      | mk gi di si =>\n        by_cases hm : m = mnemonic\n        · subst m\n          simp only [decode] at h\n          cases ops with\n          | nil => simp [decode] at h\n          | cons first rest => cases first with\n            | word first => cases first with\n              | reg d => cases rest with\n                | nil => simp [decode] at h\n                | cons second rest2 => cases second with\n                  | word source => cases rest2 with\n                    | nil =>\n                        simp only [decode] at h\n                        rcases h with ⟨rfl, rfl, rfl⟩\n                        rfl\n                    | cons _ _ => simp [decode] at h\n                  | _ => simp [decode] at h\n              | imm _ => simp [decode] at h\n            | _ => simp [decode] at h\n        · simp [decode, hm] at h\n  · rintro rfl; exact decode_encode i"
+        }
+      }
+    }
+  ]
+}

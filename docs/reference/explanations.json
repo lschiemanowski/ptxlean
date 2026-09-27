@@ -104,5 +104,10 @@
   "shf.r.wrap.b32": [
     "Join two 32-bit words into a 64-bit value: the first input is the low half, and the second is the high half. Shift that value right, fill vacated positions with zeros, and return the low 32 bits.",
     "The count is an unsigned 32-bit word. Use its remainder after division by 32, so count 32 acts like zero and count 33 acts like one. Supplying the same word as both sources rotates that word’s bits."
+  ],
+  "rcp.rn.f32": [
+    "This form takes one binary32 operand (the standard 32-bit floating-point format) and writes its reciprocal, one divided by that value. The result is rounded to the nearest representable value; halfway cases select the result with an even final significand bit. Small subnormal values are retained rather than flushed to zero.",
+    "The model includes signed zeros and infinities: a zero input produces infinity with the same sign, and an infinite input produces a zero with the same sign. A NaN input, meaning not a number, produces a NaN with the existing conservative allowance for unspecified bit patterns. Finite inputs can still overflow on reciprocal, so execution itself has no finite-output premise.",
+    "A true predicate executes using the original operand, including when source and destination use the same register. A false predicate skips the arithmetic and preserves data. Fetched execution checks PTX ISA 9.4 and a numeric target level of at least sm_20. The typed decoder handles this exact spelling, not the approximate variant, other rounding modes, flush-to-zero or 64-bit floating-point forms. This leaf is not a complete kernel or a hardware conformance result."
   ]
 }

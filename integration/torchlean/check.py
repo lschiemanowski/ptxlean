@@ -30,6 +30,10 @@ TARGETS = {"PtxTorchLean", "PtxTensorBridge", "PtxBinary32",
            "PtxBinary32.Instructions", "PtxBinary32.Mixed", "PtxBinary32.Affine"}
 
 # Explicit public coverage for the serialized two-kernel and exact VJP slice.
+COUNTS.update({'Ptx.Scalar.Reciprocal': 17, 'Ptx.Scalar.Reciprocal.Text': 6})
+TARGETS.add('PtxBinary32.ReciprocalInstruction')
+COUNTS.update({'Ptx.Binary32.ApproximatePolicyChecks': 7})
+TARGETS.add('PtxBinary32.ApproximatePolicyChecks')
 COUNTS.update({
     "Ptx.Scalar.Sequential": 17,
     "Ptx.Scalar.Sequential.SuccessfulLaunch": 15,
@@ -233,7 +237,8 @@ def snapshot():
     paths = [*sources(), ROOT / "Ptx.lean", *sorted((ROOT / "Ptx").rglob("*.lean")),
              HERE / "check.py", HERE / "check.sh",
              ROOT / "scripts/check_proofs.py", ROOT / "scripts/worker_replay.py",
-             ROOT / "scripts/worker_run.py"]
+             ROOT / "scripts/worker_run.py",
+             ROOT / "formalization/checks/reciprocal-instruction-v2.lean"]
     for directory in (HERE, ROOT):
         paths += [directory / name for name in ("lean-toolchain", "lakefile.toml", "lake-manifest.json")]
     return {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
@@ -281,6 +286,8 @@ def main():
                        cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/GridDenseBackwardChecks.lean"],
                        cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean",
+                        "../../formalization/checks/reciprocal-instruction-v2.lean"], cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(audit.stdout, end="", flush=True)

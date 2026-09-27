@@ -14,6 +14,22 @@ def plain_destination(path, worktree):
         raise ValueError("Dependency destination cannot use symbolic links")
 
 
+def auxiliary_artifacts(dependency, worktree):
+    """Lake's known out-of-tree input hash; never a source-file exemption."""
+    if dependency["name"] != "proofwidgets":
+        return []
+    target = Path(dependency["destination"])
+    relative = "widget/package-lock.json.hash"
+    path = target / relative
+    if not path.exists() and not path.is_symlink():
+        return []
+    plain_destination(path, worktree)
+    if not path.is_file():
+        raise ValueError("Nonregular prerequisite hash cache")
+    git(target, "ls-files", "--error-unmatch", "widget/package-lock.json")
+    return [path]
+
+
 def verify_dependencies(dependencies, worktree):
     for dependency in dependencies:
         target = Path(dependency["destination"])
@@ -32,8 +48,9 @@ def verify_dependencies(dependencies, worktree):
             raise ValueError(f"Dependency origin changed: {dependency['name']}")
         if git(target, "status", "--porcelain", "--untracked-files=no").strip():
             raise ValueError(f"Dependency tracked sources changed: {dependency['name']}")
+        auxiliary = {str(p.relative_to(target)) for p in auxiliary_artifacts(dependency, worktree)}
         untracked = git(target, "ls-files", "--others", "-z").decode().split("\0")
-        extra = [p for p in untracked if p and not p.startswith(".lake/")
+        extra = [p for p in untracked if p and p not in auxiliary and not p.startswith(".lake/")
                  and "__pycache__" not in PurePosixPath(p).parts]
         if extra:
             raise ValueError(f"Dependency untracked sources changed: {dependency['name']}: {extra}")

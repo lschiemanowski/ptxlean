@@ -8,7 +8,7 @@ import subprocess
 import uuid
 
 import worker_run as runner
-from worker_project import provision_dependencies, verify_dependencies, plain_destination
+from worker_project import provision_dependencies, verify_dependencies, plain_destination, auxiliary_artifacts
 
 
 def digest(path):
@@ -42,7 +42,7 @@ def artifact_hashes(worktree, project, dependencies):
     candidate proof acceptance, and fresh replay never reuses these caches.
     """
     roots = {worktree, worktree / project, *(Path(d["destination"]) for d in dependencies)}
-    files = set()
+    files = {p for d in dependencies for p in auxiliary_artifacts(d, worktree)}
     for root in roots:
         directory = root / ".lake/build"
         plain_destination(directory, worktree)

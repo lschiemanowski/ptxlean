@@ -49,16 +49,25 @@ required sign and exceptional-value conditions. Widening an allowed radius can
 only add outcomes. Several distinct finite words can satisfy a positive-radius
 contract; no deterministic reference is silently substituted for those choices.
 
-The initial reciprocal path uses nearest-even division of the encoded value one
-by the actual encoded operand. This selects the explicitly rounded PTX form as
-the future instruction target and avoids assigning the approximate reciprocal
-an undocumented reference convention. A nonzero finite operand and a bound on
-the exact quotient establish finite output and the rounded-real meaning of
-every permitted result. The NaN envelope preserves the existing uncertainty
-about permitted NaN payloads. This is a numerical provider; fetched reciprocal
-instructions and their target checks remain separate work.
+The reciprocal provider uses nearest-even division of the encoded value one by
+the actual encoded operand. The fetched rcp.rn.f32 instruction preserves exactly
+this result relation and checks the selected PTX version and target. A nonzero
+finite operand and a bound on the exact quotient establish finite output and
+the rounded-real meaning of every permitted result. These are numerical-analysis
+conditions, not restrictions on instruction execution. The NaN envelope preserves
+the existing uncertainty about permitted NaN payloads. Approximate reciprocal
+and its error convention remain separate work.
 
 These are numerical tools for future instruction contracts. They do not yet
 implement PTX ex2, a fetched unary instruction, or an executable softmax.
 The PTX source review must still justify the chosen allowance and special cases,
 and the instruction proof must connect actual operands and outputs to it.
+
+Measuring ULP at the output can permit a value excluded by measuring it at the
+center. A checked boundary example uses center 1/2-2^-25 and output 1/2+2^-24:
+their distance is three center steps but only one and a half output steps.
+Thus the center convention cannot be called a conservative replacement for the
+output convention. This example distinguishes numerical policies; it does not
+claim that a GPU produces that output or that this center is reached by an
+encoded exponential operand. A source-faithful exponential contract still needs
+an explicit interpretation policy and separate exceptional-value cases.
