@@ -251,3 +251,17 @@ more than 1,024 total lanes in both reductions, weight products and copying. Ind
 private scratch still uses the full indexed extent per group, without a GPU
 capacity or performance claim. Numerical range and ReLU-margin policies are
 unchanged, and no runtime/ABI or hardware correspondence is asserted.
+
+## Stable-softmax numerical foundations
+
+The [stable-softmax guide](../../docs/foundations/stable-softmax.md) explains
+conditional forward and backward error bounds against the pinned TorchLean
+specification. `PtxSoftmaxAccuracy` connects separate exponential, sum,
+reciprocal and multiplication obligations to that exact reference and its true
+vector–Jacobian product. `PtxBinary32.Approximate` supplies finite encoded error
+neighborhoods, preserving alternative results and signed-zero distinctions.
+These modules are included in `./check.sh` and its dependency audit.
+
+This is a numerical foundation: `ex2`/`rcp` instruction contracts, finite encoded
+exponential-result existence and softmax kernel execution/storage proofs remain
+open. No GPU run or benchmark is needed for these checks.

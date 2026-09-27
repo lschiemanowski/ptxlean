@@ -12,6 +12,6 @@
     "Distinguish numerical accuracy from exact bitwise agreement or agreement within a stated error bound with PyTorch."
   ],
   "realization": "partial",
-  "remaining": "Bit-preserving binary32, nearest-even add/multiply and explicit initial-input range/error proofs support actual scalar forward and separately selected backward kernels, including saved-value recomputation error. General network bounds, other formats and policies, range automation, useful global tolerances and PyTorch correspondence remain unfinished. Exact signaling-versus-quiet NaN realizability remains unresolved.",
+  "remaining": "Bit-preserving binary32, nearest-even add/multiply and explicit initial-input range/error proofs support actual scalar forward and separately selected backward kernels, including saved-value recomputation error. General network bounds, other formats and policies, range automation, useful global tolerances and PyTorch correspondence remain unfinished. Exact signaling-versus-quiet NaN realizability remains unresolved. Finite approximate-result neighborhoods and conditional softmax forward/backward error composition are proved; PTX-specific approximation contracts and encoded exponential-center existence remain open.",
   "links": []
 }

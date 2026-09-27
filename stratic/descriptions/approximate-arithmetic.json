@@ -1,0 +1,89 @@
+{
+  "id": "approximate-arithmetic",
+  "parent": {
+    "description": "numerical-contracts",
+    "passage": {
+      "quote": "An accuracy guarantee covers every permitted result for all inputs satisfying\nits stated conditions."
+    }
+  },
+  "summary": [
+    "Represent a finite binary32 error neighborhood without selecting one permitted output or treating exceptional encodings as real numbers.",
+    "Combine the distance from a rounded center with the center’s error relative to the ideal real result; keep source interpretation and instruction execution separate."
+  ],
+  "realization": "partial",
+  "remaining": "Finite neighborhoods, monotonicity, nonemptiness for a supplied finite center, and accumulated center/approximation error are proved. PTX-specific ULP interpretation, exceptional and sign rules, rounded exponential center representability, instruction semantics and execution remain unfinished.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An approximate instruction may return several different bit patterns for the\nsame inputs. Its accuracy contract must cover every permitted result. A finite\nerror neighborhood contains binary32 words whose real values lie within a stated\nabsolute distance of a finite center word. An exceptional value, such as infinity\nor NaN (not a number), does not belong to this finite neighborhood. Exceptional\ninstruction behavior therefore needs a separate contract."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Approximate.lean",
+        "passage": {
+          "quote": "def Within (radius : ℝ) (center output : Word) : Prop :=\n  ∃ c z : ℝ, finiteReal center = some c ∧ finiteReal output = some z ∧ |z-c| ≤ radius"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The distance can be expressed in units in the last place, abbreviated ULP. This\nis the spacing of the binary32 grid at a chosen real value, with a smallest step\nof 2^-149 near zero. The chosen convention uses the pinned FloatLib/TorchLean ULP\nat the center. At a power-of-two boundary, the spacing changes, so this convention\nis explicit. A numerical neighborhood is not a claim that NVIDIA uses exactly\nthis convention, nor that every included bit pattern is physically realizable."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Approximate.lean",
+        "passage": {
+          "quote": "def WithinULP (count : ℕ) (center output : Word) : Prop :=\n  ∃ c : ℝ, finiteReal center = some c ∧ Within (count * ulp32 c) center output"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A nonnegative-radius neighborhood always contains its finite center. Membership\nprovides an actual finite real value and an absolute distance bound. If the\ncenter is itself within error E of the ideal result, all members are within the\nneighborhood radius plus E. In particular, a correctly rounded real center\ncontributes its rounding error in addition to the approximation allowance.\nTheorems must not discard that extra rounding term."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Approximate.lean",
+        "passage": {
+          "quote": "theorem rounded_center_error (h : Within radius center output)\n    (value : finiteReal center = some (round32 ideal)) :\n    ∃ z : ℝ, finiteReal output = some z ∧ |z-ideal| ≤ radius+eps32 ideal :=\n  total_error h value (TorchLean.Floats.FP32.round_abs_error ideal)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A nonnegative-radius neighborhood always contains its finite center. Membership\nprovides an actual finite real value and an absolute distance bound. If the\ncenter is itself within error E of the ideal result, all members are within the\nneighborhood radius plus E. In particular, a correctly rounded real center\ncontributes its rounding error in addition to the approximation allowance.\nTheorems must not discard that extra rounding term."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Approximate.lean",
+        "passage": {
+          "quote": "theorem nonempty (center : Word) (finite : isFinite center = true) (radius : ℝ)\n    (nonneg : 0 ≤ radius) : ∃ output, Within radius center output :=\n  ⟨center, center_mem center finite radius nonneg⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A zero-radius neighborhood means equal real values, not necessarily equal bits:\nthe two signed zeros have the same real value. Instruction rules must add their\nrequired sign and exceptional-value conditions. Widening an allowed radius can\nonly add outcomes. Several distinct finite words can satisfy a positive-radius\ncontract; no deterministic reference is silently substituted for those choices."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Approximate.lean",
+        "passage": {
+          "quote": "theorem multiple_results : (0x3f800000 : Word) ≠ 0x3f800001 ∧\n    Within ((2:ℝ)^(-23:ℤ)) 0x3f800000 0x3f800000 ∧\n    Within ((2:ℝ)^(-23:ℤ)) 0x3f800000 0x3f800001 := by\n  refine ⟨by decide, center_mem _ (by decide) _ (by positivity),\n    1, 1+(2:ℝ)^(-23:ℤ), one_real, successor_one_real, ?_⟩\n  norm_num"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A zero-radius neighborhood means equal real values, not necessarily equal bits:\nthe two signed zeros have the same real value. Instruction rules must add their\nrequired sign and exceptional-value conditions. Widening an allowed radius can\nonly add outcomes. Several distinct finite words can satisfy a positive-radius\ncontract; no deterministic reference is silently substituted for those choices."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Approximate.lean",
+        "passage": {
+          "quote": "theorem signed_zeros : (0 : Word) ≠ 0x80000000 ∧ Within 0 0 0x80000000 := by\n  refine ⟨by decide, 0, 0, ?_, ?_, by norm_num⟩\n  · rw [finiteReal_some _ (by decide)]\n    change some (Model.toReal (Model.posZero FloatFormat.binary32)) = some 0\n    rw [Model.toReal_posZero _ (by decide)]\n  · rw [finiteReal_some _ (by decide)]\n    change some (Model.toReal (Model.negZero FloatFormat.binary32)) = some 0\n    rw [Model.toReal_negZero _ (by decide)]"
+        }
+      }
+    }
+  ]
+}

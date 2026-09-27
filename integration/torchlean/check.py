@@ -187,6 +187,10 @@ TARGETS.update({'PtxBinary32.GridReplay', 'PtxBinary32.GridDenseLocalControl', '
 COUNTS["Ptx.Scalar.Parallel.Dense.Compact"] = 53
 TARGETS.update({'PtxBinary32.CompactDenseDataRules', 'PtxBinary32.CompactDenseControl', 'PtxBinary32.CompactDenseLocalSegments', 'PtxBinary32.CompactDenseAddressControl', 'PtxBinary32.CompactDenseProgram', 'PtxBinary32.CompactDenseDataStep'})
 
+# Conditional softmax arithmetic and the exact TorchLean backward target.
+COUNTS.update({'Ptx.Binary32.Approximate': 17, 'Ptx.Numerics.Softmax': 18, 'Ptx.Numerics.Softmax.BackwardStages': 5, 'Ptx.Numerics.Softmax.Checks': 5, 'Ptx.Numerics.Softmax.Stages': 4, 'PtxTorchLean.Softmax': 12})
+TARGETS.update({'PtxBinary32.Approximate', 'PtxBinary32.SoftmaxError', 'PtxBinary32.SoftmaxChecks', 'PtxSoftmaxAccuracy'})
+
 def git(directory, *args):
     return subprocess.check_output(["git", "-C", str(directory), *args], text=True).strip()
 

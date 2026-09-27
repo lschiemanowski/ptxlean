@@ -1,0 +1,130 @@
+{
+  "id": "d9f367f9-4aee-487d-9673-7dcb92b03372",
+  "base": "a828a3e39abb5a54b62f26585d8c473e1a60efb0",
+  "contentTree": "7014588ff26ad0bf4490cbab4a1f273284d5b435",
+  "reviewer": "Codex",
+  "summary": "Establish stable-softmax numerical foundations: finite encoded approximation neighborhoods, checked forward/backward error composition and exact TorchLean VJP correspondence, with PTX instruction and execution obligations explicit. Full checks passed on identical code (1643 root and 1639 integration dependency reports); final metadata-only link changes validated separately.",
+  "examined": [
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Metadata now distinguishes completed conditional softmax arithmetic from pending fetched kernels; the example contract and summary remain accurate."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "revised",
+      "reason": "Metadata records finite approximate neighborhoods and softmax composition while preserving all-result accuracy and separate implementation correspondence."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The checker gains four explicit targets and 61 exact public dependency endpoints; pin checks, source guards and standard-axiom-only policy are unchanged. No source-fidelity claim follows from the new proofs."
+    },
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "revised",
+      "reason": "New numerical responsibility states finite encoded neighborhoods, chosen center ULP convention, rounding-plus-approximation error, signed zeros and unresolved instruction semantics."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "New nonempty unmasked row responsibility states the exact TorchLean target, stage contracts, derived denominator guard, forward/backward bounds and pending execution obligations."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "The new numerical example supports the existing full-project ambition without changing ISA coverage, implementation correspondence, execution guarantees or the separation of fidelity from proof checking."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "The existing distinction between numerical and storage obligations is preserved; softmax has only the numerical foundation, with fetched storage/execution obligations explicit."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "The softmax bridge proves the pinned rule is the true VJP and bounds separately supplied local backward arithmetic. It does not claim automatic PTX construction or execution existence."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "The nonempty unmasked softmax row is reusable future infrastructure, not Gemma implementation or architecture/modality coverage; that responsibility and unfinished status are unchanged."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "7014588ff26ad0bf4490cbab4a1f273284d5b435",
+      "method": "Manual exact-tree comparison against checked tree d0d530d17e0ae705be6dfe870cccf0c89cbd883f; stratic validate; source-passage and scope review",
+      "outcome": "pass",
+      "environment": "Same local pinned Lean/dependencies and Stratic 0.1.0 environment as the full root/integration run.",
+      "evidence": "Only the two new Stratic JSON files differ from the fully checked tree: implementation selectors now contain complete source declarations instead of short name anchors. Code, checker, build configuration, prose and pins have identical Git blobs. Stratic validates true with no issues. Reviewed the stage contracts, all-result quantification, denominator guard, exact upstream VJP, signed zero/exception boundaries and explicit unimplemented PTX instruction/execution obligations. The 1643 root and 1639 integration reports come from the earlier identical-code tree, not a rerun on this metadata-only tree.",
+      "tests": [],
+      "id": "6c7ff353-bf24-4645-ac92-5b256d614e00",
+      "recordedAt": "2026-09-27T07:51:13.787Z"
+    }
+  ],
+  "recordedAt": "2026-09-27T07:52:04.944Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/stable-softmax.md",
+      "reason": "Teaching guide derives the same contracts, records paraphrased pinned PTX source review and remaining instruction/representation obligations; it adds no implementation claim."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Approximate.lean",
+      "reason": "Unlinked regions are supporting finiteness, monotonicity, center error and boundary proofs for the linked finite-neighborhood contract."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxError.lean",
+      "reason": "Unlinked helpers prove sum/quotient perturbation and backward composition. Exact stage witnesses establish only real-arithmetic nonvacuity, explicitly not encoded execution."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxChecks.lean",
+      "reason": "The remaining regressions check D=1 with zero denominator, attainable nonunit normalization and a uniform-row backward value; no host float is trusted."
+    },
+    {
+      "path": "integration/torchlean/PtxSoftmaxAccuracy.lean",
+      "reason": "Unlinked helpers expose actual pinned tensor definitions and coordinate formulas; all approximation claims require explicit local stage contracts."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Imports and 61 exact public definition/theorem/field dependency requests cover all four new modules."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Only explicit expected target and namespace endpoint sets are expanded; verification logic and forbidden-token policy are unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Four default targets and the top-level softmax library are added; pins are unchanged."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Adds a guide link and accurate conditional-foundation status, with pending instruction/encoded/execution work explicit."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.json",
+      "reason": "Description text or metadata reviewed above: new contracts are description-first, summaries are meaningful, realization remains partial and implementation passages validate."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.md",
+      "reason": "Description text or metadata reviewed above: new contracts are description-first, summaries are meaningful, realization remains partial and implementation passages validate."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Description text or metadata reviewed above: new contracts are description-first, summaries are meaningful, realization remains partial and implementation passages validate."
+    },
+    {
+      "path": "stratic/descriptions/numerical-contracts.json",
+      "reason": "Description text or metadata reviewed above: new contracts are description-first, summaries are meaningful, realization remains partial and implementation passages validate."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Description text or metadata reviewed above: new contracts are description-first, summaries are meaningful, realization remains partial and implementation passages validate."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Description text or metadata reviewed above: new contracts are description-first, summaries are meaningful, realization remains partial and implementation passages validate."
+    }
+  ]
+}

@@ -1,3 +1,7 @@
+import PtxBinary32.Approximate
+import PtxBinary32.SoftmaxError
+import PtxBinary32.SoftmaxChecks
+import PtxSoftmaxAccuracy
 import PtxBinary32.CompactDenseAddressControl
 import PtxBinary32.CompactDenseControl
 import PtxBinary32.CompactDenseDataRules
@@ -1770,3 +1774,66 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Dense.Compact.program_round_split
 #print axioms Ptx.Scalar.Parallel.Dense.Compact.round_fetch
 #print axioms Ptx.Scalar.Parallel.Dense.Compact.output_fetch
+
+-- Stable-softmax numerical composition and finite approximate neighborhoods.
+#print axioms Ptx.Binary32.Approximate.Within
+#print axioms Ptx.Binary32.Approximate.center_mem
+#print axioms Ptx.Binary32.Approximate.nonempty
+#print axioms Ptx.Binary32.Approximate.output_finite
+#print axioms Ptx.Binary32.Approximate.monotone
+#print axioms Ptx.Binary32.Approximate.total_error
+#print axioms Ptx.Binary32.Approximate.rounded_center_error
+#print axioms Ptx.Binary32.Approximate.WithinULP
+#print axioms Ptx.Binary32.Approximate.ulp_nonnegative
+#print axioms Ptx.Binary32.Approximate.ulp_nonempty
+#print axioms Ptx.Binary32.Approximate.ulp_error
+#print axioms Ptx.Binary32.Approximate.one_real
+#print axioms Ptx.Binary32.Approximate.successor_one_real
+#print axioms Ptx.Binary32.Approximate.multiple_results
+#print axioms Ptx.Binary32.Approximate.signed_zeros
+#print axioms Ptx.Binary32.Approximate.infinity_excluded
+#print axioms Ptx.Binary32.Approximate.nan_excluded
+#print axioms Ptx.Numerics.Softmax.denominatorBudget
+#print axioms Ptx.Numerics.Softmax.coordinateBudget
+#print axioms Ptx.Numerics.Softmax.Stages
+#print axioms Ptx.Numerics.Softmax.sum_error
+#print axioms Ptx.Numerics.Softmax.denominator_error
+#print axioms Ptx.Numerics.Softmax.denominator_positive
+#print axioms Ptx.Numerics.Softmax.exact_denominator_bounds
+#print axioms Ptx.Numerics.Softmax.quotient_error
+#print axioms Ptx.Numerics.Softmax.coordinate_error
+#print axioms Ptx.Numerics.Softmax.normalization_error
+#print axioms Ptx.Numerics.Softmax.dotBudget
+#print axioms Ptx.Numerics.Softmax.BackwardStages
+#print axioms Ptx.Numerics.Softmax.backward_dot_error
+#print axioms Ptx.Numerics.Softmax.backwardBudget
+#print axioms Ptx.Numerics.Softmax.backward_coordinate_error
+#print axioms Ptx.Numerics.Softmax.exact_stages
+#print axioms Ptx.Numerics.Softmax.exact_backward_stages
+#print axioms Ptx.Numerics.Softmax.denominator_can_be_zero
+#print axioms Ptx.Numerics.Softmax.Checks.zero_denominator_boundary
+#print axioms Ptx.Numerics.Softmax.Checks.permitted_nonunit_sum
+#print axioms Ptx.Numerics.Softmax.Checks.normalization_bound_attained
+#print axioms Ptx.Numerics.Softmax.Checks.permitted_zero_weight
+#print axioms Ptx.Numerics.Softmax.Checks.backward_uniform_row
+#print axioms PtxTorchLean.Softmax.weights
+#print axioms PtxTorchLean.Softmax.forward
+#print axioms PtxTorchLean.Softmax.backward
+#print axioms PtxTorchLean.Softmax.weights_bounds
+#print axioms PtxTorchLean.Softmax.forward_formula
+#print axioms PtxTorchLean.Softmax.forward_error
+#print axioms PtxTorchLean.Softmax.computed_denominator_positive
+#print axioms PtxTorchLean.Softmax.computed_normalization_error
+#print axioms PtxTorchLean.Softmax.backward_formula
+#print axioms PtxTorchLean.Softmax.backward_is_vjp
+#print axioms PtxTorchLean.Softmax.backward_error
+#print axioms PtxTorchLean.Softmax.backward_error_of_forward
+#print axioms Ptx.Numerics.Softmax.Stages.exponential
+#print axioms Ptx.Numerics.Softmax.Stages.summation
+#print axioms Ptx.Numerics.Softmax.Stages.inverse
+#print axioms Ptx.Numerics.Softmax.Stages.multiplication
+#print axioms Ptx.Numerics.Softmax.BackwardStages.weights
+#print axioms Ptx.Numerics.Softmax.BackwardStages.incoming
+#print axioms Ptx.Numerics.Softmax.BackwardStages.reduction
+#print axioms Ptx.Numerics.Softmax.BackwardStages.subtraction
+#print axioms Ptx.Numerics.Softmax.BackwardStages.multiplication

@@ -1,0 +1,139 @@
+{
+  "id": "softmax",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "A small kernel makes the\nconnection between instructions, stored values and checked guarantees easier to\nfollow."
+    }
+  },
+  "summary": [
+    "Use TorchLean’s stable real-valued softmax as the reference for a nonempty row, and derive normalization error from separate stage errors.",
+    "Account for exponentials, summation, reciprocal and final multiplication; derive denominator positivity rather than assume the final normalization works.",
+    "Keep real analysis and conditional numerical composition distinct from pending PTX instruction, execution and memory proofs."
+  ],
+  "realization": "partial",
+  "remaining": "Real-valued forward/backward error composition, the pinned TorchLean specification/VJP bridge, derived denominator positivity, and boundary regressions are proved. PTX approximate-instruction fidelity, encoded result existence, parallel maximum/sum rounding and range bounds, fetched forward/backward programs, admitted executions, memory safety and stored-output accuracy remain unfinished.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Softmax turns a nonempty row of real scores into positive weights that sum to\none. The stable formula subtracts the row's largest score before taking\nexponentials, then divides each exponential by their sum. Subtracting the same\nvalue from every score leaves the exact real result unchanged. At least one\nshifted score is zero, so one exponential is one; all others lie between zero\nand one. The exact denominator therefore lies between one and the row length."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxAccuracy.lean",
+        "passage": {
+          "quote": "theorem weights_bounds (x : Tensor ℝ [n+1]) :\n    (∀ i, 0 < weights x i ∧ weights x i ≤ 1) ∧\n      1 ≤ ∑ i, weights x i ∧ (∑ i, weights x i) ≤ n+1 := by\n  refine ⟨fun i => ⟨Proofs.softmax_shift_exp_pos x i, Proofs.softmax_shift_exp_le_one x i⟩, ?_⟩\n  have h := Proofs.softmax_shift_denom_bounds x\n  rw [Spec.sum_spec_vec] at h\n  simpa [weights] using h"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The reference is the pinned TorchLean stable softmax specification. Its existing\nanalysis establishes these bounds and proves that its backward rule is the\ntrue vector-Jacobian product: for output weights p and incoming sensitivities d,\nthe input sensitivity is p_i*(d_i-sum_j p_j*d_j). An incoming sensitivity says\nhow strongly each output contributes to the surrounding computation's result.\nThis smooth function does not need ReLU's away-from-zero activation condition.\nA backward kernel will be supplied separately from TorchLean's automatic reverse\nconstruction."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxAccuracy.lean",
+        "passage": {
+          "quote": "theorem backward_is_vjp (x d : Tensor ℝ [n+1]) :\n    getScalarE (Activation.softmaxBackwardSpec (α := ℝ) (s := [n+1]) 0 x d) =\n      VJP[fun xV : Proofs.Autograd.Vec (n+1) =>\n        getScalarE (Activation.softmaxSpec (α := ℝ) (s := [n+1]) 0 (ofFnE xV)),\n        getScalarE x] (getScalarE d) :=\n  Proofs.Autograd.softmaxBackwardSpec_eq_vjp x d"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Numerical composition keeps four errors separate. Each computed exponential has\nan absolute error delta_i, including any error in preparing its argument. The\ncomputed sum has error sigma relative to the sum of those computed values. The\nreciprocal has error rho relative to one divided by that computed sum. The final\nmultiplication has error tau_i relative to its actual operands. These are local\ncomponent obligations, not an assumed final softmax error."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxError.lean",
+        "passage": {
+          "quote": "structure Stages (exact approximate : Fin n → ℝ) (sum reciprocal : ℝ)\n    (output delta : Fin n → ℝ) (sigma rho : ℝ) (tau : Fin n → ℝ) : Prop where\n  exponential : ∀ i, |approximate i-exact i|≤delta i\n  summation : |sum-∑ i, approximate i|≤sigma\n  inverse : |reciprocal-1/sum|≤rho\n  multiplication : ∀ i, |output i-approximate i*reciprocal|≤tau i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Let D=sigma+sum_i delta_i. If D<1, the computed denominator is at least 1-D and\nis strictly positive. Every collection of stage values satisfying those local\nbounds has coordinate error at most\n`tau_i + (1+delta_i)*rho + (delta_i+D)/(1-D)`\nagainst TorchLean's real softmax. This bound allows approximate exponentials to\nround to zero. It does not promise positive computed outputs or an exactly\nunit computed sum. The sum's departure from one is bounded by the sum of the\ncoordinate error bounds. The row length enters through the accumulated errors.\nThe D<1 condition is a sufficient condition for this bound, not a claim that\nsoftmax fails whenever the bound cannot establish it."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxAccuracy.lean",
+        "passage": {
+          "quote": "theorem forward_error (x : Tensor ℝ [n+1])\n    (h : Stages (weights x) approximate sum reciprocal output delta sigma rho tau)\n    (small : denominatorBudget delta sigma < 1) (i : Fin (n+1)) :\n    |output i-forward x i| ≤\n      coordinateBudget (delta i) (denominatorBudget delta sigma) rho (tau i) := by\n  rw [forward_formula]\n  exact coordinate_error h (fun j => (weights_bounds x).1 j |>.1.le)\n    (fun j => (weights_bounds x).1 j |>.2) (weights_bounds x).2.1 small i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Let D=sigma+sum_i delta_i. If D<1, the computed denominator is at least 1-D and\nis strictly positive. Every collection of stage values satisfying those local\nbounds has coordinate error at most\n`tau_i + (1+delta_i)*rho + (delta_i+D)/(1-D)`\nagainst TorchLean's real softmax. This bound allows approximate exponentials to\nround to zero. It does not promise positive computed outputs or an exactly\nunit computed sum. The sum's departure from one is bounded by the sum of the\ncoordinate error bounds. The row length enters through the accumulated errors.\nThe D<1 condition is a sufficient condition for this bound, not a claim that\nsoftmax fails whenever the bound cannot establish it."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxAccuracy.lean",
+        "passage": {
+          "quote": "theorem computed_denominator_positive (x : Tensor ℝ [n+1])\n    (h : Stages (weights x) approximate sum reciprocal output delta sigma rho tau)\n    (small : denominatorBudget delta sigma < 1) :\n    1-denominatorBudget delta sigma ≤ sum ∧ 0 < sum :=\n  denominator_positive h (weights_bounds x).2.1 small"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Let D=sigma+sum_i delta_i. If D<1, the computed denominator is at least 1-D and\nis strictly positive. Every collection of stage values satisfying those local\nbounds has coordinate error at most\n`tau_i + (1+delta_i)*rho + (delta_i+D)/(1-D)`\nagainst TorchLean's real softmax. This bound allows approximate exponentials to\nround to zero. It does not promise positive computed outputs or an exactly\nunit computed sum. The sum's departure from one is bounded by the sum of the\ncoordinate error bounds. The row length enters through the accumulated errors.\nThe D<1 condition is a sufficient condition for this bound, not a claim that\nsoftmax fails whenever the bound cannot establish it."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxAccuracy.lean",
+        "passage": {
+          "quote": "theorem computed_normalization_error (x : Tensor ℝ [n+1])\n    (h : Stages (weights x) approximate sum reciprocal output delta sigma rho tau)\n    (small : denominatorBudget delta sigma < 1) :\n    |(∑ i, output i)-1| ≤ ∑ i, coordinateBudget (delta i) (denominatorBudget delta sigma) rho (tau i) :=\n  normalization_error h (fun j => (weights_bounds x).1 j |>.1.le)\n    (fun j => (weights_bounds x).1 j |>.2) (weights_bounds x).2.1 small"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Let D=sigma+sum_i delta_i. If D<1, the computed denominator is at least 1-D and\nis strictly positive. Every collection of stage values satisfying those local\nbounds has coordinate error at most\n`tau_i + (1+delta_i)*rho + (delta_i+D)/(1-D)`\nagainst TorchLean's real softmax. This bound allows approximate exponentials to\nround to zero. It does not promise positive computed outputs or an exactly\nunit computed sum. The sum's departure from one is bounded by the sum of the\ncoordinate error bounds. The row length enters through the accumulated errors.\nThe D<1 condition is a sufficient condition for this bound, not a claim that\nsoftmax fails whenever the bound cannot establish it."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxChecks.lean",
+        "passage": {
+          "quote": "theorem permitted_zero_weight :\n    let e : Fin 2 → ℝ := ![1,1/1024]\n    let a : Fin 2 → ℝ := ![1,0]\n    let delta : Fin 2 → ℝ := ![0,1/1024]\n    Stages e a 1 1 a delta 0 0 (fun _ => 0) ∧\n      denominatorBudget delta 0 < 1 ∧ (∀ i, 0 < e i) ∧ a 1 = 0 := by\n  dsimp\n  refine ⟨?_, ?_, ?_, rfl⟩\n  · constructor\n    · intro i; fin_cases i <;> norm_num\n    · norm_num [Fin.sum_univ_two]\n    · norm_num\n    · intro i; fin_cases i <;> norm_num\n  · norm_num [denominatorBudget, Fin.sum_univ_two]\n  · intro i; fin_cases i <;> norm_num"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For backward arithmetic, a dot-product error budget combines errors in the\nforward weights and incoming sensitivities with the dot product's own rounding\nerror. The final coordinate bound also includes subtraction and multiplication\nerrors. Write epsilon_i for the forward-weight error, eta_i for the incoming\nsensitivity error, and sigmaDot for the computed dot product's error relative\nto its actual operands. Then\n`Q = sigmaDot + sum_i (abs(d_i)*epsilon_i + abs(pHat_i)*eta_i)`\nbounds the dot-product error against `q=sum_i p_i*d_i`. With local subtraction\nand multiplication errors subError_i and mulError_i, the backward coordinate\nerror is at most\n`mulError_i + abs(d_i-q)*epsilon_i + abs(pHat_i)*(subError_i+eta_i+Q)`.\nThe composed theorem uses the computed forward outputs as pHat and derives\nepsilon from the forward theorem. A forward error guarantee alone is not a\nbackward correctness theorem."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxError.lean",
+        "passage": {
+          "quote": "theorem backward_coordinate_error\n    (h : BackwardStages p pHat d dHat dot difference gradient epsilon eta sigma subError mulError)\n    (i : Fin n) :\n    |gradient i-p i*(d i-∑ j, p j*d j)|≤\n      backwardBudget pHat d p epsilon eta subError mulError sigma i := by\n  have dotError := backward_dot_error h\n  have subBound : |difference i-(d i-∑ j, p j*d j)|≤\n      subError i+eta i+dotBudget pHat d epsilon eta sigma := by\n    calc\n      _ = |(difference i-(dHat i-dot))+(dHat i-d i)-\n          (dot-∑ j, p j*d j)| := by congr 1; ring\n      _ ≤ |difference i-(dHat i-dot)|+|dHat i-d i|+|dot-∑ j, p j*d j| :=\n        (abs_sub _ _).trans (add_le_add (abs_add_le _ _) le_rfl)\n      _ ≤ _ := add_le_add (add_le_add (h.subtraction i) (h.incoming i)) dotError\n  calc\n    _ = |(gradient i-pHat i*difference i)+\n        (d i-∑ j, p j*d j)*(pHat i-p i)+\n        pHat i*(difference i-(d i-∑ j, p j*d j))| := by congr 1; ring\n    _ ≤ |gradient i-pHat i*difference i|+\n        |(d i-∑ j, p j*d j)*(pHat i-p i)|+\n        |pHat i*(difference i-(d i-∑ j, p j*d j))| :=\n      (abs_add_le _ _).trans (add_le_add (abs_add_le _ _) le_rfl)\n    _ ≤ _ := by\n      simp only [abs_mul]\n      exact add_le_add (add_le_add (h.multiplication i)\n        (mul_le_mul_of_nonneg_left (h.weights i) (abs_nonneg _)))\n        (mul_le_mul_of_nonneg_left subBound (abs_nonneg _))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For backward arithmetic, a dot-product error budget combines errors in the\nforward weights and incoming sensitivities with the dot product's own rounding\nerror. The final coordinate bound also includes subtraction and multiplication\nerrors. Write epsilon_i for the forward-weight error, eta_i for the incoming\nsensitivity error, and sigmaDot for the computed dot product's error relative\nto its actual operands. Then\n`Q = sigmaDot + sum_i (abs(d_i)*epsilon_i + abs(pHat_i)*eta_i)`\nbounds the dot-product error against `q=sum_i p_i*d_i`. With local subtraction\nand multiplication errors subError_i and mulError_i, the backward coordinate\nerror is at most\n`mulError_i + abs(d_i-q)*epsilon_i + abs(pHat_i)*(subError_i+eta_i+Q)`.\nThe composed theorem uses the computed forward outputs as pHat and derives\nepsilon from the forward theorem. A forward error guarantee alone is not a\nbackward correctness theorem."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxAccuracy.lean",
+        "passage": {
+          "quote": "theorem backward_error_of_forward (x d : Tensor ℝ [n+1])\n    (h : Stages (weights x) approximate sum reciprocal output delta sigma rho tau)\n    (small : denominatorBudget delta sigma < 1)\n    (dHat difference gradient eta subError mulError : Fin (n+1) → ℝ)\n    (dot dotError : ℝ)\n    (incoming : ∀ i, |dHat i-Tensor.getScalar d i| ≤ eta i)\n    (reduction : |dot-∑ i, output i*dHat i| ≤ dotError)\n    (subtraction : ∀ i, |difference i-(dHat i-dot)| ≤ subError i)\n    (multiplication : ∀ i, |gradient i-output i*difference i| ≤ mulError i)\n    (i : Fin (n+1)) :\n    |gradient i-backward x d i| ≤\n      backwardBudget output (Tensor.getScalar d) (forward x)\n        (fun j => coordinateBudget (delta j) (denominatorBudget delta sigma) rho (tau j))\n        eta subError mulError dotError i := by\n  exact backward_error x d ⟨forward_error x h small, incoming, reduction,\n    subtraction, multiplication⟩ i"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Numerical composition keeps four errors separate. Each computed exponential has\nan absolute error delta_i, including any error in preparing its argument. The\ncomputed sum has error sigma relative to the sum of those computed values. The\nreciprocal has error rho relative to one divided by that computed sum. The final\nmultiplication has error tau_i relative to its actual operands. These are local\ncomponent obligations, not an assumed final softmax error."
+      },
+      "to": {
+        "description": "numerical-contracts",
+        "passage": {
+          "quote": "An accuracy guarantee covers every permitted result for all inputs satisfying\nits stated conditions."
+        }
+      },
+      "reason": "The composition must quantify over all stage results and keep each local numerical obligation explicit."
+    }
+  ]
+}
