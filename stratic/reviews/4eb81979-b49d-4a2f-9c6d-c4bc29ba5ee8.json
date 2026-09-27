@@ -1,0 +1,121 @@
+{
+  "id": "4eb81979-b49d-4a2f-9c6d-c4bc29ba5ee8",
+  "base": "1a4a7b78c54678bc5804a3208b61cd38069e4d30",
+  "contentTree": "9e24d2b55df54cd27aaa1a5aea3e556b88804da7",
+  "reviewer": "Codex",
+  "summary": "Prove a conservative union of two ULP policies, all-result exponential bounds, and actual encoded natural-to-base-two conversion, with independent semantic/proof review and explicit remaining instruction/kernel boundaries.",
+  "examined": [
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "revised",
+      "reason": "Descriptions preceded implementation of the two-policy finite envelope and encoded base conversion. Exact union, witnesses, count-two output-range/error proof, concrete constant and actual product binding are implemented with complete passage links. Independent source and proof reviews preserve unresolved PTX special/overflow behavior."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Universal permitted-output accuracy, explicit representation and rounding, and distinction from implementation correspondence remain the parent contract. New proofs discharge bounded local obligations without changing it."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "Explains the wider error policy and concrete natural-exponential conversion budget; does not claim a shifted-input proof, a fetched exponential or a parallel kernel. Summary and remaining work match the implemented numerical slice."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Added four pinned build targets and 41 exact public axiom requests. Independent semantic/proof review covers the two-policy interpretation boundary; no worker acceptance or PTX coverage is inferred from numerical proofs."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "Actual arithmetic operands and local numerical bounds are established, while tensor storage, fetched execution and orchestration guarantees remain separate responsibilities."
+    },
+    {
+      "id": "backward",
+      "outcome": "unchanged",
+      "reason": "No automatic PTX backward construction, gradient definition or backward execution contract changed."
+    },
+    {
+      "id": "gemma",
+      "outcome": "unchanged",
+      "reason": "No architecture, cache, model or end-to-end network claim is changed by this numerical softmax groundwork."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "Softmax remains an explicitly incomplete example whose numerical guarantees are distinguished from implementation and execution; the examples-level responsibility still applies."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "9e24d2b55df54cd27aaa1a5aea3e556b88804da7",
+      "method": "./scripts/check.sh; (cd integration/torchlean && ./check.sh); stratic validate; git diff --check; independent semantic and proof review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; unchanged 16 numerical dependency pins; local checks only, no worker or external model calls",
+      "evidence": "Root checks passed (1643 dependency reports, 108 worker tests and 26 further tests). Integration checks passed (1766 exact dependency reports, including all 41 new declarations); only propext, Classical.choice, Quot.sound. Four new modules compile; boundary and encoded operand checks pass. Stratic valid with no issues; git diff --check clean. Before/after tree 9e24d2b55df54cd27aaa1a5aea3e556b88804da7 identical. Logs: /tmp/conservative-root-check.log and /tmp/conservative-integration-check.log. Independent reviews recorded in docs/formalization/conservative-exponential-review.md.",
+      "tests": [],
+      "id": "b4fdbf94-96f3-4915-a631-d4b75f34b2f7",
+      "recordedAt": "2026-09-27T11:35:37.904Z"
+    }
+  ],
+  "recordedAt": "2026-09-27T11:36:02.422Z",
+  "unmapped": [
+    {
+      "path": "docs/formalization/conservative-exponential-review.md",
+      "reason": "Project-authored explanation or independent review record for the wider ULP policy and actual encoded base conversion; explicitly preserves pending instruction preflight and parallel kernel obligations."
+    },
+    {
+      "path": "docs/formalization/unary-floating-preflight.md",
+      "reason": "Project-authored explanation or independent review record for the wider ULP policy and actual encoded base conversion; explicitly preserves pending instruction preflight and parallel kernel obligations."
+    },
+    {
+      "path": "docs/foundations/stable-softmax.md",
+      "reason": "Project-authored explanation or independent review record for the wider ULP policy and actual encoded base conversion; explicitly preserves pending instruction preflight and parallel kernel obligations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ConservativeULP.lean",
+      "reason": "Helpers implement the linked policy union, derive a global spacing bound and output range, and specialize the all-result theorem to count two. All public declarations audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ConservativeULPChecks.lean",
+      "reason": "Behavioral checks preserve boundary outputs, negative tiny values and zero signs, reject infinity, disprove arbitrary-count extrapolation, or instantiate actual encoded multiplication and natural-exponential accuracy."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ExpArgument.lean",
+      "reason": "Helpers decode the explicit constant, prove exponential sensitivity, and connect actual encoded multiplication to the linked natural-exponential error and existence theorems. Input range and inherited shift error remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ExpArgumentChecks.lean",
+      "reason": "Behavioral checks preserve boundary outputs, negative tiny values and zero signs, reject infinity, disprove arbitrary-count extrapolation, or instantiate actual encoded multiplication and natural-exponential accuracy."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Registers four integration targets and all 41 public endpoints in the exact dependency audit; pins and proof policy unchanged."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Registers four integration targets and all 41 public endpoints in the exact dependency audit; pins and proof policy unchanged."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers four integration targets and all 41 public endpoints in the exact dependency audit; pins and proof policy unchanged."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.json",
+      "reason": "Reviewed description and summary metadata with complete passage links; records partial realization and exact remaining obligations."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.md",
+      "reason": "Reviewed description and summary metadata with complete passage links; records partial realization and exact remaining obligations."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Reviewed description and summary metadata with complete passage links; records partial realization and exact remaining obligations."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Reviewed description and summary metadata with complete passage links; records partial realization and exact remaining obligations."
+    }
+  ]
+}

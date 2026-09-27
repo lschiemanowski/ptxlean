@@ -58,8 +58,8 @@ conditions, not restrictions on instruction execution. The NaN envelope preserve
 the existing uncertainty about permitted NaN payloads. Approximate reciprocal
 and its error convention remain separate work.
 
-These are numerical tools for future instruction contracts. They do not yet
-implement PTX ex2, a fetched unary instruction, or an executable softmax.
+The exponential relations are numerical tools for future instruction contracts.
+They do not yet implement PTX ex2 or an executable softmax.
 The PTX source review must still justify the chosen allowance and special cases,
 and the instruction proof must connect actual operands and outputs to it.
 
@@ -71,3 +71,33 @@ output convention. This example distinguishes numerical policies; it does not
 claim that a GPU produces that output or that this center is reached by an
 encoded exponential operand. A source-faithful exponential contract still needs
 an explicit interpretation policy and separate exceptional-value cases.
+
+A second neighborhood deliberately covers both choices of where to measure ULP:
+at the finite center and at the finite returned value. It uses the larger of
+these two spacings. Every result admitted by either choice belongs to this
+neighborhood, and the center itself is an encoded witness that it is nonempty.
+This covers these two named interpretations only; it does not establish that
+NVIDIA uniquely specifies either one or cover an unproved interpretation based
+on counting adjacent encodings.
+
+For a center between zero and one, a two-ULP result in this wider neighborhood
+still has distance at most 2*2^-23 from the center. This bound is derived without
+assuming that the returned value lies between zero and one: a global bound on
+spacing first constrains its magnitude, and then the local spacing bound applies.
+Adding nearest-even rounding error gives absolute error at most 5*2^-24 from an
+ideal value between zero and one. Hence the same numerical error budget can be
+used for a nonpositive base-two exponential under either named interpretation.
+The relation retains signed zeros and possible tiny negative results; special
+instruction cases and any source-mandated sign conditions remain separate.
+
+Converting a natural exponential to base two uses a concrete binary32 constant,
+0x3fb8aa3b, approximating 1/log(2), and an ordinary rounded multiplication by
+that constant. Its error budget keeps three contributions visible: any error
+already present in the shifted input, the constant's error, and multiplication
+rounding. For nonpositive inputs, rounding preserves the nonpositive sign;
+the exponential sensitivity bound then carries argument error to output error.
+A finite multiplication result requires a bound on the exact product before
+rounding. The resulting theorem applies to actual encoded multiplication and
+approximate outputs, but does not claim that a fetched kernel has performed the
+shift, multiplication, or exponential. It leaves the constant's error as an
+explicit real expression, not an unverified decimal estimate.

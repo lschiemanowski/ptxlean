@@ -37,7 +37,8 @@ The summation error refers to the **computed** exponentials, and the reciprocal
 error refers to the **computed** sum. Neither can substitute ideal operands.
 `delta_i` must eventually include input representation, subtraction, conversion
 of an exponential's base, and the exponential instruction's own error.
-These contributions have not yet been discharged by an instruction proof.
+The encoded base conversion is now proved below; input representation, the
+shift and the fetched exponential still need their instruction/program proofs.
 
 Set `D = sigma + sum_i delta_i`. The triangle inequality gives
 `abs(S-Z) ≤ D`. Thus `S ≥ 1-D`. When `D < 1`, the computed sum is strictly
@@ -165,12 +166,67 @@ numerical foundation, but do not mark a PTX instruction covered on that basis.
 An instruction review must justify the interpretation or a conservative envelope
 covering the intended source meanings.
 
-A future `ex2` path must also account for `exp(z) = 2^(z*log2(e))`: representing
-the conversion constant, multiplying by it, and perturbing the input all
-contribute error. Simply attaching a two-ULP allowance to `exp(z)` would omit
-those operations. Maximum selection, shifts, summation order, reciprocal and
-multiplication must eventually come from the fetched kernel and its actual
-instruction operands.
+## Covering two ULP conventions without choosing an output
+
+[`ConservativeULP.lean`](../../integration/torchlean/PtxBinary32/ConservativeULP.lean)
+now defines the larger of the center- and output-spacing allowances. It proves
+that this is exactly the union of those two policies, that an encoded center is
+always a witness, and that **every** permitted output has error at most
+`5*2^-24` for an ideal value in `[0,1]` with count two. It does not claim coverage
+of an interpretation based on counting adjacent encodings or resolve the manual's
+wording uniquely.
+
+Why does the same bound survive a wider relation? First, a global bound on ULP
+in terms of a value's magnitude shows that any two-ULP result near a center in
+`[0,1]` must have magnitude below two. Within that interval, ULP is at most
+`2^-23`. The neighborhood contributes at most twice this spacing, and reference
+rounding contributes another half. The output range is a conclusion, not an
+extra premise that discards inconvenient results. This argument is specific to
+two ULPs: a checked large-count example invalidates the general extrapolation.
+The checks also retain the boundary pair rejected by center spacing, negative
+tiny values and both signs of zero, and exclude infinity.
+
+## Turning the base-two instruction into a natural exponential
+
+The identity is `exp(t) = 2^(t/log(2))`. For an ideal shifted score `t ≤ 0`, let
+`x ≤ 0` be its actual encoded approximation and `h` a bound on `abs(x-t)`.
+[`ExpArgument.lean`](../../integration/torchlean/PtxBinary32/ExpArgument.lean)
+uses the concrete binary32 constant `0x3fb8aa3b`, whose exact real value is
+`c = 12102203/8388608`. It is an approximation to `1/log(2)`.
+The actual binary32 multiply produces `a = round32(x*c)`. Define
+
+```text
+k = abs(c - 1/log(2))
+B = eps32(x*c) + abs(x)*k + h/log(2)
+```
+
+Here `eps32` is the proved half-ULP rounding bound. `B` accounts separately for
+multiplication rounding, constant approximation and inherited shift error.
+The constant error `k` remains an explicit real expression; we have not inserted
+an unchecked decimal estimate or claimed a practical tightness result.
+
+From the input guard `abs(x*c) ≤ maxFinite`, Lean derives that the actual
+multiply has a finite, nonpositive result. A simple sufficient guard is
+`abs(x) ≤ 2^126`. For every encoded output `u` admitted by the two-policy finite
+exponential relation on that actual product word, it proves
+
+```text
+abs(u - exp(t)) ≤ 5*2^-24 + log(2)*B.
+```
+
+The factor `log(2)` bounds the sensitivity of the base-two exponential on
+nonpositive arguments. The theorem binds the exponential operand to the actual
+product word, not a substituted ideal argument. A second theorem constructs
+encoded witnesses for the multiply and approximate result. The checks include
+the actual product of the encoded constant with minus one and an all-output
+bound against `exp(-1)`.
+
+These are numerical relations and arithmetic witnesses. The finite relation
+allows a neighborhood even at input zero, so it must **not** replace the exact
+positive-one result required by the PTX zero-input table. Special input cases,
+positive-input overflow and fetched instruction behavior still need their own
+reviewed contract. Maximum selection, subtraction, sum order and the actual
+parallel forward/backward program remain work to do.
 
 ## Checking and the next acceptance boundary
 
@@ -214,7 +270,9 @@ source/proof reviews. Only `rcp.rn.f32` is covered; no `ex2` coverage is claimed
 The checked `ApproximatePolicyChecks` example also shows that output-spacing
 ULPs can admit a pair excluded by center-spacing ULPs. Adopting the existing
 center relation as PTX would therefore require a source justification, not just
-a Lean proof. Remaining kernel work includes
+a Lean proof. The new conservative relation covers both named spacing policies
+with proved all-result bounds; it is still a numerical foundation. Remaining
+kernel work includes
 parallel maximum and sum programs, forward and separately supplied backward
 programs, memory safety, admitted execution witnesses, and universal stored
 output bounds. The first row is nonempty and unmasked. Empty/all-masked rows,

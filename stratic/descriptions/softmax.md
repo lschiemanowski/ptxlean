@@ -57,9 +57,22 @@ encoded rounded result. This stronger guard establishes representability, which
 does not follow merely from positivity. The provider's half-ULP rounding error
 discharges the local reciprocal obligation for the actual destination of an
 enabled fetched reciprocal instruction. Nonpositive base-two exponentials also have finite encoded
-rounded centers and a universal neighborhood error bound. Argument preparation,
-the interpretation of the PTX approximation allowance and the actual instruction
-connection remain separate obligations.
+rounded centers and a universal neighborhood error bound. A wider finite relation
+covers both center-based and output-based ULP spacing: ULP is the floating-point
+grid spacing, which changes with magnitude. Every allowed result has error at
+most 5*2^-24, including reference rounding. This covers the two named conventions;
+it does not identify a unique interpretation of the PTX source.
+
+Natural exponentials also need conversion to base two. The concrete binary32
+constant 0x3fb8aa3b represents c=12102203/8388608, approximating 1/log(2).
+For a nonpositive encoded shifted score x approximating ideal score t<=0 with
+error h, the actual rounded product x*c has argument error at most
+`B = eps32(x*c) + abs(x)*abs(c-1/log(2)) + h/log(2)`.
+Here eps32 is the half-ULP rounding error allowance. Every result in the finite
+exponential relation on that product has error at most 5*2^-24+log(2)*B from
+exp(t). Finiteness follows from an input product bound; abs(x)<=2^126 is a simple
+sufficient guard. These theorems construct encoded arithmetic witnesses, but do
+not prove subtraction, the instruction's special cases, or fetched execution.
 
 The first scope is a nonempty unmasked row. Empty rows, masked-out positions and
 rows with no enabled positions need explicit separate policies. The reciprocal leaf is connected to its numerical provider. The remaining

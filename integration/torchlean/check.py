@@ -29,6 +29,17 @@ TARGETS = {"PtxTorchLean", "PtxTensorBridge", "PtxBinary32",
            "PtxBinary32Examples", "PtxBinary32Bounds", "PtxBinary32Error",
            "PtxBinary32.Instructions", "PtxBinary32.Mixed", "PtxBinary32.Affine"}
 
+
+# Conservative exponential policies and actual encoded base conversion.
+COUNTS["Ptx.Binary32.ConservativeULP"] = 16
+TARGETS.add("PtxBinary32.ConservativeULP")
+COUNTS["Ptx.Binary32.ConservativeULPChecks"] = 6
+TARGETS.add("PtxBinary32.ConservativeULPChecks")
+COUNTS["Ptx.Binary32.ExpArgument"] = 15
+TARGETS.add("PtxBinary32.ExpArgument")
+COUNTS["Ptx.Binary32.ExpArgumentChecks"] = 4
+TARGETS.add("PtxBinary32.ExpArgumentChecks")
+
 # Explicit public coverage for the serialized two-kernel and exact VJP slice.
 COUNTS.update({'Ptx.Scalar.Reciprocal': 17, 'Ptx.Scalar.Reciprocal.Text': 6})
 TARGETS.add('PtxBinary32.ReciprocalInstruction')

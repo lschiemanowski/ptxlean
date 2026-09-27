@@ -10,10 +10,12 @@
     "Represent a finite binary32 error neighborhood without selecting one permitted output or treating exceptional encodings as real numbers.",
     "Combine the distance from a rounded center with the center’s error relative to the ideal real result; keep source interpretation and instruction execution separate.",
     "Construct finite encoded rounded centers from input range bounds, and provide encoded nearest-even reciprocal arithmetic with explicit range/error guarantees.",
-    "Distinguish center-spacing, output-spacing and neighboring-encoding interpretations of ULP; do not silently treat one as PTX semantics."
+    "Distinguish center-spacing, output-spacing and neighboring-encoding interpretations of ULP; do not silently treat one as PTX semantics.",
+    "Cover center-based and output-based ULP allowances in one finite relation and bound every permitted result without assuming its output range.",
+    "Derive natural-exponential error and encoded arithmetic witnesses from a concrete base-conversion constant, actual multiplication, and explicit input bounds; retain inherited shift error separately."
   ],
   "realization": "partial",
-  "remaining": "Finite neighborhoods, encoded centers under input range guards, unit-interval all-result bounds and the numerical provider for the accepted rounded reciprocal instruction are proved. Source interpretation and complete exceptional/overflow behavior for approximate exponential, argument preparation and kernel execution remain unfinished.",
+  "remaining": "Conservative center/output ULP bounds and actual encoded base-conversion error/existence are proved, alongside finite centers and the accepted rounded reciprocal provider. Shift/subtraction, source interpretation and exceptional/overflow cases for a fetched exponential, and parallel kernel execution remain unfinished.",
   "links": [
     {
       "kind": "implementation",
@@ -216,6 +218,126 @@
         "path": "integration/torchlean/PtxBinary32/ApproximatePolicyChecks.lean",
         "passage": {
           "quote": "theorem output_spacing_not_center_spacing :\n    |output-center| ≤ 2*ulp32 output ∧\n      ¬ Approximate.WithinULP 2 0x3effffff 0x3f000001 := by\n  constructor\n  · rw [output_ulp]; norm_num [center, output]\n  · rintro ⟨c, hc, c', z, hc', hz, bound⟩\n    rw [center_real] at hc hc'\n    rw [output_real] at hz\n    cases Option.some.inj hc\n    cases Option.some.inj hc'\n    cases Option.some.inj hz\n    rw [center_ulp] at bound\n    norm_num [center, output] at bound"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A second neighborhood deliberately covers both choices of where to measure ULP:\nat the finite center and at the finite returned value. It uses the larger of\nthese two spacings. Every result admitted by either choice belongs to this\nneighborhood, and the center itself is an encoded witness that it is nonempty.\nThis covers these two named interpretations only; it does not establish that\nNVIDIA uniquely specifies either one or cover an unproved interpretation based\non counting adjacent encodings."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ConservativeULP.lean",
+        "passage": {
+          "quote": "def Within (count : ℕ) (center output : Word) : Prop :=\n  ∃ c z : ℝ, finiteReal center = some c ∧ finiteReal output = some z ∧\n    |z-c| ≤ count * max (ulp32 c) (ulp32 z)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A second neighborhood deliberately covers both choices of where to measure ULP:\nat the finite center and at the finite returned value. It uses the larger of\nthese two spacings. Every result admitted by either choice belongs to this\nneighborhood, and the center itself is an encoded witness that it is nonempty.\nThis covers these two named interpretations only; it does not establish that\nNVIDIA uniquely specifies either one or cover an unproved interpretation based\non counting adjacent encodings."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ConservativeULP.lean",
+        "passage": {
+          "quote": "theorem within_iff (count : ℕ) (center output : Word) :\n    Within count center output ↔\n      Approximate.WithinULP count center output ∨ OutputULP count center output := by\n  constructor\n  · rintro ⟨c,z,hc,hz,bound⟩\n    rcases le_total (ulp32 c) (ulp32 z) with h | h\n    · right; exact ⟨c,z,hc,hz,by simpa [max_eq_right h] using bound⟩\n    · left; exact ⟨c,hc,c,z,hc,hz,by simpa [max_eq_left h] using bound⟩\n  · intro h; exact h.elim center_included output_included"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A second neighborhood deliberately covers both choices of where to measure ULP:\nat the finite center and at the finite returned value. It uses the larger of\nthese two spacings. Every result admitted by either choice belongs to this\nneighborhood, and the center itself is an encoded witness that it is nonempty.\nThis covers these two named interpretations only; it does not establish that\nNVIDIA uniquely specifies either one or cover an unproved interpretation based\non counting adjacent encodings."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ConservativeULP.lean",
+        "passage": {
+          "quote": "theorem nonempty (center : Word) (finite : isFinite center = true) (count : ℕ) :\n    ∃ output, Within count center output := by\n  obtain ⟨output,h⟩ := Approximate.ulp_nonempty center finite count\n  exact ⟨output,center_included h⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For a center between zero and one, a two-ULP result in this wider neighborhood\nstill has distance at most 2*2^-23 from the center. This bound is derived without\nassuming that the returned value lies between zero and one: a global bound on\nspacing first constrains its magnitude, and then the local spacing bound applies.\nAdding nearest-even rounding error gives absolute error at most 5*2^-24 from an\nideal value between zero and one. Hence the same numerical error budget can be\nused for a nonpositive base-two exponential under either named interpretation.\nThe relation retains signed zeros and possible tiny negative results; special\ninstruction cases and any source-mandated sign conditions remain separate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ConservativeULP.lean",
+        "passage": {
+          "quote": "theorem unit_distance (c z : ℝ) (nonneg : 0 ≤ c) (upper : c ≤ 1)\n    (allowed : |z-c| ≤ 2 * max (ulp32 c) (ulp32 z)) :\n    |z-c| ≤ 2 * (2:ℝ)^(-23:ℤ) := by\n  have center := ApproximateBounds.ulp_unit c nonneg upper\n  have coarse := ulp_coarse z\n  have triangle : |z| ≤ |z-c| + 1 := by\n    have := abs_sub_le z c 0\n    simp only [sub_zero, abs_of_nonneg nonneg] at this\n    exact this.trans (add_le_add_right upper _)\n  have loose : max (ulp32 c) (ulp32 z) ≤ (|z|+1)*(2:ℝ)^(-23:ℤ) := by\n    apply max_le _ coarse\n    apply center.trans\n    norm_num\n  have distance := allowed.trans (mul_le_mul_of_nonneg_left loose (by norm_num : (0:ℝ) ≤ 2))\n  have small : |z| < 2 := by\n    norm_num at distance\n    linarith\n  exact allowed.trans (mul_le_mul_of_nonneg_left\n    (max_le center (ulp_below_two z small)) (by norm_num))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For a center between zero and one, a two-ULP result in this wider neighborhood\nstill has distance at most 2*2^-23 from the center. This bound is derived without\nassuming that the returned value lies between zero and one: a global bound on\nspacing first constrains its magnitude, and then the local spacing bound applies.\nAdding nearest-even rounding error gives absolute error at most 5*2^-24 from an\nideal value between zero and one. Hence the same numerical error budget can be\nused for a nonpositive base-two exponential under either named interpretation.\nThe relation retains signed zeros and possible tiny negative results; special\ninstruction cases and any source-mandated sign conditions remain separate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ConservativeULP.lean",
+        "passage": {
+          "quote": "theorem results_error (x : ℝ) (output : Word) (nonneg : 0 ≤ x) (upper : x ≤ 1)\n    (allowed : Results x output) :\n    ∃ z : ℝ, finiteReal output = some z ∧ |z-x| ≤ 5/(2:ℝ)^24 := by\n  obtain ⟨c,z,hc,hz,bound⟩ := allowed\n  have same : c = round32 x := Option.some.inj\n    (hc.symm.trans (RoundedReal.word_real x (RoundedReal.unit_range x nonneg upper)))\n  subst c\n  have rounded := ApproximateBounds.round_unit x nonneg upper\n  have distance := unit_distance _ _ rounded.1 rounded.2 (by simpa using bound)\n  have rounding := TorchLean.Floats.FP32.round_abs_error x\n  have eps : eps32 x ≤ (2:ℝ)^(-23:ℤ)/2 :=\n    div_le_div_of_nonneg_right (ApproximateBounds.ulp_unit x nonneg upper) (by norm_num)\n  refine ⟨z,hz,?_⟩\n  have := (abs_sub_le z (round32 x) x).trans (add_le_add distance (rounding.trans eps))\n  norm_num at this ⊢\n  exact this"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For a center between zero and one, a two-ULP result in this wider neighborhood\nstill has distance at most 2*2^-23 from the center. This bound is derived without\nassuming that the returned value lies between zero and one: a global bound on\nspacing first constrains its magnitude, and then the local spacing bound applies.\nAdding nearest-even rounding error gives absolute error at most 5*2^-24 from an\nideal value between zero and one. Hence the same numerical error budget can be\nused for a nonpositive base-two exponential under either named interpretation.\nThe relation retains signed zeros and possible tiny negative results; special\ninstruction cases and any source-mandated sign conditions remain separate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ConservativeULP.lean",
+        "passage": {
+          "quote": "theorem exp2_results_exists (x : ℝ) (nonpos : x ≤ 0) :\n    ∃ output, Results ((2:ℝ)^x) output :=\n  results_exists _ (Real.rpow_pos_of_pos (by norm_num) x).le\n    (Real.rpow_le_one_of_one_le_of_nonpos (by norm_num) nonpos)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Converting a natural exponential to base two uses a concrete binary32 constant,\n0x3fb8aa3b, approximating 1/log(2), and an ordinary rounded multiplication by\nthat constant. Its error budget keeps three contributions visible: any error\nalready present in the shifted input, the constant's error, and multiplication\nrounding. For nonpositive inputs, rounding preserves the nonpositive sign;\nthe exponential sensitivity bound then carries argument error to output error.\nA finite multiplication result requires a bound on the exact product before\nrounding. The resulting theorem applies to actual encoded multiplication and\napproximate outputs, but does not claim that a fetched kernel has performed the\nshift, multiplication, or exponential. It leaves the constant's error as an\nexplicit real expression, not an unverified decimal estimate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExpArgument.lean",
+        "passage": {
+          "quote": "theorem constant_real : finiteReal constantWord = some constantValue := by\n  rw [finiteReal_some _ (by decide)]\n  change some (Model.toReal (Model.ofFields FloatFormat.binary32 false 127 3713595)) = _\n  rw [Model.toReal_ofFields_normal _ _ _ _ (by decide) (by decide) (by decide)]\n  norm_num [constantValue, FloatFormat.binary32, Model.pow2, bpow, binaryRadix, Radix.toReal]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Converting a natural exponential to base two uses a concrete binary32 constant,\n0x3fb8aa3b, approximating 1/log(2), and an ordinary rounded multiplication by\nthat constant. Its error budget keeps three contributions visible: any error\nalready present in the shifted input, the constant's error, and multiplication\nrounding. For nonpositive inputs, rounding preserves the nonpositive sign;\nthe exponential sensitivity bound then carries argument error to output error.\nA finite multiplication result requires a bound on the exact product before\nrounding. The resulting theorem applies to actual encoded multiplication and\napproximate outputs, but does not claim that a fetched kernel has performed the\nshift, multiplication, or exponential. It leaves the constant's error as an\nexplicit real expression, not an unverified decimal estimate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExpArgument.lean",
+        "passage": {
+          "quote": "theorem natural_exp_error (x t shiftError : ℝ) (input product output : Word)\n    (value : finiteReal input = some x) (nonpos : x ≤ 0) (idealNonpos : t ≤ 0)\n    (range : |x*constantValue| ≤ Bounds.maxFinite) (shift : |x-t| ≤ shiftError)\n    (multiply : Ptx.Binary32.Results .mul input constantWord product)\n    (approximate : FiniteExp2 product output) :\n    ∃ z : ℝ, finiteReal output = some z ∧\n      |z-Real.exp t| ≤ 5/(2:ℝ)^24 + Real.log 2 * budget x shiftError := by\n  have pr := product_real input product x value nonpos range multiply\n  obtain ⟨a,ha,err⟩ := argument_error x t shiftError input product value range shift multiply\n  have same : a = round32 (x*constantValue) := Option.some.inj (ha.symm.trans pr.1)\n  subst a\n  obtain ⟨a,ha,_,approximate⟩ := approximate\n  have same : a = round32 (x*constantValue) := Option.some.inj (ha.symm.trans pr.1)\n  subst a\n  obtain ⟨z,hz,approx⟩ := ConservativeULP.exp2_error _ output pr.2 approximate\n  have logpos : 0 < Real.log 2 := Real.log_pos (by norm_num)\n  have sensitivity := exp2_nonpos_distance (round32 (x*constantValue)) (t/Real.log 2)\n    pr.2 (div_nonpos_of_nonpos_of_nonneg idealNonpos logpos.le)\n  rw [base_conversion] at sensitivity\n  exact ⟨z,hz,(abs_sub_le _ _ _).trans (add_le_add approx\n    (sensitivity.trans (mul_le_mul_of_nonneg_left err logpos.le)))⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Converting a natural exponential to base two uses a concrete binary32 constant,\n0x3fb8aa3b, approximating 1/log(2), and an ordinary rounded multiplication by\nthat constant. Its error budget keeps three contributions visible: any error\nalready present in the shifted input, the constant's error, and multiplication\nrounding. For nonpositive inputs, rounding preserves the nonpositive sign;\nthe exponential sensitivity bound then carries argument error to output error.\nA finite multiplication result requires a bound on the exact product before\nrounding. The resulting theorem applies to actual encoded multiplication and\napproximate outputs, but does not claim that a fetched kernel has performed the\nshift, multiplication, or exponential. It leaves the constant's error as an\nexplicit real expression, not an unverified decimal estimate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExpArgument.lean",
+        "passage": {
+          "quote": "theorem stages_exist (input : Word) (x : ℝ) (value : finiteReal input = some x)\n    (nonpos : x ≤ 0) (range : |x*constantValue| ≤ Bounds.maxFinite) :\n    ∃ product output, Ptx.Binary32.Results .mul input constantWord product ∧\n      finiteReal product = some (round32 (x*constantValue)) ∧\n      FiniteExp2 product output := by\n  obtain ⟨product,allowed⟩ := Ptx.Binary32.results_exists .mul input constantWord\n  have pr := product_real input product x value nonpos range allowed\n  obtain ⟨output,h⟩ := ConservativeULP.exp2_results_exists _ pr.2\n  exact ⟨product,output,allowed,pr.1,_,pr.1,pr.2,h⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Converting a natural exponential to base two uses a concrete binary32 constant,\n0x3fb8aa3b, approximating 1/log(2), and an ordinary rounded multiplication by\nthat constant. Its error budget keeps three contributions visible: any error\nalready present in the shifted input, the constant's error, and multiplication\nrounding. For nonpositive inputs, rounding preserves the nonpositive sign;\nthe exponential sensitivity bound then carries argument error to output error.\nA finite multiplication result requires a bound on the exact product before\nrounding. The resulting theorem applies to actual encoded multiplication and\napproximate outputs, but does not claim that a fetched kernel has performed the\nshift, multiplication, or exponential. It leaves the constant's error as an\nexplicit real expression, not an unverified decimal estimate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExpArgument.lean",
+        "passage": {
+          "quote": "theorem bounded_product_range (x : ℝ) (small : |x| ≤ (2:ℝ)^(126:ℤ)) :\n    |x*constantValue| ≤ Bounds.maxFinite := by\n  rw [abs_mul,abs_of_pos constant_positive]\n  have h := mul_le_mul_of_nonneg_right small constant_positive.le\n  apply h.trans\n  rw [Bounds.maxFinite_eq]\n  norm_num [constantValue]"
         }
       }
     }

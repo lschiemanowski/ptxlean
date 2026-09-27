@@ -24,8 +24,7 @@ and a quotient range bound. Nothing treats real division by zero as machine
 reciprocal behavior. The arithmetic tests check signed zero and infinity cases,
 NaN freedom, gradual underflow and overflow.
 
-Use the center-spacing ULP convention for the current exponential numerical
-foundation. `RoundedReal.Results k ideal output` measures distance from an actual
+The initial exponential numerical foundation uses center-spacing ULP. `RoundedReal.Results k ideal output` measures distance from an actual
 encoded nearest-even center using `k*ulp32(round32 ideal)`. A new input-range
 proof constructs that center; it is no longer a caller-supplied object. All
 nonpositive real exponents have finite centers for `2^x`. The corresponding
@@ -95,13 +94,16 @@ an encoded exponential operand reaches this particular center. Together with the
 existing neighboring-encoding example, it rules out silently identifying these
 numerical policies in a general arithmetic interface.
 
-One possible conservative finite envelope is
-`abs(output-center) <= 2*max(ulp32(center),ulp32(output))`, with the center the
-nearest-even rounding of the ideal exponential. That envelope includes the
-center and output conventions, but its coverage of any additional interpretation
-and its useful all-result bounds still require proofs. It does not establish a
-unique interpretation of NVIDIA's wording. The rounding convention of the
-reference must itself remain explicit.
+The implemented `ConservativeULP.Within` finite envelope is
+`abs(output-center) <= count*max(ulp32(center),ulp32(output))`. Lean proves it is
+exactly the union of the center- and output-spacing conventions. For count two,
+a rounded center of an ideal value in [0,1] gives the same uniform absolute
+error bound `5*2^-24`, including rounding. Crucially, the proof derives the
+output's magnitude from membership; it does not assume positivity or an output
+range. A large-count counterexample prevents extending this theorem to arbitrary
+counts. Coverage of additional interpretations remains unproved. This does not
+establish a unique interpretation of NVIDIA's wording; nearest-even reference
+rounding remains explicit.
 
 Special table entries must override generic neighborhoods: both signed-zero
 inputs give positive one; negative infinity gives positive zero; positive
@@ -111,12 +113,16 @@ negative results or negative zero in the underflow region. Arbitrary positive
 finite inputs cannot be required to have finite exponential outputs: overflow
 needs a separate reviewed contract. No FTZ behavior is included in this scope.
 
-Before accepting an exponential instruction, either justify a specific ULP
-interpretation from additional authoritative evidence, or explicitly adopt a
-conservative relation over named interpretations and prove its inclusion and
-all-result error bounds. Keep unsupported positive-overflow behavior visibly
+The inclusion and all-result bounds now discharge the numerical part of the
+conservative-policy route. Before accepting an exponential instruction, freeze
+its explicit interpretation and all special cases, and preflight the complete
+acceptance driver against a separate fixture and deliberate semantic mutants.
+No exponential worker has been dispatched on the strength of these numerical
+proofs alone. Keep unsupported positive-overflow behavior visibly
 partial until reviewed; it cannot be hidden in a totality assumption. Only then
-can the parallel softmax kernel claim source-qualified accuracy. Argument
-subtraction and the multiplication by a rounded log2(e) constant also need
-separate error and range proofs. These are still outstanding, as are the actual
+can the parallel softmax kernel claim source-qualified accuracy. `ExpArgument` now proves the base-conversion part: a concrete encoded constant,
+actual rounded multiplication, finite/nonpositive output from input guards, and
+natural-exponential error for every permitted approximate result. It keeps
+inherited shift error separate and does not assume a correct final exponential.
+Argument subtraction is still outstanding, as are the fetched exponential,
 parallel programs and their execution, storage and memory-safety results.

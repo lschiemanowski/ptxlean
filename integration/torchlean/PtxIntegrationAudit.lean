@@ -1,3 +1,7 @@
+import PtxBinary32.ConservativeULP
+import PtxBinary32.ConservativeULPChecks
+import PtxBinary32.ExpArgument
+import PtxBinary32.ExpArgumentChecks
 import PtxBinary32.ReciprocalInstruction
 import PtxBinary32.ApproximatePolicyChecks
 import PtxBinary32.RoundedReal
@@ -1934,3 +1938,45 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Reciprocal.Text.decode
 #print axioms Ptx.Scalar.Reciprocal.Text.decode_encode
 #print axioms Ptx.Scalar.Reciprocal.Text.decode_iff
+
+#print axioms Ptx.Binary32.ConservativeULP.Within
+#print axioms Ptx.Binary32.ConservativeULP.OutputULP
+#print axioms Ptx.Binary32.ConservativeULP.center_included
+#print axioms Ptx.Binary32.ConservativeULP.output_included
+#print axioms Ptx.Binary32.ConservativeULP.within_iff
+#print axioms Ptx.Binary32.ConservativeULP.nonempty
+#print axioms Ptx.Binary32.ConservativeULP.output_finite
+#print axioms Ptx.Binary32.ConservativeULP.ulp_relative
+#print axioms Ptx.Binary32.ConservativeULP.ulp_coarse
+#print axioms Ptx.Binary32.ConservativeULP.ulp_below_two
+#print axioms Ptx.Binary32.ConservativeULP.unit_distance
+#print axioms Ptx.Binary32.ConservativeULP.Results
+#print axioms Ptx.Binary32.ConservativeULP.results_exists
+#print axioms Ptx.Binary32.ConservativeULP.results_error
+#print axioms Ptx.Binary32.ConservativeULP.exp2_results_exists
+#print axioms Ptx.Binary32.ConservativeULP.exp2_error
+#print axioms Ptx.Binary32.ConservativeULPChecks.boundary_included
+#print axioms Ptx.Binary32.ConservativeULPChecks.negative_min_real
+#print axioms Ptx.Binary32.ConservativeULPChecks.tiny_negative_allowed
+#print axioms Ptx.Binary32.ConservativeULPChecks.both_zero_signs
+#print axioms Ptx.Binary32.ConservativeULPChecks.infinity_excluded
+#print axioms Ptx.Binary32.ConservativeULPChecks.large_count_requires_care
+#print axioms Ptx.Binary32.ExpArgument.constantWord
+#print axioms Ptx.Binary32.ExpArgument.constantValue
+#print axioms Ptx.Binary32.ExpArgument.constant_real
+#print axioms Ptx.Binary32.ExpArgument.constant_positive
+#print axioms Ptx.Binary32.ExpArgument.constantError
+#print axioms Ptx.Binary32.ExpArgument.budget
+#print axioms Ptx.Binary32.ExpArgument.exp_nonpos_distance
+#print axioms Ptx.Binary32.ExpArgument.exp2_nonpos_distance
+#print axioms Ptx.Binary32.ExpArgument.base_conversion
+#print axioms Ptx.Binary32.ExpArgument.product_real
+#print axioms Ptx.Binary32.ExpArgument.bounded_product_range
+#print axioms Ptx.Binary32.ExpArgument.argument_error
+#print axioms Ptx.Binary32.ExpArgument.FiniteExp2
+#print axioms Ptx.Binary32.ExpArgument.natural_exp_error
+#print axioms Ptx.Binary32.ExpArgument.stages_exist
+#print axioms Ptx.Binary32.ExpArgumentChecks.negative_one_product
+#print axioms Ptx.Binary32.ExpArgumentChecks.zero_product
+#print axioms Ptx.Binary32.ExpArgumentChecks.negative_one_stages
+#print axioms Ptx.Binary32.ExpArgumentChecks.negative_one_accuracy
