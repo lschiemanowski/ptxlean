@@ -1,0 +1,130 @@
+{
+  "id": "79de52e8-29c3-47bd-9af2-6925ab6f3d5b",
+  "base": "aad3095ac6d04c729e8b3c0e327d61f52ec8bb0a",
+  "contentTree": "20f9514e2aa0b3ec668b60692cc3a863939d0aa3",
+  "reviewer": "Codex with independent semantic and proof reviewers",
+  "summary": "Prove a four-step shifted exponential from bounded encoded inputs, with all-result accuracy, exact positive one at the supplied maximum, execution existence and preservation of unrelated state.",
+  "examined": [
+    {
+      "id": "shifted-exponential",
+      "outcome": "revised",
+      "reason": "New description-first component: four existing instruction leaves, conservative input bounds, all-result error, exact maximal-score +1, actual fetch/existence and frame, independent source/proof review."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "Single-score shifted-exponential subtraction and four-step computation now proved; parallel maximum/sum, normalized row and backward execution remain explicit."
+    },
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "revised",
+      "reason": "Remaining metadata reconciled: subtraction error now discharged by separate bounded sequence; numerical provider contracts and their source-policy qualifications are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Same pinned dependencies, all-public declaration audits and fresh checks; separate source and proof reviews accompany composition, with no new unchecked axioms or hardware claims."
+    },
+    {
+      "id": "exponential-instruction",
+      "outcome": "unchanged",
+      "reason": "Reused exactly its special-case and conservative all-result guarantees; input-only proof establishes nonpositive finite operand, preserving partial positive-finite coverage."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Composed error applies to every permitted result relative to stored finite input values; exact encoded one is distinguished from generic error bounds and external input representation."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "New local scalar example instantiates the existing responsibility; no full row, parallel execution, hardware or backward result promoted from it."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "New mixed program list delegates original-state leaf semantics and requires actual fetch; no raw parsing or unmodeled instruction admitted."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "No missing leaf required. Composition reuses existing accepted leaves, introduces no sub.rn form, and makes no headless worker call or new productivity claim."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "20f9514e2aa0b3ec668b60692cc3a863939d0aa3",
+      "method": "bash scripts/check.sh; python3 integration/torchlean/check.py; independent pinned-source and proof reviews; proposed-file distribution check; Stratic validation and final description delta review; git diff --check",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 with 16 verified integration dependency revisions. Existing add/mul/ex2 leaves unchanged; no new worker/API calls.",
+      "evidence": "Root suite passes with 1643 exact dependency audits; integration passes 1847 exact reports, including all 30 new public declarations and fresh boundary proof checks. No sorry or new unchecked axioms; only propext/Classical.choice/Quot.sound. Independent source and final proof review with matching source hashes is committed in docs/formalization/shifted-exponential-review.md. Logs: /tmp/shift-root.log, /tmp/shift-integration.log, /tmp/shift-distribution.log. Full checks covered tree a97631cef2d60273fcdb1273ed836299c1c80c20; only a final explicit PTX9.4/SM>=20 target clarification and matching Stratic passage metadata differ in final tree. Reviewed that documentation-only delta and validated between equal final snapshots 20f9514e2aa0b3ec668b60692cc3a863939d0aa3. All code, checks, pins and other files identical.",
+      "tests": [],
+      "id": "809bd816-c777-41d3-93c9-5babdfdcbb83",
+      "recordedAt": "2026-09-27T13:12:13.484Z"
+    }
+  ],
+  "recordedAt": "2026-09-27T13:12:39.536Z",
+  "unmapped": [
+    {
+      "path": "docs/formalization/shifted-exponential-review.md",
+      "reason": "Reviewed explanatory PTX example, numerical/sequence study and separate source/proof reports; synchronized prior softmax/preflight status. No vendor source redistributed."
+    },
+    {
+      "path": "docs/formalization/unary-floating-preflight.md",
+      "reason": "Reviewed explanatory PTX example, numerical/sequence study and separate source/proof reports; synchronized prior softmax/preflight status. No vendor source redistributed."
+    },
+    {
+      "path": "docs/foundations/shifted-exponential.md",
+      "reason": "Reviewed explanatory PTX example, numerical/sequence study and separate source/proof reports; synchronized prior softmax/preflight status. No vendor source redistributed."
+    },
+    {
+      "path": "docs/foundations/stable-softmax.md",
+      "reason": "Reviewed explanatory PTX example, numerical/sequence study and separate source/proof reports; synchronized prior softmax/preflight status. No vendor source redistributed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ShiftedExp.lean",
+      "reason": "All numerical definitions and private/public proofs inspected independently; input-only range conditions derive exact negation, shifted bounds, all-result error, exact one and numerical witnesses."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ShiftedExpChecks.lean",
+      "reason": "Nine kernel-checked obligations cover missing fetch, target, explicit spellings, maximum alias, subnormal preservation, inclusive magnitude endpoints, signed-zero run and negative shifted run."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ShiftedExpProgram.lean",
+      "reason": "All mixed instruction/event constructors, actual fetch, typed text, four-step run, private helpers and public execution/frame/accuracy theorems independently reviewed; no numerical results assumed outside each executed leaf."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Registered all three modules and all 30 public declarations; fresh boundary proof invocation and full pinned integration audit."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Registered all three modules and all 30 public declarations; fresh boundary proof invocation and full pinned integration audit."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registered all three modules and all 30 public declarations; fresh boundary proof invocation and full pinned integration audit."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.json",
+      "reason": "Description, summary, implementation passages and dependency reason reviewed; scoped implemented component remains separate from incomplete parallel softmax."
+    },
+    {
+      "path": "stratic/descriptions/shifted-exponential.json",
+      "reason": "Description, summary, implementation passages and dependency reason reviewed; scoped implemented component remains separate from incomplete parallel softmax."
+    },
+    {
+      "path": "stratic/descriptions/shifted-exponential.md",
+      "reason": "Description, summary, implementation passages and dependency reason reviewed; scoped implemented component remains separate from incomplete parallel softmax."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Description, summary, implementation passages and dependency reason reviewed; scoped implemented component remains separate from incomplete parallel softmax."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Description, summary, implementation passages and dependency reason reviewed; scoped implemented component remains separate from incomplete parallel softmax."
+    }
+  ]
+}

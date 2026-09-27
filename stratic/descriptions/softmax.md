@@ -73,7 +73,9 @@ exponential relation on that product has error at most 5*2^-24+log(2)*B from
 exp(t). Finiteness follows from an input product bound; abs(x)<=2^126 is a simple
 sufficient guard. These base-conversion theorems construct encoded arithmetic witnesses; the
 separate instruction leaf below supplies exact special cases and fetched steps.
-Subtraction remains unfinished.
+The shifted-exponential component derives the subtraction error from the original
+stored score and a supplied upper bound, then connects all stages to a four-step
+instruction sequence.
 
 The first scope is a nonempty unmasked row. Empty rows, masked-out positions and
 rows with no enabled positions need explicit separate policies. The reciprocal leaf and the bounded ex2.approx.f32 leaf connect to their
@@ -85,7 +87,10 @@ in that supported domain. This is a partial instruction model, not full ex2
 coverage. The remaining
 foundation does not yet claim that PTX instructions realize all stage contracts,
 that all stage values are realizable binary32 words, or that a kernel executes.
-Remaining work is the source-reviewed approximate arithmetic, a parallel maximum
-and sum implementation with rounding/range bounds, fetched forward and backward
+A bounded four-step scalar sequence now implements one shifted exponential and
+returns exact positive one when the score equals the supplied maximum. It derives
+finite, nonpositive intermediates from its input conditions and preserves every
+permitted final result. Remaining work includes a parallel maximum and sum
+implementation with rounding/range bounds, fetched forward and backward
 programs, admitted execution existence, memory safety and stored-output proofs.
 GPU execution and benchmarking remain deferred.

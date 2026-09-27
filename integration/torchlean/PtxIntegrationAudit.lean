@@ -1,3 +1,4 @@
+import PtxBinary32.ShiftedExpChecks
 import PtxBinary32.ExponentialInstruction
 import PtxBinary32.Exponential
 import PtxBinary32.ExponentialChecks
@@ -2036,3 +2037,34 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Exponential.Text.decode
 #print axioms Ptx.Scalar.Exponential.Text.decode_encode
 #print axioms Ptx.Scalar.Exponential.Text.decode_iff
+
+#print axioms Ptx.Binary32.ShiftedExp.InputBounds
+#print axioms Ptx.Binary32.ShiftedExp.negative_real
+#print axioms Ptx.Binary32.ShiftedExp.shift_real
+#print axioms Ptx.Binary32.ShiftedExp.error
+#print axioms Ptx.Binary32.ShiftedExp.equal_scores
+#print axioms Ptx.Binary32.ShiftedExp.stages_exist
+#print axioms Ptx.Scalar.ShiftedExp.Instr
+#print axioms Ptx.Scalar.ShiftedExp.Event
+#print axioms Ptx.Scalar.ShiftedExp.Eval
+#print axioms Ptx.Scalar.ShiftedExp.Step
+#print axioms Ptx.Scalar.ShiftedExp.Run
+#print axioms Ptx.Scalar.ShiftedExp.negate
+#print axioms Ptx.Scalar.ShiftedExp.shift
+#print axioms Ptx.Scalar.ShiftedExp.convert
+#print axioms Ptx.Scalar.ShiftedExp.exponential
+#print axioms Ptx.Scalar.ShiftedExp.program
+#print axioms Ptx.Scalar.ShiftedExp.text
+#print axioms Ptx.Scalar.ShiftedExp.run_results
+#print axioms Ptx.Scalar.ShiftedExp.correct
+#print axioms Ptx.Scalar.ShiftedExp.maximal_score
+#print axioms Ptx.Scalar.ShiftedExp.execution_exists
+#print axioms Ptx.Scalar.ShiftedExp.Checks.spellings
+#print axioms Ptx.Scalar.ShiftedExp.Checks.missing_fetch
+#print axioms Ptx.Scalar.ShiftedExp.Checks.unsupported_target
+#print axioms Ptx.Scalar.ShiftedExp.Checks.maximum_alias
+#print axioms Ptx.Scalar.ShiftedExp.Checks.subnormal_shift
+#print axioms Ptx.Scalar.ShiftedExp.Checks.endpoint_real
+#print axioms Ptx.Scalar.ShiftedExp.Checks.endpoint_stages
+#print axioms Ptx.Scalar.ShiftedExp.Checks.signed_zero_execution
+#print axioms Ptx.Scalar.ShiftedExp.Checks.negative_shift_execution

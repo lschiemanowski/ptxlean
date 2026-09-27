@@ -37,9 +37,10 @@ The summation error refers to the **computed** exponentials, and the reciprocal
 error refers to the **computed** sum. Neither can substitute ideal operands.
 `delta_i` must eventually include input representation, subtraction, conversion
 of an exponential's base, and the exponential instruction's own error.
-The encoded base conversion is now proved below; input representation and the
-shift still need their instruction/program proofs. The bounded fetched exponential
-now connects its actual operand and destination to the numerical relation.
+The encoded base conversion and a [four-step shifted exponential](shifted-exponential.md)
+are now proved. The latter derives subtraction error from the original bounded
+encoded inputs and connects the actual instructions to exp(x-m). Input
+representation error relative to values before storage remains separate.
 
 Set `D = sigma + sum_i delta_i`. The triangle inequality gives
 `abs(S-Z) ≤ D`. Thus `S ≥ 1-D`. When `D < 1`, the computed sum is strictly
@@ -229,7 +230,7 @@ positive-one result required by the PTX zero-input table. The separate bounded
 finite relation used here. Its fetched instruction preserves every admitted
 result for nonpositive finite inputs, infinities and NaNs. Positive finite
 operands, including ordinary nonoverflowing cases, remain unsupported.
-Maximum selection, subtraction, sum order and the actual parallel
+Parallel maximum selection, sum order and the complete parallel
 forward/backward program remain work to do.
 
 ## Checking and the next acceptance boundary
@@ -281,8 +282,20 @@ as a restricted model, outside accepted full-form counts.
 The conservative exponential relation covers both named ULP spacing policies
 with proved bounds for every admitted result. It does not settle the source's
 unspecified evaluation point or establish hardware conformance. Remaining
-kernel work includes argument subtraction, parallel maximum and sum programs,
+kernel work includes parallel maximum and sum programs,
 forward and separately supplied backward programs, memory safety, admitted
 execution witnesses, and universal stored-output bounds. The first row is
 nonempty and unmasked. Empty/all-masked rows, attention, GPU runs and benchmarking
 are outside this slice.
+
+## A complete scalar numerator component
+
+The [shifted-exponential guide](shifted-exponential.md) now follows four fetched
+instructions from the original score and supplied upper bound to the final
+register. It proves input-based range safety, an error bound for every admitted
+output, execution existence and preservation of unrelated state. A score equal
+to the supplied maximum produces exact encoded +1, including mixed input zero
+signs. The first shift uses exact multiplication by -1 followed by rounded
+addition; it introduces no new subtraction-instruction formalization. The
+conservative bounds are x<=m and abs(x),abs(m)<=2^124. Computing a maximum that
+is both an upper bound and an attained score remains the next parallel obligation.

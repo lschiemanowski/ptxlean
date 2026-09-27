@@ -80,8 +80,9 @@ numerical provider is not acceptance of that future instruction implementation.
 ## Still needed for softmax
 
 The generalized real-to-word construction supplies mathematical existence, not
-an executable exponential. Argument subtraction/base conversion need their own
-rounding/range/error proofs. The maximum and sum need actual parallel programs;
+an executable exponential. The [four-step shifted-exponential sequence](../foundations/shifted-exponential.md)
+now supplies subtraction and base-conversion rounding/range/error proofs from
+bounded original inputs. The maximum and sum need actual parallel programs;
 the sum's rounding can depend on the chosen tree. Stored input/output meaning,
 all permitted executions, memory safety and admitted existence remain kernel
 obligations. GPU execution, timings and performance claims remain deferred.
@@ -127,6 +128,7 @@ candidate; the restricted model remains outside full-form coverage counts.
 actual rounded multiplication. It derives finite/nonpositive output from input
 guards and natural-exponential error for every permitted approximate result.
 The fetched exponential now connects this relation to its actual destination.
-Inherited shift error remains separate. Argument subtraction, positive finite
-exponential behavior, parallel programs and their execution, storage and
-memory-safety results remain unfinished.
+The shifted-exponential component now derives the shift error and composes
+these leaves into four fetched steps. Positive finite exponential behavior,
+parallel programs and their execution, storage and memory-safety results remain
+unfinished.

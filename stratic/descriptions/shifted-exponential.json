@@ -1,0 +1,186 @@
+{
+  "id": "shifted-exponential",
+  "parent": {
+    "description": "softmax",
+    "passage": {
+      "quote": "The shifted-exponential component derives the subtraction error from the original\nstored score and a supplied upper bound, then connects all stages to a four-step\ninstruction sequence."
+    }
+  },
+  "summary": [
+    "Compute one shifted natural exponential using four existing PTX instructions and one scratch register.",
+    "Derive intermediate finiteness, nonpositivity and all-result accuracy from finite input values and explicit magnitude bounds; return exact positive one when the score equals the supplied maximum.",
+    "Prove four fetched steps exist and preserve unrelated state; leave row-maximum computation and parallel softmax separate."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This component computes an approximation to exp(x-m) for one finite stored score\nx and a supplied finite upper bound m. A later row-maximum computation must\nestablish that its output is such an upper bound. Here x and m mean the exact\nreal values of the input binary32 words, not unrounded external data."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExp.lean",
+        "passage": {
+          "quote": "def InputBounds (x m : ℝ) : Prop :=\n  x ≤ m ∧ |x| ≤ (2:ℝ)^(124:ℤ) ∧ |m| ≤ (2:ℝ)^(124:ℤ)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program uses four already modeled instructions: multiply m by exact minus\none, add that result to x, multiply the shifted result by the encoded approximation\nto 1/log(2), then apply ex2.approx.f32. Multiplication by minus one is proved to\nnegate the finite real value exactly. The addition therefore supplies the rounded\nsubtraction. This representation reuses the existing addition and multiplication\ncontracts; it does not claim to formalize sub.rn.f32 or improve performance."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExp.lean",
+        "passage": {
+          "quote": "theorem negative_real (maximum negative : Word) (m : ℝ)\n    (value : finiteReal maximum = some m) (small : |m| ≤ (2:ℝ)^(124:ℤ))\n    (negate : Ptx.Binary32.Results .mul maximum 0xbf800000 negative) :\n    finiteReal negative = some (-m) := by\n  have range : |Bounds.exactReal .mul m (-1)| ≤ Bounds.maxFinite := by\n    simp only [Bounds.exactReal, mul_neg_one, abs_neg]\n    exact small.trans (by rw [Bounds.maxFinite_eq]; norm_num)\n  have result := Bounds.round_of_range .mul maximum 0xbf800000 negative m (-1)\n    value Bounds.negative_one_real range negate\n  change finiteReal negative = some (round32 (m * (-1))) at result\n  rw [mul_neg_one] at result\n  have fixed : round32 (-m) = -m := by\n    change Model.roundAt FloatFormat.binary32 (-m) = -m\n    rw [Model.roundAt_neg]\n    exact congrArg Neg.neg (round_fixed maximum m value)\n  rwa [fixed] at result"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program uses four already modeled instructions: multiply m by exact minus\none, add that result to x, multiply the shifted result by the encoded approximation\nto 1/log(2), then apply ex2.approx.f32. Multiplication by minus one is proved to\nnegate the finite real value exactly. The addition therefore supplies the rounded\nsubtraction. This representation reuses the existing addition and multiplication\ncontracts; it does not claim to formalize sub.rn.f32 or improve performance."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExpProgram.lean",
+        "passage": {
+          "quote": "def program (input maximum destination : Nat) : List Instr :=\n  [.binary (negate maximum destination), .binary (shift input destination),\n   .binary (convert destination), .exponential (exponential destination)]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program uses four already modeled instructions: multiply m by exact minus\none, add that result to x, multiply the shifted result by the encoded approximation\nto 1/log(2), then apply ex2.approx.f32. Multiplication by minus one is proved to\nnegate the finite real value exactly. The addition therefore supplies the rounded\nsubtraction. This representation reuses the existing addition and multiplication\ncontracts; it does not claim to formalize sub.rn.f32 or improve performance."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExpProgram.lean",
+        "passage": {
+          "quote": "def text (input maximum destination : Nat) : List Scalar.Text.Statement :=\n  [Scalar.Binary32.Text.encode (negate maximum destination),\n   Scalar.Binary32.Text.encode (shift input destination),\n   Scalar.Binary32.Text.encode (convert destination),\n   Scalar.Exponential.Text.encode (exponential destination)]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The input conditions are x<=m and abs(x),abs(m)<=2^124. These conservative bounds\nprevent overflow in the negation, addition and base conversion. The proof derives\nthat the rounded difference is finite and nonpositive and hence reaches the\nsupported exponential domain. Finiteness or successful intermediate computations\nare conclusions, not extra premises. Both signs of zero and gradual underflow\nremain covered by the existing arithmetic contracts."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExp.lean",
+        "passage": {
+          "quote": "theorem shift_real (input maximum negative shifted : Word) (x m : ℝ)\n    (inputValue : finiteReal input = some x) (maximumValue : finiteReal maximum = some m)\n    (bounds : InputBounds x m)\n    (negate : Ptx.Binary32.Results .mul maximum 0xbf800000 negative)\n    (shift : Ptx.Binary32.Results .add input negative shifted) :\n    finiteReal negative = some (-m) ∧\n    finiteReal shifted = some (round32 (x-m)) ∧\n    round32 (x-m) ≤ 0 ∧ |round32 (x-m)| ≤ (2:ℝ)^(126:ℤ) ∧\n    |round32 (x-m)-(x-m)| ≤ eps32 (x-m) := by\n  have negValue := negative_real maximum negative m maximumValue bounds.2.2 negate\n  have small : |x-m| ≤ (2:ℝ)^(126:ℤ) := by\n    calc\n      |x-m| ≤ |x|+|m| := abs_sub x m\n      _ ≤ (2:ℝ)^(124:ℤ)+(2:ℝ)^(124:ℤ) := add_le_add bounds.2.1 bounds.2.2\n      _ ≤ (2:ℝ)^(126:ℤ) := by norm_num\n  have range : |Bounds.exactReal .add x (-m)| ≤ Bounds.maxFinite := by\n    change |x + -m| ≤ Bounds.maxFinite\n    rw [← sub_eq_add_neg]\n    exact small.trans (by rw [Bounds.maxFinite_eq]; norm_num)\n  have value := Bounds.round_of_range .add input negative shifted x (-m)\n    inputValue negValue range shift\n  change finiteReal shifted = some (round32 (x + -m)) at value\n  rw [← sub_eq_add_neg] at value\n  have nonpos : round32 (x-m) ≤ 0 := by\n    have h := Model.roundAt_mono FloatFormat.binary32 (sub_nonpos.mpr bounds.1)\n    rwa [Model.roundAt_zero] at h\n  have hi := Model.roundAt_mono FloatFormat.binary32 (abs_le.mp small).2\n  have lo := Model.roundAt_mono FloatFormat.binary32 (abs_le.mp small).1\n  change round32 (x-m) ≤ round32 ((2:ℝ)^(126:ℤ)) at hi\n  rw [bound_fixed] at hi\n  rw [Model.roundAt_neg] at lo\n  change -round32 ((2:ℝ)^(126:ℤ)) ≤ round32 (x-m) at lo\n  rw [bound_fixed] at lo\n  exact ⟨negValue,value,nonpos,abs_le.mpr ⟨lo,hi⟩,\n    TorchLean.Floats.FP32.round_abs_error (x-m)⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The input conditions are x<=m and abs(x),abs(m)<=2^124. These conservative bounds\nprevent overflow in the negation, addition and base conversion. The proof derives\nthat the rounded difference is finite and nonpositive and hence reaches the\nsupported exponential domain. Finiteness or successful intermediate computations\nare conclusions, not extra premises. Both signs of zero and gradual underflow\nremain covered by the existing arithmetic contracts."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExp.lean",
+        "passage": {
+          "quote": "theorem stages_exist (input maximum : Word) (x m : ℝ)\n    (inputValue : finiteReal input = some x) (maximumValue : finiteReal maximum = some m)\n    (bounds : InputBounds x m) :\n    ∃ negative shifted product output,\n      Ptx.Binary32.Results .mul maximum 0xbf800000 negative ∧\n      Ptx.Binary32.Results .add input negative shifted ∧\n      Ptx.Binary32.Results .mul shifted ExpArgument.constantWord product ∧\n      Exponential.Results product output := by\n  obtain ⟨negative,negate⟩ := Ptx.Binary32.results_exists .mul maximum 0xbf800000\n  obtain ⟨shifted,shift⟩ := Ptx.Binary32.results_exists .add input negative\n  have h := shift_real input maximum negative shifted x m inputValue maximumValue bounds negate shift\n  obtain ⟨product,multiply⟩ := Ptx.Binary32.results_exists .mul shifted ExpArgument.constantWord\n  have productValue := ExpArgument.product_real shifted product _ h.2.1 h.2.2.1\n    (ExpArgument.bounded_product_range _ h.2.2.2.1) multiply\n  obtain ⟨output,approximate⟩ := Exponential.results_exists product\n    (Or.inr (Or.inr (Or.inr ⟨_,productValue.1,productValue.2⟩)))\n  exact ⟨negative,shifted,product,output,negate,shift,multiply,approximate⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Write z=round32(x-m), where round32 rounds to the nearest binary32 grid value,\nchoosing the value with an even final bit on a tie. The shift error is at most\neps32(x-m), the half-ULP rounding allowance. Every permitted final output is finite\nand differs from exp(x-m) by at most\n`5*2^-24 + log(2)*ExpArgument.budget(z,eps32(x-m))`.\nThe total bound includes addition rounding, approximation of 1/log(2), multiplication\nrounding and the exponential allowance. When x=m, the final word is exactly positive one, including differently signed\nzero inputs. The exponential preserves both named ULP\nspacing interpretations; no unique hardware result is selected."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExp.lean",
+        "passage": {
+          "quote": "theorem error (input maximum negative shifted product output : Word) (x m : ℝ)\n    (inputValue : finiteReal input = some x) (maximumValue : finiteReal maximum = some m)\n    (bounds : InputBounds x m)\n    (negate : Ptx.Binary32.Results .mul maximum 0xbf800000 negative)\n    (shift : Ptx.Binary32.Results .add input negative shifted)\n    (multiply : Ptx.Binary32.Results .mul shifted ExpArgument.constantWord product)\n    (approximate : Exponential.Results product output) :\n    ∃ z : ℝ, finiteReal output = some z ∧\n      |z-Real.exp (x-m)| ≤ 5/(2:ℝ)^24 + Real.log 2 *\n        ExpArgument.budget (round32 (x-m)) (eps32 (x-m)) := by\n  have h := shift_real input maximum negative shifted x m inputValue maximumValue bounds negate shift\n  have range := ExpArgument.bounded_product_range _ h.2.2.2.1\n  have productValue := ExpArgument.product_real shifted product _ h.2.1 h.2.2.1 range multiply\n  exact ExpArgument.natural_exp_error _ (x-m) _ shifted product output h.2.1 h.2.2.1\n    (sub_nonpos.mpr bounds.1) range h.2.2.2.2 multiply\n    (Exponential.finiteExp2 product output _ productValue.1 approximate)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Write z=round32(x-m), where round32 rounds to the nearest binary32 grid value,\nchoosing the value with an even final bit on a tie. The shift error is at most\neps32(x-m), the half-ULP rounding allowance. Every permitted final output is finite\nand differs from exp(x-m) by at most\n`5*2^-24 + log(2)*ExpArgument.budget(z,eps32(x-m))`.\nThe total bound includes addition rounding, approximation of 1/log(2), multiplication\nrounding and the exponential allowance. When x=m, the final word is exactly positive one, including differently signed\nzero inputs. The exponential preserves both named ULP\nspacing interpretations; no unique hardware result is selected."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExp.lean",
+        "passage": {
+          "quote": "theorem equal_scores (input maximum negative shifted product output : Word) (m : ℝ)\n    (inputValue : finiteReal input = some m) (maximumValue : finiteReal maximum = some m)\n    (small : |m| ≤ (2:ℝ)^(124:ℤ))\n    (negate : Ptx.Binary32.Results .mul maximum 0xbf800000 negative)\n    (shift : Ptx.Binary32.Results .add input negative shifted)\n    (multiply : Ptx.Binary32.Results .mul shifted ExpArgument.constantWord product)\n    (approximate : Exponential.Results product output) : output = 0x3f800000 := by\n  have h := shift_real input maximum negative shifted m m inputValue maximumValue\n    ⟨le_rfl,small,small⟩ negate shift\n  have zeroRound : round32 0 = 0 := Model.roundAt_zero FloatFormat.binary32\n  have shiftedZero : finiteReal shifted = some 0 := by\n    simpa only [sub_self,zeroRound] using h.2.1\n  have productValue := ExpArgument.product_real shifted product 0 shiftedZero le_rfl\n    (ExpArgument.bounded_product_range 0 (by norm_num)) multiply\n  have productZero : finiteReal product = some 0 := by\n    simpa only [zero_mul,zeroRound] using productValue.1\n  exact (Exponential.zero_iff product output productZero).mp approximate"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction sequence uses one destination register as scratch throughout.\nIt must differ from the score register, which remains live until the addition.\nThe destination may coincide with the maximum register because the maximum is\nread before that register is overwritten. The standalone sequence starts at instruction position zero. Actual instruction\nfetch, original-state\noperand reads and four steps connect the final destination to the numerical\nbound. An execution exists for every admitted initial state on the selected PTX 9.4\ntarget with SM version at least 20, preserving subnormals without flush-to-zero.\nOther word registers, predicates, address registers and memory are preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExpProgram.lean",
+        "passage": {
+          "quote": "def Run (target : Ptx.Target) (program : List Instr) (s t : Scalar.State) : Prop :=\n  ∃ s₁ s₂ s₃ e₀ e₁ e₂ e₃,\n    Step target program s s₁ e₀ ∧ Step target program s₁ s₂ e₁ ∧\n    Step target program s₂ s₃ e₂ ∧ Step target program s₃ t e₃"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction sequence uses one destination register as scratch throughout.\nIt must differ from the score register, which remains live until the addition.\nThe destination may coincide with the maximum register because the maximum is\nread before that register is overwritten. The standalone sequence starts at instruction position zero. Actual instruction\nfetch, original-state\noperand reads and four steps connect the final destination to the numerical\nbound. An execution exists for every admitted initial state on the selected PTX 9.4\ntarget with SM version at least 20, preserving subnormals without flush-to-zero.\nOther word registers, predicates, address registers and memory are preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExpProgram.lean",
+        "passage": {
+          "quote": "theorem run_results (target : Ptx.Target) (s t : Scalar.State)\n    (input maximum destination : Nat) (start : s.pc = 0)\n    (scratch : destination ≠ input)\n    (run : Run target (program input maximum destination) s t) :\n    (∃ negative shifted product,\n      Ptx.Binary32.Results .mul (s.regs maximum) 0xbf800000 negative ∧\n      Ptx.Binary32.Results .add (s.regs input) negative shifted ∧\n      Ptx.Binary32.Results .mul shifted Ptx.Binary32.ExpArgument.constantWord product ∧\n      Ptx.Binary32.Exponential.Results product (t.regs destination)) ∧\n    t.pc = 4 ∧ t.memory = s.memory ∧ t.addrs = s.addrs ∧ t.preds = s.preds ∧\n    (∀ other, other ≠ destination → t.regs other = s.regs other) := by\n  rcases run with ⟨s₁,s₂,s₃,e₀,e₁,e₂,e₃,h₀,h₁,h₂,h₃⟩\n  obtain ⟨a₀,b₀⟩ := binary_of_step (i := negate maximum destination) (by simp [program,start]) h₀\n  have f₀ := Scalar.Binary32.eval_frame _ _ _ _ b₀\n  have pc₁ : s₁.pc = 1 := by omega\n  obtain ⟨a₁,b₁⟩ := binary_of_step (i := shift input destination) (by simp [program,pc₁]) h₁\n  have f₁ := Scalar.Binary32.eval_frame _ _ _ _ b₁\n  have pc₂ : s₂.pc = 2 := by omega\n  obtain ⟨a₂,b₂⟩ := binary_of_step (i := convert destination) (by simp [program,pc₂]) h₂\n  have f₂ := Scalar.Binary32.eval_frame _ _ _ _ b₂\n  have pc₃ : s₃.pc = 3 := by omega\n  obtain ⟨a₃,b₃⟩ := exponential_of_step (i := exponential destination) (by simp [program,pc₃]) h₃\n  have f₃ := Scalar.Exponential.eval_frame _ _ _ _ b₃\n  have r₀ := Scalar.Binary32.eval_destination _ _ _ _ b₀ (by rfl)\n  have r₁ := Scalar.Binary32.eval_destination _ _ _ _ b₁ (by rfl)\n  have r₂ := Scalar.Binary32.eval_destination _ _ _ _ b₂ (by rfl)\n  have r₃ := Scalar.Exponential.eval_destination _ _ _ _ b₃ (by rfl)\n  have saved : s₁.regs input = s.regs input :=\n    Scalar.Binary32.eval_other _ _ _ _ input b₀ (Ne.symm scratch)\n  simp only [negate,shift,convert,exponential,Scalar.Operand32.eval] at r₀ r₁ r₂ r₃\n  rw [saved] at r₁\n  refine ⟨⟨s₁.regs destination,s₂.regs destination,s₃.regs destination,r₀,r₁,r₂,r₃⟩,\n    by omega, f₃.2.1.trans (f₂.2.1.trans (f₁.2.1.trans f₀.2.1)),\n    f₃.2.2.1.trans (f₂.2.2.1.trans (f₁.2.2.1.trans f₀.2.2.1)),\n    f₃.2.2.2.trans (f₂.2.2.2.trans (f₁.2.2.2.trans f₀.2.2.2)), ?_⟩\n  intro other different\n  exact (Scalar.Exponential.eval_other _ _ _ _ other b₃ different).trans\n    ((Scalar.Binary32.eval_other _ _ _ _ other b₂ different).trans\n      ((Scalar.Binary32.eval_other _ _ _ _ other b₁ different).trans\n        (Scalar.Binary32.eval_other _ _ _ _ other b₀ different)))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction sequence uses one destination register as scratch throughout.\nIt must differ from the score register, which remains live until the addition.\nThe destination may coincide with the maximum register because the maximum is\nread before that register is overwritten. The standalone sequence starts at instruction position zero. Actual instruction\nfetch, original-state\noperand reads and four steps connect the final destination to the numerical\nbound. An execution exists for every admitted initial state on the selected PTX 9.4\ntarget with SM version at least 20, preserving subnormals without flush-to-zero.\nOther word registers, predicates, address registers and memory are preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExpProgram.lean",
+        "passage": {
+          "quote": "theorem correct (target : Ptx.Target) (s t : Scalar.State)\n    (input maximum destination : Nat) (x m : ℝ)\n    (start : s.pc = 0) (scratch : destination ≠ input)\n    (inputValue : Ptx.Binary32.finiteReal (s.regs input) = some x)\n    (maximumValue : Ptx.Binary32.finiteReal (s.regs maximum) = some m)\n    (bounds : Ptx.Binary32.ShiftedExp.InputBounds x m)\n    (run : Run target (program input maximum destination) s t) :\n    ∃ u, Ptx.Binary32.finiteReal (t.regs destination) = some u ∧\n      |u-Real.exp (x-m)| ≤ 5/(2:ℝ)^24 + Real.log 2 *\n        Ptx.Binary32.ExpArgument.budget (TorchLean.Floats.round32 (x-m))\n          (TorchLean.Floats.eps32 (x-m)) := by\n  obtain ⟨⟨negative,shifted,product,r₀,r₁,r₂,r₃⟩,_⟩ :=\n    run_results target s t input maximum destination start scratch run\n  exact Ptx.Binary32.ShiftedExp.error _ _ negative shifted product _ x m\n    inputValue maximumValue bounds r₀ r₁ r₂ r₃"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction sequence uses one destination register as scratch throughout.\nIt must differ from the score register, which remains live until the addition.\nThe destination may coincide with the maximum register because the maximum is\nread before that register is overwritten. The standalone sequence starts at instruction position zero. Actual instruction\nfetch, original-state\noperand reads and four steps connect the final destination to the numerical\nbound. An execution exists for every admitted initial state on the selected PTX 9.4\ntarget with SM version at least 20, preserving subnormals without flush-to-zero.\nOther word registers, predicates, address registers and memory are preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExpProgram.lean",
+        "passage": {
+          "quote": "theorem maximal_score (target : Ptx.Target) (s t : Scalar.State)\n    (input maximum destination : Nat) (m : ℝ)\n    (start : s.pc = 0) (scratch : destination ≠ input)\n    (inputValue : Ptx.Binary32.finiteReal (s.regs input) = some m)\n    (maximumValue : Ptx.Binary32.finiteReal (s.regs maximum) = some m)\n    (small : |m| ≤ (2:ℝ)^(124:ℤ))\n    (run : Run target (program input maximum destination) s t) :\n    t.regs destination = 0x3f800000 := by\n  obtain ⟨⟨negative,shifted,product,r₀,r₁,r₂,r₃⟩,_⟩ :=\n    run_results target s t input maximum destination start scratch run\n  exact Ptx.Binary32.ShiftedExp.equal_scores _ _ negative shifted product _ m\n    inputValue maximumValue small r₀ r₁ r₂ r₃"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The instruction sequence uses one destination register as scratch throughout.\nIt must differ from the score register, which remains live until the addition.\nThe destination may coincide with the maximum register because the maximum is\nread before that register is overwritten. The standalone sequence starts at instruction position zero. Actual instruction\nfetch, original-state\noperand reads and four steps connect the final destination to the numerical\nbound. An execution exists for every admitted initial state on the selected PTX 9.4\ntarget with SM version at least 20, preserving subnormals without flush-to-zero.\nOther word registers, predicates, address registers and memory are preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExpProgram.lean",
+        "passage": {
+          "quote": "theorem execution_exists (target : Ptx.Target) (s : Scalar.State)\n    (input maximum destination : Nat) (x m : ℝ)\n    (supported : Scalar.Binary32.SupportedTarget target)\n    (start : s.pc = 0) (scratch : destination ≠ input)\n    (inputValue : Ptx.Binary32.finiteReal (s.regs input) = some x)\n    (maximumValue : Ptx.Binary32.finiteReal (s.regs maximum) = some m)\n    (bounds : Ptx.Binary32.ShiftedExp.InputBounds x m) :\n    ∃ t, Run target (program input maximum destination) s t := by\n  obtain ⟨n,z,a,u,r₀,r₁,r₂,r₃⟩ := Ptx.Binary32.ShiftedExp.stages_exist\n    (s.regs input) (s.regs maximum) x m inputValue maximumValue bounds\n  let s₁ := write s destination n\n  let s₂ := write s₁ destination z\n  let s₃ := write s₂ destination a\n  let t := write s₃ destination u\n  have b₀ : Scalar.Binary32.Eval (negate maximum destination) s s₁\n      (Scalar.Binary32.occurrence s (negate maximum destination) true) :=\n    .executed rfl r₀\n  have b₁ : Scalar.Binary32.Eval (shift input destination) s₁ s₂\n      (Scalar.Binary32.occurrence s₁ (shift input destination) true) := by\n    apply Scalar.Binary32.Eval.executed rfl\n    simpa [s₁,write,shift,Scalar.Operand32.eval,Scalar.update,Ne.symm scratch] using r₁\n  have b₂ : Scalar.Binary32.Eval (convert destination) s₂ s₃\n      (Scalar.Binary32.occurrence s₂ (convert destination) true) := by\n    apply Scalar.Binary32.Eval.executed rfl\n    simpa [s₂,write,convert,Scalar.Operand32.eval,Scalar.update] using r₂\n  have b₃ : Scalar.Exponential.Eval (exponential destination) s₃ t\n      (Scalar.Exponential.occurrence s₃ (exponential destination) true) := by\n    apply Scalar.Exponential.Eval.executed rfl\n    simpa [s₃,write,exponential,Scalar.Operand32.eval,Scalar.update] using r₃\n  refine ⟨t,s₁,s₂,s₃,_,_,_,_,⟨supported,_,?_,.binary b₀⟩,\n    ⟨supported,_,?_,.binary b₁⟩,⟨supported,_,?_,.binary b₂⟩,\n    ⟨supported,_,?_,.exponential b₃⟩⟩ <;>\n    simp [program,s₁,s₂,s₃,write,start]"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Write z=round32(x-m), where round32 rounds to the nearest binary32 grid value,\nchoosing the value with an even final bit on a tie. The shift error is at most\neps32(x-m), the half-ULP rounding allowance. Every permitted final output is finite\nand differs from exp(x-m) by at most\n`5*2^-24 + log(2)*ExpArgument.budget(z,eps32(x-m))`.\nThe total bound includes addition rounding, approximation of 1/log(2), multiplication\nrounding and the exponential allowance. When x=m, the final word is exactly positive one, including differently signed\nzero inputs. The exponential preserves both named ULP\nspacing interpretations; no unique hardware result is selected."
+      },
+      "to": {
+        "description": "exponential-instruction",
+        "passage": {
+          "quote": "The supported input domain consists of finite nonpositive values, both\ninfinities, and NaN (not a number). Both signs of zero produce exactly positive\none. Negative infinity produces positive zero; positive infinity produces\npositive infinity. NaN permits any NaN output in the existing conservative\npayload policy. For strictly negative finite inputs, every finite result in the\nreviewed two-ULP neighborhood is retained. ULP means the spacing of the floating\npoint grid: the neighborhood uses the larger spacing at the nearest-even rounded\nreference and at the returned value. This covers the two named conventions,\nwithout claiming a unique interpretation of NVIDIA's wording or physical\nrealizability of every permitted bit pattern."
+        }
+      },
+      "reason": "The final fetched instruction must preserve every admitted finite exponential result and enforce the exact signed-zero special case."
+    }
+  ]
+}

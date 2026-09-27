@@ -50,6 +50,9 @@ TARGETS.add("PtxBinary32.ExponentialChecks")
 COUNTS.update({"Ptx.Scalar.Exponential": 18, "Ptx.Scalar.Exponential.Text": 6})
 TARGETS.add("PtxBinary32.ExponentialInstruction")
 
+COUNTS.update({'Ptx.Binary32.ShiftedExp': 6, 'Ptx.Scalar.ShiftedExp': 15, 'Ptx.Scalar.ShiftedExp.Checks': 9})
+TARGETS.update(['PtxBinary32.ShiftedExp', 'PtxBinary32.ShiftedExpProgram', 'PtxBinary32.ShiftedExpChecks'])
+
 # Explicit public coverage for the serialized two-kernel and exact VJP slice.
 COUNTS.update({'Ptx.Scalar.Reciprocal': 17, 'Ptx.Scalar.Reciprocal.Text': 6})
 TARGETS.add('PtxBinary32.ReciprocalInstruction')
@@ -312,6 +315,8 @@ def main():
                         "../../formalization/checks/reciprocal-instruction-v2.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean",
                         "../../formalization/checks/exponential-instruction-v1.lean"], cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/ShiftedExpChecks.lean"],
+                       cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(audit.stdout, end="", flush=True)
