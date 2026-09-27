@@ -71,11 +71,18 @@ error h, the actual rounded product x*c has argument error at most
 Here eps32 is the half-ULP rounding error allowance. Every result in the finite
 exponential relation on that product has error at most 5*2^-24+log(2)*B from
 exp(t). Finiteness follows from an input product bound; abs(x)<=2^126 is a simple
-sufficient guard. These theorems construct encoded arithmetic witnesses, but do
-not prove subtraction, the instruction's special cases, or fetched execution.
+sufficient guard. These base-conversion theorems construct encoded arithmetic witnesses; the
+separate instruction leaf below supplies exact special cases and fetched steps.
+Subtraction remains unfinished.
 
 The first scope is a nonempty unmasked row. Empty rows, masked-out positions and
-rows with no enabled positions need explicit separate policies. The reciprocal leaf is connected to its numerical provider. The remaining
+rows with no enabled positions need explicit separate policies. The reciprocal leaf and the bounded ex2.approx.f32 leaf connect to their
+numerical providers. The exponential leaf supports nonpositive finite inputs,
+infinities and NaNs; positive finite inputs remain explicitly unsupported, even
+when their exponentials would be finite. Signed-zero inputs produce exact
+positive one. Its existence theorem requires a disabled predicate or an input
+in that supported domain. This is a partial instruction model, not full ex2
+coverage. The remaining
 foundation does not yet claim that PTX instructions realize all stage contracts,
 that all stage values are realizable binary32 words, or that a kernel executes.
 Remaining work is the source-reviewed approximate arithmetic, a parallel maximum

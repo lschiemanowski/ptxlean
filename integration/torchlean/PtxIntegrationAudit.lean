@@ -1,3 +1,4 @@
+import PtxBinary32.ExponentialInstruction
 import PtxBinary32.Exponential
 import PtxBinary32.ExponentialChecks
 import PtxBinary32.ConservativeULP
@@ -2010,3 +2011,28 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Binary32.Exponential.Checks.negative_one_multiple_results
 #print axioms Ptx.Binary32.Exponential.Checks.negative_subnormal_real
 #print axioms Ptx.Binary32.Exponential.Checks.negative_subnormal_exists
+
+#print axioms Ptx.Scalar.Exponential.Instr
+#print axioms Ptx.Scalar.Exponential.Occurrence
+#print axioms Ptx.Scalar.Exponential.occurrence
+#print axioms Ptx.Scalar.Exponential.SupportedTarget
+#print axioms Ptx.Scalar.Exponential.Eval
+#print axioms Ptx.Scalar.Exponential.Step
+#print axioms Ptx.Scalar.Exponential.eval_true_iff
+#print axioms Ptx.Scalar.Exponential.eval_false_iff
+#print axioms Ptx.Scalar.Exponential.eval_destination
+#print axioms Ptx.Scalar.Exponential.eval_frame
+#print axioms Ptx.Scalar.Exponential.eval_other
+#print axioms Ptx.Scalar.Exponential.eval_event
+#print axioms Ptx.Scalar.Exponential.eval_exists
+#print axioms Ptx.Scalar.Exponential.eval_exists_iff
+#print axioms Ptx.Scalar.Exponential.step_origin
+#print axioms Ptx.Scalar.Exponential.step_exists
+#print axioms Ptx.Scalar.Exponential.step_no_fetch
+#print axioms Ptx.Scalar.Exponential.step_unsupported_target
+#print axioms Ptx.Scalar.Exponential.Text.mnemonic
+#print axioms Ptx.Scalar.Exponential.Text.supportedMnemonic
+#print axioms Ptx.Scalar.Exponential.Text.encode
+#print axioms Ptx.Scalar.Exponential.Text.decode
+#print axioms Ptx.Scalar.Exponential.Text.decode_encode
+#print axioms Ptx.Scalar.Exponential.Text.decode_iff

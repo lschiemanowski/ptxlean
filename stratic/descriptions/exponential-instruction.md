@@ -32,8 +32,8 @@ A program step requires actual fetch at the current instruction position and the
 selected target. A next state exists exactly when the predicate is disabled or
 the enabled operand is in the supported numerical domain. This is one-step
 existence, not a whole-kernel termination or hardware progress guarantee.
-Finite nonpositive input gives a finite output with error at most 5*2^-24 from
-2^x, including reference rounding. The actual destination also connects to the
+For an enabled instruction, finite nonpositive input gives a finite output
+with error at most 5*2^-24 from 2^x, including reference rounding. The actual destination also connects to the
 natural-exponential base-conversion proof when preceded by its encoded multiply.
 These numerical bounds do not replace source review, memory/storage contracts,
 or proof of a parallel softmax program.

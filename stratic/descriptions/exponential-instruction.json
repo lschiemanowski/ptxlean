@@ -10,7 +10,164 @@
     "Execute a bounded approximate base-two exponential with exact special cases, original operands, predicates, actual fetch and precise effects.",
     "Preserve both named ULP policies and expose positive finite inputs as missing coverage in every existence guarantee."
   ],
-  "realization": "unimplemented",
-  "remaining": "Implement the reviewed numerical provider, preflight and delegate the bounded leaf, then independently check its source fidelity and proofs. Positive finite inputs, other forms, raw parsing and whole kernels remain outside the fragment.",
-  "links": []
+  "realization": "partial",
+  "remaining": "The selected bounded fetched leaf is complete and independently checked. Positive finite exponential/overflow behavior, other forms, raw PTX parsing, whole kernels and hardware conformance remain outside this fragment. It is not counted as full accepted-form coverage.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The base-two exponential of x is 2 raised to the power x. This responsibility\ncovers a bounded fragment of ex2.approx.f32, using binary32 (32-bit floating\npoint), the pinned PTX 9.4 version and sm_20 or later. It preserves subnormal\nnumbers, the small representable values near zero, and excludes the optional\nflush-to-zero mode. The typed text interface accepts exactly this spelling,\na word-register destination and one word operand; it is not a raw PTX parser."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "def SupportedTarget (target : Ptx.Target) : Prop :=\n  target.isa = 94 ∧ 20 ≤ target.sm"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The base-two exponential of x is 2 raised to the power x. This responsibility\ncovers a bounded fragment of ex2.approx.f32, using binary32 (32-bit floating\npoint), the pinned PTX 9.4 version and sm_20 or later. It preserves subnormal\nnumbers, the small representable values near zero, and excludes the optional\nflush-to-zero mode. The typed text interface accepts exactly this spelling,\na word-register destination and one word operand; it is not a raw PTX parser."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "def decode (statement : Scalar.Text.Statement) : Except Scalar.Text.DecodeError Instr :=\n  if statement.mnemonic == mnemonic then\n    match statement.operands with\n    | [.word (.reg d), .word source] => .ok ⟨statement.guard, d, source⟩\n    | _ => .error (.invalidOperands statement.mnemonic)\n  else .error (.unsupportedMnemonic statement.mnemonic)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The supported input domain consists of finite nonpositive values, both\ninfinities, and NaN (not a number). Both signs of zero produce exactly positive\none. Negative infinity produces positive zero; positive infinity produces\npositive infinity. NaN permits any NaN output in the existing conservative\npayload policy. For strictly negative finite inputs, every finite result in the\nreviewed two-ULP neighborhood is retained. ULP means the spacing of the floating\npoint grid: the neighborhood uses the larger spacing at the nearest-even rounded\nreference and at the returned value. This covers the two named conventions,\nwithout claiming a unique interpretation of NVIDIA's wording or physical\nrealizability of every permitted bit pattern."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+        "passage": {
+          "quote": "def Results (input output : Word) : Prop :=\n  (isNaN input = true ∧ isNaN output = true) ∨\n  (input = 0xff800000 ∧ output = 0) ∨\n  (input = 0x7f800000 ∧ output = 0x7f800000) ∨\n  ∃ x : ℝ, finiteReal input = some x ∧ x ≤ 0 ∧\n    if x = 0 then output = 0x3f800000 else ConservativeULP.Results ((2:ℝ)^x) output"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The supported input domain consists of finite nonpositive values, both\ninfinities, and NaN (not a number). Both signs of zero produce exactly positive\none. Negative infinity produces positive zero; positive infinity produces\npositive infinity. NaN permits any NaN output in the existing conservative\npayload policy. For strictly negative finite inputs, every finite result in the\nreviewed two-ULP neighborhood is retained. ULP means the spacing of the floating\npoint grid: the neighborhood uses the larger spacing at the nearest-even rounded\nreference and at the returned value. This covers the two named conventions,\nwithout claiming a unique interpretation of NVIDIA's wording or physical\nrealizability of every permitted bit pattern."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+        "passage": {
+          "quote": "theorem negative_iff (input output : Word) (x : ℝ)\n    (value : finiteReal input = some x) (negative : x < 0) :\n    Results input output ↔ ConservativeULP.Results ((2:ℝ)^x) output := by\n  rw [finite_iff input output x value]\n  simp [negative.le, ne_of_lt negative]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The supported input domain consists of finite nonpositive values, both\ninfinities, and NaN (not a number). Both signs of zero produce exactly positive\none. Negative infinity produces positive zero; positive infinity produces\npositive infinity. NaN permits any NaN output in the existing conservative\npayload policy. For strictly negative finite inputs, every finite result in the\nreviewed two-ULP neighborhood is retained. ULP means the spacing of the floating\npoint grid: the neighborhood uses the larger spacing at the nearest-even rounded\nreference and at the returned value. This covers the two named conventions,\nwithout claiming a unique interpretation of NVIDIA's wording or physical\nrealizability of every permitted bit pattern."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+        "passage": {
+          "quote": "theorem zero_iff (input output : Word) (value : finiteReal input = some 0) :\n    Results input output ↔ output = 0x3f800000 := by\n  simp [finite_iff input output 0 value]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Positive finite operands have no enabled step in this fragment. This is missing\nformalization coverage, not a claim that NVIDIA leaves their behavior undefined\nor that a GPU cannot execute them. It must remain visible in every existence\ncontract. A disabled predicate skips even an unsupported input, without requiring\nan arithmetic result. An enabled instruction reads its operand in the original\nstate, writes exactly its destination, and advances the instruction position.\nSource and destination may be the same register. Other registers, predicates,\naddress registers and memory are preserved. The occurrence records the actual\ninstruction, position, reads and writes, with no memory access."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "inductive Eval (i : Instr) : Scalar.State → Scalar.State → Occurrence → Prop\n  | skipped {s} (disabled : i.guard.eval s = false) :\n      Eval i s {s with pc := s.pc + 1} (occurrence s i false)\n  | executed {s value} (enabled : i.guard.eval s = true)\n      (result : Ptx.Binary32.Exponential.Results (i.source.eval s) value) :\n      Eval i s {{s with pc := s.pc + 1} with\n        regs := Scalar.update s.regs i.destination value} (occurrence s i true)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Positive finite operands have no enabled step in this fragment. This is missing\nformalization coverage, not a claim that NVIDIA leaves their behavior undefined\nor that a GPU cannot execute them. It must remain visible in every existence\ncontract. A disabled predicate skips even an unsupported input, without requiring\nan arithmetic result. An enabled instruction reads its operand in the original\nstate, writes exactly its destination, and advances the instruction position.\nSource and destination may be the same register. Other registers, predicates,\naddress registers and memory are preserved. The occurrence records the actual\ninstruction, position, reads and writes, with no memory access."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "theorem eval_destination (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) (enabled : i.guard.eval s = true) :\n    Ptx.Binary32.Exponential.Results (i.source.eval s) (next.regs i.destination) := by\n  cases hEval with\n  | skipped disabled => simp [enabled] at disabled\n  | executed _ result => simpa using result"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Positive finite operands have no enabled step in this fragment. This is missing\nformalization coverage, not a claim that NVIDIA leaves their behavior undefined\nor that a GPU cannot execute them. It must remain visible in every existence\ncontract. A disabled predicate skips even an unsupported input, without requiring\nan arithmetic result. An enabled instruction reads its operand in the original\nstate, writes exactly its destination, and advances the instruction position.\nSource and destination may be the same register. Other registers, predicates,\naddress registers and memory are preserved. The occurrence records the actual\ninstruction, position, reads and writes, with no memory access."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "theorem eval_frame (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) :\n    next.pc = s.pc+1 ∧ next.memory = s.memory ∧ next.addrs = s.addrs ∧ next.preds = s.preds := by\n  cases hEval <;> simp_all"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Positive finite operands have no enabled step in this fragment. This is missing\nformalization coverage, not a claim that NVIDIA leaves their behavior undefined\nor that a GPU cannot execute them. It must remain visible in every existence\ncontract. A disabled predicate skips even an unsupported input, without requiring\nan arithmetic result. An enabled instruction reads its operand in the original\nstate, writes exactly its destination, and advances the instruction position.\nSource and destination may be the same register. Other registers, predicates,\naddress registers and memory are preserved. The occurrence records the actual\ninstruction, position, reads and writes, with no memory access."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "theorem eval_other (i : Instr) (s next : Scalar.State) (event : Occurrence) (other : Nat)\n    (hEval : Eval i s next event) (different : other ≠ i.destination) :\n    next.regs other = s.regs other := by\n  cases hEval with\n  | skipped _ => rfl\n  | executed _ _ => simp [Scalar.update, different]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Positive finite operands have no enabled step in this fragment. This is missing\nformalization coverage, not a claim that NVIDIA leaves their behavior undefined\nor that a GPU cannot execute them. It must remain visible in every existence\ncontract. A disabled predicate skips even an unsupported input, without requiring\nan arithmetic result. An enabled instruction reads its operand in the original\nstate, writes exactly its destination, and advances the instruction position.\nSource and destination may be the same register. Other registers, predicates,\naddress registers and memory are preserved. The occurrence records the actual\ninstruction, position, reads and writes, with no memory access."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "theorem eval_event (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) : event = occurrence s i (i.guard.eval s) := by\n  cases hEval with\n  | skipped h => simp [h]\n  | executed h _ => simp [h]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A program step requires actual fetch at the current instruction position and the\nselected target. A next state exists exactly when the predicate is disabled or\nthe enabled operand is in the supported numerical domain. This is one-step\nexistence, not a whole-kernel termination or hardware progress guarantee.\nFor an enabled instruction, finite nonpositive input gives a finite output\nwith error at most 5*2^-24 from 2^x, including reference rounding. The actual destination also connects to the\nnatural-exponential base-conversion proof when preceded by its encoded multiply.\nThese numerical bounds do not replace source review, memory/storage contracts,\nor proof of a parallel softmax program."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "def Step (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) : Prop :=\n  SupportedTarget target ∧ ∃ i, program[s.pc]? = some i ∧ Eval i s next event"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A program step requires actual fetch at the current instruction position and the\nselected target. A next state exists exactly when the predicate is disabled or\nthe enabled operand is in the supported numerical domain. This is one-step\nexistence, not a whole-kernel termination or hardware progress guarantee.\nFor an enabled instruction, finite nonpositive input gives a finite output\nwith error at most 5*2^-24 from 2^x, including reference rounding. The actual destination also connects to the\nnatural-exponential base-conversion proof when preceded by its encoded multiply.\nThese numerical bounds do not replace source review, memory/storage contracts,\nor proof of a parallel softmax program."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "theorem eval_exists_iff (i : Instr) (s : Scalar.State) :\n    (∃ next event, Eval i s next event) ↔\n      i.guard.eval s = false ∨ Ptx.Binary32.Exponential.Supported (i.source.eval s) := by\n  constructor\n  · rintro ⟨next,event,h⟩\n    cases h with\n    | skipped h => exact Or.inl h\n    | executed h result => exact Or.inr (Ptx.Binary32.Exponential.results_supported result)\n  · exact eval_exists i s"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A program step requires actual fetch at the current instruction position and the\nselected target. A next state exists exactly when the predicate is disabled or\nthe enabled operand is in the supported numerical domain. This is one-step\nexistence, not a whole-kernel termination or hardware progress guarantee.\nFor an enabled instruction, finite nonpositive input gives a finite output\nwith error at most 5*2^-24 from 2^x, including reference rounding. The actual destination also connects to the\nnatural-exponential base-conversion proof when preceded by its encoded multiply.\nThese numerical bounds do not replace source review, memory/storage contracts,\nor proof of a parallel softmax program."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+        "passage": {
+          "quote": "theorem step_exists (target : Ptx.Target) (program : List Instr) (s : Scalar.State)\n    (i : Instr) (supported : SupportedTarget target) (fetch : program[s.pc]? = some i)\n    (admissible : i.guard.eval s = false ∨\n      Ptx.Binary32.Exponential.Supported (i.source.eval s)) :\n    ∃ next event, Step target program s next event := by\n  obtain ⟨next,event,he⟩ := eval_exists i s admissible\n  exact ⟨next,event,supported,i,fetch,he⟩"
+        }
+      }
+    }
+  ]
 }

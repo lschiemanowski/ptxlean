@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "id": "exponential-instruction-v1",
+  "model": "gpt-6-luna",
+  "base_commit": "424711012a4262ce183b334a61fd6ffe4e96065f",
+  "replay_project": "integration/torchlean",
+  "allowed_paths": [
+    "integration/torchlean/PtxBinary32/ExponentialInstruction.lean"
+  ],
+  "sources": [
+    {
+      "path": "lean-toolchain",
+      "sha256": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632"
+    },
+    {
+      "path": "lakefile.toml",
+      "sha256": "0dd5039a9be123956d246a2d0134759ae33bb43c356b3b994b2c97478054e14d"
+    },
+    {
+      "path": "lake-manifest.json",
+      "sha256": "01f2e843d09759bcf28da5f401f7ad71f86b08c579e21227dcc076f31d9be719"
+    },
+    {
+      "path": "integration/torchlean/lean-toolchain",
+      "sha256": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632"
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "sha256": "83fd4ba0a98154c5b04be7074c971e8d2b226831ded7ff80a592b2247bc71afd"
+    },
+    {
+      "path": "integration/torchlean/lake-manifest.json",
+      "sha256": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01"
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+      "sha256": "cfa7217a180a328214e35534a197ae81fa1df5832c787cc5dbc70eb2a523c331"
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Instructions.lean",
+      "sha256": "dfa76383c0500eac5752873a59dc337443c3fa81c0f1000d7ce76599deafad6b"
+    },
+    {
+      "path": "Ptx/Scalar.lean",
+      "sha256": "d2676870384e35b0517979c145e3b615088668915a9b5d0178d3948813ee07d5"
+    },
+    {
+      "path": "Ptx/ScalarText.lean",
+      "sha256": "ed9eeb5074798760f986ee5290e63a1cd8f0813489db830869519728bedbab91"
+    },
+    {
+      "path": "Ptx/Environment.lean",
+      "sha256": "f2f1abd520b034cf68ed66a5a2b449ddd4f557eeebfe2f35b52c6c7c0e0219fe"
+    },
+    {
+      "path": ".ptx-source/9.4/index.html",
+      "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+      "local_only": true
+    },
+    {
+      "path": "references/nvidia/ptx-isa-9.4/manifest.json",
+      "sha256": "2cb4e54aeb0f85025f15149f18fd16f3aca705968373324dc54ec9659108eb9f"
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ConservativeULP.lean",
+      "sha256": "041cdce251f940ea02b27718beb5b6c3702974b314ba295edb0a9f94e24b3d1d"
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ExpArgument.lean",
+      "sha256": "3947722dcc3644c2a61225ac49ebd051a43f23a5f5e7df3b212dcf907b29b174"
+    },
+    {
+      "path": "formalization/contracts/exponential-instruction-v1.md",
+      "sha256": "b609cee0d61371b8889773d7dbcef438859a37c4ebbd0c87e9c01cd6a60927a7"
+    }
+  ],
+  "prompt": "# Frozen bounded exponential instruction contract v1\n\nImplement only `integration/torchlean/PtxBinary32/ExponentialInstruction.lean`,\nnamespace `Ptx.Scalar.Exponential`. Do not change any other files. Use the existing\nstate and numerical provider. This task is the bounded unary floating leaf and its typed\ntext/fetch semantics, not a kernel or new numerical algorithm.\n\nImports: `PtxBinary32.Exponential`, `Ptx.ScalarText`, `Ptx.Environment`.\nReference pattern: `PtxBinary32/Instructions.lean` (binary add/mul). Do not edit\nthat module, duplicate its arithmetic, or encode exponential as an integer op.\n\nRequired definitions with these names and exact meanings:\n\n- `Instr` has `guard : Scalar.Guard := .always`, `destination : Nat`,\n  `source : Scalar.Operand32`, deriving DecidableEq and Repr. No opcode field.\n- `Occurrence` has `pc : Nat`, `instruction : Instr`, `executed : Bool`,\n  `reads writes : List Scalar.Register`, `memory : Option Scalar.MemoryEffect`,\n  deriving DecidableEq and Repr.\n- `occurrence s i executed` has PC `s.pc`, exact `i`, guard reads followed by\n  source reads iff executed, singleton destination write iff executed, no memory.\n- `SupportedTarget target := target.isa = 94 ∧ 20 ≤ target.sm`.\n- Inductive `Eval i s next event` has only constructors `skipped` and `executed`.\n  `skipped` requires `i.guard.eval s = false`, increments pc, changes nothing else,\n  and emits `occurrence s i false`. `executed` requires true guard and\n  `Ptx.Binary32.Exponential.Results (i.source.eval s) value`; increments pc,\n  updates just `i.destination` to value, emits `occurrence s i true`.\n- `Step target program s next event` is exactly supported target AND existence of\n  i with `program[s.pc]? = some i` and `Eval i s next event`.\n- `Text.mnemonic : String := \"ex2.approx.f32\"`.\n  `Text.supportedMnemonic name := name == \"ex2.approx.f32\"`.\n  `Text.encode i` returns the exact mnemonic, guard and operands\n  `[.word (.reg i.destination), .word i.source]`.\n  `Text.decode statement` rejects any other mnemonic with `unsupportedMnemonic`;\n  for this mnemonic only it accepts the exact two-operand shape above, otherwise\n  returns `invalidOperands`. No FTZ, f64, integer or implicit-approximation forms.\n\nRequired complete proofs with these signatures:\n\n```lean\ntheorem eval_true_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (enabled : i.guard.eval s = true) :\n    Eval i s next event ↔ ∃ value,\n      Ptx.Binary32.Exponential.Results (i.source.eval s) value ∧\n      next = {s with pc := s.pc+1, regs := Scalar.update s.regs i.destination value} ∧\n      event = occurrence s i true\n\ntheorem eval_false_iff (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (disabled : i.guard.eval s = false) :\n    Eval i s next event ↔ next = {s with pc := s.pc+1} ∧ event = occurrence s i false\n\ntheorem eval_destination (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) (enabled : i.guard.eval s = true) :\n    Ptx.Binary32.Exponential.Results (i.source.eval s) (next.regs i.destination)\n\ntheorem eval_frame (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) :\n    next.pc = s.pc+1 ∧ next.memory = s.memory ∧ next.addrs = s.addrs ∧ next.preds = s.preds\n\ntheorem eval_other (i : Instr) (s next : Scalar.State) (event : Occurrence) (other : Nat)\n    (hEval : Eval i s next event) (different : other ≠ i.destination) :\n    next.regs other = s.regs other\n\ntheorem eval_event (i : Instr) (s next : Scalar.State) (event : Occurrence)\n    (hEval : Eval i s next event) : event = occurrence s i (i.guard.eval s)\n\ntheorem eval_exists (i : Instr) (s : Scalar.State)\n    (admissible : i.guard.eval s = false ∨ Ptx.Binary32.Exponential.Supported (i.source.eval s)) :\n    ∃ next event, Eval i s next event\n\ntheorem eval_exists_iff (i : Instr) (s : Scalar.State) :\n    (∃ next event, Eval i s next event) ↔\n      i.guard.eval s = false ∨ Ptx.Binary32.Exponential.Supported (i.source.eval s)\n\ntheorem step_origin (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (hStep : Step target program s next event) :\n    SupportedTarget target ∧ ∃ i,\n      program[s.pc]? = some i ∧ event.instruction = i ∧ Eval i s next event\n\ntheorem step_exists (target : Ptx.Target) (program : List Instr) (s : Scalar.State)\n    (i : Instr) (supported : SupportedTarget target) (fetch : program[s.pc]? = some i)\n    (admissible : i.guard.eval s = false ∨ Ptx.Binary32.Exponential.Supported (i.source.eval s)) :\n    ∃ next event, Step target program s next event\n\ntheorem step_no_fetch (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (missing : program[s.pc]? = none) :\n    ¬ Step target program s next event\n\ntheorem step_unsupported_target (target : Ptx.Target) (program : List Instr)\n    (s next : Scalar.State) (event : Occurrence) (unsupported : ¬ SupportedTarget target) :\n    ¬ Step target program s next event\n\nnamespace Text\ntheorem decode_encode (i : Instr) : decode (encode i) = .ok i\n\ntheorem decode_iff (statement : Scalar.Text.Statement) (i : Instr) :\n    decode statement = .ok i ↔ statement = encode i\nend Text\n```\n\nDefinitions must meet the specified contract. Preserve ALL numerical Results,\noriginal-state operands, exact fetch and instruction identity. Disabled guards\nskip ANY operand, including positive finite operands outside the numerical domain.\nEnabled positive finite operands have no Eval in this fragment; this is a\ncoverage restriction, not PTX undefined behavior. Existence MUST expose the\ndisabled-guard-or-Supported disjunction; do not assume unconditional totality.\nDo not impose source/destination inequality. Keep actual numerical effects\nconnected to the shared provider. Do not read or modify formalization/checks,\nreference fixtures, coordinator scripts or evidence; implement from this contract.\n\nSource: pinned local PTX ISA 9.4, `floating-point-instructions-ex2` (§9.7.3.21),\n`predicated-execution`, `instruction-statements`, `floating-point-constants`,\n`operand-type-information` and `fundamental-types`. ISA94/SM>=20 is the project\npolicy for no-FTZ handling, not ex2's minimum version. The selected numerical\nprovider supports finite nonpositive inputs, infinities and NaNs only. Signed\nzeros give exactly positive one; -infinity gives +zero; +infinity gives +infinity;\nNaN permits any NaN encoding. Strictly negative finite inputs use the reviewed\nunion of center-spacing/output-spacing two-ULP policies with nearest-even\nreference rounding. This is an explicit conservative source interpretation, not\na claim of unique source meaning or physical realizability. Positive finite\ninputs, including overflow, remain unsupported. This bounded fragment is NOT\nfull ex2 coverage and must not enter the accepted full-form ledger as such.\nf32/b32 compatible bits are supplied; no register-declaration/raw literal parser.\nThe numeric target check does not prove a GPU target exists or hardware conforms.\n\nWork from the pinned task base. Build from `integration/torchlean`:\n`lake build PtxBinary32.ExponentialInstruction` and\n`lake env lean PtxBinary32/ExponentialInstruction.lean`.\nUse only completed kernel-checked proofs: no sorry, admit, new axioms or native_decide.\nInspect every public theorem dependency; allowed axioms are propext,\nClassical.choice and Quot.sound. No external model calls or commits, no dependency,\nmanifest, toolchain, description or independent-check edits. Report exact\nobstacles instead of weakening a contract. Coordinator handles acceptance,\nStratic links, documentation, coverage and commits.\n"
+}

@@ -440,6 +440,42 @@
           "declaration": "Ptx.MessagePassing.publication"
         }
       ]
+    },
+    {
+      "spelling": "ex2.approx.f32",
+      "source_anchor": "floating-point-instructions-ex2",
+      "meaning": "Compute a base-two exponential in binary32 for nonpositive finite inputs, infinities and NaNs. Positive finite inputs are not yet modeled. Signed zeros return exactly positive one, negative infinity returns positive zero, positive infinity remains infinite, and NaNs remain NaNs. Strictly negative finite inputs retain every result in the declared union of center-based and output-based two-ULP allowances. ULP means the spacing of the floating-point grid.",
+      "boundary": "Partial input coverage: enabled positive finite operands have no step in this fragment; this is missing formalization, not PTX undefined behavior. A false predicate skips any operand. Exact PTX9.4, numeric SM>=20, no FTZ, typed words/literals, actual fetch and source/destination aliasing. The nearest-even reference and union of two ULP interpretations are explicit model choices; source fidelity and hardware realizability are separate. Not counted as an accepted full instruction form or a parallel softmax kernel.",
+      "code": [
+        {
+          "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+          "declaration": "Ptx.Binary32.Exponential.Results"
+        },
+        {
+          "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+          "declaration": "Ptx.Binary32.Exponential.results_exists_iff"
+        },
+        {
+          "path": "integration/torchlean/PtxBinary32/Exponential.lean",
+          "declaration": "Ptx.Binary32.Exponential.finite_error"
+        },
+        {
+          "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+          "declaration": "Ptx.Scalar.Exponential.Eval"
+        },
+        {
+          "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+          "declaration": "Ptx.Scalar.Exponential.Step"
+        },
+        {
+          "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+          "declaration": "Ptx.Scalar.Exponential.eval_exists_iff"
+        },
+        {
+          "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+          "declaration": "Ptx.Scalar.Exponential.Text.decode_iff"
+        }
+      ]
     }
   ]
 }

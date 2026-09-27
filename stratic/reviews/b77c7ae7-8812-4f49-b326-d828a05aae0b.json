@@ -1,0 +1,162 @@
+{
+  "id": "b77c7ae7-8812-4f49-b326-d828a05aae0b",
+  "base": "424711012a4262ce183b334a61fd6ffe4e96065f",
+  "contentTree": "f1ee3da14534bf2f59e03efefc636bc450f44a37",
+  "reviewer": "Codex",
+  "summary": "Integrate the independently reviewed bounded exponential leaf authored through Luna, with exact special cases, explicit supported-input existence, frozen acceptance checks and complete replay evidence.",
+  "examined": [
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "revised",
+      "reason": "Bounded exponential numerical provider now has a fetched instruction; remaining arithmetic and positive finite coverage are explicit."
+    },
+    {
+      "id": "exponential-instruction",
+      "outcome": "revised",
+      "reason": "Integrated unchanged Luna leaf after pre-dispatch calibration, proof repair, separate source/proof reviews and fresh replay; exact special cases, all-result preservation, actual fetch and conditional existence are linked."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "Bounded fetched exponential now discharges instruction-to-provider correspondence; subtraction and parallel kernel execution remain unimplemented."
+    },
+    {
+      "id": "instruction-reference",
+      "outcome": "unchanged",
+      "reason": "Existing restricted-model category displays the bounded exponential with input and ULP limits, without changing accepted-form counts or static generation contract."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Fresh independent replay and all public declaration audits preserve the assurance contract; failed resource replay, repair, reviews and transcript omissions are retained."
+    },
+    {
+      "id": "model-formalization",
+      "outcome": "unchanged",
+      "reason": "Frozen full acceptance driver calibrated on separate reference and four compiling mutants before dispatch; two requested-Luna calls with proof-only repair and identity uncertainty recorded."
+    },
+    {
+      "id": "scalar-execution",
+      "outcome": "unchanged",
+      "reason": "New bounded floating leaf reuses state and guard conventions, actual fetch and precise events; missing input coverage is explicit and no whole-kernel execution is inferred."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "All permitted bounded-domain outputs retained, exact table cases override the generic neighborhood, and ULP/source interpretation remains distinct from proof checking."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "Softmax remains a partially realized example with explicit numerical, instruction and kernel boundaries; no application contract changes."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "f1ee3da14534bf2f59e03efefc636bc450f44a37",
+      "method": "bash scripts/check.sh; python3 integration/torchlean/check.py; fresh pinned worker replay and independent semantic/proof reviews; proposed-file distribution check; final documentation delta review, stratic validate, deterministic HTML check and git diff --check",
+      "outcome": "pass",
+      "environment": "Lean 4.34.0 and 16 pinned integration dependencies; requested GPT-6 Luna headless, reported identity unavailable",
+      "evidence": "Root checks pass with 1643 dependency reports, 30 accepted forms unchanged, 2060 evidence members in 21 archives, 85 current HTML outputs. Integration passes 1817 exact dependency reports, including all 24 new leaf declarations and frozen driver. Only standard Lean axioms. Fresh exponential-replay-003 passes; failed replay-002 resource exhaustion retained with recovery note. Full-check tree c9dd346f5db8d6962c00bd98621255f600a33116 differs from final tree only in two prose clarifications and matching Stratic passage metadata, manually reviewed; all code, checks, pins, source evidence and generated HTML are identical. Final documentation checks ran between equal snapshots f1ee3da14534bf2f59e03efefc636bc450f44a37. Logs /tmp/ex2-final-root.log, /tmp/ex2-final-integration.log, /tmp/ex2-final-distribution.log. Independent reviews and pre-dispatch fixture/mutant calibration archived.",
+      "tests": [],
+      "id": "7183a56d-4e29-4cfa-810c-87964c140b9e",
+      "recordedAt": "2026-09-27T12:28:31.852Z"
+    }
+  ],
+  "recordedAt": "2026-09-27T12:29:09.934Z",
+  "unmapped": [
+    {
+      "path": "docs/formalization/exponential-instruction-source-review.md",
+      "reason": "Study/preflight/source-review prose reconciled with bounded leaf, remaining subtraction/kernel work, exact acceptance and resource-failure history."
+    },
+    {
+      "path": "docs/formalization/unary-floating-preflight.md",
+      "reason": "Study/preflight/source-review prose reconciled with bounded leaf, remaining subtraction/kernel work, exact acceptance and resource-failure history."
+    },
+    {
+      "path": "docs/foundations/stable-softmax.md",
+      "reason": "Study/preflight/source-review prose reconciled with bounded leaf, remaining subtraction/kernel work, exact acceptance and resource-failure history."
+    },
+    {
+      "path": "docs/instructions/code/integration__torchlean__PtxBinary32__Exponential.lean.html",
+      "reason": "Generated static instruction page/source and index, plus restricted-model mapping. Explicit bounded domain and ULP policy; accepted-form ledger unchanged. Deterministic docs checks cover generated content."
+    },
+    {
+      "path": "docs/instructions/code/integration__torchlean__PtxBinary32__ExponentialInstruction.lean.html",
+      "reason": "Generated static instruction page/source and index, plus restricted-model mapping. Explicit bounded domain and ULP policy; accepted-form ledger unchanged. Deterministic docs checks cover generated content."
+    },
+    {
+      "path": "docs/instructions/forms/ex2.approx.f32.html",
+      "reason": "Generated static instruction page/source and index, plus restricted-model mapping. Explicit bounded domain and ULP policy; accepted-form ledger unchanged. Deterministic docs checks cover generated content."
+    },
+    {
+      "path": "docs/instructions/index.html",
+      "reason": "Generated static instruction page/source and index, plus restricted-model mapping. Explicit bounded domain and ULP policy; accepted-form ledger unchanged. Deterministic docs checks cover generated content."
+    },
+    {
+      "path": "docs/reference/restricted-models.json",
+      "reason": "Generated static instruction page/source and index, plus restricted-model mapping. Explicit bounded domain and ULP policy; accepted-form ledger unchanged. Deterministic docs checks cover generated content."
+    },
+    {
+      "path": "formalization/results/exponential-instruction-v1/README.md",
+      "reason": "Inspected frozen task or trial evidence: both attempts, pre-dispatch fixture/mutant calibration, separate review reports, failed resource replay/recovery and passing fresh replay. Public archive omits raw vendor-bearing transcripts with hashes."
+    },
+    {
+      "path": "formalization/results/exponential-instruction-v1/acceptance.json",
+      "reason": "Inspected frozen task or trial evidence: both attempts, pre-dispatch fixture/mutant calibration, separate review reports, failed resource replay/recovery and passing fresh replay. Public archive omits raw vendor-bearing transcripts with hashes."
+    },
+    {
+      "path": "formalization/results/exponential-instruction-v1/evidence-manifest.json",
+      "reason": "Inspected frozen task or trial evidence: both attempts, pre-dispatch fixture/mutant calibration, separate review reports, failed resource replay/recovery and passing fresh replay. Public archive omits raw vendor-bearing transcripts with hashes."
+    },
+    {
+      "path": "formalization/results/exponential-instruction-v1/worker-evidence.tar.gz",
+      "reason": "Inspected frozen task or trial evidence: both attempts, pre-dispatch fixture/mutant calibration, separate review reports, failed resource replay/recovery and passing fresh replay. Public archive omits raw vendor-bearing transcripts with hashes."
+    },
+    {
+      "path": "formalization/tasks/exponential-instruction-v1.json",
+      "reason": "Inspected frozen task or trial evidence: both attempts, pre-dispatch fixture/mutant calibration, separate review reports, failed resource replay/recovery and passing fresh replay. Public archive omits raw vendor-bearing transcripts with hashes."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ExponentialInstruction.lean",
+      "reason": "Entire 24-declaration leaf reviewed and independently replayed, including unlinked event/decoder/helper proofs; integrated exact worker bytes."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Registers leaf build target, all 24 public dependency endpoints and fresh frozen-driver invocation; checker snapshot now includes that driver."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Registers leaf build target, all 24 public dependency endpoints and fresh frozen-driver invocation; checker snapshot now includes that driver."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers leaf build target, all 24 public dependency endpoints and fresh frozen-driver invocation; checker snapshot now includes that driver."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.json",
+      "reason": "Updated realization, remaining obligations and summaries; complete meaningful passage links to numerical provider and actual leaf proofs."
+    },
+    {
+      "path": "stratic/descriptions/approximate-arithmetic.md",
+      "reason": "Updated realization, remaining obligations and summaries; complete meaningful passage links to numerical provider and actual leaf proofs."
+    },
+    {
+      "path": "stratic/descriptions/exponential-instruction.json",
+      "reason": "Updated realization, remaining obligations and summaries; complete meaningful passage links to numerical provider and actual leaf proofs."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Updated realization, remaining obligations and summaries; complete meaningful passage links to numerical provider and actual leaf proofs."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Updated realization, remaining obligations and summaries; complete meaningful passage links to numerical provider and actual leaf proofs."
+    },
+    {
+      "path": "stratic/descriptions/exponential-instruction.md",
+      "reason": "Clarifies that the numerical destination guarantee requires an enabled instruction; meaningful passage links updated to match."
+    }
+  ]
+}

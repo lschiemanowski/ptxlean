@@ -59,7 +59,7 @@ the existing uncertainty about permitted NaN payloads. Approximate reciprocal
 and its error convention remain separate work.
 
 The exponential relations are numerical tools for future instruction contracts.
-They do not yet implement PTX ex2 or an executable softmax.
+They do not establish full PTX ex2 coverage or an executable softmax.
 The PTX source review must still justify the chosen allowance and special cases,
 and the instruction proof must connect actual operands and outputs to it.
 

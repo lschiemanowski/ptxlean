@@ -16,7 +16,7 @@
     "Separate exact exponential special cases from the finite approximation relation and expose its bounded supported input domain."
   ],
   "realization": "partial",
-  "remaining": "Conservative center/output ULP bounds and actual encoded base-conversion error/existence are proved, alongside finite centers and the accepted rounded reciprocal provider. Shift/subtraction, source interpretation and exceptional/overflow cases for a fetched exponential, and parallel kernel execution remain unfinished.",
+  "remaining": "Finite neighborhoods, conservative ULP bounds, encoded base conversion, reciprocal and bounded exponential providers are proved. Positive finite exponential/overflow interpretation, shift/subtraction and parallel kernel execution remain unfinished.",
   "links": [
     {
       "kind": "implementation",

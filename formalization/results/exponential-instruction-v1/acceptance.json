@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "task": "exponential-instruction-v1",
+  "selected_forms": [
+    "ex2.approx.f32"
+  ],
+  "coverage": "restricted; not accepted full-form coverage",
+  "supported_inputs": "Finite nonpositive inputs, infinities and NaNs; false predicate skips any input.",
+  "base_commit": "424711012a4262ce183b334a61fd6ffe4e96065f",
+  "accepted_patch_sha256": "ab8f3ae5495a2e7c0c05d024184e1af32588220a2930cfc4f3948ee7ea0def56",
+  "candidate_sha256": "2b5f1a0d063d0aa5349c32b6c40da81fc7f192b2bd8fa5b6c28596f7d9b4b5f7",
+  "worker_attempt": "exponential-002",
+  "mechanical_replay": "replays/exponential-003/result.json",
+  "mechanical": "pass",
+  "independent_source_review": "pass with explicit partial domain and named ULP interpretations",
+  "independent_proof_review": "pass",
+  "integration": "Exact worker candidate; combined checks recorded by Stratic.",
+  "trial_invocations": 2,
+  "repair_invocations": 1,
+  "campaign_call_numbers": [
+    33,
+    34
+  ],
+  "preflight": "Full reference fixture and four compiling axiom-audited semantic mutants before generation.",
+  "qualification": "Initial incomplete decoder proof; proof-only worker repair with unchanged definitions, statements and driver. Requested model identity unconfirmed. First replay exhausted /tmp inodes and could not persist final status; logs, recovery note and task-owned cache cleanup retained. New replay on main filesystem passed. Coordinator supplied numerical semantics; not unsupervised source discovery or full-form coverage.",
+  "source_conditions": {
+    "manual_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+    "sections": [
+      "floating-point-instructions-ex2",
+      "predicated-execution",
+      "instruction-statements",
+      "source-operands",
+      "destination-operands",
+      "operand-type-information",
+      "fundamental-types",
+      "floating-point-constants"
+    ],
+    "project_version": "PTX ISA 9.4",
+    "target_minimum": "sm_20 numeric feature floor; not target-name validation",
+    "mode": "No FTZ"
+  }
+}

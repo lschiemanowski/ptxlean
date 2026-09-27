@@ -37,8 +37,9 @@ The summation error refers to the **computed** exponentials, and the reciprocal
 error refers to the **computed** sum. Neither can substitute ideal operands.
 `delta_i` must eventually include input representation, subtraction, conversion
 of an exponential's base, and the exponential instruction's own error.
-The encoded base conversion is now proved below; input representation, the
-shift and the fetched exponential still need their instruction/program proofs.
+The encoded base conversion is now proved below; input representation and the
+shift still need their instruction/program proofs. The bounded fetched exponential
+now connects its actual operand and destination to the numerical relation.
 
 Set `D = sigma + sum_i delta_i`. The triangle inequality gives
 `abs(S-Z) ≤ D`. Thus `S ≥ 1-D`. When `D < 1`, the computed sum is strictly
@@ -223,10 +224,13 @@ bound against `exp(-1)`.
 
 These are numerical relations and arithmetic witnesses. The finite relation
 allows a neighborhood even at input zero, so it must **not** replace the exact
-positive-one result required by the PTX zero-input table. Special input cases,
-positive-input overflow and fetched instruction behavior still need their own
-reviewed contract. Maximum selection, subtraction, sum order and the actual
-parallel forward/backward program remain work to do.
+positive-one result required by the PTX zero-input table. The separate bounded
+`Exponential.Results` provider enforces that exact special case and implies the
+finite relation used here. Its fetched instruction preserves every admitted
+result for nonpositive finite inputs, infinities and NaNs. Positive finite
+operands, including ordinary nonoverflowing cases, remain unsupported.
+Maximum selection, subtraction, sum order and the actual parallel
+forward/backward program remain work to do.
 
 ## Checking and the next acceptance boundary
 
@@ -264,16 +268,21 @@ finite result from these input conditions. Its `result_exists_of_sum_error`
 theorem makes this handoff explicit without an assumed successful reciprocal.
 
 The [unary-instruction preflight](../formalization/unary-floating-preflight.md)
-records the remaining exponential acceptance obligation. The reciprocal leaf
-was authored by Luna and accepted after fresh independent checks and separate
-source/proof reviews. Only `rcp.rn.f32` is covered; no `ex2` coverage is claimed.
-The checked `ApproximatePolicyChecks` example also shows that output-spacing
-ULPs can admit a pair excluded by center-spacing ULPs. Adopting the existing
-center relation as PTX would therefore require a source justification, not just
-a Lean proof. The new conservative relation covers both named spacing policies
-with proved all-result bounds; it is still a numerical foundation. Remaining
-kernel work includes
-parallel maximum and sum programs, forward and separately supplied backward
-programs, memory safety, admitted execution witnesses, and universal stored
-output bounds. The first row is nonempty and unmasked. Empty/all-masked rows,
-attention, GPU runs and benchmarking are outside this slice.
+and [exponential review](../formalization/exponential-instruction-source-review.md)
+record the accepted boundaries. Luna supplied the reciprocal and bounded
+exponential leaves; both passed fresh checks and separate source/proof reviews.
+The reciprocal covers all encoded inputs. The
+[bounded exponential](../instructions/forms/ex2.approx.f32.html) covers finite
+nonpositive inputs, infinities and NaNs. A false predicate skips any input;
+an enabled positive finite operand has no step because its semantics are not
+yet modeled. This is missing coverage, not PTX undefined behavior. It is listed
+as a restricted model, outside accepted full-form counts.
+
+The conservative exponential relation covers both named ULP spacing policies
+with proved bounds for every admitted result. It does not settle the source's
+unspecified evaluation point or establish hardware conformance. Remaining
+kernel work includes argument subtraction, parallel maximum and sum programs,
+forward and separately supplied backward programs, memory safety, admitted
+execution witnesses, and universal stored-output bounds. The first row is
+nonempty and unmasked. Empty/all-masked rows, attention, GPU runs and benchmarking
+are outside this slice.

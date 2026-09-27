@@ -56,3 +56,44 @@ The HTML catalog's existing restricted-model category can show it with its input
 and interpretation limits. Raw PTX parsing, register declaration validation,
 positive finite/overflow behavior, other forms, parallel softmax execution and
 hardware conformance remain separate work.
+
+## Completed pre-dispatch calibration
+
+The complete frozen driver passed against a separate coordinator-authored
+reference fixture. Four altered fixtures compiled and passed their own public
+axiom audits, but failed the independent driver: ignored input operand, FTZ
+spelling, fetch fixed to position zero, and weakened SM floor. The reference
+fixture and calibration logs are retained as coordinator effort, separately from
+the worker candidate. The fixture is not part of the worker task base or inputs.
+
+A draft driver was repaired before dispatch: an explicitly typed constructor
+application replaced a slow implicit-instruction inference in the test for both
+predicate polarities. A stale overflow-coverage comment was also corrected.
+The final full-driver calibration used the corrected exact bytes; none of this
+is a post-generation checker change. Earlier diagnostics are retained as draft
+checker-development records, not acceptance evidence. These mutations exercise
+particular errors; they do not prove the checker detects every possible defect.
+
+## Candidate acceptance
+
+The headless runner made two calls requesting GPT-6 Luna (campaign calls 33 and
+34). The first candidate left the typed decoder proof incomplete. A targeted
+repair changed only that proof body; instruction definitions, theorem statements,
+provider and frozen acceptance driver were unchanged. The coordinator did not
+edit the candidate. Provider-confirmed model identity was not reported.
+
+The semantic reviewer inspected initial candidate SHA256
+`146f6dfbc0de8a82efcaf0d763293c740fc74ea30afb98cd94b3fcfe6b301258`.
+A separate proof reviewer inspected the final candidate SHA256
+`2b5f1a0d063d0aa5349c32b6c40da81fc7f192b2bd8fa5b6c28596f7d9b4b5f7`,
+confirmed the proof-only difference, and found no remaining issue in the bounded
+contract. Fresh replay checked the final candidate, frozen driver and all 24
+public declarations; dependencies are limited to Lean's standard `propext`,
+`Classical.choice` and `Quot.sound`.
+
+The first replay exhausted `/tmp` file entries while unpacking dependencies and
+could not save its final status. Its logs and recovery note are retained. Only
+task-owned generated dependency caches were removed, then a new replay on the
+main filesystem passed. This resource failure is not omitted or counted as a
+successful proof check. The [trial record](../../formalization/results/exponential-instruction-v1/README.md)
+includes both attempts, both replays and pre-dispatch calibration evidence.

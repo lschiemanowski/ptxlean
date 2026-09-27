@@ -4,7 +4,9 @@ Status: numerical foundation and independently reviewed source interpretation.
 The rounded reciprocal leaf has passed its frozen worker contract, independent
 acceptance driver v2 and fresh replay; source and proof reviews are recorded
 [separately](reciprocal-instruction-source-review.md).
-The exponential instruction contract remains unfrozen for the reasons below.
+The bounded exponential leaf has also passed its frozen contract, pre-dispatch
+calibration and fresh replay; positive finite inputs remain unsupported. See its
+[separate source and acceptance review](exponential-instruction-source-review.md).
 
 The source is PTX ISA 9.4, with the exact SHA-256 and publisher anchors recorded
 in the [stable-softmax guide](../foundations/stable-softmax.md). It was rechecked
@@ -113,16 +115,18 @@ negative results or negative zero in the underflow region. Arbitrary positive
 finite inputs cannot be required to have finite exponential outputs: overflow
 needs a separate reviewed contract. No FTZ behavior is included in this scope.
 
-The inclusion and all-result bounds now discharge the numerical part of the
-conservative-policy route. Before accepting an exponential instruction, freeze
-its explicit interpretation and all special cases, and preflight the complete
-acceptance driver against a separate fixture and deliberate semantic mutants.
-No exponential worker has been dispatched on the strength of these numerical
-proofs alone. Keep unsupported positive-overflow behavior visibly
-partial until reviewed; it cannot be hidden in a totality assumption. Only then
-can the parallel softmax kernel claim source-qualified accuracy. `ExpArgument` now proves the base-conversion part: a concrete encoded constant,
-actual rounded multiplication, finite/nonpositive output from input guards, and
-natural-exponential error for every permitted approximate result. It keeps
-inherited shift error separate and does not assume a correct final exponential.
-Argument subtraction is still outstanding, as are the fetched exponential,
-parallel programs and their execution, storage and memory-safety results.
+The inclusion and all-result bounds discharge the numerical part of the
+conservative-policy route. The bounded exponential contract was frozen with
+exact special cases and an explicit supported-input domain. Before dispatch,
+the complete acceptance driver passed a separate reference fixture and rejected
+four independently compiling semantic mutants. Luna then implemented the leaf
+with one proof repair. Independent review and a fresh replay accepted the exact
+candidate; the restricted model remains outside full-form coverage counts.
+
+`ExpArgument` proves base conversion using a concrete encoded constant and
+actual rounded multiplication. It derives finite/nonpositive output from input
+guards and natural-exponential error for every permitted approximate result.
+The fetched exponential now connects this relation to its actual destination.
+Inherited shift error remains separate. Argument subtraction, positive finite
+exponential behavior, parallel programs and their execution, storage and
+memory-safety results remain unfinished.
