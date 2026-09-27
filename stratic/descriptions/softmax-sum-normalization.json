@@ -1,0 +1,188 @@
+{
+  "id": "softmax-sum-normalization",
+  "parent": {
+    "description": "softmax",
+    "passage": {
+      "quote": "A parallel sum reduces the encoded exponentials with derived finite-range and\nrounding bounds. A two-instruction scalar sequence normalizes each numerator\nusing the actual stored sum through an explicit register interface. The total\nexponential and sum error must be at most one half to derive safe normalization.\nThe interface does not implement PTX loads or broadcast between these components.\nRemaining work includes combined softmax forward and backward programs, with\nadmitted execution existence, memory safety and stored-output proofs for their\ncomposition."
+    }
+  },
+  "summary": [
+    "Sum a finite power-of-two row of at most 1024 encoded values with derived range and rounding bounds, allowing small negative approximate outputs.",
+    "Reuse the actual dense kernel with unit weights and zero bias; preserve universal admitted-run correctness, separate existence and memory safety.",
+    "Normalize with a fetched reciprocal and multiplication, deriving representability from denominator and numerator bounds; keep combined softmax execution separate."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This component sums the encoded exponential values of a nonempty softmax row\nand normalizes one value by that computed sum. The sum has a fixed balanced\nbinary tree: neighboring pairs are added, then neighboring pair results, until\none value remains. Every addition rounds to the nearest binary32 value, choosing\nthe even final bit on a tie. The supported row length is a power of two, at most\n1024. Each stored input is finite and has absolute value at most two. These are\nconditions on the supplied words, not assumptions about successful intermediate\narithmetic. Small negative approximate exponential values are allowed; positivity\nmust not be inferred from the ideal exponential alone. The existing shifted\nexponential sequence supplies the magnitude bound of two from its actual\nnonpositive base-two argument and the exponential instruction error contract."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExpRange.lean",
+        "passage": {
+          "quote": "theorem output_range (target : Ptx.Target) (s t : Scalar.State)\n    (input maximum destination : Nat) (x m : ℝ)\n    (start : s.pc=0) (scratch : destination≠input)\n    (inputValue : Ptx.Binary32.finiteReal (s.regs input)=some x)\n    (maximumValue : Ptx.Binary32.finiteReal (s.regs maximum)=some m)\n    (bounds : Ptx.Binary32.ShiftedExp.InputBounds x m)\n    (run : Run target (program input maximum destination) s t) :\n    ∃ u, Ptx.Binary32.finiteReal (t.regs destination)=some u ∧ |u|≤2"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first parallel sum specializes the existing dense kernel to one row, exact\npositive-one weights, positive-zero bias and no activation. Its actual instruction\nlist still loads those constants, multiplies each input by one and adds zero at\nthe end. Those operations preserve the finite real value but do not justify a\nclaim about preserving every zero sign. Reusing the checked kernel retains its\nactual address calculations, shared-memory tree, barriers and stored-output\nproof. This is a reference implementation; removing the extra work needs a\nseparate program and correspondence proof."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SumProgram.lean",
+        "passage": {
+          "quote": "theorem output_iff (d : Nat) (input : Fin (width d) → Word) (value : Word) :\n    Dense.Output (shape d) (global d input) 0 value ↔ Output d input value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For n inputs, global storage contains n inputs, n positive-one weights, a\npositive-zero bias and an output word: 2*n+2 words. Shared storage contains\n(depth+1)*n words, where n=2^depth. One cooperating thread array, whose threads\nshare memory and wait at group barriers, processes the row. Unused initial\nregisters and shared contents may be arbitrary. Every completed admitted\nexecution has the stated numerical result and preserves the global input and\nconstant regions. A separate finite schedule constructs a completed admitted\nexecution with safe accesses. Neither claim establishes GPU execution, launch\ncompatibility, scheduler fairness or performance."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SumExecution.lean",
+        "passage": {
+          "quote": "theorem completed (d : Nat) (bound : Bounds d) (input : Fin (width d) → Word)\n    (shared : List Word) (seeds : Fin (shape d).threads → Scalar.State)\n    {events : List (Event (shape d).threads)} {final : State (shape d).threads}\n    (run : Runs (config d bound) (program d) (initial d input shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true)\n    (source co) (valid : Dense.Admitted (shape d) (denseBounds d bound)\n      (global d input) shared seeds run source co) :\n    (∃ value, final.global[outputIndex d]?=some value ∧ Output d input value) ∧\n    (∀ j : Fin (width d), final.global[j.val]?=some (input j)) ∧\n    (∀ i, i<outputIndex d → final.global[i]?=(global d input)[i]?) ∧\n    final.global.length=(global d input).length ∧ final.shared.length=shared.length ∧\n    (∀ event ∈ events, AccessSafe (initial d input shared seeds) event)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For n inputs, global storage contains n inputs, n positive-one weights, a\npositive-zero bias and an output word: 2*n+2 words. Shared storage contains\n(depth+1)*n words, where n=2^depth. One cooperating thread array, whose threads\nshare memory and wait at group barriers, processes the row. Unused initial\nregisters and shared contents may be arbitrary. Every completed admitted\nexecution has the stated numerical result and preserves the global input and\nconstant regions. A separate finite schedule constructs a completed admitted\nexecution with safe accesses. Neither claim establishes GPU execution, launch\ncompatibility, scheduler fairness or performance."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SumExecution.lean",
+        "passage": {
+          "quote": "theorem exists_admitted (d : Nat) (bound : Bounds d) (input : Fin (width d) → Word)\n    (shared : List Word) (seeds : Fin (shape d).threads → Scalar.State)\n    (allocated : sharedWords d≤shared.length) :\n    ∃ events final, ∃ run : ConcreteRuns (config d bound) (program d)\n        (initial d input shared seeds) events final,\n      (∃ source co, Dense.Admitted (shape d) (denseBounds d bound)\n        (global d input) shared seeds run.toRuns source co) ∧\n      (∀ t, (final.lanes t).halted=true ∧ (final.lanes t).scalar.pc=(program d).length-1) ∧\n      (∃ value, final.global[outputIndex d]?=some value ∧ Output d input value) ∧\n      (∀ j : Fin (width d), final.global[j.val]?=some (input j)) ∧\n      (∀ i, i<outputIndex d → final.global[i]?=(global d input)[i]?) ∧\n      final.global.length=(global d input).length ∧ final.shared.length=shared.length ∧\n      final.barrier=Barrier.reset (d+1) ∧ final.site=none ∧\n      (∀ event ∈ events, AccessSafe (initial d input shared seeds) event)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical proof derives finite intermediate sums from the input magnitude\nand tree depth. It bounds the error against the exact sum of the actual encoded\ninput values, keeping it separate from each exponential's error against its\nideal real value. A conservative uniform allowance of 2^-13 per tree addition\ncovers this bounded domain, giving a sum error at most (n-1)*2^-13. The exact\nmultiplications by one and final addition of zero introduce no real-value error.\nA sharper allowance can replace this bound without changing the arithmetic order."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SumTree.lean",
+        "passage": {
+          "quote": "theorem accuracy (input : Nat → Word) (values : Nat → ℝ) (k offset : Nat) (out : Word)\n    (depth : k≤10)\n    (finite : ∀j, j<2^k → finiteReal (input (offset+j))=some (values (offset+j)))\n    (small : ∀j, j<2^k → |values (offset+j)|≤2)\n    (allowed : Reduction.Eval (Reduction.balanced k offset (fun j => (0x3f800000,input j))) out) :\n    finiteReal out=some (rounded values k offset) ∧\n    |rounded values k offset|≤(2:ℝ)^(k+1) ∧\n    |rounded values k offset-ideal values k offset|≤budget k"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical proof derives finite intermediate sums from the input magnitude\nand tree depth. It bounds the error against the exact sum of the actual encoded\ninput values, keeping it separate from each exponential's error against its\nideal real value. A conservative uniform allowance of 2^-13 per tree addition\ncovers this bounded domain, giving a sum error at most (n-1)*2^-13. The exact\nmultiplications by one and final addition of zero introduce no real-value error.\nA sharper allowance can replace this bound without changing the arithmetic order."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SumCorrect.lean",
+        "passage": {
+          "quote": "theorem completed_accuracy (d : Nat) (bound : Bounds d)\n    (input : Fin (width d) → Word) (values : Fin (width d) → ℝ)\n    (finite : ∀i, finiteReal (input i)=some (values i)) (small : ∀i, |values i|≤2)\n    (shared : List Word) (seeds : Fin (shape d).threads → Scalar.State)\n    {events : List (Event (shape d).threads)} {final : State (shape d).threads}\n    (run : Runs (config d bound) (program d) (initial d input shared seeds) events final)\n    (halted : ∀t, (final.lanes t).halted=true)\n    (source co) (valid : Dense.Admitted (shape d) (denseBounds d bound)\n      (global d input) shared seeds run source co) :\n    ∃ out, final.global[outputIndex d]?=some out ∧ finiteReal out=some (rounded d values) ∧\n      |rounded d values-∑i,values i|≤SumTree.budget d"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Let delta_i bound each exponential error and let sigma be the proved summation\nallowance. If sigma+sum_i delta_i is at most one half, the stable softmax's ideal\ndenominator lower bound of one implies that the computed denominator is at\nleast one half. This guard is explicit; it is not an assumption that the\nreciprocal or final result already exists. It also explains which upstream\naccuracy information a complete softmax proof must supply."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxNormalize.lean",
+        "passage": {
+          "quote": "theorem denominator_lower (exact approximate delta : Fin n→ℝ) (S sigma : ℝ)\n    (exponential : ∀ i, |approximate i-exact i|≤delta i)\n    (summation : |S-∑i,approximate i|≤sigma) (lower : 1≤∑i,exact i)\n    (small : denominatorBudget delta sigma≤1/2) : 1/2≤S"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Normalization uses rcp.rn.f32 followed by mul.rn.f32. The reciprocal rounds one\ndivided by the actual computed denominator; multiplication then uses that\nrounded reciprocal and the actual numerator word. The scratch destination must\ndiffer from the numerator register, since the numerator remains live for the\nsecond instruction. It may coincide with the denominator register. From a\nfinite denominator at least one half and a finite numerator of magnitude at\nmost two, the proof derives finite reciprocal and product values, their separate\nrounding errors, fetched execution existence and preservation of unrelated state.\nThis is a scalar instruction sequence, not a proof of parallel normalization\nstores or of a combined softmax launch."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/NormalizeCorrect.lean",
+        "passage": {
+          "quote": "theorem correct (target : Ptx.Target) (s t : Scalar.State)\n    (numerator denominator destination : Nat) (u S : ℝ)\n    (start : s.pc = 0) (scratch : destination ≠ numerator)\n    (input : Ptx.Binary32.finiteReal (s.regs numerator) = some u)\n    (sum : Ptx.Binary32.finiteReal (s.regs denominator) = some S)\n    (small : |u| ≤ 2) (lower : 1/2 ≤ S)\n    (run : Run target (program numerator denominator destination) s t) :\n    Ptx.Binary32.finiteReal (t.regs destination) = some (round32 (u*round32 (1/S))) ∧\n    |round32 (1/S)-1/S| ≤ eps32 (1/S) ∧\n    |round32 (u*round32 (1/S))-u*round32 (1/S)| ≤ eps32 (u*round32 (1/S)) ∧\n    |round32 (u*round32 (1/S))| ≤ 4"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Normalization uses rcp.rn.f32 followed by mul.rn.f32. The reciprocal rounds one\ndivided by the actual computed denominator; multiplication then uses that\nrounded reciprocal and the actual numerator word. The scratch destination must\ndiffer from the numerator register, since the numerator remains live for the\nsecond instruction. It may coincide with the denominator register. From a\nfinite denominator at least one half and a finite numerator of magnitude at\nmost two, the proof derives finite reciprocal and product values, their separate\nrounding errors, fetched execution existence and preservation of unrelated state.\nThis is a scalar instruction sequence, not a proof of parallel normalization\nstores or of a combined softmax launch."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/NormalizeCorrect.lean",
+        "passage": {
+          "quote": "theorem finite_execution_exists (target : Ptx.Target) (s : Scalar.State)\n    (numerator denominator destination : Nat) (u S : ℝ)\n    (supported : Scalar.Binary32.SupportedTarget target)\n    (start : s.pc = 0) (scratch : destination ≠ numerator)\n    (input : Ptx.Binary32.finiteReal (s.regs numerator) = some u)\n    (sum : Ptx.Binary32.finiteReal (s.regs denominator) = some S)\n    (small : |u| ≤ 2) (lower : 1/2 ≤ S) :\n    ∃ t, Run target (program numerator denominator destination) s t ∧\n      Ptx.Binary32.finiteReal (t.regs destination) = some (round32 (u*round32 (1/S))) ∧\n      |round32 (u*round32 (1/S))| ≤ 4"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The component interface puts an original numerator in register 0 and the actual\nstored sum in register 1, then runs scalar normalization with register 2 as scratch.\nIts theorem combines the completed admitted sum execution with those fetched\nscalar runs to bound each normalized value against the ideal exponential divided\nby the ideal sum. Initializing these registers is an explicit mathematical\nhandoff; PTX loads, broadcast and combined launch execution remain unimplemented."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SumNormalize.lean",
+        "passage": {
+          "quote": "theorem completed_coordinate_accuracy (d : Nat) (bound : Sum.Bounds d)\n    (input : Fin (Sum.width d) → Word) (values exact delta : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, finiteReal (input i)=some (values i)) (small : ∀i, |values i|≤2)\n    (nonneg : ∀i, 0≤exact i) (upper : ∀i, exact i≤1) (lower : 1≤∑i,exact i)\n    (exponential : ∀i, |values i-exact i|≤delta i)\n    (budget : denominatorBudget delta (SumTree.budget d)≤1/2)\n    (shared : List Word) (seeds : Fin (Sum.shape d).threads → Scalar.State)\n    {events : List (Event (Sum.shape d).threads)} {sumFinal : State (Sum.shape d).threads}\n    (sumRun : Runs (Sum.config d bound) (Sum.program d) (Sum.initial d input shared seeds) events sumFinal)\n    (halted : ∀t, (sumFinal.lanes t).halted=true)\n    (source co) (valid : Dense.Admitted (Sum.shape d) (Sum.denseBounds d bound)\n      (Sum.global d input) shared seeds sumRun source co)\n    (target : Ptx.Target) (normalized : Fin (Sum.width d) → Scalar.State)\n    (runs : ∀i, Scalar.Normalize.Run target program\n      (entry (input i) sumFinal.global[Sum.outputIndex d]!) (normalized i))\n    (i : Fin (Sum.width d)) :\n    ∃ y, finiteReal ((normalized i).regs 2)=some y ∧\n      |y-exact i/(∑j,exact j)|≤coordinateBudget (delta i)\n        (denominatorBudget delta (SumTree.budget d))\n        (TorchLean.Floats.eps32 (1/Sum.rounded d values))\n        (TorchLean.Floats.eps32 (values i*TorchLean.Floats.round32 (1/Sum.rounded d values)))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The component interface puts an original numerator in register 0 and the actual\nstored sum in register 1, then runs scalar normalization with register 2 as scratch.\nIts theorem combines the completed admitted sum execution with those fetched\nscalar runs to bound each normalized value against the ideal exponential divided\nby the ideal sum. Initializing these registers is an explicit mathematical\nhandoff; PTX loads, broadcast and combined launch execution remain unimplemented."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SumNormalize.lean",
+        "passage": {
+          "quote": "theorem execution_exists (target : Ptx.Target) (numerator denominator : Word)\n    (supported : Scalar.Binary32.SupportedTarget target) :\n    ∃ final, Scalar.Normalize.Run target program (entry numerator denominator) final"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The first parallel sum specializes the existing dense kernel to one row, exact\npositive-one weights, positive-zero bias and no activation. Its actual instruction\nlist still loads those constants, multiplies each input by one and adds zero at\nthe end. Those operations preserve the finite real value but do not justify a\nclaim about preserving every zero sign. Reusing the checked kernel retains its\nactual address calculations, shared-memory tree, barriers and stored-output\nproof. This is a reference implementation; removing the extra work needs a\nseparate program and correspondence proof."
+      },
+      "to": {
+        "description": "dense-layer",
+        "passage": {
+          "quote": "The reduction kernel also offers an affine-only output option that leaves signed\nresults intact. The ReLU forward variant retains its existing computation. This\nshared implementation avoids duplicating the reduction and synchronization\nproofs for the transposed matrix-vector product. A copy kernel constructs the\ntransposed operand buffer from the actual stored\ngated sensitivities and original weights. Each copied word comes from a fetched\nload and store. Appending freshly allocated zero words and selecting the copied\nbuffer as the next kernel's allocation are explicit operations of the host model.\nThey perform no gradient arithmetic and do not constitute a CUDA allocation,\ntransfer, synchronization or pointer-ABI implementation."
+        }
+      },
+      "reason": "The unit-weight, zero-bias specialization uses the signed affine-only reduction and its actual instruction execution, memory and admission proofs."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Normalization uses rcp.rn.f32 followed by mul.rn.f32. The reciprocal rounds one\ndivided by the actual computed denominator; multiplication then uses that\nrounded reciprocal and the actual numerator word. The scratch destination must\ndiffer from the numerator register, since the numerator remains live for the\nsecond instruction. It may coincide with the denominator register. From a\nfinite denominator at least one half and a finite numerator of magnitude at\nmost two, the proof derives finite reciprocal and product values, their separate\nrounding errors, fetched execution existence and preservation of unrelated state.\nThis is a scalar instruction sequence, not a proof of parallel normalization\nstores or of a combined softmax launch."
+      },
+      "to": {
+        "description": "reciprocal-instruction",
+        "passage": {
+          "quote": "The reciprocal of a number x is one divided by x. This instruction responsibility\ncovers the explicit PTX spelling rcp.rn.f32: a reciprocal in binary32, the\nstandard 32-bit floating-point format, rounded to the\nnearest representable result, resolving halfway cases toward an even final bit.\nIt preserves subnormal numbers, the small representable values near zero.\nThe target policy is the pinned PTX 9.4 version on sm_20 or later, where sm_20\ndenotes NVIDIA compute-capability level 2.0.\nOther rounding modes, approximation, flushing small values to zero, and other\nnumber formats are rejected rather than silently treated as this instruction."
+        }
+      },
+      "reason": "Normalization relies on the encoded nearest-even reciprocal with preserved subnormals and explicit target restrictions."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "This component sums the encoded exponential values of a nonempty softmax row\nand normalizes one value by that computed sum. The sum has a fixed balanced\nbinary tree: neighboring pairs are added, then neighboring pair results, until\none value remains. Every addition rounds to the nearest binary32 value, choosing\nthe even final bit on a tie. The supported row length is a power of two, at most\n1024. Each stored input is finite and has absolute value at most two. These are\nconditions on the supplied words, not assumptions about successful intermediate\narithmetic. Small negative approximate exponential values are allowed; positivity\nmust not be inferred from the ideal exponential alone. The existing shifted\nexponential sequence supplies the magnitude bound of two from its actual\nnonpositive base-two argument and the exponential instruction error contract."
+      },
+      "to": {
+        "description": "shifted-exponential",
+        "passage": {
+          "quote": "The input conditions are x<=m and abs(x),abs(m)<=2^124. These conservative bounds\nprevent overflow in the negation, addition and base conversion. The proof derives\nthat the rounded difference is finite and nonpositive and hence reaches the\nsupported exponential domain. Finiteness or successful intermediate computations\nare conclusions, not extra premises. Both signs of zero and gradual underflow\nremain covered by the existing arithmetic contracts."
+        }
+      },
+      "reason": "The numerator range comes from the actual finite nonpositive exponential argument, without assuming computed values are positive."
+    }
+  ]
+}

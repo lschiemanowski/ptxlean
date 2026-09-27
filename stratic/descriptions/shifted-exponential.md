@@ -43,3 +43,10 @@ This is a four-step scalar computation. It neither computes a row maximum nor
 proves a parallel launch, memory accesses, a complete softmax kernel or hardware
 progress. Finite input values outside the conservative bounds, NaN/infinite
 scores, masked rows and input-quantization error need separate treatment.
+
+Every permitted encoded output also has absolute value at most two. This follows
+from the actual nonpositive base-two argument: its ideal exponential lies between
+zero and one, and the instruction allowance is at most 5*2^-24. The result does
+not require the error budget against exp(x-m) to be small, and it does not assume
+that approximate outputs are nonnegative. This bound supplies the input-range
+condition for the parallel sum.

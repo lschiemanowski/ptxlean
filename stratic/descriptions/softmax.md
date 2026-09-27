@@ -93,7 +93,12 @@ permitted final result. A parallel maximum component selects an original input
 word that bounds every finite score in a power-of-two row of at most 1024 entries.
 It proves correctness for every completed admitted execution, a separate completed
 execution witness, memory safety and preservation of the input storage.
-Remaining work includes the parallel exponential sum with rounding/range bounds
-and combined softmax forward and backward programs, with admitted execution
-existence, memory safety and stored-output proofs for their composition.
+A parallel sum reduces the encoded exponentials with derived finite-range and
+rounding bounds. A two-instruction scalar sequence normalizes each numerator
+using the actual stored sum through an explicit register interface. The total
+exponential and sum error must be at most one half to derive safe normalization.
+The interface does not implement PTX loads or broadcast between these components.
+Remaining work includes combined softmax forward and backward programs, with
+admitted execution existence, memory safety and stored-output proofs for their
+composition.
 GPU execution and benchmarking remain deferred.

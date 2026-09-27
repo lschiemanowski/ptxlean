@@ -1,0 +1,176 @@
+{
+  "id": "c42a8a4f-9349-49a3-b84c-0454c097bddd",
+  "base": "90d591128034896fb5901833c92c028cba6f30d7",
+  "contentTree": "8484790e98a888603123d451d01c7668bcaed359",
+  "reviewer": "Codex coordinator with independent numerical, execution and normalization proof reviews",
+  "summary": "Bounded finite signed sum and scalar normalization; checked arithmetic and admitted execution remain separate from semantic fidelity, GPU progress and a complete parallel softmax launch.",
+  "examined": [
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The existing exact pinned-source, forbidden-token and dependency-audit guarantees are retained; 76 new public declarations and three fresh fixture modules are registered without relaxing accepted axioms."
+    },
+    {
+      "id": "shifted-exponential",
+      "outcome": "revised",
+      "reason": "Expose a derived magnitude-at-most-two bound from the actual nonpositive exponential argument, independently of the accumulated natural-exponential budget."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "Record completed bounded sum and fetched normalization components while leaving PTX memory handoff and combined forward/backward launches open."
+    },
+    {
+      "id": "softmax-sum-normalization",
+      "outcome": "revised",
+      "reason": "New bounded responsibility covers actual dense-specialized sum execution, range and rounding, safe fetched reciprocal/product, and explicit register-interface composition."
+    },
+    {
+      "id": "exponential-instruction",
+      "outcome": "unchanged",
+      "reason": "The output-range wrapper uses the existing nonpositive-input allowance and exact cases unchanged, retaining small signed outputs and incomplete positive-finite coverage."
+    },
+    {
+      "id": "parallel-maximum",
+      "outcome": "unchanged",
+      "reason": "The existing attained maximum and shifted-input guarantees are unchanged; connecting maximum, sum and normalization into one program remains outstanding despite the new separately verified components."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The new example component states its input domain, arithmetic order, storage and proof boundaries, fulfilling the existing example-level contract."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Finite real interpretations and all-result absolute errors are preserved; encoded signed zeros are not conflated with bitwise equality, and exponential and sum errors remain distinct."
+    },
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "unchanged",
+      "reason": "The existing two-policy exponential allowance and encoded reciprocal provider are consumed unchanged; the new range proof retains all signed outcomes."
+    },
+    {
+      "id": "dense-layer",
+      "outcome": "unchanged",
+      "reason": "Specializing one row to exact unit weights, zero bias and no activation preserves the existing actual reduction program and its memory/execution contract, including redundant arithmetic."
+    },
+    {
+      "id": "reciprocal-instruction",
+      "outcome": "unchanged",
+      "reason": "The fetched normalization wrapper uses the existing rounded reciprocal relation and target policy, deriving finite output from the denominator guard without narrowing instruction semantics."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "8484790e98a888603123d451d01c7668bcaed359",
+      "method": "bash scripts/check.sh; python3 integration/torchlean/check.py; stratic validate; git diff --check; independent numerical/execution/normalization and connector review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; TorchLean de3192df4779877ceb65cfe470a4d4ce9d480a5b; 16 pinned integration dependencies verified, no network or external model calls.",
+      "evidence": "Root source/build checks passed with 1643 exact dependency reports. Integration built 214 guarded Lean source files and passed 2093 exact dependency reports using only standard Lean axioms. Fresh normalization alias/fetch/target, sum numerical and actual interpreter fixtures passed, along with existing fixtures. Stratic validation and impact review passed; selected snapshot identical before/after checks. Independent reviews found no blockers and retained the explicit register-interface boundary, finite signed domain, and total-error guard.",
+      "tests": [],
+      "id": "80bda77e-4725-4034-bbc4-4661a0980758",
+      "recordedAt": "2026-09-27T16:32:04.631Z"
+    }
+  ],
+  "recordedAt": "2026-09-27T16:32:54.588Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/softmax-normalization-review.md",
+      "reason": "Independent component review records exact file hashes, semantic scope and standard-axiom inspection; it is evidence, not an additional formal contract."
+    },
+    {
+      "path": "docs/foundations/softmax-sum-normalization.md",
+      "reason": "Extended worked example and component-interface teaching detail; essential conditions remain self-contained in Stratic."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Normalize.lean",
+      "reason": "Numerical stages retain an encoded reciprocal intermediate and derive finiteness from input bounds; reviewed independently as the numerical implementation behind the linked fetched correctness theorem."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/NormalizeChecks.lean",
+      "reason": "Boundary fixtures exercise signed inputs, zero signs, scratch aliasing, target/fetch conditions and actual interpreter execution; all public proof declarations are audited and fixtures freshly run."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/NormalizeCorrect.lean",
+      "reason": "Unlinked imports, helper definitions and proof bodies support the linked complete contracts; all new public declarations are registered in the dependency audit and the component proof interfaces were independently reviewed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/NormalizeProgram.lean",
+      "reason": "Two fetched instructions use existing leaf relations; source operands, scratch lifetime, PC advance and unchanged state are explicit. Reviewed independently against linked scalar correctness and existence contracts."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ShiftedExpRange.lean",
+      "reason": "Unlinked imports, helper definitions and proof bodies support the linked complete contracts; all new public declarations are registered in the dependency audit and the component proof interfaces were independently reviewed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxNormalize.lean",
+      "reason": "Numerical stages retain an encoded reciprocal intermediate and derive finiteness from input bounds; reviewed independently as the numerical implementation behind the linked fetched correctness theorem."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SumChecks.lean",
+      "reason": "Boundary fixtures exercise signed inputs, zero signs, scratch aliasing, target/fetch conditions and actual interpreter execution; all public proof declarations are audited and fixtures freshly run."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SumCorrect.lean",
+      "reason": "Unlinked imports, helper definitions and proof bodies support the linked complete contracts; all new public declarations are registered in the dependency audit and the component proof interfaces were independently reviewed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SumExecution.lean",
+      "reason": "Unlinked imports, helper definitions and proof bodies support the linked complete contracts; all new public declarations are registered in the dependency audit and the component proof interfaces were independently reviewed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SumNormalize.lean",
+      "reason": "Numerical stages retain an encoded reciprocal intermediate and derive finiteness from input bounds; reviewed independently as the numerical implementation behind the linked fetched correctness theorem."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SumProgram.lean",
+      "reason": "Unlinked imports, helper definitions and proof bodies support the linked complete contracts; all new public declarations are registered in the dependency audit and the component proof interfaces were independently reviewed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SumTree.lean",
+      "reason": "Unlinked imports, helper definitions and proof bodies support the linked complete contracts; all new public declarations are registered in the dependency audit and the component proof interfaces were independently reviewed."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SumTreeChecks.lean",
+      "reason": "Boundary fixtures exercise signed inputs, zero signs, scratch aliasing, target/fetch conditions and actual interpreter execution; all public proof declarations are audited and fixtures freshly run."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register all 13 new modules, 76 public declarations and three fresh fixture runs in the existing pinned build and audit."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register all 13 new modules, 76 public declarations and three fresh fixture runs in the existing pinned build and audit."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register all 13 new modules, 76 public declarations and three fresh fixture runs in the existing pinned build and audit."
+    },
+    {
+      "path": "stratic/descriptions/shifted-exponential.json",
+      "reason": "Description, summary and passage-link maintenance reviewed with the corresponding description contract."
+    },
+    {
+      "path": "stratic/descriptions/shifted-exponential.md",
+      "reason": "Description, summary and passage-link maintenance reviewed with the corresponding description contract."
+    },
+    {
+      "path": "stratic/descriptions/softmax-sum-normalization.json",
+      "reason": "Description, summary and passage-link maintenance reviewed with the corresponding description contract."
+    },
+    {
+      "path": "stratic/descriptions/softmax-sum-normalization.md",
+      "reason": "Description, summary and passage-link maintenance reviewed with the corresponding description contract."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Description, summary and passage-link maintenance reviewed with the corresponding description contract."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Description, summary and passage-link maintenance reviewed with the corresponding description contract."
+    }
+  ]
+}

@@ -1,3 +1,16 @@
+import PtxBinary32.Normalize
+import PtxBinary32.NormalizeChecks
+import PtxBinary32.NormalizeCorrect
+import PtxBinary32.NormalizeProgram
+import PtxBinary32.ShiftedExpRange
+import PtxBinary32.SoftmaxNormalize
+import PtxBinary32.SumChecks
+import PtxBinary32.SumCorrect
+import PtxBinary32.SumExecution
+import PtxBinary32.SumNormalize
+import PtxBinary32.SumProgram
+import PtxBinary32.SumTree
+import PtxBinary32.SumTreeChecks
 import PtxBinary32.Maximum
 import PtxBinary32.MaximumAddressControl
 import PtxBinary32.MaximumChecks
@@ -2261,3 +2274,81 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.Parallel.Maximum.completed_maximum
 #print axioms Ptx.Scalar.Parallel.Maximum.completed_real_maximum
 #print axioms Ptx.Scalar.Parallel.Maximum.completed_shifted_bounds
+
+-- Bounded sum and scalar normalization public declarations.
+#print axioms Ptx.Binary32.Normalize.Stages
+#print axioms Ptx.Binary32.Normalize.reciprocal_bounds
+#print axioms Ptx.Binary32.Normalize.product_range
+#print axioms Ptx.Binary32.Normalize.correct
+#print axioms Ptx.Binary32.Normalize.stages_exist
+#print axioms Ptx.Scalar.Normalize.Checks.spellings
+#print axioms Ptx.Scalar.Normalize.Checks.missing_fetch
+#print axioms Ptx.Scalar.Normalize.Checks.unsupported_target
+#print axioms Ptx.Scalar.Normalize.Checks.denominator_alias
+#print axioms Ptx.Scalar.Normalize.Checks.numerator_alias_changes_computation
+#print axioms Ptx.Scalar.Normalize.correct
+#print axioms Ptx.Scalar.Normalize.finite_execution_exists
+#print axioms Ptx.Scalar.Normalize.Instr
+#print axioms Ptx.Scalar.Normalize.Event
+#print axioms Ptx.Scalar.Normalize.Eval
+#print axioms Ptx.Scalar.Normalize.Step
+#print axioms Ptx.Scalar.Normalize.Run
+#print axioms Ptx.Scalar.Normalize.reciprocal
+#print axioms Ptx.Scalar.Normalize.multiply
+#print axioms Ptx.Scalar.Normalize.program
+#print axioms Ptx.Scalar.Normalize.text
+#print axioms Ptx.Scalar.Normalize.run_results
+#print axioms Ptx.Scalar.Normalize.execution_exists
+#print axioms Ptx.Binary32.ShiftedExp.output_range
+#print axioms Ptx.Scalar.ShiftedExp.output_range
+#print axioms Ptx.Binary32.SoftmaxNormalize.numerator_bound
+#print axioms Ptx.Binary32.SoftmaxNormalize.denominator_lower
+#print axioms Ptx.Binary32.SoftmaxNormalize.encoded_stages
+#print axioms Ptx.Binary32.SoftmaxNormalize.coordinate_accuracy
+#print axioms Ptx.Scalar.Parallel.Sum.Checks.check
+#print axioms Ptx.Scalar.Parallel.Sum.Checks.run
+#print axioms Ptx.Scalar.Parallel.Sum.valuesAt
+#print axioms Ptx.Scalar.Parallel.Sum.rounded
+#print axioms Ptx.Scalar.Parallel.Sum.ideal_eq_sum
+#print axioms Ptx.Scalar.Parallel.Sum.output_accuracy
+#print axioms Ptx.Scalar.Parallel.Sum.completed_accuracy
+#print axioms Ptx.Scalar.Parallel.Sum.completed
+#print axioms Ptx.Scalar.Parallel.Sum.exists_admitted
+#print axioms Ptx.Scalar.Parallel.SumNormalize.entry
+#print axioms Ptx.Scalar.Parallel.SumNormalize.program
+#print axioms Ptx.Scalar.Parallel.SumNormalize.run_stages
+#print axioms Ptx.Scalar.Parallel.SumNormalize.execution_exists
+#print axioms Ptx.Scalar.Parallel.SumNormalize.completed_coordinate_accuracy
+#print axioms Ptx.Scalar.Parallel.Sum.width
+#print axioms Ptx.Scalar.Parallel.Sum.shape
+#print axioms Ptx.Scalar.Parallel.Sum.Bounds
+#print axioms Ptx.Scalar.Parallel.Sum.global
+#print axioms Ptx.Scalar.Parallel.Sum.outputIndex
+#print axioms Ptx.Scalar.Parallel.Sum.sharedWords
+#print axioms Ptx.Scalar.Parallel.Sum.program
+#print axioms Ptx.Scalar.Parallel.Sum.threads_eq
+#print axioms Ptx.Scalar.Parallel.Sum.outputBase_eq
+#print axioms Ptx.Scalar.Parallel.Sum.globalWords_eq
+#print axioms Ptx.Scalar.Parallel.Sum.sharedWords_eq
+#print axioms Ptx.Scalar.Parallel.Sum.global_length
+#print axioms Ptx.Scalar.Parallel.Sum.global_input
+#print axioms Ptx.Scalar.Parallel.Sum.global_input_bang
+#print axioms Ptx.Scalar.Parallel.Sum.global_weight
+#print axioms Ptx.Scalar.Parallel.Sum.global_bias
+#print axioms Ptx.Scalar.Parallel.Sum.denseBounds
+#print axioms Ptx.Scalar.Parallel.Sum.program_length
+#print axioms Ptx.Scalar.Parallel.Sum.Output
+#print axioms Ptx.Scalar.Parallel.Sum.output_iff
+#print axioms Ptx.Binary32.SumTree.eps_bound
+#print axioms Ptx.Binary32.SumTree.rounded
+#print axioms Ptx.Binary32.SumTree.ideal
+#print axioms Ptx.Binary32.SumTree.budget
+#print axioms Ptx.Binary32.SumTree.ideal_sum
+#print axioms Ptx.Binary32.SumTree.accuracy
+#print axioms Ptx.Binary32.SumTree.add_zero_accuracy
+#print axioms Ptx.Binary32.SumTree.budget_bound
+#print axioms Ptx.Binary32.SumTree.Checks.signed_cancellation
+#print axioms Ptx.Binary32.SumTree.Checks.zero_sign_changes
+#print axioms Ptx.Binary32.SumTree.Checks.subnormal_leaf
+#print axioms Ptx.Binary32.SumTree.Checks.singleton_budget
+#print axioms Ptx.Binary32.SumTree.Checks.largest_budget

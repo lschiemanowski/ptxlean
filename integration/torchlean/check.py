@@ -273,6 +273,21 @@ def snapshot():
     return {str(p): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
 
 
+# Bounded softmax sum and explicit scalar normalization interface.
+COUNTS['Ptx.Binary32.Normalize'] = COUNTS.get('Ptx.Binary32.Normalize', 0) + 5
+COUNTS['Ptx.Binary32.ShiftedExp'] = COUNTS.get('Ptx.Binary32.ShiftedExp', 0) + 1
+COUNTS['Ptx.Binary32.SoftmaxNormalize'] = COUNTS.get('Ptx.Binary32.SoftmaxNormalize', 0) + 4
+COUNTS['Ptx.Binary32.SumTree'] = COUNTS.get('Ptx.Binary32.SumTree', 0) + 8
+COUNTS['Ptx.Binary32.SumTree.Checks'] = COUNTS.get('Ptx.Binary32.SumTree.Checks', 0) + 5
+COUNTS['Ptx.Scalar.Normalize'] = COUNTS.get('Ptx.Scalar.Normalize', 0) + 13
+COUNTS['Ptx.Scalar.Normalize.Checks'] = COUNTS.get('Ptx.Scalar.Normalize.Checks', 0) + 5
+COUNTS['Ptx.Scalar.Parallel.Sum'] = COUNTS.get('Ptx.Scalar.Parallel.Sum', 0) + 27
+COUNTS['Ptx.Scalar.Parallel.Sum.Checks'] = COUNTS.get('Ptx.Scalar.Parallel.Sum.Checks', 0) + 2
+COUNTS['Ptx.Scalar.Parallel.SumNormalize'] = COUNTS.get('Ptx.Scalar.Parallel.SumNormalize', 0) + 5
+COUNTS['Ptx.Scalar.ShiftedExp'] = COUNTS.get('Ptx.Scalar.ShiftedExp', 0) + 1
+TARGETS.update(['PtxBinary32.Normalize', 'PtxBinary32.NormalizeChecks', 'PtxBinary32.NormalizeCorrect', 'PtxBinary32.NormalizeProgram', 'PtxBinary32.ShiftedExpRange', 'PtxBinary32.SoftmaxNormalize', 'PtxBinary32.SumChecks', 'PtxBinary32.SumCorrect', 'PtxBinary32.SumExecution', 'PtxBinary32.SumNormalize', 'PtxBinary32.SumProgram', 'PtxBinary32.SumTree', 'PtxBinary32.SumTreeChecks'])
+
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -323,6 +338,9 @@ def main():
                        cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/MaximumChecks.lean"],
                        cwd=HERE, check=True)
+        for check in ("NormalizeChecks", "SumTreeChecks", "SumChecks"):
+            subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
+                           cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(audit.stdout, end="", flush=True)

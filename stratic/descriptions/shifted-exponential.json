@@ -9,7 +9,8 @@
   "summary": [
     "Compute one shifted natural exponential using four existing PTX instructions and one scratch register.",
     "Derive intermediate finiteness, nonpositivity and all-result accuracy from finite input values and explicit magnitude bounds; return exact positive one when the score equals the supplied maximum.",
-    "Prove four fetched steps exist and preserve unrelated state; leave row-maximum computation and parallel softmax separate."
+    "Prove four fetched steps exist and preserve unrelated state; leave row-maximum computation and parallel softmax separate.",
+    "Every permitted output has magnitude at most two, without assuming positivity or a small accumulated natural-exponential error."
   ],
   "realization": "implemented",
   "links": [
@@ -181,6 +182,18 @@
         }
       },
       "reason": "The final fetched instruction must preserve every admitted finite exponential result and enforce the exact signed-zero special case."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every permitted encoded output also has absolute value at most two. This follows\nfrom the actual nonpositive base-two argument: its ideal exponential lies between\nzero and one, and the instruction allowance is at most 5*2^-24. The result does\nnot require the error budget against exp(x-m) to be small, and it does not assume\nthat approximate outputs are nonnegative. This bound supplies the input-range\ncondition for the parallel sum."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ShiftedExpRange.lean",
+        "passage": {
+          "quote": "theorem output_range (target : Ptx.Target) (s t : Scalar.State)\n    (input maximum destination : Nat) (x m : ℝ)\n    (start : s.pc=0) (scratch : destination≠input)\n    (inputValue : Ptx.Binary32.finiteReal (s.regs input)=some x)\n    (maximumValue : Ptx.Binary32.finiteReal (s.regs maximum)=some m)\n    (bounds : Ptx.Binary32.ShiftedExp.InputBounds x m)\n    (run : Run target (program input maximum destination) s t) :\n    ∃ u, Ptx.Binary32.finiteReal (t.regs destination)=some u ∧ |u|≤2"
+        }
+      }
     }
   ]
 }
