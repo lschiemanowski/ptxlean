@@ -53,6 +53,10 @@ TARGETS.add("PtxBinary32.ExponentialInstruction")
 COUNTS.update({'Ptx.Binary32.ShiftedExp': 6, 'Ptx.Scalar.ShiftedExp': 15, 'Ptx.Scalar.ShiftedExp.Checks': 9})
 TARGETS.update(['PtxBinary32.ShiftedExp', 'PtxBinary32.ShiftedExpProgram', 'PtxBinary32.ShiftedExpChecks'])
 
+# Exact finite maximum and fetched parallel reduction.
+COUNTS.update({'Ptx.Binary32.Maximum': 8, 'Ptx.Scalar.Parallel.Maximum': 134, 'Ptx.Scalar.Parallel.Maximum.Checks': 9, 'Ptx.Scalar.MaximumSelect': 12, 'Ptx.Binary32.Maximum.Tree': 7})
+TARGETS.update(['PtxBinary32.Maximum', 'PtxBinary32.MaximumAddressControl', 'PtxBinary32.MaximumChecks', 'PtxBinary32.MaximumControl', 'PtxBinary32.MaximumCoverage', 'PtxBinary32.MaximumData', 'PtxBinary32.MaximumDataMachine', 'PtxBinary32.MaximumDataRules', 'PtxBinary32.MaximumDataRun', 'PtxBinary32.MaximumDataStep', 'PtxBinary32.MaximumExecution', 'PtxBinary32.MaximumGlobalReads', 'PtxBinary32.MaximumLoadControl', 'PtxBinary32.MaximumLoadSites', 'PtxBinary32.MaximumOwnership', 'PtxBinary32.MaximumProgram', 'PtxBinary32.MaximumReadData', 'PtxBinary32.MaximumReadSources', 'PtxBinary32.MaximumSelect', 'PtxBinary32.MaximumStoreData', 'PtxBinary32.MaximumTree', 'PtxBinary32.MaximumUniversal'])
+
 # Explicit public coverage for the serialized two-kernel and exact VJP slice.
 COUNTS.update({'Ptx.Scalar.Reciprocal': 17, 'Ptx.Scalar.Reciprocal.Text': 6})
 TARGETS.add('PtxBinary32.ReciprocalInstruction')
@@ -316,6 +320,8 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean",
                         "../../formalization/checks/exponential-instruction-v1.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/ShiftedExpChecks.lean"],
+                       cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/MaximumChecks.lean"],
                        cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

@@ -1,3 +1,25 @@
+import PtxBinary32.Maximum
+import PtxBinary32.MaximumAddressControl
+import PtxBinary32.MaximumChecks
+import PtxBinary32.MaximumControl
+import PtxBinary32.MaximumCoverage
+import PtxBinary32.MaximumData
+import PtxBinary32.MaximumDataMachine
+import PtxBinary32.MaximumDataRules
+import PtxBinary32.MaximumDataRun
+import PtxBinary32.MaximumDataStep
+import PtxBinary32.MaximumExecution
+import PtxBinary32.MaximumGlobalReads
+import PtxBinary32.MaximumLoadControl
+import PtxBinary32.MaximumLoadSites
+import PtxBinary32.MaximumOwnership
+import PtxBinary32.MaximumProgram
+import PtxBinary32.MaximumReadData
+import PtxBinary32.MaximumReadSources
+import PtxBinary32.MaximumSelect
+import PtxBinary32.MaximumStoreData
+import PtxBinary32.MaximumTree
+import PtxBinary32.MaximumUniversal
 import PtxBinary32.ShiftedExpChecks
 import PtxBinary32.ExponentialInstruction
 import PtxBinary32.Exponential
@@ -2068,3 +2090,174 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.ShiftedExp.Checks.endpoint_stages
 #print axioms Ptx.Scalar.ShiftedExp.Checks.signed_zero_execution
 #print axioms Ptx.Scalar.ShiftedExp.Checks.negative_shift_execution
+
+#print axioms Ptx.Binary32.Maximum.key
+#print axioms Ptx.Binary32.Maximum.choose
+#print axioms Ptx.Binary32.Maximum.choose_mem
+#print axioms Ptx.Binary32.Maximum.key_order
+#print axioms Ptx.Binary32.Maximum.choose_real
+#print axioms Ptx.Binary32.Maximum.choose_signed_zeros
+#print axioms Ptx.Binary32.Maximum.choose_subnormal_boundaries
+#print axioms Ptx.Binary32.Maximum.choose_self
+#print axioms Ptx.Scalar.Parallel.Maximum.program_address_compatible
+#print axioms Ptx.Scalar.Parallel.Maximum.controlSeed
+#print axioms Ptx.Scalar.Parallel.Maximum.initial_address_control
+#print axioms Ptx.Scalar.Parallel.Maximum.candidate_address_control
+#print axioms Ptx.Scalar.Parallel.Maximum.publish_control_identity
+#print axioms Ptx.Scalar.Parallel.Maximum.round_control_identity
+#print axioms Ptx.Scalar.Parallel.Maximum.rounds_control_identity
+#print axioms Ptx.Scalar.Parallel.Maximum.control_atPC_slice
+#print axioms Ptx.Scalar.Parallel.Maximum.publication_control_address
+#print axioms Ptx.Scalar.Parallel.Maximum.round_control_address
+#print axioms Ptx.Scalar.Parallel.Maximum.output_control_address
+#print axioms Ptx.Scalar.Parallel.Maximum.round_control_active
+#print axioms Ptx.Scalar.Parallel.Maximum.Checks.seed
+#print axioms Ptx.Scalar.Parallel.Maximum.Checks.schedule
+#print axioms Ptx.Scalar.Parallel.Maximum.Checks.execute
+#print axioms Ptx.Scalar.Parallel.Maximum.Checks.singleton
+#print axioms Ptx.Scalar.Parallel.Maximum.Checks.negative_tree
+#print axioms Ptx.Scalar.Parallel.Maximum.Checks.signed_zero_tree
+#print axioms Ptx.Scalar.Parallel.Maximum.Checks.eight_tree
+#print axioms Ptx.Scalar.Parallel.Maximum.Checks.negative_execution
+#print axioms Ptx.Scalar.Parallel.Maximum.Checks.eight_execution
+#print axioms Ptx.Scalar.Parallel.Maximum.program_straight
+#print axioms Ptx.Scalar.Parallel.Maximum.scalar_site_unique
+#print axioms Ptx.Scalar.Parallel.Maximum.scalar_before_arrival
+#print axioms Ptx.Scalar.Parallel.Maximum.scalar_after_completion
+#print axioms Ptx.Scalar.Parallel.Maximum.fetched_store_site
+#print axioms Ptx.Scalar.Parallel.Maximum.trace_store_site
+#print axioms Ptx.Scalar.Parallel.Maximum.fetched_exit_site
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_pc_bound
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_barrier_exists
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_phases
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_input_store
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_round_store
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_output_store
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_input_publication
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_round_publication
+#print axioms Ptx.Scalar.Parallel.Maximum.Data
+#print axioms Ptx.Scalar.Parallel.Maximum.ReadData
+#print axioms Ptx.Scalar.Parallel.Maximum.StoreData
+#print axioms Ptx.Scalar.Parallel.Maximum.initial_data
+#print axioms Ptx.Scalar.Parallel.Maximum.DataInvariant
+#print axioms Ptx.Scalar.Parallel.Maximum.Stores
+#print axioms Ptx.Scalar.Parallel.Maximum.Reads
+#print axioms Ptx.Scalar.Parallel.Maximum.dispatch_data
+#print axioms Ptx.Scalar.Parallel.Maximum.step_data
+#print axioms Ptx.Scalar.Parallel.Maximum.scalar_step_singleton
+#print axioms Ptx.Scalar.Parallel.Maximum.program_segment
+#print axioms Ptx.Scalar.Parallel.Maximum.scalar_data
+#print axioms Ptx.Scalar.Parallel.Maximum.no_fp
+#print axioms Ptx.Scalar.Parallel.Maximum.barrier_data
+#print axioms Ptx.Scalar.Parallel.Maximum.run_data
+#print axioms Ptx.Scalar.Parallel.Maximum.publish_scalar_data
+#print axioms Ptx.Scalar.Parallel.Maximum.round_scalar_data
+#print axioms Ptx.Scalar.Parallel.Maximum.output_scalar_data
+#print axioms Ptx.Scalar.Parallel.Maximum.publishFinish
+#print axioms Ptx.Scalar.Parallel.Maximum.publish_regular
+#print axioms Ptx.Scalar.Parallel.Maximum.publish_effect
+#print axioms Ptx.Scalar.Parallel.Maximum.Ready
+#print axioms Ptx.Scalar.Parallel.Maximum.PublishInvariant
+#print axioms Ptx.Scalar.Parallel.Maximum.publish_invariant_step
+#print axioms Ptx.Scalar.Parallel.Maximum.publish_exists
+#print axioms Ptx.Scalar.Parallel.Maximum.leftIndex
+#print axioms Ptx.Scalar.Parallel.Maximum.nextIndex
+#print axioms Ptx.Scalar.Parallel.Maximum.round_indices
+#print axioms Ptx.Scalar.Parallel.Maximum.roundFinish
+#print axioms Ptx.Scalar.Parallel.Maximum.round_prefix_regular
+#print axioms Ptx.Scalar.Parallel.Maximum.round_regular
+#print axioms Ptx.Scalar.Parallel.Maximum.round_effect
+#print axioms Ptx.Scalar.Parallel.Maximum.RoundInvariant
+#print axioms Ptx.Scalar.Parallel.Maximum.round_reads
+#print axioms Ptx.Scalar.Parallel.Maximum.round_invariant_step
+#print axioms Ptx.Scalar.Parallel.Maximum.round_exists
+#print axioms Ptx.Scalar.Parallel.Maximum.outputFinish
+#print axioms Ptx.Scalar.Parallel.Maximum.output_regular
+#print axioms Ptx.Scalar.Parallel.Maximum.output_effect
+#print axioms Ptx.Scalar.Parallel.Maximum.OutputInvariant
+#print axioms Ptx.Scalar.Parallel.Maximum.output_invariant_step
+#print axioms Ptx.Scalar.Parallel.Maximum.exit_sweep_memory
+#print axioms Ptx.Scalar.Parallel.Maximum.output_exists
+#print axioms Ptx.Scalar.Parallel.Maximum.selected_complete
+#print axioms Ptx.Scalar.Parallel.Maximum.selected_admitted
+#print axioms Ptx.Scalar.Parallel.Maximum.global_load_index
+#print axioms Ptx.Scalar.Parallel.Maximum.global_prefix_unwritten
+#print axioms Ptx.Scalar.Parallel.Maximum.global_read_source
+#print axioms Ptx.Scalar.Parallel.Maximum.publication_read_control
+#print axioms Ptx.Scalar.Parallel.Maximum.round_read_control
+#print axioms Ptx.Scalar.Parallel.Maximum.output_read_control
+#print axioms Ptx.Scalar.Parallel.Maximum.publicationLoad
+#print axioms Ptx.Scalar.Parallel.Maximum.roundLoad
+#print axioms Ptx.Scalar.Parallel.Maximum.outputLoad
+#print axioms Ptx.Scalar.Parallel.Maximum.fetched_load_site
+#print axioms Ptx.Scalar.Parallel.Maximum.candidate_load_address
+#print axioms Ptx.Scalar.Parallel.Maximum.candidate_store_address
+#print axioms Ptx.Scalar.Parallel.Maximum.sharedStorePC
+#print axioms Ptx.Scalar.Parallel.Maximum.candidate_shared_owner
+#print axioms Ptx.Scalar.Parallel.Maximum.candidate_global_owner
+#print axioms Ptx.Scalar.Parallel.Maximum.shared_store_unique
+#print axioms Ptx.Scalar.Parallel.Maximum.global_store_unique
+#print axioms Ptx.Scalar.Parallel.Maximum.candidate_store_unique
+#print axioms Ptx.Scalar.Parallel.Maximum.graph_writer_unique
+#print axioms Ptx.Scalar.Parallel.Maximum.Bounds
+#print axioms Ptx.Scalar.Parallel.Maximum.config
+#print axioms Ptx.Scalar.Parallel.Maximum.initial
+#print axioms Ptx.Scalar.Parallel.Maximum.publishCode
+#print axioms Ptx.Scalar.Parallel.Maximum.publish
+#print axioms Ptx.Scalar.Parallel.Maximum.roundPrefix
+#print axioms Ptx.Scalar.Parallel.Maximum.roundSuffix
+#print axioms Ptx.Scalar.Parallel.Maximum.roundCode
+#print axioms Ptx.Scalar.Parallel.Maximum.round
+#print axioms Ptx.Scalar.Parallel.Maximum.outputCode
+#print axioms Ptx.Scalar.Parallel.Maximum.output
+#print axioms Ptx.Scalar.Parallel.Maximum.program
+#print axioms Ptx.Scalar.Parallel.Maximum.publishCode_length
+#print axioms Ptx.Scalar.Parallel.Maximum.publish_length
+#print axioms Ptx.Scalar.Parallel.Maximum.roundPrefix_length
+#print axioms Ptx.Scalar.Parallel.Maximum.roundSuffix_length
+#print axioms Ptx.Scalar.Parallel.Maximum.roundCode_length
+#print axioms Ptx.Scalar.Parallel.Maximum.round_length
+#print axioms Ptx.Scalar.Parallel.Maximum.outputCode_length
+#print axioms Ptx.Scalar.Parallel.Maximum.output_length
+#print axioms Ptx.Scalar.Parallel.Maximum.program_length
+#print axioms Ptx.Scalar.Parallel.Maximum.bounds_depth
+#print axioms Ptx.Scalar.Parallel.Maximum.width_fits
+#print axioms Ptx.Scalar.Parallel.Maximum.shared_fits
+#print axioms Ptx.Scalar.Parallel.Maximum.children_bound
+#print axioms Ptx.Scalar.Parallel.Maximum.plane_bound
+#print axioms Ptx.Scalar.Parallel.Maximum.publish_fetch
+#print axioms Ptx.Scalar.Parallel.Maximum.program_round_split
+#print axioms Ptx.Scalar.Parallel.Maximum.round_fetch
+#print axioms Ptx.Scalar.Parallel.Maximum.output_fetch
+#print axioms Ptx.Scalar.Parallel.Maximum.scratch_pointer_owner
+#print axioms Ptx.Scalar.Parallel.Maximum.store_node
+#print axioms Ptx.Scalar.Parallel.Maximum.shared_load_node
+#print axioms Ptx.Scalar.Parallel.Maximum.read_data
+#print axioms Ptx.Scalar.Parallel.Maximum.Admitted
+#print axioms Ptx.Scalar.Parallel.Maximum.visible_store
+#print axioms Ptx.Scalar.Parallel.Maximum.plane_publication
+#print axioms Ptx.Scalar.Parallel.Maximum.child_owner
+#print axioms Ptx.Scalar.Parallel.Maximum.shared_read_source
+#print axioms Ptx.Scalar.MaximumSelect.code
+#print axioms Ptx.Scalar.MaximumSelect.code_length
+#print axioms Ptx.Scalar.MaximumSelect.finish
+#print axioms Ptx.Scalar.MaximumSelect.install
+#print axioms Ptx.Scalar.MaximumSelect.keyCode
+#print axioms Ptx.Scalar.MaximumSelect.keyInstall
+#print axioms Ptx.Scalar.MaximumSelect.key_execution
+#print axioms Ptx.Scalar.MaximumSelect.selectCode
+#print axioms Ptx.Scalar.MaximumSelect.selectInstall
+#print axioms Ptx.Scalar.MaximumSelect.select_execution
+#print axioms Ptx.Scalar.MaximumSelect.reference
+#print axioms Ptx.Scalar.MaximumSelect.regular
+#print axioms Ptx.Scalar.Parallel.Maximum.scalar_store_data
+#print axioms Ptx.Binary32.Maximum.Tree.nodeValue
+#print axioms Ptx.Binary32.Maximum.Tree.attained
+#print axioms Ptx.Binary32.Maximum.Tree.subtree_upper
+#print axioms Ptx.Binary32.Maximum.Tree.subtree_maximum
+#print axioms Ptx.Binary32.Maximum.Tree.root_maximum
+#print axioms Ptx.Binary32.Maximum.Tree.magnitude_bound
+#print axioms Ptx.Binary32.Maximum.Tree.root_shifted_bounds
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_maximum
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_real_maximum
+#print axioms Ptx.Scalar.Parallel.Maximum.completed_shifted_bounds

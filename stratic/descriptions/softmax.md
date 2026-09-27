@@ -84,13 +84,16 @@ infinities and NaNs; positive finite inputs remain explicitly unsupported, even
 when their exponentials would be finite. Signed-zero inputs produce exact
 positive one. Its existence theorem requires a disabled predicate or an input
 in that supported domain. This is a partial instruction model, not full ex2
-coverage. The remaining
-foundation does not yet claim that PTX instructions realize all stage contracts,
-that all stage values are realizable binary32 words, or that a kernel executes.
+coverage. These components do not yet establish that a combined softmax kernel
+realizes every stage contract or has a completed execution.
 A bounded four-step scalar sequence now implements one shifted exponential and
 returns exact positive one when the score equals the supplied maximum. It derives
 finite, nonpositive intermediates from its input conditions and preserves every
-permitted final result. Remaining work includes a parallel maximum and sum
-implementation with rounding/range bounds, fetched forward and backward
-programs, admitted execution existence, memory safety and stored-output proofs.
+permitted final result. A parallel maximum component selects an original input
+word that bounds every finite score in a power-of-two row of at most 1024 entries.
+It proves correctness for every completed admitted execution, a separate completed
+execution witness, memory safety and preservation of the input storage.
+Remaining work includes the parallel exponential sum with rounding/range bounds
+and combined softmax forward and backward programs, with admitted execution
+existence, memory safety and stored-output proofs for their composition.
 GPU execution and benchmarking remain deferred.

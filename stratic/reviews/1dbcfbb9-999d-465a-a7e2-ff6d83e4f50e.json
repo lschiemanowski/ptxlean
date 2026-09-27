@@ -1,0 +1,193 @@
+{
+  "id": "1dbcfbb9-999d-465a-a7e2-ff6d83e4f50e",
+  "base": "ffb5ec4866650fe13f2dc293debb83c35cf49362",
+  "contentTree": "6e2e856f6e29c6c7d33c835ead62a7989dbec0d4",
+  "reviewer": "Codex with independent numerical, execution and universal-memory reviewers",
+  "summary": "Prove a parallel finite-row maximum and its shifted-exponential interface. Every completed admitted candidate execution stores an attained maximum; a separate concrete schedule proves completion, admission and access safety. The power-of-two, 1024-entry, single-group limits and remaining combined softmax work are explicit.",
+  "examined": [
+    {
+      "id": "parallel-maximum",
+      "outcome": "revised",
+      "reason": "New finite-word selector, exact tree, fetched parallel program, universal read/value proof, admitted witness and bounded softmax handoff with explicit limits."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "Record completed bounded maximum component while keeping sum and combined softmax execution and error proofs open."
+    },
+    {
+      "id": "shifted-exponential",
+      "outcome": "revised",
+      "reason": "Replace future row-maximum reference with the implemented separate component; scalar numerical contract unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Existing source-fidelity versus kernel-proof distinction and explicit public dependency auditing apply unchanged; register all new declarations and regression checks."
+    },
+    {
+      "id": "exponential-instruction",
+      "outcome": "unchanged",
+      "reason": "Maximum arithmetic supplies its existing nonpositive shifted-score preconditions through the separate scalar component; exponential relation, special cases and missing positive-finite coverage unchanged."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "New small kernel is an example of the existing contracts and explicit execution-domain policy; no change to network scope or Gemma."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Exact bit selection is distinguished from real-value interpretation; all finite inputs, signed zeros and subnormals retained; no new floating approximation or derivative policy."
+    },
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "unchanged",
+      "reason": "The maximum uses integer selection with zero rounding error and supplies bounds to existing exponentiation; existing approximate neighborhoods and ULP interpretations unchanged."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "6e2e856f6e29c6c7d33c835ead62a7989dbec0d4",
+      "method": "bash scripts/check.sh; python3 integration/torchlean/check.py; stratic validate; independent semantic and proof reviews of finite key ordering, actual instruction selector, memory/read-source derivation, final universal theorem and shifted-exponential handoff; before/after snapshot equality",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; integration checked 16 dependency revisions including TorchLean de3192df4779877ceb65cfe470a4d4ce9d480a5b; existing PTX 9.4 / SM 70 fragment; no GPU execution or external model calls.",
+      "evidence": "Root source/build/regression checks passed with 1643 dependency reports. Integration checked 201 Lean sources, passed all regression executions including MaximumChecks, and audited 2017 exact declaration reports with only propext, Classical.choice and Quot.sound. Sources and configuration unchanged during verification; Stratic tree identical before/after. Three independent agents authored/reviewed numerical, concrete-execution and universal-memory portions with cross-review of final interfaces and proof. No substantive review blocker. Logs /tmp/maximum-root-check.log and /tmp/maximum-integration-check.log.",
+      "tests": [],
+      "id": "68135e61-adcb-46e1-a009-aa17cb10c8ee",
+      "recordedAt": "2026-09-27T14:07:49.218Z"
+    }
+  ],
+  "recordedAt": "2026-09-27T14:08:30.719Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/parallel-maximum.md",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/Maximum.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumAddressControl.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumChecks.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumControl.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumCoverage.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumData.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumDataMachine.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumDataRules.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumDataRun.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumDataStep.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumExecution.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumGlobalReads.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumLoadControl.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumLoadSites.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumOwnership.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumProgram.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumReadData.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumReadSources.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumSelect.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumStoreData.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumTree.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/MaximumUniversal.lean",
+      "reason": "Auxiliary proofs, imports and private arithmetic/control lemmas implement the linked public maximum contracts; independent reviews cover their role."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    },
+    {
+      "path": "stratic/descriptions/parallel-maximum.json",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    },
+    {
+      "path": "stratic/descriptions/parallel-maximum.md",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    },
+    {
+      "path": "stratic/descriptions/shifted-exponential.json",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    },
+    {
+      "path": "stratic/descriptions/shifted-exponential.md",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Reviewed support change: exact audit/target registration, description/link maintenance or extended maximum study walkthrough; no additional behavioral contract."
+    }
+  ]
+}

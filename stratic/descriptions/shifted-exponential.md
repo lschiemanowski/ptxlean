@@ -1,8 +1,8 @@
 # One shifted exponential
 
 This component computes an approximation to exp(x-m) for one finite stored score
-x and a supplied finite upper bound m. A later row-maximum computation must
-establish that its output is such an upper bound. Here x and m mean the exact
+x and a supplied finite upper bound m. The separate parallel maximum component
+establishes that property for finite power-of-two rows. Here x and m mean the exact
 real values of the input binary32 words, not unrounded external data.
 
 The program uses four already modeled instructions: multiply m by exact minus

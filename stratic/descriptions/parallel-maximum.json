@@ -1,0 +1,414 @@
+{
+  "id": "parallel-maximum",
+  "parent": {
+    "description": "softmax",
+    "passage": {
+      "quote": "A parallel maximum component selects an original input\nword that bounds every finite score in a power-of-two row of at most 1024 entries.\nIt proves correctness for every completed admitted execution, a separate completed\nexecution witness, memory safety and preservation of the input storage."
+    }
+  },
+  "summary": [
+    "Select an attained upper bound for every finite input in a power-of-two row using an exact integer-key selector.",
+    "Use actual fetched shared-memory tree phases with fresh storage and full-group barriers, including inactive threads.",
+    "Separate universal admitted-execution correctness from completed execution existence, memory safety and hardware claims."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This component selects a maximum from a nonempty power-of-two row of finite\nbinary32 words. One cooperating thread array, a group whose threads can share\nmemory and wait at a common barrier, handles the row. The first domain has at\nmost 1024 entries. The result is an original input word, its real value is at\nleast every input's value, and some input attains it. Both signs of zero and\nsubnormal values are included; NaNs and infinities are outside the real theorem."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Maximum.lean",
+        "passage": {
+          "quote": "theorem choose_real (a b : Word) (x y : ℝ)\n    (ha : finiteReal a = some x) (hb : finiteReal b = some y) :\n    finiteReal (choose a b) = some (max x y)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The pairwise selector compares ordered integer keys derived from the floating\nencodings. Nonnegative encodings have their sign bit flipped; negative encodings\nhave every bit flipped. Unsigned key comparison then agrees with real ordering\non finite inputs. Selection returns one original word without arithmetic rounding.\nPositive zero wins over negative zero; identical keys choose the left input.\nThe implementation uses existing integer comparisons, bit operations and moves,\nnot an assumed floating maximum operation or a new max.f32 instruction model."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/Maximum.lean",
+        "passage": {
+          "quote": "theorem key_order (a b : Word) (x y : ℝ)\n    (ha : finiteReal a = some x) (hb : finiteReal b = some y)\n    (h : (key a).toNat ≤ (key b).toNat) : x ≤ y"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The pairwise selector compares ordered integer keys derived from the floating\nencodings. Nonnegative encodings have their sign bit flipped; negative encodings\nhave every bit flipped. Unsigned key comparison then agrees with real ordering\non finite inputs. Selection returns one original word without arithmetic rounding.\nPositive zero wins over negative zero; identical keys choose the left input.\nThe implementation uses existing integer comparisons, bit operations and moves,\nnot an assumed floating maximum operation or a new max.f32 instruction model."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumSelect.lean",
+        "passage": {
+          "quote": "theorem reference (cfg : Parallel.Config n) (t : Fin n) (s : Parallel.State n) :\n    (Parallel.segmentReference cfg t code s).1 = install s t"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The pairwise selector compares ordered integer keys derived from the floating\nencodings. Nonnegative encodings have their sign bit flipped; negative encodings\nhave every bit flipped. Unsigned key comparison then agrees with real ordering\non finite inputs. Selection returns one original word without arithmetic rounding.\nPositive zero wins over negative zero; identical keys choose the left input.\nThe implementation uses existing integer comparisons, bit operations and moves,\nnot an assumed floating maximum operation or a new max.f32 instruction model."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumSelect.lean",
+        "passage": {
+          "quote": "theorem regular (cfg : Parallel.Config n) (t : Fin n) (s : Parallel.State n) :\n    SegmentRegular cfg t code s"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each thread loads its input from global storage and publishes it in shared\nstorage. A complete group barrier separates publication from reduction. At each\nlevel, active threads combine disjoint pairs from the previous shared plane and\nwrite the chosen words into a fresh plane. A plane is a separate allocated region\nlarge enough for one word per thread. Inactive threads skip pair reads and writes\nbut still reach every barrier. Fresh planes prevent a writer from overwriting a\nvalue that another thread still needs. Thread zero writes the root to a separate\nglobal output cell; all threads then exit through fetched instructions. For n=2^depth\ninputs, global storage needs at least n+1 words, with output at index n; shared\nstorage needs at least (depth+1)*n words. Each word occupies four bytes. The\none-entry case still publishes, synchronizes and stores, with no reduction round."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumProgram.lean",
+        "passage": {
+          "quote": "def program (depth : Nat) : List Instr :=\n  publish ++ (List.range depth).flatMap (round depth) ++ output depth"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each thread loads its input from global storage and publishes it in shared\nstorage. A complete group barrier separates publication from reduction. At each\nlevel, active threads combine disjoint pairs from the previous shared plane and\nwrite the chosen words into a fresh plane. A plane is a separate allocated region\nlarge enough for one word per thread. Inactive threads skip pair reads and writes\nbut still reach every barrier. Fresh planes prevent a writer from overwriting a\nvalue that another thread still needs. Thread zero writes the root to a separate\nglobal output cell; all threads then exit through fetched instructions. For n=2^depth\ninputs, global storage needs at least n+1 words, with output at index n; shared\nstorage needs at least (depth+1)*n words. Each word occupies four bytes. The\none-entry case still publishes, synchronizes and stores, with no reduction round."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumExecution.lean",
+        "passage": {
+          "quote": "theorem selected_complete (b : Bounds d) (global shared : List Word) (seeds : Fin (width d)→Scalar.State)\n    (gb : width d+1≤global.length) (sb : sharedWords d≤shared.length) :\n    ∃events final,ConcreteRuns (config d) (program d) (initial d global shared seeds) events final ∧\n      final.global=global.set (width d) (nodeValue global d 0) ∧\n      (∀t,(final.lanes t).halted=true) ∧ final.shared.length=shared.length ∧\n      ∀event∈events,AccessSafe (initial d global shared seeds) event"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumControl.lean",
+        "passage": {
+          "quote": "theorem program_straight (d : Nat) : Control.Straight (program d)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumAddressControl.lean",
+        "passage": {
+          "quote": "theorem candidate_address_control (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d) → Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final) :\n    AddressControl.Invariant (program d) (controlSeed d seeds) final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumOwnership.lean",
+        "passage": {
+          "quote": "theorem candidate_store_unique (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d) → Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (p q : Nat) (t u : Fin (width d)) (space seen : Space) (e f : Scalar.Occurrence) (a z : MemoryEffect)\n    (hp : events[p]?=some (.scalar t (some space) e)) (hq : events[q]?=some (.scalar u (some seen) f))\n    (he : e.memory=some a) (hf : f.memory=some z) (ha : a.kind=.store) (hz : z.kind=.store)\n    (same : (Memory.location space a.address).code=(Memory.location seen z.address).code) : p=q"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumCoverage.lean",
+        "passage": {
+          "quote": "theorem completed_round_publication (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d) → Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (k : Nat) (hk : k<d) :\n    ∃ phase : History.Phase events, phase.key.site=6+24*k+23 ∧ ∀ t,\n      t.val<2^(d-(k+1)) →\n      ∃ (p : Nat) (occ : Scalar.Occurrence) (effect : MemoryEffect),\n        events[p]?=some (.scalar t (some .shared) occ) ∧ occ.pc=6+24*k+22 ∧\n        occ.memory=some effect ∧ effect.kind=.store ∧ effect.address=bytePointer (((k+1)*width d+t.val)) ∧\n        p<History.arrivalPosition (History.completed_arrivals run rfl) phase t"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumLoadControl.lean",
+        "passage": {
+          "quote": "theorem round_read_control (b : Bounds d) (seeds : Fin (width d)→Scalar.State)\n    (t : Fin (width d)) (k : Nat) (hk : k<d) (right : Bool) :\n    let j"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumLoadSites.lean",
+        "passage": {
+          "quote": "theorem candidate_load_address (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d)→Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (t : Fin (width d)) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (member : .scalar t (some space) occ ∈ events) (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    (occ.pc=3 ∧ space=.global ∧ effect.address=bytePointer t.val) ∨\n    (∃ k, k<d ∧ ∃ right : Bool, occ.pc=6+24*k+(if right then 8 else 7) ∧ space=.shared ∧\n      t.val<2^(d-(k+1)) ∧ effect.address=bytePointer (k*width d+2*t.val+if right then 1 else 0)) ∨\n    (occ.pc=6+24*d+5 ∧ space=.shared ∧ t.val=0 ∧ effect.address=bytePointer (d*width d))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumReadSources.lean",
+        "passage": {
+          "quote": "theorem shared_read_source (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d)→Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co) (valid : Admitted d b global shared seeds run source co)\n    (q : Nat) (reader : Fin (width d)) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atQ : events[q]?=some (.scalar reader (some .shared) occ))\n    (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    ∃ (p : Nat) (writer : Fin (width d)) (storeOcc : Scalar.Occurrence) (stored : MemoryEffect),\n      events[p]?=some (.scalar writer (some .shared) storeOcc) ∧ storeOcc.memory=some stored ∧\n      stored.kind=.store ∧ stored.address=effect.address ∧ effect.value=stored.value ∧ p<q"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumGlobalReads.lean",
+        "passage": {
+          "quote": "theorem global_read_source (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d) → Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (source co) (valid : Admitted d b global shared seeds run source co)\n    (q : Nat) (t : Fin (width d)) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atQ : events[q]?=some (.scalar t (some .global) occ))\n    (memory : occ.memory=some effect) (load : effect.kind=.load) :\n    ∃ i, i<width d ∧ i<global.length ∧ effect.address=bytePointer i ∧ effect.value=global[i]!"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumData.lean",
+        "passage": {
+          "quote": "structure Data (d : Nat) (global : List Word) (t : Fin (width d)) (a : Scalar.State) : Prop where\n  tid : a.regs 0=BitVec.ofNat 32 t.val\n  publication : 4≤a.pc → a.pc≤5 → a.regs 4=global[t.val]!\n  roundGate : ∀ k<d, 6+24*k+1≤a.pc → a.pc≤6+24*k+23 → a.preds 0=decide (t.val<2^(d-(k+1)))\n  left : ∀ k<d, 6+24*k+8≤a.pc → a.pc≤6+24*k+18 → t.val<2^(d-(k+1)) → a.regs 4=node global k (2*t.val)\n  right : ∀ k<d, 6+24*k+9≤a.pc → a.pc≤6+24*k+18 → t.val<2^(d-(k+1)) → a.regs 5=node global k (2*t.val+1)\n  leftSign : ∀ k<d, 6+24*k+10≤a.pc → a.pc≤6+24*k+11 → a.preds 1=decide ((a.regs 4).toNat≥2147483648)\n  leftRaw : ∀ k<d, a.pc=6+24*k+11 → a.regs 8=a.regs 4 ^^^ 0x80000000\n  leftKey : ∀ k<d, 6+24*k+12≤a.pc → a.pc≤6+24*k+18 → a.regs 8=key (a.regs 4)\n  rightSign : ∀ k<d, 6+24*k+13≤a.pc → a.pc≤6+24*k+14 → a.preds 1=decide ((a.regs 5).toNat≥2147483648)\n  rightRaw : ∀ k<d, a.pc=6+24*k+14 → a.regs 9=a.regs 5 ^^^ 0x80000000\n  rightKey : ∀ k<d, 6+24*k+15≤a.pc → a.pc≤6+24*k+18 → a.regs 9=key (a.regs 5)\n  compare : ∀ k<d, 6+24*k+16≤a.pc → a.pc≤6+24*k+17 → a.preds 1=decide ((key (a.regs 4)).toNat<(key (a.regs 5)).toNat)\n  selectedLeft : ∀ k<d, a.pc=6+24*k+17 → a.regs 6=a.regs 4\n  reduced : ∀ k<d, 6+24*k+18≤a.pc → a.pc≤6+24*k+23 → t.val<2^(d-(k+1)) → a.regs 6=node global (k+1) t.val\n  outputGate : 6+24*d+1≤a.pc → a.pc≤6+24*d+11 → a.preds 0=decide (t.val=0)\n  root : 6+24*d+6≤a.pc → a.pc≤6+24*d+11 → t.val=0 → a.regs 6=node global d 0"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumDataStep.lean",
+        "passage": {
+          "quote": "theorem round_scalar_data (d : Nat) (b : Bounds d) (global : List Word) (t : Fin (width d))\n    (a next : Scalar.State) (i : Scalar.Instr) (occ : Scalar.Occurrence) (k j : Nat) (hk : k<d) (hj : j<24)\n    (site : a.pc=6+24*k+j) (data : Data d global t a)\n    (fetch : (round d k)[j]?=some (.localStep i) ∨ ∃ space, (round d k)[j]?=some (.memory space i))\n    (evaluated : Scalar.eval candidate i a=.next next occ)\n    (reads : ∀ effect, occ.memory=some effect → effect.kind=.load → ReadData d global t occ.pc effect.value) :\n    Data d global t next"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumDataRules.lean",
+        "passage": {
+          "quote": "theorem scalar_data (d : Nat) (b : Bounds d) (global : List Word) (t : Fin (width d))\n    (a next : Scalar.State) (i : Scalar.Instr) (occ : Scalar.Occurrence) (data : Data d global t a)\n    (fetch : (program d)[a.pc]?=some (.localStep i) ∨ ∃ space, (program d)[a.pc]?=some (.memory space i))\n    (evaluated : Scalar.eval candidate i a=.next next occ)\n    (reads : ∀ effect, occ.memory=some effect → effect.kind=.load → ReadData d global t occ.pc effect.value) :\n    Data d global t next"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumDataMachine.lean",
+        "passage": {
+          "quote": "theorem step_data (d : Nat) (b : Bounds d) (global : List Word)\n    {state : Parallel.State (width d)} {candidate : Option Word} {t : Fin (width d)} {out : Outcome (width d)} (step : Step (config d) (program d) candidate t state out)\n    (inv : DataInvariant d global state) (aligned : Aligned state) (reads : Reads d global out.events) :\n    DataInvariant d global out.state ∧ Stores d global out.events"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumStoreData.lean",
+        "passage": {
+          "quote": "theorem scalar_store_data (d : Nat) (global : List Word) (t : Fin (width d))\n    (a next : Scalar.State) (i : Scalar.Instr) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (data : Data d global t a) (fetch : (program d)[a.pc]?=some (.memory space i))\n    (evaluated : Scalar.eval candidate i a=.next next occ) (memory : occ.memory=some effect) (store : effect.kind=.store) :\n    StoreData d global t occ.pc effect.value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumReadData.lean",
+        "passage": {
+          "quote": "theorem read_data (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d)→Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co) (valid : Admitted d b global shared seeds run source co)\n    (q : Nat) (reader : Fin (width d)) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atQ : events[q]?=some (.scalar reader (some space) occ))\n    (memory : occ.memory=some effect) (load : effect.kind=.load)\n    (past : ∀ p<q, ∀ (writer : Fin (width d)) (so : Scalar.Occurrence) (stored : MemoryEffect),\n      events[p]?=some (.scalar writer (some .shared) so) → so.memory=some stored → stored.kind=.store →\n      StoreData d global writer so.pc stored.value) : ReadData d global reader occ.pc effect.value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumDataRun.lean",
+        "passage": {
+          "quote": "theorem run_data (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d) → Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co) (valid : Admitted d b global shared seeds run source co) :\n    DataInvariant d global final ∧ Stores d global events"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Two execution claims are distinct. Every completed admitted execution has an\nupper-bound result attained by an input. Separately, a concrete finite schedule\nconstructs a completed execution and an admitted memory graph. Successful\ncompletion, safety of emitted accesses and memory admission are separate proof\nobligations; a safe prefix alone is not a termination proof. No hardware fairness,\nperformance, launch or benchmarking claim follows from these results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumUniversal.lean",
+        "passage": {
+          "quote": "theorem completed_maximum (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d)→Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co) (valid : Admitted d b global shared seeds run source co) :\n    final.global[width d]?=some (node global d 0) ∧\n    (∀ i, i<width d → final.global[i]?=global[i]?) ∧\n    final.global.length=global.length ∧ final.shared.length=shared.length ∧\n    (∀ event ∈ events, AccessSafe (initial d global shared seeds) event)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Two execution claims are distinct. Every completed admitted execution has an\nupper-bound result attained by an input. Separately, a concrete finite schedule\nconstructs a completed execution and an admitted memory graph. Successful\ncompletion, safety of emitted accesses and memory admission are separate proof\nobligations; a safe prefix alone is not a termination proof. No hardware fairness,\nperformance, launch or benchmarking claim follows from these results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumUniversal.lean",
+        "passage": {
+          "quote": "theorem completed_real_maximum (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d)→Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co) (valid : Admitted d b global shared seeds run source co)\n    (values : Nat→ℝ) (finite : ∀ i, i<width d → Ptx.Binary32.finiteReal (global[i]!) = some (values i)) :\n    ∃ result m, final.global[width d]?=some result ∧ Ptx.Binary32.finiteReal result=some m ∧\n      (∀ i, i<width d → values i≤m) ∧ ∃ i, i<width d ∧ result=global[i]! ∧ m=values i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Two execution claims are distinct. Every completed admitted execution has an\nupper-bound result attained by an input. Separately, a concrete finite schedule\nconstructs a completed execution and an admitted memory graph. Successful\ncompletion, safety of emitted accesses and memory admission are separate proof\nobligations; a safe prefix alone is not a termination proof. No hardware fairness,\nperformance, launch or benchmarking claim follows from these results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumExecution.lean",
+        "passage": {
+          "quote": "theorem selected_admitted (b : Bounds d) (global shared : List Word) (seeds : Fin (width d)→Scalar.State)\n    (gb : width d+1≤global.length) (sb : sharedWords d≤shared.length) :\n    ∃events final,∃run : ConcreteRuns (config d) (program d) (initial d global shared seeds) events final,\n      ∃source co,\n      Graph.Ordered.Valid (Memory.graph (program d) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial d global shared seeds).barrier=Barrier.reset 0 from rfl) source co).cross ∧\n      (∀i,¬Path (SharedReduction.Machine.Memory.grounding\n        (Memory.graph (program d) global shared events source co)\n        (Memory.runOrder run.toRuns (show (initial d global shared seeds).barrier=Barrier.reset 0 from rfl) source co).cross) i i) ∧\n      final.global=global.set (width d) (nodeValue global d 0) ∧\n      (∀t,(final.lanes t).halted=true) ∧ final.shared.length=shared.length ∧\n      ∀event∈events,AccessSafe (initial d global shared seeds) event"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The returned maximum preserves any common input-magnitude bound. In particular,\ninputs bounded by 2^124 meet the magnitude and ordering premises of the shifted\nexponential when paired with this result. Attainment supplies a score whose\nshifted exponential is exactly positive one. Linking these components into a\ncomplete softmax forward program still requires its sum and normalization.\nArbitrary row lengths, masked rows and groups larger than this first domain need\nseparate extensions; padding must not introduce a spurious zero maximum into an\nall-negative row.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumTree.lean",
+        "passage": {
+          "quote": "theorem root_shifted_bounds (input : Nat → Word) (values : Nat → ℝ) (depth : Nat)\n    (finite : ∀i, i<2^depth → finiteReal (input i) = some (values i))\n    (small : ∀i, i<2^depth → |values i| ≤ (2:ℝ)^(124:ℤ)) :\n    ∃ m, finiteReal (nodeValue input depth 0) = some m ∧\n      (∀i, i<2^depth → ShiftedExp.InputBounds (values i) m) ∧\n      ∃i, i<2^depth ∧ nodeValue input depth 0 = input i ∧ m = values i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The returned maximum preserves any common input-magnitude bound. In particular,\ninputs bounded by 2^124 meet the magnitude and ordering premises of the shifted\nexponential when paired with this result. Attainment supplies a score whose\nshifted exponential is exactly positive one. Linking these components into a\ncomplete softmax forward program still requires its sum and normalization.\nArbitrary row lengths, masked rows and groups larger than this first domain need\nseparate extensions; padding must not introduce a spurious zero maximum into an\nall-negative row.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumUniversal.lean",
+        "passage": {
+          "quote": "theorem completed_shifted_bounds (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d)→Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final)\n    (halted : ∀ t, (final.lanes t).halted=true) (source co) (valid : Admitted d b global shared seeds run source co)\n    (values : Nat→ℝ) (finite : ∀ i, i<width d → Ptx.Binary32.finiteReal (global[i]!) = some (values i))\n    (small : ∀ i, i<width d → |values i|≤(2:ℝ)^(124:ℤ)) :\n    ∃ result m, final.global[width d]?=some result ∧ Ptx.Binary32.finiteReal result=some m ∧\n      (∀ i, i<width d → Ptx.Binary32.ShiftedExp.InputBounds (values i) m) ∧\n      ∃ i, i<width d ∧ result=global[i]! ∧ m=values i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each thread loads its input from global storage and publishes it in shared\nstorage. A complete group barrier separates publication from reduction. At each\nlevel, active threads combine disjoint pairs from the previous shared plane and\nwrite the chosen words into a fresh plane. A plane is a separate allocated region\nlarge enough for one word per thread. Inactive threads skip pair reads and writes\nbut still reach every barrier. Fresh planes prevent a writer from overwriting a\nvalue that another thread still needs. Thread zero writes the root to a separate\nglobal output cell; all threads then exit through fetched instructions. For n=2^depth\ninputs, global storage needs at least n+1 words, with output at index n; shared\nstorage needs at least (depth+1)*n words. Each word occupies four bytes. The\none-entry case still publishes, synchronizes and stores, with no reduction round."
+      },
+      "to": {
+        "path": "docs/foundations/parallel-maximum.md",
+        "passage": {
+          "quote": "For n=2^depth, shared storage contains at least `(depth+1)*n` words, and global\nstorage contains at least `n+1` words. Global cells 0 through n−1 are inputs;\ncell n is the output. Plane k starts at shared word k*n. The program computes\nbyte addresses by multiplying these word indices by four. Its checked bounds\nprevent wrapping and ensure alignment and valid array access."
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The returned maximum preserves any common input-magnitude bound. In particular,\ninputs bounded by 2^124 meet the magnitude and ordering premises of the shifted\nexponential when paired with this result. Attainment supplies a score whose\nshifted exponential is exactly positive one. Linking these components into a\ncomplete softmax forward program still requires its sum and normalization.\nArbitrary row lengths, masked rows and groups larger than this first domain need\nseparate extensions; padding must not introduce a spurious zero maximum into an\nall-negative row.\n"
+      },
+      "to": {
+        "description": "shifted-exponential",
+        "passage": {
+          "quote": "Write z=round32(x-m), where round32 rounds to the nearest binary32 grid value,\nchoosing the value with an even final bit on a tie. The shift error is at most\neps32(x-m), the half-ULP rounding allowance. Every permitted final output is finite\nand differs from exp(x-m) by at most\n`5*2^-24 + log(2)*ExpArgument.budget(z,eps32(x-m))`.\nThe total bound includes addition rounding, approximation of 1/log(2), multiplication\nrounding and the exponential allowance. When x=m, the final word is exactly positive one, including differently signed\nzero inputs. The exponential preserves both named ULP\nspacing interpretations; no unique hardware result is selected."
+        }
+      },
+      "reason": "The attained finite maximum and common magnitude bound discharge the shifted-exponential ordering and range premises; its equal-score theorem supplies exact positive one."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Two execution claims are distinct. Every completed admitted execution has an\nupper-bound result attained by an input. Separately, a concrete finite schedule\nconstructs a completed execution and an admitted memory graph. Successful\ncompletion, safety of emitted accesses and memory admission are separate proof\nobligations; a safe prefix alone is not a termination proof. No hardware fairness,\nperformance, launch or benchmarking claim follows from these results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumChecks.lean",
+        "passage": {
+          "quote": "theorem negative_execution :\n    (execute 2 [0xc0800000,0xc0000000,0xc1000000,0xbf800000]).1.global=\n      [0xc0800000,0xc0000000,0xc1000000,0xbf800000,0xbf800000] ∧\n    (∀t,((execute 2 [0xc0800000,0xc0000000,0xc1000000,0xbf800000]).1.lanes t).halted=true) ∧\n    (execute 2 [0xc0800000,0xc0000000,0xc1000000,0xbf800000]).1.barrier.generation=3"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumProgram.lean",
+        "passage": {
+          "quote": "def initial (depth : Nat) (global shared : List Word) (seeds : Fin (width depth) → Scalar.State) : State (width depth) :=\n  ⟨fun t => ⟨{seeds t with pc := 0,regs := Scalar.update (seeds t).regs 0 (BitVec.ofNat 32 t.val)},false⟩,\n    global,shared,Barrier.reset 0,none⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The program computes addresses and active-thread conditions from supplied thread\nidentities and fixed row dimensions. Register r0 initially holds each thread's\nidentity; other registers and shared contents may be arbitrary. The modeled\ntarget is PTX 9.4 with SM version 70. Allocation, address nonwrapping, bounds and\nalignment must be established for its actual accesses. Input global storage is\npreserved. The result follows from actual fetched instructions and admitted read\nobservations: candidate loads cannot simply be assumed to return the desired\nvalues. Completed barriers, unique writers and fresh storage establish which\nwrites can supply each read."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumProgram.lean",
+        "passage": {
+          "quote": "def config (depth : Nat) : Config (width depth) := ⟨⟨94,70⟩,0,Nat.two_pow_pos _⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This component selects a maximum from a nonempty power-of-two row of finite\nbinary32 words. One cooperating thread array, a group whose threads can share\nmemory and wait at a common barrier, handles the row. The first domain has at\nmost 1024 entries. The result is an original input word, its real value is at\nleast every input's value, and some input attains it. Both signs of zero and\nsubnormal values are included; NaNs and infinities are outside the real theorem."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumProgram.lean",
+        "passage": {
+          "quote": "def Bounds (depth : Nat) : Prop := width depth ≤ 1024"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Two execution claims are distinct. Every completed admitted execution has an\nupper-bound result attained by an input. Separately, a concrete finite schedule\nconstructs a completed execution and an admitted memory graph. Successful\ncompletion, safety of emitted accesses and memory admission are separate proof\nobligations; a safe prefix alone is not a termination proof. No hardware fairness,\nperformance, launch or benchmarking claim follows from these results."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/MaximumReadSources.lean",
+        "passage": {
+          "quote": "def Admitted (d : Nat) (b : Bounds d) (global shared : List Word)\n    (seeds : Fin (width d) → Scalar.State) {events : List (Event (width d))} {final : Parallel.State (width d)}\n    (run : Runs (config d) (program d) (initial d global shared seeds) events final) (source : Fin (Memory.labels (program d) global shared events).length → Fin (Memory.labels (program d) global shared events).length)\n    (co : Fin (Memory.labels (program d) global shared events).length → Fin (Memory.labels (program d) global shared events).length → Bool) : Prop :=\n  Graph.Ordered.Valid (Memory.graph (program d) global shared events source co)\n    (Memory.runOrder run rfl source co).cross"
+        }
+      }
+    }
+  ]
+}

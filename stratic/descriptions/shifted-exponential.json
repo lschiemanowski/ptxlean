@@ -16,7 +16,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "This component computes an approximation to exp(x-m) for one finite stored score\nx and a supplied finite upper bound m. A later row-maximum computation must\nestablish that its output is such an upper bound. Here x and m mean the exact\nreal values of the input binary32 words, not unrounded external data."
+        "quote": "This component computes an approximation to exp(x-m) for one finite stored score\nx and a supplied finite upper bound m. The separate parallel maximum component\nestablishes that property for finite power-of-two rows. Here x and m mean the exact\nreal values of the input binary32 words, not unrounded external data."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/ShiftedExp.lean",
