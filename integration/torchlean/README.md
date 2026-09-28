@@ -275,6 +275,14 @@ A sequential elementwise reference permits exactly the same final arrays. It pro
 bounded power-of-two rows up to 1024 scores, and stored-output error against
 TorchLean under an explicit accumulated-error guard. The approximation policy
 retains both reviewed ULP conventions rather than claiming a unique hardware
-interpretation. Fused execution, masks, general row
-sizes and backward execution remain open. No GPU run or benchmark is needed
-for these checks.
+interpretation.
+
+The [parallel backward pipeline](../../docs/foundations/softmax-backward.md)
+uses those actual stored forward outputs in a dot reduction, difference pass
+and multiplication pass. It proves completed-run correctness, independent
+existence, memory safety and error against TorchLean's true real VJP, including
+inherited forward error. Accuracy additionally bounds finite incoming
+sensitivities by 2^60; intermediate finiteness is derived. The checks include
+interleaved executions and a universal singleton zero-gradient theorem.
+Fused execution, masks and general row sizes remain open. No GPU run or
+benchmark is needed for these checks.

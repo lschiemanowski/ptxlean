@@ -1,0 +1,210 @@
+{
+  "id": "0e0a326a-d6f1-4ee0-9903-51e73d642016",
+  "base": "8c2e3f4289eef4edc66e775aa859a26adc6d8a8c",
+  "contentTree": "4c781c558aecd12b6908211cdc597984a93df9f4",
+  "reviewer": "Codex with independent backward_pointwise, backward_numerics and backward_dot reviews",
+  "summary": "Prove parallel softmax backward from actual stored forward outputs",
+  "examined": [
+    {
+      "id": "parallel-elementwise",
+      "outcome": "revised",
+      "reason": "Clarified that the separate backward uses the existing two-input pointwise machine; forward exponential/reciprocal adapter and its output-equivalence contract are unchanged. Reviewed summary and exact passage links."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "Added the completed actual-storage parallel backward responsibility and corrected future-tense scope. The real VJP and composed error policy are preserved; summary and affected quote links were reviewed."
+    },
+    {
+      "id": "softmax-backward",
+      "outcome": "revised",
+      "reason": "Description-first bounded backward contract now implemented: actual dot/difference/product launches, read-only operands, general correctness, independent existence, memory safety and inherited-forward-error bound against true TorchLean VJP. Independent agents reviewed numerical proofs, execution and final composition; doc corrections applied."
+    },
+    {
+      "id": "softmax-sum-normalization",
+      "outcome": "revised",
+      "reason": "Only its parent exact passage quote follows the new softmax backward paragraph. Sum/normalization responsibilities and summary remain accurate; no instruction or numerical policy changed."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Integration checker registers all 76 new public endpoints and 15 modules, freshly evaluates new fixtures and preserves pinned dependencies, forbidden-token checks and exact standard-axiom whitelist. No semantic-fidelity or hardware claim added."
+    },
+    {
+      "id": "dense-layer",
+      "outcome": "unchanged",
+      "reason": "Inspected dense and grid backward consumers of the generic pointwise Op: added difference is additive; existing copy, multiplication and ReLU-gate results unchanged. Reused dense affine reduction with one row and positive-zero bias; existing shape, memory and numeric contracts retained."
+    },
+    {
+      "id": "grid-execution",
+      "outcome": "unchanged",
+      "reason": "Inspected grid pointwise consumers: generic theorems extend to added difference constructor without altering old operation results, padding or ownership. New softmax backward uses one bounded group per phase and makes no grid extension claim."
+    },
+    {
+      "id": "softmax-forward",
+      "outcome": "unchanged",
+      "reason": "Read complete forward contract: backward consumes exactly its retained output prefix and derives the weight bound from its normalization proof. No forward semantics, guard, all-results coverage or storage contract changes."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The bounded softmax example now extends through supplied backward execution with separate mathematical, numerical, memory and existence guarantees. Existing general example responsibility and summary already require these distinctions; no new architecture or Gemma claim."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Inherited forward error and each actual backward rounding allowance are explicit; incoming words are exact reference inputs. Absolute error, finite input domain and real-VJP/rounding/PyTorch distinctions satisfy the existing responsibility without altering it."
+    },
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "unchanged",
+      "reason": "Backward retains every permitted forward exponential outcome and uses existing encoded nearest-even multiplication/addition relations. No approximation neighborhood, ULP interpretation, exceptional case or supported source domain changed."
+    },
+    {
+      "id": "reciprocal-instruction",
+      "outcome": "unchanged",
+      "reason": "Read fetched reciprocal contract: forward normalization and derived weight range reuse its existing provider; no mnemonic, target, numerical policy, predication or range condition changes."
+    },
+    {
+      "id": "shifted-exponential",
+      "outcome": "unchanged",
+      "reason": "Read shifted exponential contract: inherited forward error and magnitude bound remain valid for every permitted result. Backward reuses multiply-minus-one plus add without changing the forward sequence, supported domain, approximation convention or target."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "4c781c558aecd12b6908211cdc597984a93df9f4",
+      "method": "bash scripts/check.sh; python3 integration/torchlean/check.py; stratic validate; git diff --check; manual final documentation review and exact comparison of tested source/configuration against final snapshot",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; pinned TorchLean de3192df4779877ceb65cfe470a4d4ce9d480a5b and unchanged manifest dependencies; local Linux, no GPU or external model execution",
+      "evidence": "Root suite passed with 1643 dependency reports. Integration suite passed with 2449 exact dependency reports, including all 76 new public declarations; only propext, Classical.choice and Quot.sound. Fresh difference/dot/full backward interpreter checks, numerical fixtures and universal singleton proofs passed; existing dense and grid regressions passed. Independent execution, numerical and final VJP composition reviews found no proof blockers. The initial test tree 8f8117d2defeb864ef0a8b5bee9b8cd467b264e2 differs from the final tree only in the new guide and backward Stratic prose/quote metadata, correcting immediate/register-operand wording and theorem naming. Exact git-tree comparison confirms all tested code, configurations, checker and pins identical. Final before/after snapshot equality covers the corrected documentation review and final mechanical validation. Logs: /tmp/softmax-backward-root-check.log and /tmp/softmax-backward-integration-check.log.",
+      "tests": [],
+      "id": "16be1af8-9703-4ad7-a49c-cee65bdbf819",
+      "recordedAt": "2026-09-28T08:36:00.587Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T08:38:19.867Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/softmax-backward.md",
+      "reason": "Reviewed teaching material and crosslinks against implemented storage layout, numerical guard/error budget and proof endpoints. Independent documentation review corrected load/immediate wording and singleton theorem namespace."
+    },
+    {
+      "path": "docs/foundations/softmax-forward.md",
+      "reason": "Reviewed teaching material and crosslinks against implemented storage layout, numerical guard/error budget and proof endpoints. Independent documentation review corrected load/immediate wording and singleton theorem namespace."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/BackwardDot.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/BackwardDotChecks.lean",
+      "reason": "Independent regression evidence: actual instruction execution, arithmetic/cancellation/zero/subnormal fixtures, or universal singleton proof. Registered for fresh Lean checks and exact public dependency audit; not a replacement for general semantic proofs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/BackwardDotFinite.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseData.lean",
+      "reason": "Instruction-site data invariant generalized to the two-step difference body; existing operations retain their behavior. Independent review and dense/grid backward regression checks cover reused clients."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseDifferenceChecks.lean",
+      "reason": "Independent regression evidence: actual instruction execution, arithmetic/cancellation/zero/subnormal fixtures, or universal singleton proof. Registered for fresh Lean checks and exact public dependency audit; not a replacement for general semantic proofs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/PointwiseProgram.lean",
+      "reason": "Added difference operation, matching permitted-result relation and executable witness; minus-one multiply plus add. Body is linked; constructor, reference result and generic structural case extensions implement that same contract."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxBackward.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardChecks.lean",
+      "reason": "Independent regression evidence: actual instruction execution, arithmetic/cancellation/zero/subnormal fixtures, or universal singleton proof. Registered for fresh Lean checks and exact public dependency audit; not a replacement for general semantic proofs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardDot.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardDotChecks.lean",
+      "reason": "Independent regression evidence: actual instruction execution, arithmetic/cancellation/zero/subnormal fixtures, or universal singleton proof. Registered for fresh Lean checks and exact public dependency audit; not a replacement for general semantic proofs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardDotCorrect.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardExecutionChecks.lean",
+      "reason": "Independent regression evidence: actual instruction execution, arithmetic/cancellation/zero/subnormal fixtures, or universal singleton proof. Registered for fresh Lean checks and exact public dependency audit; not a replacement for general semantic proofs."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardFull.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardLayout.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardNumeric.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Explicit build/audit registration for all 15 modules and 76 public declarations, plus five fresh check modules; old coverage preserved. Infrastructure is inspected separately from linked semantic endpoints."
+    },
+    {
+      "path": "integration/torchlean/PtxSoftmaxBackward.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/PtxSoftmaxBackwardReference.lean",
+      "reason": "Linked public contract statements anchor the component. Remaining regions are their checked proofs, imports, index/storage helpers and range/rounding lemmas. Independent execution/numerical reviews inspected these and audit covers all public declarations."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Reviewed teaching material and crosslinks against implemented storage layout, numerical guard/error budget and proof endpoints. Independent documentation review corrected load/immediate wording and singleton theorem namespace."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Explicit build/audit registration for all 15 modules and 76 public declarations, plus five fresh check modules; old coverage preserved. Infrastructure is inspected separately from linked semantic endpoints."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Explicit build/audit registration for all 15 modules and 76 public declarations, plus five fresh check modules; old coverage preserved. Infrastructure is inspected separately from linked semantic endpoints."
+    },
+    {
+      "path": "stratic/descriptions/parallel-elementwise.json",
+      "reason": "Reviewed self-contained description, accurate summary and complete passage anchors; metadata changes connect the implemented backward and repair exact neighboring quotes."
+    },
+    {
+      "path": "stratic/descriptions/parallel-elementwise.md",
+      "reason": "Reviewed self-contained description, accurate summary and complete passage anchors; metadata changes connect the implemented backward and repair exact neighboring quotes."
+    },
+    {
+      "path": "stratic/descriptions/softmax-backward.json",
+      "reason": "Reviewed self-contained description, accurate summary and complete passage anchors; metadata changes connect the implemented backward and repair exact neighboring quotes."
+    },
+    {
+      "path": "stratic/descriptions/softmax-backward.md",
+      "reason": "Reviewed self-contained description, accurate summary and complete passage anchors; metadata changes connect the implemented backward and repair exact neighboring quotes."
+    },
+    {
+      "path": "stratic/descriptions/softmax-sum-normalization.json",
+      "reason": "Reviewed self-contained description, accurate summary and complete passage anchors; metadata changes connect the implemented backward and repair exact neighboring quotes."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Reviewed self-contained description, accurate summary and complete passage anchors; metadata changes connect the implemented backward and repair exact neighboring quotes."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Reviewed self-contained description, accurate summary and complete passage anchors; metadata changes connect the implemented backward and repair exact neighboring quotes."
+    }
+  ]
+}

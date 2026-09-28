@@ -1,0 +1,282 @@
+{
+  "id": "softmax-backward",
+  "parent": {
+    "description": "softmax",
+    "passage": {
+      "quote": "A parallel backward implementation uses the actual stored forward weights and\nincoming sensitivities to compute a dot product, differences and input gradients.\nIts execution, storage and numerical bounds connect to TorchLean’s true\nreal-valued derivative, with inherited forward error kept explicit."
+    }
+  },
+  "summary": [
+    "Compute the softmax vector-Jacobian product with an explicit parallel dot product, difference pass and multiplication pass on actual stored operands.",
+    "Derive finite intermediate values and gradient error from bounded original inputs, preserving forward approximation and arithmetic rounding errors.",
+    "Prove universal admitted-run correctness, independent execution existence and memory safety with explicit storage and phase interfaces."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The backward takes the actual stored softmax outputs and a row of incoming\nsensitivities: numbers describing how strongly each output contributes to a\nsurrounding result. For ideal weights p and sensitivities g, it returns\np_i*(g_i-q), where q is the sum of p_j*g_j over the row. This is the true\nvector-Jacobian product of the ideal real-valued softmax. The supplied PTX\nprogram is developed separately from TorchLean's automatic backward construction.\nIt does not differentiate floating-point rounding or the approximate exponential."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxBackwardReference.lean",
+        "passage": {
+          "quote": "theorem rowBackward_is_vjp (values incoming : Vec n) (positive : 0<n) (i : Fin n) :\n    rowBackward values.ofLp incoming.ofLp i =\n      (VJP[fun v : Vec n => getScalarE\n        (Activation.softmaxSpec (α:=ℝ) (s:=[n]) 0 (ofFnE v)), values] incoming).ofLp i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The implementation first computes qHat, an approximation of q, by combining\npairwise sums in a balanced tree. It reuses the existing parallel reduction\nwith one row, stored forward outputs as inputs, sensitivities as weights, and\npositive-zero bias. Multiplication at each leaf and addition at\neach tree node remain actual rounded instructions. A parallel difference pass\nloads each sensitivity and the stored qHat, multiplies qHat by exact minus one, and\nadds that result to the sensitivity. A parallel multiplication pass then loads\neach stored forward output and difference and writes the gradient. The separate\npasses favor reuse of checked execution and memory contracts; fusion is outside\nthis component. Multiplying by minus one and adding does not claim a new\nsubtraction-instruction formalization."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardDot.lean",
+        "passage": {
+          "quote": "def Output (d : Nat) (p g : Fin (Sum.width d) → Word) (value : Word) : Prop :=\n  ∃ dot, Reduction.Eval (Reduction.balanced d 0\n    (fun j => ((List.ofFn g)[j]!, (List.ofFn p)[j]!))) dot ∧ Results .add dot 0 value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The implementation first computes qHat, an approximation of q, by combining\npairwise sums in a balanced tree. It reuses the existing parallel reduction\nwith one row, stored forward outputs as inputs, sensitivities as weights, and\npositive-zero bias. Multiplication at each leaf and addition at\neach tree node remain actual rounded instructions. A parallel difference pass\nloads each sensitivity and the stored qHat, multiplies qHat by exact minus one, and\nadds that result to the sensitivity. A parallel multiplication pass then loads\neach stored forward output and difference and writes the gradient. The separate\npasses favor reuse of checked execution and memory contracts; fusion is outside\nthis component. Multiplying by minus one and adding does not claim a new\nsubtraction-instruction formalization."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/PointwiseProgram.lean",
+        "passage": {
+          "quote": "def body : Op → List Instr\n  | .copy => [localOp (.mov32 6 (.reg 5))]\n  | .mul => [.binary32 ⟨.always,.mul,6,.reg 4,.reg 5⟩]\n  | .gate => [localOp (.mov32 6 (.reg 5)),localOp (.setp .eq 1 (.reg 4) (.imm 0)),clear,\n      localOp (.setp .ge 1 (.reg 4) (.imm 0x80000000)),clear]\n  | .difference => [.binary32 ⟨.always,.mul,6,.reg 5,.imm 0xbf800000⟩,\n      .binary32 ⟨.always,.add,6,.reg 4,.reg 6⟩]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The implementation first computes qHat, an approximation of q, by combining\npairwise sums in a balanced tree. It reuses the existing parallel reduction\nwith one row, stored forward outputs as inputs, sensitivities as weights, and\npositive-zero bias. Multiplication at each leaf and addition at\neach tree node remain actual rounded instructions. A parallel difference pass\nloads each sensitivity and the stored qHat, multiplies qHat by exact minus one, and\nadds that result to the sensitivity. A parallel multiplication pass then loads\neach stored forward output and difference and writes the gradient. The separate\npasses favor reuse of checked execution and memory contracts; fusion is outside\nthis component. Multiplying by minus one and adding does not claim a new\nsubtraction-instruction formalization."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackward.lean",
+        "passage": {
+          "quote": "inductive Run (d : Nat) (bound : Sum.Bounds d) (p g : Fin (Sum.width d) → Word) : List Word → Prop\n  | phases {dot differences final : List Word}\n      (dotRun : SoftmaxBackwardDot.Launch d p g dot)\n      (differenceRun : Pointwise.Launch .difference (differenceLayout d bound) (extend d dot) differences)\n      (gradientRun : Pointwise.Launch .mul (gradientLayout d bound) (extend d differences) final) :\n      Run d bound p g final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The forward output prefix is retained as storage when forward scratch is\nreleased. Incoming sensitivities and fresh scratch are supplied in separately\nspecified regions of the resulting memory buffer, called the arena. These allocation and storage-view\noperations perform no derivative arithmetic. Original row inputs and values passed\nbetween launches come from fetched loads; arithmetic intermediates come from\nactual instructions. Each dot product and difference passed to the next phase\ncomes from an actual store. Sources remain read-only during each pointwise pass, and\neach output cell has one writer. Entry pointers are an explicit input interface,\nnot a CUDA argument-passing proof. Completed phase boundaries retain the existing\nmodel-level waiting and initialization contract."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardFull.lean",
+        "passage": {
+          "quote": "inductive FullRun (d : Nat) (bound : Sum.Bounds d)\n    (input incoming : Fin (Sum.width d) → Word) : List Word → Prop\n  | phases {forward final : List Word}\n      (forwardRun : Scalar.SoftmaxParallel.Run d input forward)\n      (backwardRun : Run d bound (SoftmaxStorage.row (Sum.width d) forward) incoming final) :\n      FullRun d bound input incoming final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The forward output prefix is retained as storage when forward scratch is\nreleased. Incoming sensitivities and fresh scratch are supplied in separately\nspecified regions of the resulting memory buffer, called the arena. These allocation and storage-view\noperations perform no derivative arithmetic. Original row inputs and values passed\nbetween launches come from fetched loads; arithmetic intermediates come from\nactual instructions. Each dot product and difference passed to the next phase\ncomes from an actual store. Sources remain read-only during each pointwise pass, and\neach output cell has one writer. Entry pointers are an explicit input interface,\nnot a CUDA argument-passing proof. Completed phase boundaries retain the existing\nmodel-level waiting and initialization contract."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardFull.lean",
+        "passage": {
+          "quote": "theorem entry_is_storage_view (run : Scalar.SoftmaxParallel.Run d input forward)\n    (incoming : Fin (Sum.width d) → Word) :\n    SoftmaxBackwardDot.global d (SoftmaxStorage.row (Sum.width d) forward) incoming =\n      forward.take (Sum.width d) ++ List.ofFn incoming ++ [0,0]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For n entries, words 0 through n-1 retain the forward outputs and words n\nthrough 2*n-1 hold incoming sensitivities. Word 2*n is the positive-zero bias,\nand word 2*n+1 holds the computed dot product. The difference pass appends n\noutput words starting at 2*n+2; the multiplication pass appends n gradient words\nstarting at 3*n+2. The final arena has 4*n+2 words and preserves both input rows."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardLayout.lean",
+        "passage": {
+          "quote": "def differenceLayout (d : Nat) (bound : Sum.Bounds d) : Pointwise.Layout (Sum.width d) where\n  prefixWords := differenceBase d\n  left := fun i => Sum.width d+i.val\n  right := fun _ => Sum.outputIndex d\n  leftBound := by intro i; have := i.isLt; unfold differenceBase; omega\n  rightBound := by intro i; unfold differenceBase Sum.outputIndex; omega\n  small := by have := width_bound d bound; unfold differenceBase; omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For n entries, words 0 through n-1 retain the forward outputs and words n\nthrough 2*n-1 hold incoming sensitivities. Word 2*n is the positive-zero bias,\nand word 2*n+1 holds the computed dot product. The difference pass appends n\noutput words starting at 2*n+2; the multiplication pass appends n gradient words\nstarting at 3*n+2. The final arena has 4*n+2 words and preserves both input rows."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardLayout.lean",
+        "passage": {
+          "quote": "def gradientLayout (d : Nat) (bound : Sum.Bounds d) : Pointwise.Layout (Sum.width d) where\n  prefixWords := gradientBase d\n  left := fun i => i.val\n  right := fun i => differenceBase d+i.val\n  leftBound := by intro i; have := i.isLt; unfold gradientBase; omega\n  rightBound := by intro i; have := i.isLt; unfold differenceBase gradientBase; omega\n  small := by have := width_bound d bound; unfold gradientBase; omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first domain retains nonempty power-of-two rows of at most 1024 entries.\nFor accuracy, original scores are finite, have magnitude at most 2^124, and\nsatisfy the forward guard: the accumulated exponential and sum error allowance\nis at most one half.\nIncoming encoded sensitivities are finite and have magnitude at most 2^60.\nTheir exact real values are the initial backward reference inputs. Forward\naccuracy and the numerical normalization proof bound the actual stored weights;\nthe derived weight magnitude is at most four. Products, the dot result,\ndifferences and gradients have respective magnitude bounds 2^62, 2^72, 2^73\nand 2^75, establishing finite encoded results. These conservative bounds leave\nroom for signed accumulation without requiring intermediate range premises. Successful intermediate execution, intermediate\nfiniteness and final gradient accuracy are conclusions rather than caller premises.\nThe gradient error includes the inherited forward error, rounded dot-product\nerror, difference error and final multiplication error, each kept explicit."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxBackwardReference.lean",
+        "passage": {
+          "quote": "theorem forward_report (d : Nat) (bound : d≤10)\n    (input : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, finiteReal (input i)=some (values i))\n    (small : ∀i, |values i|≤(2:ℝ)^(124:ℤ))\n    (guard : SoftmaxPipeline.AccuracyGuard d values)\n    (run : Scalar.SoftmaxParallel.Run d input forward) :\n    ∃ (m : ℝ) (u : Fin (Sum.width d) → ℝ),\n      finiteReal (Scalar.SoftmaxPipeline.maximumWord d input)=some m ∧\n      ∀i, finiteReal forward[i.val]! =some (resultValue d u i) ∧\n        |resultValue d u i|≤4 ∧\n        |resultValue d u i-Softmax.rowForward values i|≤coordinateAllowance d values m u i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first domain retains nonempty power-of-two rows of at most 1024 entries.\nFor accuracy, original scores are finite, have magnitude at most 2^124, and\nsatisfy the forward guard: the accumulated exponential and sum error allowance\nis at most one half.\nIncoming encoded sensitivities are finite and have magnitude at most 2^60.\nTheir exact real values are the initial backward reference inputs. Forward\naccuracy and the numerical normalization proof bound the actual stored weights;\nthe derived weight magnitude is at most four. Products, the dot result,\ndifferences and gradients have respective magnitude bounds 2^62, 2^72, 2^73\nand 2^75, establishing finite encoded results. These conservative bounds leave\nroom for signed accumulation without requiring intermediate range premises. Successful intermediate execution, intermediate\nfiniteness and final gradient accuracy are conclusions rather than caller premises.\nThe gradient error includes the inherited forward error, rounded dot-product\nerror, difference error and final multiplication error, each kept explicit."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardDot.lean",
+        "passage": {
+          "quote": "theorem accuracy (g p : Nat → Word) (gv pv : Nat → ℝ) (k offset : Nat) (out : Word)\n    (depth : k≤10)\n    (finiteG : ∀j, j<2^k → finiteReal (g (offset+j))=some (gv (offset+j)))\n    (finiteP : ∀j, j<2^k → finiteReal (p (offset+j))=some (pv (offset+j)))\n    (smallG : ∀j, j<2^k → |gv (offset+j)|≤(2:ℝ)^60)\n    (smallP : ∀j, j<2^k → |pv (offset+j)|≤4)\n    (allowed : Reduction.Eval (Reduction.balanced k offset (fun j => (g j,p j))) out) :\n    finiteReal out=some (rounded gv pv k offset) ∧\n    |rounded gv pv k offset|≤(2:ℝ)^(k+62) ∧\n    |rounded gv pv k offset-ideal gv pv k offset|≤budget gv pv k offset"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first domain retains nonempty power-of-two rows of at most 1024 entries.\nFor accuracy, original scores are finite, have magnitude at most 2^124, and\nsatisfy the forward guard: the accumulated exponential and sum error allowance\nis at most one half.\nIncoming encoded sensitivities are finite and have magnitude at most 2^60.\nTheir exact real values are the initial backward reference inputs. Forward\naccuracy and the numerical normalization proof bound the actual stored weights;\nthe derived weight magnitude is at most four. Products, the dot result,\ndifferences and gradients have respective magnitude bounds 2^62, 2^72, 2^73\nand 2^75, establishing finite encoded results. These conservative bounds leave\nroom for signed accumulation without requiring intermediate range premises. Successful intermediate execution, intermediate\nfiniteness and final gradient accuracy are conclusions rather than caller premises.\nThe gradient error includes the inherited forward error, rounded dot-product\nerror, difference error and final multiplication error, each kept explicit."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardDotCorrect.lean",
+        "passage": {
+          "quote": "theorem output_accuracy (d : Nat) (bound : Sum.Bounds d)\n    (p g : Fin (Sum.width d) → Word) (pv gv : Fin (Sum.width d) → ℝ) (out : Word)\n    (finiteP : ∀i,finiteReal (p i)=some (pv i))\n    (finiteG : ∀i,finiteReal (g i)=some (gv i))\n    (smallP : ∀i,|pv i|≤4) (smallG : ∀i,|gv i|≤(2:ℝ)^60)\n    (allowed : Output d p g out) :\n    finiteReal out=some (BackwardDot.vector_rounded d gv pv) ∧\n    |BackwardDot.vector_rounded d gv pv|≤(2:ℝ)^72 ∧\n    |BackwardDot.vector_rounded d gv pv-∑i,pv i*gv i|≤BackwardDot.vector_budget d gv pv"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first domain retains nonempty power-of-two rows of at most 1024 entries.\nFor accuracy, original scores are finite, have magnitude at most 2^124, and\nsatisfy the forward guard: the accumulated exponential and sum error allowance\nis at most one half.\nIncoming encoded sensitivities are finite and have magnitude at most 2^60.\nTheir exact real values are the initial backward reference inputs. Forward\naccuracy and the numerical normalization proof bound the actual stored weights;\nthe derived weight magnitude is at most four. Products, the dot result,\ndifferences and gradients have respective magnitude bounds 2^62, 2^72, 2^73\nand 2^75, establishing finite encoded results. These conservative bounds leave\nroom for signed accumulation without requiring intermediate range premises. Successful intermediate execution, intermediate\nfiniteness and final gradient accuracy are conclusions rather than caller premises.\nThe gradient error includes the inherited forward error, rounded dot-product\nerror, difference error and final multiplication error, each kept explicit."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardNumeric.lean",
+        "passage": {
+          "quote": "theorem stages (p g dot negative diff out : Word) (pv gv q : ℝ)\n    (pFinite : finiteReal p=some pv) (gFinite : finiteReal g=some gv)\n    (dotFinite : finiteReal dot=some q)\n    (pSmall : |pv|≤4) (gSmall : |gv|≤(2:ℝ)^60) (qSmall : |q|≤(2:ℝ)^72)\n    (negate : Results .mul dot 0xbf800000 negative)\n    (subtract : Results .add g negative diff) (multiply : Results .mul p diff out) :\n    finiteReal negative=some (-q) ∧ finiteReal diff=some (difference gv q) ∧\n    finiteReal out=some (gradient pv gv q) ∧\n    |difference gv q|≤(2:ℝ)^73 ∧ |gradient pv gv q|≤(2:ℝ)^75 ∧\n    |difference gv q-(gv-q)|≤subError gv q ∧\n    |gradient pv gv q-pv*difference gv q|≤mulError pv gv q"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Write epsilon_i for the inherited error of stored pHat_i from ideal p_i.\nThe dot rounding allowance sigmaDot sums half-grid-spacing errors at every\nleaf product and tree addition on their actual rounded operands. With\nq=sum_j p_j*g_j, Q=sigmaDot+sum_j abs(g_j)*epsilon_j bounds the dot error.\nThe stored gradient error is at most\n`mulError_i + abs(g_i-q)*epsilon_i + abs(pHat_i)*(subError_i+Q)`.\nHere subError_i bounds rounding of g_i-qHat, and mulError_i bounds rounding of\npHat_i times that rounded difference. Multiplication of the finite qHat by\nminus one is exact as a real value. Incoming values have no additional\nquantization allowance because the reference uses their exact stored values."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardDot.lean",
+        "passage": {
+          "quote": "def budget (g p : Nat → ℝ) : Nat → Nat → ℝ\n  | 0,offset => eps32 (g offset*p offset)\n  | k+1,offset => eps32 (rounded g p k offset+rounded g p k (offset+2^k))+\n    budget g p k offset+budget g p k (offset+2^k)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Write epsilon_i for the inherited error of stored pHat_i from ideal p_i.\nThe dot rounding allowance sigmaDot sums half-grid-spacing errors at every\nleaf product and tree addition on their actual rounded operands. With\nq=sum_j p_j*g_j, Q=sigmaDot+sum_j abs(g_j)*epsilon_j bounds the dot error.\nThe stored gradient error is at most\n`mulError_i + abs(g_i-q)*epsilon_i + abs(pHat_i)*(subError_i+Q)`.\nHere subError_i bounds rounding of g_i-qHat, and mulError_i bounds rounding of\npHat_i times that rounded difference. Multiplication of the finite qHat by\nminus one is exact as a real value. Incoming values have no additional\nquantization allowance because the reference uses their exact stored values."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/BackwardDotFinite.lean",
+        "passage": {
+          "quote": "theorem output_accuracy (d : Nat) (bound : d≤10)\n    (g p : Fin (2^d) → Word) (gv pv : Fin (2^d) → ℝ) (dot out : Word)\n    (finiteG : ∀i,finiteReal (g i)=some (gv i))\n    (finiteP : ∀i,finiteReal (p i)=some (pv i))\n    (smallG : ∀i,|gv i|≤(2:ℝ)^60) (smallP : ∀i,|pv i|≤4)\n    (tree : Reduction.Eval (Reduction.balanced d 0\n      (fun j => ((List.ofFn g)[j]!, (List.ofFn p)[j]!))) dot)\n    (zero : Results .add dot 0 out) :\n    finiteReal out=some (vector_rounded d gv pv) ∧\n    |vector_rounded d gv pv|≤(2:ℝ)^72 ∧\n    |vector_rounded d gv pv-∑i,pv i*gv i|≤vector_budget d gv pv"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Write epsilon_i for the inherited error of stored pHat_i from ideal p_i.\nThe dot rounding allowance sigmaDot sums half-grid-spacing errors at every\nleaf product and tree addition on their actual rounded operands. With\nq=sum_j p_j*g_j, Q=sigmaDot+sum_j abs(g_j)*epsilon_j bounds the dot error.\nThe stored gradient error is at most\n`mulError_i + abs(g_i-q)*epsilon_i + abs(pHat_i)*(subError_i+Q)`.\nHere subError_i bounds rounding of g_i-qHat, and mulError_i bounds rounding of\npHat_i times that rounded difference. Multiplication of the finite qHat by\nminus one is exact as a real value. Incoming values have no additional\nquantization allowance because the reference uses their exact stored values."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxBackward.lean",
+        "passage": {
+          "quote": "def allowance (d : Nat) (ideal pv gv epsilon : Fin (Sum.width d) → ℝ) (i : Fin (Sum.width d)) : ℝ :=\n  backwardBudget pv gv ideal epsilon (fun _=>0)\n    (fun j=>SoftmaxBackwardNumeric.subError (gv j) (BackwardDot.vector_rounded d gv pv))\n    (fun j=>SoftmaxBackwardNumeric.mulError (pv j) (gv j) (BackwardDot.vector_rounded d gv pv))\n    (BackwardDot.vector_budget d gv pv) i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed admitted backward execution satisfies the stored-output\ncontract and preserves its input regions. Separately, a finite schedule and its\nmemory-admission proof establish that a complete execution exists. Backward\nalone has a witness for arbitrary input words; whole forward/backward existence\nrequires only the original finite-score domain, without an accuracy guard or\nincoming finiteness. The stronger conditions above are needed for the numerical\ncomparison. All actual\naccesses are checked for allocation bounds and alignment. The combined theorem\nstarts with original scores and incoming sensitivity words, runs forward and\nbackward, and compares the stored gradients with TorchLean's real derivative.\nAll results permitted by the arithmetic relations remain covered. Bitwise\nagreement with a concrete PyTorch backend, arbitrary row lengths, masking,\nfused execution, GPU progress and benchmarking remain separate obligations."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackward.lean",
+        "passage": {
+          "quote": "theorem correct (run : Run d bound p g final) :\n    final.length=4*Sum.width d+2 ∧\n    (∀i : Fin (Sum.width d), final[i.val]?=some (p i) ∧\n      final[Sum.width d+i.val]?=some (g i)) ∧\n    ∃q, SoftmaxBackwardDot.Output d p g q ∧\n      final[Sum.outputIndex d]?=some q ∧\n      ∀i : Fin (Sum.width d), ∃negative difference,\n        Results .mul q 0xbf800000 negative ∧\n        Results .add (g i) negative difference ∧\n        final[differenceBase d+i.val]?=some difference ∧\n        Results .mul (p i) difference final[gradientBase d+i.val]!"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed admitted backward execution satisfies the stored-output\ncontract and preserves its input regions. Separately, a finite schedule and its\nmemory-admission proof establish that a complete execution exists. Backward\nalone has a witness for arbitrary input words; whole forward/backward existence\nrequires only the original finite-score domain, without an accuracy guard or\nincoming finiteness. The stronger conditions above are needed for the numerical\ncomparison. All actual\naccesses are checked for allocation bounds and alignment. The combined theorem\nstarts with original scores and incoming sensitivity words, runs forward and\nbackward, and compares the stored gradients with TorchLean's real derivative.\nAll results permitted by the arithmetic relations remain covered. Bitwise\nagreement with a concrete PyTorch backend, arbitrary row lengths, masking,\nfused execution, GPU progress and benchmarking remain separate obligations."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackward.lean",
+        "passage": {
+          "quote": "theorem access_safe (run : Run d bound p g final) :\n    ∃dot differences, SoftmaxBackwardDot.Launch d p g dot ∧\n      (∃denseBound : Dense.Bounds (Sum.shape d), ∃seeds,\n        TraceSafe (Dense.config (Sum.shape d) denseBound) (Sum.program d)\n          (Dense.initial (Sum.shape d) (SoftmaxBackwardDot.global d p g)\n            (List.replicate (Sum.sharedWords d) 0) seeds) dot) ∧\n      Pointwise.Launch .difference (differenceLayout d bound) (extend d dot) differences ∧\n      PointwiseSafe .difference (differenceLayout d bound) (extend d dot) differences ∧\n      Pointwise.Launch .mul (gradientLayout d bound) (extend d differences) final ∧\n      PointwiseSafe .mul (gradientLayout d bound) (extend d differences) final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed admitted backward execution satisfies the stored-output\ncontract and preserves its input regions. Separately, a finite schedule and its\nmemory-admission proof establish that a complete execution exists. Backward\nalone has a witness for arbitrary input words; whole forward/backward existence\nrequires only the original finite-score domain, without an accuracy guard or\nincoming finiteness. The stronger conditions above are needed for the numerical\ncomparison. All actual\naccesses are checked for allocation bounds and alignment. The combined theorem\nstarts with original scores and incoming sensitivity words, runs forward and\nbackward, and compares the stored gradients with TorchLean's real derivative.\nAll results permitted by the arithmetic relations remain covered. Bitwise\nagreement with a concrete PyTorch backend, arbitrary row lengths, masking,\nfused execution, GPU progress and benchmarking remain separate obligations."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackward.lean",
+        "passage": {
+          "quote": "theorem execution_exists (d : Nat) (bound : Sum.Bounds d) (p g : Fin (Sum.width d) → Word) :\n    ∃final, Run d bound p g final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed admitted backward execution satisfies the stored-output\ncontract and preserves its input regions. Separately, a finite schedule and its\nmemory-admission proof establish that a complete execution exists. Backward\nalone has a witness for arbitrary input words; whole forward/backward existence\nrequires only the original finite-score domain, without an accuracy guard or\nincoming finiteness. The stronger conditions above are needed for the numerical\ncomparison. All actual\naccesses are checked for allocation bounds and alignment. The combined theorem\nstarts with original scores and incoming sensitivity words, runs forward and\nbackward, and compares the stored gradients with TorchLean's real derivative.\nAll results permitted by the arithmetic relations remain covered. Bitwise\nagreement with a concrete PyTorch backend, arbitrary row lengths, masking,\nfused execution, GPU progress and benchmarking remain separate obligations."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxBackwardFull.lean",
+        "passage": {
+          "quote": "theorem full_execution_exists (d : Nat) (bound : Sum.Bounds d)\n    (input incoming : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i,Ptx.Binary32.finiteReal (input i)=some (values i))\n    (small : ∀i,|values i|≤(2:ℝ)^(124:ℤ)) :\n    ∃final,FullRun d bound input incoming final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed admitted backward execution satisfies the stored-output\ncontract and preserves its input regions. Separately, a finite schedule and its\nmemory-admission proof establish that a complete execution exists. Backward\nalone has a witness for arbitrary input words; whole forward/backward existence\nrequires only the original finite-score domain, without an accuracy guard or\nincoming finiteness. The stronger conditions above are needed for the numerical\ncomparison. All actual\naccesses are checked for allocation bounds and alignment. The combined theorem\nstarts with original scores and incoming sensitivity words, runs forward and\nbackward, and compares the stored gradients with TorchLean's real derivative.\nAll results permitted by the arithmetic relations remain covered. Bitwise\nagreement with a concrete PyTorch backend, arbitrary row lengths, masking,\nfused execution, GPU progress and benchmarking remain separate obligations."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxBackward.lean",
+        "passage": {
+          "quote": "theorem correct (d : Nat) (bound : Sum.Bounds d)\n    (input incoming : Fin (Sum.width d) → Word) (values gv : Fin (Sum.width d) → ℝ)\n    (finite : ∀i,finiteReal (input i)=some (values i))\n    (small : ∀i,|values i|≤(2:ℝ)^(124:ℤ))\n    (guard : SoftmaxPipeline.AccuracyGuard d values)\n    (incomingFinite : ∀i,finiteReal (incoming i)=some (gv i))\n    (incomingSmall : ∀i,|gv i|≤(2:ℝ)^60)\n    (run : FullRun d bound input incoming final) : Accurate d input incoming values gv final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed admitted backward execution satisfies the stored-output\ncontract and preserves its input regions. Separately, a finite schedule and its\nmemory-admission proof establish that a complete execution exists. Backward\nalone has a witness for arbitrary input words; whole forward/backward existence\nrequires only the original finite-score domain, without an accuracy guard or\nincoming finiteness. The stronger conditions above are needed for the numerical\ncomparison. All actual\naccesses are checked for allocation bounds and alignment. The combined theorem\nstarts with original scores and incoming sensitivity words, runs forward and\nbackward, and compares the stored gradients with TorchLean's real derivative.\nAll results permitted by the arithmetic relations remain covered. Bitwise\nagreement with a concrete PyTorch backend, arbitrary row lengths, masking,\nfused execution, GPU progress and benchmarking remain separate obligations."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxBackward.lean",
+        "passage": {
+          "quote": "theorem accurate_execution_exists (d : Nat) (bound : Sum.Bounds d)\n    (input incoming : Fin (Sum.width d) → Word) (values gv : Fin (Sum.width d) → ℝ)\n    (finite : ∀i,finiteReal (input i)=some (values i))\n    (small : ∀i,|values i|≤(2:ℝ)^(124:ℤ))\n    (guard : SoftmaxPipeline.AccuracyGuard d values)\n    (incomingFinite : ∀i,finiteReal (incoming i)=some (gv i))\n    (incomingSmall : ∀i,|gv i|≤(2:ℝ)^60) :\n    ∃final,FullRun d bound input incoming final ∧ Accurate d input incoming values gv final"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The first domain retains nonempty power-of-two rows of at most 1024 entries.\nFor accuracy, original scores are finite, have magnitude at most 2^124, and\nsatisfy the forward guard: the accumulated exponential and sum error allowance\nis at most one half.\nIncoming encoded sensitivities are finite and have magnitude at most 2^60.\nTheir exact real values are the initial backward reference inputs. Forward\naccuracy and the numerical normalization proof bound the actual stored weights;\nthe derived weight magnitude is at most four. Products, the dot result,\ndifferences and gradients have respective magnitude bounds 2^62, 2^72, 2^73\nand 2^75, establishing finite encoded results. These conservative bounds leave\nroom for signed accumulation without requiring intermediate range premises. Successful intermediate execution, intermediate\nfiniteness and final gradient accuracy are conclusions rather than caller premises.\nThe gradient error includes the inherited forward error, rounded dot-product\nerror, difference error and final multiplication error, each kept explicit."
+      },
+      "to": {
+        "description": "softmax-forward",
+        "passage": {
+          "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+        }
+      },
+      "reason": "The composed backward derives its weight range and inherited approximation allowance from the actual forward output theorem."
+    }
+  ]
+}

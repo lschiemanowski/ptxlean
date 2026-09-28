@@ -182,7 +182,9 @@ Run `python3 integration/torchlean/check.py` after provisioning the pinned
 Lean and numerical dependencies. This builds the proofs, freshly checks examples
 and audits public declaration dependencies. It runs no GPU benchmark.
 
-Fused execution, arbitrary row sizes, masked softmax and a backward kernel remain
-separate work. Lean checking proves
+The [parallel backward pipeline](softmax-backward.md) consumes these actual
+stored outputs and includes their error in its gradient guarantee. Fused
+execution, arbitrary row sizes and masked softmax remain separate work.
+Lean checking proves
 the formal statements; it does not establish NVIDIA hardware conformance or
 resolve the documented approximation-policy ambiguity.

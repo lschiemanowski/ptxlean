@@ -8,6 +8,7 @@ def RegisterValue (op : Op) (pc : Nat) (a b value : Word) : Prop :=
   match op with
   | .mul => Results .mul a b value
   | .copy => value=b
+  | .difference => if pc=3 then Results .mul b 0xbf800000 value else Result .difference a b value
   | .gate => value=if pc<5 then b else if pc<7 then (if a=0 then 0 else b) else Relu.gate a b
 
 structure Data (op : Op) (a b : Word) (s : Scalar.State) : Prop where
@@ -63,14 +64,16 @@ theorem fp_data (op : Op) (a b : Word) (state next : Scalar.State)
   generalize site : state.pc=pc at bound fetch
   cases op <;> simp [program,body] at bound
   all_goals interval_cases pc <;> simp [program,body,localOp,clear] at fetch
-  subst i
-  cases ev with
-  | skipped no => cases no
-  | @executed value enabled allowed =>
-    have result : Ptx.Binary32.Results .mul a b value := by
-      simpa [Scalar.Operand32.eval,data.left (by omega),data.right (by omega)] using allowed
-    rcases data with ⟨left,right,old,zero,sign⟩
-    constructor <;> simp_all [Scalar.update,site,RegisterValue]
+  all_goals subst i
+  all_goals cases ev with
+    | skipped no => cases no
+    | @executed value enabled allowed =>
+      simp only [Scalar.Operand32.eval] at allowed
+      have left := data.left (by omega)
+      have right := data.right (by omega)
+      have old := data.result
+      constructor <;> simp_all [Scalar.update,site,RegisterValue,Result]
+      all_goals exact ⟨state.regs 6,old,allowed⟩
 
 theorem scalar_store_data (op : Op) (a b : Word) (state next : Scalar.State)
     (i : Scalar.Instr) (space : Space) (occ : Scalar.Occurrence) (effect : MemoryEffect)

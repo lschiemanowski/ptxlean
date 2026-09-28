@@ -256,7 +256,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths, benchmarking and a backward implementation remain separate."
+        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths and benchmarking remain separate. The backward component\nuses the existing two-input pointwise machine for its difference and product\npasses; it does not require this exponential/reciprocal adapter."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/UnarySequential.lean",
@@ -268,7 +268,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths, benchmarking and a backward implementation remain separate."
+        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths and benchmarking remain separate. The backward component\nuses the existing two-input pointwise machine for its difference and product\npasses; it does not require this exponential/reciprocal adapter."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SoftmaxParallel.lean",
@@ -280,7 +280,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths, benchmarking and a backward implementation remain separate."
+        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths and benchmarking remain separate. The backward component\nuses the existing two-input pointwise machine for its difference and product\npasses; it does not require this exponential/reciprocal adapter."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SoftmaxParallel.lean",
@@ -292,7 +292,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths, benchmarking and a backward implementation remain separate."
+        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths and benchmarking remain separate. The backward component\nuses the existing two-input pointwise machine for its difference and product\npasses; it does not require this exponential/reciprocal adapter."
       },
       "to": {
         "path": "integration/torchlean/PtxSoftmaxParallel.lean",

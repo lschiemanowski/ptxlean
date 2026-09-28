@@ -1,3 +1,18 @@
+import PtxBinary32.BackwardDot
+import PtxBinary32.BackwardDotChecks
+import PtxBinary32.BackwardDotFinite
+import PtxBinary32.PointwiseDifferenceChecks
+import PtxBinary32.SoftmaxBackward
+import PtxBinary32.SoftmaxBackwardChecks
+import PtxBinary32.SoftmaxBackwardDot
+import PtxBinary32.SoftmaxBackwardDotChecks
+import PtxBinary32.SoftmaxBackwardDotCorrect
+import PtxBinary32.SoftmaxBackwardExecutionChecks
+import PtxBinary32.SoftmaxBackwardFull
+import PtxBinary32.SoftmaxBackwardLayout
+import PtxBinary32.SoftmaxBackwardNumeric
+import PtxSoftmaxBackward
+import PtxSoftmaxBackwardReference
 import PtxBinary32.ParallelUnary
 import PtxBinary32.ParallelUnaryAdmission
 import PtxBinary32.ParallelUnaryChronology
@@ -2665,3 +2680,81 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Scalar.UnaryPointwise.sequential_realize
 #print axioms PtxTorchLean.SoftmaxParallel.correct
 #print axioms PtxTorchLean.SoftmaxParallel.accurate_execution_exists
+
+-- Parallel softmax backward: all public declarations.
+#print axioms Ptx.Binary32.BackwardDot.power_fixed
+#print axioms Ptx.Binary32.BackwardDot.round_power_bound
+#print axioms Ptx.Binary32.BackwardDot.rounded
+#print axioms Ptx.Binary32.BackwardDot.ideal
+#print axioms Ptx.Binary32.BackwardDot.budget
+#print axioms Ptx.Binary32.BackwardDot.ideal_sum
+#print axioms Ptx.Binary32.BackwardDot.finite_fixed
+#print axioms Ptx.Binary32.BackwardDot.accuracy
+#print axioms Ptx.Binary32.BackwardDot.add_zero_accuracy
+#print axioms Ptx.Binary32.BackwardDot.Checks.cancellation
+#print axioms Ptx.Binary32.BackwardDot.Checks.coordinate
+#print axioms Ptx.Binary32.BackwardDot.Checks.signed_zero
+#print axioms Ptx.Binary32.BackwardDot.Checks.subnormal
+#print axioms Ptx.Binary32.BackwardDot.valuesAt
+#print axioms Ptx.Binary32.BackwardDot.vector_rounded
+#print axioms Ptx.Binary32.BackwardDot.vector_budget
+#print axioms Ptx.Binary32.BackwardDot.ideal_eq_sum
+#print axioms Ptx.Binary32.BackwardDot.output_accuracy
+#print axioms Ptx.Scalar.Parallel.Pointwise.DifferenceChecks.run
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.Run
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.correct
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.execution_exists
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.TraceSafe
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.PointwiseSafe
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.access_safe
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.Checks.singleton_exact
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.Checks.singleton_exists
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.global
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.global_length
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.global_probability
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.global_sensitivity
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.global_probability_bang
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.global_sensitivity_bang
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.global_bias
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.Output
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.output_iff
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.launch_correct
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.launch_prefix
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.launch_exists
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.launch_safe
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.Checks.run
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.output_accuracy
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackwardDot.launch_accuracy
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.ExecutionChecks.run
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.FullRun
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.entry_is_storage_view
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.full_execution_exists
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.differenceBase
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.gradientBase
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.width_bound
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.differenceLayout
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.gradientLayout
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.extend
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.extend_length
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.extend_prefix
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.bang_eq
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.saved_word
+#print axioms Ptx.Scalar.Parallel.SoftmaxBackward.row_is_prefix
+#print axioms Ptx.Binary32.SoftmaxBackwardNumeric.Result
+#print axioms Ptx.Binary32.SoftmaxBackwardNumeric.difference
+#print axioms Ptx.Binary32.SoftmaxBackwardNumeric.gradient
+#print axioms Ptx.Binary32.SoftmaxBackwardNumeric.subError
+#print axioms Ptx.Binary32.SoftmaxBackwardNumeric.mulError
+#print axioms Ptx.Binary32.SoftmaxBackwardNumeric.result_exists
+#print axioms Ptx.Binary32.SoftmaxBackwardNumeric.stages
+#print axioms Ptx.Binary32.SoftmaxBackwardNumeric.accuracy
+#print axioms PtxTorchLean.SoftmaxBackward.gradientValue
+#print axioms PtxTorchLean.SoftmaxBackward.allowance
+#print axioms PtxTorchLean.SoftmaxBackward.kernel_accuracy
+#print axioms PtxTorchLean.SoftmaxBackward.Accurate
+#print axioms PtxTorchLean.SoftmaxBackward.correct
+#print axioms PtxTorchLean.SoftmaxBackward.accurate_execution_exists
+#print axioms PtxTorchLean.Softmax.rowBackward
+#print axioms PtxTorchLean.Softmax.rowBackward_formula
+#print axioms PtxTorchLean.Softmax.rowBackward_is_vjp
+#print axioms PtxTorchLean.SoftmaxBackward.forward_report

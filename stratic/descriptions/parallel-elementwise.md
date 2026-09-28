@@ -42,4 +42,6 @@ Both directions are proved through a contract giving each stored result’s
 instruction relation and preserving all cells outside the output prefix. This
 keeps the numerical allowances and initial-score accuracy guard unchanged,
 without selecting a unique approximate exponential result. Masking,
-arbitrary row lengths, benchmarking and a backward implementation remain separate.
+arbitrary row lengths and benchmarking remain separate. The backward component
+uses the existing two-input pointwise machine for its difference and product
+passes; it does not require this exponential/reciprocal adapter.

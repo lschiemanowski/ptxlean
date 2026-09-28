@@ -13,7 +13,7 @@ true vector-Jacobian product: for output weights p and incoming sensitivities d,
 the input sensitivity is p_i*(d_i-sum_j p_j*d_j). An incoming sensitivity says
 how strongly each output contributes to the surrounding computation's result.
 This smooth function does not need ReLU's away-from-zero activation condition.
-A backward kernel will be supplied separately from TorchLean's automatic reverse
+The backward kernel is supplied separately from TorchLean's automatic reverse
 construction.
 
 Numerical composition keeps four errors separate. Each computed exponential has
@@ -105,6 +105,9 @@ execution witness. Existence follows from original bounded finite scores;
 stored-output accuracy against TorchLean additionally uses the explicit total-error
 guard. Phase boundaries are model-level waiting and initialization, not a CUDA
 runtime implementation.
-Fusing the forward phases, masking, arbitrary row sizes and a
-backward implementation remain separate work.
+A parallel backward implementation uses the actual stored forward weights and
+incoming sensitivities to compute a dot product, differences and input gradients.
+Its execution, storage and numerical bounds connect to TorchLean’s true
+real-valued derivative, with inherited forward error kept explicit.
+Fused execution, masking and arbitrary row sizes remain separate work.
 GPU execution and benchmarking remain deferred.

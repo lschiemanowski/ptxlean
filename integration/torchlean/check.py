@@ -317,6 +317,21 @@ COUNTS['PtxTorchLean.SoftmaxParallel'] = COUNTS.get('PtxTorchLean.SoftmaxParalle
 TARGETS.update(['PtxBinary32.ParallelUnary', 'PtxBinary32.ParallelUnaryAdmission', 'PtxBinary32.ParallelUnaryChronology', 'PtxBinary32.ParallelUnaryControl', 'PtxBinary32.ParallelUnaryMemory', 'PtxBinary32.SoftmaxParallel', 'PtxBinary32.SoftmaxParallelChecks', 'PtxBinary32.UnaryPointwiseChecks', 'PtxBinary32.UnaryPointwiseContract', 'PtxBinary32.UnaryPointwiseControl', 'PtxBinary32.UnaryPointwiseCoverage', 'PtxBinary32.UnaryPointwiseData', 'PtxBinary32.UnaryPointwiseExecution', 'PtxBinary32.UnaryPointwiseLaunch', 'PtxBinary32.UnaryPointwiseProgram', 'PtxBinary32.UnaryPointwiseReads', 'PtxBinary32.UnaryPointwiseStored', 'PtxBinary32.UnarySequential', 'PtxSoftmaxParallel'])
 
 
+# Actual parallel softmax backward and inherited forward-error composition.
+COUNTS['Ptx.Binary32.BackwardDot'] = COUNTS.get('Ptx.Binary32.BackwardDot', 0) + 14
+COUNTS['Ptx.Binary32.BackwardDot.Checks'] = COUNTS.get('Ptx.Binary32.BackwardDot.Checks', 0) + 4
+COUNTS['Ptx.Binary32.SoftmaxBackwardNumeric'] = COUNTS.get('Ptx.Binary32.SoftmaxBackwardNumeric', 0) + 8
+COUNTS['Ptx.Scalar.Parallel.Pointwise.DifferenceChecks'] = COUNTS.get('Ptx.Scalar.Parallel.Pointwise.DifferenceChecks', 0) + 1
+COUNTS['Ptx.Scalar.Parallel.SoftmaxBackward'] = COUNTS.get('Ptx.Scalar.Parallel.SoftmaxBackward', 0) + 20
+COUNTS['Ptx.Scalar.Parallel.SoftmaxBackward.Checks'] = COUNTS.get('Ptx.Scalar.Parallel.SoftmaxBackward.Checks', 0) + 2
+COUNTS['Ptx.Scalar.Parallel.SoftmaxBackward.ExecutionChecks'] = COUNTS.get('Ptx.Scalar.Parallel.SoftmaxBackward.ExecutionChecks', 0) + 1
+COUNTS['Ptx.Scalar.Parallel.SoftmaxBackwardDot'] = COUNTS.get('Ptx.Scalar.Parallel.SoftmaxBackwardDot', 0) + 15
+COUNTS['Ptx.Scalar.Parallel.SoftmaxBackwardDot.Checks'] = COUNTS.get('Ptx.Scalar.Parallel.SoftmaxBackwardDot.Checks', 0) + 1
+COUNTS['PtxTorchLean.Softmax'] = COUNTS.get('PtxTorchLean.Softmax', 0) + 3
+COUNTS['PtxTorchLean.SoftmaxBackward'] = COUNTS.get('PtxTorchLean.SoftmaxBackward', 0) + 7
+TARGETS.update(['PtxBinary32.BackwardDot', 'PtxBinary32.BackwardDotChecks', 'PtxBinary32.BackwardDotFinite', 'PtxBinary32.PointwiseDifferenceChecks', 'PtxBinary32.SoftmaxBackward', 'PtxBinary32.SoftmaxBackwardChecks', 'PtxBinary32.SoftmaxBackwardDot', 'PtxBinary32.SoftmaxBackwardDotChecks', 'PtxBinary32.SoftmaxBackwardDotCorrect', 'PtxBinary32.SoftmaxBackwardExecutionChecks', 'PtxBinary32.SoftmaxBackwardFull', 'PtxBinary32.SoftmaxBackwardLayout', 'PtxBinary32.SoftmaxBackwardNumeric', 'PtxSoftmaxBackward', 'PtxSoftmaxBackwardReference'])
+
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -371,6 +386,10 @@ def main():
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
                            cwd=HERE, check=True)
         for check in ("SoftmaxMemoryChecks", "SoftmaxPipelineChecks", "UnaryPointwiseChecks", "SoftmaxParallelChecks"):
+            subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
+                           cwd=HERE, check=True)
+        for check in ("PointwiseDifferenceChecks", "SoftmaxBackwardDotChecks", "BackwardDotChecks",
+                      "SoftmaxBackwardExecutionChecks", "SoftmaxBackwardChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
                            cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],

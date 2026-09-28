@@ -12,7 +12,7 @@ namespace Ptx.Scalar.Parallel.Pointwise
 open Ptx.Binary32
 
 inductive Op where
-  | copy | mul | gate
+  | copy | mul | gate | difference
   deriving DecidableEq, Repr
 
 def localOp (op : Scalar.Op) : Instr := .localStep (.plain op)
@@ -22,6 +22,8 @@ def body : Op → List Instr
   | .mul => [.binary32 ⟨.always,.mul,6,.reg 4,.reg 5⟩]
   | .gate => [localOp (.mov32 6 (.reg 5)),localOp (.setp .eq 1 (.reg 4) (.imm 0)),clear,
       localOp (.setp .ge 1 (.reg 4) (.imm 0x80000000)),clear]
+  | .difference => [.binary32 ⟨.always,.mul,6,.reg 5,.imm 0xbf800000⟩,
+      .binary32 ⟨.always,.add,6,.reg 4,.reg 6⟩]
 
 def program (op : Op) : List Instr :=
   [.memory .global (.plain (.load 4 (.reg 0))),.memory .global (.plain (.load 5 (.reg 1)))] ++
@@ -34,15 +36,17 @@ def Result (op : Op) (a b value : Word) : Prop :=
   | .copy => value=b
   | .mul => Results .mul a b value
   | .gate => value=Relu.gate a b
+  | .difference => ∃ neg, Results .mul b 0xbf800000 neg ∧ Results .add a neg value
 
 def reference (op : Op) (a b : Word) : Word :=
   match op with
   | .copy => b
   | .mul => Ptx.Binary32.reference .mul a b
   | .gate => Relu.gate a b
+  | .difference => Ptx.Binary32.reference .add a (Ptx.Binary32.reference .mul b 0xbf800000)
 
 theorem reference_result (op : Op) (a b : Word) : Result op a b (reference op a b) := by
-  cases op <;> first | rfl | exact envelope_self _
+  cases op <;> first | rfl | exact envelope_self _ | exact ⟨_,envelope_self _,envelope_self _⟩
 
 /-- The source prefix is read-only; each lane has one distinct output word. -/
 structure Layout (n : Nat) where
