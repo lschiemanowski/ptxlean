@@ -9,7 +9,7 @@
   "summary": [
     "Run the matrix-free Poisson operator and PCG numerical iterations in binary64 PTX using setup supplied by Lean.",
     "Use disjoint element storage and one writer per global node for deterministic assembly without floating-point atomics.",
-    "Certify accepted solutions with an exact residual checker, while keeping hardware observations separate from missing binary64 PTX refinement and PDE proofs."
+    "Certify accepted solutions with an exact residual checker; prove true_residual per thread while retaining the remaining parallel implementation and hardware boundaries."
   ],
   "realization": "implemented",
   "links": [
@@ -52,7 +52,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Validation covers Q1–Q4, numerical operator comparisons on supplied and varied\nvectors, complete solves, polynomial reproduction, boundary preservation,\niteration limits and invalid inputs. CPU references and device results start\nfrom identical setup arrays. Saved cases, PTX and binary hashes, launch records,\noutputs, toolchain identity and sanitizer logs make the observations reproducible.\nAll failures remain visible; tolerances are declared before running comparisons.\nNo throughput or benchmarking claim is part of this backend."
+        "quote": "Validation covers Q1\u2013Q4, numerical operator comparisons on supplied and varied\nvectors, complete solves, polynomial reproduction, boundary preservation,\niteration limits and invalid inputs. CPU references and device results start\nfrom identical setup arrays. Saved cases, PTX and binary hashes, launch records,\noutputs, toolchain identity and sanitizer logs make the observations reproducible.\nAll failures remain visible; tolerances are declared before running comparisons.\nNo throughput or benchmarking claim is part of this backend."
       },
       "to": {
         "path": "hardware/validate_poisson.py",

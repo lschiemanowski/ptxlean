@@ -52,3 +52,29 @@ It does not prove that every GPU execution will terminate or pass the check,
 and it gives no continuous PDE error or conditioning-based solution-error bound.
 Compiled checker execution, input/output transport, and a particular saved GPU
 run retain their stated runtime and provenance boundaries.
+
+Instruction correspondence is proved from fetched code and its initial storage.
+Binary64 loads and stores use eight little-endian bytes, with explicit alignment,
+allocation bounds and nonwrapping addresses. Arithmetic preserves the supported
+rounding behavior and treats NaN payload freedom separately from a canonical
+Lean value. A completed execution must derive each observed output from these
+steps; a premise that a phase already computes the tensor formula is insufficient.
+The program checked by a theorem must also be tied to the emitted PTX, including
+its predicates, integer indexing, branches and synchronization instructions.
+
+The complete `true_residual` entry has a per-thread instruction proof. It loads
+the actual right-hand-side and operator-result bytes, subtracts their binary64
+values, and stores the corresponding TorchLean tensor-subtraction coordinate.
+The proof includes parameter and thread-index reads, the out-of-range return,
+execution existence, allocation bounds, and preservation of bytes outside the
+one output word. It does not assume that the operator-result input equals A x.
+Contiguous-array addresses are derived from the arena base and field offsets.
+A checked frontend compares the proved instruction list with emitted PTX.
+
+This instruction proof uses concrete sequential byte storage. It does not yet
+establish which values parallel weak PTX loads may observe. The parallel memory
+rules must be extended from four-byte to eight-byte accesses and connected to
+these executions before claiming a parallel-kernel correspondence theorem.
+Shared-memory cell phases, assembly, reductions, remaining PCG kernels and host
+launch composition remain unproved at the instruction level. No premise that
+these phases already compute their specified answers substitutes for that work.

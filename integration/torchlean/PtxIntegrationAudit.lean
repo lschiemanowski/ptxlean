@@ -1,3 +1,14 @@
+import PoissonPTX.Arithmetic
+import PoissonPTX.Bytes
+import PoissonPTX.Checks
+import PoissonPTX.Kernel
+import PoissonPTX.Layout
+import PoissonPTX.Machine
+import PoissonPTX.MemoryBlocks
+import PoissonPTX.Residual
+import PoissonPTX.ResidualKernel
+import PoissonPTX.Tensor
+import PoissonPTX.Text
 import PoissonBinary64
 import PoissonQuadCorrespondence
 import PoissonResidualCertificate
@@ -2910,3 +2921,149 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.Certificate.Checks.finite_word_exact
 #print axioms PtxTorchLean.Poisson.Certificate.Checks.infinity_rejected
 #print axioms PtxTorchLean.Poisson.Certificate.Checks.nan_rejected
+
+#print axioms PtxTorchLean.Poisson.PTX.sub_software
+#print axioms PtxTorchLean.Poisson.PTX.Byte
+#print axioms PtxTorchLean.Poisson.PTX.Word
+#print axioms PtxTorchLean.Poisson.PTX.Memory
+#print axioms PtxTorchLean.Poisson.PTX.byte
+#print axioms PtxTorchLean.Poisson.PTX.read64
+#print axioms PtxTorchLean.Poisson.PTX.write64
+#print axioms PtxTorchLean.Poisson.PTX.write64_at
+#print axioms PtxTorchLean.Poisson.PTX.write64_outside
+#print axioms PtxTorchLean.Poisson.PTX.read64_write64
+#print axioms PtxTorchLean.Poisson.PTX.read64_write64_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.Valid64
+#print axioms PtxTorchLean.Poisson.PTX.valid_nonwrapping
+#print axioms PtxTorchLean.Poisson.PTX.address64
+#print axioms PtxTorchLean.Poisson.PTX.address64_exact
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Checks.initial
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Checks.context
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Checks.code
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Checks.subtract_stored_words
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Checks.no_return_no_success
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Checks.misaligned_load_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Checks.short_allocation_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Checks.below_allocation_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Checks.padded_lane_needs_no_memory
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Context
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Instr
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.State
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.u32
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.scalar
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.advance
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.halt
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.simple
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Eval
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Exec
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Step
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Run
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.simple_pc
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.eval_pc
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.exec_fetched
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.run_exec
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.exec_ordinary_iff
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.exec_nonhalting_iff
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.exec_halting_iff
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.block_exec
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.exec_block
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.step
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.execute
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.step_sound
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.execute_sound
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.setup_address
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.field_valid
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.array_coordinate
+#print axioms PtxTorchLean.Poisson.PTX.Registers
+#print axioms PtxTorchLean.Poisson.PTX.decode
+#print axioms PtxTorchLean.Poisson.PTX.encode
+#print axioms PtxTorchLean.Poisson.PTX.decode_encode
+#print axioms PtxTorchLean.Poisson.PTX.FP
+#print axioms PtxTorchLean.Poisson.PTX.FP.apply
+#print axioms PtxTorchLean.Poisson.PTX.FP.Result
+#print axioms PtxTorchLean.Poisson.PTX.FP.result_exists
+#print axioms PtxTorchLean.Poisson.PTX.Space
+#print axioms PtxTorchLean.Poisson.PTX.State
+#print axioms PtxTorchLean.Poisson.PTX.Operand
+#print axioms PtxTorchLean.Poisson.PTX.Operand.eval
+#print axioms PtxTorchLean.Poisson.PTX.Op
+#print axioms PtxTorchLean.Poisson.PTX.State.memory
+#print axioms PtxTorchLean.Poisson.PTX.State.start
+#print axioms PtxTorchLean.Poisson.PTX.State.bytes
+#print axioms PtxTorchLean.Poisson.PTX.advance
+#print axioms PtxTorchLean.Poisson.PTX.assign
+#print axioms PtxTorchLean.Poisson.PTX.put
+#print axioms PtxTorchLean.Poisson.PTX.Eval
+#print axioms PtxTorchLean.Poisson.PTX.Step
+#print axioms PtxTorchLean.Poisson.PTX.Runs
+#print axioms PtxTorchLean.Poisson.PTX.Block
+#print axioms PtxTorchLean.Poisson.PTX.eval_pc
+#print axioms PtxTorchLean.Poisson.PTX.block_pc
+#print axioms PtxTorchLean.Poisson.PTX.block_append
+#print axioms PtxTorchLean.Poisson.PTX.block_fetched
+#print axioms PtxTorchLean.Poisson.PTX.eval
+#print axioms PtxTorchLean.Poisson.PTX.run
+#print axioms PtxTorchLean.Poisson.PTX.eval_sound
+#print axioms PtxTorchLean.Poisson.PTX.run_sound
+#print axioms PtxTorchLean.Poisson.PTX.noFP
+#print axioms PtxTorchLean.Poisson.PTX.eval_complete
+#print axioms PtxTorchLean.Poisson.PTX.block_complete
+#print axioms PtxTorchLean.Poisson.PTX.block_split
+#print axioms PtxTorchLean.Poisson.PTX.wide
+#print axioms PtxTorchLean.Poisson.PTX.address
+#print axioms PtxTorchLean.Poisson.PTX.addressCode
+#print axioms PtxTorchLean.Poisson.PTX.addressed
+#print axioms PtxTorchLean.Poisson.PTX.loadCode
+#print axioms PtxTorchLean.Poisson.PTX.storeCode
+#print axioms PtxTorchLean.Poisson.PTX.addressed_memory
+#print axioms PtxTorchLean.Poisson.PTX.addressed_globalStart
+#print axioms PtxTorchLean.Poisson.PTX.addressed_sharedStart
+#print axioms PtxTorchLean.Poisson.PTX.addressed_reg
+#print axioms PtxTorchLean.Poisson.PTX.addressed_addr
+#print axioms PtxTorchLean.Poisson.PTX.address_run
+#print axioms PtxTorchLean.Poisson.PTX.run_append
+#print axioms PtxTorchLean.Poisson.PTX.load_run
+#print axioms PtxTorchLean.Poisson.PTX.store_run
+#print axioms PtxTorchLean.Poisson.PTX.load_access_bound
+#print axioms PtxTorchLean.Poisson.PTX.load_value
+#print axioms PtxTorchLean.Poisson.PTX.load_block_eq
+#print axioms PtxTorchLean.Poisson.PTX.store_block_eq
+#print axioms PtxTorchLean.Poisson.PTX.Residual.code
+#print axioms PtxTorchLean.Poisson.PTX.Residual.left
+#print axioms PtxTorchLean.Poisson.PTX.Residual.right
+#print axioms PtxTorchLean.Poisson.PTX.Residual.result
+#print axioms PtxTorchLean.Poisson.PTX.Residual.finish
+#print axioms PtxTorchLean.Poisson.PTX.Residual.executes
+#print axioms PtxTorchLean.Poisson.PTX.Residual.correct
+#print axioms PtxTorchLean.Poisson.PTX.Residual.fetched
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.prologue
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.program
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.index
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.setup
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.live
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.setup_live
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.setup_global
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.setup_shared
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.setup_bytes
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.setup_start
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.setup_index
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.setup_base
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.index_exact
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.prologue_live
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.correct
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.execution_exists
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.prologue_inactive
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.inactive
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_exists
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_frame
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_inactive
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.view
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.Residual.torchlean_coordinate
+#print axioms PtxTorchLean.Poisson.PTX.Text.register
+#print axioms PtxTorchLean.Poisson.PTX.Text.operand
+#print axioms PtxTorchLean.Poisson.PTX.Text.operation
+#print axioms PtxTorchLean.Poisson.PTX.Text.space
+#print axioms PtxTorchLean.Poisson.PTX.Text.data
+#print axioms PtxTorchLean.Poisson.PTX.Text.instruction
+#print axioms PtxTorchLean.Poisson.PTX.Text.residual

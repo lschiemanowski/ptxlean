@@ -1,0 +1,141 @@
+{
+  "id": "048a47df-ff1a-481b-8f59-055da9571b60",
+  "base": "4c68d3a878609e615f523bdddf0ce53e8c53f7e8",
+  "contentTree": "94a99ec0743608edc4638e3ae454bf4cbce5def2",
+  "reviewer": "Codex",
+  "summary": "Prove the complete true_residual entry per thread from fetched binary64 instructions and concrete byte memory, connect it to TorchLean tensor subtraction, and check emitted-code binding. Preserve explicit missing parallel memory admission and whole Poisson solver correspondence; this is a completed proof slice, not completion of the requested whole solver proof.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Added universal fetched residual correctness, execution existence, byte preservation, inactive-lane behavior and contiguous TorchLean array correspondence. No hypothesis assumes phase outputs. Parallel eight-byte admission and all other solver instruction proofs remain explicit."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Updated backend status to distinguish the new true_residual per-thread proof from still-missing parallel and whole-solver correspondence. Numerical and certified-result behavior is unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Extended the exact named dependency audit by 145 public endpoints and one separately audited executable wrapper; retained pinned dependencies, source stability checks and standard-axiom policy. Source interpretation remains separate from kernel validity."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The same reference equations, CPU Float algorithm and exact result certificate remain. The new proof is scoped to one PTX entry; no solver convergence, hardware conformance or PDE theorem is added."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "94a99ec0743608edc4638e3ae454bf4cbce5def2",
+      "method": "integration/torchlean/check.sh; python3 hardware/check_poisson_ptx.py --run .hardware-runs/poisson-certified --output /tmp/poisson-instruction-binding-final.json; python3 -m unittest discover -s hardware -p test_*.py; stratic validate; local documentation link check; git diff --check; manual theorem/source and snapshot review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, manifest-pinned TorchLean/FloatLib/mathlib dependencies, Python 3, Stratic 0.1.0; locally pinned PTX ISA 9.4 document SHA-256 0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed. No GPU execution or external model call in this change.",
+      "evidence": "Integration build, source guard, fresh closed examples and 2730 exact dependency reports passed with only standard Lean axioms; the new executable main is separately audited. Lean/config/audit content is unchanged from the integration run snapshot. The only later changes were the frontend provenance checks, their tests and their receipt, all separately rerun. The proved 20-instruction true_residual list matches all 30 saved layouts. All 19 hardware infrastructure tests pass, including rejection of opcode/guard/layout mutations, comments/duplicate entries and missing/altered artifact hashes. All 17 receipt proof/frontend hashes match current files. New/updated guides have 20 resolving local links; Stratic links and whitespace checks pass. Final selected snapshot is stable across final checks; separate user README edits are excluded and do not affect the executed integration checks. Review confirms initial-byte operands, actual fetched instructions and addresses, no assumed phase-output equality, explicit sequential-memory restriction, and remaining eight-byte parallel admission/other kernels/host composition. This does not establish the full requested solver correspondence.",
+      "tests": [],
+      "id": "4b941e1e-880f-4a65-b39d-8b059ca12c71",
+      "recordedAt": "2026-09-28T17:40:09.604Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T17:40:56.644Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-correspondence.md",
+      "reason": "Reviewed study explanations and proof boundaries against the Lean endpoints, including the still-missing parallel and whole-solver correspondence; local links checked."
+    },
+    {
+      "path": "docs/foundations/poisson-instructions.md",
+      "reason": "Reviewed study explanations and proof boundaries against the Lean endpoints, including the still-missing parallel and whole-solver correspondence; local links checked."
+    },
+    {
+      "path": "hardware/check_poisson_ptx.py",
+      "reason": "Inspected the exact emitted-entry binding, rejection tests or recorded hash evidence. They concern one residual entry and do not certify other kernels, parallel admission or hardware execution."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Inspected the exact emitted-entry binding, rejection tests or recorded hash evidence. They concern one residual entry and do not certify other kernels, parallel admission or hardware execution."
+    },
+    {
+      "path": "hardware/test_poisson_ptx.py",
+      "reason": "Inspected the exact emitted-entry binding, rejection tests or recorded hash evidence. They concern one residual entry and do not certify other kernels, parallel admission or hardware execution."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Arithmetic.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Bytes.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Checks.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Kernel.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Layout.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Machine.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/MemoryBlocks.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Residual.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ResidualKernel.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Tensor.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Text.lean",
+      "reason": "Inspected the full new module, including definitions, interpreter/refinement lemmas and proof endpoints outside linked excerpts; it implements the explicitly sequential binary64 residual proof slice and is included in the integration audit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTXMain.lean",
+      "reason": "Reviewed bounded JSON parameters and instruction rendering from the proved program; executable wrapper separately audited. Compiled frontend execution is explicitly outside the Lean parser-proof boundary."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Integration configuration and audit plumbing includes every new target and public endpoint without relaxing prior checks; no existing theorem was weakened."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Integration configuration and audit plumbing includes every new target and public endpoint without relaxing prior checks; no existing theorem was weakened."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Integration configuration and audit plumbing includes every new target and public endpoint without relaxing prior checks; no existing theorem was weakened."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Description and metadata updates state the completed proof slice and missing obligations; validated summaries and exact passage links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Description and metadata updates state the completed proof slice and missing obligations; validated summaries and exact passage links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Description and metadata updates state the completed proof slice and missing obligations; validated summaries and exact passage links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Description and metadata updates state the completed proof slice and missing obligations; validated summaries and exact passage links."
+    }
+  ]
+}

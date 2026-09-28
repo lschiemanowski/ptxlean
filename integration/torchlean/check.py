@@ -346,6 +346,10 @@ TARGETS.update({'PoissonQuad', 'PoissonQuadCLI', 'PoissonQuadMain', 'PoissonQuad
 COUNTS.update({'PtxTorchLean.Poisson.Binary64': 6, 'PtxTorchLean.Poisson.Correspondence': 45, 'PtxTorchLean.Poisson.Certificate': 23, 'PtxTorchLean.Poisson.Certificate.Input': 10, 'PtxTorchLean.Poisson.Certificate.Checks': 7})
 TARGETS.update({'PoissonResidualMain', 'PoissonQuadCorrespondence', 'PoissonBinary64', 'PoissonResidualChecks', 'PoissonResidualInput', 'PoissonResidualCertificate'})
 
+# Fetched binary64 true_residual slice; parallel admission remains separate.
+COUNTS.update({'PtxTorchLean.Poisson.PTX': 62, 'PtxTorchLean.Poisson.PTX.Kernel.Checks': 9, 'PtxTorchLean.Poisson.PTX.Kernel': 25, 'PtxTorchLean.Poisson.PTX.Kernel.Residual': 27, 'PtxTorchLean.Poisson.PTX.FP': 3, 'PtxTorchLean.Poisson.PTX.Operand': 1, 'PtxTorchLean.Poisson.PTX.State': 3, 'PtxTorchLean.Poisson.PTX.Residual': 8, 'PtxTorchLean.Poisson.PTX.Text': 7})
+TARGETS.update(['PoissonPTX.Arithmetic', 'PoissonPTX.Bytes', 'PoissonPTX.Checks', 'PoissonPTX.Kernel', 'PoissonPTX.Layout', 'PoissonPTX.Machine', 'PoissonPTX.MemoryBlocks', 'PoissonPTX.Residual', 'PoissonPTX.ResidualKernel', 'PoissonPTX.Tensor', 'PoissonPTX.Text', 'PoissonPTXMain'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -409,8 +413,9 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxHardwareDenseChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonQuadChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonResidualChecks.lean"], cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/Checks.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
-        for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean"):
+        for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean"):
             wrapper = subprocess.run(["lake", "--no-cache", "env", "lean", wrapper_file],
                                      cwd=HERE, check=True, text=True, stdout=subprocess.PIPE)
             audit_dependencies(wrapper.stdout, ["main"])

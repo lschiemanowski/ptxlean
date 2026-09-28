@@ -33,10 +33,12 @@ the installed toolchain; the project's semantic target remains PTX 9.4.
 Restricted binary64 instruction use is reviewed against NVIDIA's documentation.
 Ordinary global and shared loads/stores are weak accesses: synchronization comes
 from group barriers and ordered launches, not from the memory operations alone.
-The existing formal instruction execution model does not yet cover this new
-binary64 backend: generated text, compilation, launch and execution are tested,
-not asserted to be a proved refinement of the Lean algorithm. Neither these
-tests nor a small algebraic residual establish a continuous PDE error bound.
+The `true_residual` entry has a per-thread binary64 instruction proof tied to
+TorchLean subtraction. It includes fetched instructions, byte addresses and
+its guard. Parallel memory admission, the other kernels and host launch
+composition are still needed for a proof of the complete backend. Generated
+text, compilation, launch and execution have separate checks; they are not
+asserted to establish hardware conformance or continuous PDE accuracy.
 
 Validation covers Q1–Q4, numerical operator comparisons on supplied and varied
 vectors, complete solves, polynomial reproduction, boundary preservation,
