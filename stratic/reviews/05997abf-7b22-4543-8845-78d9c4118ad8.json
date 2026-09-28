@@ -1,0 +1,113 @@
+{
+  "id": "05997abf-7b22-4543-8845-78d9c4118ad8",
+  "base": "88e1810427f1f5ba4a32ff9ddd60b74abdf483c3",
+  "contentTree": "e1509fbdcda6a822f997811ceef36d8aa0a089dc",
+  "reviewer": "Codex",
+  "summary": "Prove Poisson shared-store execution and order-independent plane publication",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Extended the local instruction contract through actual shared stores, allocation geometry, complete order-independent plane publication and snapshot operand reads. Repeated-barrier control and visibility remain explicit unfinished work."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Parent records the shared-store and publication proofs without claiming a complete concurrent cell kernel."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The explicit dependency audit expands to cover every new public declaration. Standard-axiom-only acceptance and the separate source-fidelity, textual-binding, compiler and GPU boundaries remain unchanged."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The reference solver, represented equations, residual certificate and empirical backend behavior are unchanged. This is an additional partial instruction proof."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "e1509fbdcda6a822f997811ceef36d8aa0a089dc",
+      "method": "Full pinned integration check; Python hardware tests; fresh saved-PTX binding checks; source-semantic review; Stratic and distribution validation",
+      "outcome": "pass",
+      "environment": "Lean 4.34.0 and pinned TorchLean/FloatLib dependency set; local Python3; existing saved GPU artifacts, no new GPU execution or external model call",
+      "evidence": "integration/torchlean/check.sh passed 2900 exact dependency reports with standard Lean axioms only; 25 Python hardware tests passed; fresh binding receipt checked 720 contraction blocks and 630 shared-store blocks across 30 layouts, including adjacency of four contraction/store pairs; residual receipt rechecked all 30 layouts. New local store/publication proof endpoints independently audited; pinned PTX 9.4 st/bar review and SHA256 verified. Description links valid. README unchanged. Initial snapshot d5936011896c761d4a7cec01cdcbab4ee124dbfc; final changes after proof check are guide clarification, hardware binding adjacency checks (retested) and generated receipts. Integration sources remained unchanged during the full check. Full barrier control/visibility remains explicitly unproved.",
+      "tests": [],
+      "id": "af09da47-0285-40fd-83f3-20fd9ada124b",
+      "recordedAt": "2026-09-28T19:31:55.997Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T19:32:43.458Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-cell-contractions.md",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ContractionText.lean",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/SharedPlane.lean",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/SharedStore.lean",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/SharedStoreChecks.lean",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed shared-store/publication proof support, check registration, binding checks and evidence, or explanatory documentation. Main proof endpoints are linked from poisson-correspondence. Barrier visibility and full cell execution remain open."
+    }
+  ]
+}

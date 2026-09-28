@@ -1,3 +1,4 @@
+import PoissonPTX.SharedStore
 import PoissonPTX.Text
 import PoissonPTX.Contraction
 
@@ -37,5 +38,11 @@ def render (op : Op) : String :=
 /-- Render the same program consumed by fetched_correct, not a second algorithm. -/
 def rendered (width : Nat) (b d : Word) : List (String × List String) :=
   (plans width b d).map fun p => (p.name,(program width p.acc p.left p.right).map render)
+
+/-- Seven emitted shared-store blocks: gathered input, then six intermediate planes. -/
+def renderedStores (width : Nat) : List (Nat × List String) :=
+  (List.range 7).map fun plane => (plane,
+    (SharedStore.code (BitVec.ofNat 64 (plane*width*width*8))
+      (if plane=0 then 11 else 8)).map Text.data)
 
 end PtxTorchLean.Poisson.PTX.Contraction

@@ -1,3 +1,6 @@
+import PoissonPTX.SharedStore
+import PoissonPTX.SharedPlane
+import PoissonPTX.SharedStoreChecks
 import PoissonPTX.Contraction
 import PoissonPTX.ContractionChecks
 import PoissonPTX.ContractionFetched
@@ -3214,3 +3217,43 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Contraction.rendered
 #print axioms PtxTorchLean.Poisson.PTX.mul32
 #print axioms PtxTorchLean.Poisson.PTX.add32
+
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.code
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.location
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.finish
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.Valid
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.run_store
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.block_eq
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.location_exact
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.keeps
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.eval_keeps
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.block_keeps
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.contraction_keeps_lane
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.contraction_valid
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.contraction_store
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.contraction_store_exists
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.address
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.store_address
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.owners
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.planes_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.publish
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.published_word
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.published_outside
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.order_independent
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.published_store
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction
+#print axioms PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.state
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.last_plane
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.outside_rejected
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.misaligned_rejected
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.scratch_source
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.bad_lane_rejected
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.finals
+#print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.reversed_publication
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.renderedStores

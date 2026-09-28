@@ -76,5 +76,8 @@ The eight matrix contractions inside each cell kernel also have local instructio
 proofs: indexing, byte loads, and the ordered rounded operations produce the
 TorchLean matrix product of byte-backed operand views. These contracts preserve
 the input storage but require a supplied phase snapshot. The gather, surrounding
-branches and stores, weighting, final addition, and barriers have not yet been
-joined into a complete cell execution theorem.
+branches, weighting, final addition, and barriers have not yet been joined into
+a complete cell execution theorem. Shared-store instruction proofs now connect
+producer registers to the eight-byte words of each plane. Disjoint lane ownership
+makes the resulting plane independent of publication order; proving that later
+threads observe it through the barriers remains a separate obligation.

@@ -13,10 +13,11 @@
     "Prove the complete true_residual entry per thread, including byte addresses, guard, execution existence and TorchLean subtraction; check its emitted instruction binding.",
     "Prove whole-vector residual subtraction under necessary byte-source constraints, with derived read-only inputs, actual instruction traces and arbitrary ordering of disjoint output stores.",
     "Keep complete memory admission, shared-memory barriers, cell phases, assembly, reductions and host launch composition explicit as remaining work.",
-    "Prove the eight local cell contractions from fetched indexing, byte loads and separate rounded multiply/add operations; connect their byte-backed views to TorchLean while retaining the separate barrier-snapshot obligation."
+    "Prove the eight local cell contractions from fetched indexing, byte loads and separate rounded multiply/add operations; connect their byte-backed views to TorchLean while retaining the separate barrier-snapshot obligation.",
+    "Derive shared-plane bytes from actual store instructions and contraction results, with disjoint ownership, arbitrary publication order and execution witnesses; retain barrier visibility as a separate obligation."
   ],
   "realization": "partial",
-  "remaining": "Complete PTX memory admission, shared-memory phase availability, cell gather/control/stores/weighting/final addition, assembly, reductions, other PCG kernels and host launches remain unproved. Residual correspondence uses necessary byte-source constraints; cell contractions use concrete phase snapshots. Neither is a full solver or GPU-progress theorem.",
+  "remaining": "Complete PTX memory admission, shared-memory phase availability, cell gather/control/weighting/final addition/output stores, assembly, reductions, other PCG kernels and host launches remain unproved. Residual correspondence uses necessary byte-source constraints; cell contractions use concrete phase snapshots. Neither is a full solver or GPU-progress theorem.",
   "links": [
     {
       "kind": "implementation",
@@ -291,6 +292,90 @@
         "path": "integration/torchlean/PoissonPTX/ContractionText.lean",
         "passage": {
           "quote": "def plans (width : Nat) (b d : Word) : List Plan :=\n  let plane (p : Nat) := BitVec.ofNat 64 (p*width*width*8)\n  [\u27e8\"bu\",8,\u27e8.global,b,.row,.inner\u27e9,\u27e8.shared,plane 0,.inner,.column\u27e9\u27e9,\n   \u27e8\"du\",8,\u27e8.global,d,.row,.inner\u27e9,\u27e8.shared,plane 0,.inner,.column\u27e9\u27e9,\n   \u27e8\"dx\",8,\u27e8.shared,plane 1,.row,.inner\u27e9,\u27e8.global,d,.column,.inner\u27e9\u27e9,\n   \u27e8\"dy\",8,\u27e8.shared,plane 2,.row,.inner\u27e9,\u27e8.global,b,.column,.inner\u27e9\u27e9,\n   \u27e8\"bl\",8,\u27e8.global,b,.inner,.row\u27e9,\u27e8.shared,plane 3,.inner,.column\u27e9\u27e9,\n   \u27e8\"dl\",8,\u27e8.global,d,.inner,.row\u27e9,\u27e8.shared,plane 4,.inner,.column\u27e9\u27e9,\n   \u27e8\"x\",8,\u27e8.shared,plane 5,.row,.inner\u27e9,\u27e8.global,d,.inner,.column\u27e9\u27e9,\n   \u27e8\"y\",9,\u27e8.shared,plane 6,.row,.inner\u27e9,\u27e8.global,b,.inner,.column\u27e9\u27e9]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Shared-plane publication connects a lane's register result to its eight stored\nbytes."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SharedStore.lean",
+        "passage": {
+          "quote": "theorem fetched_correct (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++code offset src++suffix) s t)\n    (done : t.pc=pre.length+(code offset src).length)\n    (h1 : src\u22601) (h2 : src\u22602) (valid : Valid s offset) :\n    t.shared = write64 s.shared (location s offset).toNat (s.regs src) \u2227\n    t.global = s.global \u2227\n    (\u2200 r, r\u22601 \u2192 r\u22602 \u2192 t.regs r=s.regs r) := by\n  rw [block_eq (Contraction.fetched_block _ _ _ execution pc done) h1 h2 valid]\n  refine \u27e8rfl,rfl,?_\u27e9\n  intro r hr1 hr2\n  simp [finish,put,assign,advance,hr1,hr2]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Bounds derive from the seven-plane allocation\nand the active lane range; scratch address registers cannot replace the value\nbeing stored."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SharedStore.lean",
+        "passage": {
+          "quote": "theorem valid_of_plane (s : State) (width : Nat) (plane : Fin 7)\n    (hw : width\u22645) (lane : (s.regs 14).toNat < width*width)\n    (base : (s.regs 3).toNat=s.sharedStart) (aligned : s.sharedStart%8=0)\n    (fits : 7*width*width*8\u2264s.sharedBytes)\n    (noWrap : s.sharedStart+s.sharedBytes\u22642^64) :\n    Valid s (BitVec.ofNat 64 (plane.val*width*width*8)) := by\n  have hp := plane.isLt\n  have hsmall : width*width\u226425 := by nlinarith\n  have po : plane.val*width*width*8 < 2^64 := by nlinarith\n  have endBound : (s.regs 14).toNat*8+plane.val*width*width*8+8\u22647*width*width*8 := by\n    have h := Nat.mul_le_mul_right (width*width) (show plane.val+1\u22647 by omega)\n    nlinarith\n  have hb : (s.regs 3).toNat+(s.regs 14).toNat*8+\n      (BitVec.ofNat 64 (plane.val*width*width*8)).toNat < 2^64 := by\n    rw [BitVec.toNat_ofNat,Nat.mod_eq_of_lt po,base]; omega\n  unfold Valid\n  rw [location_exact s _ (by omega) hb,BitVec.toNat_ofNat,Nat.mod_eq_of_lt po,base]\n  exact \u27e8by omega,by simp [Nat.add_mod,aligned],by omega,noWrap\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A contraction followed immediately by its store publishes the\nTorchLean matrix-product coordinate, with a completed execution witness."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SharedStore.lean",
+        "passage": {
+          "quote": "theorem fetched_contraction_store (allowed : Contraction.Accumulator acc)\n    (loads : \u2200 k<width, Contraction.Valid s width k a \u2227 Contraction.Valid s width k b)\n    (valid : Valid s offset) (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++(Contraction.program width acc a b ++ code offset acc)++suffix) s t)\n    (done : t.pc=pre.length+(Contraction.program width acc a b ++ code offset acc).length) :\n    decode (read64 t.shared (location s offset).toNat) =\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor s width a)\n        (Contraction.rightTensor s width b)) 0 0 \u2227 t.global=s.global :=\n  contraction_store allowed loads valid (Contraction.fetched_block _ _ _ execution pc done)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A contraction followed immediately by its store publishes the\nTorchLean matrix-product coordinate, with a completed execution witness."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SharedStore.lean",
+        "passage": {
+          "quote": "theorem fetched_contraction_store_exists (s : State) (allowed : Contraction.Accumulator acc)\n    (loads : \u2200 k<width, Contraction.Valid s width k a \u2227 Contraction.Valid s width k b)\n    (valid : Valid s offset) (pre suffix : List Op) (pc : s.pc=pre.length) :\n    \u2203 t, Runs (pre++(Contraction.program width acc a b ++ code offset acc)++suffix) s t \u2227\n      t.pc=pre.length+(Contraction.program width acc a b ++ code offset acc).length := by\n  obtain \u27e8t,h\u27e9 := contraction_store_exists s allowed loads valid\n  exact \u27e8t,block_fetched h pre suffix pc,by rw [block_pc h,pc]\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Combining these actual store effects in any order\nrecovers every producer's word and preserves all bytes outside the plane."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SharedPlane.lean",
+        "passage": {
+          "quote": "theorem order_independent (initial : Memory) (base width plane : Nat)\n    (final : Fin (width*width) \u2192 State) (left right : List (Fin (width*width)))\n    (hl : \u2200 i, i\u2208left) (hr : \u2200 i, i\u2208right) :\n    publish initial base width plane final left = publish initial base width plane final right := by\n  funext p\n  by_cases covered : \u2203 i : Fin (width*width), \u2203 k : Fin 8, p=address base width plane i.val+k.val\n  \u00b7 obtain \u27e8i,k,rfl\u27e9 := covered\n    have l := congrArg (fun w => byte w k.val) (published_word initial base width plane final left i (hl i))\n    have r := congrArg (fun w => byte w k.val) (published_word initial base width plane final right i (hr i))\n    simpa only [Sources.byte_read64] using l.trans r.symm\n  \u00b7 have outside : \u2200 i : Fin (width*width), p<address base width plane i.val \u2228\n        address base width plane i.val+8\u2264p := by\n      intro i\n      by_contra h\n      have hk : p-address base width plane i.val<8 := by omega\n      exact covered \u27e8i,\u27e8p-address base width plane i.val,hk\u27e9,by simp; omega\u27e9\n    rw [published_outside _ _ _ _ _ _ _ outside,published_outside _ _ _ _ _ _ _ outside]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Combining these actual store effects in any order\nrecovers every producer's word and preserves all bytes outside the plane."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SharedPlane.lean",
+        "passage": {
+          "quote": "theorem published_contraction (initial : Memory) (base width plane acc : Nat) (offset : Word)\n    (a b : Contraction.Matrix) (start final : Fin (width*width) \u2192 State)\n    (order : List (Fin (width*width))) (complete : \u2200 i, i\u2208order)\n    (allowed : Contraction.Accumulator acc)\n    (loads : \u2200 i k, k<width \u2192 Contraction.Valid (start i) width k a \u2227 Contraction.Valid (start i) width k b)\n    (valid : \u2200 i, SharedStore.Valid (start i) offset)\n    (locations : \u2200 i, (SharedStore.location (start i) offset).toNat=address base width plane i.val)\n    (execution : \u2200 i, Block (Contraction.program width acc a b ++ SharedStore.code offset acc)\n      (start i) (final i)) (i : Fin (width*width)) :\n    decode (read64 (publish initial base width plane final order) (address base width plane i.val)) =\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (start i) width a)\n        (Contraction.rightTensor (start i) width b)) 0 0 := by\n  rw [published_word _ _ _ _ _ _ i (complete i)]\n  have h := (SharedStore.contraction_store allowed (loads i) (valid i) (execution i)).1\n  simpa only [locations i] using h"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This constructs the concrete snapshot for later matrix loads; it does not yet\nprove that a concurrent load observes that snapshot."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SharedPlane.lean",
+        "passage": {
+          "quote": "theorem contraction_value (initial : Memory) (base width plane : Nat)\n    (final : Fin (width*width) \u2192 State) (order : List (Fin (width*width)))\n    (complete : \u2200 i, i\u2208order) (s : State) (k : Nat) (m : Contraction.Matrix)\n    (sp : m.space=.shared) (hw : width\u22645)\n    (hr : ((m.row.operand k).eval s).toNat<width)\n    (hc : ((m.column.operand k).eval s).toNat<width)\n    (baseEq : (s.regs 3).toNat=base) (off : m.offset.toNat=plane*width*width*8)\n    (bound : base+plane*width*width*8+width*width*8\u22642^64)\n    (memory : s.shared=publish initial base width plane final order) :\n    \u2203 i : Fin (width*width),\n      i.val=((m.row.operand k).eval s).toNat*width+((m.column.operand k).eval s).toNat \u2227\n      Contraction.value s width k m = decode (read64 (final i).shared (address base width plane i.val)) := by\n  have indexBound : ((m.row.operand k).eval s).toNat*width+\n      ((m.column.operand k).eval s).toNat<width*width := by\n    nlinarith\n  let i : Fin (width*width) := \u27e8_,indexBound\u27e9\n  refine \u27e8i,rfl,?_\u27e9\n  have hb : (s.regs (Contraction.baseRegister m.space)).toNat+\n      (((m.row.operand k).eval s).toNat*width+((m.column.operand k).eval s).toNat)*8+\n      m.offset.toNat<2^64 := by\n    simp only [sp,Contraction.baseRegister,baseEq,off]; omega\n  unfold Contraction.value\n  rw [Contraction.location_exact s width k m hw hr hc hb]\n  simp only [sp,State.memory,Contraction.baseRegister,baseEq,off,memory]\n  have addr : base+(((m.row.operand k).eval s).toNat*width+\n      ((m.column.operand k).eval s).toNat)*8+plane*width*width*8=address base width plane i.val := by\n    simp [address,i]; ring\n  rw [addr,published_word _ _ _ _ _ _ i (complete i)]"
         }
       }
     }

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Bind the eight local cell contraction blocks to their proved Lean programs.
+"""Bind local cell contraction and shared-store blocks to their proved Lean programs.
 
-This does not check the gather, phase stores, barriers, weighting, final addition,
+This does not check the gather, barriers, weighting, final addition,
 launch control, or weak-memory admission. Each proof uses a concrete phase snapshot.
 """
 import argparse
@@ -61,6 +61,32 @@ def verify_blocks(ptx, rendered, layout):
     return checked
 
 
+def verify_stores(ptx, rendered, layout, contractions):
+    parameters(layout)
+    if [plane for plane, _ in rendered] != list(range(7)):
+        raise ValueError('expected seven ordered shared-store plans')
+    checked = []
+    for entry in ('element_probe', 'element_p', 'element_x'):
+        bodies = re.findall(r'\.visible \.entry '+entry+r'\(\.param \.u64 arena\)\s*([^}]+)}', ptx)
+        if len(bodies) != 1:
+            raise ValueError('entry missing or duplicated')
+        body = [line.strip() for line in bodies[0].splitlines() if line.strip()]
+        ends = [i for i, line in enumerate(body) if 'st.shared' in line]
+        if len(ends) != 7:
+            raise ValueError('missing or extra shared store')
+        for end, (plane, code) in zip(ends, rendered, strict=True):
+            if len(code) != 3 or end < 2 or body[end-2:end+1] != code:
+                raise ValueError(f'{entry}/plane {plane}: shared store differs from proved program')
+            adjacent = {1: 'bu', 2: 'du', 5: 'bl', 6: 'dl'}.get(plane)
+            if adjacent is not None:
+                combined = dict(contractions)[adjacent] + code
+                if end+1 < len(combined) or body[end+1-len(combined):end+1] != combined:
+                    raise ValueError(f'{entry}/{adjacent}: contraction is not adjacent to its proved store')
+            checked.append(dict(entry=entry, plane=plane, adjacent_contraction=adjacent, instructions=len(code),
+                                sha256=hashlib.sha256(('\n'.join(code)+'\n').encode()).hexdigest()))
+    return checked
+
+
 def check(run, output):
     if output.exists():
         raise ValueError('output already exists')
@@ -83,12 +109,16 @@ def check(run, output):
     if not version.startswith(f'Lean (version {pin},'):
         raise ValueError('toolchain differs from pin')
     subprocess.run(['lake', '--no-cache', 'build', 'poissonContractions', 'PoissonPTX.ContractionFetched',
-                    'PoissonPTX.ContractionLayout'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
+    names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
+              ('fetched_correct', 'fetched_exists', 'valid_of_plane', 'fetched_contraction_store', 'fetched_contraction_store_exists')]
+    names += ['PtxTorchLean.Poisson.PTX.SharedPlane.'+n for n in
+              ('store_address', 'published_store', 'published_contraction', 'order_independent', 'contraction_value')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\n'+
+        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)
@@ -96,7 +126,8 @@ def check(run, output):
     rendered = json.loads(subprocess.check_output([INTEGRATION/'.lake/build/bin/poissonContractions'],
         input=json.dumps([parameters(l) for l in layouts])+'\n', text=True))
     checked = [dict(directory=c['directory'], blocks=verify_blocks(
-        read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code, layout))
+        read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['contractions'], layout),
+        stores=verify_stores(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['stores'], layout, code['contractions']))
         for c, layout, code in zip(report['cases'], layouts, rendered, strict=True)]
     checker.dependencies()
     if hashes != {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}:
@@ -109,7 +140,8 @@ def check(run, output):
     if output.exists():
         raise ValueError('output already exists')
     output.write_text(json.dumps(result, indent=2)+'\n')
-    print(f'Checked {sum(len(c["blocks"]) for c in checked)} contraction blocks in {len(checked)} saved layouts.')
+    print(f'Checked {sum(len(c["blocks"]) for c in checked)} contraction blocks and '
+          f'{sum(len(c["stores"]) for c in checked)} shared-store blocks in {len(checked)} saved layouts.')
 
 
 if __name__ == '__main__':

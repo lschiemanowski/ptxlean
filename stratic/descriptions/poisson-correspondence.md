@@ -116,6 +116,22 @@ Lean instruction programs used by the proofs.
 
 These local contraction contracts use supplied phase snapshots. They do not
 establish that prior stores and barriers provide those snapshots. Initial gather,
-control branches, intermediate stores, weight multiplication, final addition,
+control branches, weight multiplication, final addition,
 output stores and parallel admission remain to be connected. A hypothesis that
 a previous phase already computes its matrix answer cannot replace that work.
+
+Shared-plane publication connects a lane's register result to its eight stored
+bytes. The three actual instructions widen the lane index, add the shared base,
+and store at the plane offset. Bounds derive from the seven-plane allocation
+and the active lane range; scratch address registers cannot replace the value
+being stored. A contraction followed immediately by its store publishes the
+TorchLean matrix-product coordinate, with a completed execution witness.
+
+A plane contains one word per active lane. Distinct lanes and distinct planes
+have disjoint byte ranges. Combining these actual store effects in any order
+recovers every producer's word and preserves all bytes outside the plane.
+This constructs the concrete snapshot for later matrix loads; it does not yet
+prove that a concurrent load observes that snapshot. The remaining barrier
+obligation is to derive arrival, completion and read-source restrictions from
+the fetched control flow, including inactive lanes and repeated barrier use.
+No assumed phase answer or assumed snapshot-visibility result closes that gap.

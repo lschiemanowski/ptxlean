@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks
+from check_poisson_contractions import parameters, verify_blocks, verify_stores
 from poisson_kernels import Layout, module, PTX
 
 
@@ -23,6 +23,27 @@ class ContractionBinding(unittest.TestCase):
                  ('x', (5,'%i','k'), ('D','k','%j'), '%acc'),
                  ('y', (6,'%i','k'), ('B','k','%j'), '%acc2')]
         self.expected = [(name, g.dot(a,b,acc).splitlines()) for name,a,b,acc in specs]
+
+    def test_stores(self):
+        g = PTX(self.obj)
+        stores = [(plane, g.shared_store(plane, '%value' if plane == 0 else '%acc').splitlines())
+                  for plane in range(7)]
+        self.assertEqual(len(verify_stores(self.ptx, stores, self.layout, self.expected)), 21)
+        for old, new in [('st.shared.f64 [%addr+0], %value;', 'st.shared.f64 [%addr+8], %value;'),
+                         ('mul.wide.u32 %off, %lane, 8;', 'mul.wide.u32 %off, %lane, 4;'),
+                         ('st.shared.f64 [%addr+0], %value;', 'st.shared.f64 [%addr+0], %acc;')]:
+            with self.subTest(new=new):
+                self.assertIn(old, self.ptx)
+                with self.assertRaises(ValueError):
+                    verify_stores(self.ptx.replace(old,new), stores, self.layout, self.expected)
+        block = '\n'.join(self.expected[0][1])
+        mutated = self.ptx.replace(block, block+'\nadd.rn.f64 %acc, %acc, %acc;', 1)
+        with self.assertRaises(ValueError):
+            verify_stores(mutated, stores, self.layout, self.expected)
+        for plans in (stores[:-1], stores[::-1], stores+[stores[0]]):
+            with self.assertRaises(ValueError): verify_stores(self.ptx, plans, self.layout, self.expected)
+        with self.assertRaises(ValueError):
+            verify_stores(self.ptx.replace('st.shared.f64 [%addr+0], %value;', ''), stores, self.layout, self.expected)
 
     def test_structure(self):
         self.assertEqual(len(verify_blocks(self.ptx, self.expected, self.layout)), 24)

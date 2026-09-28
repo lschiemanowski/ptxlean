@@ -83,9 +83,9 @@ The full cell proof must establish which bytes the gather and earlier phase
 stores provide, and why `bar.sync 0` makes those bytes available to later phases.
 There is no premise that a previous phase already computes its matrix formula.
 
-The entry's lane-control branches, initial gather, intermediate stores, weight
-multiplications, final addition and output store are also outside these block
-proofs. Neither the launch itself nor the assembled operator `A x` is proved by
+The entry's lane-control branches, initial gather, weight multiplications, final
+addition and output store remain outside these block proofs. The shared stores
+and their publication algebra are covered below, separately from barrier visibility. Neither the launch itself nor the assembled operator `A x` is proved by
 this step. The [ordered cell calculation](../../integration/torchlean/PoissonQuadCorrespondence.lean)
 and [whole-solver residual certificate](poisson-correspondence.md) retain their
 separate scopes.
@@ -126,3 +126,48 @@ surrounding instructions, the compiler, or GPU conformance. Tests reject changed
 rounding, operands, indices, shared offsets and accumulator initialization.
 Kernel-checked examples exercise both accumulators, a nonzero matrix row,
 invalid accesses, modular index arithmetic and cancellation-sensitive ordering.
+
+## From an accumulator to a shared plane
+
+A plane is one square matrix held in the thread block's shared memory. The
+kernel reserves seven planes. For a matrix of width `m`, lane `i*m+j` owns entry
+`(i,j)`. Its store address is `sharedBase + (plane*m*m + lane)*8`.
+
+`PoissonPTX/SharedStore.lean` proves the three actual store instructions: widen
+the lane number and multiply by eight, add the shared base, then store the source
+register at the plane offset. Its bounds theorem uses `m ≤ 5`, an active lane,
+and a seven-plane allocation with aligned, nonwrapping addresses. Only address
+scratch registers change. The source cannot be one of those scratch registers;
+a checked example demonstrates why that restriction matters. Raw stores preserve
+all bits, including NaN payloads.
+
+The contraction/store theorem composes the matrix calculation with that store.
+It derives the stored scalar from the byte-backed TorchLean matrix product and
+provides a completed execution witness. This directly applies to the adjacent
+`bu`, `du`, `bl`, and `dl` blocks. The `dx` and `dy` blocks additionally multiply
+by a weight before storing; that intervening operation still needs composition.
+The final `x` and `y` contractions feed an addition and a global output store.
+
+`PoissonPTX/SharedPlane.lean` combines the words recovered from completed stores.
+Different lanes and different planes occupy disjoint bytes, so every complete
+publication order gives the same entire memory, including unchanged bytes outside
+the plane. Its contraction theorem derives every published coordinate from an
+actual contraction/store execution. The later-load lemma explains how a
+row-major matrix operand reads its producer's word from this constructed snapshot.
+It does not assert that an arbitrary concurrent load observes the snapshot.
+
+The remaining synchronization proof must establish the executed stores before
+arrival, arrival of all 32 lanes (including inactive padding lanes), completion
+of each reuse of barrier zero, and the resulting restrictions on load sources.
+The plain `st.shared.f64` instruction is weak by default; publication algebra
+alone must not silently supply synchronization. The source review used the pinned
+PTX 9.4 sections on `st` and `bar` (same manual hash as above): `bar.sync 0` uses
+the aligned, whole-thread-block form, and its completion orders prior accesses
+against later accesses of its participants. Those facts guide the next layer;
+this slice does not prove its control-flow or admission rules.
+
+The binding checker now compares all seven shared-store blocks as well as the
+eight contraction blocks in each of the three element entries. It checks the
+exact proved instruction lists on all 30 saved layouts and requires the four
+unweighted contraction/store pairs to be adjacent. This text check does not
+validate the surrounding branches, barrier placement, or complete launch.

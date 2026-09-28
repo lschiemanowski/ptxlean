@@ -13,7 +13,8 @@ def main (args : List String) : IO UInt32 := do
       let d ← request.getObjValAs? Nat "D"
       if width < 2 || width > 5 || b ≥ 2^64 || d ≥ 2^64 then
         throw "expected Q1--Q4 width and 64-bit offsets"
-      return toJson (Contraction.rendered width (BitVec.ofNat 64 b) (BitVec.ofNat 64 d))
+      return Json.mkObj [("contractions", toJson (Contraction.rendered width (BitVec.ofNat 64 b) (BitVec.ofNat 64 d))),
+        ("stores", toJson (Contraction.renderedStores width))]
   match parsed with
   | .error e => (← IO.getStderr).putStrLn e; return 1
   | .ok results => (← IO.getStdout).putStrLn (Json.compress (.arr results)); return 0
