@@ -1,3 +1,6 @@
+import PtxHardwareDense
+import PtxHardwareDenseChecks
+import HardwareDenseMain
 import PtxBinary32.BackwardDot
 import PtxBinary32.BackwardDotChecks
 import PtxBinary32.BackwardDotFinite
@@ -2758,3 +2761,18 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Softmax.rowBackward_formula
 #print axioms PtxTorchLean.Softmax.rowBackward_is_vjp
 #print axioms PtxTorchLean.SoftmaxBackward.forward_report
+
+-- Restricted hardware export (not a verified compiler).
+#print axioms Ptx.Hardware.Dense.guard
+#print axioms Ptx.Hardware.Dense.word
+#print axioms Ptx.Hardware.Dense.address
+#print axioms Ptx.Hardware.Dense.floatWord
+#print axioms Ptx.Hardware.Dense.scalar
+#print axioms Ptx.Hardware.Dense.instruction
+#print axioms Ptx.Hardware.Dense.exportCase
+#print axioms Ptx.Hardware.Dense.Checks.reject_unsupported_local
+#print axioms Ptx.Hardware.Dense.Checks.reject_memory_as_local
+#print axioms Ptx.Hardware.Dense.Checks.reject_arithmetic_as_memory
+#print axioms Ptx.Hardware.Dense.Checks.reject_other_barrier
+#print axioms Ptx.Hardware.Dense.Checks.run
+#print axioms main

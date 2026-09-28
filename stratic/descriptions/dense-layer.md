@@ -278,3 +278,9 @@ the full logical row and column. The instruction list computes these compact
 shared addresses directly; storage is not silently translated by the machine
 semantics. Fresh planes preserve the existing reduction order and barrier
 lifetime argument. Forward and transposed backward reductions use this layout.
+
+Empirical forward validation runs emitted dense–ReLU instructions on a real GPU.
+It checks their connection to the Lean program, compares stored outputs with
+an exact mathematical reference and ordinary PyTorch, and records reproducible
+artifacts. This is separate evidence about compilation and execution, not an
+extension of the formal theorem to unmodeled runtime or hardware behavior.

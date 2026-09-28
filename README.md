@@ -185,7 +185,7 @@ mathlib build artifacts, and check the TorchLean examples, numerical bounds and
 forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
-and `Integration check passed: 1525 exact dependency reports, only standard Lean
+and `Integration check passed: 2462 exact dependency reports, only standard Lean
 axioms.` respectively. The general forward and backward proofs above are included.
 
 A smaller [array-loop example](docs/foundations/array-mask-select.md) combines
@@ -199,6 +199,11 @@ instruction result, and accumulated floating-point error bounds. It is included
 in the integration check above. The [vector-input ReLU neuron](docs/foundations/vector-neuron.md)
 composes it with bias, activation and a cache-free backward, connecting stored
 coordinate gradients to TorchLean's generated backward with explicit error bounds.
+
+The [dense–ReLU hardware validation](hardware/README.md) separately runs the
+parallel forward kernel on a GPU and compares its outputs with Lean, exact
+arithmetic and PyTorch. Its [recorded results](hardware/results.md) include
+sanitizer checks and an explicit PTX-version compatibility boundary.
 
 ## Instruction reference
 

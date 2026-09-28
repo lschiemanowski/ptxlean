@@ -1,0 +1,169 @@
+{
+  "id": "67806536-3bc1-48e0-955f-90b507b6acb0",
+  "base": "f9a732b7f9709592a32e4ad909bfba65d835adc5",
+  "contentTree": "8f9e4114f518b204ea9d601a16bb31819f22278d",
+  "reviewer": "Codex",
+  "summary": "Run and validate dense-ReLU forward on NVIDIA hardware with explicit scoped memory forms",
+  "examined": [
+    {
+      "id": "dense-layer",
+      "outcome": "revised",
+      "reason": "Added a separate empirical forward-validation responsibility without altering formal kernels, numerical bounds or backward scope. Reviewed current compact grid program, entry seeds, global layout, exact reduction/bias order and shared initialization; hardware adapter preserves the body and explicitly initializes the formal entry state."
+    },
+    {
+      "id": "dense-forward-hardware",
+      "outcome": "revised",
+      "reason": "Description-first implementation complete through forward only: Lean-generated restricted PTX, reviewed address/entry adapter, CUDA execution, exact rational reference, PyTorch diagnostic comparison, provenance and sanitizer replays. 37 cases/341 outputs pass GPU versus Lean bit equality, exact error allowance and diagnostic checks. Explicit 9.2 artifact compatibility is distinct from pinned 9.4 semantics; emitter/runtime/hardware are not claimed verified."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Reviewed summary and abstraction; repaired stale remaining metadata that incorrectly claimed no softmax kernel after its completed bounded milestone. Recorded dense-forward-only hardware evidence while preserving incomplete full-network and backward/softmax hardware scope."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Existing responsibility already distinguishes empirical hardware tests from universal fidelity proofs. New exporter endpoints are audited without new unchecked axioms, version compatibility uses exact source hashes and manual subset review, and distribution guard covers generated archive contents without vendor text."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "Read L0: compiler/runtime/hardware connections already require their own justification; the new evidence explicitly describes tested adapters without extending formal hardware claims or changing PTX 9.4 scope."
+    },
+    {
+      "id": "mixed-parallel-execution",
+      "outcome": "unchanged",
+      "reason": "Read full execution/memory contract and ofEffect: model accesses are relaxed. Final exporter now explicitly emits relaxed.gpu.global and relaxed.cta.shared forms; separate entry initialization zeros shared memory and synchronizes before the body. Existing machine, memory admission, scopes and proof assumptions are unchanged."
+    },
+    {
+      "id": "softmax-sum-normalization",
+      "outcome": "unchanged",
+      "reason": "Existing softmax sum specializes the same dense arithmetic, but hardware work exports only the ReLU forward adapter. No reciprocal, exponential, sum/normalization contract or softmax hardware claim is changed."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "Read interface contract: logical tensors map to contiguous stored words; exact real input interpretation and all numerical comparisons are separated from launch/runtime observations. No kernel orchestration theorem or PyTorch correspondence proof is added."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "8f9e4114f518b204ea9d601a16bb31819f22278d",
+      "method": "bash scripts/check.sh; python3 integration/torchlean/check.py; python3 -m unittest discover -s hardware -p test_*.py; /home/lothar/.pyenv/versions/fresh/bin/python hardware/validate_dense.py --output .hardware-runs/dense-forward-final --ptx-version 9.2 --sanitizers; extracted receipt archive GPU replay; source and archive SHA-256 verification; distribution scan; Stratic validation; manual restricted PTX 9.2/9.4 compatibility and entry adapter review",
+      "outcome": "pass",
+      "environment": "RTX 5090 sm_120; driver 610.57.04; CUDA ptxas 13.2.78; Python 3.12; PyTorch 2.11.0+cu130; repository-pinned Lean dependencies. Formal semantics PTX 9.4; explicit emitted PTX 9.2 compatibility subset.",
+      "evidence": "Root checks passed with 1643 exact axiom reports; integration checks passed with 2462 exact axiom reports and only standard Lean axioms. Eight CPU tests passed. Final scoped-relaxed PTX artifacts passed 37 cases/341 coordinates with three repeats: bit equality to Lean and independent rational rounding; exact theorem-derived error allowances satisfied. PyTorch has 67 differing coordinates including cancellation result 2 versus kernel 1; its separately stated unproved diagnostic allowance passed. memcheck, racecheck, synccheck and initcheck reported zero errors/hazards. Published archive extracted and all 37 cases replayed successfully. Source hashes and archive hash match. Distribution scan found no vendor manual or raw transcripts. Before/after final snapshots match. This is empirical evidence, not a verified emitter/runtime/hardware or cross-version refinement theorem.",
+      "tests": [],
+      "id": "438ad1be-e1d2-4a29-89a0-3bbf8d6dffe5",
+      "recordedAt": "2026-09-28T11:30:02.375Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T11:30:41.631Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Reviewed user guide/results/compatibility and crosslinks: distinguishes bit equality, exact mathematical error and unproved PyTorch diagnostic envelope; documents installed PTX-version limitation, wrapper boundary and forward-only stopping point."
+    },
+    {
+      "path": "docs/foundations/grid-dense-layer.md",
+      "reason": "Reviewed user guide/results/compatibility and crosslinks: distinguishes bit equality, exact mathematical error and unproved PyTorch diagnostic envelope; documents installed PTX-version limitation, wrapper boundary and forward-only stopping point."
+    },
+    {
+      "path": "hardware/README.md",
+      "reason": "Reviewed user guide/results/compatibility and crosslinks: distinguishes bit equality, exact mathematical error and unproved PyTorch diagnostic envelope; documents installed PTX-version limitation, wrapper boundary and forward-only stopping point."
+    },
+    {
+      "path": "hardware/cuda_driver.py",
+      "reason": "Explicit ctypes signatures, selected primary context, device resource checks, guarded allocation, synchronization, copyback and cleanup. Four sanitizer tools passed actual replay; no verified driver or runtime claim."
+    },
+    {
+      "path": "hardware/exact_reference.py",
+      "reason": "Remaining helpers implement exact rational decode, exponent, ties-to-even rounding and half-grid-spacing bounds including zero/subnormals; cross-checked against pinned eps32/RowInput.error and all Lean arithmetic outputs. No host float affects the ideal result or formal-formula allowance."
+    },
+    {
+      "path": "hardware/ptx-compatibility.md",
+      "reason": "Reviewed user guide/results/compatibility and crosslinks: distinguishes bit equality, exact mathematical error and unproved PyTorch diagnostic envelope; documents installed PTX-version limitation, wrapper boundary and forward-only stopping point."
+    },
+    {
+      "path": "hardware/receipts/dense-forward.json",
+      "reason": "Reviewed reproducible empirical evidence: report source hashes match current code; archive hash verified and extracted binary replay passed all 37 cases. Compatibility receipt records source/section hashes and original interpretation notes only. Explicit distribution scan found no vendor manual or raw model transcripts."
+    },
+    {
+      "path": "hardware/receipts/dense-forward.tar.gz",
+      "reason": "Reviewed reproducible empirical evidence: report source hashes match current code; archive hash verified and extracted binary replay passed all 37 cases. Compatibility receipt records source/section hashes and original interpretation notes only. Explicit distribution scan found no vendor manual or raw model transcripts."
+    },
+    {
+      "path": "hardware/receipts/ptx-version-compatibility.json",
+      "reason": "Reviewed reproducible empirical evidence: report source hashes match current code; archive hash verified and extracted binary replay passed all 37 cases. Compatibility receipt records source/section hashes and original interpretation notes only. Explicit distribution scan found no vendor manual or raw model transcripts."
+    },
+    {
+      "path": "hardware/requirements.txt",
+      "reason": "Explicit PyTorch wheel pin with official CUDA wheel index; no implicit installation. Documentation does not claim a fully locked transitive Python environment; actual runtime versions are in receipts."
+    },
+    {
+      "path": "hardware/results.md",
+      "reason": "Reviewed user guide/results/compatibility and crosslinks: distinguishes bit equality, exact mathematical error and unproved PyTorch diagnostic envelope; documents installed PTX-version limitation, wrapper boundary and forward-only stopping point."
+    },
+    {
+      "path": "hardware/test_artifacts.py",
+      "reason": "Behavioral rejection and regression checks cover unsupported instruction/context/barrier forms, malformed shapes, artifact tampering before CUDA execution, rounding ties, gradual underflow, signed zero and out-of-range arithmetic. Tests supplement rather than replace formal kernel proofs."
+    },
+    {
+      "path": "hardware/test_exact_reference.py",
+      "reason": "Behavioral rejection and regression checks cover unsupported instruction/context/barrier forms, malformed shapes, artifact tampering before CUDA execution, rounding ties, gradual underflow, signed zero and out-of-range arithmetic. Tests supplement rather than replace formal kernel proofs."
+    },
+    {
+      "path": "hardware/validate_dense.py",
+      "reason": "Unlinked orchestration checks versions/dependency pins, hashes source and exact artifacts, reports ordinary PyTorch separately, preserves failures and runs sanitizer replays. Entry code establishes logical identity and zero shared storage; model offsets are relocated only at memory operations."
+    },
+    {
+      "path": "integration/torchlean/HardwareDenseMain.lean",
+      "reason": "Restricted operand/guard formatting and JSON CLI support the linked emitter. Same Dense.Compact.program supplies instruction body and formal PCs. Shape bounds match ArithmeticBounds; unsupported forms fail. Export functions and CLI are included in exact public dependency audit."
+    },
+    {
+      "path": "integration/torchlean/PtxHardwareDense.lean",
+      "reason": "Restricted operand/guard formatting and JSON CLI support the linked emitter. Same Dense.Compact.program supplies instruction body and formal PCs. Shape bounds match ArithmeticBounds; unsupported forms fail. Export functions and CLI are included in exact public dependency audit."
+    },
+    {
+      "path": "integration/torchlean/PtxHardwareDenseChecks.lean",
+      "reason": "Behavioral rejection and regression checks cover unsupported instruction/context/barrier forms, malformed shapes, artifact tampering before CUDA execution, rounding ties, gradual underflow, signed zero and out-of-range arithmetic. Tests supplement rather than replace formal kernel proofs."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Build/check configuration adds three Lean modules and 13 exact public audit endpoints with fresh exporter rejection checks; preserves existing proof coverage and default GPU-free checks."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Reviewed user guide/results/compatibility and crosslinks: distinguishes bit equality, exact mathematical error and unproved PyTorch diagnostic envelope; documents installed PTX-version limitation, wrapper boundary and forward-only stopping point."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Build/check configuration adds three Lean modules and 13 exact public audit endpoints with fresh exporter rejection checks; preserves existing proof coverage and default GPU-free checks."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Build/check configuration adds three Lean modules and 13 exact public audit endpoints with fresh exporter rejection checks; preserves existing proof coverage and default GPU-free checks."
+    },
+    {
+      "path": "stratic/descriptions/dense-forward-hardware.json",
+      "reason": "Reviewed full descriptions and summary arrays; added a self-contained empirical responsibility, linked concrete interfaces, and reconciled stale example metadata. These description files are not themselves implementation targets."
+    },
+    {
+      "path": "stratic/descriptions/dense-forward-hardware.md",
+      "reason": "Reviewed full descriptions and summary arrays; added a self-contained empirical responsibility, linked concrete interfaces, and reconciled stale example metadata. These description files are not themselves implementation targets."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.json",
+      "reason": "Reviewed full descriptions and summary arrays; added a self-contained empirical responsibility, linked concrete interfaces, and reconciled stale example metadata. These description files are not themselves implementation targets."
+    },
+    {
+      "path": "stratic/descriptions/dense-layer.md",
+      "reason": "Reviewed full descriptions and summary arrays; added a self-contained empirical responsibility, linked concrete interfaces, and reconciled stale example metadata. These description files are not themselves implementation targets."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Reviewed full descriptions and summary arrays; added a self-contained empirical responsibility, linked concrete interfaces, and reconciled stale example metadata. These description files are not themselves implementation targets."
+    }
+  ]
+}

@@ -332,6 +332,12 @@ COUNTS['PtxTorchLean.SoftmaxBackward'] = COUNTS.get('PtxTorchLean.SoftmaxBackwar
 TARGETS.update(['PtxBinary32.BackwardDot', 'PtxBinary32.BackwardDotChecks', 'PtxBinary32.BackwardDotFinite', 'PtxBinary32.PointwiseDifferenceChecks', 'PtxBinary32.SoftmaxBackward', 'PtxBinary32.SoftmaxBackwardChecks', 'PtxBinary32.SoftmaxBackwardDot', 'PtxBinary32.SoftmaxBackwardDotChecks', 'PtxBinary32.SoftmaxBackwardDotCorrect', 'PtxBinary32.SoftmaxBackwardExecutionChecks', 'PtxBinary32.SoftmaxBackwardFull', 'PtxBinary32.SoftmaxBackwardLayout', 'PtxBinary32.SoftmaxBackwardNumeric', 'PtxSoftmaxBackward', 'PtxSoftmaxBackwardReference'])
 
 
+# Restricted hardware export and rejection checks.
+COUNTS['Ptx.Hardware.Dense'] = COUNTS.get('Ptx.Hardware.Dense', 0) + 7
+COUNTS['Ptx.Hardware.Dense.Checks'] = COUNTS.get('Ptx.Hardware.Dense.Checks', 0) + 5
+COUNTS['main'] = COUNTS.get('main', 0) + 1
+TARGETS.update(['PtxHardwareDense', 'PtxHardwareDenseChecks', 'HardwareDenseMain'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -392,6 +398,7 @@ def main():
                       "SoftmaxBackwardExecutionChecks", "SoftmaxBackwardChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
                            cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PtxHardwareDenseChecks.lean"], cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(audit.stdout, end="", flush=True)

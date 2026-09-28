@@ -11,7 +11,8 @@
     "For the supplied binary32 forward and five-stage parallel backward, every admitted completed execution stores outputs and all three gradients within calculated bounds, under explicit encodings, ranges and a backward activation margin.",
     "Construct completed admitted executions separately from universal correctness, derive actual stored handoffs and preserve operands. Empty dimensions are covered; runtime and hardware correspondence remain outside the fragment.",
     "Distribute rows and pointwise work across bounded groups sharing global memory. Prove combined forward/backward correctness and admitted existence with explicit padding, private scratch cost and unchanged numerical conditions.",
-    "Grid reductions reserve fresh scratch planes for one row per group; the per-group allocation is independent of the output row count."
+    "Grid reductions reserve fresh scratch planes for one row per group; the per-group allocation is independent of the output row count.",
+    "A separate empirical forward validation connects emitted instructions and explicit launch setup to GPU observations, exact reference values and PyTorch comparisons."
   ],
   "realization": "implemented",
   "links": [

@@ -186,3 +186,8 @@ uses one row of fresh planes per group; no hardware shared-memory capacity or
 performance claim follows. Reductions split across groups, general communicating
 CTAs, runtime/ABI correspondence,
 GPU execution and benchmarking remain outside this completed bounded milestone.
+
+A separate [hardware validation](../../hardware/README.md) now emits and runs
+this compact forward body with an explicit entry adapter. It compares actual
+GPU output against Lean, exact rational arithmetic and PyTorch; it does not
+extend the formal result to the CUDA runtime or validate backward on hardware.

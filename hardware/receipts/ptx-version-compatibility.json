@@ -1,0 +1,112 @@
+{
+  "ptx92_url": "https://docs.nvidia.com/cuda/archive/13.2.0/parallel-thread-execution/index.html",
+  "ptx94_source": "references/nvidia/ptx-isa-9.4/manifest.json",
+  "sections": [
+    {
+      "section": "integer-arithmetic-instructions-add",
+      "normalized_equal": false,
+      "ptx92_sha256": "c5363550b6922dfd6e78204e4f2c23036ef37c6a76eda436545e4aa8e9512e78",
+      "ptx94_sha256": "12c12618ef7f634b1a3d367ac801dbaf21d6ad873330f70e7861dec9b39b4921"
+    },
+    {
+      "section": "integer-arithmetic-instructions-mul",
+      "normalized_equal": true,
+      "ptx92_sha256": "73b8c7b34dc963cf2a030b4a5ee5e480f45d9dfaa749462272be98d906b484d0",
+      "ptx94_sha256": "73b8c7b34dc963cf2a030b4a5ee5e480f45d9dfaa749462272be98d906b484d0"
+    },
+    {
+      "section": "floating-point-instructions-add",
+      "normalized_equal": true,
+      "ptx92_sha256": "2a6edd87196de84ffaad151c4ae4f7652423542f2ff0eacb2295f52eb0ca54ba",
+      "ptx94_sha256": "2a6edd87196de84ffaad151c4ae4f7652423542f2ff0eacb2295f52eb0ca54ba"
+    },
+    {
+      "section": "floating-point-instructions-mul",
+      "normalized_equal": true,
+      "ptx92_sha256": "ece898a77bf69260b8733db1f3d6e9dc4724666be168d2d1fe2093826f7e9350",
+      "ptx94_sha256": "ece898a77bf69260b8733db1f3d6e9dc4724666be168d2d1fe2093826f7e9350"
+    },
+    {
+      "section": "comparison-and-selection-instructions-setp",
+      "normalized_equal": true,
+      "ptx92_sha256": "ac7f1f84dcd0f2df924dd2103d93510cfe43e7c00dc4b99ef4ada059f1073a44",
+      "ptx94_sha256": "d3001939980865995bf1cab3f5fa1edc0366d30072d8bf952741a01029dd7430"
+    },
+    {
+      "section": "logic-and-shift-instructions-and",
+      "normalized_equal": true,
+      "ptx92_sha256": "3705425c53bea9f76770ffb5063796ca069792daff007958197d72393abe3ee5",
+      "ptx94_sha256": "8a664b8f17ba73c6b98e1ca4a8ffec8f1838062ef0f79302fe3afdbaee5bf1c0"
+    },
+    {
+      "section": "logic-and-shift-instructions-shl",
+      "normalized_equal": true,
+      "ptx92_sha256": "5221a20d8283d6a95470b57e2cb03b69f4da50ecf60f53f6222cef9ee61012a7",
+      "ptx94_sha256": "464da08195c37f7c2fcb196ff9cbcbb7f7cddc92401bd8b10e69a3b662a99723"
+    },
+    {
+      "section": "logic-and-shift-instructions-shr",
+      "normalized_equal": true,
+      "ptx92_sha256": "76e7b29f953aa9e8216253dd4663d3b49e7341e3bcb1c4e33c67bb677375b7d0",
+      "ptx94_sha256": "9b8692a02040d9d5eec19b097bd654eede7eaa8ca43b5599ba51e89e944657a5"
+    },
+    {
+      "section": "data-movement-and-conversion-instructions-mov",
+      "normalized_equal": true,
+      "ptx92_sha256": "8d232ab10f2ea440e9e703b48965b6d11d04228b3a01fd8a410bfe13e79ec71b",
+      "ptx94_sha256": "2bd5b2f2c8d2a014c56fbe2100f1e660b00ec0ea7e82b96123a3103c3efa335f"
+    },
+    {
+      "section": "data-movement-and-conversion-instructions-ld",
+      "normalized_equal": false,
+      "ptx92_sha256": "7eebf332a9c37c4fe1c3b3b1adda985faa8898010676d8c05af743cde0e57c4b",
+      "ptx94_sha256": "0cb3aa529d9219c939c3c32797327a9e3aa01904894ab84815778bdc036b6e0d"
+    },
+    {
+      "section": "data-movement-and-conversion-instructions-st",
+      "normalized_equal": false,
+      "ptx92_sha256": "626516d1b7ae7da286b2b7e9c7c0ae2f00052c3a5e51f5b3f3cab150565cfcdc",
+      "ptx94_sha256": "dd98a0f05b00896c81a561f56863755470c8419561b40d07bb40c03acea12aff"
+    },
+    {
+      "section": "data-movement-and-conversion-instructions-cvt",
+      "normalized_equal": false,
+      "ptx92_sha256": "e4d7ac0c5bfccfb05040d13aeab93a3a1aa40af704d46721db2b78059d1864b5",
+      "ptx94_sha256": "762f94eb3233e40f5288fe09a5d82e27e1121596497d10055b2100e50a774d3d"
+    },
+    {
+      "section": "parallel-synchronization-and-communication-instructions-bar",
+      "normalized_equal": true,
+      "ptx92_sha256": "1b5639418e95b6af6cc19f9276cea8e46a1752cd0831cd572671a19b1d538f98",
+      "ptx94_sha256": "6b06f92ba3ca272dbdc5d8617ce845667c41613be05cf22a73f77059ee001339"
+    },
+    {
+      "section": "control-flow-instructions-exit",
+      "normalized_equal": true,
+      "ptx92_sha256": "a4e07d6b9ae63a28fe40c14b0f60860f417f92e938e4d5b2edbcaf65966cc344",
+      "ptx94_sha256": "8f9c2d102a1c94d17dc63caf05785b09a7640986ac187d44e18de3ae906c8150"
+    },
+    {
+      "section": "special-registers-tid",
+      "normalized_equal": true,
+      "ptx92_sha256": "6a3d2c993635d9935c11c14561310cff5b8ba638257dda523d4be4d52ec1abcc",
+      "ptx94_sha256": "6a3d2c993635d9935c11c14561310cff5b8ba638257dda523d4be4d52ec1abcc"
+    },
+    {
+      "section": "special-registers-ctaid",
+      "normalized_equal": true,
+      "ptx92_sha256": "586f6e1e51481167da75754ccc36fadb3e9280f98cf327311efd90ade1d63399",
+      "ptx94_sha256": "586f6e1e51481167da75754ccc36fadb3e9280f98cf327311efd90ade1d63399"
+    }
+  ],
+  "ptx92_html_sha256": "fd013df0c9560d9f86672c379b57b30a6d5efb2eccbb0c6c487950032e6d3457",
+  "ptx94_html_sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed",
+  "method": "HTML section text collected including descendants, whitespace collapsed, leading heading number removed for equality. Text is not redistributed. Differing sections were reviewed for the emitted restricted forms.",
+  "review": {
+    "integer-arithmetic-instructions-add": "Difference adds a target family for a packed form; plain add.u32 and add.u64 used here are unchanged.",
+    "data-movement-and-conversion-instructions-ld": "Changes concern heading numbering, cache-policy notation, MMIO acquire and readonly proxy forms. The body uses ld.relaxed.gpu.global.b32 and ld.relaxed.cta.shared.b32; entry setup uses ld.param.u64. None uses the changed qualifiers.",
+    "data-movement-and-conversion-instructions-st": "Changes concern heading numbering, cache-policy notation and MMIO release forms. Body stores use st.relaxed.gpu.global.b32 and st.relaxed.cta.shared.b32. The entry initializer uses st.shared.b32 before its full-group barrier. These forms are unchanged.",
+    "data-movement-and-conversion-instructions-cvt": "Changes concern heading numbering, small floating-point formats, rounding/scaling/pzo qualifiers and examples. The only emitted conversion is unsigned integer widening cvt.u64.u32."
+  },
+  "boundary": "Compatibility review for the emitted forms, not a verified cross-version memory-model refinement. Runtime artifact explicitly declares 9.2; formal semantics remain 9.4."
+}

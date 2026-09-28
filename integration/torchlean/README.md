@@ -286,3 +286,13 @@ sensitivities by 2^60; intermediate finiteness is derived. The checks include
 interleaved executions and a universal singleton zero-gradient theorem.
 Fused execution, masks and general row sizes remain open. No GPU run or
 benchmark is needed for these checks.
+
+## Dense forward hardware validation
+
+The [hardware harness](../../hardware/README.md) emits the existing compact dense
+forward instruction list, runs it with explicit CUDA entry/launch setup, and
+compares GPU words against Lean, exact rational arithmetic and ordinary PyTorch.
+It has a separate GPU command and records its PTX-version compatibility boundary.
+The ordinary integration check additionally builds/audits the restricted exporter
+and runs its rejection tests; it does not require a GPU. Backward and softmax GPU
+execution remain separate work.
