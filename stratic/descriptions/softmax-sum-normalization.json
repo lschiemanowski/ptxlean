@@ -3,7 +3,7 @@
   "parent": {
     "description": "softmax",
     "passage": {
-      "quote": "A parallel sum reduces the encoded exponentials with derived finite-range and\nrounding bounds. A two-instruction scalar sequence normalizes each numerator\nusing the actual stored sum through an explicit register interface. The total\nexponential and sum error must be at most one half to derive safe normalization.\nThe register interface alone does not implement memory operations between stages.\nA complete reference forward pipeline now connects the parallel maximum and sum\nthrough sequential fetched exponential and normalization passes in one arena.\nIt proves execution existence from original bounded finite scores and stored-output\naccuracy against TorchLean under the explicit total-error guard. Phase boundaries\nare model-level waiting and initialization, not a CUDA runtime implementation.\nA fully parallel or fused forward kernel, masking, arbitrary row sizes and a\nbackward implementation remain separate work."
+      "quote": "A parallel sum reduces the encoded exponentials with derived finite-range and\nrounding bounds. A two-instruction scalar sequence normalizes each numerator\nusing the actual stored sum through an explicit register interface. The total\nexponential and sum error must be at most one half to derive safe normalization.\nThe register interface alone does not implement memory operations between stages.\nThe complete forward pipeline connects parallel maximum, exponential, sum and\nnormalization passes in one arena. Every completed admitted execution has a\npossible sequential-reference output, and every reference output has a parallel\nexecution witness. Existence follows from original bounded finite scores;\nstored-output accuracy against TorchLean additionally uses the explicit total-error\nguard. Phase boundaries are model-level waiting and initialization, not a CUDA\nruntime implementation.\nFusing the forward phases, masking, arbitrary row sizes and a\nbackward implementation remain separate work."
     }
   },
   "summary": [
@@ -124,7 +124,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The component interface puts an original numerator in register 0 and the actual\nstored sum in register 1, then runs scalar normalization with register 2 as scratch.\nIts theorem combines the completed admitted sum execution with those fetched\nscalar runs to bound each normalized value against the ideal exponential divided\nby the ideal sum. Initializing these registers is an explicit mathematical\nhandoff; PTX loads, broadcast and combined launch execution remain unimplemented."
+        "quote": "The component interface puts an original numerator in register 0 and the actual\nstored sum in register 1, then runs scalar normalization with register 2 as scratch.\nIts theorem combines the completed admitted sum execution with those fetched\nscalar runs to bound each normalized value against the ideal exponential divided\nby the ideal sum. Initializing these registers is an explicit mathematical\nhandoff in this scalar interface. The forward-execution component supplies the\nactual memory loads and stores; it keeps runtime launch and device visibility\noutside its claim."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SumNormalize.lean",
@@ -136,7 +136,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The component interface puts an original numerator in register 0 and the actual\nstored sum in register 1, then runs scalar normalization with register 2 as scratch.\nIts theorem combines the completed admitted sum execution with those fetched\nscalar runs to bound each normalized value against the ideal exponential divided\nby the ideal sum. Initializing these registers is an explicit mathematical\nhandoff; PTX loads, broadcast and combined launch execution remain unimplemented."
+        "quote": "The component interface puts an original numerator in register 0 and the actual\nstored sum in register 1, then runs scalar normalization with register 2 as scratch.\nIts theorem combines the completed admitted sum execution with those fetched\nscalar runs to bound each normalized value against the ideal exponential divided\nby the ideal sum. Initializing these registers is an explicit mathematical\nhandoff in this scalar interface. The forward-execution component supplies the\nactual memory loads and stores; it keeps runtime launch and device visibility\noutside its claim."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SumNormalize.lean",

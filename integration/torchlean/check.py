@@ -302,6 +302,21 @@ COUNTS['PtxTorchLean.SoftmaxPipeline'] = COUNTS.get('PtxTorchLean.SoftmaxPipelin
 TARGETS.update(['PtxBinary32.SoftmaxForwardAccuracy', 'PtxBinary32.SoftmaxMemory', 'PtxBinary32.SoftmaxMemoryChecks', 'PtxBinary32.SoftmaxPipeline', 'PtxBinary32.SoftmaxPipelineChecks', 'PtxBinary32.SoftmaxPipelineExists', 'PtxBinary32.SoftmaxReductions', 'PtxBinary32.SoftmaxStorage', 'PtxBinary32.SoftmaxSweep', 'PtxSoftmaxForward', 'PtxSoftmaxPipeline'])
 
 
+# Parallel elementwise softmax: actual execution, admission and output equivalence.
+COUNTS['Ptx.Scalar.ParallelUnary'] = COUNTS.get('Ptx.Scalar.ParallelUnary', 0) + 42
+COUNTS['Ptx.Scalar.ParallelUnary.ConcreteRuns'] = COUNTS.get('Ptx.Scalar.ParallelUnary.ConcreteRuns', 0) + 2
+COUNTS['Ptx.Scalar.ParallelUnary.Event'] = COUNTS.get('Ptx.Scalar.ParallelUnary.Event', 0) + 4
+COUNTS['Ptx.Scalar.ParallelUnary.Memory'] = COUNTS.get('Ptx.Scalar.ParallelUnary.Memory', 0) + 14
+COUNTS['Ptx.Scalar.ParallelUnary.Memory.Chronology'] = COUNTS.get('Ptx.Scalar.ParallelUnary.Memory.Chronology', 0) + 23
+COUNTS['Ptx.Scalar.ParallelUnary.Runs'] = COUNTS.get('Ptx.Scalar.ParallelUnary.Runs', 0) + 1
+COUNTS['Ptx.Scalar.SoftmaxParallel'] = COUNTS.get('Ptx.Scalar.SoftmaxParallel', 0) + 5
+COUNTS['Ptx.Scalar.SoftmaxParallel.Checks'] = COUNTS.get('Ptx.Scalar.SoftmaxParallel.Checks', 0) + 2
+COUNTS['Ptx.Scalar.UnaryPointwise'] = COUNTS.get('Ptx.Scalar.UnaryPointwise', 0) + 73
+COUNTS['Ptx.Scalar.UnaryPointwise.Checks'] = COUNTS.get('Ptx.Scalar.UnaryPointwise.Checks', 0) + 3
+COUNTS['PtxTorchLean.SoftmaxParallel'] = COUNTS.get('PtxTorchLean.SoftmaxParallel', 0) + 2
+TARGETS.update(['PtxBinary32.ParallelUnary', 'PtxBinary32.ParallelUnaryAdmission', 'PtxBinary32.ParallelUnaryChronology', 'PtxBinary32.ParallelUnaryControl', 'PtxBinary32.ParallelUnaryMemory', 'PtxBinary32.SoftmaxParallel', 'PtxBinary32.SoftmaxParallelChecks', 'PtxBinary32.UnaryPointwiseChecks', 'PtxBinary32.UnaryPointwiseContract', 'PtxBinary32.UnaryPointwiseControl', 'PtxBinary32.UnaryPointwiseCoverage', 'PtxBinary32.UnaryPointwiseData', 'PtxBinary32.UnaryPointwiseExecution', 'PtxBinary32.UnaryPointwiseLaunch', 'PtxBinary32.UnaryPointwiseProgram', 'PtxBinary32.UnaryPointwiseReads', 'PtxBinary32.UnaryPointwiseStored', 'PtxBinary32.UnarySequential', 'PtxSoftmaxParallel'])
+
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -355,7 +370,7 @@ def main():
         for check in ("NormalizeChecks", "SumTreeChecks", "SumChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
                            cwd=HERE, check=True)
-        for check in ("SoftmaxMemoryChecks", "SoftmaxPipelineChecks"):
+        for check in ("SoftmaxMemoryChecks", "SoftmaxPipelineChecks", "UnaryPointwiseChecks", "SoftmaxParallelChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
                            cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],

@@ -1,0 +1,318 @@
+{
+  "id": "parallel-elementwise",
+  "parent": {
+    "description": "softmax-forward",
+    "passage": {
+      "quote": "The forward computation turns a nonempty row of finite binary32 scores into\nencoded softmax outputs. The row length is a power of two, at most 1024, and\nscores have magnitude at most 2^124. Maximum and sum use parallel reductions.\nExponential and normalization passes also run in parallel: each thread reads\none input and a common scalar, then overwrites only its own input cell. A\nsequential reference composition remains available. Both compositions permit\nthe same final arrays; this relates their results without equating their schedules.\nNeither composition claims fused execution or measured GPU performance."
+    }
+  },
+  "summary": [
+    "Execute independent shifted-exponential and normalization lanes with actual shared-program fetch, candidate reads and in-place output stores.",
+    "Derive original operands from ownership, program order and existing memory admission, preserving all admitted numerical outcomes.",
+    "Prove stored-output correctness, access safety and an independently admitted execution witness without hardware or fairness claims."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An elementwise pass assigns one output cell to each lane, where a lane is one\nparticipating thread. All lanes fetch the same straight-line instruction program.\nEach lane loads its own input and a common scalar, computes a shifted exponential\nor a rounded normalization, stores the result back to its own cell, and exits.\nThe common scalar lies outside the output prefix. Distinct lanes never write\neach other's cells. The first domain is one nonempty group of at most 1024 lanes,\nusing the same finite-score and numerical conditions as the reference softmax."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseProgram.lean",
+        "passage": {
+          "quote": "def program (op : Op) : List Instr"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An elementwise pass assigns one output cell to each lane, where a lane is one\nparticipating thread. All lanes fetch the same straight-line instruction program.\nEach lane loads its own input and a common scalar, computes a shifted exponential\nor a rounded normalization, stores the result back to its own cell, and exits.\nThe common scalar lies outside the output prefix. Distinct lanes never write\neach other's cells. The first domain is one nonempty group of at most 1024 lanes,\nusing the same finite-score and numerical conditions as the reference softmax."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseContract.lean",
+        "passage": {
+          "quote": "def Bounds (n common : Nat) (before : List Word) : Prop"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An elementwise pass assigns one output cell to each lane, where a lane is one\nparticipating thread. All lanes fetch the same straight-line instruction program.\nEach lane loads its own input and a common scalar, computes a shifted exponential\nor a rounded normalization, stores the result back to its own cell, and exits.\nThe common scalar lies outside the output prefix. Distinct lanes never write\neach other's cells. The first domain is one nonempty group of at most 1024 lanes,\nusing the same finite-score and numerical conditions as the reference softmax."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseContract.lean",
+        "passage": {
+          "quote": "def Spec (op : Op) (n common : Nat) (before after : List Word) : Prop"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The machine accepts arbitrary lane interleavings and candidate load values.\nArithmetic steps reuse the existing addition, multiplication, exponential and\nreciprocal instruction relations, retaining all permitted numerical outcomes.\nEntry initialization sets each lane’s program counter to zero and supplies its\nown-cell and common-scalar address registers. This is an explicit input interface,\nnot a fetched address-calculation program or a runtime launch proof. Other initial\nregister values are arbitrary. Every step checks actual instruction fetch and the target. An enabled exponential\noutside the existing supported domain has no arithmetic step; a completed-run\nproof must not assume that this missing step exists. This adapter has no barriers\nor shared-memory operations. Parallel reductions retain their separate machine."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseControl.lean",
+        "passage": {
+          "quote": "def initial (common : Nat) (memory : List Word) (seeds : Fin n → Scalar.State) : ParallelUnary.State n"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The machine accepts arbitrary lane interleavings and candidate load values.\nArithmetic steps reuse the existing addition, multiplication, exponential and\nreciprocal instruction relations, retaining all permitted numerical outcomes.\nEntry initialization sets each lane’s program counter to zero and supplies its\nown-cell and common-scalar address registers. This is an explicit input interface,\nnot a fetched address-calculation program or a runtime launch proof. Other initial\nregister values are arbitrary. Every step checks actual instruction fetch and the target. An enabled exponential\noutside the existing supported domain has no arithmetic step; a completed-run\nproof must not assume that this missing step exists. This adapter has no barriers\nor shared-memory operations. Parallel reductions retain their separate machine."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelUnary.lean",
+        "passage": {
+          "quote": "inductive Exec (candidate : Option Word) (thread : Fin n) : Instr → State n → State n → Event n → Prop\n  | scalarNext {i s next event} (eval : Scalar.eval candidate i (input s thread)=.next next event) :\n      Exec candidate thread (.scalar i) s (install s thread next (s.lanes thread).halted) (.scalar thread event)\n  | scalarHalted {i s next event} (eval : Scalar.eval candidate i (input s thread)=.halted next event) :\n      Exec candidate thread (.scalar i) s (install s thread next true) (.scalar thread event)\n  | binary {i s next event} (eval : Scalar.Binary32.Eval i (s.lanes thread).scalar next event) :\n      Exec candidate thread (.binary i) s (setLane s thread ⟨next,(s.lanes thread).halted⟩) (.binary thread event)\n  | exponential {i s next event} (eval : Scalar.Exponential.Eval i (s.lanes thread).scalar next event) :\n      Exec candidate thread (.exponential i) s (setLane s thread ⟨next,(s.lanes thread).halted⟩) (.exponential thread event)\n  | reciprocal {i s next event} (eval : Scalar.Reciprocal.Eval i (s.lanes thread).scalar next event) :\n      Exec candidate thread (.reciprocal i) s (setLane s thread ⟨next,(s.lanes thread).halted⟩) (.reciprocal thread event)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The machine accepts arbitrary lane interleavings and candidate load values.\nArithmetic steps reuse the existing addition, multiplication, exponential and\nreciprocal instruction relations, retaining all permitted numerical outcomes.\nEntry initialization sets each lane’s program counter to zero and supplies its\nown-cell and common-scalar address registers. This is an explicit input interface,\nnot a fetched address-calculation program or a runtime launch proof. Other initial\nregister values are arbitrary. Every step checks actual instruction fetch and the target. An enabled exponential\noutside the existing supported domain has no arithmetic step; a completed-run\nproof must not assume that this missing step exists. This adapter has no barriers\nor shared-memory operations. Parallel reductions retain their separate machine."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelUnary.lean",
+        "passage": {
+          "quote": "def Step (target : Target) (program : List Instr) (candidate : Option Word) (thread : Fin n)\n    (s t : State n) (event : Event n) : Prop"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The machine accepts arbitrary lane interleavings and candidate load values.\nArithmetic steps reuse the existing addition, multiplication, exponential and\nreciprocal instruction relations, retaining all permitted numerical outcomes.\nEntry initialization sets each lane’s program counter to zero and supplies its\nown-cell and common-scalar address registers. This is an explicit input interface,\nnot a fetched address-calculation program or a runtime launch proof. Other initial\nregister values are arbitrary. Every step checks actual instruction fetch and the target. An enabled exponential\noutside the existing supported domain has no arithmetic step; a completed-run\nproof must not assume that this missing step exists. This adapter has no barriers\nor shared-memory operations. Parallel reductions retain their separate machine."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelUnaryControl.lean",
+        "passage": {
+          "quote": "theorem position_iff_pc (run : Runs target program s events final) (straight : Straight program)\n    (p q : Nat) (e f : Event n) (hp : events[p]?=some e) (hq : events[q]?=some f)\n    (thread : e.thread=f.thread) : p<q ↔ e.pc<f.pc"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory admission applies the existing whole-word constraints to the actual\nemitted loads and stores, with no additional cross-thread order. A read cannot\nsilently receive the value intended by the proof. For a lane's own input cell,\nany noninitial writer would be that lane's later output store. The instruction\norder places the read before that store, and the memory model forbids using a\ncausally later store as the source of the read. No lane writes the common scalar.\nThese facts derive each operand's original value for every admitted execution.\nThey do not restrict all executions to a globally sequential memory order."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelUnaryMemory.lean",
+        "passage": {
+          "quote": "def Admitted (program : List Instr) (global : List Word) (events : List (Event n))\n    (source : Fin (labels program global events).length → Fin (labels program global events).length)\n    (co : Fin (labels program global events).length → Fin (labels program global events).length → Bool) : Prop"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory admission applies the existing whole-word constraints to the actual\nemitted loads and stores, with no additional cross-thread order. A read cannot\nsilently receive the value intended by the proof. For a lane's own input cell,\nany noninitial writer would be that lane's later output store. The instruction\norder places the read before that store, and the memory model forbids using a\ncausally later store as the source of the read. No lane writes the common scalar.\nThese facts derive each operand's original value for every admitted execution.\nThey do not restrict all executions to a globally sequential memory order."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelUnaryMemory.lean",
+        "passage": {
+          "quote": "theorem run_graph_complete (run : Runs target program s events final) (source co)\n    (position : Nat) (thread : Fin n) (occ : Scalar.Occurrence) (effect : MemoryEffect)\n    (atIndex : events[position]?=some (.scalar thread occ)) (memory : occ.memory=some effect) :\n    ∃r : Fin (labels program s.global events).length,\n      (graph program s.global events source co).event r=\n        ⟨some thread.val,position,(ofEffect effect).effect⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory admission applies the existing whole-word constraints to the actual\nemitted loads and stores, with no additional cross-thread order. A read cannot\nsilently receive the value intended by the proof. For a lane's own input cell,\nany noninitial writer would be that lane's later output store. The instruction\norder places the read before that store, and the memory model forbids using a\ncausally later store as the source of the read. No lane writes the common scalar.\nThese facts derive each operand's original value for every admitted execution.\nThey do not restrict all executions to a globally sequential memory order."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseReads.lean",
+        "passage": {
+          "quote": "theorem reads_initial\n    (run : ParallelUnary.Runs target (program op) (initial common before seeds) events final)\n    (separate : n≤common) (fit : common<2^62) (source co)\n    (valid : ParallelUnary.Memory.Admitted (program op) before events source co)\n    (event : ParallelUnary.Event n) (effect : MemoryEffect) (member : event∈events)\n    (memory : event.memory=some effect) (read : effect.kind=.load) :\n    effect.value=before[effect.address.toNat/4]!"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Memory admission applies the existing whole-word constraints to the actual\nemitted loads and stores, with no additional cross-thread order. A read cannot\nsilently receive the value intended by the proof. For a lane's own input cell,\nany noninitial writer would be that lane's later output store. The instruction\norder places the read before that store, and the memory model forbids using a\ncausally later store as the source of the read. No lane writes the common scalar.\nThese facts derive each operand's original value for every admitted execution.\nThey do not restrict all executions to a globally sequential memory order."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseData.lean",
+        "passage": {
+          "quote": "theorem store_results\n    (run : ParallelUnary.Runs target (program op) (initial common before seeds) events final)\n    (bounds : Bounds n common before) (source co)\n    (valid : Memory.Admitted (program op) before events source co)\n    (member : event∈events) (memory : event.memory=some effect) (store : effect.kind=.store) :\n    Result op before[event.thread.val]! before[common]! effect.value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocation bounds, four-byte alignment and nonwrapping addresses are checked\nagainst actual accesses. Universal completion correctness identifies final\nstored values and unchanged cells. A separate finite schedule constructs actual\narithmetic and memory steps, and derives a valid memory graph for that trace.\nA witness schedule does not assert scheduler fairness or GPU progress."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseLaunch.lean",
+        "passage": {
+          "quote": "inductive Launch (op : Op) (n common : Nat) (before after : List Word) : Prop\n  | execution (bounds : Bounds n common before)\n      (seeds : Fin n → Scalar.State) (events : List (ParallelUnary.Event n))\n      (final : ParallelUnary.State n)\n      (run : ParallelUnary.Runs target (program op) (initial common before seeds) events final)\n      (halted : ∀t, (final.lanes t).halted=true)\n      (source co) (admitted : Memory.Admitted (program op) before events source co)\n      (output : final.global=after) : Launch op n common before after"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocation bounds, four-byte alignment and nonwrapping addresses are checked\nagainst actual accesses. Universal completion correctness identifies final\nstored values and unchanged cells. A separate finite schedule constructs actual\narithmetic and memory steps, and derives a valid memory graph for that trace.\nA witness schedule does not assert scheduler fairness or GPU progress."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseLaunch.lean",
+        "passage": {
+          "quote": "theorem launch_spec (launch : Launch op n common before after) : Spec op n common before after"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocation bounds, four-byte alignment and nonwrapping addresses are checked\nagainst actual accesses. Universal completion correctness identifies final\nstored values and unchanged cells. A separate finite schedule constructs actual\narithmetic and memory steps, and derives a valid memory graph for that trace.\nA witness schedule does not assert scheduler fairness or GPU progress."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseLaunch.lean",
+        "passage": {
+          "quote": "theorem launch_safe (launch : Launch op n common before after) :\n    ∃(seeds : Fin n → Scalar.State) (events : List (ParallelUnary.Event n)) (final : ParallelUnary.State n),\n      ParallelUnary.Runs target (program op) (initial common before seeds) events final ∧\n      final.global=after ∧ (∀t,(final.lanes t).halted=true) ∧\n      (∃source co,Memory.Admitted (program op) before events source co) ∧\n      ∀event∈events,∀effect,event.memory=some effect → Scalar.ValidAddress before effect.address"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocation bounds, four-byte alignment and nonwrapping addresses are checked\nagainst actual accesses. Universal completion correctness identifies final\nstored values and unchanged cells. A separate finite schedule constructs actual\narithmetic and memory steps, and derives a valid memory graph for that trace.\nA witness schedule does not assert scheduler fairness or GPU progress."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseLaunch.lean",
+        "passage": {
+          "quote": "theorem launch_realize (op : Op) (n common : Nat) (before after : List Word)\n    (bounds : Bounds n common before) (spec : Spec op n common before after) :\n    Launch op n common before after"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocation bounds, four-byte alignment and nonwrapping addresses are checked\nagainst actual accesses. Universal completion correctness identifies final\nstored values and unchanged cells. A separate finite schedule constructs actual\narithmetic and memory steps, and derives a valid memory graph for that trace.\nA witness schedule does not assert scheduler fairness or GPU progress."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseCoverage.lean",
+        "passage": {
+          "quote": "theorem completed_store {n common : Nat} {op : Op} {before : List Word}\n    {seeds : Fin n→Scalar.State} {events : List (Event n)} {final : ParallelUnary.State n}\n    (run : ParallelUnary.Runs target (program op) (initial common before seeds) events final)\n    (thread : Fin n) (halted : (final.lanes thread).halted=true) :\n    ∃event effect, event∈events ∧ event.thread=thread ∧ event.memory=some effect ∧ effect.kind=.store"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocation bounds, four-byte alignment and nonwrapping addresses are checked\nagainst actual accesses. Universal completion correctness identifies final\nstored values and unchanged cells. A separate finite schedule constructs actual\narithmetic and memory steps, and derives a valid memory graph for that trace.\nA witness schedule does not assert scheduler fairness or GPU progress."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseStored.lean",
+        "passage": {
+          "quote": "theorem stored_final (run : ParallelUnary.Runs target (program op) (initial common before seeds) events final)\n    (fit : common<2^62) (separate : n≤common)\n    (member : event∈events) (memory : event.memory=some effect) (store : effect.kind=.store) :\n    final.global[event.thread.val]?=some effect.value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocation bounds, four-byte alignment and nonwrapping addresses are checked\nagainst actual accesses. Universal completion correctness identifies final\nstored values and unchanged cells. A separate finite schedule constructs actual\narithmetic and memory steps, and derives a valid memory graph for that trace.\nA witness schedule does not assert scheduler fairness or GPU progress."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseExecution.lean",
+        "passage": {
+          "quote": "theorem realize_with_seeds (op : Op) (n common : Nat) (before after : List Word)\n    (seeds : Fin n → Scalar.State) (bounds : Bounds n common before)\n    (spec : Spec op n common before after) :\n    ∃events final, ParallelUnary.ConcreteRuns target (program op) (initial common before seeds) events final ∧\n      final.global=after ∧ (∀t, (final.lanes t).halted=true) ∧ InitialReads before events"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocation bounds, four-byte alignment and nonwrapping addresses are checked\nagainst actual accesses. Universal completion correctness identifies final\nstored values and unchanged cells. A separate finite schedule constructs actual\narithmetic and memory steps, and derives a valid memory graph for that trace.\nA witness schedule does not assert scheduler fairness or GPU progress."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelUnaryChronology.lean",
+        "passage": {
+          "quote": "theorem rank_injective (program : List Instr) (global : List Word) (events : List (Event n)) :\n    Function.Injective (fun i : Fin (labels program global events).length => rank global (labels program global events)[i.val])"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Allocation bounds, four-byte alignment and nonwrapping addresses are checked\nagainst actual accesses. Universal completion correctness identifies final\nstored values and unchanged cells. A separate finite schedule constructs actual\narithmetic and memory steps, and derives a valid memory graph for that trace.\nA witness schedule does not assert scheduler fairness or GPU progress."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/ParallelUnaryAdmission.lean",
+        "passage": {
+          "quote": "theorem admitted_of_initial_reads (reads : InitialReads global events) (future : FutureStores events) :\n    ∃ source co, Admitted program global events source co ∧\n      ∀ i, ¬Path (SharedReduction.Machine.Memory.grounding\n        (graph program global events source co) (fun _ _ => False)) i i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths, benchmarking and a backward implementation remain separate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnarySequential.lean",
+        "passage": {
+          "quote": "theorem sequential_realize (op : Op) (n common : Nat) (before after : List Word)\n    (bounds : Bounds n common before) (spec : Spec op n common before after) :\n    SoftmaxSweep.Run (sequentialStep op common) n before after"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths, benchmarking and a backward implementation remain separate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxParallel.lean",
+        "passage": {
+          "quote": "theorem output_equivalence (bound : Sum.Bounds d) :\n    Run d input final ↔ SoftmaxPipeline.Run d input final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths, benchmarking and a backward implementation remain separate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxParallel.lean",
+        "passage": {
+          "quote": "theorem execution_exists (d : Nat) (bound : Sum.Bounds d)\n    (input : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, Ptx.Binary32.finiteReal (input i)=some (values i))\n    (small : ∀i, |values i|≤(2:ℝ)^(124:ℤ)) : ∃final, Run d input final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Softmax uses one such pass after its parallel maximum and another after its\nparallel sum. Phase boundaries retain the existing explicit waiting and scratch\ninitialization model; they are not a CUDA runtime implementation or fused kernel.\nThe new passes and the sequential reference permit exactly the same final arrays.\nBoth directions are proved through a contract giving each stored result’s\ninstruction relation and preserving all cells outside the output prefix. This\nkeeps the numerical allowances and initial-score accuracy guard unchanged,\nwithout selecting a unique approximate exponential result. Masking,\narbitrary row lengths, benchmarking and a backward implementation remain separate."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxParallel.lean",
+        "passage": {
+          "quote": "theorem correct (d : Nat) (bound : d≤10)\n    (input : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, finiteReal (input i)=some (values i))\n    (small : ∀i, |values i|≤(2:ℝ)^(124:ℤ))\n    (guard : SoftmaxPipeline.AccuracyGuard d values)\n    (run : Scalar.SoftmaxParallel.Run d input final) :\n    SoftmaxPipeline.Accurate d input values final"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "Memory admission applies the existing whole-word constraints to the actual\nemitted loads and stores, with no additional cross-thread order. A read cannot\nsilently receive the value intended by the proof. For a lane's own input cell,\nany noninitial writer would be that lane's later output store. The instruction\norder places the read before that store, and the memory model forbids using a\ncausally later store as the source of the read. No lane writes the common scalar.\nThese facts derive each operand's original value for every admitted execution.\nThey do not restrict all executions to a globally sequential memory order."
+      },
+      "to": {
+        "description": "softmax-forward",
+        "passage": {
+          "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. For elementwise passes, ownership\nand instruction order prove that each admitted load sees the original operand:\nother threads cannot write its input, and its own output store occurs later.\nThe sequential reference passes instead read the current arena directly.\nResetting entry registers, allocating shared scratch and waiting for a phase to\ncomplete are explicit operations of the composition model. They do not implement\nCUDA allocation, launch, waiting or device visibility. No arithmetic value is\nsupplied by those operations in place of a load or store."
+        }
+      },
+      "reason": "The existing arena layout and explicit phase boundaries make the common scalar read-only during each elementwise pass."
+    }
+  ]
+}

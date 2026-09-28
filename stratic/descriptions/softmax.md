@@ -98,11 +98,13 @@ rounding bounds. A two-instruction scalar sequence normalizes each numerator
 using the actual stored sum through an explicit register interface. The total
 exponential and sum error must be at most one half to derive safe normalization.
 The register interface alone does not implement memory operations between stages.
-A complete reference forward pipeline now connects the parallel maximum and sum
-through sequential fetched exponential and normalization passes in one arena.
-It proves execution existence from original bounded finite scores and stored-output
-accuracy against TorchLean under the explicit total-error guard. Phase boundaries
-are model-level waiting and initialization, not a CUDA runtime implementation.
-A fully parallel or fused forward kernel, masking, arbitrary row sizes and a
+The complete forward pipeline connects parallel maximum, exponential, sum and
+normalization passes in one arena. Every completed admitted execution has a
+possible sequential-reference output, and every reference output has a parallel
+execution witness. Existence follows from original bounded finite scores;
+stored-output accuracy against TorchLean additionally uses the explicit total-error
+guard. Phase boundaries are model-level waiting and initialization, not a CUDA
+runtime implementation.
+Fusing the forward phases, masking, arbitrary row sizes and a
 backward implementation remain separate work.
 GPU execution and benchmarking remain deferred.

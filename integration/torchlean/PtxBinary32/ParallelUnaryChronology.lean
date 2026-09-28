@@ -1,0 +1,149 @@
+import PtxBinary32.ParallelUnaryMemory
+import Ptx.SharedReductionMemoryWitness
+
+/-! Chronological ranks for the actual combined global memory labels.
+Initial writes occupy a disjoint earlier range; program ranks retain positions
+in the full instruction trace, including non-memory instructions. -/
+namespace Ptx.Scalar.ParallelUnary.Memory.Chronology
+open Ptx.TraceMemory
+
+variable {n : Nat} {events : List (Event n)} {program : List Instr} {global : List Word}
+  {a b e : Ptx.Occurrence}
+
+def rank (global : List Word) (e : Ptx.Occurrence) : Nat :=
+  if e.thread = none then e.position else 2*global.length+e.position
+
+/-- A noninitial label recovers one actual scalar memory event. -/
+theorem program_origin (member : e ∈ labels program global events) (thread : e.thread ≠ none) :
+    ∃ t occ eff,
+      (events : List (Event n))[e.position]? = some (.scalar t occ) ∧
+      occ.memory = some eff ∧ e = ⟨some t.val,e.position,(ofEffect eff).effect⟩ := by
+  rcases labels_origin program global events e member with ⟨i,_,eq⟩ | ⟨t,_,p,atP,accessP,eq⟩
+  · simp [← eq,Initial.occurrence] at thread
+  · obtain ⟨t',occ,eff,origin,tid,_,_,mem,_,val⟩ := access_origin program t p.origin p.access accessP
+    refine ⟨t',occ,eff,?_,mem,?_⟩
+    · simpa [← eq,Projected.occurrence,origin] using atP
+    · rw [← eq]; simp [Projected.occurrence,val,tid]
+
+theorem initial_origin (member : e ∈ labels program global events) (thread : e.thread = none) :
+    ∃ i ∈ initial global, e = i.occurrence := by
+  rcases labels_origin program global events e member with ⟨i,hi,eq⟩ | ⟨t,_,p,_,_,eq⟩
+  · exact ⟨i,hi,eq.symm⟩
+  · simp [← eq,Projected.occurrence] at thread
+
+theorem initial_bound (i : Initial 2) (member : i ∈ initial global) :
+    i.location.code < 2*global.length := by
+  simp only [initial,SharedReduction.Machine.Memory.initial,List.mem_append,List.mem_mapIdx] at member
+  rcases member with ⟨j,hj,eq⟩ | impossible
+  · subst i; simp only [Location.code]; omega
+  · simp at impossible
+
+theorem initial_rank (member : e ∈ labels program global events) (thread : e.thread = none) :
+    rank global e < 2*global.length := by
+  obtain ⟨i,hi,rfl⟩ := initial_origin member thread
+  exact initial_bound i hi
+
+theorem program_same_position (ha : a ∈ labels program global events)
+    (hb : b ∈ labels program global events) (ta : a.thread ≠ none) (tb : b.thread ≠ none)
+    (position : a.position=b.position) : a=b := by
+  obtain ⟨t,occ,eff,atA,memA,labelA⟩ := program_origin ha ta
+  obtain ⟨u,other,eff',atB,memB,labelB⟩ := program_origin hb tb
+  rw [← position,atA] at atB
+  have eq := Event.scalar.inj (Option.some.inj atB)
+  obtain ⟨rfl,rfl⟩ := eq
+  rw [memA] at memB
+  cases Option.some.inj memB
+  rw [labelA,labelB,position]
+
+theorem rank_injective (program : List Instr) (global : List Word) (events : List (Event n)) :
+    Function.Injective (fun i : Fin (labels program global events).length => rank global (labels program global events)[i.val]) := by
+  intro a b equal
+  have ma := List.getElem_mem a.isLt (l := labels program global events)
+  have mb := List.getElem_mem b.isLt (l := labels program global events)
+  have unique := labels_unique program global events
+  have identityEq : identity (labels program global events)[a.val] = identity (labels program global events)[b.val] := by
+    by_cases ta : (labels program global events)[a.val].thread = none <;>
+      by_cases tb : (labels program global events)[b.val].thread = none
+    · simp [rank,ta,tb] at equal
+      simp [identity,ta,tb,equal]
+    · have bound := initial_rank ma ta
+      simp [rank,ta,tb] at equal bound
+      omega
+    · have bound := initial_rank mb tb
+      simp [rank,ta,tb] at equal bound
+      omega
+    · have pos : (labels program global events)[a.val].position = (labels program global events)[b.val].position := by
+        simpa [rank,ta,tb] using equal
+      rw [program_same_position ma mb ta tb pos]
+  have eq : a.val=b.val := by
+    apply unique.eq_of_getElem_eq (by simp) (by simp)
+    simpa using identityEq
+  exact Fin.ext eq
+
+/-- Chronological program events have increasing ranks regardless of thread. -/
+theorem program_before (ta : a.thread ≠ none) (tb : b.thread ≠ none) (pos : a.position < b.position) :
+    rank global a < rank global b := by simp [rank,ta,tb,pos]
+
+theorem initial_iff (member : e ∈ labels program global events) :
+    e.effect.op = .init ↔ e.thread = none := by
+  by_cases thread : e.thread = none
+  · obtain ⟨i,_,rfl⟩ := initial_origin member thread
+    simp [Initial.occurrence]
+  · obtain ⟨t,occ,eff,_,_,eq⟩ := program_origin member thread
+    rw [eq]
+    cases hk : eff.kind <;> simp [ofEffect,Parallel.Memory.ofEffect,Access.effect,AccessKind.op,hk]
+
+theorem no_release (member : e ∈ labels program global events) : e.effect.op ≠ .store .release := by
+  by_cases thread : e.thread = none
+  · rw [(initial_iff member).mpr thread]; decide
+  · obtain ⟨t,occ,eff,_,_,eq⟩ := program_origin member thread
+    rw [eq]
+    cases hk : eff.kind <;> simp [ofEffect,Parallel.Memory.ofEffect,Access.effect,AccessKind.op,hk]
+
+theorem initial_position (member : e ∈ labels program global events) (thread : e.thread = none) :
+    e.position=e.effect.address := by
+  obtain ⟨i,_,rfl⟩ := initial_origin member thread
+  rfl
+
+theorem initial_before (program : List Instr) (global : List Word) (events : List (Event n))
+    (source co) (i w : Fin (labels program global events).length)
+    (hi : (graph program global events source co).initial i)
+    (same : (graph program global events source co).sameAddress i w) (ne : i≠w) :
+    rank global ((graph program global events source co).event i) <
+      rank global ((graph program global events source co).event w) := by
+  have mi := List.getElem_mem i.isLt (l := labels program global events)
+  have mw := List.getElem_mem w.isLt (l := labels program global events)
+  have ti := (initial_iff mi).mp hi
+  by_cases tw : ((graph program global events source co).event w).thread = none
+  · have pi := initial_position mi ti
+    have pw := initial_position mw tw
+    have eq : rank global ((graph program global events source co).event i) =
+        rank global ((graph program global events source co).event w) := by
+      simp only [Graph.sameAddress] at same
+      change (labels program global events)[i.val].effect.address =
+        (labels program global events)[w.val].effect.address at same
+      change (labels program global events)[w.val].thread = none at tw
+      simp [graph,TraceMemory.graph,rank,ti,tw,pi,pw,same]
+    exact False.elim (ne (rank_injective program global events eq))
+  · have bound := initial_rank mi ti
+    change rank global (labels program global events)[i.val] < _
+    have wr : rank global ((graph program global events source co).event w) =
+        2*global.length+((graph program global events source co).event w).position := by
+      simp [rank,tw]
+    rw [wr]
+    omega
+
+theorem base_before (program : List Instr) (global : List Word) (events : List (Event n))
+    (source co) (a b : Fin (labels program global events).length)
+    (edge : Graph.Ordered.baseEdge (graph program global events source co)
+      (fun _ _ => False) a b) :
+    rank global ((graph program global events source co).event a) <
+      rank global ((graph program global events source co).event b) := by
+  rcases edge with (po | sync) | cross
+  · exact program_before po.1 (by rw [← po.2.1]; exact po.1) po.2.2
+  · obtain ⟨_,w,r,release,_⟩ := sync
+    have no := no_release (List.getElem_mem a.isLt (l := labels program global events))
+    rcases release with ⟨_,rel⟩ | ⟨rel,_⟩ <;> exact False.elim (no rel)
+  · exact False.elim cross
+
+end Ptx.Scalar.ParallelUnary.Memory.Chronology

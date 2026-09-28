@@ -3,11 +3,11 @@
   "parent": {
     "description": "softmax",
     "passage": {
-      "quote": "A complete reference forward pipeline now connects the parallel maximum and sum\nthrough sequential fetched exponential and normalization passes in one arena.\nIt proves execution existence from original bounded finite scores and stored-output\naccuracy against TorchLean under the explicit total-error guard. Phase boundaries\nare model-level waiting and initialization, not a CUDA runtime implementation."
+      "quote": "The complete forward pipeline connects parallel maximum, exponential, sum and\nnormalization passes in one arena. Every completed admitted execution has a\npossible sequential-reference output, and every reference output has a parallel\nexecution witness. Existence follows from original bounded finite scores;\nstored-output accuracy against TorchLean additionally uses the explicit total-error\nguard. Phase boundaries are model-level waiting and initialization, not a CUDA\nruntime implementation."
     }
   },
   "summary": [
-    "Connect parallel maximum and sum with sequential fetched exponential and normalization passes through one actual memory arena.",
+    "Connect parallel maximum, exponential, sum and normalization passes through one actual memory arena, preserving exactly the reference composition’s possible output arrays.",
     "Derive finite outputs and coordinate error against stable real softmax under an explicit accumulated-error guard; retain all permitted arithmetic outcomes.",
     "Distinguish completed execution, independent existence, memory safety and model-level phase boundaries from GPU and runtime claims."
   ],
@@ -16,7 +16,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The forward computation turns a nonempty row of finite binary32 scores into\nencoded softmax outputs. The row length is a power of two, at most 1024, and\nscores have magnitude at most 2^124. Its maximum and sum reductions use the\nexisting parallel programs. Between them, sequential passes load operands,\nexecute the modeled exponential or normalization instructions, and store results.\nThese passes provide a simple reference implementation, not a fast parallel\nsoftmax kernel or a GPU performance claim."
+        "quote": "The forward computation turns a nonempty row of finite binary32 scores into\nencoded softmax outputs. The row length is a power of two, at most 1024, and\nscores have magnitude at most 2^124. Maximum and sum use parallel reductions.\nExponential and normalization passes also run in parallel: each thread reads\none input and a common scalar, then overwrites only its own input cell. A\nsequential reference composition remains available. Both compositions permit\nthe same final arrays; this relates their results without equating their schedules.\nNeither composition claims fused execution or measured GPU performance."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SoftmaxPipeline.lean",
@@ -28,7 +28,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "All phases share one global word arena. For n scores, its first n words initially\nhold the scores, followed by n positive-one weights and two zero words. The\nmaximum reduction temporarily writes its result at index n. Each exponential\nstep loads a score and this stored maximum, computes the shifted exponential,\nand overwrites that score's cell. After the pass, an actual store restores the\npositive-one weight at index n. The sum reduction can then use the same arena\nas its unit-weight dense specialization, placing its denominator at index 2*n+1.\nThe normalization pass loads each exponential and this stored denominator,\nexecutes rounded reciprocal and multiplication, and overwrites the exponential\nwith the output. The passes access one element at a time; the maximum and\ndenominator remain intact until all their consumers have read them."
+        "quote": "All phases share one global word arena. For n scores, its first n words initially\nhold the scores, followed by n positive-one weights and two zero words. The\nmaximum reduction temporarily writes its result at index n. Each exponential\nstep loads a score and this stored maximum, computes the shifted exponential,\nand overwrites that score's cell. After the pass, an actual store restores the\npositive-one weight at index n. The sum reduction can then use the same arena\nas its unit-weight dense specialization, placing its denominator at index 2*n+1.\nThe normalization pass loads each exponential and this stored denominator,\nexecutes rounded reciprocal and multiplication, and overwrites the exponential\nwith the output. The maximum and denominator lie outside the overwritten\nprefix and remain intact until all their consumers have read them."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SoftmaxPipeline.lean",
@@ -40,7 +40,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "All phases share one global word arena. For n scores, its first n words initially\nhold the scores, followed by n positive-one weights and two zero words. The\nmaximum reduction temporarily writes its result at index n. Each exponential\nstep loads a score and this stored maximum, computes the shifted exponential,\nand overwrites that score's cell. After the pass, an actual store restores the\npositive-one weight at index n. The sum reduction can then use the same arena\nas its unit-weight dense specialization, placing its denominator at index 2*n+1.\nThe normalization pass loads each exponential and this stored denominator,\nexecutes rounded reciprocal and multiplication, and overwrites the exponential\nwith the output. The passes access one element at a time; the maximum and\ndenominator remain intact until all their consumers have read them."
+        "quote": "All phases share one global word arena. For n scores, its first n words initially\nhold the scores, followed by n positive-one weights and two zero words. The\nmaximum reduction temporarily writes its result at index n. Each exponential\nstep loads a score and this stored maximum, computes the shifted exponential,\nand overwrites that score's cell. After the pass, an actual store restores the\npositive-one weight at index n. The sum reduction can then use the same arena\nas its unit-weight dense specialization, placing its denominator at index 2*n+1.\nThe normalization pass loads each exponential and this stored denominator,\nexecutes rounded reciprocal and multiplication, and overwrites the exponential\nwith the output. The maximum and denominator lie outside the overwritten\nprefix and remain intact until all their consumers have read them."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SoftmaxStorage.lean",
@@ -52,7 +52,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. Sequential passes read the current\narena directly, so their contract requires no concurrent interference. Resetting\nentry registers, allocating shared scratch and waiting for a phase to complete\nare explicit operations of the composition model. They do not implement CUDA\nallocation, launch, waiting or device visibility. No arithmetic value is supplied\nby those operations in place of a load or store."
+        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. For elementwise passes, ownership\nand instruction order prove that each admitted load sees the original operand:\nother threads cannot write its input, and its own output store occurs later.\nThe sequential reference passes instead read the current arena directly.\nResetting entry registers, allocating shared scratch and waiting for a phase to\ncomplete are explicit operations of the composition model. They do not implement\nCUDA allocation, launch, waiting or device visibility. No arithmetic value is\nsupplied by those operations in place of a load or store."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SoftmaxMemory.lean",
@@ -64,7 +64,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. Sequential passes read the current\narena directly, so their contract requires no concurrent interference. Resetting\nentry registers, allocating shared scratch and waiting for a phase to complete\nare explicit operations of the composition model. They do not implement CUDA\nallocation, launch, waiting or device visibility. No arithmetic value is supplied\nby those operations in place of a load or store."
+        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. For elementwise passes, ownership\nand instruction order prove that each admitted load sees the original operand:\nother threads cannot write its input, and its own output store occurs later.\nThe sequential reference passes instead read the current arena directly.\nResetting entry registers, allocating shared scratch and waiting for a phase to\ncomplete are explicit operations of the composition model. They do not implement\nCUDA allocation, launch, waiting or device visibility. No arithmetic value is\nsupplied by those operations in place of a load or store."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SoftmaxReductions.lean",
@@ -76,7 +76,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. Sequential passes read the current\narena directly, so their contract requires no concurrent interference. Resetting\nentry registers, allocating shared scratch and waiting for a phase to complete\nare explicit operations of the composition model. They do not implement CUDA\nallocation, launch, waiting or device visibility. No arithmetic value is supplied\nby those operations in place of a load or store."
+        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. For elementwise passes, ownership\nand instruction order prove that each admitted load sees the original operand:\nother threads cannot write its input, and its own output store occurs later.\nThe sequential reference passes instead read the current arena directly.\nResetting entry registers, allocating shared scratch and waiting for a phase to\ncomplete are explicit operations of the composition model. They do not implement\nCUDA allocation, launch, waiting or device visibility. No arithmetic value is\nsupplied by those operations in place of a load or store."
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/SoftmaxReductions.lean",
@@ -160,7 +160,7 @@
     {
       "kind": "depends-on",
       "from": {
-        "quote": "All phases share one global word arena. For n scores, its first n words initially\nhold the scores, followed by n positive-one weights and two zero words. The\nmaximum reduction temporarily writes its result at index n. Each exponential\nstep loads a score and this stored maximum, computes the shifted exponential,\nand overwrites that score's cell. After the pass, an actual store restores the\npositive-one weight at index n. The sum reduction can then use the same arena\nas its unit-weight dense specialization, placing its denominator at index 2*n+1.\nThe normalization pass loads each exponential and this stored denominator,\nexecutes rounded reciprocal and multiplication, and overwrites the exponential\nwith the output. The passes access one element at a time; the maximum and\ndenominator remain intact until all their consumers have read them."
+        "quote": "All phases share one global word arena. For n scores, its first n words initially\nhold the scores, followed by n positive-one weights and two zero words. The\nmaximum reduction temporarily writes its result at index n. Each exponential\nstep loads a score and this stored maximum, computes the shifted exponential,\nand overwrites that score's cell. After the pass, an actual store restores the\npositive-one weight at index n. The sum reduction can then use the same arena\nas its unit-weight dense specialization, placing its denominator at index 2*n+1.\nThe normalization pass loads each exponential and this stored denominator,\nexecutes rounded reciprocal and multiplication, and overwrites the exponential\nwith the output. The maximum and denominator lie outside the overwritten\nprefix and remain intact until all their consumers have read them."
       },
       "to": {
         "description": "parallel-maximum",
@@ -195,6 +195,78 @@
         }
       },
       "reason": "The supported initial score domain derives nonpositive exponential arguments and finite outputs for the four arithmetic instructions."
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The forward computation turns a nonempty row of finite binary32 scores into\nencoded softmax outputs. The row length is a power of two, at most 1024, and\nscores have magnitude at most 2^124. Maximum and sum use parallel reductions.\nExponential and normalization passes also run in parallel: each thread reads\none input and a common scalar, then overwrites only its own input cell. A\nsequential reference composition remains available. Both compositions permit\nthe same final arrays; this relates their results without equating their schedules.\nNeither composition claims fused execution or measured GPU performance."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxParallel.lean",
+        "passage": {
+          "quote": "inductive Run (d : Nat) (input : Fin (Sum.width d) → Word) : List Word → Prop\n  | phases {maximum exponentials restored summed final : List Word}\n      (maxRun : SoftmaxReductions.MaximumLaunch d (Sum.global d input) maximum)\n      (expRun : UnaryPointwise.Launch .shifted (Sum.width d) (Sum.width d) maximum exponentials)\n      (restore : SoftmaxMemory.StoreLaunch SoftmaxPipeline.target (Sum.width d) 0x3f800000 exponentials restored)\n      (sumRun : Dense.Launch (Sum.shape d) restored summed)\n      (normRun : UnaryPointwise.Launch .normalize (Sum.width d) (Sum.outputIndex d) summed final) :\n      Run d input final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The forward computation turns a nonempty row of finite binary32 scores into\nencoded softmax outputs. The row length is a power of two, at most 1024, and\nscores have magnitude at most 2^124. Maximum and sum use parallel reductions.\nExponential and normalization passes also run in parallel: each thread reads\none input and a common scalar, then overwrites only its own input cell. A\nsequential reference composition remains available. Both compositions permit\nthe same final arrays; this relates their results without equating their schedules.\nNeither composition claims fused execution or measured GPU performance."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxParallel.lean",
+        "passage": {
+          "quote": "theorem output_equivalence (bound : Sum.Bounds d) :\n    Run d input final ↔ SoftmaxPipeline.Run d input final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. For elementwise passes, ownership\nand instruction order prove that each admitted load sees the original operand:\nother threads cannot write its input, and its own output store occurs later.\nThe sequential reference passes instead read the current arena directly.\nResetting entry registers, allocating shared scratch and waiting for a phase to\ncomplete are explicit operations of the composition model. They do not implement\nCUDA allocation, launch, waiting or device visibility. No arithmetic value is\nsupplied by those operations in place of a load or store."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/UnaryPointwiseLaunch.lean",
+        "passage": {
+          "quote": "theorem launch_safe (launch : Launch op n common before after) :\n    ∃(seeds : Fin n → Scalar.State) (events : List (ParallelUnary.Event n)) (final : ParallelUnary.State n),\n      ParallelUnary.Runs target (program op) (initial common before seeds) events final ∧\n      final.global=after ∧ (∀t,(final.lanes t).halted=true) ∧\n      (∃source co,Memory.Admitted (program op) before events source co) ∧\n      ∀event∈events,∀effect,event.memory=some effect → Scalar.ValidAddress before effect.address"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxParallel.lean",
+        "passage": {
+          "quote": "theorem execution_exists (d : Nat) (bound : Sum.Bounds d)\n    (input : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, Ptx.Binary32.finiteReal (input i)=some (values i))\n    (small : ∀i, |values i|≤(2:ℝ)^(124:ℤ)) : ∃final, Run d input final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxParallel.lean",
+        "passage": {
+          "quote": "theorem correct (d : Nat) (bound : d≤10)\n    (input : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, finiteReal (input i)=some (values i))\n    (small : ∀i, |values i|≤(2:ℝ)^(124:ℤ))\n    (guard : SoftmaxPipeline.AccuracyGuard d values)\n    (run : Scalar.SoftmaxParallel.Run d input final) :\n    SoftmaxPipeline.Accurate d input values final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxParallel.lean",
+        "passage": {
+          "quote": "theorem accurate_execution_exists (d : Nat) (bound : d≤10)\n    (input : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, finiteReal (input i)=some (values i))\n    (small : ∀i, |values i|≤(2:ℝ)^(124:ℤ))\n    (guard : SoftmaxPipeline.AccuracyGuard d values) :\n    ∃final, Scalar.SoftmaxParallel.Run d input final ∧\n      SoftmaxPipeline.Accurate d input values final"
+        }
+      }
     }
   ]
 }

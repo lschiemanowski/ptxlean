@@ -1,3 +1,22 @@
+import PtxBinary32.ParallelUnary
+import PtxBinary32.ParallelUnaryAdmission
+import PtxBinary32.ParallelUnaryChronology
+import PtxBinary32.ParallelUnaryControl
+import PtxBinary32.ParallelUnaryMemory
+import PtxBinary32.SoftmaxParallel
+import PtxBinary32.SoftmaxParallelChecks
+import PtxBinary32.UnaryPointwiseChecks
+import PtxBinary32.UnaryPointwiseContract
+import PtxBinary32.UnaryPointwiseControl
+import PtxBinary32.UnaryPointwiseCoverage
+import PtxBinary32.UnaryPointwiseData
+import PtxBinary32.UnaryPointwiseExecution
+import PtxBinary32.UnaryPointwiseLaunch
+import PtxBinary32.UnaryPointwiseProgram
+import PtxBinary32.UnaryPointwiseReads
+import PtxBinary32.UnaryPointwiseStored
+import PtxBinary32.UnarySequential
+import PtxSoftmaxParallel
 import PtxBinary32.SoftmaxForwardAccuracy
 import PtxBinary32.SoftmaxMemory
 import PtxBinary32.SoftmaxMemoryChecks
@@ -2474,3 +2493,175 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.SoftmaxPipeline.correct
 #print axioms PtxTorchLean.SoftmaxPipeline.accurate_execution_exists
 #print axioms PtxTorchLean.SoftmaxPipeline.equal_scores_guard
+
+#print axioms Ptx.Scalar.ParallelUnary.Lane
+#print axioms Ptx.Scalar.ParallelUnary.State
+#print axioms Ptx.Scalar.ParallelUnary.Event
+#print axioms Ptx.Scalar.ParallelUnary.Event.thread
+#print axioms Ptx.Scalar.ParallelUnary.Event.pc
+#print axioms Ptx.Scalar.ParallelUnary.Event.instruction
+#print axioms Ptx.Scalar.ParallelUnary.Event.memory
+#print axioms Ptx.Scalar.ParallelUnary.setLane
+#print axioms Ptx.Scalar.ParallelUnary.input
+#print axioms Ptx.Scalar.ParallelUnary.install
+#print axioms Ptx.Scalar.ParallelUnary.Exec
+#print axioms Ptx.Scalar.ParallelUnary.Supported
+#print axioms Ptx.Scalar.ParallelUnary.Step
+#print axioms Ptx.Scalar.ParallelUnary.Runs
+#print axioms Ptx.Scalar.ParallelUnary.ConcreteRuns
+#print axioms Ptx.Scalar.ParallelUnary.ConcreteRuns.toRuns
+#print axioms Ptx.Scalar.ParallelUnary.Runs.append
+#print axioms Ptx.Scalar.ParallelUnary.ConcreteRuns.append
+#print axioms Ptx.Scalar.ParallelUnary.exec_other
+#print axioms Ptx.Scalar.ParallelUnary.step_other
+#print axioms Ptx.Scalar.ParallelUnary.exec_length
+#print axioms Ptx.Scalar.ParallelUnary.step_length
+#print axioms Ptx.Scalar.ParallelUnary.runs_length
+#print axioms Ptx.Scalar.ParallelUnary.exec_memory_safe
+#print axioms Ptx.Scalar.ParallelUnary.step_memory_safe
+#print axioms Ptx.Scalar.ParallelUnary.runs_memory_safe
+#print axioms Ptx.Scalar.ParallelUnary.scalar_next_origin
+#print axioms Ptx.Scalar.ParallelUnary.scalar_halted_origin
+#print axioms Ptx.Scalar.ParallelUnary.exec_origin
+#print axioms Ptx.Scalar.ParallelUnary.step_origin
+#print axioms Ptx.Scalar.ParallelUnary.runs_fetch
+#print axioms Ptx.Scalar.ParallelUnary.step_memory_origin
+#print axioms Ptx.Scalar.ParallelUnary.step_frame
+#print axioms Ptx.Scalar.ParallelUnary.runs_frame
+#print axioms Ptx.Scalar.ParallelUnary.exec_exponential_supported
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.InitialReads
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.FutureStores
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.initial_graph_member
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.SourceFor
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.source_exists
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.chosenSource
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.chronologicalCoherence
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.chosenSource_spec
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.initial_certificate
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.admitted_of_initial_reads
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.rank
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.program_origin
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.initial_origin
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.initial_bound
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.initial_rank
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.program_same_position
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.rank_injective
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.program_before
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.initial_iff
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.no_release
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.initial_position
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.initial_before
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Chronology.base_before
+#print axioms Ptx.Scalar.ParallelUnary.StraightInstr
+#print axioms Ptx.Scalar.ParallelUnary.Straight
+#print axioms Ptx.Scalar.ParallelUnary.cursor
+#print axioms Ptx.Scalar.ParallelUnary.scalar_next_pc
+#print axioms Ptx.Scalar.ParallelUnary.exec_progress
+#print axioms Ptx.Scalar.ParallelUnary.step_progress
+#print axioms Ptx.Scalar.ParallelUnary.TraceProgress
+#print axioms Ptx.Scalar.ParallelUnary.runs_progress
+#print axioms Ptx.Scalar.ParallelUnary.position_iff_pc
+#print axioms Ptx.Scalar.ParallelUnary.same_site_unique
+#print axioms Ptx.Scalar.ParallelUnary.step_cursor_le
+#print axioms Ptx.Scalar.ParallelUnary.runs_site
+#print axioms Ptx.Scalar.ParallelUnary.Memory.access
+#print axioms Ptx.Scalar.ParallelUnary.Memory.access_origin
+#print axioms Ptx.Scalar.ParallelUnary.Memory.labels
+#print axioms Ptx.Scalar.ParallelUnary.Memory.graph
+#print axioms Ptx.Scalar.ParallelUnary.Memory.Admitted
+#print axioms Ptx.Scalar.ParallelUnary.Memory.labels_unique
+#print axioms Ptx.Scalar.ParallelUnary.Memory.labels_origin
+#print axioms Ptx.Scalar.ParallelUnary.Memory.source_initial_of_future
+#print axioms Ptx.Scalar.ParallelUnary.Memory.step_access_complete
+#print axioms Ptx.Scalar.ParallelUnary.Memory.run_access_complete
+#print axioms Ptx.Scalar.ParallelUnary.Memory.run_graph_complete
+#print axioms Ptx.Scalar.ParallelUnary.Memory.program_write_origin
+#print axioms Ptx.Scalar.ParallelUnary.Memory.initial_origin
+#print axioms Ptx.Scalar.ParallelUnary.Memory.initial_read_value
+#print axioms Ptx.Scalar.SoftmaxParallel.Run
+#print axioms Ptx.Scalar.SoftmaxParallel.refines
+#print axioms Ptx.Scalar.SoftmaxParallel.of_reference
+#print axioms Ptx.Scalar.SoftmaxParallel.output_equivalence
+#print axioms Ptx.Scalar.SoftmaxParallel.execution_exists
+#print axioms Ptx.Scalar.SoftmaxParallel.Checks.singleton_exact
+#print axioms Ptx.Scalar.SoftmaxParallel.Checks.singleton_exists
+#print axioms Ptx.Scalar.UnaryPointwise.Checks.wrong_load_executes
+#print axioms Ptx.Scalar.UnaryPointwise.Checks.wrong_load_rejected
+#print axioms Ptx.Scalar.UnaryPointwise.Checks.interleaved_loads
+#print axioms Ptx.Scalar.UnaryPointwise.Op
+#print axioms Ptx.Scalar.UnaryPointwise.target
+#print axioms Ptx.Scalar.UnaryPointwise.Result
+#print axioms Ptx.Scalar.UnaryPointwise.Bounds
+#print axioms Ptx.Scalar.UnaryPointwise.Spec
+#print axioms Ptx.Scalar.UnaryPointwise.sequentialStep
+#print axioms Ptx.Scalar.UnaryPointwise.sequential_writes
+#print axioms Ptx.Scalar.UnaryPointwise.sequential_spec
+#print axioms Ptx.Scalar.UnaryPointwise.pointer
+#print axioms Ptx.Scalar.UnaryPointwise.initial
+#print axioms Ptx.Scalar.UnaryPointwise.Addresses
+#print axioms Ptx.Scalar.UnaryPointwise.initial_addresses
+#print axioms Ptx.Scalar.UnaryPointwise.step_addresses
+#print axioms Ptx.Scalar.UnaryPointwise.runs_addresses
+#print axioms Ptx.Scalar.UnaryPointwise.step_memory
+#print axioms Ptx.Scalar.UnaryPointwise.runs_memory
+#print axioms Ptx.Scalar.UnaryPointwise.run_memory
+#print axioms Ptx.Scalar.UnaryPointwise.HaltSite
+#print axioms Ptx.Scalar.UnaryPointwise.step_halt_site
+#print axioms Ptx.Scalar.UnaryPointwise.runs_halt_site
+#print axioms Ptx.Scalar.UnaryPointwise.completed_pc
+#print axioms Ptx.Scalar.UnaryPointwise.completed_store
+#print axioms Ptx.Scalar.UnaryPointwise.Scratch
+#print axioms Ptx.Scalar.UnaryPointwise.Data
+#print axioms Ptx.Scalar.UnaryPointwise.initial_data
+#print axioms Ptx.Scalar.UnaryPointwise.ReadValues
+#print axioms Ptx.Scalar.UnaryPointwise.step_data
+#print axioms Ptx.Scalar.UnaryPointwise.runs_data
+#print axioms Ptx.Scalar.UnaryPointwise.admitted_reads
+#print axioms Ptx.Scalar.UnaryPointwise.run_data
+#print axioms Ptx.Scalar.UnaryPointwise.store_results
+#print axioms Ptx.Scalar.UnaryPointwise.input_install
+#print axioms Ptx.Scalar.UnaryPointwise.install_install
+#print axioms Ptx.Scalar.UnaryPointwise.LaneResult
+#print axioms Ptx.Scalar.UnaryPointwise.normalize_lane
+#print axioms Ptx.Scalar.UnaryPointwise.shifted_lane
+#print axioms Ptx.Scalar.UnaryPointwise.lane_realize
+#print axioms Ptx.Scalar.UnaryPointwise.InitialReads
+#print axioms Ptx.Scalar.UnaryPointwise.realize_with_seeds
+#print axioms Ptx.Scalar.UnaryPointwise.realize
+#print axioms Ptx.Scalar.UnaryPointwise.initial_reads_bounded
+#print axioms Ptx.Scalar.UnaryPointwise.Launch
+#print axioms Ptx.Scalar.UnaryPointwise.launch_bounds
+#print axioms Ptx.Scalar.UnaryPointwise.launch_spec
+#print axioms Ptx.Scalar.UnaryPointwise.launch_safe
+#print axioms Ptx.Scalar.UnaryPointwise.launch_realize
+#print axioms Ptx.Scalar.UnaryPointwise.ownLoad
+#print axioms Ptx.Scalar.UnaryPointwise.commonLoad
+#print axioms Ptx.Scalar.UnaryPointwise.ownStore
+#print axioms Ptx.Scalar.UnaryPointwise.exitInstr
+#print axioms Ptx.Scalar.UnaryPointwise.arithmetic
+#print axioms Ptx.Scalar.UnaryPointwise.body
+#print axioms Ptx.Scalar.UnaryPointwise.program
+#print axioms Ptx.Scalar.UnaryPointwise.storePC
+#print axioms Ptx.Scalar.UnaryPointwise.exitPC
+#print axioms Ptx.Scalar.UnaryPointwise.body_length
+#print axioms Ptx.Scalar.UnaryPointwise.program_length
+#print axioms Ptx.Scalar.UnaryPointwise.fetch_own
+#print axioms Ptx.Scalar.UnaryPointwise.fetch_common
+#print axioms Ptx.Scalar.UnaryPointwise.fetch_store
+#print axioms Ptx.Scalar.UnaryPointwise.fetch_exit
+#print axioms Ptx.Scalar.UnaryPointwise.ScalarAllowed
+#print axioms Ptx.Scalar.UnaryPointwise.scalar_sites
+#print axioms Ptx.Scalar.UnaryPointwise.scalar_allowed
+#print axioms Ptx.Scalar.UnaryPointwise.straight
+#print axioms Ptx.Scalar.UnaryPointwise.pointer_index
+#print axioms Ptx.Scalar.UnaryPointwise.stores_follow_read
+#print axioms Ptx.Scalar.UnaryPointwise.read_initial
+#print axioms Ptx.Scalar.UnaryPointwise.reads_initial
+#print axioms Ptx.Scalar.ParallelUnary.step_stored
+#print axioms Ptx.Scalar.ParallelUnary.runs_stored
+#print axioms Ptx.Scalar.UnaryPointwise.events_nodup
+#print axioms Ptx.Scalar.UnaryPointwise.stores_unique
+#print axioms Ptx.Scalar.UnaryPointwise.stored_final
+#print axioms Ptx.Scalar.UnaryPointwise.sequential_realize
+#print axioms PtxTorchLean.SoftmaxParallel.correct
+#print axioms PtxTorchLean.SoftmaxParallel.accurate_execution_exists

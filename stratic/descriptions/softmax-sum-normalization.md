@@ -60,8 +60,8 @@ stores or of a combined softmax launch.
 The sum and normalization guarantees discharge the corresponding local stages
 of the softmax error bound. Any resulting comparison with the ideal softmax
 must still retain the exponential errors and the explicit total-error guard.
-A separate reference-forward responsibility connects these components through
-actual loads, stores and phase writeback. This component's register interface
+A separate forward-execution responsibility connects these components through
+actual loads, stores and phase writeback, including parallel elementwise passes. This component's register interface
 alone does not establish that complete execution.
 
 The component interface puts an original numerator in register 0 and the actual
@@ -69,4 +69,6 @@ stored sum in register 1, then runs scalar normalization with register 2 as scra
 Its theorem combines the completed admitted sum execution with those fetched
 scalar runs to bound each normalized value against the ideal exponential divided
 by the ideal sum. Initializing these registers is an explicit mathematical
-handoff; PTX loads, broadcast and combined launch execution remain unimplemented.
+handoff in this scalar interface. The forward-execution component supplies the
+actual memory loads and stores; it keeps runtime launch and device visibility
+outside its claim.

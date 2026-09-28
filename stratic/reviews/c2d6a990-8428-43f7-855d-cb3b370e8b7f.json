@@ -1,0 +1,213 @@
+{
+  "id": "c2d6a990-8428-43f7-855d-cb3b370e8b7f",
+  "base": "e2057c400b796e01515feb9cd9ee778ed99972e1",
+  "contentTree": "1735690afac15eea6cfc121efe8c2adee385e59e",
+  "reviewer": "Codex with independent proof and semantic review agents",
+  "summary": "Implement parallel shifted-exponential and normalization passes and connect them to the complete softmax forward pipeline. Preserve all numerical outcomes, derive admission and existence separately, and audit every added public declaration.",
+  "examined": [
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The audit still verifies pinned dependencies, exact public declarations and source immutability; added modules and fresh checks extend coverage without changing assurance claims."
+    },
+    {
+      "id": "softmax-forward",
+      "outcome": "revised",
+      "reason": "Parallel elementwise launches now compose with the unchanged reductions and preserve exactly the reference output arrays; accuracy and existence remain distinct."
+    },
+    {
+      "id": "softmax-sum-normalization",
+      "outcome": "revised",
+      "reason": "Arithmetic contracts remain unchanged. Updated enclosing-pipeline quotations and removed a stale statement that memory-connected execution is still unimplemented; the scalar interface now explicitly delegates it to forward execution."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "All forward arithmetic passes now have parallel execution; summary and outstanding scope preserve phase/runtime, masking and backward boundaries."
+    },
+    {
+      "id": "parallel-elementwise",
+      "outcome": "revised",
+      "reason": "New responsibility documents actual parallel fetch, explicit entry pointers, graph-derived operands, universal stores, witness construction and exact reference-output equivalence."
+    },
+    {
+      "id": "parallel-maximum",
+      "outcome": "unchanged",
+      "reason": "The existing attained finite maximum, exact global frame and independent admitted launch witness are reused unchanged."
+    },
+    {
+      "id": "shifted-exponential",
+      "outcome": "unchanged",
+      "reason": "The four-instruction scalar relation, bounded input domain and all-outcome approximation remain unchanged; the parallel adapter reuses these leaves."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The example hierarchy still requires explicit input/numerical/execution coverage and reproducible verification; the softmax extension follows those promises."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Parallel scheduling preserves the exact allowed output arrays and the existing error guard; no precision policy, accuracy bound or backward claim changes."
+    },
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "unchanged",
+      "reason": "The same conservative two-policy exponential envelope and rounded reciprocal are preserved, with no hardware conformance or unique-output claim."
+    },
+    {
+      "id": "dense-layer",
+      "outcome": "unchanged",
+      "reason": "The unchanged dense launch supplies the unit-weight summation reduction with its existing ordering, allocation and all-execution result. The new adapter does not alter that machine."
+    },
+    {
+      "id": "reciprocal-instruction",
+      "outcome": "unchanged",
+      "reason": "The unchanged rcp.rn.f32 Eval relation is lifted into the parallel adapter with the stronger common target threshold; all original rounding and exceptional outcomes remain represented."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "1735690afac15eea6cfc121efe8c2adee385e59e",
+      "method": "bash scripts/check.sh; python3 integration/torchlean/check.py; stratic validate; independent proof and semantic review of the parallel adapter, admission, output equivalence and accuracy interfaces",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; 16 checked pinned integration dependencies; Linux; no GPU execution or external model API calls",
+      "evidence": "Root suite passed with 1643 exact dependency reports. Integration suite passed on 244 Lean source files with 2373 exact dependency reports, permitting only standard Lean axioms; all 171 new public declarations included. Fresh regression elaboration covers wrong candidate admission rejection, a genuine two-lane read interleaving and universal/inhabited singleton exactness. Independent reviewers found no blocking issue. Stratic descriptions and links validate. Proposed snapshot identical before and after checks.",
+      "tests": [],
+      "id": "fbcf6f41-c096-4a9f-8307-338988ff9416",
+      "recordedAt": "2026-09-28T08:03:20.044Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T08:04:02.159Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/softmax-forward.md",
+      "reason": "Updated the study guide and integration overview to explain parallel passes, reference-output equivalence, entry-pointer interface and preserved numerical/runtime restrictions."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelUnary.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelUnaryAdmission.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelUnaryChronology.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelUnaryControl.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/ParallelUnaryMemory.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxParallel.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxParallelChecks.lean",
+      "reason": "Regression proofs exercise candidate/admission separation, actual lane interleaving or universal singleton exactness and whole-pipeline existence; freshly elaborated by integration check."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseChecks.lean",
+      "reason": "Regression proofs exercise candidate/admission separation, actual lane interleaving or universal singleton exactness and whole-pipeline existence; freshly elaborated by integration check."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseContract.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseControl.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseCoverage.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseData.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseExecution.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseLaunch.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseProgram.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseReads.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnaryPointwiseStored.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/UnarySequential.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Adds exactly one import and dependency report per new audited public declaration; explicit checker counts match."
+    },
+    {
+      "path": "integration/torchlean/PtxSoftmaxParallel.lean",
+      "reason": "Reviewed supporting definitions and proof bodies behind the linked public contracts; all new public declarations are explicitly built and dependency-audited."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Updated the study guide and integration overview to explain parallel passes, reference-output equivalence, entry-pointer interface and preserved numerical/runtime restrictions."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Registers the parallel modules, exact declaration audit counts and fresh regression checks in the pinned integration build; existing targets are preserved."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers the parallel modules, exact declaration audit counts and fresh regression checks in the pinned integration build; existing targets are preserved."
+    },
+    {
+      "path": "stratic/descriptions/parallel-elementwise.json",
+      "reason": "Reviewed description-first parallel-pass contract, current summaries, parent quotation repairs and meaningful implementation passage links; Stratic validation passes."
+    },
+    {
+      "path": "stratic/descriptions/parallel-elementwise.md",
+      "reason": "Reviewed description-first parallel-pass contract, current summaries, parent quotation repairs and meaningful implementation passage links; Stratic validation passes."
+    },
+    {
+      "path": "stratic/descriptions/softmax-forward.json",
+      "reason": "Reviewed description-first parallel-pass contract, current summaries, parent quotation repairs and meaningful implementation passage links; Stratic validation passes."
+    },
+    {
+      "path": "stratic/descriptions/softmax-forward.md",
+      "reason": "Reviewed description-first parallel-pass contract, current summaries, parent quotation repairs and meaningful implementation passage links; Stratic validation passes."
+    },
+    {
+      "path": "stratic/descriptions/softmax-sum-normalization.json",
+      "reason": "Reviewed description-first parallel-pass contract, current summaries, parent quotation repairs and meaningful implementation passage links; Stratic validation passes."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Reviewed description-first parallel-pass contract, current summaries, parent quotation repairs and meaningful implementation passage links; Stratic validation passes."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Reviewed description-first parallel-pass contract, current summaries, parent quotation repairs and meaningful implementation passage links; Stratic validation passes."
+    },
+    {
+      "path": "stratic/descriptions/softmax-sum-normalization.md",
+      "reason": "Clarifies that the scalar register handoff delegates actual memory execution to the now-implemented forward composition; the numerical contract is unchanged."
+    }
+  ]
+}

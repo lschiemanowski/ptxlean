@@ -269,12 +269,12 @@ input range bound, including nonpositive base-two exponentials.
 and accuracy proofs and signed-zero, subnormal, overflow and NaN checks.
 
 The fetched `rcp.rn.f32` and bounded `ex2.approx.f32` leaves now support a
-[complete reference forward pipeline](../../docs/foundations/softmax-forward.md):
-parallel maximum and sum reductions, with sequential fetched exponential and
-normalization passes through one arena. It proves execution existence for finite
+[complete parallel forward pipeline](../../docs/foundations/softmax-forward.md):
+parallel maximum, exponential, sum and normalization passes through one arena.
+A sequential elementwise reference permits exactly the same final arrays. It proves execution existence for finite
 bounded power-of-two rows up to 1024 scores, and stored-output error against
 TorchLean under an explicit accumulated-error guard. The approximation policy
 retains both reviewed ULP conventions rather than claiming a unique hardware
-interpretation. A fused or fully parallel softmax kernel, masks, general row
+interpretation. Fused execution, masks, general row
 sizes and backward execution remain open. No GPU run or benchmark is needed
 for these checks.
