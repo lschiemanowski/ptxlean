@@ -14,6 +14,10 @@ rows with at most 1024 input columns, padded to a power of two. One group
 computes each row; the total thread count may exceed 1024. Empty output vectors
 skip launch, while empty input vectors return ReLU of the bias.
 
+The separate [Poisson GPU backend](poisson.md) executes the Q1–Q4 finite-element
+operator and iterative solve in binary64. Its empirical status differs from
+this example's connection to formal PTX proofs.
+
 ## Run
 
 Provision the project's pinned Lean dependencies as described in the

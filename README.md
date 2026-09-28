@@ -207,8 +207,9 @@ sanitizer checks and an explicit PTX-version compatibility boundary.
 
 A [quadrilateral Poisson example](examples/poisson/README.md) implements the Q1–Q4
 finite-element workflow in Lean/TorchLean, with numerical comparison against its
-Python source. This CPU reference does not yet have a PTX implementation or PDE
-correctness proof.
+Python source. A [binary64 PTX backend](hardware/poisson.md) runs the operator
+and iterative solve on the GPU and is tested against that reference. Its PTX
+correspondence and continuous PDE correctness are not yet proved.
 
 ## Instruction reference
 

@@ -37,8 +37,13 @@ A sine solution with a known source supplies a reproducible end-to-end example.
 Separate quadrature estimates measure errors in the field and its gradient;
 these are numerical measurements, not proved bounds on the continuous equation.
 The first implementation includes mesh/setup, operator and diagonal, load,
-interior restriction, iterative solve and error integration. It does not include
-PTX kernels, GPU execution, differentiation through the solver, binary32 mode,
-a convergence theorem, a finite-element error theorem or a verified numerical
+interior restriction, iterative solve and error integration. The reference does not include
+differentiation through the solver or binary32 mode,
+and it does not establish a convergence theorem, a finite-element error theorem or a verified numerical
 relationship to the Python backend. Tests and any Lean theorems state their
 own narrower guarantees.
+
+A separate binary64 PTX backend runs the repeated matrix-free operator and
+conjugate-gradient arithmetic on the GPU, using the Lean reference for mesh,
+quadrature, load and diagonal setup. Its empirical comparison, memory checks
+and execution evidence are distinct from a formal PTX correspondence theorem.

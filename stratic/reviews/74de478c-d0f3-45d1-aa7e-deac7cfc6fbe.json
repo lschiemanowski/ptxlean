@@ -1,0 +1,127 @@
+{
+  "id": "74de478c-d0f3-45d1-aa7e-deac7cfc6fbe",
+  "base": "3d39c147f9306526c7c76e38716d96d7d5cf2592",
+  "contentTree": "a5225a85d51b589d938ce02140568b1d024a31a6",
+  "reviewer": "Codex",
+  "summary": "Execute the binary64 Q1-Q4 Poisson operator and PCG in PTX with empirical Lean comparisons and reproducible GPU evidence",
+  "examined": [
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Description-first backend implemented with five shared-memory contraction stages, deterministic single-writer assembly, GPU PCG arithmetic and CPU orchestration. Reviewed source-to-stage mapping, bounds, barriers, convergence states and failures. Thirty cases and four sanitizers pass; binary64 formal refinement, universal safety and PDE guarantees are explicitly absent. Restart branch is implemented but unexercised."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "revised",
+      "reason": "Added separate empirical binary64 PTX execution child and replaced obsolete whole-example no-PTX statement. Existing Lean CPU numerical port and boundary lemmas are unchanged; CPU setup and unproved solver/PDE correspondence remain explicit."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Updated scientific-computing scope and remaining status to distinguish Lean reference and empirically checked GPU implementation. Existing summary retains the application-specific proof versus experiment boundary."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "Read full description. Numerical examples and explicit proved/tested/hardware boundaries already cover this addition. PTX9.4 semantic scope, neural interfaces and full-ISA coverage claims do not change."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No formal instruction definition or dependency changed. Reviewed pinned vendor sections locally and retain only authored interpretation and hashes. New archive contains generated kernels, binaries and empirical observations, not vendor manuals. Tests are not upgraded into hardware or semantic proofs."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "No formal tensor-layout, orchestration or numerical contract was added. GPU scheduling and arithmetic are a separate empirical implementation of the Lean algorithm; neither the binary32 instruction proofs nor exact-real contracts are claimed for it."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "a5225a85d51b589d938ce02140568b1d024a31a6",
+      "method": "bash scripts/check.sh; python3 examples/poisson/check.py; python3 -m unittest discover -s hardware -p test_*.py; replay extracted committed Poisson archive; source/archive hash and all-proposed-file distribution checks; Stratic validation and manual source/stage review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 integration and root toolchain; Python standard library; RTX 5090 sm_120, driver 610.57.04, ptxas 13.2.78; explicit emitted PTX9.2, formal project target9.4",
+      "evidence": "Before/after Stratic snapshot trees agree. Root build and axiom audit passed 1643 declarations with only standard Lean axioms. Frozen Poisson CPU correspondence passed. All 12 hardware rejection/adapter unit tests passed. Committed archive freshly extracted and replayed all 30 GPU cases with complete observation equality. Current runtime source hashes match the full numerical and sanitizer run: 27 converged, 2 maxiter, 1 expected breakdown; operator delta0, maximum solution delta2.220446049250313e-15; memcheck/racecheck/synccheck/initcheck pass. All proposed files including archive members passed distribution checks. Inspected algorithm mapping, barriers, bounded indexing, storage ownership, native driver scheduling and documented empirical-only limits. No Lean theorem or new axiom added. Restart branch was not triggered by the recorded suite.",
+      "tests": [],
+      "id": "e4014e48-03f0-4176-848f-ce096c49163b",
+      "recordedAt": "2026-09-28T15:45:20.412Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T15:46:31.045Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Updated public status and link to empirical backend; no claim of a new Lean or PDE proof."
+    },
+    {
+      "path": "examples/poisson/README.md",
+      "reason": "Preserves CPU reference instructions and adds explicit separate GPU backend, retaining binary64 and proof limitations."
+    },
+    {
+      "path": "hardware/README.md",
+      "reason": "Adds navigation to Poisson while retaining existing dense-forward proof and target boundaries."
+    },
+    {
+      "path": "hardware/poisson-compatibility.md",
+      "reason": "Reviewed all emitted operation families against local pinned 9.2/9.4 primary sources. Ordinary weak scalar accesses, barriers and launch order are explicit; irrelevant new MMIO, readonly proxy and packed-add target differences do not expand the accepted subset."
+    },
+    {
+      "path": "hardware/poisson.md",
+      "reason": "Reviewed run/replay commands, CPU/GPU partition, algorithm stages, fixed tolerances, exact recorded results, no exercised restarts, and absence of binary64 formal or universal safety/PDE claims."
+    },
+    {
+      "path": "hardware/poisson_kernels.py",
+      "reason": "Inspected remaining address helpers, exact-thread entry declarations, unrolled tensor products, strided/tree reductions and every PCG arithmetic stage against Lean. Finite bounds prevent 32-bit index overflow; aligned typed buffers and per-node writes avoid shared output updates. No binary32 formalization reuse claimed."
+    },
+    {
+      "path": "hardware/poisson_runtime.py",
+      "reason": "Inspected persistent guarded allocation, same-stream kernel order, synchronous scalar observations, selected device UUID/compute capability, resource limits, cleanup and read-only/guard audit. Storage and arithmetic remain on device during solve."
+    },
+    {
+      "path": "hardware/receipts/poisson-ptx-compatibility.json",
+      "reason": "Only source URLs, normalization, section/document hashes and authored conclusion are distributed; relevant textual differences manually reviewed."
+    },
+    {
+      "path": "hardware/receipts/poisson.json",
+      "reason": "Receipt matches current runtime source hashes, exact archive hash, actual selected GPU, compiler, 30 case outcomes and all four sanitizer logs; current Git base plus source hashes identifies formerly uncommitted implementation."
+    },
+    {
+      "path": "hardware/receipts/poisson.tar.gz",
+      "reason": "Archive contains saved generated PTX, cubins, exact inputs/reference/observed outputs, independent residuals, layouts and logs. Fresh extracted replay passed all 30 cases; distribution guard checked every member."
+    },
+    {
+      "path": "hardware/test_poisson.py",
+      "reason": "Behavioral rejection tests cover unsupported geometry, shape, nonfinite setup, nonpositive interior diagonal, invalid controls and version/target; tampered replay fails before CUDA access."
+    },
+    {
+      "path": "hardware/validate_poisson.py",
+      "reason": "Reviewed dependency/version pin checks, fresh Lean export, fixed 30-case suite, before/after source hashes, persisted failure evidence, independent residual measurement allowance, saved-binary replay with pre-CUDA hash checking and full sanitizer replay. No silent precision/version/tolerance fallback."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Description and metadata reviewed directly: hierarchy, summaries, realization status and complete passage links distinguish numerical reference, empirical GPU backend and missing formal guarantees. stratic validate passes."
+    },
+    {
+      "path": "stratic/descriptions/examples.md",
+      "reason": "Description and metadata reviewed directly: hierarchy, summaries, realization status and complete passage links distinguish numerical reference, empirical GPU backend and missing formal guarantees. stratic validate passes."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Description and metadata reviewed directly: hierarchy, summaries, realization status and complete passage links distinguish numerical reference, empirical GPU backend and missing formal guarantees. stratic validate passes."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Description and metadata reviewed directly: hierarchy, summaries, realization status and complete passage links distinguish numerical reference, empirical GPU backend and missing formal guarantees. stratic validate passes."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad.json",
+      "reason": "Description and metadata reviewed directly: hierarchy, summaries, realization status and complete passage links distinguish numerical reference, empirical GPU backend and missing formal guarantees. stratic validate passes."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad.md",
+      "reason": "Description and metadata reviewed directly: hierarchy, summaries, realization status and complete passage links distinguish numerical reference, empirical GPU backend and missing formal guarantees. stratic validate passes."
+    }
+  ]
+}

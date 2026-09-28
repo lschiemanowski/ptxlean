@@ -93,9 +93,10 @@ before the next scheduled check count as iterations, as in the Python source.
 
 ## Numerical and formal boundaries
 
-This first port is **CPU binary64**, using Lean's native `Float`. It implements
-the default numerical workflow; it does not port the Python CUDA/float32 modes,
-backpropagation, or any PTX kernel. Public operator calls expect objects built
+The reference is **CPU binary64**, using Lean's native `Float`. A separate
+[binary64 PTX backend](../../hardware/poisson.md) runs the operator and iterative
+solve on the GPU using the reference's setup arrays. Neither port includes
+backpropagation or the Python float32 mode. Public operator calls expect objects built
 by `makeOperator`; manually replacing the mesh or its setup tables is outside
 the contract. Node and degree validation occurs before setup, and supplied
 vectors, sources and solver options are checked.

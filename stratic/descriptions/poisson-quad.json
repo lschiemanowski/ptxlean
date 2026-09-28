@@ -3,13 +3,14 @@
   "parent": {
     "description": "examples",
     "passage": {
-      "quote": "Scientific-computing examples exercise the same tensor and numerical interfaces\noutside neural networks. The quadrilateral Poisson example constructs and solves\na finite-element discretization of a boundary-value problem, beginning with a\nLean/TorchLean numerical implementation before any PTX kernel connection."
+      "quote": "Scientific-computing examples exercise the same tensor and numerical interfaces\noutside neural networks. The quadrilateral Poisson example constructs and solves\na finite-element discretization of a boundary-value problem. Its Lean/TorchLean\nreference and binary64 PTX execution distinguish numerical comparisons from\nformal solver, kernel-correspondence and continuous-equation guarantees."
     }
   },
   "summary": [
     "Solve the unit-square Q1\u2013Q4 Poisson discretization using shared nodes, tensor contractions and an interior-only iterative solve.",
     "Require fresh residual checks for convergence and expose numerical failures and iteration limits.",
-    "Keep executable binary64 results, exact-real tensor algebra, empirical Python comparisons and unproved PDE or PTX claims distinct."
+    "Keep executable binary64 results, exact-real tensor algebra, empirical Python comparisons and unproved PDE or PTX claims distinct.",
+    "Provide a separate PTX execution responsibility while retaining explicit proof and hardware boundaries."
   ],
   "realization": "implemented",
   "links": [
@@ -52,7 +53,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "A sine solution with a known source supplies a reproducible end-to-end example.\nSeparate quadrature estimates measure errors in the field and its gradient;\nthese are numerical measurements, not proved bounds on the continuous equation.\nThe first implementation includes mesh/setup, operator and diagonal, load,\ninterior restriction, iterative solve and error integration. It does not include\nPTX kernels, GPU execution, differentiation through the solver, binary32 mode,\na convergence theorem, a finite-element error theorem or a verified numerical\nrelationship to the Python backend. Tests and any Lean theorems state their\nown narrower guarantees.\n"
+        "quote": "A sine solution with a known source supplies a reproducible end-to-end example.\nSeparate quadrature estimates measure errors in the field and its gradient;\nthese are numerical measurements, not proved bounds on the continuous equation.\nThe first implementation includes mesh/setup, operator and diagonal, load,\ninterior restriction, iterative solve and error integration. The reference does not include\ndifferentiation through the solver or binary32 mode,\nand it does not establish a convergence theorem, a finite-element error theorem or a verified numerical\nrelationship to the Python backend. Tests and any Lean theorems state their\nown narrower guarantees."
       },
       "to": {
         "path": "integration/torchlean/PoissonQuadChecks.lean",

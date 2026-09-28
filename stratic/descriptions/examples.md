@@ -27,5 +27,6 @@ to the abstractions used by the verification infrastructure.
 
 Scientific-computing examples exercise the same tensor and numerical interfaces
 outside neural networks. The quadrilateral Poisson example constructs and solves
-a finite-element discretization of a boundary-value problem, beginning with a
-Lean/TorchLean numerical implementation before any PTX kernel connection.
+a finite-element discretization of a boundary-value problem. Its Lean/TorchLean
+reference and binary64 PTX execution distinguish numerical comparisons from
+formal solver, kernel-correspondence and continuous-equation guarantees.

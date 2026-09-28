@@ -1,0 +1,77 @@
+{
+  "id": "poisson-quad-ptx",
+  "parent": {
+    "description": "poisson-quad",
+    "passage": {
+      "quote": "A separate binary64 PTX backend runs the repeated matrix-free operator and\nconjugate-gradient arithmetic on the GPU, using the Lean reference for mesh,\nquadrature, load and diagonal setup. Its empirical comparison, memory checks\nand execution evidence are distinct from a formal PTX correspondence theorem."
+    }
+  },
+  "summary": [
+    "Run the matrix-free Poisson operator and PCG numerical iterations in binary64 PTX using setup supplied by Lean.",
+    "Use disjoint element storage and one writer per global node for deterministic assembly without floating-point atomics.",
+    "Keep numerical comparisons, sanitizer evidence and reproducible execution artifacts separate from the missing binary64 PTX refinement and PDE proofs."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "One group of GPU threads handles each square element. Successive contractions\napply the one-dimensional basis tables, with barriers separating shared-memory\nintermediates. Products and sums use separate explicitly rounded binary64\ninstructions. Contributions are first written into disjoint element storage.\nEvery group thread reaches each barrier, including inactive matrix lanes.\nA second kernel gives each global node one writer, which sums its incident\ncontributions in element order. This preserves a deterministic assembly order\nwithout concurrent floating-point updates. Interior solves explicitly zero the\nboundary entries; the unrestricted operator is also available for comparison."
+      },
+      "to": {
+        "path": "hardware/poisson_kernels.py",
+        "passage": {
+          "quote": "    def element(self,name,source):\n        m=self.l.m\n        body=f'setp.lt.u32 %live, %lane, {m*m};\\ndiv.u32 %i, %lane, {m};\\nrem.u32 %j, %lane, {m};\\n'\n        stages=[]\n        stages.append(f'mad.lo.u32 %idx, %cell, {m*m}, %lane;\\n'+self.load('cells','%node','%idx')+self.load(source,'%value','%node')+self.shared_store(0,'%value'))\n        stages.append(self.dot(('B','%i','k'),(0,'k','%j'))+self.shared_store(1,'%acc')+\n                      self.dot(('D','%i','k'),(0,'k','%j'))+self.shared_store(2,'%acc'))\n        stages.append(self.dot((1,'%i','k'),('D','%j','k'))+self.load('W','%c','%lane')+\n                      'mul.rn.f64 %acc, %acc, %c;\\n'+self.shared_store(3,'%acc')+\n                      self.dot((2,'%i','k'),('B','%j','k'))+self.load('W','%c','%lane')+\n                      'mul.rn.f64 %acc, %acc, %c;\\n'+self.shared_store(4,'%acc'))\n        stages.append(self.dot(('B','k','%i'),(3,'k','%j'))+self.shared_store(5,'%acc')+\n                      self.dot(('D','k','%i'),(4,'k','%j'))+self.shared_store(6,'%acc'))\n        stages.append(self.dot((5,'%i','k'),('D','k','%j'))+self.dot((6,'%i','k'),('B','k','%j'),'%acc2')+\n                      f'add.rn.f64 %value, %acc, %acc2;\\nmad.lo.u32 %idx, %cell, {m*m}, %lane;\\n'+self.store('element','%value','%idx'))\n        for i,stage in enumerate(stages):\n            body+=f'@!%live bra stage_{i}_done;\\n'+stage+f'stage_{i}_done:\\n'\n            if i<len(stages)-1:body+='bar.sync 0;\\n'\n        return self.entry(name,body,32,self.l.n**2,7*m*m*8)\n    def assemble(self,name,target,mask):\n        body=self.vector_start()+self.load('offsets','%cursor','%global')+'add.u32 %idx, %global, 1;\\n'+self.load('offsets','%end','%idx')\n        body+=f'mov.f64 %acc, {ZERO};\\nloop:\\nsetp.ge.u32 %p0, %cursor, %end;\\n@%p0 bra done;\\n'\n        body+=self.load('entries','%idx','%cursor')+self.load('element','%a','%idx')+'add.rn.f64 %acc, %acc, %a;\\nadd.u32 %cursor, %cursor, 1;\\nbra loop;\\ndone:\\n'\n        if mask:body+=self.load('boundary','%flag','%global')+f'setp.ne.u32 %p0, %flag, 0;\\n@%p0 mov.f64 %acc, {ZERO};\\n'\n        return self.entry(name,body+self.store(target,'%acc','%global'))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Vector updates, division by the Jacobi diagonal, dot products and square roots\nare implemented in PTX. Dot products use a specified parallel reduction tree.\nTheir order can differ from the CPU reference, so numerical agreement is tested\nrather than assumed bitwise. The loop retains active and broken state, freezes\nupdates after recursive convergence, recomputes the true residual at scheduled\nchecks and at the iteration limit, and restarts if the recursive test was too\noptimistic. Empty interiors, zero loads, breakdown and exhausted iterations have\nexplicit outcomes. The recorded suite does not exercise a restart; implementation\nof that branch does not imply observed coverage."
+      },
+      "to": {
+        "path": "hardware/poisson_runtime.py",
+        "passage": {
+          "quote": "def solve(session,options):\n    \"\"\"Only scheduling and status decisions are on CPU; all solver arithmetic is PTX.\"\"\"\n    s=session;trace=[];restarts=0\n    s.launch('element_probe');s.launch('assemble_probe')\n    applied=s.read('applied')\n    s.launch('initialize');s.launch('dot_rhs');s.launch('dot_rz');s.launch('start')\n    rhs_norm=s.scalar('rhs_norm');tolerance=s.scalar('tolerance')\n    residual=rhs_norm\n    def finish(it,reason):\n        return dict(solution=s.read('x'),applied=applied,iterations=it,reason=reason,converged=reason=='converged',\n                    true_residual_norm=residual,relative_residual=residual/rhs_norm if rhs_norm else 0.,\n                    tolerance=tolerance,restarts=restarts,checks=trace,storage_audit=s.audit_storage(),\n                    launches=s.launch_log)\n    if not math.isfinite(rhs_norm):return finish(0,'breakdown')\n    if rhs_norm<=tolerance:return finish(0,'converged')\n    maximum=options.get('maxiter',1000);interval=options.get('check_every',10)\n    if maximum==0:return finish(0,'maxiter')\n    for it in range(1,maximum+1):\n        for name in ('element_p','assemble_ap','dot_pap','coefficient_alpha','update_xrz','dot_next','dot_rr','coefficient_beta','update_p'):\n            s.launch(name)\n        if it%interval==0 or it==maximum:\n            for name in ('element_x','assemble_ap','true_residual','dot_true','residual_norm'):s.launch(name)\n            residual=s.scalar('residual');active=s.scalar('active');broken=s.scalar('broken')\n            trace.append(dict(iteration=it,residual=residual,active=bool(active),broken=bool(broken)))\n            if not math.isfinite(residual):return finish(it,'breakdown')\n            if residual<=tolerance:return finish(it,'converged')\n            if broken:return finish(it,'breakdown')\n            if not active:\n                for name in ('restart_vectors','dot_rz','restart_flag'):s.launch(name)\n                restarts+=1\n    return finish(maximum,'maxiter')"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Generation validates the uniform connectivity, finite setup arrays, positive\ninterior diagonal, solver controls and a bounded 32-bit index domain. Device\nstorage contains guard bytes around every buffer; inputs and guards are checked\nafter solving. These checks and sanitizer runs support the tested executions,\nnot a universal memory-safety theorem."
+      },
+      "to": {
+        "path": "hardware/poisson_kernels.py",
+        "passage": {
+          "quote": "class Layout:\n    def __init__(self, reference, options):\n        n,p=reference['n'],reference['degree']\n        if type(n) is not int or n<1 or type(p) is not int or p not in (1,2,3,4):\n            raise ValueError('expected positive n and degree 1..4')\n        self.n,self.p,self.m=n,p,p+1\n        self.size=(n*p+1)**2\n        if self.size>=2**30 or n*n*(p+1)**2>=2**30:\n            raise ValueError('index domain exceeds 32-bit bound')\n        self.fields={};self.data=bytearray();self.launches={}\n        def add(name,values,kind='d',mutable=False):\n            self.data.extend(b'\\xa5'*((-len(self.data))%8))\n            self.fields[name]=dict(offset=len(self.data),count=len(values),kind=kind,mutable=mutable)\n            self.data.extend(struct.pack('<'+kind*len(values),*values))\n            # Guard each logical buffer, not just the outer allocation.\n            self.data.extend(b'\\xa5'*32)\n        for key in ('B','D'):\n            values=reference[key]\n            if len(values)!=self.m**2 or not all(math.isfinite(x) for x in values):\n                raise ValueError('invalid basis table')\n            add(key,values)\n        weights=reference['weights']\n        if len(weights)!=self.m or not all(math.isfinite(w) and w>0 for w in weights):\n            raise ValueError('invalid quadrature weights')\n        add('W',[a*b for a in weights for b in weights])\n        cells=reference['cells'];width=n*p+1\n        expected=[[(ey*p+i)*width+ex*p+j for i in range(p+1) for j in range(p+1)]\n                  for ey in range(n) for ex in range(n)]\n        if cells!=expected:raise ValueError('connectivity is not the supported uniform mesh')\n        add('cells',[j for row in cells for j in row],'I')\n        bd=[int(i%width in (0,width-1) or i//width in (0,width-1)) for i in range(self.size)]\n        if bd!=reference['boundary']:raise ValueError('boundary mask mismatch')\n        add('boundary',bd,'I')\n        incident=[[] for _ in range(self.size)]\n        for e,cell in enumerate(cells):\n            for i,node in enumerate(cell):incident[node].append(e*self.m**2+i)\n        offsets=[0];entries=[]\n        for xs in incident:\n            entries.extend(xs);offsets.append(len(entries))\n        add('offsets',offsets,'I');add('entries',entries,'I')\n        for key in ('load','diagonal','probe'):\n            values=reference[key]\n            if len(values)!=self.size or not all(math.isfinite(x) for x in values):\n                raise ValueError(f'invalid {key}')\n            if key=='diagonal' and any(v<=0 for v,b in zip(values,bd) if not b):\n                raise ValueError('Jacobi diagonal must be positive')\n            add(key,values)\n        rtol,atol=options.get('rtol',1e-10),options.get('atol',0.)\n        if not all(type(v) in (int,float) and math.isfinite(v) and v>=0 for v in (rtol,atol)) or not(rtol or atol):\n            raise ValueError('invalid tolerances')\n        for k,minimum in (('maxiter',0),('check_every',1)):\n            v=options.get(k,1000 if k=='maxiter' else 10)\n            if type(v) is not int or v<minimum:raise ValueError(f'invalid {k}')\n        add('rtol',[rtol]);add('atol',[atol])\n        for key in ('x','rhs','r','z','p','ap','true_r','applied'):\n            add(key,[0.]*self.size,mutable=True)\n        add('element',[0.]*(n*n*self.m*self.m),mutable=True)\n        for key in ('rho','rho_next','denominator','rr','rhs_square','true_square','rhs_norm','residual','tolerance','alpha','beta'):\n            add(key,[0.],mutable=True)\n        for key in ('active','broken','use_step'):add(key,[0],'I',mutable=True)\n\n    def offset(self,name):return self.fields[name]['offset']\n    def manifest(self):return dict(n=self.n,degree=self.p,bytes=len(self.data),fields=self.fields,launches=self.launches)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Validation covers Q1\u2013Q4, numerical operator comparisons on supplied and varied\nvectors, complete solves, polynomial reproduction, boundary preservation,\niteration limits and invalid inputs. CPU references and device results start\nfrom identical setup arrays. Saved cases, PTX and binary hashes, launch records,\noutputs, toolchain identity and sanitizer logs make the observations reproducible.\nAll failures remain visible; tolerances are declared before running comparisons.\nNo throughput or benchmarking claim is part of this backend."
+      },
+      "to": {
+        "path": "hardware/validate_poisson.py",
+        "passage": {
+          "quote": "def validate_result(observed,ref,case):\n    if observed['reason']!=ref['reason'] or observed['converged']!=ref['converged']:\n        raise AssertionError(f\"solve status differs: {observed['reason']} vs {ref['reason']}\")\n    metrics={\n        'operator_max_absolute_difference':compare(observed['applied'],ref['applied'],2e-12,2e-12,'operator'),\n        'solution_max_absolute_difference':compare(observed['solution'],ref['solution'],2e-11,2e-9,'solution')}\n    if any(x!=0 for x,bd in zip(observed['solution'],ref['boundary'],strict=True) if bd):\n        raise AssertionError('nonzero boundary solution')\n    if observed['converged'] and not (math.isfinite(observed['true_residual_norm']) and observed['true_residual_norm']<=observed['tolerance']):\n        raise AssertionError('false convergence')\n    if case.get('maxiter')==0 and observed['iterations']!=0:raise AssertionError('maxiter=0 performed iterations')\n    if case.get('source')=='polynomial' and case['degree']>=2:\n        ideal=[x*(1-x)*y*(1-y) for x,y in ref['points']]\n        metrics['polynomial_max_absolute_error']=compare(observed['solution'],ideal,2e-12,0,'polynomial')\n    return metrics"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical comparison uses fixed absolute and relative tolerances. A\nconverged result must satisfy the GPU's freshly measured residual tolerance.\nLean separately applies its operator to that result for an independent residual\ncomparison. That check allows an absolute 2e-12 measurement discrepancy when\ncorroborating convergence; it does not certify exact satisfaction of an\narbitrarily tighter tolerance in the independent arithmetic.\n"
+      },
+      "to": {
+        "path": "hardware/validate_poisson.py",
+        "passage": {
+          "quote": "            # Independent application of the Lean operator to the GPU solution\n            # checks the reported residual without trusting the GPU's reduction.\n            residual_request=dict(case,values=observed['solution'],maxiter=0)\n            save(folder/'residual-request.json',[residual_request])\n            run([INTEGRATION/'.lake/build/bin/poissonQuad','--request',folder/'residual-request.json','--output',folder/'residual-reference.json'])\n            independent=json.loads((folder/'residual-reference.json').read_text())[0]\n            if 'error' in independent:raise ValueError(independent['error'])\n            residual=math.hypot(*(a-b for a,b,bd in zip(ref['load'],independent['applied'],ref['boundary'],strict=True) if not bd))\n            if math.isfinite(residual)!=math.isfinite(observed['true_residual_norm']) or (math.isfinite(residual) and abs(residual-observed['true_residual_norm'])>2e-12+2e-10*residual):\n                raise AssertionError('reported residual disagrees with independently applied Lean operator')\n            if observed['converged'] and residual>observed['tolerance']+2e-12:\n                raise AssertionError('independent residual does not corroborate convergence')"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "ptx92_url": "https://docs.nvidia.com/cuda/archive/13.2.0/parallel-thread-execution/index.html",
+  "ptx94_url": "https://docs.nvidia.com/cuda/parallel-thread-execution/index.html",
+  "documents": [
+    {
+      "version": "9.2",
+      "sha256": "fd013df0c9560d9f86672c379b57b30a6d5efb2eccbb0c6c487950032e6d3457"
+    },
+    {
+      "version": "9.4",
+      "sha256": "0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed"
+    }
+  ],
+  "sections": [
+    {
+      "section": "floating-point-instructions-add",
+      "normalized_equal": true,
+      "ptx92_sha256": "d5112a36adc9a1d547f52a4e58ec1dd1f16a87b6b692c6ccf4ff3a0c58f2c1a9",
+      "ptx94_sha256": "d5112a36adc9a1d547f52a4e58ec1dd1f16a87b6b692c6ccf4ff3a0c58f2c1a9"
+    },
+    {
+      "section": "floating-point-instructions-sub",
+      "normalized_equal": true,
+      "ptx92_sha256": "7dc5d3115afea3ef68e844beec7f8f43975093b6b1665cfe144ac00c43d52ebe",
+      "ptx94_sha256": "7dc5d3115afea3ef68e844beec7f8f43975093b6b1665cfe144ac00c43d52ebe"
+    },
+    {
+      "section": "floating-point-instructions-mul",
+      "normalized_equal": true,
+      "ptx92_sha256": "9bc312bc895cb8f79e9625e9fba245efa5cf9cea799c7347c4eefc7a9d8e9bd8",
+      "ptx94_sha256": "9bc312bc895cb8f79e9625e9fba245efa5cf9cea799c7347c4eefc7a9d8e9bd8"
+    },
+    {
+      "section": "floating-point-instructions-div",
+      "normalized_equal": true,
+      "ptx92_sha256": "44301a8584d66a7c99f4332327598fd01cf312649208811400faeaae72f3822c",
+      "ptx94_sha256": "44301a8584d66a7c99f4332327598fd01cf312649208811400faeaae72f3822c"
+    },
+    {
+      "section": "floating-point-instructions-sqrt",
+      "normalized_equal": true,
+      "ptx92_sha256": "f133f70ab7208a58740591cd150d5f2c8ffb8c93affcc6f001b6b6d335e0a777",
+      "ptx94_sha256": "f133f70ab7208a58740591cd150d5f2c8ffb8c93affcc6f001b6b6d335e0a777"
+    },
+    {
+      "section": "floating-point-instructions-abs",
+      "normalized_equal": true,
+      "ptx92_sha256": "2c659808be566154217850e6868f747fc619b662c69c21c217a1fc09dd0e709c",
+      "ptx94_sha256": "2c659808be566154217850e6868f747fc619b662c69c21c217a1fc09dd0e709c"
+    },
+    {
+      "section": "floating-point-instructions-max",
+      "normalized_equal": true,
+      "ptx92_sha256": "04de7c54aa3f66ee87f03e5578edee7a2fcc5e014711cc5e885fbeb3778f0948",
+      "ptx94_sha256": "04de7c54aa3f66ee87f03e5578edee7a2fcc5e014711cc5e885fbeb3778f0948"
+    },
+    {
+      "section": "comparison-and-selection-instructions-setp",
+      "normalized_equal": true,
+      "ptx92_sha256": "5a7dd9894cb9bb565b86167bacb485d8d3282152caed5439ae2c789485fe6f44",
+      "ptx94_sha256": "5a7dd9894cb9bb565b86167bacb485d8d3282152caed5439ae2c789485fe6f44"
+    },
+    {
+      "section": "comparison-and-selection-instructions-selp",
+      "normalized_equal": true,
+      "ptx92_sha256": "26093814c263bdd831bf65099a1d5305c273fd8e93082cc3e36831d562d0ad88",
+      "ptx94_sha256": "26093814c263bdd831bf65099a1d5305c273fd8e93082cc3e36831d562d0ad88"
+    },
+    {
+      "section": "logic-and-shift-instructions-and",
+      "normalized_equal": true,
+      "ptx92_sha256": "f1ebc00d0f343406f12361fe4b9a22318b9b9860d9d280dc36aec1d25bf50c5f",
+      "ptx94_sha256": "f1ebc00d0f343406f12361fe4b9a22318b9b9860d9d280dc36aec1d25bf50c5f"
+    },
+    {
+      "section": "logic-and-shift-instructions-not",
+      "normalized_equal": true,
+      "ptx92_sha256": "95dfc7d8d12c02702ad706664a7b4b20e19b3a1a20673667095a3054c3a91c08",
+      "ptx94_sha256": "95dfc7d8d12c02702ad706664a7b4b20e19b3a1a20673667095a3054c3a91c08"
+    },
+    {
+      "section": "integer-arithmetic-instructions-mad",
+      "normalized_equal": true,
+      "ptx92_sha256": "d93d2cb2d63bfcee4419f8b98cdfdd01adefb9668beef49e39e13a3760ecef7b",
+      "ptx94_sha256": "d93d2cb2d63bfcee4419f8b98cdfdd01adefb9668beef49e39e13a3760ecef7b"
+    },
+    {
+      "section": "integer-arithmetic-instructions-div",
+      "normalized_equal": true,
+      "ptx92_sha256": "12ef1f6192dbcf510601f9bca156c9c0c36c823fe36f7188c1f8377df9b54adf",
+      "ptx94_sha256": "12ef1f6192dbcf510601f9bca156c9c0c36c823fe36f7188c1f8377df9b54adf"
+    },
+    {
+      "section": "integer-arithmetic-instructions-rem",
+      "normalized_equal": true,
+      "ptx92_sha256": "6baa5ab349268e4bc2ac55acf2818093f8d29e26050f1468762fb9689e24e37e",
+      "ptx94_sha256": "6baa5ab349268e4bc2ac55acf2818093f8d29e26050f1468762fb9689e24e37e"
+    },
+    {
+      "section": "data-movement-and-conversion-instructions-ld",
+      "normalized_equal": false,
+      "ptx92_sha256": "55096387cdc2ee7c91c7ac4e71ec123256614612be26be874795e4ac08a703c8",
+      "ptx94_sha256": "7f4b0151555c287c7cfa705676cbb69c48deef258dd4282f875b008df1287752"
+    },
+    {
+      "section": "data-movement-and-conversion-instructions-st",
+      "normalized_equal": false,
+      "ptx92_sha256": "9a186b2e33301bc5df8caff904f994cfbc617ef1e32230e7b1b7d9a32c2f9a27",
+      "ptx94_sha256": "5f7aef3f65b1219acc17453743227ee87d543d5d05b1fb2225dab20e6da8be2e"
+    },
+    {
+      "section": "parallel-synchronization-and-communication-instructions-bar",
+      "normalized_equal": true,
+      "ptx92_sha256": "d889b5288c2408c3b49f8859f6fa22e8ed88a593c4022cc67d9dca8beeaf501f",
+      "ptx94_sha256": "d889b5288c2408c3b49f8859f6fa22e8ed88a593c4022cc67d9dca8beeaf501f"
+    },
+    {
+      "section": "integer-arithmetic-instructions-add",
+      "normalized_equal": false,
+      "ptx92_sha256": "a07725208ff9ffd847cf86a0b6f833b1262ad73b0179614c929d3ae2507cb929",
+      "ptx94_sha256": "20d00ffc70a7e91a4c443eb7a35429ff219a336e85dc026782578f5efeefac8a"
+    },
+    {
+      "section": "integer-arithmetic-instructions-mul",
+      "normalized_equal": true,
+      "ptx92_sha256": "56ab1bc0f92e71f8871f301fcadd0e72b848bcbf3ac383ca74a400962625eae7",
+      "ptx94_sha256": "56ab1bc0f92e71f8871f301fcadd0e72b848bcbf3ac383ca74a400962625eae7"
+    },
+    {
+      "section": "data-movement-and-conversion-instructions-mov",
+      "normalized_equal": true,
+      "ptx92_sha256": "087bafd4e01aaf3dac3d2111c2bd9172a852c3d5f0929710eb561524c63bfb94",
+      "ptx94_sha256": "087bafd4e01aaf3dac3d2111c2bd9172a852c3d5f0929710eb561524c63bfb94"
+    },
+    {
+      "section": "control-flow-instructions-bra",
+      "normalized_equal": true,
+      "ptx92_sha256": "28277130c2a16d38d2a9bac4e5de9aed5bec66ba5a162c467c2bef4f1e8ce895",
+      "ptx94_sha256": "28277130c2a16d38d2a9bac4e5de9aed5bec66ba5a162c467c2bef4f1e8ce895"
+    },
+    {
+      "section": "control-flow-instructions-ret",
+      "normalized_equal": true,
+      "ptx92_sha256": "e773f0c92e722c0dcf381b632e6fbf730f3f757094dce2c04cf309f448eef3e6",
+      "ptx94_sha256": "e773f0c92e722c0dcf381b632e6fbf730f3f757094dce2c04cf309f448eef3e6"
+    },
+    {
+      "section": "performance-tuning-directives-reqntid",
+      "normalized_equal": true,
+      "ptx92_sha256": "6a6e3dbb41e1fc0f895e07cfb459a155e33f4154aec0f46f971a6b1246b41f72",
+      "ptx94_sha256": "6a6e3dbb41e1fc0f895e07cfb459a155e33f4154aec0f46f971a6b1246b41f72"
+    }
+  ],
+  "normalization": "BeautifulSoup HTML parser, join stripped_strings with spaces, remove leading numeric section number.",
+  "conclusion": "Reviewed ordinary scalar binary64 arithmetic, address arithmetic, predication, weak global/shared memory and CTA barrier forms. Relevant instruction contracts agree for this emitted subset; load/store changes concern unused MMIO, readonly proxy and cache-policy spelling. This is source review, not a formal version-refinement proof. The integer-add section adds sm_107f support for unused packed/saturating forms."
+}
