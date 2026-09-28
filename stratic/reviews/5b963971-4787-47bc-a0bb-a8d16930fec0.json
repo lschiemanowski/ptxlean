@@ -1,0 +1,139 @@
+{
+  "id": "5b963971-4787-47bc-a0bb-a8d16930fec0",
+  "base": "3b521f2a2756e5314bd557727c8c0f9c5a95f6ac",
+  "contentTree": "993706bdbdca0172511256892e99b842ce07646f",
+  "reviewer": "Codex",
+  "summary": "Prove parallel Poisson residual correspondence and expand the README example",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Whole-vector source-constrained residual theorem, compatible execution witness, padding, physical array layout, and exact instruction binding now substantiate the partial contract; full admission and solver kernels remain explicit."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Parent now distinguishes the proved closed residual launch from remaining shared-memory operator, assembly, reduction and host-composition obligations."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The checker continues to reject all dependencies except standard logical axioms and separately state semantic-fidelity boundaries. Its endpoint set grows; its contract is unchanged."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The example retains its CPU numerical reference and separate GPU backend. The residual certificate and lack of a complete PTX solver correspondence are unchanged."
+    },
+    {
+      "id": "relu-neuron",
+      "outcome": "unchanged",
+      "reason": "The user-authored README expands the existing forward graph and numerical theorem. Its Lean excerpts match the source, and execution, rounding and runtime conditions remain explicit. No example contract changes."
+    },
+    {
+      "id": "coverage-inventory",
+      "outcome": "unchanged",
+      "reason": "The README retains the 31-family/53-form selected coverage overview and explicitly calls full PTX coverage an eventual goal."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "993706bdbdca0172511256892e99b842ce07646f",
+      "method": "Exact content comparison with previously verified proof snapshot; manual README/source review; README Lean excerpt and local-link checks; stratic validate; git diff --check; distribution guard",
+      "outcome": "pass",
+      "environment": "Same pinned Lean 4.34.0 workspace. Only README differs from verified proposal 0cc881c713accb849343fd7862d1af0d28de2428.",
+      "evidence": "Proof/config/receipt files identical to passing result aee559bc-1e6b-455b-be5f-89351ab16909: 2792 exact axiom reports, 20 Python tests and instruction matching on 30 saved layouts. No test rerun necessary for unchanged sources. Current README preserved byte for byte; its three Lean excerpts match implementation and seven relative links exist. Numerical and execution qualifications reviewed. Stratic and whitespace checks pass. No known vendor manual artifact or raw transcript in tracked files. Combined snapshot stable before/after checks.",
+      "tests": [],
+      "id": "d18d7911-9f5b-4dc8-a420-47c0ffbb2d2f",
+      "recordedAt": "2026-09-28T18:23:22.632Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T18:23:54.130Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-correspondence.md",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "docs/foundations/poisson-instructions.md",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "hardware/check_poisson_ptx.py",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "hardware/test_poisson_ptx.py",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ParallelResidual.lean",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ParallelResidualChecks.lean",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ParallelResidualLayout.lean",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ParallelResidualOutput.lean",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Sources.lean",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Weak.lean",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/WeakPadding.lean",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/WeakResidual.lean",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed as supporting implementation, targeted checks, build/audit registration, receipt or explanatory documentation for the parallel residual contract; the defining public proof passages are linked from poisson-correspondence."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Fresh reproducible binding receipt: three audited parallel endpoints, source hashes, and all 30 saved emitted entries. It does not claim complete PTX admission or a new GPU run."
+    },
+    {
+      "path": "README.md",
+      "reason": "Preserve the complete user-authored tutorial and feature overview verbatim. Lean excerpts checked against implementation, relative links checked, numerical and execution boundaries reviewed; no implementation contract changes."
+    }
+  ]
+}

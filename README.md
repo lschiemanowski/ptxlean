@@ -6,8 +6,20 @@ This is very early alpha. Full coverage of PTX is the eventual goal.
 
 This project has been realized with GPT 6 Astra and Luna.
 
-The code is accompanied by descriptions managed in [stratic](https://github.com/lschiemanowski/stratic). The current implementation covers selected instructions,
-restricted memory and synchronization, and the forward/backward example below.
+The code is accompanied by descriptions managed in
+[stratic](https://github.com/lschiemanowski/stratic).
+
+The project currently includes:
+
+- **31 instruction families** with 53 documented forms, from integer and bit
+  operations to selected floating-point instructions.
+- **An execution model** covering threads, registers, memory access and ordering,
+  shared memory, block barriers, and multi-block grids.
+- **ReLU MLP layers and softmax**, with forward/backward computations connected
+  to TorchLean by execution and numerical-error theorems.
+- **A higher-order quadrilateral finite-element solver** for the Poisson problem
+  on a square, including a binary64 GPU implementation and proved residual
+  certification. The solver's PTX–TorchLean correspondence is work in progress.
 
 ## The idea
 
@@ -30,53 +42,109 @@ represent NVIDIA's specification is a separate question, addressed through pinne
 source passages, semantic review and distinguishing examples. The project records
 both kinds of evidence.
 
-## Example: a ReLU neuron and its backward
+## Example: a ReLU neuron
 
-A single neuron multiplies its input by a trainable weight, adds a trainable bias,
-and applies ReLU, which replaces negative values with zero:
+A single neuron multiplies its input by a weight, adds a bias, and applies ReLU,
+which replaces negative values with zero:
 
 ```text
-F : ℝ × ℝ × ℝ → ℝ
-A = w*x + b
-F(x,w,b) = ReLU(A) = max(A, 0)
-
-backward : ℝ × ℝ × ℝ × ℝ → ℝ × ℝ × ℝ
-backward(x,w,b,upstream) = (dx,dw,db)
-g = upstream if A > 0, otherwise 0
-dx = g*w     dw = g*x     db = g
+F(x,w,b) = max(w*x + b, 0)
 ```
 
-`upstream` is the gradient arriving from the rest of the network. If `F` feeds a
-loss `L`, it is `∂L/∂F`, and the backward returns `(∂L/∂x, ∂L/∂w, ∂L/∂b)`.
-Use **1** to obtain the gradient of `F` itself. The Lean definitions call this
-argument `d`; it is a backward input, not another trainable parameter.
+The example connects a binary32 PTX implementation to this real-valued computation
+in TorchLean, with a proved bound on the error in the stored output.
 
-TorchLean automatically constructs this backward from its multiplication,
-addition and ReLU nodes. Its checked backward succeeds for every real input and
-uses the convention **zero gradient at `A = 0`**. ReLU has no ordinary derivative
-there: the mathematical derivative theorem requires **`A ≠ 0`**. These are general
-results, not tests at a few selected numbers.
+### The PyTorch computation
 
-The separately authored PTX kernels use binary32 (32-bit single precision).
-Multiplication and addition round separately to nearest, with ties to even.
-The forward error bound applies on either side of zero and across the kink.
-The backward error bound additionally requires the affine error budget to be
-smaller than `|A|`, so rounding cannot change the activation decision. Finite
-input values, input encoding errors and overflow-range conditions are explicit.
-These proofs do not differentiate floating-point rounding or claim bitwise
-agreement with a PyTorch run.
+With scalar tensors `x`, `w` and `b`, the computation is:
+
+```python
+import torch
+
+def neuron(x: torch.Tensor, w: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
+    return torch.relu(w * x + b)
+```
+
+### The TorchLean computation
+
+The corresponding definition in [PtxReluVJP.lean](integration/torchlean/PtxReluVJP.lean)
+expresses the same three operations as a graph: multiply `w` by `x`, add `b`,
+then apply ReLU. Here the tensors contain exact real numbers (`ℝ`), so this graph
+specifies the mathematical computation to which we will compare the rounded
+PTX result.
+
+```lean
+abbrev scalarShape : Shape := .scalar
+
+def inputs (x w b : ℝ) : TensorPack ℝ [scalarShape, scalarShape, scalarShape] :=
+  .cons (Tensor.scalar x) (.cons (Tensor.scalar w) (.cons (Tensor.scalar b) .nil))
+
+def rawGraph : Graph [scalarShape, scalarShape, scalarShape] [scalarShape, scalarShape, scalarShape] :=
+  let x : Idx ([scalarShape, scalarShape, scalarShape] ++ []) scalarShape := ⟨⟨0, by simp⟩, rfl⟩
+  let w : Idx ([scalarShape, scalarShape, scalarShape] ++ []) scalarShape := ⟨⟨1, by simp⟩, rfl⟩
+  let p : Idx ([scalarShape, scalarShape, scalarShape] ++ [scalarShape]) scalarShape := ⟨⟨3, by simp⟩, rfl⟩
+  let b : Idx ([scalarShape, scalarShape, scalarShape] ++ [scalarShape]) scalarShape := ⟨⟨2, by simp⟩, rfl⟩
+  let a : Idx ([scalarShape, scalarShape, scalarShape] ++ [scalarShape, scalarShape]) scalarShape := ⟨⟨4, by simp⟩, rfl⟩
+  ((Graph.nil.snoc (TapeNodes.mul w x)).snoc (TapeNodes.add p b)).snoc (TapeNodes.relu a)
+
+def graph : Runtime.Autograd.Torch.TypedGraph ℝ [scalarShape, scalarShape, scalarShape] scalarShape where
+  nodeShapes := [scalarShape, scalarShape, scalarShape]
+  data := rawGraph.toAlgebra.toData
+  output := PtxTorchLean.output scalarShape
+```
+
+`scalarShape` means that each tensor contains one number. The function `inputs`
+wraps the three real numbers in scalar tensors and collects them in the order
+`[x, w, b]`. `TensorPack` records each tensor's shape in its type; the nested
+`.cons` constructors build that collection, ending with `.nil`.
+
+`rawGraph` describes how new values are computed from this input collection.
+In its type `Graph [scalarShape, scalarShape, scalarShape]
+[scalarShape, scalarShape, scalarShape]`, the first list describes the three
+inputs and the second describes the results of the three appended nodes.
+`Graph.nil` starts with no computed nodes. Each `.snoc` appends one node, which
+can read the original inputs and any earlier node's result.
+
+As the graph is evaluated, its collection of available values grows as follows.
+Positions are numbered from zero:
+
+| Position | Value | Supplied or computed by |
+| --- | --- | --- |
+| 0 | `x` | First input |
+| 1 | `w` | Second input |
+| 2 | `b` | Third input |
+| 3 | `p = w*x` | `TapeNodes.mul w x` |
+| 4 | `a = p+b` | `TapeNodes.add p b` |
+| 5 | `max(a, 0)` | `TapeNodes.relu a` |
+
+The `let` bindings in `rawGraph` name **references to these positions**. For
+example, `p` refers to position 3, where the multiplication result will be
+available. An `Idx` records both an in-range position and the expected tensor
+shape. The lists joined by `++` describe the inputs plus the results available
+at that stage: addition can refer to `p`, and ReLU can refer to `a`.
+
+Finally, `graph` packages this construction as a `TypedGraph` with three scalar
+inputs and one scalar output. `nodeShapes` lists the shapes of the three computed
+values; `rawGraph.toAlgebra.toData` supplies their evaluation data.
+`PtxTorchLean.output scalarShape` selects position 5, the ReLU result, as the
+output. Thus `graph.forward (inputs x w b)` evaluates the nodes in order and
+returns that final scalar tensor. `Tensor.item` extracts its single real value.
+
+The theorem `forward_value` states that this evaluation gives exactly the
+mathematical neuron expression for every real `x`, `w` and `b`:
+
+```lean
+theorem forward_value (x w b : ℝ) :
+    Tensor.item (graph.forward (inputs x w b)) = max (w*x+b) 0
+```
 
 ### Forward PTX
 
-The following are the actual instruction bodies of **two separate launches**.
-Symbolic address registers such as `%x` are supplied at launch; `%r0`–`%r4` hold
-32-bit words. Register declarations, address setup and host launch wrappers are
-outside the verified example.
-
-The ReLU gate uses existing integer comparisons on binary32 encodings: zero has
-all bits clear, and the high bit marks a negative value. For finite values, this
-implements ReLU exactly, including returning positive zero for negative zero.
-It is a small reference implementation, not an optimized kernel.
+The forward computation uses **two separate launches**: the first stores the
+affine value `A`, and the second applies ReLU. These are the actual instruction
+bodies. Symbolic address registers such as `%x` are supplied at launch;
+`%r0`–`%r4` hold 32-bit words. Register declarations, address setup and host launch
+wrappers are outside the verified example.
 
 ```ptx
 // Launch 1: A = round(round(w*x) + b).
@@ -99,65 +167,93 @@ st.relaxed.gpu.global.u32 [%y], %r1;
 exit;
 ```
 
-### Backward PTX
+Multiplication and addition round separately to nearest, with ties to even.
+The ReLU gate tests the binary32 encoding with integer comparisons: zero has all
+bits clear, and the high bit marks a negative value. For finite values this
+implements ReLU, returning positive zero for either signed zero. It is a small
+reference implementation, with no claim about ReLU's NaN policy.
 
-The backward recomputes `A` from `x,w,b`, gates the incoming gradient, and computes
-the input and weight gradients. It uses **four separate launches** and does not
-reuse a cached forward value. `%zero` holds positive zero; every displayed zero
-addition is part of the implementation and its proof.
+### The theorem connecting them
 
-```ptx
-// Launch 1: recompute A = round(round(w*x) + b).
-ld.relaxed.gpu.global.u32 %r0, [%w];
-ld.relaxed.gpu.global.u32 %r1, [%x];
-ld.relaxed.gpu.global.u32 %r2, [%b];
-mul.rn.f32 %r3, %r0, %r1;
-add.rn.f32 %r4, %r3, %r2;
-st.relaxed.gpu.global.u32 [%A], %r4;
-exit;
+[`stored_forward_accuracy`](integration/torchlean/PtxReluAccuracy.lean) says that
+**every completed execution of the two PTX launches satisfying the assumptions
+below stores a finite result within an explicit error bound of the TorchLean
+computation**. Its statement is:
 
-// Launch 2: db = upstream if A > 0, otherwise 0.
-ld.relaxed.gpu.global.u32 %r0, [%A];
-ld.relaxed.gpu.global.u32 %r1, [%upstream];
-setp.eq.u32 %p0, %r0, 0;
-@%p0 mov.b32 %r1, 0;
-setp.ge.u32 %p0, %r0, 0x80000000;
-@%p0 mov.b32 %r1, 0;
-st.relaxed.gpu.global.u32 [%db], %r1;
-exit;
-
-// Launch 3: dx = round(round(db*w) + 0).
-ld.relaxed.gpu.global.u32 %r0, [%db];
-ld.relaxed.gpu.global.u32 %r1, [%w];
-ld.relaxed.gpu.global.u32 %r2, [%zero];
-mul.rn.f32 %r3, %r0, %r1;
-add.rn.f32 %r4, %r3, %r2;
-st.relaxed.gpu.global.u32 [%dx], %r4;
-exit;
-
-// Launch 4: dw = round(round(db*x) + 0).
-ld.relaxed.gpu.global.u32 %r0, [%db];
-ld.relaxed.gpu.global.u32 %r1, [%x];
-ld.relaxed.gpu.global.u32 %r2, [%zero];
-mul.rn.f32 %r3, %r0, %r1;
-add.rn.f32 %r4, %r3, %r2;
-st.relaxed.gpu.global.u32 [%dw], %r4;
-exit;
+```lean
+theorem stored_forward_accuracy (i : Inputs d)
+    (present : before.cells allocation = some ⟨thread.device,d.words⟩)
+    (eligible : Mixed.Eligible target)
+    (chain : Chain before (forwardStages.map (request target thread allocation registers)) after) :
+    ∃ (out : Data) (y : ℝ), after.cells allocation = some ⟨thread.device,out.words⟩ ∧ finiteReal out.y = some y ∧
+      |y-TorchLean.Tensor.item (ReluVJP.graph.forward (ReluVJP.inputs i.x i.w i.b))| ≤ i.budget
 ```
 
-The execution model uses one thread per launch and initialized, aligned storage.
-Launches complete with visible writes and no interference before the next begins;
-a real runtime must establish that contract. Execution existence covers arbitrary
-initial bit patterns, while the ReLU and numerical interpretations require finite
-values. No claim about floating-point ReLU's NaN policy is made by this bit gate.
+The arguments before the conclusion describe the inputs, initial memory and
+execution being compared:
 
-[PtxReluVJP.lean](integration/torchlean/PtxReluVJP.lean) proves the generated backward
-and its mathematical meaning. [PtxReluKernel.lean](integration/torchlean/PtxReluKernel.lean)
-proves execution existence and correspondence; [PtxReluAccuracy.lean](integration/torchlean/PtxReluAccuracy.lean)
-connects the stored forward result and gradients to TorchLean with error bounds.
-The [study guide](docs/foundations/relu-neuron.md) explains the proof conditions.
+- **`i : Inputs d` — the numerical assumptions.** `d` holds the initial binary32
+  words. `i.x`, `i.w` and `i.b` are the ideal real inputs supplied to TorchLean;
+  `i.xh`, `i.wh` and `i.bh` are the real numbers represented by the corresponding
+  words in `d`. These need not be equal: for example, `i.ex` bounds
+  `|i.xh - i.x|`, the input's encoding error. `i.ew` and `i.eb` do the same for
+  the weight and bias. `Inputs` also requires finite encoded values and bounds
+  the intermediate magnitudes so that multiplication and addition stay in range.
+- **`present` — the initial storage.** In the initial store `before`, the
+  allocation identified by `allocation` exists on `thread.device` and contains
+  exactly `d.words`. This includes the inputs and initialized scratch/output
+  slots; those slots may initially hold arbitrary bit patterns.
+- **`eligible` — the target.** The modeled target uses PTX ISA 9.4 and has
+  `sm ≥ 70`, as required by `Mixed.Eligible` for these instructions.
+- **`chain` — the PTX execution.** `forwardStages` selects the affine computation
+  followed by ReLU. Mapping `request` over these stages supplies their programs,
+  addresses and initial registers. `Chain before ... after` records their
+  completed instruction executions and writebacks, from `before` to `after`.
+  Each launch uses one thread; the first launch's writes are visible to the
+  second, with no intervening interference. A real runtime must establish this
+  launch contract.
 
-## Run the checks and examples
+The conclusion starts with `∃ (out : Data) (y : ℝ)`: there are final data `out`
+and a real output value `y` satisfying all three clauses joined by `∧`:
+
+1. **`after.cells allocation = some ⟨thread.device,out.words⟩`** identifies the
+   actual contents of the allocation after execution as `out.words`.
+2. **`finiteReal out.y = some y`** says that the stored output word represents
+   the finite real number `y`. Finiteness of the output is part of the conclusion.
+3. **The final inequality** compares that `y` with the scalar extracted by
+   `Tensor.item` from the TorchLean graph evaluated at the ideal inputs. By
+   `forward_value`, that reference value is `max(i.w * i.x + i.b, 0)`.
+
+Writing `E = i.budget`, the numerical guarantee is therefore:
+
+```text
+|stored output as a real number - max(w*x + b, 0)| ≤ E
+```
+
+The budget is computed from the inputs and their error bounds, rather than
+chosen after seeing the output. It includes a rounding allowance for each of
+the two arithmetic operations, plus the propagated input encoding errors:
+
+```text
+E = multiplication rounding allowance + addition rounding allowance
+    + |w|*ex + |x|*ew + ew*ex + eb
+```
+
+Here `x` and `w` are the ideal real inputs, and `ex`, `ew`, `eb` are their
+encoding-error bounds. The rounding allowances use the encoded operands and
+the rounded intermediate product; their exact definition is
+[`affineBudget`](integration/torchlean/PtxBinary32Error.lean).
+Even if encoding is exact (`ex = ew = eb = 0`), arithmetic rounding can still
+contribute error. The same bound applies when rounding changes which side of
+zero the affine value falls on: there is no assumption that the PTX and
+TorchLean ReLU gates make the same activation decision.
+
+The [study guide](docs/foundations/relu-neuron.md) gives the detailed definitions
+and execution conditions.
+
+<a id="run-the-checks-and-examples"></a>
+
+## Run the checks
 
 The commands below check the formalized executions and their proofs. They do
 not launch GPU kernels. The tested environment is Linux with Bash, Git, Python 3.11 or later,
@@ -185,33 +281,10 @@ mathlib build artifacts, and check the TorchLean examples, numerical bounds and
 forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
-and `Integration check passed: 2494 exact dependency reports, only standard Lean
-axioms.` respectively. The general forward and backward proofs above are included.
-
-A smaller [array-loop example](docs/foundations/array-mask-select.md) combines
-reviewed integer instructions with memory and branches, proving exact output,
-memory safety and termination. After `lake build`, check it with
-`lake env lean examples/array_mask_select.lean`.
-
-The [sequential dot-product example](docs/foundations/dot-product.md) extends the
-arithmetic to array inputs, with a PTX loop, termination for every permitted
-instruction result, and accumulated floating-point error bounds. It is included
-in the integration check above. The [vector-input ReLU neuron](docs/foundations/vector-neuron.md)
-composes it with bias, activation and a cache-free backward, connecting stored
-coordinate gradients to TorchLean's generated backward with explicit error bounds.
-
-The [dense–ReLU hardware validation](hardware/README.md) separately runs the
-parallel forward kernel on a GPU and compares its outputs with Lean, exact
-arithmetic and PyTorch. Its [recorded results](hardware/results.md) include
-sanitizer checks and an explicit PTX-version compatibility boundary.
-
-A [quadrilateral Poisson example](examples/poisson/README.md) implements the Q1–Q4
-finite-element workflow in Lean/TorchLean, with numerical comparison against its
-Python source. A [binary64 PTX backend](hardware/poisson.md) runs the operator
-and iterative solve on the GPU. A [proved exact checker](docs/foundations/poisson-correspondence.md)
-certifies accepted solutions against the same represented discrete equations at
-the requested residual tolerance. Full PTX instruction correspondence and
-continuous PDE correctness remain unproved.
+and `Integration check passed: … exact dependency reports, only standard Lean
+axioms.` respectively. The integration check reports the number of declarations
+audited. Example-specific execution and GPU validation commands are in the
+linked guides above.
 
 ## Instruction reference
 

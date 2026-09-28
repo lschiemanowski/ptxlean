@@ -12,8 +12,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "b72618cff88faa482dc4b109e7e163f8173a4f1bca2ce01382cbd2ef06ff15ef",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "01-n2-q1",
@@ -26,8 +26,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "6f9267e2cb4b262dd77c12bd256f8f42bbf29b59c07e65699cab83e65ddbad26",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "02-n4-q1",
@@ -40,8 +40,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "33ee23fcd6fc5ab9ec460ca1196c1f0da3c67d826f5ecb5b9606615d96639879",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "03-n1-q2",
@@ -54,8 +54,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "b396e4120b107899b26f557b96fbad47e4345f1bec184d66daa83db770ce691d",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "04-n2-q2",
@@ -68,8 +68,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "3a400e462456fe15095222f3d267d76f63ba1299159cefc631c9130249c153db",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "05-n4-q2",
@@ -82,8 +82,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "74389d9a0d45b7e923ca1650532f6b1d425983aeabaed334e5057a5393c597ac",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "06-n1-q3",
@@ -96,8 +96,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "f10929758d9863a9b82a13a7538b26759885bd054e1d5e4c54f4ccdd3470ff04",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "07-n2-q3",
@@ -110,8 +110,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "f97bdf9eeab99aeb3fc1a1a381dbd71ef892b6f4c6fe4a6200ae1d07a9e07149",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "08-n4-q3",
@@ -124,8 +124,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "7f3138c9f6ab54e09d730cd7a53dea2632df051f76db0e6fbab965136a116326",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "09-n1-q4",
@@ -138,8 +138,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "2ec6dcf9d00a3ba380234d7b00a3c665157feee1d1a369ee4bebdaac84768db0",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "10-n2-q4",
@@ -152,8 +152,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "93203e5bd4bae613f24d937bdaee62610a7f217377275d831a28889ef2fa7115",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "11-n4-q4",
@@ -166,8 +166,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "d67874903b53cbf54e282ca66ee76dd1bc5051ee49b9328a05ee7365e4117e26",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "12-n8-q4",
@@ -180,8 +180,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "e636b671b525edcfe54b87faa3ca4a2fc1f35a261fa01ebc1031c8a197c117a2",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "13-n2-q1",
@@ -194,8 +194,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "6f9267e2cb4b262dd77c12bd256f8f42bbf29b59c07e65699cab83e65ddbad26",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "14-n2-q2",
@@ -208,8 +208,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "3a400e462456fe15095222f3d267d76f63ba1299159cefc631c9130249c153db",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "15-n2-q3",
@@ -222,8 +222,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "f97bdf9eeab99aeb3fc1a1a381dbd71ef892b6f4c6fe4a6200ae1d07a9e07149",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "16-n2-q4",
@@ -236,8 +236,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "93203e5bd4bae613f24d937bdaee62610a7f217377275d831a28889ef2fa7115",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "17-n2-q2",
@@ -250,8 +250,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "3a400e462456fe15095222f3d267d76f63ba1299159cefc631c9130249c153db",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "18-n2-q2",
@@ -264,8 +264,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "3a400e462456fe15095222f3d267d76f63ba1299159cefc631c9130249c153db",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "19-n2-q2",
@@ -278,8 +278,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "3a400e462456fe15095222f3d267d76f63ba1299159cefc631c9130249c153db",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "20-n2-q2",
@@ -292,8 +292,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "3a400e462456fe15095222f3d267d76f63ba1299159cefc631c9130249c153db",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "21-n2-q2",
@@ -306,8 +306,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "3a400e462456fe15095222f3d267d76f63ba1299159cefc631c9130249c153db",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "22-n3-q1",
@@ -320,8 +320,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "0a5d07253f4b5abdfe3068b28ee774b6e26bac7e0ca52e305d10717d719bb869",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "23-n3-q2",
@@ -334,8 +334,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "ed0694c652d9f0b96482914df1c6a4f18533def6ff9082e0fe15eb792e3b49ea",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "24-n3-q3",
@@ -348,8 +348,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "e2e6aed1138125e5dee19dda957ad6120c986c6165631eacea57fbef192455c2",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "25-n3-q4",
@@ -362,8 +362,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "45409f447f3966acf1433af78dfdce130ef4e124a6195c6a1cccc667f9b4ba41",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "26-n8-q4",
@@ -376,8 +376,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "e636b671b525edcfe54b87faa3ca4a2fc1f35a261fa01ebc1031c8a197c117a2",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "27-n16-q2",
@@ -390,8 +390,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "b79690f1c687d35f007c8e89281fcba0088bf6c6c94b6857f5878600d15be64d",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "28-n4-q3",
@@ -404,8 +404,8 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "7f3138c9f6ab54e09d730cd7a53dea2632df051f76db0e6fbab965136a116326",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     },
     {
       "directory": "29-n2-q2",
@@ -418,10 +418,16 @@
       "entry": "true_residual",
       "instruction_count": 20,
       "entry_sha256": "3a400e462456fe15095222f3d267d76f63ba1299159cefc631c9130249c153db",
-      "theorem": "PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct",
-      "scope": "Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open."
+      "theorem": "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+      "scope": "Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility."
     }
   ],
+  "audited_theorems": [
+    "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence",
+    "PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.witness_sources",
+    "PtxTorchLean.Poisson.PTX.Weak.Residual.padding"
+  ],
+  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.witness_sources' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Weak.Residual.padding' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
   "source_sha256": {
     "integration/torchlean/PoissonPTX/Arithmetic.lean": "8fd4f79048a2452ec06f11fa6dd491ba1c2ceac1f0f73941aeb55558b9e16e2c",
     "integration/torchlean/PoissonPTX/Bytes.lean": "b1405bdaa8d08aabbe28aaa5880063e71cd5c1f25acfb961cf543172b3b26857",
@@ -430,16 +436,24 @@
     "integration/torchlean/PoissonPTX/Layout.lean": "584efde27d90c4591c76ace8a6c4064daf83ff43db5c07850dd4b807ed26a031",
     "integration/torchlean/PoissonPTX/Machine.lean": "a671aa340d862420a80dacc46c50a3b144798fb82f650fbcd4d4b7ec75f4e58d",
     "integration/torchlean/PoissonPTX/MemoryBlocks.lean": "b6afd6d47fab2e6673cfa6135bb3c234bc2df02220fb74f099a4520b0df9f8e7",
+    "integration/torchlean/PoissonPTX/ParallelResidual.lean": "d0d7b84eded3884c33bbfabbeb9bada6bff6502f904efdb7411a6a077710e2a2",
+    "integration/torchlean/PoissonPTX/ParallelResidualChecks.lean": "d878a43d15f1b85ad7fc05c742e7f1a72b44794d218e80922c4f6c26862228b8",
+    "integration/torchlean/PoissonPTX/ParallelResidualLayout.lean": "7e25c85ce9b58add3a28aa7f4965e61084805df57984f0644c477e1eb135150a",
+    "integration/torchlean/PoissonPTX/ParallelResidualOutput.lean": "15b5309524bb1cbf59a7d9c585cd85e28b953f2cdafebc0a666eadd7848f22af",
     "integration/torchlean/PoissonPTX/Residual.lean": "aa8833e97674b820de08a5b96e41fe9accd4f220c15c2ef8ccf0ecaced405643",
     "integration/torchlean/PoissonPTX/ResidualKernel.lean": "fc8808b3a38ba7cc4d4f99e498f17aa2861506f08749b2d4542b1d71d01b51b8",
+    "integration/torchlean/PoissonPTX/Sources.lean": "ee19fa7e8b27510d6536535cde7189f6844bcf94a18b013afc21035f29feb2f6",
     "integration/torchlean/PoissonPTX/Tensor.lean": "b92554c8e1c4f74f2d0e10e5dc9088e51204067e2683dfa00952d208ef6a7cfd",
     "integration/torchlean/PoissonPTX/Text.lean": "85375ad5d07211960e8ff28820bb03be2e00d950b4f29833603c01826a94a406",
+    "integration/torchlean/PoissonPTX/Weak.lean": "91bb8508ff0ec38acfabde9d9c1975d5b5033608d109834387631c36c961a24c",
+    "integration/torchlean/PoissonPTX/WeakPadding.lean": "920a80b3d0047288905e9bc2573b42937dbf7259c022c3adbb7c602ed9e43279",
+    "integration/torchlean/PoissonPTX/WeakResidual.lean": "0b8438f59d104b68834763b204674f7ae4cc428e192d7dc1bced7127a012de33",
     "integration/torchlean/PoissonPTXMain.lean": "95c3c5175a3a44ad973ed1d1a7f4df84fef4e00016bd7da5e4ffd9b319981888",
-    "integration/torchlean/check.py": "50da8e7d520cbc3529bae24b7271c74ced2881e166024a809f95fe2fdee3fd6a",
-    "integration/torchlean/lakefile.toml": "7d46b63773bc0726eb0d03687d5b4391c3c67f22c5bfcb252bd5f5aa7f573b66",
+    "integration/torchlean/check.py": "3e4f9b49b9b1b7f8993760de9a46bad6f3973a95d6999608b56971b5fdc5b9fe",
+    "integration/torchlean/lakefile.toml": "858d8ff574419139ed92ed3a88d731cbd83604a5ab578b18481bdcfffebfea49",
     "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
     "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
-    "hardware/check_poisson_ptx.py": "a7681854dd2a7e52dac7ac8670467f0880cac5fe51fc055293d1994ace8497c2"
+    "hardware/check_poisson_ptx.py": "6165a8e3962b76285ffa475379ff3d44483ed248e42d5a1497ff4b34d9a99447"
   },
   "source_run_report_sha256": "c0334cbcbb6c4393c3045a73dbaf9ffb303e5103c33ce5b8f16196c3810ad613",
   "source_run_artifacts": {

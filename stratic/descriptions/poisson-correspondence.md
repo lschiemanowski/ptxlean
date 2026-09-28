@@ -71,10 +71,28 @@ one output word. It does not assume that the operator-result input equals A x.
 Contiguous-array addresses are derived from the arena base and field offsets.
 A checked frontend compares the proved instruction list with emitted PTX.
 
-This instruction proof uses concrete sequential byte storage. It does not yet
-establish which values parallel weak PTX loads may observe. The parallel memory
-rules must be extended from four-byte to eight-byte accesses and connected to
-these executions before claiming a parallel-kernel correspondence theorem.
-Shared-memory cell phases, assembly, reductions, remaining PCG kernels and host
-launch composition remain unproved at the instruction level. No premise that
-these phases already compute their specified answers substitutes for that work.
+Parallel residual verification permits each eight-byte load to choose a candidate
+word before checking its memory sources. Each byte must come from the initial
+storage or a matching byte of an actual executed store. The executed instruction
+trace supplies every store's calculated address and operand value. If the output
+array is disjoint from both inputs, no thread can supply a store to an input
+byte. Every input load must therefore recover its initial word, independently
+of thread order or a freedom to combine byte sources.
+
+For this closed launch, with no concurrent external writer or address alias,
+the resulting output tensor equals TorchLean binary64 tensor subtraction.
+The 256-thread index calculation is nonwrapping in the bounded array layout;
+each active lane owns one disjoint output word. Padding lanes return without
+memory accesses. Publishing the actual stores in any order yields the same
+decoded output and preserves every byte outside the outputs. A witness supplies
+successful fetched executions and compatible initial-byte sources.
+
+The parallel proof uses necessary source constraints, allowing more candidates
+than the complete PTX memory rules. A universal result over those candidates
+therefore needs no sequential-consistency assumption. The witness is an
+execution of this broader candidate model, not a full PTX admission or hardware
+progress theorem. Publication describes storage after the completed stores; the
+CUDA host-visibility mechanism is not proved. Shared-memory barriers, the cell
+phases, assembly, reductions, remaining PCG kernels and host launch composition
+still need their instruction-level connections. No premise that these phases
+already compute their specified answers substitutes for that work.

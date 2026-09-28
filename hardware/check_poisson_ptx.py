@@ -13,6 +13,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 INTEGRATION = ROOT / 'integration/torchlean'
@@ -41,6 +42,9 @@ def parameters(layout):
         if f['offset'] + count * 8 > layout['bytes']:
             raise ValueError(f'buffer outside arena: {field}')
         result[key] = f['offset']
+    for key in ('rhs', 'ap'):
+        if not (result['output'] + count*8 <= result[key] or result[key] + count*8 <= result['output']):
+            raise ValueError('output overlaps a read-only input array')
     launch = layout['launches']['true_residual']
     if launch != dict(groups=(count + 255)//256, threads=256, shared_bytes=0):
         raise ValueError('launch shape differs from the reviewed entry')
@@ -64,8 +68,8 @@ def verify_entry(ptx, expected, layout):
     parameters(layout)
     return dict(entry='true_residual', instruction_count=len(expected),
                 entry_sha256=hashlib.sha256(entries[0].encode()).hexdigest(),
-                theorem='PtxTorchLean.Poisson.PTX.Kernel.Residual.fetched_correct',
-                scope='Single-thread concrete byte-memory execution; parallel weak-memory admission and other kernels remain open.')
+                theorem='PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence',
+                scope='Closed residual launch: arbitrary per-byte sources from initial memory or actual stores; disjoint output, arbitrary publication order. Necessary-source overapproximation, not complete PTX admission or host visibility.')
 
 
 def read_artifact(run, report, name):
@@ -99,8 +103,18 @@ def check(run, output):
     pin = (INTEGRATION/'lean-toolchain').read_text().strip().removeprefix('leanprover/lean4:v')
     if not version.startswith(f'Lean (version {pin},'):
         raise ValueError('unexpected Lean toolchain')
-    subprocess.run(['lake', '--no-cache', 'build', 'poissonPTX'], cwd=INTEGRATION, check=True,
+    subprocess.run(['lake', '--no-cache', 'build', 'poissonPTX', 'PoissonPTX.ParallelResidualLayout', 'PoissonPTX.WeakPadding'], cwd=INTEGRATION, check=True,
                    stdout=sys.stderr)
+    audited = ['PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence',
+               'PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.witness_sources',
+               'PtxTorchLean.Poisson.PTX.Weak.Residual.padding']
+    with tempfile.TemporaryDirectory(prefix='poisson-instruction-audit-') as folder:
+        driver = Path(folder)/'Audit.lean'
+        driver.write_text('import PoissonPTX.ParallelResidualLayout\nimport PoissonPTX.WeakPadding\n' +
+                          ''.join('#print axioms '+name+'\n' for name in audited))
+        audit = subprocess.run(['lake', '--no-cache', 'env', 'lean', driver], cwd=INTEGRATION,
+                               check=True, text=True, capture_output=True)
+        checker.audit_dependencies(audit.stdout, audited)
     layouts = [json.loads(read_artifact(run, report, c['directory']+'/layout.json')) for c in report['cases']]
     params = [parameters(l) for l in layouts]
     emitted = subprocess.run([INTEGRATION/'.lake/build/bin/poissonPTX'],
@@ -113,7 +127,8 @@ def check(run, output):
     checker.dependencies()
     if hashes != {str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sources}:
         raise ValueError('proof/frontend sources changed during checking')
-    result = dict(status='pass', checked=results,
+    result = dict(status='pass', checked=results, audited_theorems=audited,
+                  axiom_audit=audit.stdout,
                   source_sha256=hashes,
                   source_run_report_sha256=hashlib.sha256((run/'report.json').read_bytes()).hexdigest(),
                   source_run_artifacts=report['artifacts'])

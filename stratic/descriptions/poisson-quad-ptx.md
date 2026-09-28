@@ -33,12 +33,15 @@ the installed toolchain; the project's semantic target remains PTX 9.4.
 Restricted binary64 instruction use is reviewed against NVIDIA's documentation.
 Ordinary global and shared loads/stores are weak accesses: synchronization comes
 from group barriers and ordered launches, not from the memory operations alone.
-The `true_residual` entry has a per-thread binary64 instruction proof tied to
-TorchLean subtraction. It includes fetched instructions, byte addresses and
-its guard. Parallel memory admission, the other kernels and host launch
-composition are still needed for a proof of the complete backend. Generated
-text, compilation, launch and execution have separate checks; they are not
-asserted to establish hardware conformance or continuous PDE accuracy.
+The `true_residual` entry has an instruction proof connecting the whole output
+tensor to TorchLean subtraction. It derives input values from byte-source
+constraints and disjoint output writes, then publishes the actual stores in any
+order. The proof assumes a closed launch with no external writer and uses
+necessary source conditions rather than a complete memory-admission model.
+The other kernels, shared-memory synchronization and host launch composition
+still need their instruction proofs. Compilation and GPU execution retain
+separate evidence; no hardware-conformance or continuous PDE theorem is claimed.
+
 
 Validation covers Q1–Q4, numerical operator comparisons on supplied and varied
 vectors, complete solves, polynomial reproduction, boundary preservation,

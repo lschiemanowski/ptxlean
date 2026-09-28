@@ -11,10 +11,11 @@
     "Connect ordered cell calculations and assembly to TorchLean without assuming associativity of rounded addition; preserve the distinct GPU reduction order.",
     "Reject malformed or nonfinite certificate input; keep compiled checking and saved GPU provenance distinct from kernel-checked proofs.",
     "Prove the complete true_residual entry per thread, including byte addresses, guard, execution existence and TorchLean subtraction; check its emitted instruction binding.",
-    "Keep eight-byte parallel memory admission, cell phases, assembly, reductions and host launch composition explicit as remaining work."
+    "Prove whole-vector residual subtraction under necessary byte-source constraints, with derived read-only inputs, actual instruction traces and arbitrary ordering of disjoint output stores.",
+    "Keep complete memory admission, shared-memory barriers, cell phases, assembly, reductions and host launch composition explicit as remaining work."
   ],
   "realization": "partial",
-  "remaining": "Eight-byte parallel weak-memory admission, shared-memory cell phases, assembly, reductions, other PCG kernels and host launches are not yet proved to refine the ordered algorithm. The true_residual instruction theorem covers per-thread concrete-memory execution. Result certification does not promise solver convergence, guaranteed acceptance or continuous PDE accuracy.",
+  "remaining": "Complete PTX memory admission for eight-byte communicating accesses, shared-memory cell phases, assembly, reductions, other PCG kernels and host launches remain unproved. Residual correspondence covers a closed launch under necessary byte-source constraints and publication of actual disjoint stores; the existence witness establishes this candidate model, not full PTX admission or hardware progress.",
   "links": [
     {
       "kind": "implementation",
@@ -181,6 +182,66 @@
         "path": "integration/torchlean/PoissonPTX/ResidualKernel.lean",
         "passage": {
           "quote": "theorem fetched_inactive (hn : \u00ac live ctx count) (pc : s.core.pc = 0) (running : s.halted = false) :\n    Run ctx (program count rhs ap output) s (setup ctx s count) \u2227\n    \u2200 final, Run ctx (program count rhs ap output) s final \u2192\n      final.core.global = s.core.global \u2227 final.core.shared = s.core.shared := by\n  have he : Exec ctx (program count rhs ap output) s (setup ctx s count) := by\n    apply (prologue_inactive hn running).mpr\n    rfl\n  exact \u27e8exec_fetched he [] pc, fun final h => inactive (run_exec h [] _ rfl pc) hn running\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every input load must therefore recover its initial word, independently\nof thread order or a freedom to combine byte sources."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/Sources.lean",
+        "passage": {
+          "quote": "theorem read_only_value (compatible : Compatible initial events source)\n    (hr : (events r).store = false) (ro : ReadOnly events (events r).address) :\n    (events r).value = read64 initial (events r).address := by\n  apply word_eq_of_bytes\n  intro k\n  have h := compatible r hr k\n  rw [read_only_initial compatible hr ro k] at h\n  simpa using h"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The executed instruction\ntrace supplies every store's calculated address and operand value."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ParallelResidual.lean",
+        "passage": {
+          "quote": "theorem trace_exact (p : Inputs n) (c : Candidate p) (i : Fin n) :\n    c.trace i = [events p c (i,0), events p c (i,1), events p c (i,2)] := by\n  simpa [events,accesses,Inputs.addr] using (characterize p c i).2"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "the resulting output tensor equals TorchLean binary64 tensor subtraction."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ParallelResidualLayout.lean",
+        "passage": {
+          "quote": "theorem Arena.correspondence (a : Arena n) (memory : Memory) (regs : Fin n \u2192 Registers)\n    (c : Candidate (a.inputs memory regs)) (source)\n    (compatible : Compatible memory (events (a.inputs memory regs) c) source)\n    (order : List (Fin n)) (complete : \u2200 i, i\u2208order) :\n    Kernel.Residual.view (publish (a.inputs memory regs) c order)\n        (fun i : Fin n => a.base.toNat+i.val*8+a.output.toNat) =\n      TorchLean.Tensor.subSpec\n        (Kernel.Residual.view memory (fun i : Fin n => a.base.toNat+i.val*8+a.rhs.toNat))\n        (Kernel.Residual.view memory (fun i : Fin n => a.base.toNat+i.val*8+a.ap.toNat)) := by\n  have h:=torchlean_output (a.inputs memory regs) c source compatible\n    (a.input_separation memory regs) (a.output_ownership memory regs) order complete\n  change Kernel.Residual.view (publish (a.inputs memory regs) c order)\n    (fun i => (a.inputs memory regs).addr i a.output) =\n      TorchLean.Tensor.subSpec\n        (Kernel.Residual.view memory (fun i => (a.inputs memory regs).addr i a.rhs))\n        (Kernel.Residual.view memory (fun i => (a.inputs memory regs).addr i a.ap)) at h\n  simpa only [a.addr memory regs _ a.output (by simp),\n    a.addr memory regs _ a.rhs (by simp), a.addr memory regs _ a.ap (by simp)] using h"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A witness supplies\nsuccessful fetched executions and compatible initial-byte sources."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ParallelResidualOutput.lean",
+        "passage": {
+          "quote": "theorem witness_sources (p : Inputs n) :\n    Compatible p.initial (events p (witness p)) (fun _ _ => .initial) := by\n  intro e hr k\n  rcases e with \u27e8i,j\u27e9\n  fin_cases j <;> simp_all [events,witness,canonical]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Padding lanes return without\nmemory accesses."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/WeakPadding.lean",
+        "passage": {
+          "quote": "theorem padding (ctx : Context) (s : Kernel.State) (count : BitVec 32)\n    (rhs ap output : Word) (choose : Nat \u2192 Word) (fuel : Nat)\n    (pc : s.core.pc=0) (running : s.halted=false) (inactive : \u00acKernel.Residual.live ctx count) :\n    execute ctx (Kernel.Residual.program count rhs ap output) choose (fuel+6) s =\n      some (Kernel.Residual.setup ctx s count,[]) := by\n  have hge : count.toNat \u2264 (Kernel.Residual.index ctx).toNat := Nat.le_of_not_gt inactive\n  simp [Kernel.Residual.index] at hge\n  iterate 6\n    rw [execute]\n    simp [Weak.step,instruction,Kernel.Residual.program,Kernel.Residual.prologue,\n      PTX.Residual.code,loadCode,storeCode,addressCode,Kernel.simple,Kernel.scalar,\n      Kernel.advance,Kernel.halt,assign,PTX.advance,u32,pc,running,hge]\n  simp [Kernel.Residual.setup,Kernel.simple,Kernel.scalar,Kernel.advance,Kernel.halt,\n    assign,PTX.advance,u32,pc,running,hge]"
         }
       }
     }

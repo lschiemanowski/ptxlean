@@ -1,10 +1,11 @@
 # From Poisson PTX instructions to a TorchLean result
 
-There is a proved instruction-level connection for **one thread of
-`true_residual`**, the kernel that subtracts the computed operator value from
-the right-hand side. There is not yet a proof of the complete Poisson solver's
-PTX implementation. In particular, this theorem does not establish that the
-input called `ap` really contains `A x`.
+There are instruction-level proofs for **`true_residual`**, the kernel that
+subtracts the computed operator value from the right-hand side: a per-thread
+concrete-memory theorem and a whole-vector theorem using necessary byte-source
+constraints. There is not yet a proof of the complete Poisson solver's PTX
+implementation. Neither theorem establishes that the input called `ap` really
+contains `A x`. The parallel proof is explained below.
 
 For an active index `i`, the statement is:
 
@@ -136,10 +137,10 @@ prose is not redistributed here.
 sequential byte storage. PTX's ordinary loads/stores are weak memory operations;
 a sequential memory map is not their general concurrent semantics. Existing
 parallel admission proofs in this project use four-byte observations. They do
-not automatically justify this new eight-byte model. Therefore the proof above
-is a per-thread instruction result, conditional on its concrete-memory execution
-model. It does not yet cover arbitrary parallel PTX executions, even of this
-barrier-free entry.
+not automatically justify this new eight-byte model. The first proof above is consequently a per-thread result, conditional on its
+concrete-memory model. The parallel extension below instead proves the residual
+result using necessary source constraints, exploiting its read-only inputs.
+General eight-byte communication and complete memory admission remain open.
 
 To prove the complete requested implementation correspondence still requires:
 
@@ -155,3 +156,80 @@ To prove the complete requested implementation correspondence still requires:
 Assuming that each phase produces its mathematical answer would bypass precisely
 these obligations. The result certificate remains useful independently: it
 certifies an accepted solution even while the implementation proof is incomplete.
+
+## Parallel residual correspondence
+
+The parallel extension removes the sequential-read assumption for the residual
+entry. [Arena.correspondence](../../integration/torchlean/PoissonPTX/ParallelResidualLayout.lean)
+proves equality of the **whole decoded output tensor** with TorchLean's
+`Tensor.subSpec` of the initial input tensors.
+
+The key is that this kernel only reads inputs and writes a separate output.
+Suppose a load tentatively reads an incorrect word. Every observed byte needs
+an explanation: either the byte already present at launch start, or a matching
+byte from a store executed by some thread. All actual stores target the output
+array. None can explain a different input byte. Thus every input read must
+recover its initial word. This reasoning works even in a model that generally
+permits different bytes of a read to have different sources.
+
+The formal steps are:
+
+1. [Sources](../../integration/torchlean/PoissonPTX/Sources.lean) defines per-byte
+   source compatibility, with explicit source offsets and physical byte addresses.
+   `read_only_value` derives a complete initial word from the absence of overlapping
+   stores. It does not assume whole-word atomicity.
+2. [Weak](../../integration/torchlean/PoissonPTX/Weak.lean) executes fetched
+   instructions while allowing arbitrary load words. Arithmetic still requires
+   the primitive rounding relation. Loads and stores emit their actual addresses
+   and operand/result words. Shared instructions are deliberately unsupported here.
+3. [WeakResidual](../../integration/torchlean/PoissonPTX/WeakResidual.lean)
+   symbolically executes the complete entry for arbitrary choices and any fuel
+   budget of at least twenty. Successful execution yields exactly two loads and
+   one store; its subtraction constraint comes from the executed instruction.
+   [WeakPadding](../../integration/torchlean/PoissonPTX/WeakPadding.lean) proves
+   that an inactive lane returns after six instructions with no memory events.
+4. [ParallelResidual](../../integration/torchlean/PoissonPTX/ParallelResidual.lean)
+   collects those exact traces. `trace_exact` proves that no memory event is
+   omitted or supplied independently. Source checking and disjoint input/output
+   regions then imply `stored_value`, for every candidate execution.
+5. [ParallelResidualOutput](../../integration/torchlean/PoissonPTX/ParallelResidualOutput.lean)
+   publishes the actual stores in any order. Disjoint owners imply that every
+   output word comes from its own executed store; bytes outside outputs stay
+   unchanged. `torchlean_output` proves whole-tensor equality. `witness_sources`
+   constructs successful instruction executions with compatible initial sources.
+6. [ParallelResidualLayout](../../integration/torchlean/PoissonPTX/ParallelResidualLayout.lean)
+   derives the address and ownership conditions for contiguous arrays. Lane and
+   group IDs are `i % 256` and `i / 256`; the proved 32-bit calculation recovers
+   `i`. Alignment, allocation bounds and a nonwrapping arena are explicit initial
+   conditions. Output/input separation is about complete byte ranges, not merely
+   different pointers. Input arrays may overlap each other.
+
+This models a **closed launch**: no other kernel, device or host thread writes
+these allocations concurrently. The initial snapshot is the supplied launch
+input; prior-kernel ordering and CUDA transfers are not proved here. Addresses
+use an identity mapping with no hidden physical aliases. The output observation
+publishes completed stores; its correspondence with a CUDA host copy remains a
+runtime boundary. NaN payloads need not agree bitwise, and the theorem still does
+not assert that the input named `ap` contains `A x`.
+
+The source condition is a deliberately permissive approximation to PTX's memory
+rules. PTX ISA 9.4 §8 introduces candidate writes, including initialization;
+§8.2 identifies bytes and physical overlap. The proof uses only that necessary
+source property. It neither turns weak accesses into strong ones nor assumes
+that a chosen source must be the most recent write in some global schedule.
+Other PTX constraints can remove candidates without invalidating a universal
+result over the larger set. The existence witness establishes a compatible
+candidate, **not complete PTX admission or GPU scheduling progress**.
+
+[ParallelResidualChecks](../../integration/torchlean/PoissonPTX/ParallelResidualChecks.lean)
+contains kernel-checked forward/reverse publication examples, padding, byte-range
+overlap and source rejection. An incorrect input candidate really executes in
+the permissive interpreter and produces the wrong subtraction; source checking
+then rejects it. Another example accepts torn byte sources when stores overlap,
+confirming that source uniformity has not been silently assumed.
+
+The frontend binding checker now also checks output/input separation and freshly
+builds and audits the parallel theorem, witness and padding result. It compares
+the same unchanged emitted entry with the same Lean instruction list. The full
+solver still needs shared-memory communication, the other kernels and host-loop
+composition; the read-only argument alone cannot justify those steps.

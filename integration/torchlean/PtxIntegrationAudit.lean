@@ -1,3 +1,11 @@
+import PoissonPTX.Sources
+import PoissonPTX.Weak
+import PoissonPTX.WeakResidual
+import PoissonPTX.WeakPadding
+import PoissonPTX.ParallelResidual
+import PoissonPTX.ParallelResidualOutput
+import PoissonPTX.ParallelResidualLayout
+import PoissonPTX.ParallelResidualChecks
 import PoissonPTX.Arithmetic
 import PoissonPTX.Bytes
 import PoissonPTX.Checks
@@ -3067,3 +3075,66 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Text.data
 #print axioms PtxTorchLean.Poisson.PTX.Text.instruction
 #print axioms PtxTorchLean.Poisson.PTX.Text.residual
+
+#print axioms PtxTorchLean.Poisson.PTX.Sources.Access
+#print axioms PtxTorchLean.Poisson.PTX.Sources.Origin
+#print axioms PtxTorchLean.Poisson.PTX.Sources.Compatible
+#print axioms PtxTorchLean.Poisson.PTX.Sources.ReadOnly
+#print axioms PtxTorchLean.Poisson.PTX.Sources.word_eq_of_bytes
+#print axioms PtxTorchLean.Poisson.PTX.Sources.byte_read64
+#print axioms PtxTorchLean.Poisson.PTX.Sources.read_only_initial
+#print axioms PtxTorchLean.Poisson.PTX.Sources.read_only_value
+#print axioms PtxTorchLean.Poisson.PTX.Sources.Disjoint
+#print axioms PtxTorchLean.Poisson.PTX.Sources.readonly_of_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.Weak.data
+#print axioms PtxTorchLean.Poisson.PTX.Weak.access
+#print axioms PtxTorchLean.Poisson.PTX.Weak.instruction
+#print axioms PtxTorchLean.Poisson.PTX.Weak.step
+#print axioms PtxTorchLean.Poisson.PTX.Weak.execute
+#print axioms PtxTorchLean.Poisson.PTX.Weak.access_origin
+#print axioms PtxTorchLean.Poisson.PTX.Weak.data_pc
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.accesses
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.finish
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.execution
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.padding
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Inputs
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Inputs.addr
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Candidate
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.characterize
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.events
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.trace_exact
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.store_origin
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.inputs_readonly
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.stored_value
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.publish
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.published_word
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.torchlean_output
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.canonical
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.witness
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.witness_sources
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.published_outside
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.context
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.start
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.index
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.live
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.inputs
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.addr
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.input_separation
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.output_ownership
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Arena.correspondence
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.arena
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.memory
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.inputs
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.forward_order
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.reverse_order
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.badChoice
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.bad_candidate_executes
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.badEvents
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.bad_initial_source_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.output_cannot_source_input
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.overlapping_bytes
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.padding_has_no_access
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.tornEvents
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.tornSource
+#print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.torn_sources_permitted

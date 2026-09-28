@@ -66,6 +66,13 @@ class InstructionBinding(unittest.TestCase):
                 read_artifact(root, report, 'layout.json')
             with self.assertRaises(ValueError): read_artifact(root, report, '../escape')
 
+    def test_output_overlap_rejected(self):
+        for key in ('rhs', 'ap'):
+            layout = copy.deepcopy(self.layout)
+            layout['fields']['true_r']['offset'] = layout['fields'][key]['offset'] + 8
+            with self.assertRaisesRegex(ValueError, 'overlaps'):
+                parameters(layout)
+
     def test_layout_and_launch_rejected(self):
         for field, value in [('offset', -8), ('offset', 1), ('offset', 2**64), ('kind', 'I'), ('count', 1)]:
             layout = copy.deepcopy(self.layout)
