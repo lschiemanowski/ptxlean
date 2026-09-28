@@ -12,10 +12,11 @@
     "Reject malformed or nonfinite certificate input; keep compiled checking and saved GPU provenance distinct from kernel-checked proofs.",
     "Prove the complete true_residual entry per thread, including byte addresses, guard, execution existence and TorchLean subtraction; check its emitted instruction binding.",
     "Prove whole-vector residual subtraction under necessary byte-source constraints, with derived read-only inputs, actual instruction traces and arbitrary ordering of disjoint output stores.",
-    "Keep complete memory admission, shared-memory barriers, cell phases, assembly, reductions and host launch composition explicit as remaining work."
+    "Keep complete memory admission, shared-memory barriers, cell phases, assembly, reductions and host launch composition explicit as remaining work.",
+    "Prove the eight local cell contractions from fetched indexing, byte loads and separate rounded multiply/add operations; connect their byte-backed views to TorchLean while retaining the separate barrier-snapshot obligation."
   ],
   "realization": "partial",
-  "remaining": "Complete PTX memory admission for eight-byte communicating accesses, shared-memory cell phases, assembly, reductions, other PCG kernels and host launches remain unproved. Residual correspondence covers a closed launch under necessary byte-source constraints and publication of actual disjoint stores; the existence witness establishes this candidate model, not full PTX admission or hardware progress.",
+  "remaining": "Complete PTX memory admission, shared-memory phase availability, cell gather/control/stores/weighting/final addition, assembly, reductions, other PCG kernels and host launches remain unproved. Residual correspondence uses necessary byte-source constraints; cell contractions use concrete phase snapshots. Neither is a full solver or GPU-progress theorem.",
   "links": [
     {
       "kind": "implementation",
@@ -242,6 +243,54 @@
         "path": "integration/torchlean/PoissonPTX/WeakPadding.lean",
         "passage": {
           "quote": "theorem padding (ctx : Context) (s : Kernel.State) (count : BitVec 32)\n    (rhs ap output : Word) (choose : Nat \u2192 Word) (fuel : Nat)\n    (pc : s.core.pc=0) (running : s.halted=false) (inactive : \u00acKernel.Residual.live ctx count) :\n    execute ctx (Kernel.Residual.program count rhs ap output) choose (fuel+6) s =\n      some (Kernel.Residual.setup ctx s count,[]) := by\n  have hge : count.toNat \u2264 (Kernel.Residual.index ctx).toNat := Nat.le_of_not_gt inactive\n  simp [Kernel.Residual.index] at hge\n  iterate 6\n    rw [execute]\n    simp [Weak.step,instruction,Kernel.Residual.program,Kernel.Residual.prologue,\n      PTX.Residual.code,loadCode,storeCode,addressCode,Kernel.simple,Kernel.scalar,\n      Kernel.advance,Kernel.halt,assign,PTX.advance,u32,pc,running,hge]\n  simp [Kernel.Residual.setup,Kernel.simple,Kernel.scalar,Kernel.advance,Kernel.halt,\n    assign,PTX.advance,u32,pc,running,hge]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The eight unrolled cell contractions have local fetched-instruction proofs.\nEach operand comes from its actual global or shared byte address, using row-major\nindexing and explicit allocation bounds."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ContractionFetched.lean",
+        "passage": {
+          "quote": "theorem fetched_correct (allowed : Accumulator acc)\n    (valid : \u2200 k<width, Valid s width k a \u2227 Valid s width k b)\n    (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++program width acc a b++suffix) s t)\n    (done : t.pc=pre.length+(program width acc a b).length) :\n    decode (t.regs acc) =\n      Spec.get2 (Spec.matMulSpec (leftTensor s width a) (rightTensor s width b)) 0 0 \u2227\n    Stable s t := by\n  rw [tensor_fold]\n  exact correct allowed valid (fetched_block _ _ _ execution pc done)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed block equals the TorchLean matrix product of\nthe corresponding byte-backed row and column views, and a valid initial snapshot\nhas a completed execution."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ContractionFetched.lean",
+        "passage": {
+          "quote": "theorem fetched_exists (s : State) (allowed : Accumulator acc)\n    (valid : \u2200 k<width, Valid s width k a \u2227 Valid s width k b)\n    (pre suffix : List Op) (pc : s.pc=pre.length) :\n    \u2203 t, Runs (pre++program width acc a b++suffix) s t \u2227\n      t.pc=pre.length+(program width acc a b).length := by\n  obtain \u27e8t,ht\u27e9 := exists_execution s allowed valid\n  exact \u27e8t,block_fetched ht pre suffix pc,by rw [block_pc ht,pc]\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The layout proof supplies aligned, in-bounds, nonwrapping addresses from complete\nallocated matrices and in-range coordinate operands for Q1 through Q4."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ContractionLayout.lean",
+        "passage": {
+          "quote": "theorem valid_of_matrix (s : State) (width k : Nat) (m : Matrix)\n    (hw : width \u2264 5)\n    (hr : ((m.row.operand k).eval s).toNat < width)\n    (hc : ((m.column.operand k).eval s).toNat < width)\n    (base : (s.regs (baseRegister m.space)).toNat = s.start m.space)\n    (aligned : s.start m.space % 8 = 0) (offsetAligned : m.offset.toNat % 8 = 0)\n    (fits : m.offset.toNat + width*width*8 \u2264 s.bytes m.space)\n    (noWrap : s.start m.space + s.bytes m.space \u2264 2^64) : Valid s width k m := by\n  have indexBound : (((m.row.operand k).eval s).toNat * width + ((m.column.operand k).eval s).toNat)*8+8 \u2264 width*width*8 := by\n    interval_cases width <;> norm_num at * <;> omega\n  have bound : (s.regs (baseRegister m.space)).toNat +\n      (((m.row.operand k).eval s).toNat * width + ((m.column.operand k).eval s).toNat)*8 + m.offset.toNat < 2^64 := by\n    rw [base]; omega\n  unfold Valid\n  rw [location_exact s width k m hw hr hc bound,base]\n  refine \u27e8by omega,?_,by omega,noWrap\u27e9\n  simp [Nat.add_mod,aligned,offsetAligned]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Both generated accumulators are covered.\nA checked frontend compares all eight blocks in each element entry with the same\nLean instruction programs used by the proofs."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ContractionText.lean",
+        "passage": {
+          "quote": "def plans (width : Nat) (b d : Word) : List Plan :=\n  let plane (p : Nat) := BitVec.ofNat 64 (p*width*width*8)\n  [\u27e8\"bu\",8,\u27e8.global,b,.row,.inner\u27e9,\u27e8.shared,plane 0,.inner,.column\u27e9\u27e9,\n   \u27e8\"du\",8,\u27e8.global,d,.row,.inner\u27e9,\u27e8.shared,plane 0,.inner,.column\u27e9\u27e9,\n   \u27e8\"dx\",8,\u27e8.shared,plane 1,.row,.inner\u27e9,\u27e8.global,d,.column,.inner\u27e9\u27e9,\n   \u27e8\"dy\",8,\u27e8.shared,plane 2,.row,.inner\u27e9,\u27e8.global,b,.column,.inner\u27e9\u27e9,\n   \u27e8\"bl\",8,\u27e8.global,b,.inner,.row\u27e9,\u27e8.shared,plane 3,.inner,.column\u27e9\u27e9,\n   \u27e8\"dl\",8,\u27e8.global,d,.inner,.row\u27e9,\u27e8.shared,plane 4,.inner,.column\u27e9\u27e9,\n   \u27e8\"x\",8,\u27e8.shared,plane 5,.row,.inner\u27e9,\u27e8.global,d,.inner,.column\u27e9\u27e9,\n   \u27e8\"y\",9,\u27e8.shared,plane 6,.row,.inner\u27e9,\u27e8.global,b,.inner,.column\u27e9\u27e9]"
         }
       }
     }

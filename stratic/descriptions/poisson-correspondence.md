@@ -96,3 +96,26 @@ CUDA host-visibility mechanism is not proved. Shared-memory barriers, the cell
 phases, assembly, reductions, remaining PCG kernels and host launch composition
 still need their instruction-level connections. No premise that these phases
 already compute their specified answers substitutes for that work.
+
+
+The eight unrolled cell contractions have local fetched-instruction proofs.
+Each operand comes from its actual global or shared byte address, using row-major
+indexing and explicit allocation bounds. The accumulator starts at positive zero
+and performs separate rounded multiply and add operations in increasing
+inner-index order. Every completed block equals the TorchLean matrix product of
+the corresponding byte-backed row and column views, and a valid initial snapshot
+has a completed execution. Decoded NaN equality preserves encoding freedom.
+
+The layout proof supplies aligned, in-bounds, nonwrapping addresses from complete
+allocated matrices and in-range coordinate operands for Q1 through Q4. Integer
+index instructions retain their modular semantics outside those conditions.
+The local block preserves the global/shared memories, their allocation bounds,
+and the base and row/column registers. Both generated accumulators are covered.
+A checked frontend compares all eight blocks in each element entry with the same
+Lean instruction programs used by the proofs.
+
+These local contraction contracts use supplied phase snapshots. They do not
+establish that prior stores and barriers provide those snapshots. Initial gather,
+control branches, intermediate stores, weight multiplication, final addition,
+output stores and parallel admission remain to be connected. A hypothesis that
+a previous phase already computes its matrix answer cannot replace that work.

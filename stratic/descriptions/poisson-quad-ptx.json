@@ -9,7 +9,8 @@
   "summary": [
     "Run the matrix-free Poisson operator and PCG numerical iterations in binary64 PTX using setup supplied by Lean.",
     "Use disjoint element storage and one writer per global node for deterministic assembly without floating-point atomics.",
-    "Certify accepted solutions with an exact residual checker; connect the residual kernel output to TorchLean under byte-source constraints while retaining the other implementation and hardware boundaries."
+    "Certify accepted solutions with an exact residual checker; connect the residual kernel output to TorchLean under byte-source constraints while retaining the other implementation and hardware boundaries.",
+    "Local cell-contraction instruction proofs connect byte-backed inputs to TorchLean matrix products; the complete cell launch and phase availability remain unproved."
   ],
   "realization": "implemented",
   "links": [

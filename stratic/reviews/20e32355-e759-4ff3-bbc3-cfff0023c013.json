@@ -1,0 +1,137 @@
+{
+  "id": "20e32355-e759-4ff3-bbc3-cfff0023c013",
+  "base": "3f95b9b95fda167a6942377bb0eaf1b7077459a1",
+  "contentTree": "ffb853b4df49191c198767d0c55fba47c9f0fa57",
+  "reviewer": "Codex",
+  "summary": "Prove fetched Poisson cell contractions against byte-backed TorchLean matrix products",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "New local fetched-block correctness, execution existence and matrix-layout theorems connect actual byte loads to TorchLean. The supplied shared snapshot and missing gather/control/stores/barriers are explicit; no full cell or solver claim."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Parent now identifies the eight local cell contractions as proved block contracts while preserving outstanding parallel phase and whole-kernel obligations."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The explicit dependency audit expands to cover every new public declaration. Standard-axiom-only acceptance and the separate source-fidelity, textual-binding, compiler and GPU boundaries remain unchanged."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The reference solver, represented equations, residual certificate and empirical backend behavior are unchanged. This is an additional partial instruction proof."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "ffb853b4df49191c198767d0c55fba47c9f0fa57",
+      "method": "integration/torchlean/check.sh; python3 -m unittest discover -s hardware -p test_*.py; hardware/check_poisson_contractions.py and hardware/check_poisson_ptx.py on .hardware-runs/poisson-certified; pinned PTX 9.4 semantic review; stratic validate; local guide links; git diff --check; distribution guard",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and existing checked dependencies. No external model calls or new GPU execution. Source version 9.4 with pinned SHA-256; saved emitted artifacts include the reviewed 9.2 variant.",
+      "evidence": "Full integration passed 2861 exact dependency reports, only standard Lean axioms. All 24 Python tests passed. Fresh binding checked 720 contraction blocks in 30 saved layouts and retained the 30-layout residual binding. Four contraction endpoints freshly audited in the binding checker; all 69 new declarations independently audited and included in the full audit. Receipt source hashes match final files. Source/config/receipts unchanged from precheck tree 0eeee741727cec740f4c6e89fa854c437d9e942a; only the new study guide gained plain-English explanations afterward, manually reviewed with 28 local guide links verified. Stratic validation and whitespace checks pass. Source interpretation and theorem review preserve the supplied-snapshot local scope: full cell control, gather, stores, weights, final addition, barriers, memory admission and solver composition remain open.",
+      "tests": [],
+      "id": "9b5f0983-5043-401d-a2f2-6c69ba0c555a",
+      "recordedAt": "2026-09-28T18:52:36.363Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T18:53:08.757Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-cell-contractions.md",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "docs/foundations/poisson-instructions.md",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Contraction.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ContractionChecks.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ContractionFetched.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ContractionLayout.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ContractionLoads.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ContractionText.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Machine.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Text.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Weak.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed supporting code, check registration, tests, saved binding evidence or explanatory guide for the local contraction contract. Public correctness, existence, layout and concrete program-selection passages are linked from poisson-correspondence; surrounding launch/barrier semantics remain open."
+    }
+  ]
+}

@@ -1,3 +1,9 @@
+import PoissonPTX.Contraction
+import PoissonPTX.ContractionChecks
+import PoissonPTX.ContractionFetched
+import PoissonPTX.ContractionLayout
+import PoissonPTX.ContractionLoads
+import PoissonPTX.ContractionText
 import PoissonPTX.Sources
 import PoissonPTX.Weak
 import PoissonPTX.WeakResidual
@@ -3138,3 +3144,73 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.tornEvents
 #print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.tornSource
 #print axioms PtxTorchLean.Poisson.PTX.Weak.Residual.Parallel.Checks.torn_sources_permitted
+
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.mac
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.term
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.terms
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.program
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Accumulator
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.mac_correct
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.mac_exists
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.term_correct
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.term_exists
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.terms_correct
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.terms_exists
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.correct
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.exists_execution
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.memory4
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.state
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.a
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.b
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.matrix_coordinate
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.second_accumulator
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.outside_shared_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.unaligned_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.index_wrap
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.cancellation
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.cancellation_order
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Checks.all_plans_have_eight_blocks
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.runs_pc_le
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.runs_eq_of_pc
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.fetched_block
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.leftTensor
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.rightTensor
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.tensor_fold
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.fetched_correct
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.fetched_exists
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.index_exact
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.location_exact
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Coord
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Coord.operand
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Matrix
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.indexWord
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.baseRegister
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.location
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.value
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Valid
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.indexCode
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.loadCode
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.indexed
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.loaded
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.environment
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Stable
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.stable_refl
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.stable_trans
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.stable_assign
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.stable_location
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.stable_valid
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.stable_value
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.wide_byte_offset
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.load_run
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.load_eq
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.loaded_reg
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.loaded_preserves
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.loaded_stable
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.Plan
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.plans
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.render
+#print axioms PtxTorchLean.Poisson.PTX.Contraction.rendered
+#print axioms PtxTorchLean.Poisson.PTX.mul32
+#print axioms PtxTorchLean.Poisson.PTX.add32

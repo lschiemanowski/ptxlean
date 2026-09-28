@@ -233,3 +233,12 @@ builds and audits the parallel theorem, witness and padding result. It compares
 the same unchanged emitted entry with the same Lean instruction list. The full
 solver still needs shared-memory communication, the other kernels and host-loop
 composition; the read-only argument alone cannot justify those steps.
+
+
+## Cell contraction blocks
+
+The next instruction layer proves the eight local cell contractions from indexed
+global/shared byte loads and separate rounded multiply/add operations. See the
+[cell-contraction guide](poisson-cell-contractions.md) for the theorem, storage
+conditions, source review and binding checks. These are supplied-snapshot block
+contracts; the surrounding cell control, gather, stores and barriers remain open.

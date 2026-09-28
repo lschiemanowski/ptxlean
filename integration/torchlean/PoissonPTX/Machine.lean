@@ -52,14 +52,18 @@ structure State where
 inductive Operand where
   | reg (index : Nat)
   | imm (value : Word)
+  | offset (index : Nat) (value : Word)
   deriving DecidableEq, Repr
 
 def Operand.eval (s : State) : Operand → Word
   | .reg r => s.regs r
   | .imm w => w
+  | .offset r w => s.regs r + w
 
 inductive Op where
   | mov (dst : Nat) (src : Operand)
+  | mul32 (dst : Nat) (a b : Operand)
+  | add32 (dst : Nat) (a b : Operand)
   | add64 (dst : Nat) (a b : Operand)
   | wide8 (dst : Nat) (index : Operand)
   | load64 (space : Space) (dst : Nat) (address : Operand)
@@ -88,10 +92,15 @@ def put (s : State) (space : Space) (address : Nat) (value : Word) : State :=
   | .global => {advance s with global := write64 s.global address value}
   | .shared => {advance s with shared := write64 s.shared address value}
 
-/-- Actual instruction execution. Invalid byte accesses have no successful
-step; the checked interpreter below returns none instead of inventing a value. -/
+/-- Unsigned low-word arithmetic, zero-extended into the register container. -/
+def mul32 (a b : Word) : Word := ((a.setWidth 32)*(b.setWidth 32)).setWidth 64
+def add32 (a b : Word) : Word := ((a.setWidth 32)+(b.setWidth 32)).setWidth 64
+
+/-- Actual instruction execution; invalid byte accesses have no successful step. -/
 inductive Eval : Op → State → State → Prop where
   | mov : Eval (.mov dst src) s (assign s dst (src.eval s))
+  | mul32 : Eval (.mul32 dst a b) s (assign s dst (mul32 (a.eval s) (b.eval s)))
+  | add32 : Eval (.add32 dst a b) s (assign s dst (add32 (a.eval s) (b.eval s)))
   | add64 : Eval (.add64 dst a b) s (assign s dst (a.eval s+b.eval s))
   | wide8 : Eval (.wide8 dst index) s (assign s dst (BitVec.ofNat 64 ((index.eval s).toNat % 2^32 * 8)))
   | load64 (valid : Valid64 (s.start space) (s.bytes space) (address.eval s).toNat) :
@@ -147,6 +156,8 @@ theorem block_fetched (h : Block code s t) (precode suffix : List Op)
 def eval (op : Op) (s : State) : Option State :=
   match op with
   | .mov dst src => some (assign s dst (src.eval s))
+  | .mul32 dst a b => some (assign s dst (mul32 (a.eval s) (b.eval s)))
+  | .add32 dst a b => some (assign s dst (add32 (a.eval s) (b.eval s)))
   | .add64 dst a b => some (assign s dst (a.eval s+b.eval s))
   | .wide8 dst i => some (assign s dst (BitVec.ofNat 64 ((i.eval s).toNat % 2^32 * 8)))
   | .load64 space dst address =>
@@ -164,6 +175,8 @@ def run : List Op → State → Option State
 theorem eval_sound (h : eval op s = some t) : Eval op s t := by
   cases op <;> simp only [eval] at h
   case mov => cases h; exact .mov
+  case mul32 => cases h; exact .mul32
+  case add32 => cases h; exact .add32
   case add64 => cases h; exact .add64
   case wide8 => cases h; exact .wide8
   case load64 => split at h <;> simp_all; subst t; exact .load64 (by assumption)

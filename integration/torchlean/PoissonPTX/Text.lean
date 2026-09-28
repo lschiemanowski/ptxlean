@@ -10,11 +10,13 @@ def register : Nat → String
   | 4 => "%a" | 5 => "%b" | 6 => "%c" | 7 => "%d"
   | 8 => "%acc" | 9 => "%acc2" | 10 => "%prod" | 11 => "%value"
   | 12 => "%global" | 13 => "%idx" | 14 => "%lane" | 15 => "%cell"
+  | 16 => "%i" | 17 => "%j"
   | n => s!"%unmapped{n}"
 
 def operand : Operand → String
   | .reg r => register r
   | .imm w => toString w.toNat
+  | .offset r w => s!"{register r}+{w.toNat}"
 
 def operation : FP → String
   | .add => "add.rn.f64" | .sub => "sub.rn.f64"
@@ -24,6 +26,8 @@ def space : Space → String | .global => "global" | .shared => "shared"
 
 def data : Op → String
   | .mov d s => s!"mov.b64 {register d}, {operand s};"
+  | .mul32 d a b => s!"mul.lo.u32 {register d}, {operand a}, {operand b};"
+  | .add32 d a b => s!"add.u32 {register d}, {operand a}, {operand b};"
   | .add64 d a b => s!"add.u64 {register d}, {operand a}, {operand b};"
   | .wide8 d i => s!"mul.wide.u32 {register d}, {operand i}, 8;"
   | .load64 sp d a => s!"ld.{space sp}.f64 {register d}, [{operand a}];"

@@ -70,3 +70,11 @@ associativity of rounded addition. A binary64 instruction interpretation must
 then connect actual register and memory execution to those calculations. The
 parallel dot-product order is part of the GPU algorithm, so the solver's result
 is not required to be bitwise identical to the CPU PCG loop.
+
+
+The eight matrix contractions inside each cell kernel also have local instruction
+proofs: indexing, byte loads, and the ordered rounded operations produce the
+TorchLean matrix product of byte-backed operand views. These contracts preserve
+the input storage but require a supplied phase snapshot. The gather, surrounding
+branches and stores, weighting, final addition, and barriers have not yet been
+joined into a complete cell execution theorem.

@@ -78,6 +78,8 @@ theorem data_pc (h : data choice op s = some t) : t.pc=s.pc+1 := by
     · cases h; rfl
     · contradiction
   | mov dst src => cases h; rfl
+  | mul32 dst a b => cases h; rfl
+  | add32 dst a b => cases h; rfl
   | add64 dst a b => cases h; rfl
   | wide8 dst index => cases h; rfl
 
