@@ -1,0 +1,160 @@
+{
+  "id": "cd870036-91f1-4a9b-bea9-2084399deb5f",
+  "base": "9404f618f76227f102b1a70d37e44cc3592c4041",
+  "contentTree": "5a04e550769555bda3ce6b79d8d20f8175d085b5",
+  "reviewer": "Codex",
+  "summary": "Certify Poisson GPU results with proved exact residual checking and ordered TorchLean computation lemmas",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Description-first contract refined to the user-selected residual guarantee. Proved ordered local/tensor and assembly connections, canonical binary64 operand commutation, reduction-order counterexample, exact decoder and sound residual acceptance. No PTX execution, solver convergence or PDE premise hides remaining obligations."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Every converged result now passes the exact checker in validation; empirical residual diagnostics retain their existing allowance but are insufficient for acceptance. Fresh 30-case GPU run yields 27 certified solutions and 5 negative rejections. Kernels and launch runtime unchanged; earlier sanitizer evidence remains separate."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "revised",
+      "reason": "Added exact accepted-result guarantee for represented setup coefficients and distinguished it from native rounded CPU residuals, ideal quadrature and continuous PDE accuracy. Reviewed and updated summary."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Updated remaining status to include Poisson residual certificates while retaining unproved convergence, PDE and binary64 instruction refinement. Existing summaries accurately distinguish proofs and experiments."
+    },
+    {
+      "id": "root",
+      "outcome": "unchanged",
+      "reason": "Read complete description. Existing distinctions between checked definitions, semantic fidelity, completed-result correctness, existence and hardware/runtime boundaries encompass this result certificate without new project promises."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Read complete description and inspected new audit coverage: 91 new public endpoints plus the isolated executable wrapper, pinned dependencies, placeholder guard and only standard logical axioms. No instruction semantics or ISA coverage claim changed. New archive contains authored code/observations, not vendor manual content."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "Read complete description. Reuses the actual TorchLean tensor expression and makes represented-coefficient residual accuracy explicit; does not extend existing byte layouts, launches, backward interfaces or binary32 PTX refinement to binary64."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "5a04e550769555bda3ce6b79d8d20f8175d085b5",
+      "method": "integration/torchlean/check.sh; bash scripts/check.sh; python3 -m unittest discover -s hardware -p test_*.py; fresh validate_poisson.py --ptx-version 9.2; certify_poisson.py on freshly extracted committed archive; independent exact Fraction residual/provenance checks; all-proposed-file distribution guard; Stratic validation and manual proof/scope review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 with existing TorchLean/FloatLib revisions; Python standard library; RTX 5090 sm_120, driver 610.57.04, ptxas 13.2.78, emitted PTX 9.2 and formal target 9.4",
+      "evidence": "Final before/after Stratic trees agree. Integration checked 2585 exact dependency reports and isolated executable main, only standard Lean axioms; root checked 1643. New 91 public proof/definition endpoints and closed GPU fixture are included; no sorry/native_decide/new unchecked axioms. All 14 hardware unit tests passed. Fresh 30-case GPU run:27 converged solutions pass exact requested residual bound and zero boundary, 2 maxiter and 1 expected breakdown remain uncertified; 5 negative certificate controls reject. Independent Python Fraction arithmetic matches all 27 exact Lean residual-squared outputs. Closed Lean acceptance fixture matches original saved GPU words. Archive/member hashes verified; freshly extracted archive recertifies all 27. Current proof/runtime hashes match receipts; kernel/runtime/driver unchanged from prior sanitizer run (sanitizers not rerun). All proposed files/archive members pass distribution guard; Stratic structure/links and git whitespace checks pass. Reviewed represented-coefficient scope, rational-to-real norm proof, exact decoding, ordered TorchLean formulas, and explicit missing PTX byte-memory/barrier/launch refinement, convergence and continuous PDE obligations.",
+      "tests": [],
+      "id": "c8e9a1c8-422a-480d-a621-0b609bed6cb1",
+      "recordedAt": "2026-09-28T16:42:09.873Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T16:42:42.127Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Public status now names the exact accepted-result certificate and retains missing full PTX and PDE guarantees."
+    },
+    {
+      "path": "docs/foundations/poisson-correspondence.md",
+      "reason": "New study guide traces real residual statement, exact represented coefficients, proof endpoints, reproduction and compiler/transport/instruction boundaries."
+    },
+    {
+      "path": "examples/poisson/README.md",
+      "reason": "Replaces stale blanket no-assembly-proof claim with precise ordered algorithm and certificate status; retains unproved convergence and hardware/PDE claims."
+    },
+    {
+      "path": "hardware/certify_poisson.py",
+      "reason": "Reviewed saved-word extraction, artifact verification, pinned rebuild and dependency audit, nonempty converged-case gate, five rejection controls, source stability and explicit failure receipts. No trust in reported residual scalar."
+    },
+    {
+      "path": "hardware/poisson.md",
+      "reason": "Documents mandatory certification and fresh receipt while preserving separate previous sanitizer evidence."
+    },
+    {
+      "path": "hardware/receipts/poisson-certified.json",
+      "reason": "Fresh 30-case run and exact certificate source/artifact hashes; 27 accepted, two maxiter and one breakdown. Explicit not_run sanitizer status."
+    },
+    {
+      "path": "hardware/receipts/poisson-certified.tar.gz",
+      "reason": "Compressed reproducible inputs, authored PTX/binaries, observations, exact checker requests/results and audit. Verified archive/member hashes and distribution guard."
+    },
+    {
+      "path": "hardware/test_poisson_certificate.py",
+      "reason": "Behavioral tests bind serialized exact words to arena and observed solution, ignore residual scalars, and reject corrupt artifacts before building."
+    },
+    {
+      "path": "hardware/validate_poisson.py",
+      "reason": "Adds all Poisson proof sources to hashes and mandatory exact certification after existing diagnostics; recomputes artifact inventory. Existing numerical thresholds unchanged."
+    },
+    {
+      "path": "integration/torchlean/PoissonBinary64.lean",
+      "reason": "Logical Float multiplication commutation and kernel-checked sequential/tree reduction counterexample. Does not claim physical NaN payload or GPU conformance."
+    },
+    {
+      "path": "integration/torchlean/PoissonQuadCorrespondence.lean",
+      "reason": "Reviewed ordered contraction, actual TorchLean cell formula, operand reversal, scatter/gather preservation, eager cell assembly and finite indices. Scalar streams and phase boundaries explicitly stop short of PTX fetch/address/barrier semantics."
+    },
+    {
+      "path": "integration/torchlean/PoissonResidualCertificate.lean",
+      "reason": "Exact represented-coefficient operator, efficient vector implementation equivalence, nonnegative tolerances and zero-boundary gate, rational squared inequality and real norm soundness. No solver-correctness hypothesis."
+    },
+    {
+      "path": "integration/torchlean/PoissonResidualChecks.lean",
+      "reason": "Kernel-reduced proof on an actual saved GPU solution plus wrong-solution and finite/nonfinite decoding guards. No native_decide."
+    },
+    {
+      "path": "integration/torchlean/PoissonResidualInput.lean",
+      "reason": "Exact FloatLib word interpretation, checked shapes and uniform connectivity, derived boundary, acceptance-to-real-bound theorem and rational output. Compiled transport boundary remains explicit."
+    },
+    {
+      "path": "integration/torchlean/PoissonResidualMain.lean",
+      "reason": "Batch executable returns nonzero on any parse/check failure; global main audited in separate environment."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Adds all 91 public Poisson proof/check definitions and theorems to exact axiom audit."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Adds fixed namespace counts and targets, fresh kernel certificate examples, separate executable wrapper audit; existing forbidden-token and pinned-source guards retained."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers six proof/check/wrapper targets and the certificate executable without modifying dependency or toolchain pins."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Reviewed complete description/metadata, summaries, exact passage links and implementation status in the corresponding examined responsibility; no unsupported completion claim."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed complete description/metadata, summaries, exact passage links and implementation status in the corresponding examined responsibility; no unsupported completion claim."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed complete description/metadata, summaries, exact passage links and implementation status in the corresponding examined responsibility; no unsupported completion claim."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed complete description/metadata, summaries, exact passage links and implementation status in the corresponding examined responsibility; no unsupported completion claim."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed complete description/metadata, summaries, exact passage links and implementation status in the corresponding examined responsibility; no unsupported completion claim."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad.json",
+      "reason": "Reviewed complete description/metadata, summaries, exact passage links and implementation status in the corresponding examined responsibility; no unsupported completion claim."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad.md",
+      "reason": "Reviewed complete description/metadata, summaries, exact passage links and implementation status in the corresponding examined responsibility; no unsupported completion claim."
+    }
+  ]
+}

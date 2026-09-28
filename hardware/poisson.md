@@ -10,8 +10,10 @@ The kernels are authored in [poisson_kernels.py](poisson_kernels.py). They are
 **empirically checked against Lean, not exported from a proved PTX program**.
 The existing formal instruction model does not cover this binary64 backend.
 Preserving the source's precision takes priority over reusing its binary32 model.
-No formal numerical-refinement, PCG-convergence or continuous PDE-error theorem
-is claimed, and no performance measurements are included.
+A [proved exact residual checker](../docs/foundations/poisson-correspondence.md)
+certifies accepted results against the represented discrete equations. This
+is separate from instruction refinement, PCG convergence and continuous PDE
+error, which remain unproved. No performance measurements are included.
 
 ## Run and replay
 
@@ -27,9 +29,10 @@ python3 hardware/validate_poisson.py \
 ```
 
 The output directory must be new. This builds the Lean executable, exports the
-30 reference cases, assembles the kernels, runs comparisons, and replays the
+30 reference cases, assembles the kernels, runs comparisons, certifies every
+converged solution with the exact Lean checker, and replays the
 saved binaries under all four sanitizers. Omit `--sanitizers` for numerical
-checks alone. Results, solutions, generated PTX, GPU binaries, launch sequences,
+and exact certificate checks alone. Results, solutions, generated PTX, GPU binaries, launch sequences,
 input buffers and logs remain in the output directory; failures are retained.
 For example, `12-n8-q4/observed.json` contains the recorded Q4 solution. `report.json` lists the authoritative case names and statuses.
 
@@ -63,7 +66,8 @@ is a same-target reproducibility check, not a portability guarantee.
 | Local operator and assembly into global node values | PTX GPU |
 | Vector updates, diagonal division, dot products, coefficients, norms | PTX GPU |
 | Kernel scheduling and convergence-status decisions | Python CPU |
-| Independent residual cross-check on the returned GPU solution | Lean CPU and Python |
+| Rounded residual diagnostic on the returned GPU solution | Lean CPU and Python |
+| Required exact residual certificate | Lean CPU, exact rational arithmetic |
 
 Setup arrays are transferred once. Solver vectors stay in GPU storage through
 iteration; the CPU reads scalar residuals and flags at scheduled checks. A
@@ -128,9 +132,10 @@ Each converged result must satisfy the GPU's requested true-residual tolerance.
 Independently, Lean applies its operator to the GPU solution and Python computes
 the residual norm. Comparing that measurement allows `2e-12 + 2e-10 * residual`;
 corroborating convergence allows an additional absolute `2e-12`. Thus the check
-does not prove that the independently measured residual meets an arbitrarily
-tight requested tolerance exactly. An algebraic residual also differs from the
-error relative to the continuous Poisson equation.
+alone does not prove exact satisfaction of a tighter tolerance. The mandatory
+exact checker now separately establishes the requested residual bound without
+this allowance, using the represented setup and returned solution words. An
+algebraic residual still differs from continuous PDE error.
 
 Input checks and finite index bounds restrict the generated layout. Guard bytes
 surround every logical buffer, and all read-only bytes are checked after solving.
@@ -138,3 +143,21 @@ Sanitizers add evidence about the tested executions; they do not prove memory
 safety for all mesh sizes. The backend uses ordinary weak global/shared loads
 and stores, with CTA barriers and ordered kernel launches for synchronization.
 There is no claimed connection to the project's formal relaxed-access model.
+
+The [certified-run receipt](receipts/poisson-certified.json) records a fresh
+30-case run with this required gate: all 27 converged solutions passed the exact
+bound, and five deliberately invalid inputs were rejected. Two iteration-limit
+cases and one breakdown remain uncertified. The kernels and launch runtime are
+unchanged from the earlier sanitizer run; sanitizers were not rerun for this
+checker addition. The compressed archive includes the exact certificate inputs,
+outputs and proof dependency audit. To inspect or recertify it without a GPU:
+
+```sh
+mkdir -p .hardware-runs/poisson-certified-saved
+sha256sum hardware/receipts/poisson-certified.tar.gz
+# Compare with archive_sha256 in hardware/receipts/poisson-certified.json.
+tar -xzf hardware/receipts/poisson-certified.tar.gz -C .hardware-runs/poisson-certified-saved
+python3 hardware/certify_poisson.py \
+  --run .hardware-runs/poisson-certified-saved/poisson-certified \
+  --output .hardware-runs/poisson-recertified
+```

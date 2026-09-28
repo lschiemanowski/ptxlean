@@ -42,7 +42,7 @@ def run(command,**kw):
 
 
 def sources():
-    paths=[*sorted(INTEGRATION.glob('PoissonQuad*.lean')),ROOT/'hardware/cuda_driver.py',
+    paths=[*sorted(INTEGRATION.glob('Poisson*.lean')),ROOT/'hardware/cuda_driver.py',
            *sorted((ROOT/'hardware').glob('*poisson*.py')),ROOT/'hardware/poisson_runtime.py',
            ROOT/'hardware/poisson_kernels.py',INTEGRATION/'lean-toolchain',
            INTEGRATION/'lake-manifest.json',INTEGRATION/'lakefile.toml']
@@ -176,7 +176,17 @@ def validate(args):
         if sources()!=report['source_sha256']:raise AssertionError('checked sources changed during execution')
         checker.dependencies()
         report['artifacts']={str(p.relative_to(directory)):sha(p) for p in sorted(directory.rglob('*')) if p.is_file() and p.name!='report.json'}
-        report['numerical_status']='pass';report['status']='pass'
+        report['numerical_status']='pass';report['status']='running'
+        save(directory/'report.json',report)
+        # Acceptance of a converged vector now additionally requires the proved
+        # exact residual checker; the GPU's own rounded norm is insufficient.
+        from certify_poisson import certify
+        certificate = certify(directory, directory/'certification')
+        report['certification'] = dict(status=certificate['status'],
+            theorem=certificate['theorem'], cases=len(certificate['checks']),
+            report='certification/certification.json')
+        report['artifacts']={str(p.relative_to(directory)):sha(p) for p in sorted(directory.rglob('*'))
+                             if p.is_file() and p != directory/'report.json'}
         save(directory/'report.json',report)
         if args.sanitizers:
             outcomes={}
@@ -191,6 +201,7 @@ def validate(args):
                 outcomes[tool]=dict(status='pass',log=f'{tool}.log',sha256=sha(directory/f'{tool}.log'))
                 print(f'{tool}: pass',flush=True)
             report['sanitizers']=dict(status='pass',tools=outcomes)
+        report['status']='pass'
         report['completed_at']=datetime.now(timezone.utc).isoformat();save(directory/'report.json',report)
     except BaseException as e:
         report['status']='fail';report['error']=str(e);save(directory/'report.json',report)

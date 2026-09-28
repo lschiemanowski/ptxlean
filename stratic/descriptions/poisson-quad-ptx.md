@@ -52,9 +52,16 @@ storage contains guard bytes around every buffer; inputs and guards are checked
 after solving. These checks and sanitizer runs support the tested executions,
 not a universal memory-safety theorem.
 
-The numerical comparison uses fixed absolute and relative tolerances. A
-converged result must satisfy the GPU's freshly measured residual tolerance.
-Lean separately applies its operator to that result for an independent residual
-comparison. That check allows an absolute 2e-12 measurement discrepancy when
-corroborating convergence; it does not certify exact satisfaction of an
-arbitrarily tighter tolerance in the independent arithmetic.
+The numerical comparison uses fixed absolute and relative tolerances. Rounded
+GPU and Lean residual measurements remain diagnostic comparisons and allow a
+small measurement discrepancy. Acceptance additionally requires the proved
+exact Lean residual checker: the saved setup coefficients and returned solution
+must satisfy the requested bound with no extra allowance and exactly zero
+boundary values. Iteration-limit and breakdown results are not certified.
+
+Correspondence is established in separate layers. The tensor calculation and
+ordered assembly must first agree with the Lean specification without assuming
+associativity of rounded addition. A binary64 instruction interpretation must
+then connect actual register and memory execution to those calculations. The
+parallel dot-product order is part of the GPU algorithm, so the solver's result
+is not required to be bitwise identical to the CPU PCG loop.

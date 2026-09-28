@@ -342,6 +342,10 @@ TARGETS.update(['PtxHardwareDense', 'PtxHardwareDenseChecks', 'HardwareDenseMain
 COUNTS.update({'PtxTorchLean.Poisson': 28, 'PtxTorchLean.Poisson.CLI': 3, 'PtxTorchLean.Poisson.Checks': 1})
 TARGETS.update({'PoissonQuad', 'PoissonQuadCLI', 'PoissonQuadMain', 'PoissonQuadChecks'})
 
+# Poisson ordered computation and exact a posteriori residual certification.
+COUNTS.update({'PtxTorchLean.Poisson.Binary64': 6, 'PtxTorchLean.Poisson.Correspondence': 45, 'PtxTorchLean.Poisson.Certificate': 23, 'PtxTorchLean.Poisson.Certificate.Input': 10, 'PtxTorchLean.Poisson.Certificate.Checks': 7})
+TARGETS.update({'PoissonResidualMain', 'PoissonQuadCorrespondence', 'PoissonBinary64', 'PoissonResidualChecks', 'PoissonResidualInput', 'PoissonResidualCertificate'})
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -404,11 +408,12 @@ def main():
                            cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxHardwareDenseChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonQuadChecks.lean"], cwd=HERE, check=True)
-        # The two executable wrappers both define global `main`, so audit this
-        # second wrapper in a separate environment instead of importing both.
-        wrapper = subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonQuadMain.lean"],
-                                 cwd=HERE, check=True, text=True, stdout=subprocess.PIPE)
-        audit_dependencies(wrapper.stdout, ["main"])
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonResidualChecks.lean"], cwd=HERE, check=True)
+        # Executable wrappers share global main; audit them in separate environments.
+        for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean"):
+            wrapper = subprocess.run(["lake", "--no-cache", "env", "lean", wrapper_file],
+                                     cwd=HERE, check=True, text=True, stdout=subprocess.PIPE)
+            audit_dependencies(wrapper.stdout, ["main"])
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(audit.stdout, end="", flush=True)

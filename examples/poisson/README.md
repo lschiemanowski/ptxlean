@@ -104,11 +104,12 @@ vectors, sources and solver options are checked.
 The local tensor definitions are generic in the scalar type and can also be
 instantiated over exact real numbers. That is distinct from the executable
 binary64 solver. The small zero-boundary helper has Lean proofs for boundary
-and interior entries and is used in the executable extension. There is **no
-proof yet** of the full assembly, conjugate-gradient convergence, finite-element
-error, continuous PDE solution, numerical equivalence to Python, or hardware
-behavior. Native arithmetic and transcendental functions are exercised by tests,
-not certified by those boundary lemmas.
+and interior entries and is used in the executable extension. The [correspondence proofs](../../docs/foundations/poisson-correspondence.md)
+now relate ordered cell calculations and assembly to that tensor definition,
+and a proved exact residual checker certifies accepted GPU solutions for the
+represented setup coefficients. Conjugate-gradient convergence, finite-element
+error, continuous PDE correctness, numerical equivalence to Python and full
+PTX instruction correspondence remain unproved.
 
 The consequential setup difference is quadrature: Python diagonalizes a small
 Legendre recurrence matrix; Lean uses bounded Newton iteration on the Legendre

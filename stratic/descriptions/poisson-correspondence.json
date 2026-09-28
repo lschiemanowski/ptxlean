@@ -1,0 +1,127 @@
+{
+  "id": "poisson-correspondence",
+  "parent": {
+    "description": "poisson-quad-ptx",
+    "passage": {
+      "quote": "Correspondence is established in separate layers. The tensor calculation and\nordered assembly must first agree with the Lean specification without assuming\nassociativity of rounded addition. A binary64 instruction interpretation must\nthen connect actual register and memory execution to those calculations. The\nparallel dot-product order is part of the GPU algorithm, so the solver's result\nis not required to be bitwise identical to the CPU PCG loop."
+    }
+  },
+  "summary": [
+    "Prove that accepted binary64 solutions have zero boundary and satisfy the exact requested residual bound for the represented discrete equations.",
+    "Connect ordered cell calculations and assembly to TorchLean without assuming associativity of rounded addition; preserve the distinct GPU reduction order.",
+    "Reject malformed or nonfinite certificate input; keep compiled checking and saved GPU provenance distinct from kernel-checked proofs.",
+    "Leave binary64 PTX instruction, memory and launch refinement explicit as remaining work."
+  ],
+  "realization": "partial",
+  "remaining": "Fetched binary64 PTX execution, byte-memory addresses, shared-memory barriers and host launches are not yet proved to refine the ordered algorithm. The accepted-result certificate does not promise solver convergence, guaranteed acceptance, or continuous PDE accuracy.",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A correspondence proof must explain what the GPU computes, rather than assume\nthat an operator call already has the right answer. The local cell calculation\nuses five phases separated by barriers. Each lane computes one matrix entry,\nwith a sequential sequence of multiply and add operations. The proof relates\nthat ordered calculation to the actual TorchLean matrix-product definition.\nIt must not rearrange rounded sums using identities valid only over real numbers."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonQuadCorrespondence.lean",
+        "passage": {
+          "quote": "theorem cell_float_correspondence (b d w u : Mat Float n n) :\n    cell (entries b) (entries d) (entries w) (entries u) =\n      entries (localAction b d w u) :=\n  cell_correspondence Binary64.mul_comm b d w u"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Assembly adds the contributions for a global node in element order. Filtering\nother nodes' contributions out of that order must preserve its value even when\naddition is not associative. Writes to different nodes may be scheduled in any\norder because each node has one writer."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonQuadCorrespondence.lean",
+        "passage": {
+          "quote": "theorem scatter_gather [DecidableEq ι] [Add α]\n    (contributions : List (ι × α)) (s : ι → α) (node : ι) :\n    (contributions.foldl scatterStep s) node =\n      (contributions.filter fun entry => entry.1 == node).foldl\n        (fun acc entry => acc + entry.2) (s node) := by\n  induction contributions generalizing s with\n  | nil => rfl\n  | cons x xs ih =>\n    simp only [List.foldl_cons, ih]\n    by_cases h : x.1 = node\n    · simp [h, scatterStep]\n    · simp [h, scatterStep, Function.update_of_ne (Ne.symm h)]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The GPU's dot product partitions inputs among 256 lanes, then combines partial\nsums in a tree. That ordering belongs to its numerical specification. Agreement\nwith a sequential CPU dot product is not a universal bitwise property. The\nsolver must be related to its own rounded operations and fresh residual check;\na different iteration history is not itself a correctness failure."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonBinary64.lean",
+        "passage": {
+          "quote": "theorem reduction_order_counterexample :\n    (([0,1,2,3] : List Nat).foldl (fun acc i => acc + cancellation i) (Float.ofBits 0)).toBits =\n      0x3ff0000000000000 ∧\n    (reduce256 cancellation).toBits = 0x4000000000000000 := by\n  decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Binary64 arithmetic uses the pinned Lean logical Float model. FloatLib supplies\nthe exact dyadic decoding used by the residual checker and proved arithmetic\nbridges under explicit finiteness conditions.\nThose logical bridges do not themselves establish the behavior of a compiler\nor physical GPU."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonResidualInput.lean",
+        "passage": {
+          "quote": "theorem decodeWord_real (word : BitVec 64) (q : ℚ) (h : decodeWord word = some q) :\n    (q : ℝ) = (Model.ofBits word : Model FloatFormat.binary64).toReal := by\n  unfold decodeWord at h\n  cases hd : (Model.ofBits word : Model FloatFormat.binary64).toDyadic? with\n  | none => simp [hd] at h\n  | some d =>\n    simp only [hd, Option.map_some, Option.some.injEq] at h\n    rw [← h, FloatLib.Numerics.Dyadic.cast_toRat, Model.toReal_eq, hd]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The accepted whole-solver guarantee is an a posteriori residual certificate: a\ncheck of the actual returned solution, independent of how the solver obtained\nit. Exact rational arithmetic interprets the saved binary64 basis, derivative,\nweight, load and solution words. NaNs, infinities, malformed shapes and altered\nuniform connectivity are rejected. The coefficient values are the represented\nsetup values, not ideal quadrature recomputed over real numbers."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonResidualInput.lean",
+        "passage": {
+          "quote": "def parse (j : Json) : Except String Request := do\n  let side ← natField j \"n\"\n  let degree ← natField j \"degree\"\n  if side == 0 || degree < 1 || degree > 4 then throw \"expected positive n and degree 1..4\"\n  let m := degree+1\n  let width := side*degree+1\n  let v := width*width\n  let e := side*side\n  let cellsJson ← (← field j \"cells\").getArr?\n  let cells ← cellsJson.mapM fun value => do\n    let k ← value.getNat?\n    if h : k < v then pure (⟨k,h⟩ : Fin v) else throw \"cell node outside mesh\"\n  let cells ← sized cells ((e*m)*m)\n  let b ← sized (← words j \"B\") (m*m)\n  let d ← sized (← words j \"D\") (m*m)\n  let w ← sized (← words j \"W\") (m*m)\n  let rhs ← sized (← words j \"load\") v\n  let x ← sized (← words j \"solution\") v\n  let rtol ← decode (← field j \"rtol\")\n  let atol ← decode (← field j \"atol\")\n  let mesh : Connectivity e m v := ⟨fun element i j => cells (index (index element i) j)⟩\n  -- Reject a different mesh even when its indices are in range.\n  for element in List.finRange e do\n    for i in List.finRange m do\n      for k in List.finRange m do\n        let expected := (element.val/side*degree+i.val)*width+element.val%side*degree+k.val\n        if (mesh.node element i k).val != expected then throw \"nonuniform connectivity\"\n  let p : Problem e m v := {\n    mesh := mesh\n    b := matrix fun i j => b (index i j)\n    d := matrix fun i j => d (index i j)\n    w := matrix fun i j => w (index i j)\n    rhs := rhs\n    boundary := fun i => i.val%width == 0 || i.val%width == width-1 || i.val/width == 0 || i.val/width == width-1\n    rtol := rtol, atol := atol }\n  return ⟨e,m,v,p,x⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Acceptance requires zero boundary values and\n`‖b − A x‖₂ ≤ max(atol, rtol · ‖b‖₂)` on interior nodes, where A uses the\nTorchLean tensor operator in exact arithmetic. The check compares squared\nrational quantities, avoiding any rounded square root or empirical allowance.\nThe soundness theorem applies to every accepted vector and does not assume\nPTX correctness, PCG convergence or agreement with the CPU iteration history.\nAll rounding in the returned solution is included by checking its exact stored\nvalues. Successful GPU status alone is insufficient for acceptance."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonResidualCertificate.lean",
+        "passage": {
+          "quote": "theorem certified_residual (p : Problem e n v) (x : Fin v → ℚ)\n    (accepted : check p x = true) :\n    (∀ i, p.boundary i = true → x i = 0) ∧\n      realNorm (residual p x) ≤\n        max (p.atol : ℝ) ((p.rtol : ℝ) * realNorm (fun i => if p.boundary i then 0 else p.rhs i)) := by\n  obtain ⟨ha,hr,hboundary,hbound⟩ := check_sound p x accepted\n  refine ⟨hboundary, ?_⟩\n  have ha' : (0 : ℝ) ≤ p.atol := by exact_mod_cast ha\n  have hr' : (0 : ℝ) ≤ p.rtol := by exact_mod_cast hr\n  have bound : ((squareSum (residual p x) : ℚ) : ℝ) ≤ ((thresholdSquare p : ℚ) : ℝ) := by exact_mod_cast hbound\n  apply (Real.sqrt_le_sqrt bound).trans_eq\n  simp only [thresholdSquare, Rat.cast_max, Rat.cast_mul]\n  rw [(show Monotone Real.sqrt from fun _ _ h => Real.sqrt_le_sqrt h).map_max, Real.sqrt_mul (mul_nonneg hr' hr')]\n  simp only [Real.sqrt_mul_self ha', Real.sqrt_mul_self hr', realNorm, rhsSquare]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Acceptance requires zero boundary values and\n`‖b − A x‖₂ ≤ max(atol, rtol · ‖b‖₂)` on interior nodes, where A uses the\nTorchLean tensor operator in exact arithmetic. The check compares squared\nrational quantities, avoiding any rounded square root or empirical allowance.\nThe soundness theorem applies to every accepted vector and does not assume\nPTX correctness, PCG convergence or agreement with the CPU iteration history.\nAll rounding in the returned solution is included by checking its exact stored\nvalues. Successful GPU status alone is insufficient for acceptance."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonResidualCertificate.lean",
+        "passage": {
+          "quote": "def computedApply (p : Problem e n v) (x : Fin v → ℚ) : Vector ℚ v :=\n  (tensorContributions p.mesh p.b p.d p.w x).foldl scatterVectorStep (Vector.replicate v 0)\n\ntheorem computedApply_get (p : Problem e n v) (x : Fin v → ℚ) (i : Fin v) :\n    (computedApply p x)[i] = exactApply p x i := by\n  have h := congrFun (scatterVector_fold (tensorContributions p.mesh p.b p.d p.w x)\n    (Vector.replicate v 0)) i\n  simpa [computedApply, exactApply, tensorOperator] using h"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Acceptance requires zero boundary values and\n`‖b − A x‖₂ ≤ max(atol, rtol · ‖b‖₂)` on interior nodes, where A uses the\nTorchLean tensor operator in exact arithmetic. The check compares squared\nrational quantities, avoiding any rounded square root or empirical allowance.\nThe soundness theorem applies to every accepted vector and does not assume\nPTX correctness, PCG convergence or agreement with the CPU iteration history.\nAll rounding in the returned solution is included by checking its exact stored\nvalues. Successful GPU status alone is insufficient for acceptance."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonResidualInput.lean",
+        "passage": {
+          "quote": "theorem acceptedRequest_sound (j : Json) (h : acceptedRequest j = true) :\n    ∃ (e n v : Nat) (p : Problem e n v) (x : Fin v → ℚ),\n      parse j = .ok ⟨e,n,v,p,x⟩ ∧\n      (∀ i, p.boundary i = true → x i = 0) ∧\n      realNorm (residual p x) ≤\n        max (p.atol : ℝ) ((p.rtol : ℝ) * realNorm (fun i => if p.boundary i then 0 else p.rhs i)) := by\n  cases hp : parse j with\n  | error error => simp [acceptedRequest,hp] at h\n  | ok request =>\n    rcases request with ⟨e,n,v,p,x⟩\n    exact ⟨e,n,v,p,x,rfl,certified_residual p x (by simpa [acceptedRequest,hp] using h)⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This establishes a result certificate, not an instruction-refinement theorem.\nIt does not prove that every GPU execution will terminate or pass the check,\nand it gives no continuous PDE error or conditioning-based solution-error bound.\nCompiled checker execution, input/output transport, and a particular saved GPU\nrun retain their stated runtime and provenance boundaries."
+      },
+      "to": {
+        "path": "hardware/certify_poisson.py",
+        "passage": {
+          "quote": "def certify(run_directory, output):\n    run_directory = run_directory.resolve()\n    output = output.resolve()\n    output.mkdir(parents=True, exist_ok=False)\n    source_hashes = proof_sources()\n    report = {'schema_version': 1, 'status': 'running', 'checks': [], 'skipped': [],\n              'proof_sources_sha256': source_hashes,\n              'theorem': 'PtxTorchLean.Poisson.Certificate.certified_residual',\n              'claim': 'Exact requested residual bound and zero boundary for represented setup coefficients; no PDE or PTX trace theorem.'}\n    try:\n        run = json.loads((run_directory / 'report.json').read_text())\n        if run['numerical_status'] != 'pass':\n            raise ValueError('requires a completed numerical run')\n        for name, expected in run['artifacts'].items():\n            path = run_directory / name\n            path.resolve().relative_to(run_directory)\n            if digest(path) != expected:\n                raise ValueError(f'artifact hash mismatch: {name}')\n        report['run_artifacts'] = run['artifacts']\n        version, log = build()\n        report['lean_version'] = version\n        (output / 'build.log').write_text(log)\n        selected = []\n        for case in run['cases']:\n            folder = run_directory / case['directory']\n            observed = json.loads((folder / 'observed.json').read_text())\n            if observed['reason'] != case['reason']:\n                raise ValueError('case status mismatch')\n            if observed['reason'] == 'converged':\n                selected.append((case['directory'], request(folder)))\n            else:\n                report['skipped'].append({'directory': case['directory'], 'reason': observed['reason']})\n        if not selected:\n            raise ValueError('no converged results to certify')\n        status, results = run_checker([r for _, r in selected], output / 'inputs.json', output / 'outputs.json')\n        if len(results) != len(selected):\n            raise ValueError('certificate count mismatch')\n        for (name, _), result in zip(selected, results, strict=True):\n            report['checks'].append({'directory': name, **result})\n        if status or any(r.get('accepted') is not True for r in results):\n            raise AssertionError('a GPU result failed the exact residual/boundary certificate')\n\n        # Negative controls bind acceptance to values, boundary, shape and finite\n        # decoding. They cannot pass merely because the source run said converged.\n        sample = next(r for _, r in selected if r['n'] == 2 and r['degree'] == 1)\n        bad_boundary = copy.deepcopy(sample)\n        bad_boundary['solution'][0] = 0x3ff0000000000000\n        bad_interior = copy.deepcopy(sample)\n        bad_interior['solution'][4] = 0\n        nonfinite = copy.deepcopy(sample)\n        nonfinite['W'][0] = 0x7ff0000000000000\n        wrong_shape = copy.deepcopy(sample)\n        wrong_shape['B'].pop()\n        bad_mesh = copy.deepcopy(sample)\n        bad_mesh['cells'][0] = 1\n        status, rejected = run_checker([bad_boundary, bad_interior, nonfinite, wrong_shape, bad_mesh],\n                                       output / 'negative-inputs.json', output / 'negative-outputs.json')\n        if status == 0 or len(rejected) != 5 or any(r.get('accepted') is True for r in rejected):\n            raise AssertionError('negative certificate controls were not rejected')\n        report['negative_controls'] = ['nonzero boundary', 'wrong interior solution',\n                                       'nonfinite weight', 'wrong basis shape', 'wrong connectivity']\n        if proof_sources() != source_hashes:\n            raise AssertionError('proof/checker sources changed during certification')\n        report['artifacts'] = {p.name: digest(p) for p in sorted(output.iterdir()) if p.is_file()}\n        report['status'] = 'pass'\n        save(output / 'certification.json', report)\n        print(f'Exact Lean residual certificates passed: {len(results)} GPU solutions; 5 negative controls rejected.', flush=True)\n        return report\n    except BaseException as e:\n        report['status'] = 'fail'\n        report['error'] = str(e)\n        save(output / 'certification.json', report)\n        raise"
+        }
+      }
+    }
+  ]
+}

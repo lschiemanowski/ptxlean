@@ -1,3 +1,8 @@
+import PoissonBinary64
+import PoissonQuadCorrespondence
+import PoissonResidualCertificate
+import PoissonResidualInput
+import PoissonResidualChecks
 import PoissonQuadCLI
 import PoissonQuadChecks
 import PtxHardwareDense
@@ -2812,3 +2817,96 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.CLI.evaluate
 #print axioms PtxTorchLean.Poisson.CLI.run
 #print axioms PtxTorchLean.Poisson.Checks.run
+
+-- Poisson computation and exact residual certification (no PTX trace refinement).
+#print axioms PtxTorchLean.Poisson.Binary64.unpacked_mul_comm
+#print axioms PtxTorchLean.Poisson.Binary64.mul_comm
+#print axioms PtxTorchLean.Poisson.Binary64.round
+#print axioms PtxTorchLean.Poisson.Binary64.reduce256
+#print axioms PtxTorchLean.Poisson.Binary64.cancellation
+#print axioms PtxTorchLean.Poisson.Binary64.reduction_order_counterexample
+#print axioms PtxTorchLean.Poisson.Correspondence.Registers
+#print axioms PtxTorchLean.Poisson.Correspondence.Op
+#print axioms PtxTorchLean.Poisson.Correspondence.step
+#print axioms PtxTorchLean.Poisson.Correspondence.run
+#print axioms PtxTorchLean.Poisson.Correspondence.contractionCode
+#print axioms PtxTorchLean.Poisson.Correspondence.contraction_correct
+#print axioms PtxTorchLean.Poisson.Correspondence.Grid
+#print axioms PtxTorchLean.Poisson.Correspondence.contraction
+#print axioms PtxTorchLean.Poisson.Correspondence.contraction_eq_fold
+#print axioms PtxTorchLean.Poisson.Correspondence.product
+#print axioms PtxTorchLean.Poisson.Correspondence.transposed
+#print axioms PtxTorchLean.Poisson.Correspondence.weighted
+#print axioms PtxTorchLean.Poisson.Correspondence.summed
+#print axioms PtxTorchLean.Poisson.Correspondence.entries
+#print axioms PtxTorchLean.Poisson.Correspondence.entries_matrix
+#print axioms PtxTorchLean.Poisson.Correspondence.entries_product
+#print axioms PtxTorchLean.Poisson.Correspondence.entries_transpose
+#print axioms PtxTorchLean.Poisson.Correspondence.entries_weighted
+#print axioms PtxTorchLean.Poisson.Correspondence.entries_summed
+#print axioms PtxTorchLean.Poisson.Correspondence.Planes
+#print axioms PtxTorchLean.Poisson.Correspondence.phase1
+#print axioms PtxTorchLean.Poisson.Correspondence.phase2
+#print axioms PtxTorchLean.Poisson.Correspondence.phase3
+#print axioms PtxTorchLean.Poisson.Correspondence.phase4
+#print axioms PtxTorchLean.Poisson.Correspondence.phase5
+#print axioms PtxTorchLean.Poisson.Correspondence.cell
+#print axioms PtxTorchLean.Poisson.Correspondence.cell_correspondence
+#print axioms PtxTorchLean.Poisson.Correspondence.cell_float_correspondence
+#print axioms PtxTorchLean.Poisson.Correspondence.scatterStep
+#print axioms PtxTorchLean.Poisson.Correspondence.scatter_gather
+#print axioms PtxTorchLean.Poisson.Correspondence.assemble
+#print axioms PtxTorchLean.Poisson.Correspondence.assembly_correspondence
+#print axioms PtxTorchLean.Poisson.Correspondence.distinct_writers_commute
+#print axioms PtxTorchLean.Poisson.Correspondence.Connectivity
+#print axioms PtxTorchLean.Poisson.Correspondence.gathered
+#print axioms PtxTorchLean.Poisson.Correspondence.contributions
+#print axioms PtxTorchLean.Poisson.Correspondence.operator
+#print axioms PtxTorchLean.Poisson.Correspondence.tensorContributions
+#print axioms PtxTorchLean.Poisson.Correspondence.tensorOperator
+#print axioms PtxTorchLean.Poisson.Correspondence.operator_correspondence
+#print axioms PtxTorchLean.Poisson.Correspondence.operator_float_correspondence
+#print axioms PtxTorchLean.Poisson.Correspondence.interior_float_correspondence
+#print axioms PtxTorchLean.Poisson.Correspondence.row_major_bound
+#print axioms PtxTorchLean.Poisson.Correspondence.row_major_injective
+#print axioms PtxTorchLean.Poisson.Correspondence.shared_offset_bound
+#print axioms PtxTorchLean.Poisson.Certificate.Problem
+#print axioms PtxTorchLean.Poisson.Certificate.exactApply
+#print axioms PtxTorchLean.Poisson.Certificate.residual
+#print axioms PtxTorchLean.Poisson.Certificate.squareSum
+#print axioms PtxTorchLean.Poisson.Certificate.rhsSquare
+#print axioms PtxTorchLean.Poisson.Certificate.thresholdSquare
+#print axioms PtxTorchLean.Poisson.Certificate.Accepts
+#print axioms PtxTorchLean.Poisson.Certificate.scatterVectorStep
+#print axioms PtxTorchLean.Poisson.Certificate.scatterVectorStep_get
+#print axioms PtxTorchLean.Poisson.Certificate.scatterVector_fold
+#print axioms PtxTorchLean.Poisson.Certificate.computedApply
+#print axioms PtxTorchLean.Poisson.Certificate.computedApply_get
+#print axioms PtxTorchLean.Poisson.Certificate.computedResidual
+#print axioms PtxTorchLean.Poisson.Certificate.computedResidual_get
+#print axioms PtxTorchLean.Poisson.Certificate.computedSquare
+#print axioms PtxTorchLean.Poisson.Certificate.computedSquare_eq
+#print axioms PtxTorchLean.Poisson.Certificate.check
+#print axioms PtxTorchLean.Poisson.Certificate.realNorm
+#print axioms PtxTorchLean.Poisson.Certificate.check_sound
+#print axioms PtxTorchLean.Poisson.Certificate.squareSum_eq_sum
+#print axioms PtxTorchLean.Poisson.Certificate.squareSum_nonneg
+#print axioms PtxTorchLean.Poisson.Certificate.realNorm_eq
+#print axioms PtxTorchLean.Poisson.Certificate.certified_residual
+#print axioms PtxTorchLean.Poisson.Certificate.Input.decodeWord
+#print axioms PtxTorchLean.Poisson.Certificate.Input.decodeWord_real
+#print axioms PtxTorchLean.Poisson.Certificate.Input.decode
+#print axioms PtxTorchLean.Poisson.Certificate.Input.sized
+#print axioms PtxTorchLean.Poisson.Certificate.Input.index
+#print axioms PtxTorchLean.Poisson.Certificate.Input.Request
+#print axioms PtxTorchLean.Poisson.Certificate.Input.parse
+#print axioms PtxTorchLean.Poisson.Certificate.Input.acceptedRequest
+#print axioms PtxTorchLean.Poisson.Certificate.Input.acceptedRequest_sound
+#print axioms PtxTorchLean.Poisson.Certificate.Input.evaluate
+#print axioms PtxTorchLean.Poisson.Certificate.Checks.recordedGpuInput
+#print axioms PtxTorchLean.Poisson.Certificate.Checks.recorded_gpu_accepted
+#print axioms PtxTorchLean.Poisson.Certificate.Checks.wrongInteriorInput
+#print axioms PtxTorchLean.Poisson.Certificate.Checks.wrong_interior_rejected
+#print axioms PtxTorchLean.Poisson.Certificate.Checks.finite_word_exact
+#print axioms PtxTorchLean.Poisson.Certificate.Checks.infinity_rejected
+#print axioms PtxTorchLean.Poisson.Certificate.Checks.nan_rejected

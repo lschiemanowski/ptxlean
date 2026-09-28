@@ -47,3 +47,10 @@ A separate binary64 PTX backend runs the repeated matrix-free operator and
 conjugate-gradient arithmetic on the GPU, using the Lean reference for mesh,
 quadrature, load and diagonal setup. Its empirical comparison, memory checks
 and execution evidence are distinct from a formal PTX correspondence theorem.
+
+Accepted GPU solutions additionally pass a proved exact residual checker. It
+uses the rational values represented by the saved binary64 setup and solution,
+requiring zero boundary values and the requested bound for the discrete
+interior equations. This certificate accounts for the returned rounding errors
+without claiming identical CPU/GPU iterates, guaranteed convergence, or
+accuracy relative to the continuous equation.

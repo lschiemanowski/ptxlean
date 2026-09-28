@@ -1,0 +1,1605 @@
+{
+  "schema_version": 1,
+  "run_report": {
+    "schema_version": 1,
+    "status": "pass",
+    "numerical_status": "pass",
+    "cases": [
+      {
+        "directory": "00-n1-q1",
+        "request": {
+          "n": 1,
+          "degree": 1
+        },
+        "reason": "converged",
+        "iterations": 0,
+        "relative_residual": 0.0,
+        "independent_lean_residual": 0.0,
+        "restarts": 0,
+        "launch_count": 6,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 0.0
+      },
+      {
+        "directory": "01-n2-q1",
+        "request": {
+          "n": 2,
+          "degree": 1
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 1.3565337194181477e-16,
+        "independent_lean_residual": 4.440892098500626e-16,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 0.0
+      },
+      {
+        "directory": "02-n4-q1",
+        "request": {
+          "n": 4,
+          "degree": 1
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 4.1721820209840973e-16,
+        "independent_lean_residual": 9.28879225241625e-16,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 2.220446049250313e-16
+      },
+      {
+        "directory": "03-n1-q2",
+        "request": {
+          "n": 1,
+          "degree": 2
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 1.6545357093918965e-16,
+        "independent_lean_residual": 8.881784197001252e-16,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 0.0
+      },
+      {
+        "directory": "04-n2-q2",
+        "request": {
+          "n": 2,
+          "degree": 2
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 3.4629247865965186e-16,
+        "independent_lean_residual": 9.019494489765868e-16,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 2.220446049250313e-16
+      },
+      {
+        "directory": "05-n4-q2",
+        "request": {
+          "n": 4,
+          "degree": 2
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 1.4600895027420305e-15,
+        "independent_lean_residual": 1.9767446127831646e-15,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 4.440892098500626e-16
+      },
+      {
+        "directory": "06-n1-q3",
+        "request": {
+          "n": 1,
+          "degree": 3
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 1.5300932290732522e-16,
+        "independent_lean_residual": 6.280369834735101e-16,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 0.0
+      },
+      {
+        "directory": "07-n2-q3",
+        "request": {
+          "n": 2,
+          "degree": 3
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 8.775027243420018e-16,
+        "independent_lean_residual": 1.6200794203405353e-15,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 2.220446049250313e-16
+      },
+      {
+        "directory": "08-n4-q3",
+        "request": {
+          "n": 4,
+          "degree": 3
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 4.819517297732745e-15,
+        "independent_lean_residual": 4.458713150836863e-15,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 1.6653345369377348e-15
+      },
+      {
+        "directory": "09-n1-q4",
+        "request": {
+          "n": 1,
+          "degree": 4
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 3.4420790750747732e-16,
+        "independent_lean_residual": 1.121270291988505e-15,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 2.220446049250313e-16
+      },
+      {
+        "directory": "10-n2-q4",
+        "request": {
+          "n": 2,
+          "degree": 4
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 3.8797302832063815e-15,
+        "independent_lean_residual": 5.449633178560697e-15,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 2.220446049250313e-16
+      },
+      {
+        "directory": "11-n4-q4",
+        "request": {
+          "n": 4,
+          "degree": 4
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 9.229878800980095e-15,
+        "independent_lean_residual": 6.482131797464844e-15,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 3.3306690738754696e-16
+      },
+      {
+        "directory": "12-n8-q4",
+        "request": {
+          "n": 8,
+          "degree": 4
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 3.765832936628598e-14,
+        "independent_lean_residual": 1.3223641195327599e-14,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 2.220446049250313e-15
+      },
+      {
+        "directory": "13-n2-q1",
+        "request": {
+          "n": 2,
+          "degree": 1,
+          "source": "polynomial"
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 0.0,
+        "independent_lean_residual": 0.0,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 0.0
+      },
+      {
+        "directory": "14-n2-q2",
+        "request": {
+          "n": 2,
+          "degree": 2,
+          "source": "polynomial"
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 6.714935906826808e-16,
+        "independent_lean_residual": 1.2586013583571652e-16,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 6.938893903907228e-18,
+        "polynomial_max_absolute_error": 1.3877787807814457e-17
+      },
+      {
+        "directory": "15-n2-q3",
+        "request": {
+          "n": 2,
+          "degree": 3,
+          "source": "polynomial"
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 9.546419293643883e-16,
+        "independent_lean_residual": 1.2571958845984296e-16,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 1.3877787807814457e-17,
+        "polynomial_max_absolute_error": 2.0816681711721685e-17
+      },
+      {
+        "directory": "16-n2-q4",
+        "request": {
+          "n": 2,
+          "degree": 4,
+          "source": "polynomial"
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 2.212644996832435e-15,
+        "independent_lean_residual": 2.225218186981889e-16,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 2.0816681711721685e-17,
+        "polynomial_max_absolute_error": 3.469446951953614e-17
+      },
+      {
+        "directory": "17-n2-q2",
+        "request": {
+          "n": 2,
+          "degree": 2,
+          "source": "zero"
+        },
+        "reason": "converged",
+        "iterations": 0,
+        "relative_residual": 0.0,
+        "independent_lean_residual": 0.0,
+        "restarts": 0,
+        "launch_count": 6,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 0.0
+      },
+      {
+        "directory": "18-n2-q2",
+        "request": {
+          "n": 2,
+          "degree": 2,
+          "maxiter": 0
+        },
+        "reason": "maxiter",
+        "iterations": 0,
+        "relative_residual": 1.0,
+        "independent_lean_residual": 2.604588619619006,
+        "restarts": 0,
+        "launch_count": 6,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 0.0
+      },
+      {
+        "directory": "19-n2-q2",
+        "request": {
+          "n": 2,
+          "degree": 2,
+          "maxiter": 1,
+          "rtol": 1e-30
+        },
+        "reason": "maxiter",
+        "iterations": 1,
+        "relative_residual": 0.37846330811877704,
+        "independent_lean_residual": 0.985741225269528,
+        "restarts": 0,
+        "launch_count": 20,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 3.3306690738754696e-16
+      },
+      {
+        "directory": "20-n2-q2",
+        "request": {
+          "n": 2,
+          "degree": 2,
+          "source": "polynomial",
+          "check_every": 1
+        },
+        "reason": "converged",
+        "iterations": 3,
+        "relative_residual": 6.714935906826808e-16,
+        "independent_lean_residual": 1.2586013583571652e-16,
+        "restarts": 0,
+        "launch_count": 48,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 6.938893903907228e-18,
+        "polynomial_max_absolute_error": 1.3877787807814457e-17
+      },
+      {
+        "directory": "21-n2-q2",
+        "request": {
+          "n": 2,
+          "degree": 2,
+          "source": "constant"
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 2.7511642410880956e-16,
+        "independent_lean_residual": 6.877910602720239e-17,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 1.3877787807814457e-17
+      },
+      {
+        "directory": "22-n3-q1",
+        "request": {
+          "n": 3,
+          "degree": 1
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 1.6204561847961865e-16,
+        "independent_lean_residual": 4.440892098500626e-16,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 0.0
+      },
+      {
+        "directory": "23-n3-q2",
+        "request": {
+          "n": 3,
+          "degree": 2
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 8.335838744333432e-16,
+        "independent_lean_residual": 1.4900375968040556e-15,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 2.220446049250313e-16
+      },
+      {
+        "directory": "24-n3-q3",
+        "request": {
+          "n": 3,
+          "degree": 3
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 2.6885646649697156e-15,
+        "independent_lean_residual": 3.315324793910119e-15,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 4.440892098500626e-16
+      },
+      {
+        "directory": "25-n3-q4",
+        "request": {
+          "n": 3,
+          "degree": 4
+        },
+        "reason": "converged",
+        "iterations": 10,
+        "relative_residual": 4.944845834826517e-15,
+        "independent_lean_residual": 4.6303820226178355e-15,
+        "restarts": 0,
+        "launch_count": 101,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 1.6653345369377348e-15
+      },
+      {
+        "directory": "26-n8-q4",
+        "request": {
+          "n": 8,
+          "degree": 4,
+          "source": "constant",
+          "check_every": 3,
+          "maxiter": 200
+        },
+        "reason": "converged",
+        "iterations": 72,
+        "relative_residual": 6.285250393856372e-11,
+        "independent_lean_residual": 2.226389910925629e-12,
+        "restarts": 0,
+        "launch_count": 774,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 3.122502256758253e-16
+      },
+      {
+        "directory": "27-n16-q2",
+        "request": {
+          "n": 16,
+          "degree": 2,
+          "source": "constant",
+          "check_every": 7,
+          "maxiter": 200
+        },
+        "reason": "converged",
+        "iterations": 56,
+        "relative_residual": 7.384844969810798e-11,
+        "independent_lean_residual": 2.5321300026695013e-12,
+        "restarts": 0,
+        "launch_count": 550,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 1.3877787807814457e-16
+      },
+      {
+        "directory": "28-n4-q3",
+        "request": {
+          "n": 4,
+          "degree": 3,
+          "source": "constant",
+          "rtol": 1e-14,
+          "check_every": 1,
+          "maxiter": 200
+        },
+        "reason": "converged",
+        "iterations": 21,
+        "relative_residual": 7.313348360977442e-15,
+        "independent_lean_residual": 6.729296234927162e-16,
+        "restarts": 0,
+        "launch_count": 300,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 8.326672684688674e-17
+      },
+      {
+        "directory": "29-n2-q2",
+        "request": {
+          "n": 2,
+          "degree": 2,
+          "load": [
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308,
+            1e+308
+          ]
+        },
+        "reason": "breakdown",
+        "iterations": 0,
+        "relative_residual": null,
+        "independent_lean_residual": null,
+        "restarts": 0,
+        "launch_count": 6,
+        "operator_max_absolute_difference": 0.0,
+        "solution_max_absolute_difference": 0.0
+      }
+    ],
+    "artifacts": {
+      "00-n1-q1/arena.bin": "8d2e0cd3646b8b17e17df87ba4d242e9fa62cb5ba4745364dfd1dc58310982e1",
+      "00-n1-q1/assembler.log": "1f4a56e4dbb75a227014a99c82f693c703546266be6e2124e1a7d52b3683968c",
+      "00-n1-q1/kernel.cubin": "e2bea842ca496d817c698602cd49a691d2a33f32d7f234a1e4c853681a69ea02",
+      "00-n1-q1/kernel.ptx": "c4fe7d761eac775d3ffc6272a64e7127cec552404d5f8e24fd20fc91d042cf80",
+      "00-n1-q1/layout.json": "3c5800406cb9b356ccbe62b5fcb2b71a5240fa879170093f8795b9d46f21203c",
+      "00-n1-q1/observed.json": "25ffd3fafdc65250d6b1147262666a7651db597723426e836200225844adfc01",
+      "00-n1-q1/reference.json": "632f4d45e00f87674ec8d68e7741fb98f216357f26da3c4c912e3ab5e041db8d",
+      "00-n1-q1/request.json": "9b5ca3e629f0b9c95c444e6efa321b651d7b3b10501130f84d6815b6e95fa41c",
+      "00-n1-q1/residual-reference.json": "ba739c3fd6495005c5c6f9dfe345b3a2b2aa0cf5d21fce4dffd6a080206db644",
+      "00-n1-q1/residual-request.json": "36909f2b96ec4cb5867728c55ff962df5a117e30bec3ad9566e4500c5e99e904",
+      "01-n2-q1/arena.bin": "3384f7241484285f6ea09c20dd6f3fcb63c9ab924e197635ee6593905138f53e",
+      "01-n2-q1/assembler.log": "ecf5f49acf8b9fccdc95fc7c48b3a5b812b4bb048d6f4875bc935e53fd26b0d5",
+      "01-n2-q1/kernel.cubin": "e961369acad7e52c3dff25cba6edc4086c723f17341f713dd67276c32f2b24bb",
+      "01-n2-q1/kernel.ptx": "8fa4cdf88df17c648e0efe059874ea148e3d55505f80bcc3196f50c1e8db8c56",
+      "01-n2-q1/layout.json": "96f860ebaba08bb6e747871b8df7706a285f44df8ac8d8d4118644f8f967522b",
+      "01-n2-q1/observed.json": "3e4450d4064dc4e1714048e09d50604b729dc347ec81dd437d67e1bd4c3b0b96",
+      "01-n2-q1/reference.json": "4ec489181d415929225e70ffb09a299c5d6c5ae18266af7bd17b10e03836d72f",
+      "01-n2-q1/request.json": "7bf119af3c6c07da7eb89a6d61e8983aae32a6ffee83a1826408f830c3e6d3ff",
+      "01-n2-q1/residual-reference.json": "616b2e9b0de1c805f31fa0f3bba02469c96612fc01e6ae134cd2bf0eca7e22a7",
+      "01-n2-q1/residual-request.json": "e97990c18e6c307f2e1f994ea3c9c0c6627d20763c76137c612ac29802aeb27a",
+      "02-n4-q1/arena.bin": "e1188b587aab19117031a3559ec90c8d28ab61cc322a0726eb45b41e6f4d0cd1",
+      "02-n4-q1/assembler.log": "7a207137c32522b05a63912e7601e333fc70ffeb05a0b2da9cbd908ea147db8d",
+      "02-n4-q1/kernel.cubin": "10863380a2dfffc4eaa10f77140498ef79de00322dc39f5fbd295448edc9daa5",
+      "02-n4-q1/kernel.ptx": "82873a23544ad58fbeea878ec3d68c8f9f651b0fc975fad414a2d1c08c7a28b8",
+      "02-n4-q1/layout.json": "b117a0414004aa6dd2f558d6e5c8a476c8a5c794983fab9009ac953ab0280de4",
+      "02-n4-q1/observed.json": "16166a2830fe730e3bd4eef24928d1541e2d0a54ca1fcb250fcb7a8338fc1f01",
+      "02-n4-q1/reference.json": "ece637ce0f1b2330b0872dbef1b600949cf774bf9d8e0ab9dae2a1deb62b0fe6",
+      "02-n4-q1/request.json": "949ee10f3fd9273d9070e980a50cb7ceac534cbc2e757de4ba1a518e2063ef82",
+      "02-n4-q1/residual-reference.json": "638e3665cf487cba1ee81309044e224ba1451295c43f34ba785eb67327e8a40d",
+      "02-n4-q1/residual-request.json": "a15880f4cf7d80ef55e0bfe3a9c0431599bffd4b72537599ad916e27e973e74e",
+      "03-n1-q2/arena.bin": "52b298b6719fb482a7d6f68141dde95f2a29b5450fa25f6df8bab19b2be67bc4",
+      "03-n1-q2/assembler.log": "4524802ad24940dd23cfc00cf352bbb561cd6f830a2355c54db878a7e97da918",
+      "03-n1-q2/kernel.cubin": "8a87deb526571c1046436e82056855d21688ebb4a9ba81e3fca85920e88f0a2e",
+      "03-n1-q2/kernel.ptx": "084299c46a539a7c272a4dc7b239e8d2c325bc9d7920a3f1e2f943b3c2e0924f",
+      "03-n1-q2/layout.json": "0b5d21ddecde334c1bd9af0d91463ce0768bd74e958f2a280dd418426301feb0",
+      "03-n1-q2/observed.json": "d2e1211c6cec75034cdf631692617979782a28bec7299cb7a1bd4bc4cf128e88",
+      "03-n1-q2/reference.json": "9041c10fda5b75cad2315ba244e8b472adc021d7726660d27e8137abe0e71c64",
+      "03-n1-q2/request.json": "af0f4aaa54037e7e980597b009a371a3f2814017efcb48ea5efae048591d0b7e",
+      "03-n1-q2/residual-reference.json": "c4e9282a1ab2dbca19207670de8fecc63d72c29239c416637367a1a819d8f14e",
+      "03-n1-q2/residual-request.json": "ede8ebe0d245cabbb768455e5f658f3d350876c6162bf56d8a4f3f2524c6bf3d",
+      "04-n2-q2/arena.bin": "dd72dd15dbd7fa773ea30447e3bf7158eaa61b88b833e2ffbf1913bbf7c94334",
+      "04-n2-q2/assembler.log": "0b5ce280d044f1ebc56354226b2a24012ac34d1d59a4eb73e8ab4a78309fb6ae",
+      "04-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "04-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "04-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "04-n2-q2/observed.json": "56e883689ba5ea4f25021fe0390832d709a8a706338f80f80c723af14570b7cb",
+      "04-n2-q2/reference.json": "2f9395bfd131e1816f050d91ac5f0ae581b6dd20b8c8bd98849f6f5fe9afcbe3",
+      "04-n2-q2/request.json": "53e2f008d24387864df8614d40e55869fdfca1c8f7af224e6f61a61c9bd7eb87",
+      "04-n2-q2/residual-reference.json": "ba698a4b74893780c3c79287ded653999bd3d4e68f4d10e973ba1b6e1e6a7944",
+      "04-n2-q2/residual-request.json": "12c38529e98ce9fab44e270e99f7466641571a76ef87ad5261b9e636f20a8cb2",
+      "05-n4-q2/arena.bin": "68f9f34bf857d05202d9fca2c03e4f174adea36fee0b2da1e0efa63be955a200",
+      "05-n4-q2/assembler.log": "47716c00c6fb8d52048d0895063d91e7fd5104ed4fa51413745040ff9b6634ec",
+      "05-n4-q2/kernel.cubin": "07fa47050f0875905025c458ba5e3460c9d3d6a30dd3350844a98dbe1345ba93",
+      "05-n4-q2/kernel.ptx": "ebb8e5c8da774e6ba42f16234d486d83dc0e96e258b12b87dc92707a000946a1",
+      "05-n4-q2/layout.json": "39ff71edd405f00f1a4165e900ed97dfee5f18da433525297f3ab5fa972bea8c",
+      "05-n4-q2/observed.json": "199f197d8fd7ff431891a4b6cf4a99f29f88edb44a57b479902bc3457877acb3",
+      "05-n4-q2/reference.json": "3035a5e262b6b4f2cff21d53fecb16cbd3a0d2a1983a403ec33411e2d8ffa89a",
+      "05-n4-q2/request.json": "1521354181d925bff4374c4b48080d4bfc53e75afe653a6757ca885b542b3fae",
+      "05-n4-q2/residual-reference.json": "a5bcb193904fa26bc060e146e604a59576b77ccc13aa2717279542ff927e5dd0",
+      "05-n4-q2/residual-request.json": "db1aaca47b5e51ea9db76469bbe34f572436c34fcba0771585cd1aad252dcf3f",
+      "06-n1-q3/arena.bin": "4cb70241723b35431e5026e66fd2b40d192bff53607144fc8c4150c8e95ca388",
+      "06-n1-q3/assembler.log": "fa843c5a926ec6e323e800f8fa7b148ecbfcc4b403060a4fb0e158912c4d1d37",
+      "06-n1-q3/kernel.cubin": "33f64d21c0b542030441d7ca318379fb44c9c07c6e880d40c1e3715942deef63",
+      "06-n1-q3/kernel.ptx": "c50dd15b1423682f5bc808a0e74389a1a02ac4d329cf4216a095fae1ae95a408",
+      "06-n1-q3/layout.json": "a77d4068635bd5f5b84f6a103f7cf8a4037d2fc6826120c55bbe222bbf413c97",
+      "06-n1-q3/observed.json": "ed15338cfc61d246d468df6e241a07979b39f6dc6d52109af828fb32bc820e21",
+      "06-n1-q3/reference.json": "224901022f2e601aca591235ea640b492b92982c0fdcbd6304f0c2647a895d66",
+      "06-n1-q3/request.json": "a22afe07b6123b307ad0fad702ddc11f972804c224a4a104a3807bc21139b4e1",
+      "06-n1-q3/residual-reference.json": "2370f993203d2a668f89b232563e411cc37eecc65e140cf7590f5d9ea9c57f7c",
+      "06-n1-q3/residual-request.json": "bdc9fdcdcdd6ee0689b67dec654ca63a5558bc71274c2f39c168706a56b21206",
+      "07-n2-q3/arena.bin": "d76ec1aae72b3a19b4ebf6c9d6a04196f9e0d92c5bc54c66fdd389f4828a8577",
+      "07-n2-q3/assembler.log": "e160aa80ff745695c665b4077d8ae3496c4fce30ccf2a3374a4db0778c39a6b7",
+      "07-n2-q3/kernel.cubin": "bd5f8509af2be83ebe1586275e5065c57d32b2fbef1609c22d754357aede9621",
+      "07-n2-q3/kernel.ptx": "ee3334e8508fd300b1377200da0188e69b059b7847d1efa839ec033a985e6f68",
+      "07-n2-q3/layout.json": "d714ef1817364893c5e424dea2d8c6185397cd7afb76ec8f19624e02c168743b",
+      "07-n2-q3/observed.json": "c04c983cfc0cd2ef782ba86789537940cbd6b9d5af00e469ce7f4de23f8632a6",
+      "07-n2-q3/reference.json": "1bf8552840016c99264f7f854974207f5c993e9568696da070d3fb0111f13983",
+      "07-n2-q3/request.json": "3f7fb30a9323dabc1277cd6212b0b150de4dbbd5c973c013755a84aa6b3618ad",
+      "07-n2-q3/residual-reference.json": "2d07abd43025f1c56aac8a6cc3d21379adae2656d0dc4d72271dd41e6367d652",
+      "07-n2-q3/residual-request.json": "71698cd58d92b241d7391dae208eca40ae53536400d0b3a7a8f8656a8b33b976",
+      "08-n4-q3/arena.bin": "515772c3ca798d4f649ffa99736882cdf3f930dafb6a61a2b72679b3362ffbc1",
+      "08-n4-q3/assembler.log": "1eb6ffeeea2ddc66a066f89778133b33196b78bb8661b218013c58846d41e878",
+      "08-n4-q3/kernel.cubin": "7a48297675d88141844fbb5149d0cf33029cfc1a8182950f12f9c8379010f7ba",
+      "08-n4-q3/kernel.ptx": "46e9d3106bf2d01451202b9fa0f72c3813b4caa859c6df26e4d8678ee91ff40f",
+      "08-n4-q3/layout.json": "459fc58bf3121813e2dbfbbb0649520ddb6682dad28c71b90629392c9935af43",
+      "08-n4-q3/observed.json": "292ef483d1f88638a169f916fdef3b87f605bf680cd05051d6f4d6f14a6276b4",
+      "08-n4-q3/reference.json": "125b706f31aa9603c88640aa47063666bd806c1528fdce8ece155885e0a8ddb7",
+      "08-n4-q3/request.json": "70dcf74549d4dd44bbd83baff43b7ef0123c8c91297dcd1d108c33592e1790aa",
+      "08-n4-q3/residual-reference.json": "7e73f12de00e7dc31994de89c0ff3db673f0da5df203f41d6daaf8d915c8bda4",
+      "08-n4-q3/residual-request.json": "434250e8e664be48962706dcae50351fc975a5061ca145418c1fceac8a20f2a7",
+      "09-n1-q4/arena.bin": "f386c9a6a71a7472e30b983a48e56696ba856bc76405a90ffc0d39f826cc5a4e",
+      "09-n1-q4/assembler.log": "aa336d128e35e28ef1649a957304bd329916f43966d2fb1716ba11047f23f96c",
+      "09-n1-q4/kernel.cubin": "6727df77a543cf63dcd5ae00f920ac57d7cd27505bd81fc98abc89622b1222df",
+      "09-n1-q4/kernel.ptx": "2d739e0e270eef6231f627707f133d0009d6ed6889d606ac26bd19a0ae2c7414",
+      "09-n1-q4/layout.json": "0bf69719c34139f13d776deda00a8955377b8b3531326a1236df9e33951444c9",
+      "09-n1-q4/observed.json": "0be4d06ed7b67e472bdef03e8241da53d432330360cc349d951466f36cb37f44",
+      "09-n1-q4/reference.json": "07a6296ec34a867d77a42cdea42cb3142cee82ccf11a9752f8a9f23adedf1cdf",
+      "09-n1-q4/request.json": "2060f16f27c8d728e3c2a5d2235bb0346fa24adb7006f1f6940a0e3765e944ab",
+      "09-n1-q4/residual-reference.json": "e5ae4b05979f08bb632d42eda0cdf3adcbdfa6752037b2a3f2eb9f7c95522d7e",
+      "09-n1-q4/residual-request.json": "ab82987b08b5e5ed85e09a06f4fae62ff303aab11e51fedd41e3fa9f460c5867",
+      "10-n2-q4/arena.bin": "9e416f7b0939ba8b83263a4beabda06b3deaa4938f068b44d406483d17b747f8",
+      "10-n2-q4/assembler.log": "19f06a32075bb219fdae6bd9bcaa0166a313343b607fb7930e9edaf7f1832a32",
+      "10-n2-q4/kernel.cubin": "10be75980fca1aa130d108110b867d23995935c710ed1e1adb2c25cc261e1f61",
+      "10-n2-q4/kernel.ptx": "73701f9516e283cfcf277264f31e073dcd9bcf824154a6a314cc1018b0ab7753",
+      "10-n2-q4/layout.json": "43e18b9ad2b42524510c67e64a831808abcac39a70bbede0f04714362fed1c8c",
+      "10-n2-q4/observed.json": "9dff4ba77cf9a3204688bd31d81c705ed1c9528eb3a498c3dc54e081cb35a192",
+      "10-n2-q4/reference.json": "05a4a005af06fa61df39e7fed3ef51ae3a93cbd23988d10dd947a07bc5c47847",
+      "10-n2-q4/request.json": "1db8c26285c09af27d9a76481a5f29f334b7f9895ade973982ab1feb3f76679d",
+      "10-n2-q4/residual-reference.json": "6fb61061cf69f8d630c7ae4559b958bbaeda192e593eec260cdfba9ae7206511",
+      "10-n2-q4/residual-request.json": "4fa8b82a7e09f002f3f11b307b5d28cc0d48c821ad3b4571fb15de2d16a6cc1c",
+      "11-n4-q4/arena.bin": "a57203ab5de1f2b8f71507df0fc10bf1cdd241d5b9b641979a9e8416c617f5b8",
+      "11-n4-q4/assembler.log": "ea1bf1880d994ec8c4d1dba0c38744fa5e98d25b1fa5495ef929589339ab871f",
+      "11-n4-q4/kernel.cubin": "6b08f86ba099905a145da0950ee1d4f284d1ad35ab8595f4d7804fddacccf226",
+      "11-n4-q4/kernel.ptx": "f7615853931a332e1e48b73a2c89cc0f3b8c0531d2a8e1535657d7863bae6fed",
+      "11-n4-q4/layout.json": "ea7fc0072492ac51b6affe41ce7cdf7fc3a4e8aee0320da1251907c9b83573ad",
+      "11-n4-q4/observed.json": "e8521cf78cd0b6dc77fe64c69378dcc05c7964a76b0b9b0b5b3b2c2f6ef2b9f2",
+      "11-n4-q4/reference.json": "a632ceac68bbf310dcb43546b0137b7938b6ace998edfc5fce6140eceecfa815",
+      "11-n4-q4/request.json": "7dbf81a2b61ede930587b7d035f5d2dc7334e488ed948952c2c8dc9f1dd1b8ad",
+      "11-n4-q4/residual-reference.json": "80be3c8df9e24a5869d0b1c3888a61bc4137d026080b50e3d6e9c8c9f34fe2f5",
+      "11-n4-q4/residual-request.json": "4400f427d4d1b6465da780516d8026dca77de0f2d98416c267a0cc9de4f47a47",
+      "12-n8-q4/arena.bin": "f2740b75e86a9850a23c0781e3703380b81b48a72176f34b13239740211722d6",
+      "12-n8-q4/assembler.log": "4d7121e538af636e5b2bee5fe1c0285684c480b447705798aa49022114560ac2",
+      "12-n8-q4/kernel.cubin": "a0e71761b047c9b64874e51b8f93c2382a867f349af4246b0e4c12ec4d332a50",
+      "12-n8-q4/kernel.ptx": "3dd5feceec8ec1ec4007b14e42ef068b440f86df411b2da7b3357364dfb6f6ca",
+      "12-n8-q4/layout.json": "0468c1624068d7566d85004893b6241812d85fe2f04d862b5ff84bb58adc7292",
+      "12-n8-q4/observed.json": "f3c831a2ae52a9042b6c86dfa8844937ccefcaaf00bfe214c64b9b866bd3af1d",
+      "12-n8-q4/reference.json": "45f066562a884899fb7e45268291691ff7086955ed48f780c85d3f15ebbee68d",
+      "12-n8-q4/request.json": "e223112929a092873b76f6172d62a3abbc37bb22a351caeab91af573c065e7db",
+      "12-n8-q4/residual-reference.json": "7299bf9dee637e0c408401733b390ee0f11b31395144099a2e696dd4db9641ad",
+      "12-n8-q4/residual-request.json": "03bef5aac37b92473ddccaf0800f775acebb4a181e2e4ba9ce94a053a403e507",
+      "13-n2-q1/arena.bin": "0dcff7d356b874fd3f6e24ca2ef9a916b15ee63ebbaaed079ef2c30f79bb4c3a",
+      "13-n2-q1/assembler.log": "00e2a717f54a706fd3b13d16cb2a714d63d3bb11a9a3f3e7f4356729e2c4f17b",
+      "13-n2-q1/kernel.cubin": "e961369acad7e52c3dff25cba6edc4086c723f17341f713dd67276c32f2b24bb",
+      "13-n2-q1/kernel.ptx": "8fa4cdf88df17c648e0efe059874ea148e3d55505f80bcc3196f50c1e8db8c56",
+      "13-n2-q1/layout.json": "96f860ebaba08bb6e747871b8df7706a285f44df8ac8d8d4118644f8f967522b",
+      "13-n2-q1/observed.json": "2828fe32ab52bb0fc9cc36d0162f0a8376054c89ca92bbe5b53bb002bf6f7bc9",
+      "13-n2-q1/reference.json": "efd28170b2259302ce5e3e84e77a1fc4bfc75ea06af1ff4836fdcbae2c531227",
+      "13-n2-q1/request.json": "1c4d4ec8a11e02a8c9e998213eaefe6225b3b7d391a04ae2bab55785c0e04b03",
+      "13-n2-q1/residual-reference.json": "46c16b34a7754890d89f8095bb6156725d8629cae089403a2812d7cc8c3da1a5",
+      "13-n2-q1/residual-request.json": "addda6084886117328b5dddc77e3a677980326eda6808eb81a90307ccfa09c79",
+      "14-n2-q2/arena.bin": "5a2eaf08931f56235e5e34f94bab5eb30746b14d6f1f1fe9bad027aa467ec905",
+      "14-n2-q2/assembler.log": "2947bb6397570ba6066e49ea409562ddb9dc127d405473658a4c8df993d040c9",
+      "14-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "14-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "14-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "14-n2-q2/observed.json": "dc90923e7227f9b884e29110f2352a94ce9ad39a430d7e4967bbdd22ed149704",
+      "14-n2-q2/reference.json": "f8ca777c2a8e96cc255c312e074713f3e9e46739b1038eed866756cae1ed2eb6",
+      "14-n2-q2/request.json": "3907687c8c69b096071ffd36b88caefec3a760a14b13ca1f1b825712d5056e56",
+      "14-n2-q2/residual-reference.json": "946b306f43f66736582ff9847d425c3f48c8c8e6f3ff38529ad4ce3894d58b30",
+      "14-n2-q2/residual-request.json": "74f67f86958819f9a75ce44a144a3861271751fb3acb98ad8708db22ebd14e74",
+      "15-n2-q3/arena.bin": "7443ad2b274aa3feebff00a4fefe28e9c3308cd1f54e1eec0c7dc9f4edb5282f",
+      "15-n2-q3/assembler.log": "7a9c5a76b62baf21f71cc9e5199ea20e985666631b33dcc092edb5ddc79a5a6b",
+      "15-n2-q3/kernel.cubin": "bd5f8509af2be83ebe1586275e5065c57d32b2fbef1609c22d754357aede9621",
+      "15-n2-q3/kernel.ptx": "ee3334e8508fd300b1377200da0188e69b059b7847d1efa839ec033a985e6f68",
+      "15-n2-q3/layout.json": "d714ef1817364893c5e424dea2d8c6185397cd7afb76ec8f19624e02c168743b",
+      "15-n2-q3/observed.json": "65f797efb98155e5158b52f1743eeba4b54d94c9911313112583177ecdeb32cb",
+      "15-n2-q3/reference.json": "f08375319b8ec464f861aac921368210d1eb1dc3c996b95d9f14b5207f2e50fa",
+      "15-n2-q3/request.json": "2d700ab0559563180d132541e32d2608d4bf4908ff829a72729595bd26239591",
+      "15-n2-q3/residual-reference.json": "2939f0145a74ef5b3111862a134863511faef403f514a9e1a905f966054b0fe4",
+      "15-n2-q3/residual-request.json": "fefde48cfbd564dfdd1f191c0dcabc920f5ab4dda6aaacdb24fb0da99605ee50",
+      "16-n2-q4/arena.bin": "2e4ad8d03e9c0a6e60e13c69b2053e9f134b6a63933f728638922166e92bc662",
+      "16-n2-q4/assembler.log": "4b4e9b903abd0de127b8b4d4aaa8fc0521834164663b85e5c8e2644d05f484f9",
+      "16-n2-q4/kernel.cubin": "10be75980fca1aa130d108110b867d23995935c710ed1e1adb2c25cc261e1f61",
+      "16-n2-q4/kernel.ptx": "73701f9516e283cfcf277264f31e073dcd9bcf824154a6a314cc1018b0ab7753",
+      "16-n2-q4/layout.json": "43e18b9ad2b42524510c67e64a831808abcac39a70bbede0f04714362fed1c8c",
+      "16-n2-q4/observed.json": "6ce8b454adffab365a3de39a4b2a12ea04ebf37ba0281bf2f08f375c1706fd1b",
+      "16-n2-q4/reference.json": "684d7a1315c1df330af5f93e1a9a8b8014d73592adfd0c1e9a6ded2304a5dce5",
+      "16-n2-q4/request.json": "256aa096d413a78dd6a8059415c717f5fd606f9cddd8fb55075177056ba79774",
+      "16-n2-q4/residual-reference.json": "12e3be788a975e953f061e25b2807aff131f1388d7b5455e64d0f1f2fb4b481a",
+      "16-n2-q4/residual-request.json": "d5d25f9320192650a4ff4c608a2b9222c3b23ccd1f0baf5047871c2169b5d3fb",
+      "17-n2-q2/arena.bin": "7b3e6ea3c491ce05d91b93b3b402f016e3bd3d5db595a0c0318389cb051e254c",
+      "17-n2-q2/assembler.log": "fc3d04b2dd9387a975afc6c68880319897c98d2325760d792f1005402865bb66",
+      "17-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "17-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "17-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "17-n2-q2/observed.json": "8bfa2eeaaa4116f227d39a0181d9bc2e52cb7f31ace78ccd69e4ba14d6ff6b18",
+      "17-n2-q2/reference.json": "c318c975e553e905e6c8416d3bfcd09242097cff1907c104202a5b3ec223812c",
+      "17-n2-q2/request.json": "53ee46dccf874ee948735b99b5cf5954c55c1e24cd8b1fac094463044d52a26d",
+      "17-n2-q2/residual-reference.json": "fad65948faf6c013d08b8b30c334f8a01b3fc861e580fe2e5f7b5f5a65a9828a",
+      "17-n2-q2/residual-request.json": "f9b89fb7fd505a333bb44be30d9cd81e38ac08fe302c5073655343d64ee988eb",
+      "18-n2-q2/arena.bin": "dd72dd15dbd7fa773ea30447e3bf7158eaa61b88b833e2ffbf1913bbf7c94334",
+      "18-n2-q2/assembler.log": "f134ea790e220e257a6558cd51ae42a68c136c8450c9b6d48656dcb08b6502ab",
+      "18-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "18-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "18-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "18-n2-q2/observed.json": "9b6f8afa16ba8e5a3593bc8c07420cfa0ff7ee2002afd42e58f6b6c47aea749f",
+      "18-n2-q2/reference.json": "3fad09cb3f75c9c17310b0c6083e6dc9ed885dc5e33f1f9c4ef9bd596401eded",
+      "18-n2-q2/request.json": "a928883547f87ab553321dbaa15e3726db5b4296496475720647aec17cc4afa1",
+      "18-n2-q2/residual-reference.json": "943606b5127ec3081b43e43c941d80bb1d983d8a52f484d8b5e3fee87a3c507b",
+      "18-n2-q2/residual-request.json": "1cede6e4ea354947e2350a6ce14a268666705321921b737a1d4063deee2d021e",
+      "19-n2-q2/arena.bin": "f4546ade58006c5cf8ea599311eacaadfaf2631932b4a8df05450d5d41a3e49f",
+      "19-n2-q2/assembler.log": "bbfc608cb8d477b347e6408bdf5f5b3b83769eef3c6a7545838eb5f775dc0911",
+      "19-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "19-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "19-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "19-n2-q2/observed.json": "5eb66df47a790b136070f519ab61117ae500572f944238e28ad31429757d3d4e",
+      "19-n2-q2/reference.json": "4f8933ad11e410e9cc768a7cd1e9d95eb625f2367cf9d9867d1fec0ba1378f2e",
+      "19-n2-q2/request.json": "41d3306907c6021f21cf06a3a59c373b44917b03afb6bad405e224f13dcf37bb",
+      "19-n2-q2/residual-reference.json": "557f62253660d940912b6907fbd3ea2fae839a4e3f74ba585744154fe7c844a6",
+      "19-n2-q2/residual-request.json": "f5a48d6c473bac8c2b1abe11a792ab311e29b6cd354a2f28f655b7a5e4ffd3e0",
+      "20-n2-q2/arena.bin": "5a2eaf08931f56235e5e34f94bab5eb30746b14d6f1f1fe9bad027aa467ec905",
+      "20-n2-q2/assembler.log": "d4edbb7b162eaff4b586ee52d346bb33db6b28729f0da4468c76c18551cd94c7",
+      "20-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "20-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "20-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "20-n2-q2/observed.json": "660fc048ecd3f4f524497be8069dcacaad53b796445663d7ae7d43ee0e74c257",
+      "20-n2-q2/reference.json": "19ebd44d479af892d220866692fbdc82452569cf1c2d55fbcaa7caa73e73a2ac",
+      "20-n2-q2/request.json": "5a406c22c596d2858d4ba11592bdf102e8e6da635117ca789a1ab5c54e54a4e0",
+      "20-n2-q2/residual-reference.json": "946b306f43f66736582ff9847d425c3f48c8c8e6f3ff38529ad4ce3894d58b30",
+      "20-n2-q2/residual-request.json": "99b6fd4fd3d7fc0832473fe6b36223bf8d52ab86263fc5e2b4188fe22e9352de",
+      "21-n2-q2/arena.bin": "a549c5eb6158226c94a80e9bab04ac428b04dcc2bdece57ee3159e3f18c78e41",
+      "21-n2-q2/assembler.log": "506e25143397641c8ef3cc9e6188008b30d043f5dbdd0b77ffc629d0185b9359",
+      "21-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "21-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "21-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "21-n2-q2/observed.json": "9aa7901f5bcfe7d97bca2efc8b94e6058096fe84e30e7599b974d73cae8dffd1",
+      "21-n2-q2/reference.json": "1306a052c9e24fea1a1ac52c2e51a0de02c08f6b26a8b01811605ba23ff59dc4",
+      "21-n2-q2/request.json": "714074423ac91ef5fa77ead8b5e4fc8d76b0376baca629874a9b34c62515a1af",
+      "21-n2-q2/residual-reference.json": "d2bc330efc716ad1e57976ce1cf54b9027e4a75e4d36db7d4794c712273ae052",
+      "21-n2-q2/residual-request.json": "be1a3b89be77be5d74da53b00d7270f23f4645751484fc730f6bb0f6594d9a57",
+      "22-n3-q1/arena.bin": "f4e403b4e051816fca2026d281473da2d4f6d75123a9991e880bcd8d695841f3",
+      "22-n3-q1/assembler.log": "05f4485a80b2c8983a34b28e7e10ea9af5a8d1aa4aa89b5828ed8afeb0e44482",
+      "22-n3-q1/kernel.cubin": "6afe51a12b61127026d89b7a8d2c9279299dec4ab7d1f6e718d79a5bb07faccd",
+      "22-n3-q1/kernel.ptx": "fe00022defa2813d9837339b15a1b8135a9fef2d38bb116526687165bf85332f",
+      "22-n3-q1/layout.json": "30a9fa60e5d99a68098a80411435b87fa64bf154ccb8afd51f4724af8606a779",
+      "22-n3-q1/observed.json": "030c78d80e0f2969825f3c83042993d23f055b5b2a47b7a9db73d02bafc39e43",
+      "22-n3-q1/reference.json": "3d00b9e6e8e92c8929fcb65acbd8ecffc5a598969c7a04335617fa0b907da740",
+      "22-n3-q1/request.json": "f8b4d94e11b434dde93342cfcf1acbb0944c1724e0ff71b058d0aa99e4a35dfa",
+      "22-n3-q1/residual-reference.json": "2510148f688279d650292c18a0b5bc129bbe6c890909bacfee84ef31932900a6",
+      "22-n3-q1/residual-request.json": "922489b4d99a7542bee32f53958ba91d91f1bcbf2e06018f8ed8cd2b78ac8d83",
+      "23-n3-q2/arena.bin": "b4de0ac0998cfc4696da279f1a8ad05cb68feba4dec586a3917076114930bd2c",
+      "23-n3-q2/assembler.log": "fdd39f57bfce9e409369ed4ef310d9d8044147b0f22a077ac05b80369e005301",
+      "23-n3-q2/kernel.cubin": "b96870a64660258ab04cbc7988315ed16b18b16533e4e4a3d0743faf34fe49b8",
+      "23-n3-q2/kernel.ptx": "8ae5777d0fa3ebc2525061fb935d95f29dd0efcdec859add79c9f44f244fc1ee",
+      "23-n3-q2/layout.json": "f02d3e7f290d4677b140b4403f65bca626620ff70dbd439a133c66bb7adb72b6",
+      "23-n3-q2/observed.json": "4a091e14f86557cb00dd256d154a50e3489f6f1d91ac404b7452ea59a1d3d34e",
+      "23-n3-q2/reference.json": "2e934624e96cb4802000910d3effba4d56fbf305297a8bb46b14f9fe2f16bcca",
+      "23-n3-q2/request.json": "edcb2d922acb83ff5b7f8831ad1f1a2363844576d6bf325cd3ba516e9430e475",
+      "23-n3-q2/residual-reference.json": "1acf1f13ca967f461101b03f71335415b4f3566aaccce98c2533b4fb29d53f0b",
+      "23-n3-q2/residual-request.json": "72fc580ebd5a2efcc68dd2c5a836acacf2bf165f9d49f87d4abcb06a81c5ccc6",
+      "24-n3-q3/arena.bin": "913a4463ac36bb2573a673685df189f942ce695fbccdf52db26ab11e61cb5da1",
+      "24-n3-q3/assembler.log": "d486f7c77ab17a572f3eea4163f83e93b27022f683c2774ec8676c996fb1bb5a",
+      "24-n3-q3/kernel.cubin": "3c96f2954b8962bcb150a630751f0e463fe7764c913424359123fed07f9dc4b0",
+      "24-n3-q3/kernel.ptx": "129551c86c0a077282d3e77a086ddd767f02159a90b1472d116546c8567b2c1a",
+      "24-n3-q3/layout.json": "105bc0e071f9857200443e9dada20b943cf16c2f12d55018c5a58f977e700628",
+      "24-n3-q3/observed.json": "a059a93500c36eb98f9522b23fd00d53ec37ce9ad609316da42b2ff86e9216c9",
+      "24-n3-q3/reference.json": "e1f4b581ed2d0e549055a3368c349959f319e2840c22989e0363a361dc55cfe1",
+      "24-n3-q3/request.json": "0cb1e820d7203fa60a3a99195dade3ae87648d17fbd765eb72fcb0611c8ff862",
+      "24-n3-q3/residual-reference.json": "65246d98f67f3a95129bd17ef244f67515190f2602bf6d2c7fc5d0fbbb34bde9",
+      "24-n3-q3/residual-request.json": "fb396265f1864e8f06283a8e059d3b84b3f40e0df563bbaf25728344a9a3eb51",
+      "25-n3-q4/arena.bin": "a15634a0eb824b8037aa982a75c1c625ce76fa5fd6b769f64337281cfba5afb5",
+      "25-n3-q4/assembler.log": "75c981a87bfd18280cc19e0ed8379a3517abf78fe821acc181d3b5af5fc69b34",
+      "25-n3-q4/kernel.cubin": "eeacbc41ca8a5f18ad3945baea677ee1ca4d3c5ac7b4d88ae44e83dd4ee0adef",
+      "25-n3-q4/kernel.ptx": "ea8923c1c5e83169be9f4dd00c71a3aac6beb3994ab80d667b607b9a3e11bb5a",
+      "25-n3-q4/layout.json": "9edd6e373d4c0feea2dc58b6381cfde0db9bf8f101ea3ed150833dd4f09681b0",
+      "25-n3-q4/observed.json": "8917aa26380bfb66d9e30bc92a2de70ed53168ea5eb685e7a16d7119507789ad",
+      "25-n3-q4/reference.json": "683b276dd0245d2fabb240c69b9a0dfc82704252a29c7fa1f862ae6a3d9b59db",
+      "25-n3-q4/request.json": "d3d830091ce09dcdb07ec8cb98bc7c8cd7ddbb9b5e1da601c85bf9a1695a7df8",
+      "25-n3-q4/residual-reference.json": "1970b521565dc9c44ac25463f4a0296415dae10264bb32b28d7197b3fdf49249",
+      "25-n3-q4/residual-request.json": "163682b691318569704e1d8e956916c729bc6c002ef0f5e289cc9842b7dd2910",
+      "26-n8-q4/arena.bin": "a916012dd8be89c4552a158e666c6213d007645b7ce3309234539db07a7e6fa5",
+      "26-n8-q4/assembler.log": "29fb389221f81473375486139cacf29007be1f7c14a14494dd90475e148f7c53",
+      "26-n8-q4/kernel.cubin": "a0e71761b047c9b64874e51b8f93c2382a867f349af4246b0e4c12ec4d332a50",
+      "26-n8-q4/kernel.ptx": "3dd5feceec8ec1ec4007b14e42ef068b440f86df411b2da7b3357364dfb6f6ca",
+      "26-n8-q4/layout.json": "0468c1624068d7566d85004893b6241812d85fe2f04d862b5ff84bb58adc7292",
+      "26-n8-q4/observed.json": "fa83feaa8b247425b5f9efb4c8d32e2f58fc7c939190555524776cc8d6b065d8",
+      "26-n8-q4/reference.json": "5ee520a4cc923602579a8ec7adb0e8f8078da042b989a41b0ff27682215dbbab",
+      "26-n8-q4/request.json": "324d7c26edf637f026d8867ad885eec0d533d52c7788fc8c1802b4bcba6e23e2",
+      "26-n8-q4/residual-reference.json": "c02961a6ce5ee702d767da99ded91bd7a1e6881417adfdea9b42fbe5e8a6456b",
+      "26-n8-q4/residual-request.json": "3f16cca539c58a0feeae06991fa526f3af4aee214a8e37f4154097d226c95ce3",
+      "27-n16-q2/arena.bin": "8f452194badae53dcb50d1836163dc3faa02e5eb1ee78bfff393cef507392e7e",
+      "27-n16-q2/assembler.log": "8df6915996f7ec46b6d83700e3f01666378c0dd6d6b477db7943772117c439ca",
+      "27-n16-q2/kernel.cubin": "59da41ec2a81faec56ae107f4d15463dbb2920db13a5f1010aeb821191b39567",
+      "27-n16-q2/kernel.ptx": "ea037d577779217064f3254cde622079fee389f8ff06ab8d1bafcc3fa726deac",
+      "27-n16-q2/layout.json": "be357465706b6725a36a1dc77ac0b8e3e0071adc3dbf2c9723edc22daea4fe40",
+      "27-n16-q2/observed.json": "4ae4a4f839cc660204dbad4231c24e19bb1fbf5b83bc9d636c7dfc73b9166890",
+      "27-n16-q2/reference.json": "1be526b2777719e9083c1edab6e3c143f281d4c535fd82cace3ba6bf48d178d0",
+      "27-n16-q2/request.json": "c214d3f1a3bbdd657afc56daa236baaed43e810139589f7579996021e94039f7",
+      "27-n16-q2/residual-reference.json": "4926f65899201de749b5e2b0d7b6d97c555fb133d84b8d2867b8fb64936394c7",
+      "27-n16-q2/residual-request.json": "830cfb0b4c951871cd2b7b52eee5f210e65b67676290cf4882129113a442d008",
+      "28-n4-q3/arena.bin": "e79a57eb41e4957dec9000d4f709b8f7b48db3a27c628717a2adab00414647f6",
+      "28-n4-q3/assembler.log": "6aec058eba95f623532fe50ea56d11685f3ee0f2823496064ff541eee715e39d",
+      "28-n4-q3/kernel.cubin": "7a48297675d88141844fbb5149d0cf33029cfc1a8182950f12f9c8379010f7ba",
+      "28-n4-q3/kernel.ptx": "46e9d3106bf2d01451202b9fa0f72c3813b4caa859c6df26e4d8678ee91ff40f",
+      "28-n4-q3/layout.json": "459fc58bf3121813e2dbfbbb0649520ddb6682dad28c71b90629392c9935af43",
+      "28-n4-q3/observed.json": "7533fc5cf09f13150801b25c468420000875f1f21147f5af6c88ab14d797c772",
+      "28-n4-q3/reference.json": "594f4deea457ecd456fccae74309a10776cdddd528686a4eaaacaf2e4e874337",
+      "28-n4-q3/request.json": "3d7adb0adcdbb4bee36298e310ef862d761ebb3e841a28a759bb794feb52d498",
+      "28-n4-q3/residual-reference.json": "dd87486d9dc850f4e1f6f241fc72abf04d185c23dfc0b95879322c853c87339e",
+      "28-n4-q3/residual-request.json": "15c87da2a0913f37e6bdb85457bfa1d9645bccc3b1eb2e001a9b24f5cddd3d0b",
+      "29-n2-q2/arena.bin": "7c850729e43510ad031207a02bfe5a9baf37aa1c0ec31cb1564cc3567d21f77a",
+      "29-n2-q2/assembler.log": "0d8cd3dcbec9aee7fc304962221b9d5fa1290dfe93caf5d23841bbedd09bc6e3",
+      "29-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "29-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "29-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "29-n2-q2/observed.json": "1c56f72de9e30d76f6a30eefd9fb456baeee989247614d850af93a64c5d16174",
+      "29-n2-q2/reference.json": "9190a9d360661d1fb65239cd67474bba724556a37995876d5882b14f1e487d12",
+      "29-n2-q2/request.json": "fd6309f82dd55ba46ec90b4dba973ace10c0c6bab0df0d0adb5e70fe553094be",
+      "29-n2-q2/residual-reference.json": "e7039b3f8f4679084a0f14aac9c579fcce98c5e7bb33c83cb49834457bea9036",
+      "29-n2-q2/residual-request.json": "6e36a66fda92f9015ae813dcde0e4aa3a6582a60847cf871919025df8d24313e",
+      "build.log": "166c1d091bef04589cc9d1a08c238f5de3e1cbd773722dffd913209c37b98dcb",
+      "certification/build.log": "65413ae52086542de1eee9eea6e39d0860e22e2e245cf688feee752fc9488e7e",
+      "certification/certification.json": "3dbb5cd8488a29b735f5c75d1c20dd2186b8ddb5cbf3fef9a367d29b730e2c75",
+      "certification/inputs.json": "6e55fedf41f80f0694844db0247081d4bfbff51a0ef2b6acad11eed991a9a279",
+      "certification/negative-inputs.json": "8034c55befce445a444e89658cd13fba914051cf1622ec985ffba16727151671",
+      "certification/negative-outputs.json": "231f874ff8860cfbd3bd5f14b68f1b1e78e91921bd08455e875ecbe8a1e79f8c",
+      "certification/outputs.json": "d5ef4267a3408bb73c04993b92ef369f96d77b6ee236e595e9fdec6d16722631",
+      "export.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "references.json": "1d75c3052c74c603050e6d6cf66a228c86588e4f0fa07291af80cb98f1173501",
+      "requests.json": "3d58424b51de879083b663e34edc80b04baf09df7f4a2378865f72fb98901dc9"
+    },
+    "started_at": "2026-09-28T16:33:12.116927+00:00",
+    "source_sha256": {
+      "integration/torchlean/PoissonBinary64.lean": "9f3b88819fdcbafb5f14a8abd588995d6cdba5569afa1c72003ac93ec196bb48",
+      "integration/torchlean/PoissonQuad.lean": "a06f01073b60ab759189049967b026c99b54e067ebe5eb6a578d492bb5d90726",
+      "integration/torchlean/PoissonQuadCLI.lean": "7bd8fe1b5379a1d546ce2468d0635e88c968147e132d32420a6f5f3dd97e1705",
+      "integration/torchlean/PoissonQuadChecks.lean": "1285688baf4050b1ea0ffdc88007e00b70a9ec5defca83079333f8fcd9f8afc2",
+      "integration/torchlean/PoissonQuadCorrespondence.lean": "e5d177ec11019881d2732da0a605d7dd3c4f98ed23acfc2f84fb2b5f5441a211",
+      "integration/torchlean/PoissonQuadMain.lean": "6623bafbdf8fb4f84e59fc3ec8555bb18ebc975dfc8557e47679732499971d0f",
+      "integration/torchlean/PoissonResidualCertificate.lean": "b44e964fec426035aa773fba03b7d4454ace806f6225d76e911218bd74a91150",
+      "integration/torchlean/PoissonResidualChecks.lean": "0521ddf7d3f0e931074ecbf2f64f44b1da8fea956fc489d3dbbdd9400b4731ea",
+      "integration/torchlean/PoissonResidualInput.lean": "c1ec8c1d0ce6b867f253f192dd88d85fd441e5368984abe9fd04fe38e69941b5",
+      "integration/torchlean/PoissonResidualMain.lean": "062de57dd2460ed00d7ff8e9de74e95a23c531e20ce1a1abe552c33eb2933c43",
+      "hardware/cuda_driver.py": "1528c553388f635f03efb7a8ffd2c244e90894df9b5fdb4595ed5f92480eb95f",
+      "hardware/certify_poisson.py": "924f473938efc643c06c9232fa57296d6083ffa5cecf0bde12d98f060b51a9ce",
+      "hardware/poisson_kernels.py": "06a85915e4a9d25626d1c4e14cac6997963ab18297e8f1d690515eb0ee6ec48d",
+      "hardware/poisson_runtime.py": "69fdb21be21b7ba5ee8e6a732709b65a29ea15d18e8234392d8b2dd08a14a653",
+      "hardware/test_poisson.py": "c67e534bc36cacf20abedacc94c08c67f4539b2070972dfc0edb867efac7fa32",
+      "hardware/test_poisson_certificate.py": "2d0d587715c8164e19b190f90414137bd45bbb11b6af1f21e41b7cdb1044cb2b",
+      "hardware/validate_poisson.py": "c088f3a537c78e021e840b43bebedc5af58c3c051b2fe23a9904a4a329613fc5",
+      "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+      "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
+      "integration/torchlean/lakefile.toml": "702576fd8f098e3093f5c3a67019ea4103c387c79d7f30836e4b9dd053ca16da"
+    },
+    "formal_project_ptx_version": "9.4",
+    "emitted_ptx_version": "9.2",
+    "target": "sm_120",
+    "claim": "Empirical binary64 PTX implementation; not a verified PTX refinement of PoissonQuad.",
+    "tolerances": {
+      "operator": {
+        "atol": 2e-12,
+        "rtol": 2e-12
+      },
+      "solution": {
+        "atol": 2e-11,
+        "rtol": 2e-09
+      },
+      "polynomial": {
+        "atol": 2e-12,
+        "rtol": 0
+      }
+    },
+    "sanitizers": {
+      "status": "not_run"
+    },
+    "lean_version": "Lean (version 4.34.0, x86_64-unknown-linux-gnu, commit 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b, Release)",
+    "git_commit": "9404f618f76227f102b1a70d37e44cc3592c4041",
+    "git_status": " M hardware/validate_poisson.py\n M integration/torchlean/PtxIntegrationAudit.lean\n M integration/torchlean/check.py\n M integration/torchlean/lakefile.toml\n M stratic/descriptions/poisson-quad-ptx.md\n?? hardware/certify_poisson.py\n?? hardware/test_poisson_certificate.py\n?? integration/torchlean/PoissonBinary64.lean\n?? integration/torchlean/PoissonQuadCorrespondence.lean\n?? integration/torchlean/PoissonResidualCertificate.lean\n?? integration/torchlean/PoissonResidualChecks.lean\n?? integration/torchlean/PoissonResidualInput.lean\n?? integration/torchlean/PoissonResidualMain.lean\n?? stratic/descriptions/poisson-correspondence.json\n?? stratic/descriptions/poisson-correspondence.md\n",
+    "compiler": "/usr/local/cuda/bin/ptxas",
+    "compiler_sha256": "a0212ca1a74ca4877e8d063baa1dd0b075fcd255fb6ab9e8a6bf98a276a2d6e8",
+    "compiler_version": "ptxas: NVIDIA (R) Ptx optimizing assembler\nCopyright (c) 2005-2026 NVIDIA Corporation\nBuilt on Thu_Mar_19_11:12:51_PM_PDT_2026\nCuda compilation tools, release 13.2, V13.2.78\nBuild cuda_13.2.r13.2/compiler.37668154_0",
+    "gpu": "NVIDIA GeForce RTX 5090, GPU-3e694cbe-b438-d60a-1130-670113fd969a, 610.57.04",
+    "selected_device": {
+      "name": "NVIDIA GeForce RTX 5090",
+      "uuid": "GPU-3e694cbe-b438-d60a-1130-670113fd969a",
+      "compute_capability": [
+        12,
+        0
+      ],
+      "driver_api_version": 13030
+    },
+    "certification": {
+      "status": "pass",
+      "theorem": "PtxTorchLean.Poisson.Certificate.certified_residual",
+      "cases": 27,
+      "report": "certification/certification.json"
+    },
+    "completed_at": "2026-09-28T16:34:06.010402+00:00"
+  },
+  "certificate_report": {
+    "schema_version": 1,
+    "status": "pass",
+    "checks": [
+      {
+        "directory": "00-n1-q1",
+        "threshold_squared": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "residual_squared": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "01-n2-q1",
+        "threshold_squared": {
+          "numerator": "3253104895273969194207557106481618083062397821069189604775798569",
+          "denominator": "30354201441027016733116592294117482916287606860189680019559568902170379456331382784"
+        },
+        "residual_squared": {
+          "numerator": "9466175547342951355869347183189036094869090706080054918374609",
+          "denominator": "32592575621351777380295131014550050576823494298654980010178247189670100796213387298934358016"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "02-n4-q1",
+        "threshold_squared": {
+          "numerator": "12036516181916870810989849557167076803430736210970444696822241963",
+          "denominator": "242833611528216133864932738352939863330300854881517440156476551217363035650651062272"
+        },
+        "residual_squared": {
+          "numerator": "460546938643678512711946815322257152209618668898449047191300681",
+          "denominator": "521481209941628438084722096232800809229175908778479680162851955034721612739414196782949728256"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "03-n1-q2",
+        "threshold_squared": {
+          "numerator": "2186789422249702198948941237825174140931688697897426330314098129",
+          "denominator": "7588550360256754183279148073529370729071901715047420004889892225542594864082845696"
+        },
+        "residual_squared": {
+          "numerator": "21374258475607001032744905579073298628451825871756168535415749826439696252288045738105975575608145173486651261047721815187447649007431289538766023472120041",
+          "denominator": "1087770609288739018116276647019455748771006705104961378712461595034426490595025393129804804639189577049885346787832834079429794483512744426310696916513970896780966442670885312576979206144"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "04-n2-q2",
+        "threshold_squared": {
+          "numerator": "32947090729634340879086262213758677812997338919352230628565845385",
+          "denominator": "485667223056432267729865476705879726660601709763034880312953102434726071301302124544"
+        },
+        "residual_squared": {
+          "numerator": "48179689355687399582264960018431443451018198311059137692440603556159404105946055410016928055575720909754949853083267430582477922784892791892291954336654941277",
+          "denominator": "69617318994479297159441705409245167921344429126717528237597542082203295398081625160307507496908132931192662194421301381083506846944815643283884602656894137393981852330936660004926669193216"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "05-n4-q2",
+        "threshold_squared": {
+          "numerator": "142429827321440653287737482311974772310171989476387927561703273681",
+          "denominator": "7770675568902916283677847627294075626569627356208558085007249638955617140820833992704"
+        },
+        "residual_squared": {
+          "numerator": "9557142324630991141060973812995667307016458253743080675350267801467033107514897690610945395206976760144929891305216239901623639140917179583026880500706536773191",
+          "denominator": "2227754207823337509102134573095845373483021732054960903603121346630505452738612005129840239901060253798165190221481644194672219102234100585084307285020612396607419274589973120157653414182912"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "06-n1-q3",
+        "threshold_squared": {
+          "numerator": "5113914505577174374428401492282585886592888730933286015477760509",
+          "denominator": "30354201441027016733116592294117482916287606860189680019559568902170379456331382784"
+        },
+        "residual_squared": {
+          "numerator": "1638536317727660387121410421222467729223753600117000998649992881028465633378456460199293483355608222188895284103649730525975938140586556274135186973031590497887509",
+          "denominator": "18249762470488780874564686422801165299572914028994239722316770071597100668834709546023651245269485599114569238294377629242754818885501751993010645278888856753007978697441059800331496768986415104"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "07-n2-q3",
+        "threshold_squared": {
+          "numerator": "132435509037800024650034933993033724343669199982246449350456681797",
+          "denominator": "3885337784451458141838923813647037813284813678104279042503624819477808570410416996352"
+        },
+        "residual_squared": {
+          "numerator": "600543864804115692044390870391598345034689064078439567383492229729510222564753167347688552326215423850539143357291074534074388355230587211074337736705334255507457976901",
+          "denominator": "299004108316488185848867822351174292268202623451041623610437960853046897358187881202051502002495252055893102400215083077513294952620060704653486412249315029041282722978874323768631243063073425063936"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "08-n4-q3",
+        "threshold_squared": {
+          "numerator": "4256481310298787438591036124805209096609000961825331566803149217113",
+          "denominator": "497323236409786642155382248146820840100456150797347717440463976893159497012533375533056"
+        },
+        "residual_squared": {
+          "numerator": "13626695698374328042495336087228210107779753386423070334462137047584311321641043456134049473034447698727896948413553393052922154728449866008135147641548427391867286426407",
+          "denominator": "1196016433265952743395471289404697169072810493804166494441751843412187589432751524808206008009981008223572409600860332310053179810480242818613945648997260116165130891915497295074524972252293700255744"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "09-n1-q4",
+        "threshold_squared": {
+          "numerator": "206147337929546657828097858090725530454810863066783525538003665737",
+          "denominator": "1942668892225729070919461906823518906642406839052139521251812409738904285205208498176"
+        },
+        "residual_squared": {
+          "numerator": "1640174961490039847220575203988129367679456162640168500389005561183135498659496445868780235405054590046652692383695880578215348908312941761567124997529401203355958939401",
+          "denominator": "2392032866531905486790942578809394338145620987608332988883503686824375178865503049616412016019962016447144819201720664620106359620960485637227891297994520232330261783830994590149049944504587400511488"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "10-n2-q4",
+        "threshold_squared": {
+          "numerator": "9812286550544867667781924214883522393043601784479328798362331412281",
+          "denominator": "497323236409786642155382248146820840100456150797347717440463976893159497012533375533056"
+        },
+        "residual_squared": {
+          "numerator": "18453678064437693586806548973416309192565525862619457359864254683824336533084321094979097365128746377282973423162453767054197406056350706087293258713844342102073067527888741",
+          "denominator": "612360413832167804618481300175204950565278972827733245154176943827040045789568780701801476101110276210469073715640490142747228062965884323130340172286597179476547016660734615078156785793174374530940928"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "11-n4-q4",
+        "threshold_squared": {
+          "numerator": "627946196276509662888223894952150854642729406124830458300334444958441",
+          "denominator": "127314748520905380391777855525586135065716774604121015664758778084648831235208544136462336"
+        },
+        "residual_squared": {
+          "numerator": "44217799643904499637607194144745384869988822516329739350590892036019077095331888797983807596427319711217502329968803298715245128846605091346662631296385914930351176495213943",
+          "denominator": "1224720827664335609236962600350409901130557945655466490308353887654080091579137561403602952202220552420938147431280980285494456125931768646260680344573194358953094033321469230156313571586348749061881856"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "12-n8-q4",
+        "threshold_squared": {
+          "numerator": "40188213085494603832742711412528966846478064617492854703847435798369175",
+          "denominator": "32592575621351777380295131014550050576823494298654980010178247189670100796213387298934358016"
+        },
+        "residual_squared": {
+          "numerator": "46882393903951239689437359069259602352657910616355224754206403106592642624537101427244568267178349739718148370083708768766537547030355130068969504346080700263488858629628641359",
+          "denominator": "313528531882069915964662425689704934689422834087799421518938595239444503444259215719322355763768461419760165742407930953086580768238532773442734168210737755891992072530296122920016274326105279759841755136"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "13-n2-q1",
+        "threshold_squared": {
+          "numerator": "843172262250750376468549204769825747030838550433181457010128401",
+          "denominator": "1942668892225729070919461906823518906642406839052139521251812409738904285205208498176"
+        },
+        "residual_squared": {
+          "numerator": "20096859310212268017686701537127123386845556640172895672581729",
+          "denominator": "33374797436264220037422214158899251790667258161822699530422525122222183215322508594108782608384"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "14-n2-q2",
+        "threshold_squared": {
+          "numerator": "174715485754148090961297461168688433165753879323514669578584310453",
+          "denominator": "497323236409786642155382248146820840100456150797347717440463976893159497012533375533056"
+        },
+        "residual_squared": {
+          "numerator": "29604291845794849681073106828216840106719724386369187406166520295709919517205688027800271210587976996591940578109986332778371696763806788671200532737590409977",
+          "denominator": "2227754207823337509102134573095845373483021732054960903603121346630505452738612005129840239901060253798165190221481644194672219102234100585084307285020612396607419274589973120157653414182912"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "15-n2-q3",
+        "threshold_squared": {
+          "numerator": "345003605119347284778919894571156897445166167958482756129795851673",
+          "denominator": "1989292945639146568621528992587283360401824603189390869761855907572637988050133502132224"
+        },
+        "residual_squared": {
+          "numerator": "834941061570359429400007199553042137435208661361826976750989895057043433787375342016824063166126254038403681407624094002123248448565018406670766520201651566705847841693",
+          "denominator": "76545051729020975577310162521900618820659871603466655644272117978380005723696097587725184512638784526308634214455061267843403507870735540391292521535824647434568377082591826884769598224146796816367616"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "16-n2-q4",
+        "threshold_squared": {
+          "numerator": "804786078953351913248972763912376221305671495728537051764630781333",
+          "denominator": "7957171782556586274486115970349133441607298412757563479047423630290551952200534008528896"
+        },
+        "residual_squared": {
+          "numerator": "17271592111565783229106960672886852735223485035024544465965000668890854399307747198051340782972581853724076053962491156080563700775734688026179909984450321209793286181075125",
+          "denominator": "313528531882069915964662425689704934689422834087799421518938595239444503444259215719322355763768461419760165742407930953086580768238532773442734168210737755891992072530296122920016274326105279759841755136"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "17-n2-q2",
+        "threshold_squared": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "residual_squared": {
+          "numerator": "0",
+          "denominator": "1"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "20-n2-q2",
+        "threshold_squared": {
+          "numerator": "174715485754148090961297461168688433165753879323514669578584310453",
+          "denominator": "497323236409786642155382248146820840100456150797347717440463976893159497012533375533056"
+        },
+        "residual_squared": {
+          "numerator": "29604291845794849681073106828216840106719724386369187406166520295709919517205688027800271210587976996591940578109986332778371696763806788671200532737590409977",
+          "denominator": "2227754207823337509102134573095845373483021732054960903603121346630505452738612005129840239901060253798165190221481644194672219102234100585084307285020612396607419274589973120157653414182912"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "21-n2-q2",
+        "threshold_squared": {
+          "numerator": "310827022756116705628340842627627539071074856554363698876332225241",
+          "denominator": "497323236409786642155382248146820840100456150797347717440463976893159497012533375533056"
+        },
+        "residual_squared": {
+          "numerator": "8516146596800912153055166173453567964580850610600140946391122574217184700774665197801288957752225070346418400454817706629703471819090691539260161787395199185",
+          "denominator": "2227754207823337509102134573095845373483021732054960903603121346630505452738612005129840239901060253798165190221481644194672219102234100585084307285020612396607419274589973120157653414182912"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "22-n3-q1",
+        "threshold_squared": {
+          "numerator": "4559473169558980186938513188586755900371384785249518485196173677",
+          "denominator": "60708402882054033466233184588234965832575213720379360039119137804340758912662765568"
+        },
+        "residual_squared": {
+          "numerator": "206739826388985933144671528678458133862430289987895504106319825",
+          "denominator": "1042962419883256876169444192465601618458351817556959360325703910069443225478828393565899456512"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "23-n3-q2",
+        "threshold_squared": {
+          "numerator": "248287366070369824465875738909074798106134724501294138164858159709",
+          "denominator": "7770675568902916283677847627294075626569627356208558085007249638955617140820833992704"
+        },
+        "residual_squared": {
+          "numerator": "6588252300152820159917782727965051661558534062847938694791687641034092370574159210394162105440763997037935138631262998275159499616725730667391960903779448663723",
+          "denominator": "4455508415646675018204269146191690746966043464109921807206242693261010905477224010259680479802120507596330380442963288389344438204468201170168614570041224793214838549179946240315306828365824"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "24-n3-q3",
+        "threshold_squared": {
+          "numerator": "945278879012650306131986313324273061031294155564407126607475196501",
+          "denominator": "62165404551223330269422781018352605012557018849668464680057997111644937126566671941632"
+        },
+        "residual_squared": {
+          "numerator": "5872907285792342234266138338792722288344984042958480420166987476091083792866273439978668712199982000686057137966163445646218339735003223352920976768101294061618293791255",
+          "denominator": "598008216632976371697735644702348584536405246902083247220875921706093794716375762404103004004990504111786204800430166155026589905240121409306972824498630058082565445957748647537262486126146850127872"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "25-n3-q4",
+        "threshold_squared": {
+          "numerator": "34886457553178049330263619083707796439171786304545605661377402742273",
+          "denominator": "3978585891278293137243057985174566720803649206378781739523711815145275976100267004264448"
+        },
+        "residual_squared": {
+          "numerator": "84618781304123651460385213607976715758088342453997560425374788623520545578154819778162882129858592547094319470964705899282570011984730970942637670917336118890742190447443953",
+          "denominator": "4898883310657342436947850401401639604522231782621865961233415550616320366316550245614411808808882209683752589725123921141977824503727074585042721378292777435812376133285876920625254286345394996247527424"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "26-n8-q4",
+        "threshold_squared": {
+          "numerator": "25559713524723754366493833825406140692757171892975644042541230481481",
+          "denominator": "2037035976334486086268445688409378161051468393665936250636140449354381299763336706183397376"
+        },
+        "residual_squared": {
+          "numerator": "24866044150318124877047105862745816469558816484354818883249174179918315408813211057404992704447788452952007792684190487840973178948735699627576818111905639562681061060909642992611523",
+          "denominator": "5016456510113118655434598811035278955030765345404790744303017523831112055108147451509157692220295382716162651878526895249385292291816524375083746691371804094271873160484737966720260389217684476157468082176"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "27-n16-q2",
+        "threshold_squared": {
+          "numerator": "23949030234826230008605104805095796706021655709270826027900117994681",
+          "denominator": "2037035976334486086268445688409378161051468393665936250636140449354381299763336706183397376"
+        },
+        "residual_squared": {
+          "numerator": "468053180009932388724377138513040759372490139686519575620837660501456144764687330569587069675627143762801044073916654297459943959707872156558269901877991734724956191339037",
+          "denominator": "72999049881955123498258745691204661198291656115976958889267080286388402675338838184094604981077942396458276953177510516971019275542007007972042581115555427012031914789764239201325987075945660416"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      },
+      {
+        "directory": "28-n4-q3",
+        "threshold_squared": {
+          "numerator": "7233781327042148965549896413871923281425193795305487240954160659345",
+          "denominator": "8543948143683640329580086824678208458410818089426611079788166431288878903122562200091848347746304"
+        },
+        "residual_squared": {
+          "numerator": "7923521929109225964809935105858943192697828249930273436457149656519289356230362870925915952010164722141561048700622193296893255136073515626262551676879943446294890310193",
+          "denominator": "19136262932255243894327540630475154705164967900866663911068029494595001430924024396931296128159696131577158553613765316960850876967683885097823130383956161858642094270647956721192399556036699204091904"
+        },
+        "claim": "Exact residual bound for represented coefficient tables; zero boundary; no PDE or instruction-trace claim.",
+        "accepted": true
+      }
+    ],
+    "skipped": [
+      {
+        "directory": "18-n2-q2",
+        "reason": "maxiter"
+      },
+      {
+        "directory": "19-n2-q2",
+        "reason": "maxiter"
+      },
+      {
+        "directory": "29-n2-q2",
+        "reason": "breakdown"
+      }
+    ],
+    "proof_sources_sha256": {
+      "integration/torchlean/PoissonBinary64.lean": "9f3b88819fdcbafb5f14a8abd588995d6cdba5569afa1c72003ac93ec196bb48",
+      "integration/torchlean/PoissonQuad.lean": "a06f01073b60ab759189049967b026c99b54e067ebe5eb6a578d492bb5d90726",
+      "integration/torchlean/PoissonQuadCLI.lean": "7bd8fe1b5379a1d546ce2468d0635e88c968147e132d32420a6f5f3dd97e1705",
+      "integration/torchlean/PoissonQuadChecks.lean": "1285688baf4050b1ea0ffdc88007e00b70a9ec5defca83079333f8fcd9f8afc2",
+      "integration/torchlean/PoissonQuadCorrespondence.lean": "e5d177ec11019881d2732da0a605d7dd3c4f98ed23acfc2f84fb2b5f5441a211",
+      "integration/torchlean/PoissonQuadMain.lean": "6623bafbdf8fb4f84e59fc3ec8555bb18ebc975dfc8557e47679732499971d0f",
+      "integration/torchlean/PoissonResidualCertificate.lean": "b44e964fec426035aa773fba03b7d4454ace806f6225d76e911218bd74a91150",
+      "integration/torchlean/PoissonResidualChecks.lean": "0521ddf7d3f0e931074ecbf2f64f44b1da8fea956fc489d3dbbdd9400b4731ea",
+      "integration/torchlean/PoissonResidualInput.lean": "c1ec8c1d0ce6b867f253f192dd88d85fd441e5368984abe9fd04fe38e69941b5",
+      "integration/torchlean/PoissonResidualMain.lean": "062de57dd2460ed00d7ff8e9de74e95a23c531e20ce1a1abe552c33eb2933c43",
+      "integration/torchlean/lakefile.toml": "702576fd8f098e3093f5c3a67019ea4103c387c79d7f30836e4b9dd053ca16da",
+      "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
+      "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+      "integration/torchlean/check.py": "81d92ca7a97560d38b52170bc9c799fb7f8d3d2d8de7725813d2432debe89298",
+      "hardware/certify_poisson.py": "924f473938efc643c06c9232fa57296d6083ffa5cecf0bde12d98f060b51a9ce"
+    },
+    "theorem": "PtxTorchLean.Poisson.Certificate.certified_residual",
+    "claim": "Exact requested residual bound and zero boundary for represented setup coefficients; no PDE or PTX trace theorem.",
+    "run_artifacts": {
+      "00-n1-q1/arena.bin": "8d2e0cd3646b8b17e17df87ba4d242e9fa62cb5ba4745364dfd1dc58310982e1",
+      "00-n1-q1/assembler.log": "1f4a56e4dbb75a227014a99c82f693c703546266be6e2124e1a7d52b3683968c",
+      "00-n1-q1/kernel.cubin": "e2bea842ca496d817c698602cd49a691d2a33f32d7f234a1e4c853681a69ea02",
+      "00-n1-q1/kernel.ptx": "c4fe7d761eac775d3ffc6272a64e7127cec552404d5f8e24fd20fc91d042cf80",
+      "00-n1-q1/layout.json": "3c5800406cb9b356ccbe62b5fcb2b71a5240fa879170093f8795b9d46f21203c",
+      "00-n1-q1/observed.json": "25ffd3fafdc65250d6b1147262666a7651db597723426e836200225844adfc01",
+      "00-n1-q1/reference.json": "632f4d45e00f87674ec8d68e7741fb98f216357f26da3c4c912e3ab5e041db8d",
+      "00-n1-q1/request.json": "9b5ca3e629f0b9c95c444e6efa321b651d7b3b10501130f84d6815b6e95fa41c",
+      "00-n1-q1/residual-reference.json": "ba739c3fd6495005c5c6f9dfe345b3a2b2aa0cf5d21fce4dffd6a080206db644",
+      "00-n1-q1/residual-request.json": "36909f2b96ec4cb5867728c55ff962df5a117e30bec3ad9566e4500c5e99e904",
+      "01-n2-q1/arena.bin": "3384f7241484285f6ea09c20dd6f3fcb63c9ab924e197635ee6593905138f53e",
+      "01-n2-q1/assembler.log": "ecf5f49acf8b9fccdc95fc7c48b3a5b812b4bb048d6f4875bc935e53fd26b0d5",
+      "01-n2-q1/kernel.cubin": "e961369acad7e52c3dff25cba6edc4086c723f17341f713dd67276c32f2b24bb",
+      "01-n2-q1/kernel.ptx": "8fa4cdf88df17c648e0efe059874ea148e3d55505f80bcc3196f50c1e8db8c56",
+      "01-n2-q1/layout.json": "96f860ebaba08bb6e747871b8df7706a285f44df8ac8d8d4118644f8f967522b",
+      "01-n2-q1/observed.json": "3e4450d4064dc4e1714048e09d50604b729dc347ec81dd437d67e1bd4c3b0b96",
+      "01-n2-q1/reference.json": "4ec489181d415929225e70ffb09a299c5d6c5ae18266af7bd17b10e03836d72f",
+      "01-n2-q1/request.json": "7bf119af3c6c07da7eb89a6d61e8983aae32a6ffee83a1826408f830c3e6d3ff",
+      "01-n2-q1/residual-reference.json": "616b2e9b0de1c805f31fa0f3bba02469c96612fc01e6ae134cd2bf0eca7e22a7",
+      "01-n2-q1/residual-request.json": "e97990c18e6c307f2e1f994ea3c9c0c6627d20763c76137c612ac29802aeb27a",
+      "02-n4-q1/arena.bin": "e1188b587aab19117031a3559ec90c8d28ab61cc322a0726eb45b41e6f4d0cd1",
+      "02-n4-q1/assembler.log": "7a207137c32522b05a63912e7601e333fc70ffeb05a0b2da9cbd908ea147db8d",
+      "02-n4-q1/kernel.cubin": "10863380a2dfffc4eaa10f77140498ef79de00322dc39f5fbd295448edc9daa5",
+      "02-n4-q1/kernel.ptx": "82873a23544ad58fbeea878ec3d68c8f9f651b0fc975fad414a2d1c08c7a28b8",
+      "02-n4-q1/layout.json": "b117a0414004aa6dd2f558d6e5c8a476c8a5c794983fab9009ac953ab0280de4",
+      "02-n4-q1/observed.json": "16166a2830fe730e3bd4eef24928d1541e2d0a54ca1fcb250fcb7a8338fc1f01",
+      "02-n4-q1/reference.json": "ece637ce0f1b2330b0872dbef1b600949cf774bf9d8e0ab9dae2a1deb62b0fe6",
+      "02-n4-q1/request.json": "949ee10f3fd9273d9070e980a50cb7ceac534cbc2e757de4ba1a518e2063ef82",
+      "02-n4-q1/residual-reference.json": "638e3665cf487cba1ee81309044e224ba1451295c43f34ba785eb67327e8a40d",
+      "02-n4-q1/residual-request.json": "a15880f4cf7d80ef55e0bfe3a9c0431599bffd4b72537599ad916e27e973e74e",
+      "03-n1-q2/arena.bin": "52b298b6719fb482a7d6f68141dde95f2a29b5450fa25f6df8bab19b2be67bc4",
+      "03-n1-q2/assembler.log": "4524802ad24940dd23cfc00cf352bbb561cd6f830a2355c54db878a7e97da918",
+      "03-n1-q2/kernel.cubin": "8a87deb526571c1046436e82056855d21688ebb4a9ba81e3fca85920e88f0a2e",
+      "03-n1-q2/kernel.ptx": "084299c46a539a7c272a4dc7b239e8d2c325bc9d7920a3f1e2f943b3c2e0924f",
+      "03-n1-q2/layout.json": "0b5d21ddecde334c1bd9af0d91463ce0768bd74e958f2a280dd418426301feb0",
+      "03-n1-q2/observed.json": "d2e1211c6cec75034cdf631692617979782a28bec7299cb7a1bd4bc4cf128e88",
+      "03-n1-q2/reference.json": "9041c10fda5b75cad2315ba244e8b472adc021d7726660d27e8137abe0e71c64",
+      "03-n1-q2/request.json": "af0f4aaa54037e7e980597b009a371a3f2814017efcb48ea5efae048591d0b7e",
+      "03-n1-q2/residual-reference.json": "c4e9282a1ab2dbca19207670de8fecc63d72c29239c416637367a1a819d8f14e",
+      "03-n1-q2/residual-request.json": "ede8ebe0d245cabbb768455e5f658f3d350876c6162bf56d8a4f3f2524c6bf3d",
+      "04-n2-q2/arena.bin": "dd72dd15dbd7fa773ea30447e3bf7158eaa61b88b833e2ffbf1913bbf7c94334",
+      "04-n2-q2/assembler.log": "0b5ce280d044f1ebc56354226b2a24012ac34d1d59a4eb73e8ab4a78309fb6ae",
+      "04-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "04-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "04-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "04-n2-q2/observed.json": "56e883689ba5ea4f25021fe0390832d709a8a706338f80f80c723af14570b7cb",
+      "04-n2-q2/reference.json": "2f9395bfd131e1816f050d91ac5f0ae581b6dd20b8c8bd98849f6f5fe9afcbe3",
+      "04-n2-q2/request.json": "53e2f008d24387864df8614d40e55869fdfca1c8f7af224e6f61a61c9bd7eb87",
+      "04-n2-q2/residual-reference.json": "ba698a4b74893780c3c79287ded653999bd3d4e68f4d10e973ba1b6e1e6a7944",
+      "04-n2-q2/residual-request.json": "12c38529e98ce9fab44e270e99f7466641571a76ef87ad5261b9e636f20a8cb2",
+      "05-n4-q2/arena.bin": "68f9f34bf857d05202d9fca2c03e4f174adea36fee0b2da1e0efa63be955a200",
+      "05-n4-q2/assembler.log": "47716c00c6fb8d52048d0895063d91e7fd5104ed4fa51413745040ff9b6634ec",
+      "05-n4-q2/kernel.cubin": "07fa47050f0875905025c458ba5e3460c9d3d6a30dd3350844a98dbe1345ba93",
+      "05-n4-q2/kernel.ptx": "ebb8e5c8da774e6ba42f16234d486d83dc0e96e258b12b87dc92707a000946a1",
+      "05-n4-q2/layout.json": "39ff71edd405f00f1a4165e900ed97dfee5f18da433525297f3ab5fa972bea8c",
+      "05-n4-q2/observed.json": "199f197d8fd7ff431891a4b6cf4a99f29f88edb44a57b479902bc3457877acb3",
+      "05-n4-q2/reference.json": "3035a5e262b6b4f2cff21d53fecb16cbd3a0d2a1983a403ec33411e2d8ffa89a",
+      "05-n4-q2/request.json": "1521354181d925bff4374c4b48080d4bfc53e75afe653a6757ca885b542b3fae",
+      "05-n4-q2/residual-reference.json": "a5bcb193904fa26bc060e146e604a59576b77ccc13aa2717279542ff927e5dd0",
+      "05-n4-q2/residual-request.json": "db1aaca47b5e51ea9db76469bbe34f572436c34fcba0771585cd1aad252dcf3f",
+      "06-n1-q3/arena.bin": "4cb70241723b35431e5026e66fd2b40d192bff53607144fc8c4150c8e95ca388",
+      "06-n1-q3/assembler.log": "fa843c5a926ec6e323e800f8fa7b148ecbfcc4b403060a4fb0e158912c4d1d37",
+      "06-n1-q3/kernel.cubin": "33f64d21c0b542030441d7ca318379fb44c9c07c6e880d40c1e3715942deef63",
+      "06-n1-q3/kernel.ptx": "c50dd15b1423682f5bc808a0e74389a1a02ac4d329cf4216a095fae1ae95a408",
+      "06-n1-q3/layout.json": "a77d4068635bd5f5b84f6a103f7cf8a4037d2fc6826120c55bbe222bbf413c97",
+      "06-n1-q3/observed.json": "ed15338cfc61d246d468df6e241a07979b39f6dc6d52109af828fb32bc820e21",
+      "06-n1-q3/reference.json": "224901022f2e601aca591235ea640b492b92982c0fdcbd6304f0c2647a895d66",
+      "06-n1-q3/request.json": "a22afe07b6123b307ad0fad702ddc11f972804c224a4a104a3807bc21139b4e1",
+      "06-n1-q3/residual-reference.json": "2370f993203d2a668f89b232563e411cc37eecc65e140cf7590f5d9ea9c57f7c",
+      "06-n1-q3/residual-request.json": "bdc9fdcdcdd6ee0689b67dec654ca63a5558bc71274c2f39c168706a56b21206",
+      "07-n2-q3/arena.bin": "d76ec1aae72b3a19b4ebf6c9d6a04196f9e0d92c5bc54c66fdd389f4828a8577",
+      "07-n2-q3/assembler.log": "e160aa80ff745695c665b4077d8ae3496c4fce30ccf2a3374a4db0778c39a6b7",
+      "07-n2-q3/kernel.cubin": "bd5f8509af2be83ebe1586275e5065c57d32b2fbef1609c22d754357aede9621",
+      "07-n2-q3/kernel.ptx": "ee3334e8508fd300b1377200da0188e69b059b7847d1efa839ec033a985e6f68",
+      "07-n2-q3/layout.json": "d714ef1817364893c5e424dea2d8c6185397cd7afb76ec8f19624e02c168743b",
+      "07-n2-q3/observed.json": "c04c983cfc0cd2ef782ba86789537940cbd6b9d5af00e469ce7f4de23f8632a6",
+      "07-n2-q3/reference.json": "1bf8552840016c99264f7f854974207f5c993e9568696da070d3fb0111f13983",
+      "07-n2-q3/request.json": "3f7fb30a9323dabc1277cd6212b0b150de4dbbd5c973c013755a84aa6b3618ad",
+      "07-n2-q3/residual-reference.json": "2d07abd43025f1c56aac8a6cc3d21379adae2656d0dc4d72271dd41e6367d652",
+      "07-n2-q3/residual-request.json": "71698cd58d92b241d7391dae208eca40ae53536400d0b3a7a8f8656a8b33b976",
+      "08-n4-q3/arena.bin": "515772c3ca798d4f649ffa99736882cdf3f930dafb6a61a2b72679b3362ffbc1",
+      "08-n4-q3/assembler.log": "1eb6ffeeea2ddc66a066f89778133b33196b78bb8661b218013c58846d41e878",
+      "08-n4-q3/kernel.cubin": "7a48297675d88141844fbb5149d0cf33029cfc1a8182950f12f9c8379010f7ba",
+      "08-n4-q3/kernel.ptx": "46e9d3106bf2d01451202b9fa0f72c3813b4caa859c6df26e4d8678ee91ff40f",
+      "08-n4-q3/layout.json": "459fc58bf3121813e2dbfbbb0649520ddb6682dad28c71b90629392c9935af43",
+      "08-n4-q3/observed.json": "292ef483d1f88638a169f916fdef3b87f605bf680cd05051d6f4d6f14a6276b4",
+      "08-n4-q3/reference.json": "125b706f31aa9603c88640aa47063666bd806c1528fdce8ece155885e0a8ddb7",
+      "08-n4-q3/request.json": "70dcf74549d4dd44bbd83baff43b7ef0123c8c91297dcd1d108c33592e1790aa",
+      "08-n4-q3/residual-reference.json": "7e73f12de00e7dc31994de89c0ff3db673f0da5df203f41d6daaf8d915c8bda4",
+      "08-n4-q3/residual-request.json": "434250e8e664be48962706dcae50351fc975a5061ca145418c1fceac8a20f2a7",
+      "09-n1-q4/arena.bin": "f386c9a6a71a7472e30b983a48e56696ba856bc76405a90ffc0d39f826cc5a4e",
+      "09-n1-q4/assembler.log": "aa336d128e35e28ef1649a957304bd329916f43966d2fb1716ba11047f23f96c",
+      "09-n1-q4/kernel.cubin": "6727df77a543cf63dcd5ae00f920ac57d7cd27505bd81fc98abc89622b1222df",
+      "09-n1-q4/kernel.ptx": "2d739e0e270eef6231f627707f133d0009d6ed6889d606ac26bd19a0ae2c7414",
+      "09-n1-q4/layout.json": "0bf69719c34139f13d776deda00a8955377b8b3531326a1236df9e33951444c9",
+      "09-n1-q4/observed.json": "0be4d06ed7b67e472bdef03e8241da53d432330360cc349d951466f36cb37f44",
+      "09-n1-q4/reference.json": "07a6296ec34a867d77a42cdea42cb3142cee82ccf11a9752f8a9f23adedf1cdf",
+      "09-n1-q4/request.json": "2060f16f27c8d728e3c2a5d2235bb0346fa24adb7006f1f6940a0e3765e944ab",
+      "09-n1-q4/residual-reference.json": "e5ae4b05979f08bb632d42eda0cdf3adcbdfa6752037b2a3f2eb9f7c95522d7e",
+      "09-n1-q4/residual-request.json": "ab82987b08b5e5ed85e09a06f4fae62ff303aab11e51fedd41e3fa9f460c5867",
+      "10-n2-q4/arena.bin": "9e416f7b0939ba8b83263a4beabda06b3deaa4938f068b44d406483d17b747f8",
+      "10-n2-q4/assembler.log": "19f06a32075bb219fdae6bd9bcaa0166a313343b607fb7930e9edaf7f1832a32",
+      "10-n2-q4/kernel.cubin": "10be75980fca1aa130d108110b867d23995935c710ed1e1adb2c25cc261e1f61",
+      "10-n2-q4/kernel.ptx": "73701f9516e283cfcf277264f31e073dcd9bcf824154a6a314cc1018b0ab7753",
+      "10-n2-q4/layout.json": "43e18b9ad2b42524510c67e64a831808abcac39a70bbede0f04714362fed1c8c",
+      "10-n2-q4/observed.json": "9dff4ba77cf9a3204688bd31d81c705ed1c9528eb3a498c3dc54e081cb35a192",
+      "10-n2-q4/reference.json": "05a4a005af06fa61df39e7fed3ef51ae3a93cbd23988d10dd947a07bc5c47847",
+      "10-n2-q4/request.json": "1db8c26285c09af27d9a76481a5f29f334b7f9895ade973982ab1feb3f76679d",
+      "10-n2-q4/residual-reference.json": "6fb61061cf69f8d630c7ae4559b958bbaeda192e593eec260cdfba9ae7206511",
+      "10-n2-q4/residual-request.json": "4fa8b82a7e09f002f3f11b307b5d28cc0d48c821ad3b4571fb15de2d16a6cc1c",
+      "11-n4-q4/arena.bin": "a57203ab5de1f2b8f71507df0fc10bf1cdd241d5b9b641979a9e8416c617f5b8",
+      "11-n4-q4/assembler.log": "ea1bf1880d994ec8c4d1dba0c38744fa5e98d25b1fa5495ef929589339ab871f",
+      "11-n4-q4/kernel.cubin": "6b08f86ba099905a145da0950ee1d4f284d1ad35ab8595f4d7804fddacccf226",
+      "11-n4-q4/kernel.ptx": "f7615853931a332e1e48b73a2c89cc0f3b8c0531d2a8e1535657d7863bae6fed",
+      "11-n4-q4/layout.json": "ea7fc0072492ac51b6affe41ce7cdf7fc3a4e8aee0320da1251907c9b83573ad",
+      "11-n4-q4/observed.json": "e8521cf78cd0b6dc77fe64c69378dcc05c7964a76b0b9b0b5b3b2c2f6ef2b9f2",
+      "11-n4-q4/reference.json": "a632ceac68bbf310dcb43546b0137b7938b6ace998edfc5fce6140eceecfa815",
+      "11-n4-q4/request.json": "7dbf81a2b61ede930587b7d035f5d2dc7334e488ed948952c2c8dc9f1dd1b8ad",
+      "11-n4-q4/residual-reference.json": "80be3c8df9e24a5869d0b1c3888a61bc4137d026080b50e3d6e9c8c9f34fe2f5",
+      "11-n4-q4/residual-request.json": "4400f427d4d1b6465da780516d8026dca77de0f2d98416c267a0cc9de4f47a47",
+      "12-n8-q4/arena.bin": "f2740b75e86a9850a23c0781e3703380b81b48a72176f34b13239740211722d6",
+      "12-n8-q4/assembler.log": "4d7121e538af636e5b2bee5fe1c0285684c480b447705798aa49022114560ac2",
+      "12-n8-q4/kernel.cubin": "a0e71761b047c9b64874e51b8f93c2382a867f349af4246b0e4c12ec4d332a50",
+      "12-n8-q4/kernel.ptx": "3dd5feceec8ec1ec4007b14e42ef068b440f86df411b2da7b3357364dfb6f6ca",
+      "12-n8-q4/layout.json": "0468c1624068d7566d85004893b6241812d85fe2f04d862b5ff84bb58adc7292",
+      "12-n8-q4/observed.json": "f3c831a2ae52a9042b6c86dfa8844937ccefcaaf00bfe214c64b9b866bd3af1d",
+      "12-n8-q4/reference.json": "45f066562a884899fb7e45268291691ff7086955ed48f780c85d3f15ebbee68d",
+      "12-n8-q4/request.json": "e223112929a092873b76f6172d62a3abbc37bb22a351caeab91af573c065e7db",
+      "12-n8-q4/residual-reference.json": "7299bf9dee637e0c408401733b390ee0f11b31395144099a2e696dd4db9641ad",
+      "12-n8-q4/residual-request.json": "03bef5aac37b92473ddccaf0800f775acebb4a181e2e4ba9ce94a053a403e507",
+      "13-n2-q1/arena.bin": "0dcff7d356b874fd3f6e24ca2ef9a916b15ee63ebbaaed079ef2c30f79bb4c3a",
+      "13-n2-q1/assembler.log": "00e2a717f54a706fd3b13d16cb2a714d63d3bb11a9a3f3e7f4356729e2c4f17b",
+      "13-n2-q1/kernel.cubin": "e961369acad7e52c3dff25cba6edc4086c723f17341f713dd67276c32f2b24bb",
+      "13-n2-q1/kernel.ptx": "8fa4cdf88df17c648e0efe059874ea148e3d55505f80bcc3196f50c1e8db8c56",
+      "13-n2-q1/layout.json": "96f860ebaba08bb6e747871b8df7706a285f44df8ac8d8d4118644f8f967522b",
+      "13-n2-q1/observed.json": "2828fe32ab52bb0fc9cc36d0162f0a8376054c89ca92bbe5b53bb002bf6f7bc9",
+      "13-n2-q1/reference.json": "efd28170b2259302ce5e3e84e77a1fc4bfc75ea06af1ff4836fdcbae2c531227",
+      "13-n2-q1/request.json": "1c4d4ec8a11e02a8c9e998213eaefe6225b3b7d391a04ae2bab55785c0e04b03",
+      "13-n2-q1/residual-reference.json": "46c16b34a7754890d89f8095bb6156725d8629cae089403a2812d7cc8c3da1a5",
+      "13-n2-q1/residual-request.json": "addda6084886117328b5dddc77e3a677980326eda6808eb81a90307ccfa09c79",
+      "14-n2-q2/arena.bin": "5a2eaf08931f56235e5e34f94bab5eb30746b14d6f1f1fe9bad027aa467ec905",
+      "14-n2-q2/assembler.log": "2947bb6397570ba6066e49ea409562ddb9dc127d405473658a4c8df993d040c9",
+      "14-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "14-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "14-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "14-n2-q2/observed.json": "dc90923e7227f9b884e29110f2352a94ce9ad39a430d7e4967bbdd22ed149704",
+      "14-n2-q2/reference.json": "f8ca777c2a8e96cc255c312e074713f3e9e46739b1038eed866756cae1ed2eb6",
+      "14-n2-q2/request.json": "3907687c8c69b096071ffd36b88caefec3a760a14b13ca1f1b825712d5056e56",
+      "14-n2-q2/residual-reference.json": "946b306f43f66736582ff9847d425c3f48c8c8e6f3ff38529ad4ce3894d58b30",
+      "14-n2-q2/residual-request.json": "74f67f86958819f9a75ce44a144a3861271751fb3acb98ad8708db22ebd14e74",
+      "15-n2-q3/arena.bin": "7443ad2b274aa3feebff00a4fefe28e9c3308cd1f54e1eec0c7dc9f4edb5282f",
+      "15-n2-q3/assembler.log": "7a9c5a76b62baf21f71cc9e5199ea20e985666631b33dcc092edb5ddc79a5a6b",
+      "15-n2-q3/kernel.cubin": "bd5f8509af2be83ebe1586275e5065c57d32b2fbef1609c22d754357aede9621",
+      "15-n2-q3/kernel.ptx": "ee3334e8508fd300b1377200da0188e69b059b7847d1efa839ec033a985e6f68",
+      "15-n2-q3/layout.json": "d714ef1817364893c5e424dea2d8c6185397cd7afb76ec8f19624e02c168743b",
+      "15-n2-q3/observed.json": "65f797efb98155e5158b52f1743eeba4b54d94c9911313112583177ecdeb32cb",
+      "15-n2-q3/reference.json": "f08375319b8ec464f861aac921368210d1eb1dc3c996b95d9f14b5207f2e50fa",
+      "15-n2-q3/request.json": "2d700ab0559563180d132541e32d2608d4bf4908ff829a72729595bd26239591",
+      "15-n2-q3/residual-reference.json": "2939f0145a74ef5b3111862a134863511faef403f514a9e1a905f966054b0fe4",
+      "15-n2-q3/residual-request.json": "fefde48cfbd564dfdd1f191c0dcabc920f5ab4dda6aaacdb24fb0da99605ee50",
+      "16-n2-q4/arena.bin": "2e4ad8d03e9c0a6e60e13c69b2053e9f134b6a63933f728638922166e92bc662",
+      "16-n2-q4/assembler.log": "4b4e9b903abd0de127b8b4d4aaa8fc0521834164663b85e5c8e2644d05f484f9",
+      "16-n2-q4/kernel.cubin": "10be75980fca1aa130d108110b867d23995935c710ed1e1adb2c25cc261e1f61",
+      "16-n2-q4/kernel.ptx": "73701f9516e283cfcf277264f31e073dcd9bcf824154a6a314cc1018b0ab7753",
+      "16-n2-q4/layout.json": "43e18b9ad2b42524510c67e64a831808abcac39a70bbede0f04714362fed1c8c",
+      "16-n2-q4/observed.json": "6ce8b454adffab365a3de39a4b2a12ea04ebf37ba0281bf2f08f375c1706fd1b",
+      "16-n2-q4/reference.json": "684d7a1315c1df330af5f93e1a9a8b8014d73592adfd0c1e9a6ded2304a5dce5",
+      "16-n2-q4/request.json": "256aa096d413a78dd6a8059415c717f5fd606f9cddd8fb55075177056ba79774",
+      "16-n2-q4/residual-reference.json": "12e3be788a975e953f061e25b2807aff131f1388d7b5455e64d0f1f2fb4b481a",
+      "16-n2-q4/residual-request.json": "d5d25f9320192650a4ff4c608a2b9222c3b23ccd1f0baf5047871c2169b5d3fb",
+      "17-n2-q2/arena.bin": "7b3e6ea3c491ce05d91b93b3b402f016e3bd3d5db595a0c0318389cb051e254c",
+      "17-n2-q2/assembler.log": "fc3d04b2dd9387a975afc6c68880319897c98d2325760d792f1005402865bb66",
+      "17-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "17-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "17-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "17-n2-q2/observed.json": "8bfa2eeaaa4116f227d39a0181d9bc2e52cb7f31ace78ccd69e4ba14d6ff6b18",
+      "17-n2-q2/reference.json": "c318c975e553e905e6c8416d3bfcd09242097cff1907c104202a5b3ec223812c",
+      "17-n2-q2/request.json": "53ee46dccf874ee948735b99b5cf5954c55c1e24cd8b1fac094463044d52a26d",
+      "17-n2-q2/residual-reference.json": "fad65948faf6c013d08b8b30c334f8a01b3fc861e580fe2e5f7b5f5a65a9828a",
+      "17-n2-q2/residual-request.json": "f9b89fb7fd505a333bb44be30d9cd81e38ac08fe302c5073655343d64ee988eb",
+      "18-n2-q2/arena.bin": "dd72dd15dbd7fa773ea30447e3bf7158eaa61b88b833e2ffbf1913bbf7c94334",
+      "18-n2-q2/assembler.log": "f134ea790e220e257a6558cd51ae42a68c136c8450c9b6d48656dcb08b6502ab",
+      "18-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "18-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "18-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "18-n2-q2/observed.json": "9b6f8afa16ba8e5a3593bc8c07420cfa0ff7ee2002afd42e58f6b6c47aea749f",
+      "18-n2-q2/reference.json": "3fad09cb3f75c9c17310b0c6083e6dc9ed885dc5e33f1f9c4ef9bd596401eded",
+      "18-n2-q2/request.json": "a928883547f87ab553321dbaa15e3726db5b4296496475720647aec17cc4afa1",
+      "18-n2-q2/residual-reference.json": "943606b5127ec3081b43e43c941d80bb1d983d8a52f484d8b5e3fee87a3c507b",
+      "18-n2-q2/residual-request.json": "1cede6e4ea354947e2350a6ce14a268666705321921b737a1d4063deee2d021e",
+      "19-n2-q2/arena.bin": "f4546ade58006c5cf8ea599311eacaadfaf2631932b4a8df05450d5d41a3e49f",
+      "19-n2-q2/assembler.log": "bbfc608cb8d477b347e6408bdf5f5b3b83769eef3c6a7545838eb5f775dc0911",
+      "19-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "19-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "19-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "19-n2-q2/observed.json": "5eb66df47a790b136070f519ab61117ae500572f944238e28ad31429757d3d4e",
+      "19-n2-q2/reference.json": "4f8933ad11e410e9cc768a7cd1e9d95eb625f2367cf9d9867d1fec0ba1378f2e",
+      "19-n2-q2/request.json": "41d3306907c6021f21cf06a3a59c373b44917b03afb6bad405e224f13dcf37bb",
+      "19-n2-q2/residual-reference.json": "557f62253660d940912b6907fbd3ea2fae839a4e3f74ba585744154fe7c844a6",
+      "19-n2-q2/residual-request.json": "f5a48d6c473bac8c2b1abe11a792ab311e29b6cd354a2f28f655b7a5e4ffd3e0",
+      "20-n2-q2/arena.bin": "5a2eaf08931f56235e5e34f94bab5eb30746b14d6f1f1fe9bad027aa467ec905",
+      "20-n2-q2/assembler.log": "d4edbb7b162eaff4b586ee52d346bb33db6b28729f0da4468c76c18551cd94c7",
+      "20-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "20-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "20-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "20-n2-q2/observed.json": "660fc048ecd3f4f524497be8069dcacaad53b796445663d7ae7d43ee0e74c257",
+      "20-n2-q2/reference.json": "19ebd44d479af892d220866692fbdc82452569cf1c2d55fbcaa7caa73e73a2ac",
+      "20-n2-q2/request.json": "5a406c22c596d2858d4ba11592bdf102e8e6da635117ca789a1ab5c54e54a4e0",
+      "20-n2-q2/residual-reference.json": "946b306f43f66736582ff9847d425c3f48c8c8e6f3ff38529ad4ce3894d58b30",
+      "20-n2-q2/residual-request.json": "99b6fd4fd3d7fc0832473fe6b36223bf8d52ab86263fc5e2b4188fe22e9352de",
+      "21-n2-q2/arena.bin": "a549c5eb6158226c94a80e9bab04ac428b04dcc2bdece57ee3159e3f18c78e41",
+      "21-n2-q2/assembler.log": "506e25143397641c8ef3cc9e6188008b30d043f5dbdd0b77ffc629d0185b9359",
+      "21-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "21-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "21-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "21-n2-q2/observed.json": "9aa7901f5bcfe7d97bca2efc8b94e6058096fe84e30e7599b974d73cae8dffd1",
+      "21-n2-q2/reference.json": "1306a052c9e24fea1a1ac52c2e51a0de02c08f6b26a8b01811605ba23ff59dc4",
+      "21-n2-q2/request.json": "714074423ac91ef5fa77ead8b5e4fc8d76b0376baca629874a9b34c62515a1af",
+      "21-n2-q2/residual-reference.json": "d2bc330efc716ad1e57976ce1cf54b9027e4a75e4d36db7d4794c712273ae052",
+      "21-n2-q2/residual-request.json": "be1a3b89be77be5d74da53b00d7270f23f4645751484fc730f6bb0f6594d9a57",
+      "22-n3-q1/arena.bin": "f4e403b4e051816fca2026d281473da2d4f6d75123a9991e880bcd8d695841f3",
+      "22-n3-q1/assembler.log": "05f4485a80b2c8983a34b28e7e10ea9af5a8d1aa4aa89b5828ed8afeb0e44482",
+      "22-n3-q1/kernel.cubin": "6afe51a12b61127026d89b7a8d2c9279299dec4ab7d1f6e718d79a5bb07faccd",
+      "22-n3-q1/kernel.ptx": "fe00022defa2813d9837339b15a1b8135a9fef2d38bb116526687165bf85332f",
+      "22-n3-q1/layout.json": "30a9fa60e5d99a68098a80411435b87fa64bf154ccb8afd51f4724af8606a779",
+      "22-n3-q1/observed.json": "030c78d80e0f2969825f3c83042993d23f055b5b2a47b7a9db73d02bafc39e43",
+      "22-n3-q1/reference.json": "3d00b9e6e8e92c8929fcb65acbd8ecffc5a598969c7a04335617fa0b907da740",
+      "22-n3-q1/request.json": "f8b4d94e11b434dde93342cfcf1acbb0944c1724e0ff71b058d0aa99e4a35dfa",
+      "22-n3-q1/residual-reference.json": "2510148f688279d650292c18a0b5bc129bbe6c890909bacfee84ef31932900a6",
+      "22-n3-q1/residual-request.json": "922489b4d99a7542bee32f53958ba91d91f1bcbf2e06018f8ed8cd2b78ac8d83",
+      "23-n3-q2/arena.bin": "b4de0ac0998cfc4696da279f1a8ad05cb68feba4dec586a3917076114930bd2c",
+      "23-n3-q2/assembler.log": "fdd39f57bfce9e409369ed4ef310d9d8044147b0f22a077ac05b80369e005301",
+      "23-n3-q2/kernel.cubin": "b96870a64660258ab04cbc7988315ed16b18b16533e4e4a3d0743faf34fe49b8",
+      "23-n3-q2/kernel.ptx": "8ae5777d0fa3ebc2525061fb935d95f29dd0efcdec859add79c9f44f244fc1ee",
+      "23-n3-q2/layout.json": "f02d3e7f290d4677b140b4403f65bca626620ff70dbd439a133c66bb7adb72b6",
+      "23-n3-q2/observed.json": "4a091e14f86557cb00dd256d154a50e3489f6f1d91ac404b7452ea59a1d3d34e",
+      "23-n3-q2/reference.json": "2e934624e96cb4802000910d3effba4d56fbf305297a8bb46b14f9fe2f16bcca",
+      "23-n3-q2/request.json": "edcb2d922acb83ff5b7f8831ad1f1a2363844576d6bf325cd3ba516e9430e475",
+      "23-n3-q2/residual-reference.json": "1acf1f13ca967f461101b03f71335415b4f3566aaccce98c2533b4fb29d53f0b",
+      "23-n3-q2/residual-request.json": "72fc580ebd5a2efcc68dd2c5a836acacf2bf165f9d49f87d4abcb06a81c5ccc6",
+      "24-n3-q3/arena.bin": "913a4463ac36bb2573a673685df189f942ce695fbccdf52db26ab11e61cb5da1",
+      "24-n3-q3/assembler.log": "d486f7c77ab17a572f3eea4163f83e93b27022f683c2774ec8676c996fb1bb5a",
+      "24-n3-q3/kernel.cubin": "3c96f2954b8962bcb150a630751f0e463fe7764c913424359123fed07f9dc4b0",
+      "24-n3-q3/kernel.ptx": "129551c86c0a077282d3e77a086ddd767f02159a90b1472d116546c8567b2c1a",
+      "24-n3-q3/layout.json": "105bc0e071f9857200443e9dada20b943cf16c2f12d55018c5a58f977e700628",
+      "24-n3-q3/observed.json": "a059a93500c36eb98f9522b23fd00d53ec37ce9ad609316da42b2ff86e9216c9",
+      "24-n3-q3/reference.json": "e1f4b581ed2d0e549055a3368c349959f319e2840c22989e0363a361dc55cfe1",
+      "24-n3-q3/request.json": "0cb1e820d7203fa60a3a99195dade3ae87648d17fbd765eb72fcb0611c8ff862",
+      "24-n3-q3/residual-reference.json": "65246d98f67f3a95129bd17ef244f67515190f2602bf6d2c7fc5d0fbbb34bde9",
+      "24-n3-q3/residual-request.json": "fb396265f1864e8f06283a8e059d3b84b3f40e0df563bbaf25728344a9a3eb51",
+      "25-n3-q4/arena.bin": "a15634a0eb824b8037aa982a75c1c625ce76fa5fd6b769f64337281cfba5afb5",
+      "25-n3-q4/assembler.log": "75c981a87bfd18280cc19e0ed8379a3517abf78fe821acc181d3b5af5fc69b34",
+      "25-n3-q4/kernel.cubin": "eeacbc41ca8a5f18ad3945baea677ee1ca4d3c5ac7b4d88ae44e83dd4ee0adef",
+      "25-n3-q4/kernel.ptx": "ea8923c1c5e83169be9f4dd00c71a3aac6beb3994ab80d667b607b9a3e11bb5a",
+      "25-n3-q4/layout.json": "9edd6e373d4c0feea2dc58b6381cfde0db9bf8f101ea3ed150833dd4f09681b0",
+      "25-n3-q4/observed.json": "8917aa26380bfb66d9e30bc92a2de70ed53168ea5eb685e7a16d7119507789ad",
+      "25-n3-q4/reference.json": "683b276dd0245d2fabb240c69b9a0dfc82704252a29c7fa1f862ae6a3d9b59db",
+      "25-n3-q4/request.json": "d3d830091ce09dcdb07ec8cb98bc7c8cd7ddbb9b5e1da601c85bf9a1695a7df8",
+      "25-n3-q4/residual-reference.json": "1970b521565dc9c44ac25463f4a0296415dae10264bb32b28d7197b3fdf49249",
+      "25-n3-q4/residual-request.json": "163682b691318569704e1d8e956916c729bc6c002ef0f5e289cc9842b7dd2910",
+      "26-n8-q4/arena.bin": "a916012dd8be89c4552a158e666c6213d007645b7ce3309234539db07a7e6fa5",
+      "26-n8-q4/assembler.log": "29fb389221f81473375486139cacf29007be1f7c14a14494dd90475e148f7c53",
+      "26-n8-q4/kernel.cubin": "a0e71761b047c9b64874e51b8f93c2382a867f349af4246b0e4c12ec4d332a50",
+      "26-n8-q4/kernel.ptx": "3dd5feceec8ec1ec4007b14e42ef068b440f86df411b2da7b3357364dfb6f6ca",
+      "26-n8-q4/layout.json": "0468c1624068d7566d85004893b6241812d85fe2f04d862b5ff84bb58adc7292",
+      "26-n8-q4/observed.json": "fa83feaa8b247425b5f9efb4c8d32e2f58fc7c939190555524776cc8d6b065d8",
+      "26-n8-q4/reference.json": "5ee520a4cc923602579a8ec7adb0e8f8078da042b989a41b0ff27682215dbbab",
+      "26-n8-q4/request.json": "324d7c26edf637f026d8867ad885eec0d533d52c7788fc8c1802b4bcba6e23e2",
+      "26-n8-q4/residual-reference.json": "c02961a6ce5ee702d767da99ded91bd7a1e6881417adfdea9b42fbe5e8a6456b",
+      "26-n8-q4/residual-request.json": "3f16cca539c58a0feeae06991fa526f3af4aee214a8e37f4154097d226c95ce3",
+      "27-n16-q2/arena.bin": "8f452194badae53dcb50d1836163dc3faa02e5eb1ee78bfff393cef507392e7e",
+      "27-n16-q2/assembler.log": "8df6915996f7ec46b6d83700e3f01666378c0dd6d6b477db7943772117c439ca",
+      "27-n16-q2/kernel.cubin": "59da41ec2a81faec56ae107f4d15463dbb2920db13a5f1010aeb821191b39567",
+      "27-n16-q2/kernel.ptx": "ea037d577779217064f3254cde622079fee389f8ff06ab8d1bafcc3fa726deac",
+      "27-n16-q2/layout.json": "be357465706b6725a36a1dc77ac0b8e3e0071adc3dbf2c9723edc22daea4fe40",
+      "27-n16-q2/observed.json": "4ae4a4f839cc660204dbad4231c24e19bb1fbf5b83bc9d636c7dfc73b9166890",
+      "27-n16-q2/reference.json": "1be526b2777719e9083c1edab6e3c143f281d4c535fd82cace3ba6bf48d178d0",
+      "27-n16-q2/request.json": "c214d3f1a3bbdd657afc56daa236baaed43e810139589f7579996021e94039f7",
+      "27-n16-q2/residual-reference.json": "4926f65899201de749b5e2b0d7b6d97c555fb133d84b8d2867b8fb64936394c7",
+      "27-n16-q2/residual-request.json": "830cfb0b4c951871cd2b7b52eee5f210e65b67676290cf4882129113a442d008",
+      "28-n4-q3/arena.bin": "e79a57eb41e4957dec9000d4f709b8f7b48db3a27c628717a2adab00414647f6",
+      "28-n4-q3/assembler.log": "6aec058eba95f623532fe50ea56d11685f3ee0f2823496064ff541eee715e39d",
+      "28-n4-q3/kernel.cubin": "7a48297675d88141844fbb5149d0cf33029cfc1a8182950f12f9c8379010f7ba",
+      "28-n4-q3/kernel.ptx": "46e9d3106bf2d01451202b9fa0f72c3813b4caa859c6df26e4d8678ee91ff40f",
+      "28-n4-q3/layout.json": "459fc58bf3121813e2dbfbbb0649520ddb6682dad28c71b90629392c9935af43",
+      "28-n4-q3/observed.json": "7533fc5cf09f13150801b25c468420000875f1f21147f5af6c88ab14d797c772",
+      "28-n4-q3/reference.json": "594f4deea457ecd456fccae74309a10776cdddd528686a4eaaacaf2e4e874337",
+      "28-n4-q3/request.json": "3d7adb0adcdbb4bee36298e310ef862d761ebb3e841a28a759bb794feb52d498",
+      "28-n4-q3/residual-reference.json": "dd87486d9dc850f4e1f6f241fc72abf04d185c23dfc0b95879322c853c87339e",
+      "28-n4-q3/residual-request.json": "15c87da2a0913f37e6bdb85457bfa1d9645bccc3b1eb2e001a9b24f5cddd3d0b",
+      "29-n2-q2/arena.bin": "7c850729e43510ad031207a02bfe5a9baf37aa1c0ec31cb1564cc3567d21f77a",
+      "29-n2-q2/assembler.log": "0d8cd3dcbec9aee7fc304962221b9d5fa1290dfe93caf5d23841bbedd09bc6e3",
+      "29-n2-q2/kernel.cubin": "c370e8f6f944517a3fcb409d73f897d3a62c66b30519ae09a4058d5672264ddd",
+      "29-n2-q2/kernel.ptx": "15f03d202f7518b321d7ba02b81c34d11d64b4158bb462c393362bd8c055ac3b",
+      "29-n2-q2/layout.json": "08a86c61a03c76fcee35ae8f518adb0b736b719953397f7279c841a8d5786091",
+      "29-n2-q2/observed.json": "1c56f72de9e30d76f6a30eefd9fb456baeee989247614d850af93a64c5d16174",
+      "29-n2-q2/reference.json": "9190a9d360661d1fb65239cd67474bba724556a37995876d5882b14f1e487d12",
+      "29-n2-q2/request.json": "fd6309f82dd55ba46ec90b4dba973ace10c0c6bab0df0d0adb5e70fe553094be",
+      "29-n2-q2/residual-reference.json": "e7039b3f8f4679084a0f14aac9c579fcce98c5e7bb33c83cb49834457bea9036",
+      "29-n2-q2/residual-request.json": "6e36a66fda92f9015ae813dcde0e4aa3a6582a60847cf871919025df8d24313e",
+      "build.log": "166c1d091bef04589cc9d1a08c238f5de3e1cbd773722dffd913209c37b98dcb",
+      "export.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "references.json": "1d75c3052c74c603050e6d6cf66a228c86588e4f0fa07291af80cb98f1173501",
+      "requests.json": "3d58424b51de879083b663e34edc80b04baf09df7f4a2378865f72fb98901dc9"
+    },
+    "lean_version": "Lean (version 4.34.0, x86_64-unknown-linux-gnu, commit 293d5d0c0c3f3dded4688b3ccd6a33939ac5102b, Release)",
+    "negative_controls": [
+      "nonzero boundary",
+      "wrong interior solution",
+      "nonfinite weight",
+      "wrong basis shape",
+      "wrong connectivity"
+    ],
+    "artifacts": {
+      "build.log": "65413ae52086542de1eee9eea6e39d0860e22e2e245cf688feee752fc9488e7e",
+      "inputs.json": "6e55fedf41f80f0694844db0247081d4bfbff51a0ef2b6acad11eed991a9a279",
+      "negative-inputs.json": "8034c55befce445a444e89658cd13fba914051cf1622ec985ffba16727151671",
+      "negative-outputs.json": "231f874ff8860cfbd3bd5f14b68f1b1e78e91921bd08455e875ecbe8a1e79f8c",
+      "outputs.json": "d5ef4267a3408bb73c04993b92ef369f96d77b6ee236e595e9fdec6d16722631"
+    }
+  },
+  "archive_sha256": "202b185936f52ae9776d2e1ea6362febe3e1bd59f4408e82974b93b0d3acb546",
+  "archive": "poisson-certified.tar.gz",
+  "scope": "Fresh GPU numerical suite plus proved exact residual acceptance. Kernels and runtime unchanged from earlier sanitizer receipt; sanitizers not rerun. No PTX instruction refinement or continuous PDE theorem."
+}

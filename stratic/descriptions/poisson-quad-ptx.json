@@ -9,7 +9,7 @@
   "summary": [
     "Run the matrix-free Poisson operator and PCG numerical iterations in binary64 PTX using setup supplied by Lean.",
     "Use disjoint element storage and one writer per global node for deterministic assembly without floating-point atomics.",
-    "Keep numerical comparisons, sanitizer evidence and reproducible execution artifacts separate from the missing binary64 PTX refinement and PDE proofs."
+    "Certify accepted solutions with an exact residual checker, while keeping hardware observations separate from missing binary64 PTX refinement and PDE proofs."
   ],
   "realization": "implemented",
   "links": [
@@ -52,7 +52,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Validation covers Q1\u2013Q4, numerical operator comparisons on supplied and varied\nvectors, complete solves, polynomial reproduction, boundary preservation,\niteration limits and invalid inputs. CPU references and device results start\nfrom identical setup arrays. Saved cases, PTX and binary hashes, launch records,\noutputs, toolchain identity and sanitizer logs make the observations reproducible.\nAll failures remain visible; tolerances are declared before running comparisons.\nNo throughput or benchmarking claim is part of this backend."
+        "quote": "Validation covers Q1–Q4, numerical operator comparisons on supplied and varied\nvectors, complete solves, polynomial reproduction, boundary preservation,\niteration limits and invalid inputs. CPU references and device results start\nfrom identical setup arrays. Saved cases, PTX and binary hashes, launch records,\noutputs, toolchain identity and sanitizer logs make the observations reproducible.\nAll failures remain visible; tolerances are declared before running comparisons.\nNo throughput or benchmarking claim is part of this backend."
       },
       "to": {
         "path": "hardware/validate_poisson.py",
@@ -64,12 +64,24 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The numerical comparison uses fixed absolute and relative tolerances. A\nconverged result must satisfy the GPU's freshly measured residual tolerance.\nLean separately applies its operator to that result for an independent residual\ncomparison. That check allows an absolute 2e-12 measurement discrepancy when\ncorroborating convergence; it does not certify exact satisfaction of an\narbitrarily tighter tolerance in the independent arithmetic.\n"
+        "quote": "The numerical comparison uses fixed absolute and relative tolerances. Rounded\nGPU and Lean residual measurements remain diagnostic comparisons and allow a\nsmall measurement discrepancy. Acceptance additionally requires the proved\nexact Lean residual checker: the saved setup coefficients and returned solution\nmust satisfy the requested bound with no extra allowance and exactly zero\nboundary values. Iteration-limit and breakdown results are not certified."
       },
       "to": {
         "path": "hardware/validate_poisson.py",
         "passage": {
           "quote": "            # Independent application of the Lean operator to the GPU solution\n            # checks the reported residual without trusting the GPU's reduction.\n            residual_request=dict(case,values=observed['solution'],maxiter=0)\n            save(folder/'residual-request.json',[residual_request])\n            run([INTEGRATION/'.lake/build/bin/poissonQuad','--request',folder/'residual-request.json','--output',folder/'residual-reference.json'])\n            independent=json.loads((folder/'residual-reference.json').read_text())[0]\n            if 'error' in independent:raise ValueError(independent['error'])\n            residual=math.hypot(*(a-b for a,b,bd in zip(ref['load'],independent['applied'],ref['boundary'],strict=True) if not bd))\n            if math.isfinite(residual)!=math.isfinite(observed['true_residual_norm']) or (math.isfinite(residual) and abs(residual-observed['true_residual_norm'])>2e-12+2e-10*residual):\n                raise AssertionError('reported residual disagrees with independently applied Lean operator')\n            if observed['converged'] and residual>observed['tolerance']+2e-12:\n                raise AssertionError('independent residual does not corroborate convergence')"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical comparison uses fixed absolute and relative tolerances. Rounded\nGPU and Lean residual measurements remain diagnostic comparisons and allow a\nsmall measurement discrepancy. Acceptance additionally requires the proved\nexact Lean residual checker: the saved setup coefficients and returned solution\nmust satisfy the requested bound with no extra allowance and exactly zero\nboundary values. Iteration-limit and breakdown results are not certified."
+      },
+      "to": {
+        "path": "hardware/validate_poisson.py",
+        "passage": {
+          "quote": "        from certify_poisson import certify\n        certificate = certify(directory, directory/'certification')\n        report['certification'] = dict(status=certificate['status'],\n            theorem=certificate['theorem'], cases=len(certificate['checks']),\n            report='certification/certification.json')"
         }
       }
     }
