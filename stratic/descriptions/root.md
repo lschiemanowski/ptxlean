@@ -28,7 +28,7 @@ and controlling numerical error relative to an ideal network over real numbers.
 Exact agreement of bits and agreement within an error bound are distinct claims.
 
 Examples show how these foundations fit together to verify concrete
-neural-network implementations. They make the reusable interfaces tangible and
+numerical and neural-network implementations. They make the reusable interfaces tangible and
 expose the additional assumptions and proofs required by each application.
 
 Explanations accompany the formalization so that readers can understand the

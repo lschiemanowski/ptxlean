@@ -185,7 +185,7 @@ mathlib build artifacts, and check the TorchLean examples, numerical bounds and
 forward/backward implementation proofs.
 
 Successful runs end with `All source, build, and proof-dependency checks passed.`
-and `Integration check passed: 2462 exact dependency reports, only standard Lean
+and `Integration check passed: 2494 exact dependency reports, only standard Lean
 axioms.` respectively. The general forward and backward proofs above are included.
 
 A smaller [array-loop example](docs/foundations/array-mask-select.md) combines
@@ -204,6 +204,11 @@ The [dense–ReLU hardware validation](hardware/README.md) separately runs the
 parallel forward kernel on a GPU and compares its outputs with Lean, exact
 arithmetic and PyTorch. Its [recorded results](hardware/results.md) include
 sanitizer checks and an explicit PTX-version compatibility boundary.
+
+A [quadrilateral Poisson example](examples/poisson/README.md) implements the Q1–Q4
+finite-element workflow in Lean/TorchLean, with numerical comparison against its
+Python source. This CPU reference does not yet have a PTX implementation or PDE
+correctness proof.
 
 ## Instruction reference
 

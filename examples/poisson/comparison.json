@@ -1,0 +1,38 @@
+{
+  "source_sha256": {
+    "integration/torchlean/PoissonQuad.lean": "a06f01073b60ab759189049967b026c99b54e067ebe5eb6a578d492bb5d90726",
+    "integration/torchlean/PoissonQuadCLI.lean": "7bd8fe1b5379a1d546ce2468d0635e88c968147e132d32420a6f5f3dd97e1705",
+    "integration/torchlean/PoissonQuadChecks.lean": "1285688baf4050b1ea0ffdc88007e00b70a9ec5defca83079333f8fcd9f8afc2",
+    "integration/torchlean/PoissonQuadMain.lean": "6623bafbdf8fb4f84e59fc3ec8555bb18ebc975dfc8557e47679732499971d0f",
+    "examples/poisson/check.py": "1ddc12d5480b8f5e951325e8bf302106807328f263af260e22227b1144d95e7b",
+    "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+    "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01"
+  },
+  "cases": 22,
+  "rejections": 12,
+  "max_absolute_differences": {
+    "points": 0,
+    "lobatto": 0,
+    "q": 1.1102230246251565e-16,
+    "weights": 1.942890293094024e-16,
+    "B": 5.551115123125783e-16,
+    "D": 8.881784197001252e-15,
+    "diagonal": 7.993605777301127e-15,
+    "load": 5.329070518200751e-15,
+    "probe": 0,
+    "applied": 4.1902245562219775e-15,
+    "tolerance": 5.169878828456423e-25,
+    "solution": 2.220446049250313e-15,
+    "true_residual_norm": 2.220446049250313e-15,
+    "relative_residual": 1.6237446586331578e-15,
+    "l2_error": 2.220446049250313e-16,
+    "h1_seminorm_error": 5.277896175659436e-16
+  },
+  "default_example": {
+    "iterations": 10,
+    "relative_residual": 3.787529301528361e-14,
+    "l2_error": 1.0535595247660976e-07,
+    "h1_seminorm_error": 1.0470912880300669e-05
+  },
+  "reference_source_sha256": "722dbe760c39ed2b92b02858a3a633faf588e789b033aa354a27586e44ef3352"
+}

@@ -1,0 +1,126 @@
+{
+  "id": "f34a03d1-f681-447f-970e-12a107cca022",
+  "base": "df9d4722a951278d8f0032aaa3b92a1a204c565d",
+  "contentTree": "254ca9ed17727c5ae8690429e22291785f348127",
+  "reviewer": "Codex",
+  "summary": "Add a CPU Lean and TorchLean Q1-Q4 Poisson numerical example",
+  "examined": [
+    {
+      "id": "root",
+      "outcome": "revised",
+      "reason": "Expanded the example sentence and reviewed its summary to include numerical applications; PTX 9.4 semantics and the network verification interface remain unchanged."
+    },
+    {
+      "id": "examples",
+      "outcome": "revised",
+      "reason": "Added a scientific-computing example responsibility and explicit numerical-only status, without upgrading any existing kernel or full-network guarantee. Reviewed summary and remaining obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "revised",
+      "reason": "Description-first Q1-Q4 CPU binary64 port now implements mesh, quadrature, TorchLean local contractions, scatter, load, diagonal, zero-boundary restriction, bounded PCG and error integration. Live and frozen Python comparisons plus numerical edge checks substantiate implementation. Documentation distinguishes the two boundary lemmas from unproved PDE, solver convergence, numerical refinement and PTX claims."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The integration checker retains pinned toolchain/dependency checks, placeholder guard, exact axiom endpoint lists and before/after source hashes. It now audits numerical Poisson core and a separate executable wrapper; native numerical behavior is tested, not silently claimed proved."
+    },
+    {
+      "id": "verification-interface",
+      "outcome": "unchanged",
+      "reason": "Read the full interface. This example uses TorchLean matrix tensors on CPU and does not introduce GPU contracts, orchestration, automatic backward or a PyTorch bitwise correspondence claim. Future PTX connections remain explicitly absent."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "254ca9ed17727c5ae8690429e22291785f348127",
+      "method": "Final manual snapshot reconciliation and Stratic validation after bash scripts/check.sh; python3 integration/torchlean/check.py; live Python examples/poisson/check.py --reference /home/lothar/workspace/fem_0/standalone/poisson_quad.py --record; Python standard-library frozen-reference check. git diff --check and comparison source-hash verification.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and repository dependency manifest; native CPU binary64; live reference Python 3.12.12 / PyTorch 2.11.0+cu130 CPU float64; no new dependencies, models or GPU execution.",
+      "evidence": "Live and frozen comparisons passed 22 cases plus 12 malformed/unsupported request rejections. Maximum solution difference from the original Python source was 2.220446049250313e-15. Q1-Q4 refinement and Q2-Q4 polynomial reproduction passed; Lean checks passed required quadrature moments, interpolation, derivative partition, constant operator/load, recovered matrix symmetry/diagonal, zero/empty interior, iteration limits, nonfinite norm breakdown and invalid inputs. Full root audit passed 1643 endpoints; integration audit passed 2494 endpoints plus a separately checked executable main, only standard Lean axioms. Automated-check before/after tree d383593be2be54a8428f7c412dd44b7fde84ea19 matched exactly. The only subsequent edit moves the unchanged Poisson README paragraph above Instruction reference; git tree comparison establishes README.md is the sole difference. Final documentation placement, links, Stratic validation and whitespace checks pass; all executable sources and comparison hashes still match tested content. No PDE correctness, CG convergence, error-bound, native arithmetic or PTX refinement proof is claimed.",
+      "tests": [],
+      "id": "36b0cca1-d0f2-4e22-926f-bf0fdd678c0d",
+      "recordedAt": "2026-09-28T15:10:38.111Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T15:11:10.376Z",
+  "unmapped": [
+    {
+      "path": "README.md",
+      "reason": "Reviewed run instructions and source-stage mapping; documentation separates CPU binary64 execution, generic exact-real local algebra, empirical comparisons and missing whole-solver/PDE/PTX proofs. Existing guide and README link to the example."
+    },
+    {
+      "path": "examples/poisson/README.md",
+      "reason": "Reviewed run instructions and source-stage mapping; documentation separates CPU binary64 execution, generic exact-real local algebra, empirical comparisons and missing whole-solver/PDE/PTX proofs. Existing guide and README link to the example."
+    },
+    {
+      "path": "examples/poisson/check.py",
+      "reason": "Behavioral comparison checks shapes, topology, quadrature, basis, diagonal, load, operator action, solution, residual and error estimates against independent Python fixtures. Polynomial exactness, refinement, boundary and invalid-input checks supplement source comparison; no tolerance fallback or normal-run fixture rewrite."
+    },
+    {
+      "path": "examples/poisson/comparison.json",
+      "reason": "Live comparison report retains exact source hashes, 22 numerical cases, 12 invalid-input rejections, fixed tolerances and maxima. Maximum measured solution difference is 2.22e-15; these results are not a proof."
+    },
+    {
+      "path": "examples/poisson/reference.json",
+      "reason": "Frozen arrays generated independently by the user-supplied Python source on CPU float64. Source SHA-256, environment and all requests are retained; no expected array is generated by the Lean implementation."
+    },
+    {
+      "path": "integration/torchlean/PoissonQuad.lean",
+      "reason": "Inspected all remaining geometry, basis, scatter/gather, diagonal, load, restriction/extension and error-integration helpers against the supplied source. CPU Float64 and Newton quadrature are explicit choices. Solver preserves finite guards, active/broken updates, scheduled true residual checks and restart. Public operations assume factory-created operators."
+    },
+    {
+      "path": "integration/torchlean/PoissonQuadCLI.lean",
+      "reason": "Checked typed JSON parameters, rejection of unsupported modes/options, full-precision decimal serialization, null for nonfinite observations, and status reporting. Default and batch modes distinguish argument errors from solver failure. No Python or native GPU solver is called."
+    },
+    {
+      "path": "integration/torchlean/PoissonQuadChecks.lean",
+      "reason": "Lean numerical checks cover all required quadrature moments, nodal interpolation, derivative partition, nullspace, constant-load integral, recovered global symmetry and diagonal, empty-interior and zero-load solves, iteration limit, overflow breakdown and invalid source/options. These are runtime tests and do not masquerade as universal proofs."
+    },
+    {
+      "path": "integration/torchlean/PoissonQuadMain.lean",
+      "reason": "Build and dependency-audit wiring includes new modules and executable, fresh runtime checks and exact public core endpoints. The new executable main is audited separately to avoid conflict with the existing global main in the hardware exporter."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Build and dependency-audit wiring includes new modules and executable, fresh runtime checks and exact public core endpoints. The new executable main is audited separately to avoid conflict with the existing global main in the hardware exporter."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Reviewed run instructions and source-stage mapping; documentation separates CPU binary64 execution, generic exact-real local algebra, empirical comparisons and missing whole-solver/PDE/PTX proofs. Existing guide and README link to the example."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Build and dependency-audit wiring includes new modules and executable, fresh runtime checks and exact public core endpoints. The new executable main is audited separately to avoid conflict with the existing global main in the hardware exporter."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Build and dependency-audit wiring includes new modules and executable, fresh runtime checks and exact public core endpoints. The new executable main is audited separately to avoid conflict with the existing global main in the hardware exporter."
+    },
+    {
+      "path": "stratic/descriptions/examples.json",
+      "reason": "Reviewed descriptions, parent passages and summaries. New example is self-contained and linked to meaningful operator, setup, solver and check passages; numerical-only scope is explicit."
+    },
+    {
+      "path": "stratic/descriptions/examples.md",
+      "reason": "Reviewed descriptions, parent passages and summaries. New example is self-contained and linked to meaningful operator, setup, solver and check passages; numerical-only scope is explicit."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad.json",
+      "reason": "Reviewed descriptions, parent passages and summaries. New example is self-contained and linked to meaningful operator, setup, solver and check passages; numerical-only scope is explicit."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad.md",
+      "reason": "Reviewed descriptions, parent passages and summaries. New example is self-contained and linked to meaningful operator, setup, solver and check passages; numerical-only scope is explicit."
+    },
+    {
+      "path": "stratic/descriptions/root.json",
+      "reason": "Reviewed descriptions, parent passages and summaries. New example is self-contained and linked to meaningful operator, setup, solver and check passages; numerical-only scope is explicit."
+    },
+    {
+      "path": "stratic/descriptions/root.md",
+      "reason": "Reviewed descriptions, parent passages and summaries. New example is self-contained and linked to meaningful operator, setup, solver and check passages; numerical-only scope is explicit."
+    }
+  ]
+}

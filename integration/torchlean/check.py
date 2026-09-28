@@ -338,6 +338,10 @@ COUNTS['Ptx.Hardware.Dense.Checks'] = COUNTS.get('Ptx.Hardware.Dense.Checks', 0)
 COUNTS['main'] = COUNTS.get('main', 0) + 1
 TARGETS.update(['PtxHardwareDense', 'PtxHardwareDenseChecks', 'HardwareDenseMain'])
 
+# CPU binary64 Poisson reference; no PTX correspondence claim.
+COUNTS.update({'PtxTorchLean.Poisson': 28, 'PtxTorchLean.Poisson.CLI': 3, 'PtxTorchLean.Poisson.Checks': 1})
+TARGETS.update({'PoissonQuad', 'PoissonQuadCLI', 'PoissonQuadMain', 'PoissonQuadChecks'})
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -399,6 +403,12 @@ def main():
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
                            cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxHardwareDenseChecks.lean"], cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonQuadChecks.lean"], cwd=HERE, check=True)
+        # The two executable wrappers both define global `main`, so audit this
+        # second wrapper in a separate environment instead of importing both.
+        wrapper = subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonQuadMain.lean"],
+                                 cwd=HERE, check=True, text=True, stdout=subprocess.PIPE)
+        audit_dependencies(wrapper.stdout, ["main"])
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
                                cwd=HERE, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(audit.stdout, end="", flush=True)

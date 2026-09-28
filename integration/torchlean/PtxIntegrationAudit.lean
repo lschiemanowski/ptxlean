@@ -1,3 +1,5 @@
+import PoissonQuadCLI
+import PoissonQuadChecks
 import PtxHardwareDense
 import PtxHardwareDenseChecks
 import HardwareDenseMain
@@ -2776,3 +2778,37 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Hardware.Dense.Checks.reject_other_barrier
 #print axioms Ptx.Hardware.Dense.Checks.run
 #print axioms main
+
+-- Numerical Poisson reference, generic tensor algebra and bounded solver.
+#print axioms PtxTorchLean.Poisson.Mat
+#print axioms PtxTorchLean.Poisson.matrix
+#print axioms PtxTorchLean.Poisson.transpose
+#print axioms PtxTorchLean.Poisson.hadamard
+#print axioms PtxTorchLean.Poisson.plus
+#print axioms PtxTorchLean.Poisson.localAction
+#print axioms PtxTorchLean.Poisson.localLoad
+#print axioms PtxTorchLean.Poisson.zeroBoundary
+#print axioms PtxTorchLean.Poisson.zeroBoundary_boundary
+#print axioms PtxTorchLean.Poisson.zeroBoundary_interior
+#print axioms PtxTorchLean.Poisson.sineSolution
+#print axioms PtxTorchLean.Poisson.sineSource
+#print axioms PtxTorchLean.Poisson.sineGradient
+#print axioms PtxTorchLean.Poisson.lobattoNodes
+#print axioms PtxTorchLean.Poisson.gaussRule
+#print axioms PtxTorchLean.Poisson.lagrangeBasis
+#print axioms PtxTorchLean.Poisson.Mesh
+#print axioms PtxTorchLean.Poisson.quadrilateralSquare
+#print axioms PtxTorchLean.Poisson.Operator
+#print axioms PtxTorchLean.Poisson.makeOperator
+#print axioms PtxTorchLean.Poisson.apply
+#print axioms PtxTorchLean.Poisson.applyInterior
+#print axioms PtxTorchLean.Poisson.load
+#print axioms PtxTorchLean.Poisson.Options
+#print axioms PtxTorchLean.Poisson.Reason
+#print axioms PtxTorchLean.Poisson.Result
+#print axioms PtxTorchLean.Poisson.solvePCG
+#print axioms PtxTorchLean.Poisson.errorNorms
+#print axioms PtxTorchLean.Poisson.CLI.jsonFloat
+#print axioms PtxTorchLean.Poisson.CLI.evaluate
+#print axioms PtxTorchLean.Poisson.CLI.run
+#print axioms PtxTorchLean.Poisson.Checks.run

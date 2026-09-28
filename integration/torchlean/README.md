@@ -296,3 +296,13 @@ It has a separate GPU command and records its PTX-version compatibility boundary
 The ordinary integration check additionally builds/audits the restricted exporter
 and runs its rejection tests; it does not require a GPU. Backward and softmax GPU
 execution remain separate work.
+
+## Quadrilateral Poisson example
+
+`PoissonQuad.lean` ports the Q1–Q4 unit-square Poisson workflow to CPU binary64
+Lean with actual TorchLean tensor contractions. It includes mesh and quadrature
+setup, matrix-free operator and load, an interior-only iterative solver with
+fresh-residual convergence checks, and solution/gradient error estimates.
+Run `lake --no-cache exe poissonQuad 8 4`; see the
+[example guide](../../examples/poisson/README.md) for scope, Python comparison,
+and the distinction between executable numerics and mathematical proofs.

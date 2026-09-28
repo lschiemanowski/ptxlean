@@ -24,3 +24,8 @@ An example's coverage is stated for its own architecture and execution domain;
 it does not define the coverage of the underlying PTX formalization. Its
 explanation connects concrete tensors, storage, kernels, and state transitions
 to the abstractions used by the verification infrastructure.
+
+Scientific-computing examples exercise the same tensor and numerical interfaces
+outside neural networks. The quadrilateral Poisson example constructs and solves
+a finite-element discretization of a boundary-value problem, beginning with a
+Lean/TorchLean numerical implementation before any PTX kernel connection.

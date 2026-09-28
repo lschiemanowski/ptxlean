@@ -1,0 +1,65 @@
+{
+  "id": "poisson-quad",
+  "parent": {
+    "description": "examples",
+    "passage": {
+      "quote": "Scientific-computing examples exercise the same tensor and numerical interfaces\noutside neural networks. The quadrilateral Poisson example constructs and solves\na finite-element discretization of a boundary-value problem, beginning with a\nLean/TorchLean numerical implementation before any PTX kernel connection."
+    }
+  },
+  "summary": [
+    "Solve the unit-square Q1\u2013Q4 Poisson discretization using shared nodes, tensor contractions and an interior-only iterative solve.",
+    "Require fresh residual checks for convergence and expose numerical failures and iteration limits.",
+    "Keep executable binary64 results, exact-real tensor algebra, empirical Python comparisons and unproved PDE or PTX claims distinct."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The mesh uses Gauss\u2013Lobatto interpolation nodes, including both cell endpoints.\nAdjacent cells share endpoint nodes. Gauss\u2013Legendre quadrature approximates an\nintegral by a weighted sum of values at selected points. One-dimensional basis\nvalues and derivatives are reused in each coordinate. The operator acts through\nsuccessive small TorchLean matrix products instead of constructing the full\nglobal stiffness matrix. Contributions at shared nodes are added, and solving\nuses only interior unknowns; boundary entries are extended by exact zeros."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonQuad.lean",
+        "passage": {
+          "quote": "/-- Two one-coordinate contractions per gradient, followed by their transposes.\nThe same definition can be instantiated with Float or with exact real numbers. -/\ndef localAction [Storage \u03b1] [Add \u03b1] [Mul \u03b1] [Zero \u03b1]\n    (b d : Mat \u03b1 q m) (w : Mat \u03b1 q q) (u : Mat \u03b1 m m) : Mat \u03b1 m m :=\n  let dx := Spec.matMulSpec (Spec.matMulSpec b u) (transpose d)\n  let dy := Spec.matMulSpec (Spec.matMulSpec d u) (transpose b)\n  plus (Spec.matMulSpec (Spec.matMulSpec (transpose b) (hadamard w dx)) d)\n       (Spec.matMulSpec (Spec.matMulSpec (transpose d) (hadamard w dy)) b)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The linear solver is Jacobi-preconditioned conjugate gradients: it uses the\noperator's diagonal to rescale the iterative updates. It returns convergence,\nbreakdown or iteration-limit status. Success requires a newly computed residual\n(the load minus the operator applied to the candidate solution) within the\nrequested tolerance. A small recursive residual alone cannot certify success;\nfalse recursive convergence restarts from the measured residual. All loops have\nexplicit finite limits, and invalid mesh sizes, degrees, tolerances, vectors and\nquadrature setup are rejected."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonQuad.lean",
+        "passage": {
+          "quote": "/-- Bounded PCG, including frozen steps, true-residual checks and restart.\nSuccess is a measured residual criterion, not a PDE-error certificate. -/\ndef solvePCG (o : Operator) (rhsFull : Array Float) (opts : Options := {}) : Except String Result := do\n  checkVector rhsFull o.mesh.points.size\n  if !opts.rtol.isFinite || !opts.atol.isFinite || opts.rtol < 0 || opts.atol < 0 ||\n      (opts.rtol == 0 && opts.atol == 0) || opts.checkEvery == 0 then throw \"invalid solver options\"\n  let rhs := restrict o rhsFull\n  let rhsNorm := norm rhs\n  let tolerance := max opts.atol (opts.rtol*rhsNorm)\n  let finish := fun x it residual reason =>\n    Result.mk (extend o x) reason it residual (if rhsNorm == 0 then 0 else residual/rhsNorm) tolerance\n  let mut x := Array.replicate rhs.size 0.0\n  if !rhsNorm.isFinite then return finish x 0 rhsNorm .breakdown\n  if rhsNorm \u2264 tolerance then return finish x 0 rhsNorm .converged\n  if opts.maxiter == 0 then return finish x 0 rhsNorm .maxiter\n  let diagonal := restrict o o.diagonal\n  let precondition := fun r => tab rhs.size fun i => r[i]!/diagonal[i]!\n  let mut r := rhs\n  let mut z := precondition r\n  let mut p := z\n  let mut rho := dot r z\n  let mut active := true; let mut broken := false\n  let mut residualNorm := rhsNorm\n  for it in [1:opts.maxiter+1] do\n    let ap := applyInteriorRaw o p\n    let denominator := dot p ap\n    let valid := denominator.isFinite && denominator > 0 && rho.isFinite && rho > 0\n    broken := broken || (active && !valid)\n    let useStep := active && valid\n    let alpha := if useStep then rho/denominator else 0\n    x := combine x alpha p\n    r := combine r (-alpha) ap\n    z := precondition r\n    let rhoNext := dot r z\n    broken := broken || (active && !rhoNext.isFinite)\n    let beta := if useStep then rhoNext/(if rho > 0 then rho else 1) else 0\n    p := combine z beta p\n    rho := rhoNext\n    active := useStep && dot r r > tolerance*tolerance && !broken\n    if it % opts.checkEvery == 0 || it == opts.maxiter then\n      let trueResidual := combine rhs (-1) (applyInteriorRaw o x)\n      residualNorm := norm trueResidual\n      if !residualNorm.isFinite then return finish x it residualNorm .breakdown\n      if residualNorm \u2264 tolerance then return finish x it residualNorm .converged\n      if broken then return finish x it residualNorm .breakdown\n      if !active then\n        r := trueResidual; z := precondition r; p := z; rho := dot r z; active := true\n  return finish x opts.maxiter residualNorm .maxiter"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The executable reference uses Lean's native Float (binary64) on the CPU.\nIts tensor contractions call TorchLean's matrix multiplication specification,\ninstantiated with Float. The same local algebra can be instantiated with real\nnumbers; this does not equate rounded execution with exact real arithmetic.\nQuadrature setup computes Legendre roots by bounded Newton iteration rather\nthan reproducing PyTorch's eigensolver. Node, weight, operator and solution\ncomparisons check this numerical choice independently. No bitwise equality to\nPyTorch's backend is promised."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonQuad.lean",
+        "passage": {
+          "quote": "/-- Setup for the two-to-six-point rules used by Q1\u2013Q4 (also accepts one).\nEach root has at most 64 Newton steps and is checked before acceptance. -/\ndef gaussRule (count : Nat) : Except String (Array Float \u00d7 Array Float) := do\n  if count == 0 || count > 6 then throw \"quadrature count must be one through six\"\n  let mut points := #[]; let mut weights := #[]\n  for i in [0:count] do\n    let mut z := -(pi*(Float.ofNat i+0.75)/(Float.ofNat count+0.5)).cos\n    let mut done := false\n    for _ in [0:64] do\n      if !done then\n        let (v,d) := legendre count z\n        let next := z-v/d\n        done := (next-z).abs \u2264 1e-15\n        z := next\n    let (v,d) := legendre count z\n    let w := 1/((1-z*z)*d*d)\n    if !done || !z.isFinite || !w.isFinite || !(w > 0) || !(z.abs < 1) || v.abs > 2e-14 then\n      throw \"quadrature root calculation failed\"\n    points := points.push ((z+1)/2); weights := weights.push w\n  return (points,weights)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A sine solution with a known source supplies a reproducible end-to-end example.\nSeparate quadrature estimates measure errors in the field and its gradient;\nthese are numerical measurements, not proved bounds on the continuous equation.\nThe first implementation includes mesh/setup, operator and diagonal, load,\ninterior restriction, iterative solve and error integration. It does not include\nPTX kernels, GPU execution, differentiation through the solver, binary32 mode,\na convergence theorem, a finite-element error theorem or a verified numerical\nrelationship to the Python backend. Tests and any Lean theorems state their\nown narrower guarantees.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonQuadChecks.lean",
+        "passage": {
+          "quote": "/-- Structural, quadrature, assembly and solver edge checks; numerical tests, not proofs. -/\ndef run : IO Unit := do"
+        }
+      }
+    }
+  ]
+}
