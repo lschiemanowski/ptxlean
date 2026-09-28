@@ -1,0 +1,200 @@
+{
+  "id": "softmax-forward",
+  "parent": {
+    "description": "softmax",
+    "passage": {
+      "quote": "A complete reference forward pipeline now connects the parallel maximum and sum\nthrough sequential fetched exponential and normalization passes in one arena.\nIt proves execution existence from original bounded finite scores and stored-output\naccuracy against TorchLean under the explicit total-error guard. Phase boundaries\nare model-level waiting and initialization, not a CUDA runtime implementation."
+    }
+  },
+  "summary": [
+    "Connect parallel maximum and sum with sequential fetched exponential and normalization passes through one actual memory arena.",
+    "Derive finite outputs and coordinate error against stable real softmax under an explicit accumulated-error guard; retain all permitted arithmetic outcomes.",
+    "Distinguish completed execution, independent existence, memory safety and model-level phase boundaries from GPU and runtime claims."
+  ],
+  "realization": "implemented",
+  "links": [
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The forward computation turns a nonempty row of finite binary32 scores into\nencoded softmax outputs. The row length is a power of two, at most 1024, and\nscores have magnitude at most 2^124. Its maximum and sum reductions use the\nexisting parallel programs. Between them, sequential passes load operands,\nexecute the modeled exponential or normalization instructions, and store results.\nThese passes provide a simple reference implementation, not a fast parallel\nsoftmax kernel or a GPU performance claim."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxPipeline.lean",
+        "passage": {
+          "quote": "inductive Run (d : Nat) (input : Fin (Sum.width d) → Word) : List Word → Prop\n  | phases {maximum exponentials restored summed final : List Word}\n      (maxRun : SoftmaxReductions.MaximumLaunch d (Sum.global d input) maximum)\n      (expRun : SoftmaxSweep.Run (exponentialStep d) (Sum.width d) maximum exponentials)\n      (restore : SoftmaxMemory.StoreLaunch target (Sum.width d) 0x3f800000 exponentials restored)\n      (sumRun : Dense.Launch (Sum.shape d) restored summed)\n      (normRun : SoftmaxSweep.Run (normalizationStep d) (Sum.width d) summed final) :\n      Run d input final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "All phases share one global word arena. For n scores, its first n words initially\nhold the scores, followed by n positive-one weights and two zero words. The\nmaximum reduction temporarily writes its result at index n. Each exponential\nstep loads a score and this stored maximum, computes the shifted exponential,\nand overwrites that score's cell. After the pass, an actual store restores the\npositive-one weight at index n. The sum reduction can then use the same arena\nas its unit-weight dense specialization, placing its denominator at index 2*n+1.\nThe normalization pass loads each exponential and this stored denominator,\nexecutes rounded reciprocal and multiplication, and overwrites the exponential\nwith the output. The passes access one element at a time; the maximum and\ndenominator remain intact until all their consumers have read them."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxPipeline.lean",
+        "passage": {
+          "quote": "theorem arithmetic (run : Run d input final) :\n    ∃ exponential : Fin (Sum.width d) → Word, ∃ denominator,\n      (∀i, SoftmaxForward.ExpStages (input i) (maximumWord d input) (exponential i)) ∧\n      Sum.Output d exponential denominator ∧\n      (∀i, Binary32.Normalize.Stages (exponential i) denominator (final[i.val]!)) ∧\n      final.length=2*Sum.width d+2"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "All phases share one global word arena. For n scores, its first n words initially\nhold the scores, followed by n positive-one weights and two zero words. The\nmaximum reduction temporarily writes its result at index n. Each exponential\nstep loads a score and this stored maximum, computes the shifted exponential,\nand overwrites that score's cell. After the pass, an actual store restores the\npositive-one weight at index n. The sum reduction can then use the same arena\nas its unit-weight dense specialization, placing its denominator at index 2*n+1.\nThe normalization pass loads each exponential and this stored denominator,\nexecutes rounded reciprocal and multiplication, and overwrites the exponential\nwith the output. The passes access one element at a time; the maximum and\ndenominator remain intact until all their consumers have read them."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxStorage.lean",
+        "passage": {
+          "quote": "theorem restore_weight (d : Nat) (input : Fin (Sum.width d) → Word) (maximum : Word)\n    (memory : List Word) (len : memory.length=2*Sum.width d+2)\n    (tail : ∀ i, Sum.width d ≤ i →\n      memory[i]?=((Sum.global d input).set (Sum.width d) maximum)[i]?) :\n    memory.set (Sum.width d) 0x3f800000 = Sum.global d (row (Sum.width d) memory)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. Sequential passes read the current\narena directly, so their contract requires no concurrent interference. Resetting\nentry registers, allocating shared scratch and waiting for a phase to complete\nare explicit operations of the composition model. They do not implement CUDA\nallocation, launch, waiting or device visibility. No arithmetic value is supplied\nby those operations in place of a load or store."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxMemory.lean",
+        "passage": {
+          "quote": "theorem run_memory_safe {target program s t} (run : Run target program s t) :\n    t.memory.length=s.memory.length ∧ ∀effect, AccessAt program program s t effect →\n      effect.address.toNat % 4=0 ∧ effect.address.toNat+4≤4*s.memory.length"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. Sequential passes read the current\narena directly, so their contract requires no concurrent interference. Resetting\nentry registers, allocating shared scratch and waiting for a phase to complete\nare explicit operations of the composition model. They do not implement CUDA\nallocation, launch, waiting or device visibility. No arithmetic value is supplied\nby those operations in place of a load or store."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxReductions.lean",
+        "passage": {
+          "quote": "theorem maximum_launch_safe (launch : MaximumLaunch d before after) :\n    ∃bound : Sum.Bounds d, ∃shared seeds events final,\n      ∃run : Runs (Maximum.config d) (Maximum.program d) (Maximum.initial d before shared seeds) events final,\n      after=final.global ∧ (∀t, (final.lanes t).halted=true) ∧\n      (∃source co, Maximum.Admitted d (maximumBounds d bound) before shared seeds run source co) ∧\n      (∀event∈events, AccessSafe (Maximum.initial d before shared seeds) event)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The composed execution contains actual fetched instructions and exact memory\nwriteback at each phase. Parallel phases retain their admitted read observations\nand separate completed-execution witnesses. Sequential passes read the current\narena directly, so their contract requires no concurrent interference. Resetting\nentry registers, allocating shared scratch and waiting for a phase to complete\nare explicit operations of the composition model. They do not implement CUDA\nallocation, launch, waiting or device visibility. No arithmetic value is supplied\nby those operations in place of a load or store."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxReductions.lean",
+        "passage": {
+          "quote": "theorem sum_launch_safe (launch : SumLaunch d input after) :\n    ∃bound : Dense.Bounds (Sum.shape d), ∃seeds events final,\n      ∃run : Runs (Dense.config (Sum.shape d) bound) (Sum.program d)\n        (Sum.initial d input (List.replicate (Sum.sharedWords d) 0) seeds) events final,\n      after=final.global ∧ (∀t, (final.lanes t).halted=true) ∧\n      (∃source co, Dense.Admitted (Sum.shape d) bound (Sum.global d input)\n        (List.replicate (Sum.sharedWords d) 0) seeds run source co) ∧\n      (∀event∈events, AccessSafe (Sum.initial d input (List.replicate (Sum.sharedWords d) 0) seeds) event)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxBinary32/SoftmaxPipelineExists.lean",
+        "passage": {
+          "quote": "theorem execution_exists (d : Nat) (bound : Sum.Bounds d)\n    (input : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, Ptx.Binary32.finiteReal (input i)=some (values i))\n    (small : ∀i, |values i|≤(2:ℝ)^(124:ℤ)) : ∃final, Run d input final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxPipeline.lean",
+        "passage": {
+          "quote": "def AccuracyGuard (d : Nat) (values : Fin (Sum.width d) → ℝ) : Prop :=\n  ∀m, (∀i, values i≤m) → (∃i, values i=m) → SoftmaxForward.totalBudget d values m≤1/2"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxPipeline.lean",
+        "passage": {
+          "quote": "def Accurate (d : Nat) (input : Fin (Sum.width d) → Word)\n    (values : Fin (Sum.width d) → ℝ) (final : List Word) : Prop :=\n  final.length=2*Sum.width d+2 ∧\n  ∃ (m : ℝ) (u : Fin (Sum.width d) → ℝ)\n      (exponential : Fin (Sum.width d) → Word) (denominator : Word),\n    finiteReal (Scalar.SoftmaxPipeline.maximumWord d input)=some m ∧\n    (∀i, values i≤m) ∧ (∃i, values i=m) ∧\n    (∀i, SoftmaxForward.ExpStages (input i) (Scalar.SoftmaxPipeline.maximumWord d input) (exponential i)) ∧\n    Sum.Output d exponential denominator ∧\n    (∀i, Normalize.Stages (exponential i) denominator (final[i.val]!)) ∧\n    (∀i, finiteReal (exponential i)=some (u i)) ∧\n    finiteReal denominator=some (Sum.rounded d u) ∧ 1/2≤Sum.rounded d u ∧\n    (∀i, ∃word, final[i.val]?=some word ∧ finiteReal word=some (resultValue d u i) ∧\n      |resultValue d u i-Softmax.rowForward values i|≤coordinateAllowance d values m u i) ∧\n    |(∑i,resultValue d u i)-1|≤∑i,coordinateAllowance d values m u i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxPipeline.lean",
+        "passage": {
+          "quote": "theorem correct (d : Nat) (bound : d≤10)\n    (input : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, finiteReal (input i)=some (values i))\n    (small : ∀i, |values i|≤(2:ℝ)^(124:ℤ))\n    (guard : AccuracyGuard d values) (run : Scalar.SoftmaxPipeline.Run d input final) :\n    Accurate d input values final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxPipeline.lean",
+        "passage": {
+          "quote": "theorem accurate_execution_exists (d : Nat) (bound : d≤10)\n    (input : Fin (Sum.width d) → Word) (values : Fin (Sum.width d) → ℝ)\n    (finite : ∀i, finiteReal (input i)=some (values i))\n    (small : ∀i, |values i|≤(2:ℝ)^(124:ℤ)) (guard : AccuracyGuard d values) :\n    ∃final, Scalar.SoftmaxPipeline.Run d input final ∧ Accurate d input values final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "path": "integration/torchlean/PtxSoftmaxForward.lean",
+        "passage": {
+          "quote": "theorem rowForward_formula (values : Fin n → ℝ) (m : ℝ)\n    (upper : ∀i, values i≤m) (attained : ∃i, values i=m) (i : Fin n) :\n    rowForward values i = Ptx.Binary32.SoftmaxForward.exact values m i /\n      (∑j,Ptx.Binary32.SoftmaxForward.exact values m j)"
+        }
+      }
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "All phases share one global word arena. For n scores, its first n words initially\nhold the scores, followed by n positive-one weights and two zero words. The\nmaximum reduction temporarily writes its result at index n. Each exponential\nstep loads a score and this stored maximum, computes the shifted exponential,\nand overwrites that score's cell. After the pass, an actual store restores the\npositive-one weight at index n. The sum reduction can then use the same arena\nas its unit-weight dense specialization, placing its denominator at index 2*n+1.\nThe normalization pass loads each exponential and this stored denominator,\nexecutes rounded reciprocal and multiplication, and overwrites the exponential\nwith the output. The passes access one element at a time; the maximum and\ndenominator remain intact until all their consumers have read them."
+      },
+      "to": {
+        "description": "parallel-maximum",
+        "passage": {
+          "quote": "This component selects a maximum from a nonempty power-of-two row of finite\nbinary32 words. One cooperating thread array, a group whose threads can share\nmemory and wait at a common barrier, handles the row. The first domain has at\nmost 1024 entries. The result is an original input word, its real value is at\nleast every input's value, and some input attains it. Both signs of zero and\nsubnormal values are included; NaNs and infinities are outside the real theorem."
+        }
+      },
+      "reason": "The maximum launch provides an attained stored word, exact untouched suffix and an independently constructed admitted execution."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "description": "softmax-sum-normalization",
+        "passage": {
+          "quote": "The numerical proof derives finite intermediate sums from the input magnitude\nand tree depth. It bounds the error against the exact sum of the actual encoded\ninput values, keeping it separate from each exponential's error against its\nideal real value. A conservative uniform allowance of 2^-13 per tree addition\ncovers this bounded domain, giving a sum error at most (n-1)*2^-13. The exact\nmultiplications by one and final addition of zero introduce no real-value error.\nA sharper allowance can replace this bound without changing the arithmetic order."
+        }
+      },
+      "reason": "The sum allowance and finite normalization bounds are derived from actual encoded operands, preserving signed approximate values."
+    },
+    {
+      "kind": "depends-on",
+      "from": {
+        "quote": "The numerical theorem uses the exact real values of the original stored scores.\nIt derives the finite attained maximum, exponential range and approximation\nerrors, and the sum's rounding error. If the sum of exponential error allowances\nplus (n-1)/8192 is at most one half, the computed denominator is at least one\nhalf. Rounded reciprocal and product then remain finite. Each output is bounded\nagainst the stable real softmax, retaining exponential, sum, reciprocal and\nmultiplication errors separately. The error guard is a sufficient accuracy\ncondition, not a claim that other inputs cannot execute correctly. Existence\nmust not assume successful intermediate arithmetic or the desired output."
+      },
+      "to": {
+        "description": "shifted-exponential",
+        "passage": {
+          "quote": "The input conditions are x<=m and abs(x),abs(m)<=2^124. These conservative bounds\nprevent overflow in the negation, addition and base conversion. The proof derives\nthat the rounded difference is finite and nonpositive and hence reaches the\nsupported exponential domain. Finiteness or successful intermediate computations\nare conclusions, not extra premises. Both signs of zero and gradual underflow\nremain covered by the existing arithmetic contracts."
+        }
+      },
+      "reason": "The supported initial score domain derives nonpositive exponential arguments and finite outputs for the four arithmetic instructions."
+    }
+  ]
+}

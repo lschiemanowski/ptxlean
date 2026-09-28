@@ -60,8 +60,9 @@ stores or of a combined softmax launch.
 The sum and normalization guarantees discharge the corresponding local stages
 of the softmax error bound. Any resulting comparison with the ideal softmax
 must still retain the exponential errors and the explicit total-error guard.
-The maximum, shifted exponential, sum and scalar normalization remain separately
-verified components until a composed program connects their storage and execution.
+A separate reference-forward responsibility connects these components through
+actual loads, stores and phase writeback. This component's register interface
+alone does not establish that complete execution.
 
 The component interface puts an original numerator in register 0 and the actual
 stored sum in register 1, then runs scalar normalization with register 2 as scratch.

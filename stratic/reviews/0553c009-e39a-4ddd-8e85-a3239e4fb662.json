@@ -1,0 +1,176 @@
+{
+  "id": "0553c009-e39a-4ddd-8e85-a3239e4fb662",
+  "base": "9bdab9c048921780568b7403033b6a0ca836784e",
+  "contentTree": "66ed77845ab7d816985329b2110e7760ed8c3470",
+  "reviewer": "Codex coordinator with independent reduction, numerical and memory/proof reviewers",
+  "summary": "Connect parallel reductions and sequential fetched passes into a same-arena reference softmax forward pipeline, with independent existence and guarded stored-output accuracy against pinned TorchLean.",
+  "examined": [
+    {
+      "id": "parallel-maximum",
+      "outcome": "revised",
+      "reason": "Update the component boundary to reference the actual forward composition; maximum semantics, output ownership and supported domain are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Add 109 public audit endpoints and fresh memory/pipeline regression proofs while retaining exact pins, forbidden proof-token guards and standard-axiom-only acceptance. No instruction semantics changed; fidelity remains separate from checked composition."
+    },
+    {
+      "id": "softmax-sum-normalization",
+      "outcome": "revised",
+      "reason": "Keep this component register-interface proof distinct from the new forward responsibility that supplies actual memory operations."
+    },
+    {
+      "id": "softmax",
+      "outcome": "revised",
+      "reason": "Report complete bounded reference forward execution and guarded stored-output accuracy while keeping serial passes, model-level phase boundaries, masked/arbitrary domains and backward execution explicit."
+    },
+    {
+      "id": "softmax-forward",
+      "outcome": "revised",
+      "reason": "New same-arena phase relation contains actual admitted parallel runs and fetched sequential stages, no desired intermediate values. Existence is independent of accuracy, and every error term is tied to encoded stages and final stored outputs."
+    },
+    {
+      "id": "shifted-exponential",
+      "outcome": "unchanged",
+      "reason": "Original bounded input, all-result error and exact maximal-score guarantees are consumed unchanged. The new memory stage instantiates existing leaves; it does not broaden the instruction domain."
+    },
+    {
+      "id": "dense-layer",
+      "outcome": "unchanged",
+      "reason": "The same actual affine-only dense program supplies the unit-weight sum. Constants are restored by a fetched store; no dense arithmetic, concurrency or backward contract changed."
+    },
+    {
+      "id": "reciprocal-instruction",
+      "outcome": "unchanged",
+      "reason": "Existing target, nearest-even reciprocal, exceptional results and subnormal policy are retained. The new sequence obtains operands by concrete loads and derives finite output only under the explicit guard."
+    },
+    {
+      "id": "examples",
+      "outcome": "unchanged",
+      "reason": "The reference example identifies its storage, initial row conditions, target, arithmetic order, model-level phase boundaries and reproduction procedure, preserving this parent abstraction."
+    },
+    {
+      "id": "numerical-contracts",
+      "outcome": "unchanged",
+      "reason": "Accuracy remains separate from bitwise correspondence and execution existence. The final contract names pinned TorchLean real softmax, retains encoded stage provenance and states the sufficient guard; no PyTorch-bit or backward accuracy claim added."
+    },
+    {
+      "id": "approximate-arithmetic",
+      "outcome": "unchanged",
+      "reason": "The composition preserves every result of the existing two-policy exponential neighborhood, including possible tiny negatives. No approximation interpretation or hardware-fidelity premise was changed."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "66ed77845ab7d816985329b2110e7760ed8c3470",
+      "method": "bash scripts/check.sh; python3 integration/torchlean/check.py; stratic validate; git diff --check; independent component and complete-pipeline proof review",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; TorchLean de3192df4779877ceb65cfe470a4d4ce9d480a5b; 16 integration dependency revisions verified. No external model or GPU calls.",
+      "evidence": "Root source/build suite passed with 1643 standard-axiom-only declaration reports. Integration built 225 guarded Lean source files and passed 2202 exact dependency reports, with fresh existing interpreter fixtures plus memory and complete singleton regression proofs. Three independent reviewer roles checked numerical aggregation, fetched memory semantics, exact frames, noncircular execution existence and the stored TorchLean result. The strengthened accuracy contract retains encoded stage provenance. Final snapshot matches pre-check source tree exactly.",
+      "tests": [],
+      "id": "54f0166c-45ee-4559-beef-13cec7d6cedd",
+      "recordedAt": "2026-09-28T07:16:11.931Z"
+    }
+  ],
+  "recordedAt": "2026-09-28T07:16:57.112Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/softmax-forward.md",
+      "reason": "Study guide and integration README explain the concrete arena walkthrough, guards, reproduction commands and serial/runtime restrictions; core contracts are in Stratic."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxForwardAccuracy.lean",
+      "reason": "Numerical aggregation derives exponential finiteness/errors, denominator lower bound and rounded output errors from original-score conditions and actual encoded relations. Independent review checked the explicit guard and nonvacuous equal-score family."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxMemory.lean",
+      "reason": "Supporting definitions, helper lemmas and proof bodies implement the linked complete contracts. Independent reviews checked actual loads, stores, whole-arena frame, constructive existence, standard dependencies and absence of assumed intermediate answers."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxMemoryChecks.lean",
+      "reason": "Meaningful boundaries: actual in-place 2/4 writeback and constant store, rejected bounds/wrap/target, universal exact singleton output and constructed whole-pipeline witness. Public declarations audited and fresh proof elaboration configured."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxPipeline.lean",
+      "reason": "Supporting definitions, helper lemmas and proof bodies implement the linked complete contracts. Independent reviews checked actual loads, stores, whole-arena frame, constructive existence, standard dependencies and absence of assumed intermediate answers."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxPipelineChecks.lean",
+      "reason": "Meaningful boundaries: actual in-place 2/4 writeback and constant store, rejected bounds/wrap/target, universal exact singleton output and constructed whole-pipeline witness. Public declarations audited and fresh proof elaboration configured."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxPipelineExists.lean",
+      "reason": "Supporting definitions, helper lemmas and proof bodies implement the linked complete contracts. Independent reviews checked actual loads, stores, whole-arena frame, constructive existence, standard dependencies and absence of assumed intermediate answers."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxReductions.lean",
+      "reason": "Supporting definitions, helper lemmas and proof bodies implement the linked complete contracts. Independent reviews checked actual loads, stores, whole-arena frame, constructive existence, standard dependencies and absence of assumed intermediate answers."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxStorage.lean",
+      "reason": "Supporting definitions, helper lemmas and proof bodies implement the linked complete contracts. Independent reviews checked actual loads, stores, whole-arena frame, constructive existence, standard dependencies and absence of assumed intermediate answers."
+    },
+    {
+      "path": "integration/torchlean/PtxBinary32/SoftmaxSweep.lean",
+      "reason": "Generic memory-only induction preserves unprocessed inputs, untouched suffix and final writes. It supplies no arithmetic and is instantiated with actual fetched stage relations in the linked pipeline theorem."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register all 11 new modules and 109 public declarations, with two new fresh regression modules, in existing pinned source/build/dependency checks."
+    },
+    {
+      "path": "integration/torchlean/PtxSoftmaxForward.lean",
+      "reason": "Supporting definitions, helper lemmas and proof bodies implement the linked complete contracts. Independent reviews checked actual loads, stores, whole-arena frame, constructive existence, standard dependencies and absence of assumed intermediate answers."
+    },
+    {
+      "path": "integration/torchlean/PtxSoftmaxPipeline.lean",
+      "reason": "Supporting definitions, helper lemmas and proof bodies implement the linked complete contracts. Independent reviews checked actual loads, stores, whole-arena frame, constructive existence, standard dependencies and absence of assumed intermediate answers."
+    },
+    {
+      "path": "integration/torchlean/README.md",
+      "reason": "Study guide and integration README explain the concrete arena walkthrough, guards, reproduction commands and serial/runtime restrictions; core contracts are in Stratic."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register all 11 new modules and 109 public declarations, with two new fresh regression modules, in existing pinned source/build/dependency checks."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register all 11 new modules and 109 public declarations, with two new fresh regression modules, in existing pinned source/build/dependency checks."
+    },
+    {
+      "path": "stratic/descriptions/parallel-maximum.json",
+      "reason": "Self-contained descriptions, summaries and complete passage links reviewed in lockstep; changed boundary text distinguishes components from complete model-level forward composition."
+    },
+    {
+      "path": "stratic/descriptions/parallel-maximum.md",
+      "reason": "Self-contained descriptions, summaries and complete passage links reviewed in lockstep; changed boundary text distinguishes components from complete model-level forward composition."
+    },
+    {
+      "path": "stratic/descriptions/softmax-forward.json",
+      "reason": "Self-contained descriptions, summaries and complete passage links reviewed in lockstep; changed boundary text distinguishes components from complete model-level forward composition."
+    },
+    {
+      "path": "stratic/descriptions/softmax-forward.md",
+      "reason": "Self-contained descriptions, summaries and complete passage links reviewed in lockstep; changed boundary text distinguishes components from complete model-level forward composition."
+    },
+    {
+      "path": "stratic/descriptions/softmax-sum-normalization.json",
+      "reason": "Self-contained descriptions, summaries and complete passage links reviewed in lockstep; changed boundary text distinguishes components from complete model-level forward composition."
+    },
+    {
+      "path": "stratic/descriptions/softmax-sum-normalization.md",
+      "reason": "Self-contained descriptions, summaries and complete passage links reviewed in lockstep; changed boundary text distinguishes components from complete model-level forward composition."
+    },
+    {
+      "path": "stratic/descriptions/softmax.json",
+      "reason": "Self-contained descriptions, summaries and complete passage links reviewed in lockstep; changed boundary text distinguishes components from complete model-level forward composition."
+    },
+    {
+      "path": "stratic/descriptions/softmax.md",
+      "reason": "Self-contained descriptions, summaries and complete passage links reviewed in lockstep; changed boundary text distinguishes components from complete model-level forward composition."
+    }
+  ]
+}

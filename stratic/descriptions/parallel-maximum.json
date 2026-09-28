@@ -304,7 +304,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The returned maximum preserves any common input-magnitude bound. In particular,\ninputs bounded by 2^124 meet the magnitude and ordering premises of the shifted\nexponential when paired with this result. Attainment supplies a score whose\nshifted exponential is exactly positive one. Linking these components into a\ncomplete softmax forward program still requires its sum and normalization.\nArbitrary row lengths, masked rows and groups larger than this first domain need\nseparate extensions; padding must not introduce a spurious zero maximum into an\nall-negative row.\n"
+        "quote": "The returned maximum preserves any common input-magnitude bound. In particular,\ninputs bounded by 2^124 meet the magnitude and ordering premises of the shifted\nexponential when paired with this result. Attainment supplies a score whose\nshifted exponential is exactly positive one. The separate reference-forward responsibility connects this result through\nactual memory operations to exponentiation, summation and normalization.\nArbitrary row lengths, masked rows and groups larger than this first domain need\nseparate extensions; padding must not introduce a spurious zero maximum into an\nall-negative row.\n"
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/MaximumTree.lean",
@@ -316,7 +316,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The returned maximum preserves any common input-magnitude bound. In particular,\ninputs bounded by 2^124 meet the magnitude and ordering premises of the shifted\nexponential when paired with this result. Attainment supplies a score whose\nshifted exponential is exactly positive one. Linking these components into a\ncomplete softmax forward program still requires its sum and normalization.\nArbitrary row lengths, masked rows and groups larger than this first domain need\nseparate extensions; padding must not introduce a spurious zero maximum into an\nall-negative row.\n"
+        "quote": "The returned maximum preserves any common input-magnitude bound. In particular,\ninputs bounded by 2^124 meet the magnitude and ordering premises of the shifted\nexponential when paired with this result. Attainment supplies a score whose\nshifted exponential is exactly positive one. The separate reference-forward responsibility connects this result through\nactual memory operations to exponentiation, summation and normalization.\nArbitrary row lengths, masked rows and groups larger than this first domain need\nseparate extensions; padding must not introduce a spurious zero maximum into an\nall-negative row.\n"
       },
       "to": {
         "path": "integration/torchlean/PtxBinary32/MaximumUniversal.lean",
@@ -340,7 +340,7 @@
     {
       "kind": "depends-on",
       "from": {
-        "quote": "The returned maximum preserves any common input-magnitude bound. In particular,\ninputs bounded by 2^124 meet the magnitude and ordering premises of the shifted\nexponential when paired with this result. Attainment supplies a score whose\nshifted exponential is exactly positive one. Linking these components into a\ncomplete softmax forward program still requires its sum and normalization.\nArbitrary row lengths, masked rows and groups larger than this first domain need\nseparate extensions; padding must not introduce a spurious zero maximum into an\nall-negative row.\n"
+        "quote": "The returned maximum preserves any common input-magnitude bound. In particular,\ninputs bounded by 2^124 meet the magnitude and ordering premises of the shifted\nexponential when paired with this result. Attainment supplies a score whose\nshifted exponential is exactly positive one. The separate reference-forward responsibility connects this result through\nactual memory operations to exponentiation, summation and normalization.\nArbitrary row lengths, masked rows and groups larger than this first domain need\nseparate extensions; padding must not introduce a spurious zero maximum into an\nall-negative row.\n"
       },
       "to": {
         "description": "shifted-exponential",

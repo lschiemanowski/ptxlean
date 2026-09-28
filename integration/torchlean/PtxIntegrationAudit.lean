@@ -1,3 +1,14 @@
+import PtxBinary32.SoftmaxForwardAccuracy
+import PtxBinary32.SoftmaxMemory
+import PtxBinary32.SoftmaxMemoryChecks
+import PtxBinary32.SoftmaxPipeline
+import PtxBinary32.SoftmaxPipelineChecks
+import PtxBinary32.SoftmaxPipelineExists
+import PtxBinary32.SoftmaxReductions
+import PtxBinary32.SoftmaxStorage
+import PtxBinary32.SoftmaxSweep
+import PtxSoftmaxForward
+import PtxSoftmaxPipeline
 import PtxBinary32.Normalize
 import PtxBinary32.NormalizeChecks
 import PtxBinary32.NormalizeCorrect
@@ -2352,3 +2363,114 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms Ptx.Binary32.SumTree.Checks.subnormal_leaf
 #print axioms Ptx.Binary32.SumTree.Checks.singleton_budget
 #print axioms Ptx.Binary32.SumTree.Checks.largest_budget
+
+-- Reference forward pipeline public declarations.
+#print axioms Ptx.Binary32.SoftmaxForward.ExpStages
+#print axioms Ptx.Binary32.SoftmaxForward.delta
+#print axioms Ptx.Binary32.SoftmaxForward.exact
+#print axioms Ptx.Binary32.SoftmaxForward.totalBudget
+#print axioms Ptx.Binary32.SoftmaxForward.equal_scores_guard
+#print axioms Ptx.Binary32.SoftmaxForward.exponentials
+#print axioms Ptx.Binary32.SoftmaxForward.exact_bounds
+#print axioms Ptx.Binary32.SoftmaxForward.correct
+#print axioms Ptx.Scalar.SoftmaxMemory.Instr
+#print axioms Ptx.Scalar.SoftmaxMemory.Eval
+#print axioms Ptx.Scalar.SoftmaxMemory.Executes
+#print axioms Ptx.Scalar.SoftmaxMemory.Run
+#print axioms Ptx.Scalar.SoftmaxMemory.AccessAt
+#print axioms Ptx.Scalar.SoftmaxMemory.eval_length
+#print axioms Ptx.Scalar.SoftmaxMemory.executes_length
+#print axioms Ptx.Scalar.SoftmaxMemory.access_safe
+#print axioms Ptx.Scalar.SoftmaxMemory.run_memory_safe
+#print axioms Ptx.Scalar.SoftmaxMemory.address
+#print axioms Ptx.Scalar.SoftmaxMemory.load
+#print axioms Ptx.Scalar.SoftmaxMemory.store
+#print axioms Ptx.Scalar.SoftmaxMemory.write
+#print axioms Ptx.Scalar.SoftmaxMemory.save
+#print axioms Ptx.Scalar.SoftmaxMemory.ValidIndex
+#print axioms Ptx.Scalar.SoftmaxMemory.address_index
+#print axioms Ptx.Scalar.SoftmaxMemory.valid_address
+#print axioms Ptx.Scalar.SoftmaxMemory.load_iff
+#print axioms Ptx.Scalar.SoftmaxMemory.store_iff
+#print axioms Ptx.Scalar.SoftmaxMemory.store_result
+#print axioms Ptx.Scalar.SoftmaxMemory.shiftedProgram
+#print axioms Ptx.Scalar.SoftmaxMemory.normalizeProgram
+#print axioms Ptx.Scalar.SoftmaxMemory.ShiftedStages
+#print axioms Ptx.Scalar.SoftmaxMemory.NormalizeStages
+#print axioms Ptx.Scalar.SoftmaxMemory.executes_cons
+#print axioms Ptx.Scalar.SoftmaxMemory.executes_nil
+#print axioms Ptx.Scalar.SoftmaxMemory.binary_iff
+#print axioms Ptx.Scalar.SoftmaxMemory.exponential_iff
+#print axioms Ptx.Scalar.SoftmaxMemory.reciprocal_iff
+#print axioms Ptx.Scalar.SoftmaxMemory.Frame
+#print axioms Ptx.Scalar.SoftmaxMemory.normalize_correct
+#print axioms Ptx.Scalar.SoftmaxMemory.shifted_correct
+#print axioms Ptx.Scalar.SoftmaxMemory.normalize_realize
+#print axioms Ptx.Scalar.SoftmaxMemory.shifted_realize
+#print axioms Ptx.Scalar.SoftmaxMemory.ShiftLaunch
+#print axioms Ptx.Scalar.SoftmaxMemory.NormalizeLaunch
+#print axioms Ptx.Scalar.SoftmaxMemory.shifted_launch_correct
+#print axioms Ptx.Scalar.SoftmaxMemory.normalize_launch_correct
+#print axioms Ptx.Scalar.SoftmaxMemory.shifted_launch_memory_safe
+#print axioms Ptx.Scalar.SoftmaxMemory.normalize_launch_memory_safe
+#print axioms Ptx.Scalar.SoftmaxMemory.entry
+#print axioms Ptx.Scalar.SoftmaxMemory.shifted_launch_realize
+#print axioms Ptx.Scalar.SoftmaxMemory.normalize_launch_realize
+#print axioms Ptx.Scalar.SoftmaxMemory.shifted_launch_exists
+#print axioms Ptx.Scalar.SoftmaxMemory.normalize_launch_exists
+#print axioms Ptx.Scalar.SoftmaxMemory.constantStore
+#print axioms Ptx.Scalar.SoftmaxMemory.StoreLaunch
+#print axioms Ptx.Scalar.SoftmaxMemory.constantStore_iff
+#print axioms Ptx.Scalar.SoftmaxMemory.store_launch_correct
+#print axioms Ptx.Scalar.SoftmaxMemory.store_launch_exists
+#print axioms Ptx.Scalar.SoftmaxMemory.store_launch_memory_safe
+#print axioms Ptx.Scalar.SoftmaxMemory.Checks.in_place_normalization
+#print axioms Ptx.Scalar.SoftmaxMemory.Checks.restore_unit_weight
+#print axioms Ptx.Scalar.SoftmaxMemory.Checks.out_of_bounds_rejected
+#print axioms Ptx.Scalar.SoftmaxMemory.Checks.wrapping_index_rejected
+#print axioms Ptx.Scalar.SoftmaxMemory.Checks.unsupported_target
+#print axioms Ptx.Scalar.SoftmaxPipeline.target
+#print axioms Ptx.Scalar.SoftmaxPipeline.exponentialStep
+#print axioms Ptx.Scalar.SoftmaxPipeline.normalizationStep
+#print axioms Ptx.Scalar.SoftmaxPipeline.Run
+#print axioms Ptx.Scalar.SoftmaxPipeline.maximumWord
+#print axioms Ptx.Scalar.SoftmaxPipeline.exponential_writes
+#print axioms Ptx.Scalar.SoftmaxPipeline.normalization_writes
+#print axioms Ptx.Scalar.SoftmaxPipeline.arithmetic
+#print axioms Ptx.Scalar.SoftmaxPipeline.Checks.singleton_exact
+#print axioms Ptx.Scalar.SoftmaxPipeline.Checks.singleton_exists
+#print axioms Ptx.Scalar.SoftmaxPipeline.execution_exists
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.maximumBounds
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.maximum_frame
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.maximum_exact
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.MaximumLaunch
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.maximum_launch_correct
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.maximum_launch_exists
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.sum_launch_exists
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.sum_launch_correct
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.maximum_launch_safe
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.sum_launch_safe
+#print axioms Ptx.Scalar.Parallel.SoftmaxReductions.maximum_input_bounds
+#print axioms Ptx.Scalar.SoftmaxStorage.row
+#print axioms Ptx.Scalar.SoftmaxStorage.bang_eq
+#print axioms Ptx.Scalar.SoftmaxStorage.some_bang
+#print axioms Ptx.Scalar.SoftmaxStorage.global_tail
+#print axioms Ptx.Scalar.SoftmaxStorage.global_eq
+#print axioms Ptx.Scalar.SoftmaxStorage.restore_weight
+#print axioms Ptx.Scalar.SoftmaxStorage.pass_relations
+#print axioms Ptx.Scalar.SoftmaxSweep.Run
+#print axioms Ptx.Scalar.SoftmaxSweep.WritesOwn
+#print axioms Ptx.Scalar.SoftmaxSweep.length
+#print axioms Ptx.Scalar.SoftmaxSweep.outside
+#print axioms Ptx.Scalar.SoftmaxSweep.occurrence
+#print axioms Ptx.Scalar.SoftmaxSweep.exists_run
+#print axioms PtxTorchLean.Softmax.rowForward
+#print axioms PtxTorchLean.Softmax.rowForward_formula
+#print axioms PtxTorchLean.Softmax.rowForward_error
+#print axioms PtxTorchLean.SoftmaxPipeline.AccuracyGuard
+#print axioms PtxTorchLean.SoftmaxPipeline.resultValue
+#print axioms PtxTorchLean.SoftmaxPipeline.coordinateAllowance
+#print axioms PtxTorchLean.SoftmaxPipeline.Accurate
+#print axioms PtxTorchLean.SoftmaxPipeline.correct
+#print axioms PtxTorchLean.SoftmaxPipeline.accurate_execution_exists
+#print axioms PtxTorchLean.SoftmaxPipeline.equal_scores_guard

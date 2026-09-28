@@ -47,8 +47,8 @@ performance, launch or benchmarking claim follows from these results.
 The returned maximum preserves any common input-magnitude bound. In particular,
 inputs bounded by 2^124 meet the magnitude and ordering premises of the shifted
 exponential when paired with this result. Attainment supplies a score whose
-shifted exponential is exactly positive one. Linking these components into a
-complete softmax forward program still requires its sum and normalization.
+shifted exponential is exactly positive one. The separate reference-forward responsibility connects this result through
+actual memory operations to exponentiation, summation and normalization.
 Arbitrary row lengths, masked rows and groups larger than this first domain need
 separate extensions; padding must not introduce a spurious zero maximum into an
 all-negative row.

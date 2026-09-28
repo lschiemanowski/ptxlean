@@ -84,8 +84,8 @@ infinities and NaNs; positive finite inputs remain explicitly unsupported, even
 when their exponentials would be finite. Signed-zero inputs produce exact
 positive one. Its existence theorem requires a disabled predicate or an input
 in that supported domain. This is a partial instruction model, not full ex2
-coverage. These components do not yet establish that a combined softmax kernel
-realizes every stage contract or has a completed execution.
+coverage. These instruction components feed the reference forward pipeline described below;
+each retains its own supported domain and numerical policy.
 A bounded four-step scalar sequence now implements one shifted exponential and
 returns exact positive one when the score equals the supplied maximum. It derives
 finite, nonpositive intermediates from its input conditions and preserves every
@@ -97,8 +97,12 @@ A parallel sum reduces the encoded exponentials with derived finite-range and
 rounding bounds. A two-instruction scalar sequence normalizes each numerator
 using the actual stored sum through an explicit register interface. The total
 exponential and sum error must be at most one half to derive safe normalization.
-The interface does not implement PTX loads or broadcast between these components.
-Remaining work includes combined softmax forward and backward programs, with
-admitted execution existence, memory safety and stored-output proofs for their
-composition.
+The register interface alone does not implement memory operations between stages.
+A complete reference forward pipeline now connects the parallel maximum and sum
+through sequential fetched exponential and normalization passes in one arena.
+It proves execution existence from original bounded finite scores and stored-output
+accuracy against TorchLean under the explicit total-error guard. Phase boundaries
+are model-level waiting and initialization, not a CUDA runtime implementation.
+A fully parallel or fused forward kernel, masking, arbitrary row sizes and a
+backward implementation remain separate work.
 GPU execution and benchmarking remain deferred.

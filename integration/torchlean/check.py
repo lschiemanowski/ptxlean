@@ -288,6 +288,20 @@ COUNTS['Ptx.Scalar.ShiftedExp'] = COUNTS.get('Ptx.Scalar.ShiftedExp', 0) + 1
 TARGETS.update(['PtxBinary32.Normalize', 'PtxBinary32.NormalizeChecks', 'PtxBinary32.NormalizeCorrect', 'PtxBinary32.NormalizeProgram', 'PtxBinary32.ShiftedExpRange', 'PtxBinary32.SoftmaxNormalize', 'PtxBinary32.SumChecks', 'PtxBinary32.SumCorrect', 'PtxBinary32.SumExecution', 'PtxBinary32.SumNormalize', 'PtxBinary32.SumProgram', 'PtxBinary32.SumTree', 'PtxBinary32.SumTreeChecks'])
 
 
+# Memory-connected reference softmax forward pipeline.
+COUNTS['Ptx.Binary32.SoftmaxForward'] = COUNTS.get('Ptx.Binary32.SoftmaxForward', 0) + 8
+COUNTS['Ptx.Scalar.Parallel.SoftmaxReductions'] = COUNTS.get('Ptx.Scalar.Parallel.SoftmaxReductions', 0) + 11
+COUNTS['Ptx.Scalar.SoftmaxMemory'] = COUNTS.get('Ptx.Scalar.SoftmaxMemory', 0) + 51
+COUNTS['Ptx.Scalar.SoftmaxMemory.Checks'] = COUNTS.get('Ptx.Scalar.SoftmaxMemory.Checks', 0) + 5
+COUNTS['Ptx.Scalar.SoftmaxPipeline'] = COUNTS.get('Ptx.Scalar.SoftmaxPipeline', 0) + 9
+COUNTS['Ptx.Scalar.SoftmaxPipeline.Checks'] = COUNTS.get('Ptx.Scalar.SoftmaxPipeline.Checks', 0) + 2
+COUNTS['Ptx.Scalar.SoftmaxStorage'] = COUNTS.get('Ptx.Scalar.SoftmaxStorage', 0) + 7
+COUNTS['Ptx.Scalar.SoftmaxSweep'] = COUNTS.get('Ptx.Scalar.SoftmaxSweep', 0) + 6
+COUNTS['PtxTorchLean.Softmax'] = COUNTS.get('PtxTorchLean.Softmax', 0) + 3
+COUNTS['PtxTorchLean.SoftmaxPipeline'] = COUNTS.get('PtxTorchLean.SoftmaxPipeline', 0) + 7
+TARGETS.update(['PtxBinary32.SoftmaxForwardAccuracy', 'PtxBinary32.SoftmaxMemory', 'PtxBinary32.SoftmaxMemoryChecks', 'PtxBinary32.SoftmaxPipeline', 'PtxBinary32.SoftmaxPipelineChecks', 'PtxBinary32.SoftmaxPipelineExists', 'PtxBinary32.SoftmaxReductions', 'PtxBinary32.SoftmaxStorage', 'PtxBinary32.SoftmaxSweep', 'PtxSoftmaxForward', 'PtxSoftmaxPipeline'])
+
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -339,6 +353,9 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PtxBinary32/MaximumChecks.lean"],
                        cwd=HERE, check=True)
         for check in ("NormalizeChecks", "SumTreeChecks", "SumChecks"):
+            subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
+                           cwd=HERE, check=True)
+        for check in ("SoftmaxMemoryChecks", "SoftmaxPipelineChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PtxBinary32/{check}.lean"],
                            cwd=HERE, check=True)
         audit = subprocess.run(["lake", "--no-cache", "env", "lean", driver.name],
