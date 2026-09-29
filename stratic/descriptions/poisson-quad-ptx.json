@@ -12,7 +12,8 @@
     "Certify accepted solutions with an exact residual checker; connect the residual kernel output to TorchLean under byte-source constraints while retaining the other implementation and hardware boundaries.",
     "Prove the eight local contractions and actual shared stores, and connect all six outputs of the three completed middle phases to TorchLean under necessary byte-source constraints.",
     "Derive middle-slice read addresses, intermediate values, weight operations, ownership and barrier ordering for certified Q1–Q4 layouts; check complete emitted bodies against the proved program.",
-    "Keep gathered input and entry registers explicit; full cell composition, complete memory admission, general execution existence and host launches remain unproved."
+    "Keep gathered input and entry registers explicit; full cell composition, complete memory admission, general execution existence and host launches remain unproved.",
+    "Prove the final fetched arithmetic, indexing and output store, and compose it with actual middle stores through a checked byte snapshot; retain the single concurrent whole-cell trace as a remaining obligation."
   ],
   "realization": "implemented",
   "links": [

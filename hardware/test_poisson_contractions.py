@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle
+from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final
 from poisson_kernels import Layout, module, PTX
 
 
@@ -80,6 +80,25 @@ class ContractionBinding(unittest.TestCase):
         for bodies in (expected[:-1], expected[::-1], expected+[expected[0]]):
             with self.assertRaises(ValueError):
                 verify_middle(self.ptx, bodies, self.layout)
+
+    def test_final_body(self):
+        lines = self.ptx.splitlines()
+        expected = lines[lines.index('@!%live bra stage_4_done;')+1:
+                         lines.index('stage_4_done:')]+['ret;']
+        self.assertEqual(len(verify_final(self.ptx, expected, self.layout)), 3)
+        for old, new in [('add.rn.f64 %value, %acc, %acc2;', 'sub.rn.f64 %value, %acc, %acc2;'),
+                         ('st.global.f64 [%addr], %value;', 'st.global.f64 [%addr], %acc;'),
+                         ('stage_4_done:', 'add.u32 %idx, %idx, 1;\nstage_4_done:')]:
+            with self.subTest(new=new):
+                self.assertIn(old, self.ptx)
+                with self.assertRaises(ValueError):
+                    verify_final(self.ptx.replace(old, new), expected, self.layout)
+        for code in (expected[:-1], expected+['ret;'], list(reversed(expected))):
+            with self.assertRaises(ValueError): verify_final(self.ptx, code, self.layout)
+        for key, value in [('offset', 1), ('count', 1), ('count', 2**32), ('kind', 'I')]:
+            layout = copy.deepcopy(self.layout)
+            layout['fields']['element'][key] = value
+            with self.assertRaises(ValueError): parameters(layout)
 
     def test_structure(self):
         self.assertEqual(len(verify_blocks(self.ptx, self.expected, self.layout)), 24)

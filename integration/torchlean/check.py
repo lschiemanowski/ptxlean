@@ -399,6 +399,10 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources'] = COUNTS.get('PtxTorch
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks', 0) + 9
 TARGETS.update(['PoissonPTX.Symbolic', 'PoissonPTX.SymbolicRun', 'PoissonPTX.CellSymbolic', 'PoissonPTX.CellLaunch', 'PoissonPTX.CellWordView', 'PoissonPTX.CellReadGeometry', 'PoissonPTX.CellReadValues', 'PoissonPTX.CellStoreValues', 'PoissonPTX.CellTensor', 'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.ZeroSources', 'PoissonPTX.CellMiddleNumericChecks'])
 
+# Final fetched output and composition from actual middle-store bytes.
+COUNTS.update({'PtxTorchLean.Poisson.PTX.CellFinal': 43, 'PtxTorchLean.Poisson.PTX.CellFinal.Checks': 13})
+TARGETS.update(['PoissonPTX.CellFinal', 'PoissonPTX.CellFinalChecks', 'PoissonPTX.CellFinalKernel', 'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellFinalSnapshot', 'PoissonPTX.CellFinalTensor', 'PoissonPTX.CellFinalText'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -468,7 +472,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

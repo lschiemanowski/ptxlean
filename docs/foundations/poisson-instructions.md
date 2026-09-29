@@ -243,4 +243,7 @@ global/shared byte loads and separate rounded multiply/add operations. See the
 conditions, source review and binding checks. These are supplied-snapshot block
 contracts. The three middle phases now have complete numerical composition,
 including their stores and barriers, under necessary byte-source constraints;
-the gather, final output and complete cell launch remain open.
+the [final-body proof](poisson-final-output.md) composes its arithmetic and
+global store with a byte snapshot constructed from the middle stores. Gather,
+final-read visibility in one concurrent trace and the complete cell launch remain
+open.

@@ -161,8 +161,9 @@ The reusable fetched barrier model now proves arrival provenance, waiting, reuse
 and the single-writer byte-source visibility rule. Its full-cell instantiation
 still must establish the executed stores before arrival, the complete access
 coverage, and the subsequent reads for every phase. The three middle phases
-now have this instantiation and numerical composition; gather and final output
-remain outside that result. See the
+now have this instantiation and numerical composition. The final body has a
+separate fetched proof and phase-by-phase composition; gather and a single
+concurrent trace through final reads remain outside that result. See the
 [barrier visibility guide](poisson-barrier-visibility.md).
 The plain `st.shared.f64` instruction is weak by default; publication algebra
 alone must not silently supply synchronization. The source review used the pinned
@@ -178,3 +179,14 @@ unweighted contraction/store pairs to be adjacent. It now also checks the five
 guards and four barrier boundaries syntactically. This does not prove their
 complete launch. The middle-body binding additionally checks every instruction
 against the program used by the completed middle-slice numerical theorem.
+
+## Completing the final arithmetic and store
+
+The final `x` and `y` contractions are now composed with their addition,
+element/lane indexing, global store and return. The proof establishes the actual
+stored value, preserves unrelated bytes and supplies a completed execution for
+valid snapshots. A second theorem constructs those bytes from actual middle-run
+stores and obtains the whole TorchLean local cell result. See the
+[final-output guide](poisson-final-output.md) for its entry conditions and the
+remaining distinction between this phase-by-phase composition and one concurrent
+whole-cell trace. The frontend checks the entire final body, not just `x` and `y`.

@@ -353,8 +353,10 @@ requires a completed run and the two necessary byte-source constraints,
 scalar traces, store coverage or producer-ordering paths.
 
 This finishes numerical correspondence for the **middle slice**. The complete
-cell still needs its prologue, gathered-input connection, final contractions,
-addition and global output joined to this result. The proof does not establish
+cell still needs its prologue, gathered-input connection and a single concurrent
+trace extending through the final reads and global output. The final body now
+has a separate fetched proof and phase-by-phase composition described in the
+[final-output guide](poisson-final-output.md). The proof does not establish
 full PTX memory admission, arbitrary-input execution existence, GPU progress,
 or whole-solver correspondence.
 

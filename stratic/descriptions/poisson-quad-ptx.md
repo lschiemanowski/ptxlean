@@ -87,10 +87,16 @@ producer ownership and barrier ordering are derived from execution; no phase
 answer is assumed. The certificates cover the emitted Q1–Q4 arena layouts,
 and the frontend compares every body instruction with saved PTX.
 
-This slice starts with gathered bytes and prepared base/lane/coordinate registers.
-It does not prove how the prologue and gather establish those inputs. The final
-two contractions, addition and global output must still be joined to obtain a
-complete cell theorem. Complete PTX memory admission, arbitrary-input execution
-existence, hardware progress and whole-solver instruction correspondence remain
-separate obligations. Documentation and saved empirical evidence distinguish
-these boundaries from the completed middle-slice theorem.
+The complete final body also has a fetched-instruction proof: two contractions,
+rounded addition, element/lane indexing, global store and return. A separate
+existence theorem covers valid input snapshots. A phase-by-phase composition
+constructs its shared bytes from actual middle-run stores and proves the stored
+TorchLean local cell result, with allocation and index conditions explicit.
+
+The middle slice starts with gathered bytes and prepared base/lane/coordinate
+registers. The final phase's entry registers are also explicit. The prologue and
+gather must establish those inputs, and one concurrent trace must still connect
+the final reads to the middle stores through the barriers. Complete PTX memory
+admission, general execution existence, hardware progress and whole-solver
+instruction correspondence remain separate obligations. Documentation and saved
+empirical evidence distinguish these from the completed phase-by-phase theorem.

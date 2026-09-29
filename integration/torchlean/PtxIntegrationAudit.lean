@@ -1,3 +1,10 @@
+import PoissonPTX.CellFinal
+import PoissonPTX.CellFinalChecks
+import PoissonPTX.CellFinalKernel
+import PoissonPTX.CellFinalLayout
+import PoissonPTX.CellFinalSnapshot
+import PoissonPTX.CellFinalTensor
+import PoissonPTX.CellFinalText
 import PoissonPTX.Symbolic
 import PoissonPTX.SymbolicRun
 import PoissonPTX.CellSymbolic
@@ -3666,3 +3673,60 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.execute_zero_reads
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.decode_zero
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.expected_zero
+
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.left
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.right
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.arithmetic
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.fold
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.result
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Inputs
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.inputs_stable
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.contraction_keeps
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.fold_stable
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_correct
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.initial
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.ctx
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.code
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.input_bounds
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.store_bounds
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.completed_value
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.exists_fetched
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.wrong_sum_changes_result
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.short_output_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.unaligned_output_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.modular_index
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.Checks.wrapped_extent_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.index
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.indexed
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.location
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.tail
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.program
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.location_stable
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.tail_correct
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.tail_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.correct
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.execution_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.fetched_correct
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.fetched_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.inputs_of_matrices
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.index_exact
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.location_exact
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.output_valid
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.wordBytes
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.read_wordBytes
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.phaseState
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.phase_global
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.phase_shared
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.phase_result
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.completed_from_middle
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.bases
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.words
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.grid
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.value_grid
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.fold_fin
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.fold_product
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.result_tensor
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.rendered
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle

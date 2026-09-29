@@ -4,8 +4,10 @@
 Complete middle-phase bodies are bound to the concurrent Lean program with
 kernel-checked control, address and numerical certificates for Q1--Q4. Completed
 middle-slice executions satisfying necessary byte-source constraints store all
-six TorchLean intermediate tensors. The gather, prologue, final output, full
-launch composition and complete PTX memory admission remain open.
+six TorchLean intermediate tensors. The final body has a fetched, snapshot-based
+store theorem and phase-by-phase composition with actual middle stores. Final
+read visibility in one concurrent full-cell trace, gather, prologue, full launch
+composition and complete PTX memory admission remain open.
 """
 import argparse
 import hashlib
@@ -33,6 +35,13 @@ def parameters(layout):
                 field['offset'] % 8 or field['offset']+width*width*8 > layout['bytes']):
             raise ValueError('invalid matrix layout')
         result[name] = field['offset']
+    field = layout['fields']['element']
+    if (field['kind'] != 'd' or type(field['count']) is not int or field['count'] <= 0
+            or field['count'] % (width*width) or field['count'] >= 2**32
+            or type(field['offset']) is not int or field['offset'] < 0 or field['offset'] % 8
+            or field['offset']+field['count']*8 > layout['bytes']):
+        raise ValueError('invalid element-output extent')
+    result['output'] = field['offset']
     return result
 
 
@@ -156,6 +165,27 @@ def verify_middle(ptx, rendered, layout):
     return checked
 
 
+def verify_final(ptx, rendered, layout):
+    """Bind the complete active final body, index/address/store and return."""
+    parameters(layout)
+    verify_control(ptx, layout)
+    if len(rendered) < 7 or rendered[-1] != 'ret;':
+        raise ValueError('expected final-body program ending in ret')
+    checked = []
+    for entry in ('element_probe', 'element_p', 'element_x'):
+        bodies = re.findall(r'\.visible \.entry '+entry+r'\(\.param \.u64 arena\)\s*([^}]+)}', ptx)
+        if len(bodies) != 1:
+            raise ValueError('entry missing or duplicated')
+        lines = [line.strip() for line in bodies[0].splitlines() if line.strip()]
+        begin = lines.index('@!%live bra stage_4_done;')
+        end = lines.index('stage_4_done:')
+        if lines[begin+1:end] != rendered[:-1] or lines[end+1:] != ['ret;']:
+            raise ValueError(f'{entry}: final body differs from proved program')
+        checked.append(dict(entry=entry, instructions=len(rendered),
+                            sha256=hashlib.sha256(('\n'.join(rendered)+'\n').encode()).hexdigest()))
+    return checked
+
+
 def check(run, output):
     if output.exists():
         raise ValueError('output already exists')
@@ -180,7 +210,8 @@ def check(run, output):
     subprocess.run(['lake', '--no-cache', 'build', 'poissonContractions', 'PoissonPTX.ContractionFetched',
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
                     'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
-                    'PoissonPTX.CellMiddleCorrespondence'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.CellFinalSnapshot',
+                    'PoissonPTX.CellFinalLayout'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -198,9 +229,13 @@ def check(run, output):
     names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.'+n for n in
               ('loads', 'stores', 'load_location', 'all_reads', 'store_expression',
                'producer', 'plane_equations', 'completed_middle', 'completed_store')]
+    names += ['PtxTorchLean.Poisson.PTX.CellFinal.'+n for n in
+              ('arithmetic_correct', 'fetched_correct', 'fetched_exists', 'inputs_of_matrices',
+               'index_exact', 'location_exact', 'output_valid', 'read_wordBytes',
+               'phase_result', 'completed_from_middle', 'exists_from_middle')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\n'+
+        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)
@@ -211,7 +246,8 @@ def check(run, output):
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['contractions'], layout),
         stores=verify_stores(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['stores'], layout, code['contractions']),
         control=verify_control(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), layout),
-        middle=verify_middle(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['middle'], layout))
+        middle=verify_middle(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['middle'], layout),
+        final=verify_final(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['final'], layout))
         for c, layout, code in zip(report['cases'], layouts, rendered, strict=True)]
     checker.dependencies()
     if hashes != {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}:

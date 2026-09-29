@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nComplete middle-phase bodies are bound to the concurrent Lean program with\nkernel-checked control, address and numerical certificates for Q1--Q4. Completed\nmiddle-slice executions satisfying necessary byte-source constraints store all\nsix TorchLean intermediate tensors. The gather, prologue, final output, full\nlaunch composition and complete PTX memory admission remain open.",
+  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nComplete middle-phase bodies are bound to the concurrent Lean program with\nkernel-checked control, address and numerical certificates for Q1--Q4. Completed\nmiddle-slice executions satisfying necessary byte-source constraints store all\nsix TorchLean intermediate tensors. The final body has a fetched, snapshot-based\nstore theorem and phase-by-phase composition with actual middle stores. Final\nread visibility in one concurrent full-cell trace, gather, prologue, full launch\ncomposition and complete PTX memory admission remain open.",
   "checked": [
     {
       "directory": "00-n1-q1",
@@ -400,6 +400,23 @@
             }
           ],
           "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 61,
+          "sha256": "6238b6a663e022987be0a7403963fc491c8e75f4e21aae70570bd0a00dbc7a26"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 61,
+          "sha256": "6238b6a663e022987be0a7403963fc491c8e75f4e21aae70570bd0a00dbc7a26"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 61,
+          "sha256": "6238b6a663e022987be0a7403963fc491c8e75f4e21aae70570bd0a00dbc7a26"
         }
       ]
     },
@@ -802,6 +819,23 @@
           ],
           "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 61,
+          "sha256": "01a41387e609f4dc3e0fdd46bff4e2bd0193f091306169b600162be3239e05ec"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 61,
+          "sha256": "01a41387e609f4dc3e0fdd46bff4e2bd0193f091306169b600162be3239e05ec"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 61,
+          "sha256": "01a41387e609f4dc3e0fdd46bff4e2bd0193f091306169b600162be3239e05ec"
+        }
       ]
     },
     {
@@ -1202,6 +1236,23 @@
             }
           ],
           "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 61,
+          "sha256": "46f7160e685571918cf986419694526ad781a9c60332d7a09c22019b389a2647"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 61,
+          "sha256": "46f7160e685571918cf986419694526ad781a9c60332d7a09c22019b389a2647"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 61,
+          "sha256": "46f7160e685571918cf986419694526ad781a9c60332d7a09c22019b389a2647"
         }
       ]
     },
@@ -1604,6 +1655,23 @@
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "cbe7684b3a7e306449a76b6845de81cc828fbb27d5c672972e6b2b7fb5f30b64"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "cbe7684b3a7e306449a76b6845de81cc828fbb27d5c672972e6b2b7fb5f30b64"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "cbe7684b3a7e306449a76b6845de81cc828fbb27d5c672972e6b2b7fb5f30b64"
+        }
       ]
     },
     {
@@ -2004,6 +2072,23 @@
             }
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
         }
       ]
     },
@@ -2406,6 +2491,23 @@
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "793ca40b76927aa94d31bb4c00f381d2a49f15e24e9005eb7ba8e5b4a33f19c3"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "793ca40b76927aa94d31bb4c00f381d2a49f15e24e9005eb7ba8e5b4a33f19c3"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "793ca40b76927aa94d31bb4c00f381d2a49f15e24e9005eb7ba8e5b4a33f19c3"
+        }
       ]
     },
     {
@@ -2806,6 +2908,23 @@
             }
           ],
           "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 113,
+          "sha256": "d3e85e8430e1a4cd0c4da5843fe9bff514082e3f1e55592cf4817361031bd5a5"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 113,
+          "sha256": "d3e85e8430e1a4cd0c4da5843fe9bff514082e3f1e55592cf4817361031bd5a5"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 113,
+          "sha256": "d3e85e8430e1a4cd0c4da5843fe9bff514082e3f1e55592cf4817361031bd5a5"
         }
       ]
     },
@@ -3208,6 +3327,23 @@
           ],
           "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 113,
+          "sha256": "737ed93ac76cc2786c63fe8ca67ee3b473d9d0c41222991b033d13a3a4768537"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 113,
+          "sha256": "737ed93ac76cc2786c63fe8ca67ee3b473d9d0c41222991b033d13a3a4768537"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 113,
+          "sha256": "737ed93ac76cc2786c63fe8ca67ee3b473d9d0c41222991b033d13a3a4768537"
+        }
       ]
     },
     {
@@ -3608,6 +3744,23 @@
             }
           ],
           "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 113,
+          "sha256": "588118feae9fbd134da29e5af95692babfc25c7e879bddba1db58d54b6853fa1"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 113,
+          "sha256": "588118feae9fbd134da29e5af95692babfc25c7e879bddba1db58d54b6853fa1"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 113,
+          "sha256": "588118feae9fbd134da29e5af95692babfc25c7e879bddba1db58d54b6853fa1"
         }
       ]
     },
@@ -4010,6 +4163,23 @@
           ],
           "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 139,
+          "sha256": "8c6fe1eaf1ae56af74b65de7235d3951c68bc919cbbc0b8c45649ec0dc2d5591"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 139,
+          "sha256": "8c6fe1eaf1ae56af74b65de7235d3951c68bc919cbbc0b8c45649ec0dc2d5591"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 139,
+          "sha256": "8c6fe1eaf1ae56af74b65de7235d3951c68bc919cbbc0b8c45649ec0dc2d5591"
+        }
       ]
     },
     {
@@ -4410,6 +4580,23 @@
             }
           ],
           "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 139,
+          "sha256": "b5a45f58e994578e5487158128d7b176aba1a096bfbe29106c089f900bafada9"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 139,
+          "sha256": "b5a45f58e994578e5487158128d7b176aba1a096bfbe29106c089f900bafada9"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 139,
+          "sha256": "b5a45f58e994578e5487158128d7b176aba1a096bfbe29106c089f900bafada9"
         }
       ]
     },
@@ -4812,6 +4999,23 @@
           ],
           "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 139,
+          "sha256": "59ba174fede7dbf3bfcd609332b4d6661d3e84035c0c60b0017e967ab97669ec"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 139,
+          "sha256": "59ba174fede7dbf3bfcd609332b4d6661d3e84035c0c60b0017e967ab97669ec"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 139,
+          "sha256": "59ba174fede7dbf3bfcd609332b4d6661d3e84035c0c60b0017e967ab97669ec"
+        }
       ]
     },
     {
@@ -5212,6 +5416,23 @@
             }
           ],
           "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 139,
+          "sha256": "42a7025cce8daa68a191e0edbbe17d230280424c8183c24c094ed80185ec0ef4"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 139,
+          "sha256": "42a7025cce8daa68a191e0edbbe17d230280424c8183c24c094ed80185ec0ef4"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 139,
+          "sha256": "42a7025cce8daa68a191e0edbbe17d230280424c8183c24c094ed80185ec0ef4"
         }
       ]
     },
@@ -5614,6 +5835,23 @@
           ],
           "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 61,
+          "sha256": "01a41387e609f4dc3e0fdd46bff4e2bd0193f091306169b600162be3239e05ec"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 61,
+          "sha256": "01a41387e609f4dc3e0fdd46bff4e2bd0193f091306169b600162be3239e05ec"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 61,
+          "sha256": "01a41387e609f4dc3e0fdd46bff4e2bd0193f091306169b600162be3239e05ec"
+        }
       ]
     },
     {
@@ -6014,6 +6252,23 @@
             }
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
         }
       ]
     },
@@ -6416,6 +6671,23 @@
           ],
           "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 113,
+          "sha256": "737ed93ac76cc2786c63fe8ca67ee3b473d9d0c41222991b033d13a3a4768537"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 113,
+          "sha256": "737ed93ac76cc2786c63fe8ca67ee3b473d9d0c41222991b033d13a3a4768537"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 113,
+          "sha256": "737ed93ac76cc2786c63fe8ca67ee3b473d9d0c41222991b033d13a3a4768537"
+        }
       ]
     },
     {
@@ -6816,6 +7088,23 @@
             }
           ],
           "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 139,
+          "sha256": "b5a45f58e994578e5487158128d7b176aba1a096bfbe29106c089f900bafada9"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 139,
+          "sha256": "b5a45f58e994578e5487158128d7b176aba1a096bfbe29106c089f900bafada9"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 139,
+          "sha256": "b5a45f58e994578e5487158128d7b176aba1a096bfbe29106c089f900bafada9"
         }
       ]
     },
@@ -7218,6 +7507,23 @@
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        }
       ]
     },
     {
@@ -7618,6 +7924,23 @@
             }
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
         }
       ]
     },
@@ -8020,6 +8343,23 @@
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        }
       ]
     },
     {
@@ -8420,6 +8760,23 @@
             }
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
         }
       ]
     },
@@ -8822,6 +9179,23 @@
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        }
       ]
     },
     {
@@ -9222,6 +9596,23 @@
             }
           ],
           "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 61,
+          "sha256": "1cd5c88fd9cb263d617b5dfaf0bb34d4ba01e41f781f7f354dbf216df7e06429"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 61,
+          "sha256": "1cd5c88fd9cb263d617b5dfaf0bb34d4ba01e41f781f7f354dbf216df7e06429"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 61,
+          "sha256": "1cd5c88fd9cb263d617b5dfaf0bb34d4ba01e41f781f7f354dbf216df7e06429"
         }
       ]
     },
@@ -9624,6 +10015,23 @@
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "c48b6bd3f25a8f1d93b71fe5791fd79a5260595c57e684e76891febc7ab9b1d9"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "c48b6bd3f25a8f1d93b71fe5791fd79a5260595c57e684e76891febc7ab9b1d9"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "c48b6bd3f25a8f1d93b71fe5791fd79a5260595c57e684e76891febc7ab9b1d9"
+        }
       ]
     },
     {
@@ -10024,6 +10432,23 @@
             }
           ],
           "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 113,
+          "sha256": "5bcc8c8af3a962d9dda13ed09660a99657791d38a8f1eae5adacc3ae010c38f0"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 113,
+          "sha256": "5bcc8c8af3a962d9dda13ed09660a99657791d38a8f1eae5adacc3ae010c38f0"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 113,
+          "sha256": "5bcc8c8af3a962d9dda13ed09660a99657791d38a8f1eae5adacc3ae010c38f0"
         }
       ]
     },
@@ -10426,6 +10851,23 @@
           ],
           "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 139,
+          "sha256": "a8a3505a498dc29ad86fa42f31d7d52d40d4abfaf19a3979aa4867a3c8e74ec3"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 139,
+          "sha256": "a8a3505a498dc29ad86fa42f31d7d52d40d4abfaf19a3979aa4867a3c8e74ec3"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 139,
+          "sha256": "a8a3505a498dc29ad86fa42f31d7d52d40d4abfaf19a3979aa4867a3c8e74ec3"
+        }
       ]
     },
     {
@@ -10826,6 +11268,23 @@
             }
           ],
           "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 139,
+          "sha256": "42a7025cce8daa68a191e0edbbe17d230280424c8183c24c094ed80185ec0ef4"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 139,
+          "sha256": "42a7025cce8daa68a191e0edbbe17d230280424c8183c24c094ed80185ec0ef4"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 139,
+          "sha256": "42a7025cce8daa68a191e0edbbe17d230280424c8183c24c094ed80185ec0ef4"
         }
       ]
     },
@@ -11228,6 +11687,23 @@
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "42d09a3d68b9f6bd982c5320de3c17b40a9c3b209d320e1316eb984ac878be5b"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "42d09a3d68b9f6bd982c5320de3c17b40a9c3b209d320e1316eb984ac878be5b"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "42d09a3d68b9f6bd982c5320de3c17b40a9c3b209d320e1316eb984ac878be5b"
+        }
       ]
     },
     {
@@ -11628,6 +12104,23 @@
             }
           ],
           "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 113,
+          "sha256": "588118feae9fbd134da29e5af95692babfc25c7e879bddba1db58d54b6853fa1"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 113,
+          "sha256": "588118feae9fbd134da29e5af95692babfc25c7e879bddba1db58d54b6853fa1"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 113,
+          "sha256": "588118feae9fbd134da29e5af95692babfc25c7e879bddba1db58d54b6853fa1"
         }
       ]
     },
@@ -12030,6 +12523,23 @@
           ],
           "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
+      ],
+      "final": [
+        {
+          "entry": "element_probe",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 87,
+          "sha256": "09887e43e010bf79aede3fcd0a406ee9a0d47a2e9e0c6d5ff4f5998a6ab4010e"
+        }
       ]
     }
   ],
@@ -12074,14 +12584,32 @@
     "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer",
     "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations",
     "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle",
-    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store"
+    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store",
+    "PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_correct",
+    "PtxTorchLean.Poisson.PTX.CellFinal.fetched_correct",
+    "PtxTorchLean.Poisson.PTX.CellFinal.fetched_exists",
+    "PtxTorchLean.Poisson.PTX.CellFinal.inputs_of_matrices",
+    "PtxTorchLean.Poisson.PTX.CellFinal.index_exact",
+    "PtxTorchLean.Poisson.PTX.CellFinal.location_exact",
+    "PtxTorchLean.Poisson.PTX.CellFinal.output_valid",
+    "PtxTorchLean.Poisson.PTX.CellFinal.read_wordBytes",
+    "PtxTorchLean.Poisson.PTX.CellFinal.phase_result",
+    "PtxTorchLean.Poisson.PTX.CellFinal.completed_from_middle",
+    "PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle"
   ],
-  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.run_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.stored_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.published_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.shared_stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.global_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.input_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.initial_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.runs_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_location' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.all_reads' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n",
+  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.run_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.stored_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.published_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.shared_stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.global_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.input_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.initial_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.runs_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_location' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.all_reads' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.inputs_of_matrices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.index_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.location_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.output_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.read_wordBytes' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.phase_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.completed_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
   "source_sha256": {
     "integration/torchlean/PoissonPTX/Arithmetic.lean": "8fd4f79048a2452ec06f11fa6dd491ba1c2ceac1f0f73941aeb55558b9e16e2c",
     "integration/torchlean/PoissonPTX/BarrierChecks.lean": "b821ce1ae932bbb62dd1bf151c3bf62e17865382805a394467179e9714681780",
     "integration/torchlean/PoissonPTX/BarrierSources.lean": "b1c114dbc5ca25231c698ee764cb98bb9bc70066e2728a835b618022ef5c55bb",
     "integration/torchlean/PoissonPTX/Bytes.lean": "b1405bdaa8d08aabbe28aaa5880063e71cd5c1f25acfb961cf543172b3b26857",
+    "integration/torchlean/PoissonPTX/CellFinal.lean": "592c8252a4008fd2f7c8412375cf86a275227a3ec5f52241838384024c135250",
+    "integration/torchlean/PoissonPTX/CellFinalChecks.lean": "147c44d705515b64d7add6f46f0740ea0c059dee6b55b1c036e3dffa01406731",
+    "integration/torchlean/PoissonPTX/CellFinalKernel.lean": "a88e47a7eef9d1d8253af118ac33784da236a90b200c2b4f9fa7f3bba490fbe0",
+    "integration/torchlean/PoissonPTX/CellFinalLayout.lean": "ccc42f1b2ee8597ed525623b9856ad07d1a5baacf416b3f2d886c08043db4c06",
+    "integration/torchlean/PoissonPTX/CellFinalSnapshot.lean": "122c3973e5e94e21e64576ef834a7fb2ee434a52478be50adc8ed5317bd75ea4",
+    "integration/torchlean/PoissonPTX/CellFinalTensor.lean": "13d9194bf59b7e82b26b9b9724ffbc9efebe7fde377244d13d18a2251b4a0502",
+    "integration/torchlean/PoissonPTX/CellFinalText.lean": "5409e370af7fa9729000ca285270f5c351cd9d64709c82c49dcf0bd51e34e547",
     "integration/torchlean/PoissonPTX/CellLaunch.lean": "80fda293996ee7cb04367616264559f49db105a71d66a4685bbd295fcebed848",
     "integration/torchlean/PoissonPTX/CellMiddle.lean": "92c1e82e960ec182e24b4061092b5acbf01318279e87a52cd67e8a2a60382b5f",
     "integration/torchlean/PoissonPTX/CellMiddleChecks.lean": "4a099bec0ae7364837f5b56f550e213a9483b8128831310598e8847cdaece7d4",
@@ -12139,13 +12667,13 @@
     "integration/torchlean/PoissonPTX/WeakPadding.lean": "920a80b3d0047288905e9bc2573b42937dbf7259c022c3adbb7c602ed9e43279",
     "integration/torchlean/PoissonPTX/WeakResidual.lean": "0b8438f59d104b68834763b204674f7ae4cc428e192d7dc1bced7127a012de33",
     "integration/torchlean/PoissonPTX/ZeroSources.lean": "efbd8cea410e6ea0c7820b4b4f081e805206641ab808951692bf4af91ca4c079",
-    "integration/torchlean/PoissonContractionsMain.lean": "82a43506998beeaf7f0113926813d70b79b4d32fd1ee5b105261b9a7b359924c",
+    "integration/torchlean/PoissonContractionsMain.lean": "8383431ff1f24b7443704136b7e70447484c3289d285132297b90792359dba34",
     "integration/torchlean/PoissonQuadCorrespondence.lean": "e5d177ec11019881d2732da0a605d7dd3c4f98ed23acfc2f84fb2b5f5441a211",
-    "integration/torchlean/check.py": "e963d938aabea07c6a6c907af01933de92be8fc557fd7945a28959bc37fd5513",
-    "integration/torchlean/lakefile.toml": "879dbd9f9137e5bf8e68fb7591146f501b2fbfe8cfdd8b5844f240461be11bc4",
+    "integration/torchlean/check.py": "251667dfd51718e73a7a0af88cf10ee6591b77f5aaa405fd094fce0bc9011f25",
+    "integration/torchlean/lakefile.toml": "617c58b12c3c7bae37af5833a7e0f45d754d6c22b79f26a4641fa9b4f636cfd3",
     "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
     "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
-    "hardware/check_poisson_contractions.py": "745c8fd834722d5671bc0ba5cd0aec13913cbf266aa935dd7c69652a1a29bfd0",
+    "hardware/check_poisson_contractions.py": "bbfca331febf77de57985120f6601ffcd8f41b9ae863f9702063de691908b149",
     "hardware/check_poisson_ptx.py": "6165a8e3962b76285ffa475379ff3d44483ed248e42d5a1497ff4b34d9a99447"
   },
   "source_run_report_sha256": "c0334cbcbb6c4393c3045a73dbaf9ffb303e5103c33ce5b8f16196c3810ad613",

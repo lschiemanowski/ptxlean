@@ -99,9 +99,11 @@ This is **accepted-result correspondence**, not a proof that the PTX solver
 always terminates, converges, or returns an acceptable vector. The [residual instruction proofs](poisson-instructions.md) connect the complete
 `true_residual` entry to TorchLean subtraction, including its guard and byte
 addresses. A parallel theorem recovers the whole output tensor from necessary
-byte-source constraints and disjoint stores, without assuming sequential reads. The shared-memory cell phases, parallel
-memory admission, remaining kernels and host launch sequence are still not
-connected to the ordered algorithm by such a proof. Bounds on scalar array indices alone are not a full memory-safety
+byte-source constraints and disjoint stores, without assuming sequential reads. The three middle cell phases also have instruction-level numerical correspondence;
+a [final-body proof](poisson-final-output.md) extends it through a constructed
+byte snapshot to the stored local cell result. Gather, one concurrent trace
+through the final reads, complete memory admission, remaining kernels and host
+launch composition still require their instruction-level connections. Bounds on scalar array indices alone are not a full memory-safety
 proof. GPU tests and the existing sanitizer evidence remain separate.
 
 For the full numerical suite, running the compiled checker additionally trusts

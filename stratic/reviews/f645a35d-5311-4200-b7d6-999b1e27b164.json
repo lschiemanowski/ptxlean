@@ -1,0 +1,141 @@
+{
+  "id": "f645a35d-5311-4200-b7d6-999b1e27b164",
+  "base": "135fd0895ab46b17527209fb82a94c2166127817",
+  "contentTree": "bf8935d032a578ef9545aa3ecd9bc3a325c71551",
+  "reviewer": "Codex",
+  "summary": "Prove the complete Poisson final arithmetic, output indexing and global store, including fetched execution existence and frame preservation. Compose its actual input bytes with middle-run stores to establish the TorchLean local cell result phase by phase, retaining concurrent final-read visibility and gather/launch obligations.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Add final fetched correctness/existence, storage/index bounds and actual-store snapshot composition; explicitly retain the missing single concurrent trace through final reads."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Reflect completed final-body and phase-by-phase correspondence while preserving the prologue, gather, admission, whole-solver and hardware boundaries."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Primitive instruction and memory-source semantics are unchanged. All new public definitions/proofs are included in exact audits; kernel-checked examples and text mutation tests provide separate evidence, not hardware conformance."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The tensor operator, algorithm and accepted residual certificate remain unchanged; these proofs extend the existing PTX implementation correspondence."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "bf8935d032a578ef9545aa3ecd9bc3a325c71551",
+      "method": "integration/torchlean/check.sh; python3 -m unittest discover -s hardware -p test_*.py; both saved Poisson binding checkers; python3 scripts/check_distribution.py; stratic validate; git diff --check; manual theorem-hypothesis/frame review and local documentation-link check.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 checked integration dependencies on Linux; 342 guarded integration Lean files. No GPU rerun, model call or new primitive semantics.",
+      "evidence": "Full integration passed 3318 exact dependency reports, including 56 new public declarations, with only standard Lean axioms. New final-body correctness/existence, actual-store snapshot composition, storage/index bounds and fresh kernel-checked numerical/negative examples pass. 28 hardware Python tests pass. Binding checks pass for 30 saved layouts: 720 contractions, 630 shared stores, 90 middle slices, 90 complete final bodies and 30 residual entries. Both receipt source-hash maps match current files. Stratic has no issues, distribution guard and whitespace checks pass; local guide links resolve. The integration checker confirms its proof/configuration/dependency hashes are unchanged across the full run. Two overview-only documentation corrections during that run do not affect execution; final documentation-review before/after snapshots are identical. README is unchanged. Log SHA256: {\"/tmp/poisson-final-integration.log\": \"5843e2d21a5a9a996ec181f98bd63fa320e1cb0910cac685eff2311ef10b3e29\", \"/tmp/poisson-final-python-all.log\": \"4ba1b9599660d9ed817934b204eb3c22350cb28b5cc605377fa5c4aa5cddd7de\", \"/tmp/poisson-final-distribution.log\": \"ab4407fa5ecd2285fe290ab8d820508349e8bd38b97e32fe1d25628a331df623\", \"/tmp/poisson-final-stratic-final.json\": \"ef43b0bc6092267f1be737777a2a9b9e3c4d6f42a1b9727d8a85102c54bbb45c\", \"/tmp/poisson-final-binding-v2.log\": \"71b44e561bb9f7387a19759330963e2a953af5b026f5b2c31216da7481264275\", \"/tmp/poisson-final-residual-binding.log\": \"8916d728b6ad4e5a3d7c1804c517589fd49f9de167e5f3366c7cbcdc4688d911\"}",
+      "tests": [],
+      "id": "2f7d9ae2-e14a-496d-a9a9-c45a6a03e8a4",
+      "recordedAt": "2026-09-29T13:18:54.775Z"
+    }
+  ],
+  "recordedAt": "2026-09-29T13:19:44.750Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-final-output.md",
+      "reason": "Explain final-body and phase-by-phase results, their storage/register conditions and the unresolved single concurrent final-read/gather/launch connection; existing guides are reconciled."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellFinal.lean",
+      "reason": "Reviewed the complete module as support for final fetched correctness/existence, actual-store snapshot composition or numerical/invalid-storage checks. All declarations are explicitly audited and the complete modules are built; no new primitive semantics or assumed tensor answers."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellFinalChecks.lean",
+      "reason": "Reviewed the complete module as support for final fetched correctness/existence, actual-store snapshot composition or numerical/invalid-storage checks. All declarations are explicitly audited and the complete modules are built; no new primitive semantics or assumed tensor answers."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellFinalKernel.lean",
+      "reason": "Reviewed the complete module as support for final fetched correctness/existence, actual-store snapshot composition or numerical/invalid-storage checks. All declarations are explicitly audited and the complete modules are built; no new primitive semantics or assumed tensor answers."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellFinalLayout.lean",
+      "reason": "Reviewed the complete module as support for final fetched correctness/existence, actual-store snapshot composition or numerical/invalid-storage checks. All declarations are explicitly audited and the complete modules are built; no new primitive semantics or assumed tensor answers."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellFinalSnapshot.lean",
+      "reason": "Reviewed the complete module as support for final fetched correctness/existence, actual-store snapshot composition or numerical/invalid-storage checks. All declarations are explicitly audited and the complete modules are built; no new primitive semantics or assumed tensor answers."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellFinalTensor.lean",
+      "reason": "Reviewed the complete module as support for final fetched correctness/existence, actual-store snapshot composition or numerical/invalid-storage checks. All declarations are explicitly audited and the complete modules are built; no new primitive semantics or assumed tensor answers."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellFinalText.lean",
+      "reason": "Reviewed the complete module as support for final fetched correctness/existence, actual-store snapshot composition or numerical/invalid-storage checks. All declarations are explicitly audited and the complete modules are built; no new primitive semantics or assumed tensor answers."
+    },
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Explain final-body and phase-by-phase results, their storage/register conditions and the unresolved single concurrent final-read/gather/launch connection; existing guides are reconciled."
+    },
+    {
+      "path": "docs/foundations/poisson-cell-contractions.md",
+      "reason": "Explain final-body and phase-by-phase results, their storage/register conditions and the unresolved single concurrent final-read/gather/launch connection; existing guides are reconciled."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Render the exact proved final program, validate output extents, compare whole active bodies and returns, and audit composed proof endpoints; activity guards retain the separate existing control check."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh saved-artifact binding evidence against the exact current Lean/frontend source hashes; no hardware rerun or new GPU result claimed."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh saved-artifact binding evidence against the exact current Lean/frontend source hashes; no hardware rerun or new GPU result claimed."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Add final-body binding mutation tests and output-extent rejection; the saved-run positive check uses the Lean renderer, independently of the Python fixture."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Render the exact proved final program, validate output extents, compare whole active bodies and returns, and audit composed proof endpoints; activity guards retain the separate existing control check."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register all seven final-output modules and 56 new public dependency endpoints, with fresh execution/negative checks included in the pinned integration suite."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register all seven final-output modules and 56 new public dependency endpoints, with fresh execution/negative checks included in the pinned integration suite."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register all seven final-output modules and 56 new public dependency endpoints, with fresh execution/negative checks included in the pinned integration suite."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Update the self-contained account, summaries and exact theorem passage links; deliberately retain partial realization for full correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Update the self-contained account, summaries and exact theorem passage links; deliberately retain partial realization for full correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Update the self-contained account, summaries and exact theorem passage links; deliberately retain partial realization for full correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Update the self-contained account, summaries and exact theorem passage links; deliberately retain partial realization for full correspondence."
+    },
+    {
+      "path": "docs/foundations/poisson-instructions.md",
+      "reason": "Correct older overview language to match the middle numerical theorem and the new phase-by-phase final-output result, keeping gather and single-trace final-read visibility explicit."
+    },
+    {
+      "path": "docs/foundations/poisson-correspondence.md",
+      "reason": "Correct older overview language to match the middle numerical theorem and the new phase-by-phase final-output result, keeping gather and single-trace final-read visibility explicit."
+    }
+  ]
+}

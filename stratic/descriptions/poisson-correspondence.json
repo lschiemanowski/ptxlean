@@ -17,11 +17,12 @@
     "Derive shared-store ownership and barrier visibility from fetched control and addresses, rather than assuming producer ordering or phase values.",
     "Prove that every completed Q1–Q4 middle-slice run satisfying necessary byte-source constraints stores all six TorchLean intermediate tensors, including weight multiplication.",
     "Derive every load address and source using sound symbolic bookkeeping and kernel-checked code certificates; retain NaN encoding freedom and ordered rounded sums.",
-    "Keep slice-entry registers and gathered bytes explicit; full gather, final output, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
-    "Supply a completed zero-data Q1 execution satisfying both necessary byte-source constraints; reject wrong-coordinate and wrong-weight code mutations without claiming arbitrary-input existence."
+    "Keep slice-entry registers and gathered bytes explicit; concurrent final-read visibility, full gather, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
+    "Supply a completed zero-data Q1 execution satisfying both necessary byte-source constraints; reject wrong-coordinate and wrong-weight code mutations without claiming arbitrary-input existence.",
+    "Connect the complete final arithmetic/store body to its actual byte inputs, and compose with middle-run stores through a proved byte snapshot while retaining the distinct whole-trace visibility obligation."
   ],
   "realization": "partial",
-  "remaining": "The three middle phases have complete numerical correspondence to all six TorchLean intermediate tensors for certified Q1–Q4 layouts, conditional on actual completed execution and necessary byte-source constraints. Gather, prologue, final output, arbitrary-input source-admitted execution existence, complete PTX admission and whole-cell composition remain open. Other layouts need certificates. Assembly, reductions, remaining PCG kernels and host launches retain separate instruction obligations.",
+  "remaining": "The middle phases and the complete final arithmetic/store body have numerical instruction proofs. Their phase-by-phase composition constructs final input bytes from actual middle stores. Extending one concurrent trace through the final reads, deriving prologue/gather inputs, arbitrary-input source-admitted execution existence, full launch composition and complete PTX admission remain open. Other layouts need certificates. Assembly, reductions, remaining PCG kernels and host launches retain separate instruction obligations.",
   "links": [
     {
       "kind": "implementation",
@@ -716,6 +717,114 @@
         "path": "integration/torchlean/PoissonPTX/CellMiddleNumericChecks.lean",
         "passage": {
           "quote": "theorem witness_correspondence (plane : Fin 7) (positive : plane≠0) :\n    grid 2 (fun _ => 0) (view 2 (fun _ => 0) (fun _ _ => 0) Witness.result.events) .shared (plane.val*2*2*8)=\n      Correspondence.entries (target\n        (initialTensor 2 (fun _ => 0) (fun _ _ => 0) .global 0)\n        (initialTensor 2 (fun _ => 0) (fun _ _ => 0) .global 64)\n        (initialTensor 2 (fun _ => 0) (fun _ _ => 0) .global 128)\n        (initialTensor 2 (fun _ => 0) (fun _ _ => 0) .shared 0) plane.val)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete final arithmetic body has a fetched-instruction proof."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFinalKernel.lean",
+        "passage": {
+          "quote": "theorem fetched_correct (running : s.halted=false) (inputs : Inputs s.core width b d)\n    (valid : Valid64 s.core.globalStart s.core.globalBytes (location s.core width output).toNat)\n    (precode : List Kernel.Instr) (pc : s.core.pc=precode.length)\n    (execution : Kernel.Run ctx (precode++program width b d output) s final) :\n    decode (read64 final.core.global (location s.core width output).toNat)=result s.core width b d ∧\n    final.core.shared=s.core.shared ∧\n    (∀ p, p<(location s.core width output).toNat ∨ (location s.core width output).toNat+8≤p → final.core.global p=s.core.global p) ∧\n    final.halted=true :=\n  correct running inputs valid (run_exec execution precode _ rfl pc)\n\ntheorem fetched_exists (s : Kernel.State) (running : s.halted=false) (inputs : Inputs s.core width b d)\n    (valid : Valid64 s.core.globalStart s.core.globalBytes (location s.core width output).toNat)\n    (precode : List Kernel.Instr) (pc : s.core.pc=precode.length) :\n    ∃ final, Kernel.Run ctx (precode++program width b d output) s final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A separate theorem constructs a completed run for every such valid snapshot."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFinalKernel.lean",
+        "passage": {
+          "quote": "theorem fetched_exists (s : Kernel.State) (running : s.halted=false) (inputs : Inputs s.core width b d)\n    (valid : Valid64 s.core.globalStart s.core.globalBytes (location s.core width output).toNat)\n    (precode : List Kernel.Instr) (pc : s.core.pc=precode.length) :\n    ∃ final, Kernel.Run ctx (precode++program width b d output) s final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Complete allocated operand matrices discharge all input-load\nbounds."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFinalLayout.lean",
+        "passage": {
+          "quote": "theorem inputs_of_matrices (s : State) (hi : width≤5) (b d : Word)\n    (row : (s.regs 16).toNat<width) (col : (s.regs 17).toNat<width)\n    (global : (s.regs 0).toNat = s.globalStart) (shared : (s.regs 3).toNat = s.sharedStart)\n    (ga : s.globalStart%8=0) (sa : s.sharedStart%8=0)\n    (ba : b.toNat%8=0) (da : d.toNat%8=0)\n    (bf : b.toNat+width*width*8≤s.globalBytes) (df : d.toNat+width*width*8≤s.globalBytes)\n    (sf : 7*width*width*8≤s.sharedBytes)\n    (gn : s.globalStart+s.globalBytes≤2^64) (sn : s.sharedStart+s.sharedBytes≤2^64) :\n    Inputs s width b d"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The actual 32-bit multiply-add wraps on overflow; bounds\non this expression justify its ordinary natural-number interpretation."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFinalLayout.lean",
+        "passage": {
+          "quote": "theorem index_exact (s : State) (hi : width≤5)\n    (bound : (s.regs 15).toNat*(width*width)+(s.regs 14).toNat<2^32) :\n    (index s width).toNat=(s.regs 15).toNat*(width*width)+(s.regs 14).toNat"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The\n64-bit byte address additionally requires alignment, allocated output space and\nno address wrap."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFinalLayout.lean",
+        "passage": {
+          "quote": "theorem output_valid (s : State) (hi : width≤5)\n    (bound : (s.regs 15).toNat*(width*width)+(s.regs 14).toNat<2^32)\n    (base : (s.regs 0).toNat=s.globalStart) (aligned : s.globalStart%8=0) (oa : output.toNat%8=0)\n    (fits : ((s.regs 15).toNat*(width*width)+(s.regs 14).toNat)*8+output.toNat+8≤s.globalBytes)\n    (nowrap : s.globalStart+s.globalBytes≤2^64) :\n    Valid64 s.globalStart s.globalBytes (location s width output).toNat"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "It constructs the final shared bytes from those stores, proves that each aligned\neight-byte load recovers the recorded word, and then composes the final fetched\nexecution with the six proved middle-plane equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFinalSnapshot.lean",
+        "passage": {
+          "quote": "theorem read_wordBytes (memory : Nat → Word) (address : Nat) (aligned : address%8=0) :\n    read64 (wordBytes memory) address=memory address"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A phase-by-phase theorem connects actual middle-run stores to this final output."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFinalSnapshot.lean",
+        "passage": {
+          "quote": "theorem completed_from_middle (entry : PTX.State) (lo : 2≤width) (hi : width≤5)\n    (launch : Numeric.Launch width baseWords start) (aligned : (baseWords .shared).toNat%8=0)\n    (global : entry.regs 0=baseWords .global) (shared : entry.regs 3=baseWords .shared)\n    (i j : Fin width) (row : (entry.regs 16).toNat=i.val) (col : (entry.regs 17).toNat=j.val)\n    (execution : Concurrent.Runs cfg (CellMiddle.Checks.program width) start events middle)\n    (done : ∀ t, (middle.lanes t).pc=(CellMiddle.Checks.program width).length)\n    (compatible : Visibility.Compatible initial events source) (performed : Visibility.Performed events source)\n    (inputs : Inputs (phaseState entry width baseWords initial events) width 0 (CellMiddle.Checks.derivativeOffset width))\n    (valid : Valid64 entry.globalStart entry.globalBytes (location entry width output).toNat)\n    (precode : List Kernel.Instr) (pc : entry.pc=precode.length)\n    (finalRun : Kernel.Run ctx (precode++program width 0 (CellMiddle.Checks.derivativeOffset width) output)\n      ⟨phaseState entry width baseWords initial events,false,false⟩ endState) :\n    decode (read64 endState.core.global (location entry width output).toNat)=\n      Spec.get2 (localAction\n        (Numeric.initialTensor width baseWords initial .global 0)\n        (Numeric.initialTensor width baseWords initial .global (width*width*8+32))\n        (Numeric.initialTensor width baseWords initial .global (2*(width*width*8+32)))\n        (Numeric.initialTensor width baseWords initial .shared 0)) i j"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Kernel-checked examples\nexercise nonzero, asymmetric matrices and a nonzero element/lane output offset;\nwrong addition, short or unaligned output storage, and index overflow have\nexplicit checks."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFinalChecks.lean",
+        "passage": {
+          "quote": "theorem completed_value :\n    (Kernel.execute ctx code 1000 start).map (fun s => (read64 s.core.global 208,s.halted))=\n      some (0x4044800000000000,true)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Under valid final storage, the composition also constructs a completed\nfinal run with that result."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFinalSnapshot.lean",
+        "passage": {
+          "quote": "theorem exists_from_middle (entry : PTX.State) (lo : 2≤width) (hi : width≤5)\n    (launch : Numeric.Launch width baseWords start) (aligned : (baseWords .shared).toNat%8=0)\n    (global : entry.regs 0=baseWords .global) (shared : entry.regs 3=baseWords .shared)\n    (i j : Fin width) (row : (entry.regs 16).toNat=i.val) (col : (entry.regs 17).toNat=j.val)\n    (execution : Concurrent.Runs cfg (CellMiddle.Checks.program width) start events middle)\n    (done : ∀ t, (middle.lanes t).pc=(CellMiddle.Checks.program width).length)\n    (compatible : Visibility.Compatible initial events source) (performed : Visibility.Performed events source)\n    (inputs : Inputs (phaseState entry width baseWords initial events) width 0 (CellMiddle.Checks.derivativeOffset width))\n    (valid : Valid64 entry.globalStart entry.globalBytes (location entry width output).toNat)\n    (precode : List Kernel.Instr) (pc : entry.pc=precode.length)\n :\n    ∃ endState, Kernel.Run ctx (precode++program width 0 (CellMiddle.Checks.derivativeOffset width) output)\n      ⟨phaseState entry width baseWords initial events,false,false⟩ endState ∧\n    decode (read64 endState.core.global (location entry width output).toNat)=\n      Spec.get2 (localAction\n        (Numeric.initialTensor width baseWords initial .global 0)\n        (Numeric.initialTensor width baseWords initial .global (width*width*8+32))\n        (Numeric.initialTensor width baseWords initial .global (2*(width*width*8+32)))\n        (Numeric.initialTensor width baseWords initial .shared 0)) i j"
         }
       }
     }

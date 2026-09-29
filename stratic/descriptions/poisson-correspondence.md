@@ -116,7 +116,7 @@ Lean instruction programs used by the proofs.
 
 These local contraction contracts use supplied phase snapshots. They do not
 establish that prior stores and barriers provide those snapshots. The middle-slice theorem below discharges its control, weight and barrier
-obligations. Initial gather, final addition, global output stores and complete
+obligations. Initial gather, final-read visibility in one concurrent trace and complete
 parallel admission remain to be connected for the full cell. A hypothesis that
 a previous phase already computes its matrix answer cannot replace that work.
 
@@ -182,7 +182,7 @@ the writer's arrival, the common completion and a later read in strict order.
 Forward-only control also prevents a thread from executing the same store site
 twice. Combining this fact with the shared-plane address layout supplies storage
 ownership without assuming a phase's computed value. The middle slice instantiates these conditions below. The complete generated
-cell still needs the gather and final bodies joined to that result.
+cell still needs the gather and final reads joined into the same concurrent trace.
 
 The three middle arithmetic phases have a concrete concurrent instruction
 program, including their padding branches, weighted contractions, six shared
@@ -196,7 +196,7 @@ when those two scratch registers are ready for a store; branch targets cannot
 enter halfway through that preparation. The shared base and lane registers stay
 unchanged, and inactive lanes cannot enter a data instruction. These facts turn
 the concrete slice's store records into the plane-ownership contract. The whole-slice numerical proof connects candidate loads and those stored
-words to the ordered TorchLean arithmetic. The complete gather and final output
+words to the ordered TorchLean arithmetic. The complete gather and concurrent final-output composition
 remain separate obligations.
 
 The structural certificates cover Q1 through Q4 with the emitted arena layout:
@@ -280,6 +280,45 @@ termination for arbitrary inputs or a GPU scheduler. The source rules are
 necessary constraints, not complete PTX memory admission.
 
 The remaining whole-cell obligations are to establish the gathered input and
-entry registers, join the final two contractions, addition and output store,
+entry registers, extend the concurrent trace through the final reads and stores,
 and prove the full launch and memory-admission connections. Assembly, reductions,
 PCG kernels and host composition retain their separate instruction obligations.
+
+The complete final arithmetic body has a fetched-instruction proof. It computes
+two ordered contractions from shared planes 5 and 6, adds their binary64 results,
+calculates the element/lane output index, stores eight global bytes and returns.
+Every completed run from valid input storage writes the corresponding TorchLean
+coordinate. It preserves shared storage and all global bytes outside that word.
+A separate theorem constructs a completed run for every such valid snapshot.
+
+The output index is the element number times the number of entries per element,
+plus the lane number. The actual 32-bit multiply-add wraps on overflow; bounds
+on this expression justify its ordinary natural-number interpretation. The
+64-bit byte address additionally requires alignment, allocated output space and
+no address wrap. Complete allocated operand matrices discharge all input-load
+bounds. These conditions concern storage and indices, not a presumed answer.
+For a matrix coordinate (i,j), lane i*m+j supplies the row-major output location;
+the local theorem retains the actual lane and element registers as inputs.
+
+A phase-by-phase theorem connects actual middle-run stores to this final output.
+It constructs the final shared bytes from those stores, proves that each aligned
+eight-byte load recovers the recorded word, and then composes the final fetched
+execution with the six proved middle-plane equations. The stored result equals
+the complete TorchLean local cell calculation on the initial coefficient and
+shared-input tensors. No premise asserts an intermediate or final numerical
+answer. Under valid final storage, the composition also constructs a completed
+final run with that result. The final phase's base, coordinate and index registers and allocation
+conditions are still explicit entry conditions.
+
+This composition uses a constructed snapshot. It does not yet prove that the
+final reads obtain those bytes within a single concurrent whole-cell execution.
+That requires extending the actual store/barrier/read-source argument through
+the final consumers of planes 5 and 6. Initial gather, full launch admission and
+host visibility remain separate from the completed phase-by-phase theorem.
+
+The frontend compares the complete final body and return in all three element
+entries with the Lean program used by these proofs. Kernel-checked examples
+exercise nonzero, asymmetric matrices and a nonzero element/lane output offset;
+wrong addition, short or unaligned output storage, and index overflow have
+explicit checks. These checks support the general proofs and text binding;
+they are not a new GPU experiment or hardware-conformance claim.
