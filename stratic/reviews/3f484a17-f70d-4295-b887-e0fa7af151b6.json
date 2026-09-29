@@ -1,0 +1,145 @@
+{
+  "id": "3f484a17-f70d-4295-b887-e0fa7af151b6",
+  "base": "ecfafc3aac1ab49b7757a3c68a694ae0e2c7e9f0",
+  "contentTree": "0bcd71380a2d5a08cad7951ab08f3ecdc3a2e531",
+  "reviewer": "Codex",
+  "summary": "Complete numerical correspondence for the three concrete Poisson middle phases, including derived read addresses, actual source/store visibility, all six TorchLean intermediate tensors and weight operations. Preserve the explicit gather, prologue, final output, full-admission and whole-solver boundaries.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "The completed-run and actual-store endpoints now establish all six middle-phase tensor values without assumed read values or phase answers; descriptions state the entry and source restrictions."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Reflect the completed middle numerical composition while retaining the whole-cell and solver obligations."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Primitive instruction and byte-source semantics are unchanged. New symbolic bookkeeping is proved sound, finite checks use kernel reduction, and every new public endpoint is included in exact dependency auditing."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The tensor operator and accepted residual-bound specification are unchanged; this extends an instruction proof for existing middle phases, not the algorithm or solver guarantee."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "0bcd71380a2d5a08cad7951ab08f3ecdc3a2e531",
+      "method": "integration/torchlean/check.sh; python3 -m unittest discover -s hardware -p test_*.py; python3 scripts/check_distribution.py; stratic validate; git diff --check; both saved Poisson binding checkers; review of theorem hypotheses and exact before/after snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 checked integration dependencies on Linux; 335 guarded integration Lean files. No new GPU run or paid model call.",
+      "evidence": "Full integration passed 3262 exact dependency reports with only standard Lean axioms; all 124 new public endpoints were also separately audited. Fresh finite Q1–Q4 load/store certificates, completed source-constrained Q1 witness and wrong-coordinate/wrong-weight mutation checks passed. 27 hardware Python tests passed. Saved PTX binding: 30 layouts, 720 contractions, 630 shared stores and 90 complete middle slices; all receipt source hashes match. Stratic valid with no issues; distribution guard and diff whitespace check pass. Before/after tree identical. Logs SHA256: {\"/tmp/poisson-complete-audit.log\": \"3ab655610ed9af2f103196a36ef61f39d3de82016623585889a5e79456fbc513\", \"/tmp/poisson-complete-distribution.log\": \"ab4407fa5ecd2285fe290ab8d820508349e8bd38b97e32fe1d25628a331df623\", \"/tmp/poisson-complete-integration.log\": \"33781f3ea9f6106fb65d2ae25e17373233149a040fd2e53365f6cd65c0a3c739\", \"/tmp/poisson-complete-python.log\": \"85a8cfbd715d4c1ec81b2f41a83a2a8f92ec3b02222362e21aca64a1ab490a2d\", \"/tmp/poisson-complete-stratic-final.json\": \"ef43b0bc6092267f1be737777a2a9b9e3c4d6f42a1b9727d8a85102c54bbb45c\"}",
+      "tests": [],
+      "id": "24bf6e7e-1240-44cc-a72a-1b18b4ffdc02",
+      "recordedAt": "2026-09-29T12:39:42.162Z"
+    }
+  ],
+  "recordedAt": "2026-09-29T12:41:23.378Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Reconcile the study guides with the completed middle-slice theorem, explain the symbolic/source/tensor composition and keep full-cell/admission/existence limits explicit."
+    },
+    {
+      "path": "docs/foundations/poisson-cell-contractions.md",
+      "reason": "Reconcile the study guides with the completed middle-slice theorem, explain the symbolic/source/tensor composition and keep full-cell/admission/existence limits explicit."
+    },
+    {
+      "path": "docs/foundations/poisson-instructions.md",
+      "reason": "Reconcile the study guides with the completed middle-slice theorem, explain the symbolic/source/tensor composition and keep full-cell/admission/existence limits explicit."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Extend the saved-PTX binding audit to the completed numerical endpoints and correct its scope statement; matching logic and generated PTX are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellLaunch.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellMiddleCorrespondence.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellMiddleNumericChecks.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellReadGeometry.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellReadValues.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellStoreValues.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellSymbolic.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTensor.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWordView.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Symbolic.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/SymbolicRun.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ZeroSources.lean",
+      "reason": "Reviewed proof infrastructure and supporting lemmas for the linked completed_middle/completed_store endpoints, or their source-constrained witness and negative code checks. Entire module is built and all public declarations are dependency-audited; no primitive PTX semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register the twelve new proof modules, their exact public endpoint counts and fresh finite regression checks in the existing pinned integration audit."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register the twelve new proof modules, their exact public endpoint counts and fresh finite regression checks in the existing pinned integration audit."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register the twelve new proof modules, their exact public endpoint counts and fresh finite regression checks in the existing pinned integration audit."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reconcile the affected description/metadata and summaries with completed middle-slice numerical correspondence; preserve intentional remaining obligations and exact links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reconcile the affected description/metadata and summaries with completed middle-slice numerical correspondence; preserve intentional remaining obligations and exact links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reconcile the affected description/metadata and summaries with completed middle-slice numerical correspondence; preserve intentional remaining obligations and exact links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reconcile the affected description/metadata and summaries with completed middle-slice numerical correspondence; preserve intentional remaining obligations and exact links."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Fresh saved-artifact receipt for the final proof/frontend hashes; 30 existing GPU layouts rechecked, with explicit completed middle-slice scope and no claim of a new hardware run. All source hashes verified against the proposed snapshot."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Fresh saved-artifact receipt for the final proof/frontend hashes; 30 existing GPU layouts rechecked, with explicit completed middle-slice scope and no claim of a new hardware run. All source hashes verified against the proposed snapshot."
+    }
+  ]
+}

@@ -241,4 +241,6 @@ The next instruction layer proves the eight local cell contractions from indexed
 global/shared byte loads and separate rounded multiply/add operations. See the
 [cell-contraction guide](poisson-cell-contractions.md) for the theorem, storage
 conditions, source review and binding checks. These are supplied-snapshot block
-contracts; the surrounding cell control, gather, stores and barriers remain open.
+contracts. The three middle phases now have complete numerical composition,
+including their stores and barriers, under necessary byte-source constraints;
+the gather, final output and complete cell launch remain open.

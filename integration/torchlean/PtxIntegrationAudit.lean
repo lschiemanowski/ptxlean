@@ -1,3 +1,15 @@
+import PoissonPTX.Symbolic
+import PoissonPTX.SymbolicRun
+import PoissonPTX.CellSymbolic
+import PoissonPTX.CellLaunch
+import PoissonPTX.CellWordView
+import PoissonPTX.CellReadGeometry
+import PoissonPTX.CellReadValues
+import PoissonPTX.CellStoreValues
+import PoissonPTX.CellTensor
+import PoissonPTX.CellMiddleCorrespondence
+import PoissonPTX.ZeroSources
+import PoissonPTX.CellMiddleNumericChecks
 import PoissonPTX.ConcurrentReplay
 import PoissonPTX.ConcurrentReadOnly
 import PoissonPTX.ConcurrentComputedStore
@@ -3529,3 +3541,128 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.no_store_ops
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.stored_tensor
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.wrong_read_rejected
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Bits
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Bits.eval
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Number
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Number.eval
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Registers
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Rel
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Matches
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.add
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.mul32
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.add32
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.wide
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.eval_add
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.eval_mul32
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.eval_add32
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.eval_wide
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.operand
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.number
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.binary
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.widening
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.floating
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.loaded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.operand_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.number_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.binary_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.widening_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.floating_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.assign_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Mode
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.update
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.transfer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.atPC
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.at_zero
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.at_next
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.update_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Guards
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.step_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.runs_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.access_registers
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.seed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.address
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.extract
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.extract_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loadCheck
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Loads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.entry
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.sum
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads_q1
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads_q2
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads_q3
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads_q4
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores_q1
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores_q2
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores_q3
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores_q4
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Launch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Launch.aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Launch.base_nat
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Launch.lane_nat
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Launch.symbolic
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.guards
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.access_active
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_location
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.WordView.writesAt
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.WordView.stored
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.WordView.stored_eq
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.WordView.memory
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.WordView.global
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.WordView.input
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.WordView.output
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Geometry.split_offset
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Geometry.plane_zero
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Geometry.plane_positive
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.publication_view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.all_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.value_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_expression
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.grid
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.entry_eval
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.sum_fold
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.sum_eval
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.formula
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.row_col
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.expected_eval
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.shared_word_address
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.target
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.initialTensor
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.global_grid
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.input_grid
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.compose
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.writes
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.source
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.Zero
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.zero_words
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.launch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.witness_correspondence
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.wrong_coordinate_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.wrong_weight_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression_of_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.evaluate_zero_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.tick_zero_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources.execute_zero_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.decode_zero
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks.expected_zero

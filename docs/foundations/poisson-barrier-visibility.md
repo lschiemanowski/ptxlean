@@ -221,12 +221,19 @@ extra writes to the shared base, incorrect addresses and missing/reordered phase
 `CellMiddleWitness` supplies a finite Q1 candidate execution from zero storage:
 four active threads execute the bodies, 28 padding threads skip them, all 32
 participate, and all threads finish after three releases. This witnesses the
-candidate instruction machine. A source-admitted execution witness for the
-complete slice is still a separate obligation.
+candidate instruction machine. `CellMiddleNumericChecks` additionally proves
+that its actual zero-valued loads and computed stores satisfy both necessary
+source constraints, and applies `completed_middle` to it. The proof follows
+chosen loads compositionally and derives the store values from the numerical
+invariant. A small checked representation lemma ensures decoded positive zero
+has the actual zero bits. This witnesses the theorem's premises for Q1; it does
+not prove arbitrary-input existence or complete PTX memory admission.
+Negative checks reject an in-range but wrong matrix coordinate and addition
+in place of the integration-weight multiplication.
 
 The full generated cell kernel is **not yet proved**. The reusable connection between candidate loads, actual stored words and the
-ordered TorchLean contraction proof is described below. Its complete numerical
-instantiation for the concrete middle phases remains unfinished. The gathered input, complete
+ordered TorchLean contraction proof is described below. Its numerical
+instantiation for the concrete middle phases is now proved, as detailed below. The gathered input, complete
 prologue, final addition/output and whole-cell composition also remain open.
 The publication theorem does not identify its stored word with a mathematical
 or TorchLean coordinate by itself. Complete PTX admission, hardware progress
@@ -290,17 +297,66 @@ all executed stores are shared stores in planes 1–6. In particular:
 Here “initial” means the storage at the start of this middle slice. The omitted
 gather still has to establish how those bytes represent the input tensor.
 
-### What this does and does not finish
+### Completing the numerical connection
 
-The reusable replay and actual-store theorems are completed. They require a
-proved load-byte view and actual interval endpoints. The concrete read-only
-input result is also completed, for reads whose addresses lie in the input
-region. It does **not** yet establish that every executed contraction load
-uses the expected matrix coordinate. That remaining address proof must derive
-the row, column, index multiplication and byte offset from the executed code.
-The whole-run proof must also locate contraction boundaries, build intermediate
-views from actual producer stores and include the weight multiplications.
-These are remaining proof obligations, not an assumed phase-correctness premise.
+The concrete theorem is `CellMiddleCorrespondence.completed_middle`. It covers
+a complete run of the three middle phases, for widths 2–5. Its companion
+`completed_store` identifies the actual store event for every output coordinate.
+The conclusion is decoded floating-point equality to TorchLean, including its
+order of operations. It is not a real-arithmetic identity or a claim that all
+NaN bit patterns agree.
+
+Let B be the interpolation table, D the derivative table, W the integration
+weights, and U the shared input matrix. The six proved planes are:
+
+| Plane | TorchLean calculation |
+| --- | --- |
+| 1 | BU |
+| 2 | DU |
+| 3 | W multiplied entry by entry with (BU)Dᵀ |
+| 4 | W multiplied entry by entry with (DU)Bᵀ |
+| 5 | Bᵀ times plane 3 |
+| 6 | Dᵀ times plane 4 |
+
+Each matrix product is an increasing-index fold starting at positive zero,
+with separate rounded multiplication and addition. The proof exchanges only
+the two operands of a single weight multiplication; it never rearranges a sum.
+
+The proof connects the actual instructions in four steps:
+
+1. **Find the reads.** `Symbolic` records address expressions in registers.
+   Its address mode deliberately forgets loaded values and floating-point
+   results. `CellLaunch.load_location` therefore derives each load's address
+   without assuming that its value is right. Finite kernel-checked certificates
+   establish which initial region or intermediate plane contains that address,
+   and which barrier must precede a read of an intermediate plane.
+2. **Justify their values.** `CellWordView` reads initial coefficient/input bytes
+   and looks up actual output stores. `CellReadValues.all_reads` proves that every
+   actual load equals this view, using read-only inputs or the previously proved
+   unique producer and barrier visibility. A required producer is proved to
+   exist; the lookup's default value never substitutes for a missing store.
+3. **Follow the arithmetic.** The value mode records the ordered floating-point
+   expression, and `SymbolicRun` proves it agrees with actual registers across
+   arbitrary thread interleavings. `CellSymbolic` checks the exact matrix
+   coordinates and operations at all six store sites. The checks cover every
+   active lane in each Q1–Q4 program, not an enumeration of input values.
+4. **Compose the tensors.** `CellTensor` connects each expression to TorchLean's
+   matrix-product fold. `CellMiddleCorrespondence` substitutes the six plane
+   equations and proves that their values are emitted by actual stores.
+
+The launch conditions say exactly what must hold at this slice's entry: all
+32 threads start at its first instruction with a reset barrier, correct base,
+lane and row/column registers, and a nonwrapping seven-plane shared allocation.
+The executed instruction relation supplies each access's validity. The theorem
+requires a completed run and the two necessary byte-source constraints,
+`Compatible` and `Performed`. It assumes no read values, phase answers, supplied
+scalar traces, store coverage or producer-ordering paths.
+
+This finishes numerical correspondence for the **middle slice**. The complete
+cell still needs its prologue, gathered-input connection, final contractions,
+addition and global output joined to this result. The proof does not establish
+full PTX memory admission, arbitrary-input execution existence, GPU progress,
+or whole-solver correspondence.
 
 `ConcurrentReplayChecks` provides a nonzero example: two threads alternate
 instructions while each computes a one-term contraction of 2 and 3. Compatible

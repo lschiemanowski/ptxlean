@@ -13,16 +13,15 @@
     "Prove the complete true_residual entry per thread, including byte addresses, guard, execution existence and TorchLean subtraction; check its emitted instruction binding.",
     "Prove whole-vector residual subtraction under necessary byte-source constraints, with derived read-only inputs, actual instruction traces and arbitrary ordering of disjoint output stores.",
     "Keep complete memory admission, whole-cell composition, assembly, reductions and host launch composition explicit as remaining work.",
-    "Prove the eight local cell contractions from fetched indexing, byte loads and separate rounded multiply/add operations; connect their byte-backed views to TorchLean while retaining the separate barrier-snapshot obligation.",
-    "Derive shared-plane bytes from actual store instructions and contraction results; join those local value proofs to the concurrent middle-phase publication theorem in a separate composition step.",
-    "Derive common barrier arrivals from fetched binary64 candidate execution and exclude stale shared-byte sources across an executed whole-block barrier; distinguish the reusable fragment from its remaining full-cell instantiation.",
-    "Derive a preceding common barrier completion for every later access when branches cannot jump past the barrier, for arbitrary candidate executions.",
-    "Derive producer-store ordering and non-repetition from fetched forward control, then combine event positions and shared-plane layout to justify ownership; instantiate these structural conditions separately for the complete cell.",
-    "Derive control, shared-store addresses and byte publication for the concrete three middle cell phases in the certified Q1--Q4 layouts; retain tensor phase composition, gather, final output and source-admitted existence as separate obligations.",
-    "Project actual interleaved contraction instructions onto their scalar numerical proof using justified byte views; derive read-only input values from sources, retaining the intermediate-plane and full-cell composition obligations."
+    "Prove the eight local cell contractions from fetched indexing, byte loads and separate rounded multiply/add operations; connect their byte-backed views to TorchLean.",
+    "Derive shared-store ownership and barrier visibility from fetched control and addresses, rather than assuming producer ordering or phase values.",
+    "Prove that every completed Q1–Q4 middle-slice run satisfying necessary byte-source constraints stores all six TorchLean intermediate tensors, including weight multiplication.",
+    "Derive every load address and source using sound symbolic bookkeeping and kernel-checked code certificates; retain NaN encoding freedom and ordered rounded sums.",
+    "Keep slice-entry registers and gathered bytes explicit; full gather, final output, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
+    "Supply a completed zero-data Q1 execution satisfying both necessary byte-source constraints; reject wrong-coordinate and wrong-weight code mutations without claiming arbitrary-input existence."
   ],
   "realization": "partial",
-  "remaining": "The concrete three middle phases have derived control, shared-store coverage, barrier publication and read-only global/input-plane storage for certified Q1--Q4 layouts. A reusable concurrent replay theorem connects justified byte views to ordered TorchLean contraction results and actual shared stores. Full numerical instantiation still must derive each load address and contraction interval from whole runs, compose intermediate producer snapshots and weight multiplications. Gather, prologue, final output, source-admitted full-slice existence and complete cell composition remain open. Other layouts need structural certificates. Complete PTX admission, assembly, reductions, PCG kernels and host launches remain unproved.",
+  "remaining": "The three middle phases have complete numerical correspondence to all six TorchLean intermediate tensors for certified Q1–Q4 layouts, conditional on actual completed execution and necessary byte-source constraints. Gather, prologue, final output, arbitrary-input source-admitted execution existence, complete PTX admission and whole-cell composition remain open. Other layouts need certificates. Assembly, reductions, remaining PCG kernels and host launches retain separate instruction obligations.",
   "links": [
     {
       "kind": "implementation",
@@ -44,7 +43,7 @@
       "to": {
         "path": "integration/torchlean/PoissonQuadCorrespondence.lean",
         "passage": {
-          "quote": "theorem scatter_gather [DecidableEq \u03b9] [Add \u03b1]\n    (contributions : List (\u03b9 \u00d7 \u03b1)) (s : \u03b9 \u2192 \u03b1) (node : \u03b9) :\n    (contributions.foldl scatterStep s) node =\n      (contributions.filter fun entry => entry.1 == node).foldl\n        (fun acc entry => acc + entry.2) (s node) := by\n  induction contributions generalizing s with\n  | nil => rfl\n  | cons x xs ih =>\n    simp only [List.foldl_cons, ih]\n    by_cases h : x.1 = node\n    \u00b7 simp [h, scatterStep]\n    \u00b7 simp [h, scatterStep, Function.update_of_ne (Ne.symm h)]"
+          "quote": "theorem scatter_gather [DecidableEq ι] [Add α]\n    (contributions : List (ι × α)) (s : ι → α) (node : ι) :\n    (contributions.foldl scatterStep s) node =\n      (contributions.filter fun entry => entry.1 == node).foldl\n        (fun acc entry => acc + entry.2) (s node) := by\n  induction contributions generalizing s with\n  | nil => rfl\n  | cons x xs ih =>\n    simp only [List.foldl_cons, ih]\n    by_cases h : x.1 = node\n    · simp [h, scatterStep]\n    · simp [h, scatterStep, Function.update_of_ne (Ne.symm h)]"
         }
       }
     },
@@ -56,7 +55,7 @@
       "to": {
         "path": "integration/torchlean/PoissonBinary64.lean",
         "passage": {
-          "quote": "theorem reduction_order_counterexample :\n    (([0,1,2,3] : List Nat).foldl (fun acc i => acc + cancellation i) (Float.ofBits 0)).toBits =\n      0x3ff0000000000000 \u2227\n    (reduce256 cancellation).toBits = 0x4000000000000000 := by\n  decide"
+          "quote": "theorem reduction_order_counterexample :\n    (([0,1,2,3] : List Nat).foldl (fun acc i => acc + cancellation i) (Float.ofBits 0)).toBits =\n      0x3ff0000000000000 ∧\n    (reduce256 cancellation).toBits = 0x4000000000000000 := by\n  decide"
         }
       }
     },
@@ -68,7 +67,7 @@
       "to": {
         "path": "integration/torchlean/PoissonResidualInput.lean",
         "passage": {
-          "quote": "theorem decodeWord_real (word : BitVec 64) (q : \u211a) (h : decodeWord word = some q) :\n    (q : \u211d) = (Model.ofBits word : Model FloatFormat.binary64).toReal := by\n  unfold decodeWord at h\n  cases hd : (Model.ofBits word : Model FloatFormat.binary64).toDyadic? with\n  | none => simp [hd] at h\n  | some d =>\n    simp only [hd, Option.map_some, Option.some.injEq] at h\n    rw [\u2190 h, FloatLib.Numerics.Dyadic.cast_toRat, Model.toReal_eq, hd]"
+          "quote": "theorem decodeWord_real (word : BitVec 64) (q : ℚ) (h : decodeWord word = some q) :\n    (q : ℝ) = (Model.ofBits word : Model FloatFormat.binary64).toReal := by\n  unfold decodeWord at h\n  cases hd : (Model.ofBits word : Model FloatFormat.binary64).toDyadic? with\n  | none => simp [hd] at h\n  | some d =>\n    simp only [hd, Option.map_some, Option.some.injEq] at h\n    rw [← h, FloatLib.Numerics.Dyadic.cast_toRat, Model.toReal_eq, hd]"
         }
       }
     },
@@ -80,43 +79,43 @@
       "to": {
         "path": "integration/torchlean/PoissonResidualInput.lean",
         "passage": {
-          "quote": "def parse (j : Json) : Except String Request := do\n  let side \u2190 natField j \"n\"\n  let degree \u2190 natField j \"degree\"\n  if side == 0 || degree < 1 || degree > 4 then throw \"expected positive n and degree 1..4\"\n  let m := degree+1\n  let width := side*degree+1\n  let v := width*width\n  let e := side*side\n  let cellsJson \u2190 (\u2190 field j \"cells\").getArr?\n  let cells \u2190 cellsJson.mapM fun value => do\n    let k \u2190 value.getNat?\n    if h : k < v then pure (\u27e8k,h\u27e9 : Fin v) else throw \"cell node outside mesh\"\n  let cells \u2190 sized cells ((e*m)*m)\n  let b \u2190 sized (\u2190 words j \"B\") (m*m)\n  let d \u2190 sized (\u2190 words j \"D\") (m*m)\n  let w \u2190 sized (\u2190 words j \"W\") (m*m)\n  let rhs \u2190 sized (\u2190 words j \"load\") v\n  let x \u2190 sized (\u2190 words j \"solution\") v\n  let rtol \u2190 decode (\u2190 field j \"rtol\")\n  let atol \u2190 decode (\u2190 field j \"atol\")\n  let mesh : Connectivity e m v := \u27e8fun element i j => cells (index (index element i) j)\u27e9\n  -- Reject a different mesh even when its indices are in range.\n  for element in List.finRange e do\n    for i in List.finRange m do\n      for k in List.finRange m do\n        let expected := (element.val/side*degree+i.val)*width+element.val%side*degree+k.val\n        if (mesh.node element i k).val != expected then throw \"nonuniform connectivity\"\n  let p : Problem e m v := {\n    mesh := mesh\n    b := matrix fun i j => b (index i j)\n    d := matrix fun i j => d (index i j)\n    w := matrix fun i j => w (index i j)\n    rhs := rhs\n    boundary := fun i => i.val%width == 0 || i.val%width == width-1 || i.val/width == 0 || i.val/width == width-1\n    rtol := rtol, atol := atol }\n  return \u27e8e,m,v,p,x\u27e9"
+          "quote": "def parse (j : Json) : Except String Request := do\n  let side ← natField j \"n\"\n  let degree ← natField j \"degree\"\n  if side == 0 || degree < 1 || degree > 4 then throw \"expected positive n and degree 1..4\"\n  let m := degree+1\n  let width := side*degree+1\n  let v := width*width\n  let e := side*side\n  let cellsJson ← (← field j \"cells\").getArr?\n  let cells ← cellsJson.mapM fun value => do\n    let k ← value.getNat?\n    if h : k < v then pure (⟨k,h⟩ : Fin v) else throw \"cell node outside mesh\"\n  let cells ← sized cells ((e*m)*m)\n  let b ← sized (← words j \"B\") (m*m)\n  let d ← sized (← words j \"D\") (m*m)\n  let w ← sized (← words j \"W\") (m*m)\n  let rhs ← sized (← words j \"load\") v\n  let x ← sized (← words j \"solution\") v\n  let rtol ← decode (← field j \"rtol\")\n  let atol ← decode (← field j \"atol\")\n  let mesh : Connectivity e m v := ⟨fun element i j => cells (index (index element i) j)⟩\n  -- Reject a different mesh even when its indices are in range.\n  for element in List.finRange e do\n    for i in List.finRange m do\n      for k in List.finRange m do\n        let expected := (element.val/side*degree+i.val)*width+element.val%side*degree+k.val\n        if (mesh.node element i k).val != expected then throw \"nonuniform connectivity\"\n  let p : Problem e m v := {\n    mesh := mesh\n    b := matrix fun i j => b (index i j)\n    d := matrix fun i j => d (index i j)\n    w := matrix fun i j => w (index i j)\n    rhs := rhs\n    boundary := fun i => i.val%width == 0 || i.val%width == width-1 || i.val/width == 0 || i.val/width == width-1\n    rtol := rtol, atol := atol }\n  return ⟨e,m,v,p,x⟩"
         }
       }
     },
     {
       "kind": "implementation",
       "from": {
-        "quote": "Acceptance requires zero boundary values and\n`\u2016b \u2212 A x\u2016\u2082 \u2264 max(atol, rtol \u00b7 \u2016b\u2016\u2082)` on interior nodes, where A uses the\nTorchLean tensor operator in exact arithmetic. The check compares squared\nrational quantities, avoiding any rounded square root or empirical allowance.\nThe soundness theorem applies to every accepted vector and does not assume\nPTX correctness, PCG convergence or agreement with the CPU iteration history.\nAll rounding in the returned solution is included by checking its exact stored\nvalues. Successful GPU status alone is insufficient for acceptance."
+        "quote": "Acceptance requires zero boundary values and\n`‖b − A x‖₂ ≤ max(atol, rtol · ‖b‖₂)` on interior nodes, where A uses the\nTorchLean tensor operator in exact arithmetic. The check compares squared\nrational quantities, avoiding any rounded square root or empirical allowance.\nThe soundness theorem applies to every accepted vector and does not assume\nPTX correctness, PCG convergence or agreement with the CPU iteration history.\nAll rounding in the returned solution is included by checking its exact stored\nvalues. Successful GPU status alone is insufficient for acceptance."
       },
       "to": {
         "path": "integration/torchlean/PoissonResidualCertificate.lean",
         "passage": {
-          "quote": "theorem certified_residual (p : Problem e n v) (x : Fin v \u2192 \u211a)\n    (accepted : check p x = true) :\n    (\u2200 i, p.boundary i = true \u2192 x i = 0) \u2227\n      realNorm (residual p x) \u2264\n        max (p.atol : \u211d) ((p.rtol : \u211d) * realNorm (fun i => if p.boundary i then 0 else p.rhs i)) := by\n  obtain \u27e8ha,hr,hboundary,hbound\u27e9 := check_sound p x accepted\n  refine \u27e8hboundary, ?_\u27e9\n  have ha' : (0 : \u211d) \u2264 p.atol := by exact_mod_cast ha\n  have hr' : (0 : \u211d) \u2264 p.rtol := by exact_mod_cast hr\n  have bound : ((squareSum (residual p x) : \u211a) : \u211d) \u2264 ((thresholdSquare p : \u211a) : \u211d) := by exact_mod_cast hbound\n  apply (Real.sqrt_le_sqrt bound).trans_eq\n  simp only [thresholdSquare, Rat.cast_max, Rat.cast_mul]\n  rw [(show Monotone Real.sqrt from fun _ _ h => Real.sqrt_le_sqrt h).map_max, Real.sqrt_mul (mul_nonneg hr' hr')]\n  simp only [Real.sqrt_mul_self ha', Real.sqrt_mul_self hr', realNorm, rhsSquare]"
+          "quote": "theorem certified_residual (p : Problem e n v) (x : Fin v → ℚ)\n    (accepted : check p x = true) :\n    (∀ i, p.boundary i = true → x i = 0) ∧\n      realNorm (residual p x) ≤\n        max (p.atol : ℝ) ((p.rtol : ℝ) * realNorm (fun i => if p.boundary i then 0 else p.rhs i)) := by\n  obtain ⟨ha,hr,hboundary,hbound⟩ := check_sound p x accepted\n  refine ⟨hboundary, ?_⟩\n  have ha' : (0 : ℝ) ≤ p.atol := by exact_mod_cast ha\n  have hr' : (0 : ℝ) ≤ p.rtol := by exact_mod_cast hr\n  have bound : ((squareSum (residual p x) : ℚ) : ℝ) ≤ ((thresholdSquare p : ℚ) : ℝ) := by exact_mod_cast hbound\n  apply (Real.sqrt_le_sqrt bound).trans_eq\n  simp only [thresholdSquare, Rat.cast_max, Rat.cast_mul]\n  rw [(show Monotone Real.sqrt from fun _ _ h => Real.sqrt_le_sqrt h).map_max, Real.sqrt_mul (mul_nonneg hr' hr')]\n  simp only [Real.sqrt_mul_self ha', Real.sqrt_mul_self hr', realNorm, rhsSquare]"
         }
       }
     },
     {
       "kind": "implementation",
       "from": {
-        "quote": "Acceptance requires zero boundary values and\n`\u2016b \u2212 A x\u2016\u2082 \u2264 max(atol, rtol \u00b7 \u2016b\u2016\u2082)` on interior nodes, where A uses the\nTorchLean tensor operator in exact arithmetic. The check compares squared\nrational quantities, avoiding any rounded square root or empirical allowance.\nThe soundness theorem applies to every accepted vector and does not assume\nPTX correctness, PCG convergence or agreement with the CPU iteration history.\nAll rounding in the returned solution is included by checking its exact stored\nvalues. Successful GPU status alone is insufficient for acceptance."
+        "quote": "Acceptance requires zero boundary values and\n`‖b − A x‖₂ ≤ max(atol, rtol · ‖b‖₂)` on interior nodes, where A uses the\nTorchLean tensor operator in exact arithmetic. The check compares squared\nrational quantities, avoiding any rounded square root or empirical allowance.\nThe soundness theorem applies to every accepted vector and does not assume\nPTX correctness, PCG convergence or agreement with the CPU iteration history.\nAll rounding in the returned solution is included by checking its exact stored\nvalues. Successful GPU status alone is insufficient for acceptance."
       },
       "to": {
         "path": "integration/torchlean/PoissonResidualCertificate.lean",
         "passage": {
-          "quote": "def computedApply (p : Problem e n v) (x : Fin v \u2192 \u211a) : Vector \u211a v :=\n  (tensorContributions p.mesh p.b p.d p.w x).foldl scatterVectorStep (Vector.replicate v 0)\n\ntheorem computedApply_get (p : Problem e n v) (x : Fin v \u2192 \u211a) (i : Fin v) :\n    (computedApply p x)[i] = exactApply p x i := by\n  have h := congrFun (scatterVector_fold (tensorContributions p.mesh p.b p.d p.w x)\n    (Vector.replicate v 0)) i\n  simpa [computedApply, exactApply, tensorOperator] using h"
+          "quote": "def computedApply (p : Problem e n v) (x : Fin v → ℚ) : Vector ℚ v :=\n  (tensorContributions p.mesh p.b p.d p.w x).foldl scatterVectorStep (Vector.replicate v 0)\n\ntheorem computedApply_get (p : Problem e n v) (x : Fin v → ℚ) (i : Fin v) :\n    (computedApply p x)[i] = exactApply p x i := by\n  have h := congrFun (scatterVector_fold (tensorContributions p.mesh p.b p.d p.w x)\n    (Vector.replicate v 0)) i\n  simpa [computedApply, exactApply, tensorOperator] using h"
         }
       }
     },
     {
       "kind": "implementation",
       "from": {
-        "quote": "Acceptance requires zero boundary values and\n`\u2016b \u2212 A x\u2016\u2082 \u2264 max(atol, rtol \u00b7 \u2016b\u2016\u2082)` on interior nodes, where A uses the\nTorchLean tensor operator in exact arithmetic. The check compares squared\nrational quantities, avoiding any rounded square root or empirical allowance.\nThe soundness theorem applies to every accepted vector and does not assume\nPTX correctness, PCG convergence or agreement with the CPU iteration history.\nAll rounding in the returned solution is included by checking its exact stored\nvalues. Successful GPU status alone is insufficient for acceptance."
+        "quote": "Acceptance requires zero boundary values and\n`‖b − A x‖₂ ≤ max(atol, rtol · ‖b‖₂)` on interior nodes, where A uses the\nTorchLean tensor operator in exact arithmetic. The check compares squared\nrational quantities, avoiding any rounded square root or empirical allowance.\nThe soundness theorem applies to every accepted vector and does not assume\nPTX correctness, PCG convergence or agreement with the CPU iteration history.\nAll rounding in the returned solution is included by checking its exact stored\nvalues. Successful GPU status alone is insufficient for acceptance."
       },
       "to": {
         "path": "integration/torchlean/PoissonResidualInput.lean",
         "passage": {
-          "quote": "theorem acceptedRequest_sound (j : Json) (h : acceptedRequest j = true) :\n    \u2203 (e n v : Nat) (p : Problem e n v) (x : Fin v \u2192 \u211a),\n      parse j = .ok \u27e8e,n,v,p,x\u27e9 \u2227\n      (\u2200 i, p.boundary i = true \u2192 x i = 0) \u2227\n      realNorm (residual p x) \u2264\n        max (p.atol : \u211d) ((p.rtol : \u211d) * realNorm (fun i => if p.boundary i then 0 else p.rhs i)) := by\n  cases hp : parse j with\n  | error error => simp [acceptedRequest,hp] at h\n  | ok request =>\n    rcases request with \u27e8e,n,v,p,x\u27e9\n    exact \u27e8e,n,v,p,x,rfl,certified_residual p x (by simpa [acceptedRequest,hp] using h)\u27e9"
+          "quote": "theorem acceptedRequest_sound (j : Json) (h : acceptedRequest j = true) :\n    ∃ (e n v : Nat) (p : Problem e n v) (x : Fin v → ℚ),\n      parse j = .ok ⟨e,n,v,p,x⟩ ∧\n      (∀ i, p.boundary i = true → x i = 0) ∧\n      realNorm (residual p x) ≤\n        max (p.atol : ℝ) ((p.rtol : ℝ) * realNorm (fun i => if p.boundary i then 0 else p.rhs i)) := by\n  cases hp : parse j with\n  | error error => simp [acceptedRequest,hp] at h\n  | ok request =>\n    rcases request with ⟨e,n,v,p,x⟩\n    exact ⟨e,n,v,p,x,rfl,certified_residual p x (by simpa [acceptedRequest,hp] using h)⟩"
         }
       }
     },
@@ -140,7 +139,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/Layout.lean",
         "passage": {
-          "quote": "theorem array_coordinate (ctx : Context) (s final : State) (count : BitVec 32)\n    (rhs ap output : Word) (i : Fin count.toNat)\n    (threadIndex : (index ctx).toNat = i.val)\n    (pc : s.core.pc = 0) (running : s.halted = false)\n    (start : s.core.globalStart = ctx.arena.toNat)\n    (aligned : ctx.arena.toNat % 8 = 0)\n    (arenaBound : ctx.arena.toNat+s.core.globalBytes \u2264 2^64)\n    (fields : \u2200 off \u2208 [rhs,ap,output], off.toNat % 8 = 0 \u2227\n      off.toNat+count.toNat*8 \u2264 s.core.globalBytes)\n    (execution : Run ctx (program count rhs ap output) s final) :\n    decode (read64 final.core.global (ctx.arena.toNat+i.val*8+output.toNat)) =\n      (TorchLean.Tensor.subSpec\n        (view s.core.global (fun j : Fin count.toNat => ctx.arena.toNat+j.val*8+rhs.toNat))\n        (view s.core.global (fun j : Fin count.toNat => ctx.arena.toNat+j.val*8+ap.toNat))) (i,PUnit.unit) := by\n  have hl : live ctx count := by unfold live; rw [threadIndex]; exact i.isLt\n  have valid (off : Word) (h : off \u2208 [rhs,ap,output]) :=\n    field_valid ctx s count off hl start aligned (fields off h).1 (fields off h).2 arenaBound\n  have addressExact (off : Word) (h : off \u2208 [rhs,ap,output]) :\n      (address (setup ctx s count).core 12 off).toNat = ctx.arena.toNat+i.val*8+off.toNat := by\n    have hf := (fields off h).2\n    have hi := i.isLt\n    rw [setup_address,address64_exact _ _ _ (by rw [threadIndex]; omega),threadIndex]\n  have hr := torchlean_coordinate ctx s final count rhs ap output i\n    (fun j => ctx.arena.toNat+j.val*8+rhs.toNat)\n    (fun j => ctx.arena.toNat+j.val*8+ap.toNat)\n    (addressExact rhs (by simp)).symm (addressExact ap (by simp)).symm\n    pc running hl (valid rhs (by simp)) (valid ap (by simp)) (valid output (by simp)) execution\n  simpa only [addressExact output (by simp)] using hr"
+          "quote": "theorem array_coordinate (ctx : Context) (s final : State) (count : BitVec 32)\n    (rhs ap output : Word) (i : Fin count.toNat)\n    (threadIndex : (index ctx).toNat = i.val)\n    (pc : s.core.pc = 0) (running : s.halted = false)\n    (start : s.core.globalStart = ctx.arena.toNat)\n    (aligned : ctx.arena.toNat % 8 = 0)\n    (arenaBound : ctx.arena.toNat+s.core.globalBytes ≤ 2^64)\n    (fields : ∀ off ∈ [rhs,ap,output], off.toNat % 8 = 0 ∧\n      off.toNat+count.toNat*8 ≤ s.core.globalBytes)\n    (execution : Run ctx (program count rhs ap output) s final) :\n    decode (read64 final.core.global (ctx.arena.toNat+i.val*8+output.toNat)) =\n      (TorchLean.Tensor.subSpec\n        (view s.core.global (fun j : Fin count.toNat => ctx.arena.toNat+j.val*8+rhs.toNat))\n        (view s.core.global (fun j : Fin count.toNat => ctx.arena.toNat+j.val*8+ap.toNat))) (i,PUnit.unit) := by\n  have hl : live ctx count := by unfold live; rw [threadIndex]; exact i.isLt\n  have valid (off : Word) (h : off ∈ [rhs,ap,output]) :=\n    field_valid ctx s count off hl start aligned (fields off h).1 (fields off h).2 arenaBound\n  have addressExact (off : Word) (h : off ∈ [rhs,ap,output]) :\n      (address (setup ctx s count).core 12 off).toNat = ctx.arena.toNat+i.val*8+off.toNat := by\n    have hf := (fields off h).2\n    have hi := i.isLt\n    rw [setup_address,address64_exact _ _ _ (by rw [threadIndex]; omega),threadIndex]\n  have hr := torchlean_coordinate ctx s final count rhs ap output i\n    (fun j => ctx.arena.toNat+j.val*8+rhs.toNat)\n    (fun j => ctx.arena.toNat+j.val*8+ap.toNat)\n    (addressExact rhs (by simp)).symm (addressExact ap (by simp)).symm\n    pc running hl (valid rhs (by simp)) (valid ap (by simp)) (valid output (by simp)) execution\n  simpa only [addressExact output (by simp)] using hr"
         }
       }
     },
@@ -152,7 +151,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ResidualKernel.lean",
         "passage": {
-          "quote": "theorem fetched_correct (ctx : Context) (s final : State) (count : BitVec 32) (rhs ap output : Word)\n    (pc : s.core.pc = 0) (running : s.halted = false) (hl : live ctx count)\n    (hr : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 rhs).toNat)\n    (ha : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 ap).toNat)\n    (ho : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 output).toNat)\n    (execution : Run ctx (program count rhs ap output) s final) :\n    decode (read64 final.core.global (address (setup ctx s count).core 12 output).toNat) =\n      decode (read64 s.core.global (address (setup ctx s count).core 12 rhs).toNat) -\n      decode (read64 s.core.global (address (setup ctx s count).core 12 ap).toNat) \u2227\n    final.halted = true :=\n  correct ctx s final count rhs ap output running hl hr ha ho\n    (run_exec execution [] _ rfl pc)"
+          "quote": "theorem fetched_correct (ctx : Context) (s final : State) (count : BitVec 32) (rhs ap output : Word)\n    (pc : s.core.pc = 0) (running : s.halted = false) (hl : live ctx count)\n    (hr : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 rhs).toNat)\n    (ha : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 ap).toNat)\n    (ho : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 output).toNat)\n    (execution : Run ctx (program count rhs ap output) s final) :\n    decode (read64 final.core.global (address (setup ctx s count).core 12 output).toNat) =\n      decode (read64 s.core.global (address (setup ctx s count).core 12 rhs).toNat) -\n      decode (read64 s.core.global (address (setup ctx s count).core 12 ap).toNat) ∧\n    final.halted = true :=\n  correct ctx s final count rhs ap output running hl hr ha ho\n    (run_exec execution [] _ rfl pc)"
         }
       }
     },
@@ -164,7 +163,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ResidualKernel.lean",
         "passage": {
-          "quote": "theorem fetched_exists (ctx : Context) (s : State) (count : BitVec 32) (rhs ap output : Word)\n    (pc : s.core.pc = 0) (running : s.halted = false) (hl : live ctx count)\n    (hr : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 rhs).toNat)\n    (ha : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 ap).toNat)\n    (ho : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 output).toNat) :\n    \u2203 final, Run ctx (program count rhs ap output) s final := by\n  obtain \u27e8final,h\u27e9 := execution_exists ctx s count rhs ap output running hl hr ha ho\n  exact \u27e8final,exec_fetched h [] pc\u27e9"
+          "quote": "theorem fetched_exists (ctx : Context) (s : State) (count : BitVec 32) (rhs ap output : Word)\n    (pc : s.core.pc = 0) (running : s.halted = false) (hl : live ctx count)\n    (hr : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 rhs).toNat)\n    (ha : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 ap).toNat)\n    (ho : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 output).toNat) :\n    ∃ final, Run ctx (program count rhs ap output) s final := by\n  obtain ⟨final,h⟩ := execution_exists ctx s count rhs ap output running hl hr ha ho\n  exact ⟨final,exec_fetched h [] pc⟩"
         }
       }
     },
@@ -176,7 +175,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ResidualKernel.lean",
         "passage": {
-          "quote": "theorem fetched_frame (ctx : Context) (s final : State) (count : BitVec 32) (rhs ap output : Word)\n    (pc : s.core.pc = 0) (running : s.halted = false) (hl : live ctx count)\n    (hr : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 rhs).toNat)\n    (ha : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 ap).toNat)\n    (ho : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 output).toNat)\n    (execution : Run ctx (program count rhs ap output) s final) :\n    (\u2200 p, p < (address (setup ctx s count).core 12 output).toNat \u2228\n      (address (setup ctx s count).core 12 output).toNat+8 \u2264 p \u2192 final.core.global p = s.core.global p) \u2227\n    final.core.shared = s.core.shared := by\n  have he : Exec ctx (program count rhs ap output) s final := run_exec execution [] _ rfl pc\n  have hb : Exec ctx ((PTX.Residual.code rhs ap output).map Instr.data ++ [.ret]) (setup ctx s count) final :=\n    (prologue_live hl running).mp (by simpa only [program,List.append_assoc] using he)\n  obtain \u27e8middle,hbody,hret\u27e9 := exec_block hb\n  have runMiddle : ({setup ctx s count with core := middle} : State).halted = false := setup_live hl running\n  have hend := (exec_halting_iff (i := .ret) (by simp) runMiddle rfl).mp hret\n  subst final\n  have h := PTX.Residual.correct _ _ rhs ap output\n    (by simpa using hr) (by simpa using ha) (by simpa using ho) hbody\n  simpa [simple,halt,advance,PTX.advance] using h.2"
+          "quote": "theorem fetched_frame (ctx : Context) (s final : State) (count : BitVec 32) (rhs ap output : Word)\n    (pc : s.core.pc = 0) (running : s.halted = false) (hl : live ctx count)\n    (hr : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 rhs).toNat)\n    (ha : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 ap).toNat)\n    (ho : Valid64 s.core.globalStart s.core.globalBytes (address (setup ctx s count).core 12 output).toNat)\n    (execution : Run ctx (program count rhs ap output) s final) :\n    (∀ p, p < (address (setup ctx s count).core 12 output).toNat ∨\n      (address (setup ctx s count).core 12 output).toNat+8 ≤ p → final.core.global p = s.core.global p) ∧\n    final.core.shared = s.core.shared := by\n  have he : Exec ctx (program count rhs ap output) s final := run_exec execution [] _ rfl pc\n  have hb : Exec ctx ((PTX.Residual.code rhs ap output).map Instr.data ++ [.ret]) (setup ctx s count) final :=\n    (prologue_live hl running).mp (by simpa only [program,List.append_assoc] using he)\n  obtain ⟨middle,hbody,hret⟩ := exec_block hb\n  have runMiddle : ({setup ctx s count with core := middle} : State).halted = false := setup_live hl running\n  have hend := (exec_halting_iff (i := .ret) (by simp) runMiddle rfl).mp hret\n  subst final\n  have h := PTX.Residual.correct _ _ rhs ap output\n    (by simpa using hr) (by simpa using ha) (by simpa using ho) hbody\n  simpa [simple,halt,advance,PTX.advance] using h.2"
         }
       }
     },
@@ -188,7 +187,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ResidualKernel.lean",
         "passage": {
-          "quote": "theorem fetched_inactive (hn : \u00ac live ctx count) (pc : s.core.pc = 0) (running : s.halted = false) :\n    Run ctx (program count rhs ap output) s (setup ctx s count) \u2227\n    \u2200 final, Run ctx (program count rhs ap output) s final \u2192\n      final.core.global = s.core.global \u2227 final.core.shared = s.core.shared := by\n  have he : Exec ctx (program count rhs ap output) s (setup ctx s count) := by\n    apply (prologue_inactive hn running).mpr\n    rfl\n  exact \u27e8exec_fetched he [] pc, fun final h => inactive (run_exec h [] _ rfl pc) hn running\u27e9"
+          "quote": "theorem fetched_inactive (hn : ¬ live ctx count) (pc : s.core.pc = 0) (running : s.halted = false) :\n    Run ctx (program count rhs ap output) s (setup ctx s count) ∧\n    ∀ final, Run ctx (program count rhs ap output) s final →\n      final.core.global = s.core.global ∧ final.core.shared = s.core.shared := by\n  have he : Exec ctx (program count rhs ap output) s (setup ctx s count) := by\n    apply (prologue_inactive hn running).mpr\n    rfl\n  exact ⟨exec_fetched he [] pc, fun final h => inactive (run_exec h [] _ rfl pc) hn running⟩"
         }
       }
     },
@@ -224,7 +223,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ParallelResidualLayout.lean",
         "passage": {
-          "quote": "theorem Arena.correspondence (a : Arena n) (memory : Memory) (regs : Fin n \u2192 Registers)\n    (c : Candidate (a.inputs memory regs)) (source)\n    (compatible : Compatible memory (events (a.inputs memory regs) c) source)\n    (order : List (Fin n)) (complete : \u2200 i, i\u2208order) :\n    Kernel.Residual.view (publish (a.inputs memory regs) c order)\n        (fun i : Fin n => a.base.toNat+i.val*8+a.output.toNat) =\n      TorchLean.Tensor.subSpec\n        (Kernel.Residual.view memory (fun i : Fin n => a.base.toNat+i.val*8+a.rhs.toNat))\n        (Kernel.Residual.view memory (fun i : Fin n => a.base.toNat+i.val*8+a.ap.toNat)) := by\n  have h:=torchlean_output (a.inputs memory regs) c source compatible\n    (a.input_separation memory regs) (a.output_ownership memory regs) order complete\n  change Kernel.Residual.view (publish (a.inputs memory regs) c order)\n    (fun i => (a.inputs memory regs).addr i a.output) =\n      TorchLean.Tensor.subSpec\n        (Kernel.Residual.view memory (fun i => (a.inputs memory regs).addr i a.rhs))\n        (Kernel.Residual.view memory (fun i => (a.inputs memory regs).addr i a.ap)) at h\n  simpa only [a.addr memory regs _ a.output (by simp),\n    a.addr memory regs _ a.rhs (by simp), a.addr memory regs _ a.ap (by simp)] using h"
+          "quote": "theorem Arena.correspondence (a : Arena n) (memory : Memory) (regs : Fin n → Registers)\n    (c : Candidate (a.inputs memory regs)) (source)\n    (compatible : Compatible memory (events (a.inputs memory regs) c) source)\n    (order : List (Fin n)) (complete : ∀ i, i∈order) :\n    Kernel.Residual.view (publish (a.inputs memory regs) c order)\n        (fun i : Fin n => a.base.toNat+i.val*8+a.output.toNat) =\n      TorchLean.Tensor.subSpec\n        (Kernel.Residual.view memory (fun i : Fin n => a.base.toNat+i.val*8+a.rhs.toNat))\n        (Kernel.Residual.view memory (fun i : Fin n => a.base.toNat+i.val*8+a.ap.toNat)) := by\n  have h:=torchlean_output (a.inputs memory regs) c source compatible\n    (a.input_separation memory regs) (a.output_ownership memory regs) order complete\n  change Kernel.Residual.view (publish (a.inputs memory regs) c order)\n    (fun i => (a.inputs memory regs).addr i a.output) =\n      TorchLean.Tensor.subSpec\n        (Kernel.Residual.view memory (fun i => (a.inputs memory regs).addr i a.rhs))\n        (Kernel.Residual.view memory (fun i => (a.inputs memory regs).addr i a.ap)) at h\n  simpa only [a.addr memory regs _ a.output (by simp),\n    a.addr memory regs _ a.rhs (by simp), a.addr memory regs _ a.ap (by simp)] using h"
         }
       }
     },
@@ -236,7 +235,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ParallelResidualOutput.lean",
         "passage": {
-          "quote": "theorem witness_sources (p : Inputs n) :\n    Compatible p.initial (events p (witness p)) (fun _ _ => .initial) := by\n  intro e hr k\n  rcases e with \u27e8i,j\u27e9\n  fin_cases j <;> simp_all [events,witness,canonical]"
+          "quote": "theorem witness_sources (p : Inputs n) :\n    Compatible p.initial (events p (witness p)) (fun _ _ => .initial) := by\n  intro e hr k\n  rcases e with ⟨i,j⟩\n  fin_cases j <;> simp_all [events,witness,canonical]"
         }
       }
     },
@@ -248,7 +247,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/WeakPadding.lean",
         "passage": {
-          "quote": "theorem padding (ctx : Context) (s : Kernel.State) (count : BitVec 32)\n    (rhs ap output : Word) (choose : Nat \u2192 Word) (fuel : Nat)\n    (pc : s.core.pc=0) (running : s.halted=false) (inactive : \u00acKernel.Residual.live ctx count) :\n    execute ctx (Kernel.Residual.program count rhs ap output) choose (fuel+6) s =\n      some (Kernel.Residual.setup ctx s count,[]) := by\n  have hge : count.toNat \u2264 (Kernel.Residual.index ctx).toNat := Nat.le_of_not_gt inactive\n  simp [Kernel.Residual.index] at hge\n  iterate 6\n    rw [execute]\n    simp [Weak.step,instruction,Kernel.Residual.program,Kernel.Residual.prologue,\n      PTX.Residual.code,loadCode,storeCode,addressCode,Kernel.simple,Kernel.scalar,\n      Kernel.advance,Kernel.halt,assign,PTX.advance,u32,pc,running,hge]\n  simp [Kernel.Residual.setup,Kernel.simple,Kernel.scalar,Kernel.advance,Kernel.halt,\n    assign,PTX.advance,u32,pc,running,hge]"
+          "quote": "theorem padding (ctx : Context) (s : Kernel.State) (count : BitVec 32)\n    (rhs ap output : Word) (choose : Nat → Word) (fuel : Nat)\n    (pc : s.core.pc=0) (running : s.halted=false) (inactive : ¬Kernel.Residual.live ctx count) :\n    execute ctx (Kernel.Residual.program count rhs ap output) choose (fuel+6) s =\n      some (Kernel.Residual.setup ctx s count,[]) := by\n  have hge : count.toNat ≤ (Kernel.Residual.index ctx).toNat := Nat.le_of_not_gt inactive\n  simp [Kernel.Residual.index] at hge\n  iterate 6\n    rw [execute]\n    simp [Weak.step,instruction,Kernel.Residual.program,Kernel.Residual.prologue,\n      PTX.Residual.code,loadCode,storeCode,addressCode,Kernel.simple,Kernel.scalar,\n      Kernel.advance,Kernel.halt,assign,PTX.advance,u32,pc,running,hge]\n  simp [Kernel.Residual.setup,Kernel.simple,Kernel.scalar,Kernel.advance,Kernel.halt,\n    assign,PTX.advance,u32,pc,running,hge]"
         }
       }
     },
@@ -260,7 +259,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ContractionFetched.lean",
         "passage": {
-          "quote": "theorem fetched_correct (allowed : Accumulator acc)\n    (valid : \u2200 k<width, Valid s width k a \u2227 Valid s width k b)\n    (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++program width acc a b++suffix) s t)\n    (done : t.pc=pre.length+(program width acc a b).length) :\n    decode (t.regs acc) =\n      Spec.get2 (Spec.matMulSpec (leftTensor s width a) (rightTensor s width b)) 0 0 \u2227\n    Stable s t := by\n  rw [tensor_fold]\n  exact correct allowed valid (fetched_block _ _ _ execution pc done)"
+          "quote": "theorem fetched_correct (allowed : Accumulator acc)\n    (valid : ∀ k<width, Valid s width k a ∧ Valid s width k b)\n    (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++program width acc a b++suffix) s t)\n    (done : t.pc=pre.length+(program width acc a b).length) :\n    decode (t.regs acc) =\n      Spec.get2 (Spec.matMulSpec (leftTensor s width a) (rightTensor s width b)) 0 0 ∧\n    Stable s t := by\n  rw [tensor_fold]\n  exact correct allowed valid (fetched_block _ _ _ execution pc done)"
         }
       }
     },
@@ -272,7 +271,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ContractionFetched.lean",
         "passage": {
-          "quote": "theorem fetched_exists (s : State) (allowed : Accumulator acc)\n    (valid : \u2200 k<width, Valid s width k a \u2227 Valid s width k b)\n    (pre suffix : List Op) (pc : s.pc=pre.length) :\n    \u2203 t, Runs (pre++program width acc a b++suffix) s t \u2227\n      t.pc=pre.length+(program width acc a b).length := by\n  obtain \u27e8t,ht\u27e9 := exists_execution s allowed valid\n  exact \u27e8t,block_fetched ht pre suffix pc,by rw [block_pc ht,pc]\u27e9"
+          "quote": "theorem fetched_exists (s : State) (allowed : Accumulator acc)\n    (valid : ∀ k<width, Valid s width k a ∧ Valid s width k b)\n    (pre suffix : List Op) (pc : s.pc=pre.length) :\n    ∃ t, Runs (pre++program width acc a b++suffix) s t ∧\n      t.pc=pre.length+(program width acc a b).length := by\n  obtain ⟨t,ht⟩ := exists_execution s allowed valid\n  exact ⟨t,block_fetched ht pre suffix pc,by rw [block_pc ht,pc]⟩"
         }
       }
     },
@@ -284,7 +283,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ContractionLayout.lean",
         "passage": {
-          "quote": "theorem valid_of_matrix (s : State) (width k : Nat) (m : Matrix)\n    (hw : width \u2264 5)\n    (hr : ((m.row.operand k).eval s).toNat < width)\n    (hc : ((m.column.operand k).eval s).toNat < width)\n    (base : (s.regs (baseRegister m.space)).toNat = s.start m.space)\n    (aligned : s.start m.space % 8 = 0) (offsetAligned : m.offset.toNat % 8 = 0)\n    (fits : m.offset.toNat + width*width*8 \u2264 s.bytes m.space)\n    (noWrap : s.start m.space + s.bytes m.space \u2264 2^64) : Valid s width k m := by\n  have indexBound : (((m.row.operand k).eval s).toNat * width + ((m.column.operand k).eval s).toNat)*8+8 \u2264 width*width*8 := by\n    interval_cases width <;> norm_num at * <;> omega\n  have bound : (s.regs (baseRegister m.space)).toNat +\n      (((m.row.operand k).eval s).toNat * width + ((m.column.operand k).eval s).toNat)*8 + m.offset.toNat < 2^64 := by\n    rw [base]; omega\n  unfold Valid\n  rw [location_exact s width k m hw hr hc bound,base]\n  refine \u27e8by omega,?_,by omega,noWrap\u27e9\n  simp [Nat.add_mod,aligned,offsetAligned]"
+          "quote": "theorem valid_of_matrix (s : State) (width k : Nat) (m : Matrix)\n    (hw : width ≤ 5)\n    (hr : ((m.row.operand k).eval s).toNat < width)\n    (hc : ((m.column.operand k).eval s).toNat < width)\n    (base : (s.regs (baseRegister m.space)).toNat = s.start m.space)\n    (aligned : s.start m.space % 8 = 0) (offsetAligned : m.offset.toNat % 8 = 0)\n    (fits : m.offset.toNat + width*width*8 ≤ s.bytes m.space)\n    (noWrap : s.start m.space + s.bytes m.space ≤ 2^64) : Valid s width k m := by\n  have indexBound : (((m.row.operand k).eval s).toNat * width + ((m.column.operand k).eval s).toNat)*8+8 ≤ width*width*8 := by\n    interval_cases width <;> norm_num at * <;> omega\n  have bound : (s.regs (baseRegister m.space)).toNat +\n      (((m.row.operand k).eval s).toNat * width + ((m.column.operand k).eval s).toNat)*8 + m.offset.toNat < 2^64 := by\n    rw [base]; omega\n  unfold Valid\n  rw [location_exact s width k m hw hr hc bound,base]\n  refine ⟨by omega,?_,by omega,noWrap⟩\n  simp [Nat.add_mod,aligned,offsetAligned]"
         }
       }
     },
@@ -296,7 +295,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ContractionText.lean",
         "passage": {
-          "quote": "def plans (width : Nat) (b d : Word) : List Plan :=\n  let plane (p : Nat) := BitVec.ofNat 64 (p*width*width*8)\n  [\u27e8\"bu\",8,\u27e8.global,b,.row,.inner\u27e9,\u27e8.shared,plane 0,.inner,.column\u27e9\u27e9,\n   \u27e8\"du\",8,\u27e8.global,d,.row,.inner\u27e9,\u27e8.shared,plane 0,.inner,.column\u27e9\u27e9,\n   \u27e8\"dx\",8,\u27e8.shared,plane 1,.row,.inner\u27e9,\u27e8.global,d,.column,.inner\u27e9\u27e9,\n   \u27e8\"dy\",8,\u27e8.shared,plane 2,.row,.inner\u27e9,\u27e8.global,b,.column,.inner\u27e9\u27e9,\n   \u27e8\"bl\",8,\u27e8.global,b,.inner,.row\u27e9,\u27e8.shared,plane 3,.inner,.column\u27e9\u27e9,\n   \u27e8\"dl\",8,\u27e8.global,d,.inner,.row\u27e9,\u27e8.shared,plane 4,.inner,.column\u27e9\u27e9,\n   \u27e8\"x\",8,\u27e8.shared,plane 5,.row,.inner\u27e9,\u27e8.global,d,.inner,.column\u27e9\u27e9,\n   \u27e8\"y\",9,\u27e8.shared,plane 6,.row,.inner\u27e9,\u27e8.global,b,.inner,.column\u27e9\u27e9]"
+          "quote": "def plans (width : Nat) (b d : Word) : List Plan :=\n  let plane (p : Nat) := BitVec.ofNat 64 (p*width*width*8)\n  [⟨\"bu\",8,⟨.global,b,.row,.inner⟩,⟨.shared,plane 0,.inner,.column⟩⟩,\n   ⟨\"du\",8,⟨.global,d,.row,.inner⟩,⟨.shared,plane 0,.inner,.column⟩⟩,\n   ⟨\"dx\",8,⟨.shared,plane 1,.row,.inner⟩,⟨.global,d,.column,.inner⟩⟩,\n   ⟨\"dy\",8,⟨.shared,plane 2,.row,.inner⟩,⟨.global,b,.column,.inner⟩⟩,\n   ⟨\"bl\",8,⟨.global,b,.inner,.row⟩,⟨.shared,plane 3,.inner,.column⟩⟩,\n   ⟨\"dl\",8,⟨.global,d,.inner,.row⟩,⟨.shared,plane 4,.inner,.column⟩⟩,\n   ⟨\"x\",8,⟨.shared,plane 5,.row,.inner⟩,⟨.global,d,.inner,.column⟩⟩,\n   ⟨\"y\",9,⟨.shared,plane 6,.row,.inner⟩,⟨.global,b,.inner,.column⟩⟩]"
         }
       }
     },
@@ -308,7 +307,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/SharedStore.lean",
         "passage": {
-          "quote": "theorem fetched_correct (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++code offset src++suffix) s t)\n    (done : t.pc=pre.length+(code offset src).length)\n    (h1 : src\u22601) (h2 : src\u22602) (valid : Valid s offset) :\n    t.shared = write64 s.shared (location s offset).toNat (s.regs src) \u2227\n    t.global = s.global \u2227\n    (\u2200 r, r\u22601 \u2192 r\u22602 \u2192 t.regs r=s.regs r) := by\n  rw [block_eq (Contraction.fetched_block _ _ _ execution pc done) h1 h2 valid]\n  refine \u27e8rfl,rfl,?_\u27e9\n  intro r hr1 hr2\n  simp [finish,put,assign,advance,hr1,hr2]"
+          "quote": "theorem fetched_correct (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++code offset src++suffix) s t)\n    (done : t.pc=pre.length+(code offset src).length)\n    (h1 : src≠1) (h2 : src≠2) (valid : Valid s offset) :\n    t.shared = write64 s.shared (location s offset).toNat (s.regs src) ∧\n    t.global = s.global ∧\n    (∀ r, r≠1 → r≠2 → t.regs r=s.regs r) := by\n  rw [block_eq (Contraction.fetched_block _ _ _ execution pc done) h1 h2 valid]\n  refine ⟨rfl,rfl,?_⟩\n  intro r hr1 hr2\n  simp [finish,put,assign,advance,hr1,hr2]"
         }
       }
     },
@@ -320,7 +319,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/SharedStore.lean",
         "passage": {
-          "quote": "theorem valid_of_plane (s : State) (width : Nat) (plane : Fin 7)\n    (hw : width\u22645) (lane : (s.regs 14).toNat < width*width)\n    (base : (s.regs 3).toNat=s.sharedStart) (aligned : s.sharedStart%8=0)\n    (fits : 7*width*width*8\u2264s.sharedBytes)\n    (noWrap : s.sharedStart+s.sharedBytes\u22642^64) :\n    Valid s (BitVec.ofNat 64 (plane.val*width*width*8)) := by\n  have hp := plane.isLt\n  have hsmall : width*width\u226425 := by nlinarith\n  have po : plane.val*width*width*8 < 2^64 := by nlinarith\n  have endBound : (s.regs 14).toNat*8+plane.val*width*width*8+8\u22647*width*width*8 := by\n    have h := Nat.mul_le_mul_right (width*width) (show plane.val+1\u22647 by omega)\n    nlinarith\n  have hb : (s.regs 3).toNat+(s.regs 14).toNat*8+\n      (BitVec.ofNat 64 (plane.val*width*width*8)).toNat < 2^64 := by\n    rw [BitVec.toNat_ofNat,Nat.mod_eq_of_lt po,base]; omega\n  unfold Valid\n  rw [location_exact s _ (by omega) hb,BitVec.toNat_ofNat,Nat.mod_eq_of_lt po,base]\n  exact \u27e8by omega,by simp [Nat.add_mod,aligned],by omega,noWrap\u27e9"
+          "quote": "theorem valid_of_plane (s : State) (width : Nat) (plane : Fin 7)\n    (hw : width≤5) (lane : (s.regs 14).toNat < width*width)\n    (base : (s.regs 3).toNat=s.sharedStart) (aligned : s.sharedStart%8=0)\n    (fits : 7*width*width*8≤s.sharedBytes)\n    (noWrap : s.sharedStart+s.sharedBytes≤2^64) :\n    Valid s (BitVec.ofNat 64 (plane.val*width*width*8)) := by\n  have hp := plane.isLt\n  have hsmall : width*width≤25 := by nlinarith\n  have po : plane.val*width*width*8 < 2^64 := by nlinarith\n  have endBound : (s.regs 14).toNat*8+plane.val*width*width*8+8≤7*width*width*8 := by\n    have h := Nat.mul_le_mul_right (width*width) (show plane.val+1≤7 by omega)\n    nlinarith\n  have hb : (s.regs 3).toNat+(s.regs 14).toNat*8+\n      (BitVec.ofNat 64 (plane.val*width*width*8)).toNat < 2^64 := by\n    rw [BitVec.toNat_ofNat,Nat.mod_eq_of_lt po,base]; omega\n  unfold Valid\n  rw [location_exact s _ (by omega) hb,BitVec.toNat_ofNat,Nat.mod_eq_of_lt po,base]\n  exact ⟨by omega,by simp [Nat.add_mod,aligned],by omega,noWrap⟩"
         }
       }
     },
@@ -332,7 +331,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/SharedStore.lean",
         "passage": {
-          "quote": "theorem fetched_contraction_store (allowed : Contraction.Accumulator acc)\n    (loads : \u2200 k<width, Contraction.Valid s width k a \u2227 Contraction.Valid s width k b)\n    (valid : Valid s offset) (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++(Contraction.program width acc a b ++ code offset acc)++suffix) s t)\n    (done : t.pc=pre.length+(Contraction.program width acc a b ++ code offset acc).length) :\n    decode (read64 t.shared (location s offset).toNat) =\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor s width a)\n        (Contraction.rightTensor s width b)) 0 0 \u2227 t.global=s.global :=\n  contraction_store allowed loads valid (Contraction.fetched_block _ _ _ execution pc done)"
+          "quote": "theorem fetched_contraction_store (allowed : Contraction.Accumulator acc)\n    (loads : ∀ k<width, Contraction.Valid s width k a ∧ Contraction.Valid s width k b)\n    (valid : Valid s offset) (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++(Contraction.program width acc a b ++ code offset acc)++suffix) s t)\n    (done : t.pc=pre.length+(Contraction.program width acc a b ++ code offset acc).length) :\n    decode (read64 t.shared (location s offset).toNat) =\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor s width a)\n        (Contraction.rightTensor s width b)) 0 0 ∧ t.global=s.global :=\n  contraction_store allowed loads valid (Contraction.fetched_block _ _ _ execution pc done)"
         }
       }
     },
@@ -344,7 +343,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/SharedStore.lean",
         "passage": {
-          "quote": "theorem fetched_contraction_store_exists (s : State) (allowed : Contraction.Accumulator acc)\n    (loads : \u2200 k<width, Contraction.Valid s width k a \u2227 Contraction.Valid s width k b)\n    (valid : Valid s offset) (pre suffix : List Op) (pc : s.pc=pre.length) :\n    \u2203 t, Runs (pre++(Contraction.program width acc a b ++ code offset acc)++suffix) s t \u2227\n      t.pc=pre.length+(Contraction.program width acc a b ++ code offset acc).length := by\n  obtain \u27e8t,h\u27e9 := contraction_store_exists s allowed loads valid\n  exact \u27e8t,block_fetched h pre suffix pc,by rw [block_pc h,pc]\u27e9"
+          "quote": "theorem fetched_contraction_store_exists (s : State) (allowed : Contraction.Accumulator acc)\n    (loads : ∀ k<width, Contraction.Valid s width k a ∧ Contraction.Valid s width k b)\n    (valid : Valid s offset) (pre suffix : List Op) (pc : s.pc=pre.length) :\n    ∃ t, Runs (pre++(Contraction.program width acc a b ++ code offset acc)++suffix) s t ∧\n      t.pc=pre.length+(Contraction.program width acc a b ++ code offset acc).length := by\n  obtain ⟨t,h⟩ := contraction_store_exists s allowed loads valid\n  exact ⟨t,block_fetched h pre suffix pc,by rw [block_pc h,pc]⟩"
         }
       }
     },
@@ -356,7 +355,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/SharedPlane.lean",
         "passage": {
-          "quote": "theorem order_independent (initial : Memory) (base width plane : Nat)\n    (final : Fin (width*width) \u2192 State) (left right : List (Fin (width*width)))\n    (hl : \u2200 i, i\u2208left) (hr : \u2200 i, i\u2208right) :\n    publish initial base width plane final left = publish initial base width plane final right := by\n  funext p\n  by_cases covered : \u2203 i : Fin (width*width), \u2203 k : Fin 8, p=address base width plane i.val+k.val\n  \u00b7 obtain \u27e8i,k,rfl\u27e9 := covered\n    have l := congrArg (fun w => byte w k.val) (published_word initial base width plane final left i (hl i))\n    have r := congrArg (fun w => byte w k.val) (published_word initial base width plane final right i (hr i))\n    simpa only [Sources.byte_read64] using l.trans r.symm\n  \u00b7 have outside : \u2200 i : Fin (width*width), p<address base width plane i.val \u2228\n        address base width plane i.val+8\u2264p := by\n      intro i\n      by_contra h\n      have hk : p-address base width plane i.val<8 := by omega\n      exact covered \u27e8i,\u27e8p-address base width plane i.val,hk\u27e9,by simp; omega\u27e9\n    rw [published_outside _ _ _ _ _ _ _ outside,published_outside _ _ _ _ _ _ _ outside]"
+          "quote": "theorem order_independent (initial : Memory) (base width plane : Nat)\n    (final : Fin (width*width) → State) (left right : List (Fin (width*width)))\n    (hl : ∀ i, i∈left) (hr : ∀ i, i∈right) :\n    publish initial base width plane final left = publish initial base width plane final right := by\n  funext p\n  by_cases covered : ∃ i : Fin (width*width), ∃ k : Fin 8, p=address base width plane i.val+k.val\n  · obtain ⟨i,k,rfl⟩ := covered\n    have l := congrArg (fun w => byte w k.val) (published_word initial base width plane final left i (hl i))\n    have r := congrArg (fun w => byte w k.val) (published_word initial base width plane final right i (hr i))\n    simpa only [Sources.byte_read64] using l.trans r.symm\n  · have outside : ∀ i : Fin (width*width), p<address base width plane i.val ∨\n        address base width plane i.val+8≤p := by\n      intro i\n      by_contra h\n      have hk : p-address base width plane i.val<8 := by omega\n      exact covered ⟨i,⟨p-address base width plane i.val,hk⟩,by simp; omega⟩\n    rw [published_outside _ _ _ _ _ _ _ outside,published_outside _ _ _ _ _ _ _ outside]"
         }
       }
     },
@@ -368,7 +367,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/SharedPlane.lean",
         "passage": {
-          "quote": "theorem published_contraction (initial : Memory) (base width plane acc : Nat) (offset : Word)\n    (a b : Contraction.Matrix) (start final : Fin (width*width) \u2192 State)\n    (order : List (Fin (width*width))) (complete : \u2200 i, i\u2208order)\n    (allowed : Contraction.Accumulator acc)\n    (loads : \u2200 i k, k<width \u2192 Contraction.Valid (start i) width k a \u2227 Contraction.Valid (start i) width k b)\n    (valid : \u2200 i, SharedStore.Valid (start i) offset)\n    (locations : \u2200 i, (SharedStore.location (start i) offset).toNat=address base width plane i.val)\n    (execution : \u2200 i, Block (Contraction.program width acc a b ++ SharedStore.code offset acc)\n      (start i) (final i)) (i : Fin (width*width)) :\n    decode (read64 (publish initial base width plane final order) (address base width plane i.val)) =\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (start i) width a)\n        (Contraction.rightTensor (start i) width b)) 0 0 := by\n  rw [published_word _ _ _ _ _ _ i (complete i)]\n  have h := (SharedStore.contraction_store allowed (loads i) (valid i) (execution i)).1\n  simpa only [locations i] using h"
+          "quote": "theorem published_contraction (initial : Memory) (base width plane acc : Nat) (offset : Word)\n    (a b : Contraction.Matrix) (start final : Fin (width*width) → State)\n    (order : List (Fin (width*width))) (complete : ∀ i, i∈order)\n    (allowed : Contraction.Accumulator acc)\n    (loads : ∀ i k, k<width → Contraction.Valid (start i) width k a ∧ Contraction.Valid (start i) width k b)\n    (valid : ∀ i, SharedStore.Valid (start i) offset)\n    (locations : ∀ i, (SharedStore.location (start i) offset).toNat=address base width plane i.val)\n    (execution : ∀ i, Block (Contraction.program width acc a b ++ SharedStore.code offset acc)\n      (start i) (final i)) (i : Fin (width*width)) :\n    decode (read64 (publish initial base width plane final order) (address base width plane i.val)) =\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (start i) width a)\n        (Contraction.rightTensor (start i) width b)) 0 0 := by\n  rw [published_word _ _ _ _ _ _ i (complete i)]\n  have h := (SharedStore.contraction_store allowed (loads i) (valid i) (execution i)).1\n  simpa only [locations i] using h"
         }
       }
     },
@@ -380,7 +379,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/SharedPlane.lean",
         "passage": {
-          "quote": "theorem contraction_value (initial : Memory) (base width plane : Nat)\n    (final : Fin (width*width) \u2192 State) (order : List (Fin (width*width)))\n    (complete : \u2200 i, i\u2208order) (s : State) (k : Nat) (m : Contraction.Matrix)\n    (sp : m.space=.shared) (hw : width\u22645)\n    (hr : ((m.row.operand k).eval s).toNat<width)\n    (hc : ((m.column.operand k).eval s).toNat<width)\n    (baseEq : (s.regs 3).toNat=base) (off : m.offset.toNat=plane*width*width*8)\n    (bound : base+plane*width*width*8+width*width*8\u22642^64)\n    (memory : s.shared=publish initial base width plane final order) :\n    \u2203 i : Fin (width*width),\n      i.val=((m.row.operand k).eval s).toNat*width+((m.column.operand k).eval s).toNat \u2227\n      Contraction.value s width k m = decode (read64 (final i).shared (address base width plane i.val)) := by\n  have indexBound : ((m.row.operand k).eval s).toNat*width+\n      ((m.column.operand k).eval s).toNat<width*width := by\n    nlinarith\n  let i : Fin (width*width) := \u27e8_,indexBound\u27e9\n  refine \u27e8i,rfl,?_\u27e9\n  have hb : (s.regs (Contraction.baseRegister m.space)).toNat+\n      (((m.row.operand k).eval s).toNat*width+((m.column.operand k).eval s).toNat)*8+\n      m.offset.toNat<2^64 := by\n    simp only [sp,Contraction.baseRegister,baseEq,off]; omega\n  unfold Contraction.value\n  rw [Contraction.location_exact s width k m hw hr hc hb]\n  simp only [sp,State.memory,Contraction.baseRegister,baseEq,off,memory]\n  have addr : base+(((m.row.operand k).eval s).toNat*width+\n      ((m.column.operand k).eval s).toNat)*8+plane*width*width*8=address base width plane i.val := by\n    simp [address,i]; ring\n  rw [addr,published_word _ _ _ _ _ _ i (complete i)]"
+          "quote": "theorem contraction_value (initial : Memory) (base width plane : Nat)\n    (final : Fin (width*width) → State) (order : List (Fin (width*width)))\n    (complete : ∀ i, i∈order) (s : State) (k : Nat) (m : Contraction.Matrix)\n    (sp : m.space=.shared) (hw : width≤5)\n    (hr : ((m.row.operand k).eval s).toNat<width)\n    (hc : ((m.column.operand k).eval s).toNat<width)\n    (baseEq : (s.regs 3).toNat=base) (off : m.offset.toNat=plane*width*width*8)\n    (bound : base+plane*width*width*8+width*width*8≤2^64)\n    (memory : s.shared=publish initial base width plane final order) :\n    ∃ i : Fin (width*width),\n      i.val=((m.row.operand k).eval s).toNat*width+((m.column.operand k).eval s).toNat ∧\n      Contraction.value s width k m = decode (read64 (final i).shared (address base width plane i.val)) := by\n  have indexBound : ((m.row.operand k).eval s).toNat*width+\n      ((m.column.operand k).eval s).toNat<width*width := by\n    nlinarith\n  let i : Fin (width*width) := ⟨_,indexBound⟩\n  refine ⟨i,rfl,?_⟩\n  have hb : (s.regs (Contraction.baseRegister m.space)).toNat+\n      (((m.row.operand k).eval s).toNat*width+((m.column.operand k).eval s).toNat)*8+\n      m.offset.toNat<2^64 := by\n    simp only [sp,Contraction.baseRegister,baseEq,off]; omega\n  unfold Contraction.value\n  rw [Contraction.location_exact s width k m hw hr hc hb]\n  simp only [sp,State.memory,Contraction.baseRegister,baseEq,off,memory]\n  have addr : base+(((m.row.operand k).eval s).toNat*width+\n      ((m.column.operand k).eval s).toNat)*8+plane*width*width*8=address base width plane i.val := by\n    simp [address,i]; ring\n  rw [addr,published_word _ _ _ _ _ _ i (complete i)]"
         }
       }
     },
@@ -392,7 +391,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/Concurrent.lean",
         "passage": {
-          "quote": "theorem waiting_blocks (waiting : s.barrier.arrived thread=true) : \u00acStep cfg program thread s out := by\n  intro h; have hf := h.1; simp [waiting] at hf"
+          "quote": "theorem waiting_blocks (waiting : s.barrier.arrived thread=true) : ¬Step cfg program thread s out := by\n  intro h; have hf := h.1; simp [waiting] at hf"
         }
       }
     },
@@ -416,7 +415,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentBarrier.lean",
         "passage": {
-          "quote": "theorem two_barriers_exist (cfg : Config n) (s : State n)\n    (pcs : \u2200 t, (s.lanes t).pc=0) (reset : s.barrier=Barrier.reset 0) (site : s.site=none) :\n    \u2203 events, Runs cfg [.sync 0,.sync 0] s events (afterRound (afterRound s 0) 1) := by\n  obtain \u27e8first,hfirst\u27e9 := barrier_round_exists cfg s [.sync 0,.sync 0] 0 0 pcs reset site rfl\n  obtain \u27e8second,hsecond\u27e9 := barrier_round_exists cfg (afterRound s 0) [.sync 0,.sync 0] 1 1\n    (by intro t; simp [afterRound,advance,pcs]) rfl rfl rfl\n  exact \u27e8first++second,runs_append hfirst hsecond\u27e9"
+          "quote": "theorem two_barriers_exist (cfg : Config n) (s : State n)\n    (pcs : ∀ t, (s.lanes t).pc=0) (reset : s.barrier=Barrier.reset 0) (site : s.site=none) :\n    ∃ events, Runs cfg [.sync 0,.sync 0] s events (afterRound (afterRound s 0) 1) := by\n  obtain ⟨first,hfirst⟩ := barrier_round_exists cfg s [.sync 0,.sync 0] 0 0 pcs reset site rfl\n  obtain ⟨second,hsecond⟩ := barrier_round_exists cfg (afterRound s 0) [.sync 0,.sync 0] 1 1\n    (by intro t; simp [afterRound,advance,pcs]) rfl rfl rfl\n  exact ⟨first++second,runs_append hfirst hsecond⟩"
         }
       }
     },
@@ -428,7 +427,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/BarrierSources.lean",
         "passage": {
-          "quote": "theorem read_from_writer (compatible : Compatible initial events source)\n    (performed : Performed events source)\n    (hw : events[w]?=some (.data writer wa)) (hr : events[r]?=some (.data reader ra))\n    (write : wa.data.store=true) (read : ra.data.store=false)\n    (sw : wa.space=.shared) (sr : ra.space=.shared)\n    (same : wa.data.address=ra.data.address) (ordered : Across events w r)\n    (owner : SoleWriter events w ra.data.address) :\n    ra.data.value=wa.data.value \u2227 \u2200 k, source r k=.store w k := by\n  have chosen : \u2200 k, source r k=.store w k \u2227 byte ra.data.value k.val=byte wa.data.value k.val := by\n    intro k\n    have comp := compatible r reader ra hr read k\n    cases hs : source r k with\n    | initial => exact False.elim (performed w r writer reader wa ra hw hr write read sw sr ordered k k (by rw [same]) hs)\n    | store other j =>\n      simp only [hs] at comp\n      obtain \u27e8t,a,ha,store,space,address,value\u27e9 := comp\n      have eq : other=w := owner other t a ha store (space.trans sr) j k address\n      subst other\n      have accessEq : a=wa := by have := Option.some.inj (ha.symm.trans hw); cases this; rfl\n      subst a\n      have jk : j=k := by apply Fin.ext; omega\n      subst j\n      exact \u27e8rfl,value\u27e9\n  exact \u27e8Sources.word_eq_of_bytes _ _ (fun k => (chosen k).2),fun k => (chosen k).1\u27e9"
+          "quote": "theorem read_from_writer (compatible : Compatible initial events source)\n    (performed : Performed events source)\n    (hw : events[w]?=some (.data writer wa)) (hr : events[r]?=some (.data reader ra))\n    (write : wa.data.store=true) (read : ra.data.store=false)\n    (sw : wa.space=.shared) (sr : ra.space=.shared)\n    (same : wa.data.address=ra.data.address) (ordered : Across events w r)\n    (owner : SoleWriter events w ra.data.address) :\n    ra.data.value=wa.data.value ∧ ∀ k, source r k=.store w k := by\n  have chosen : ∀ k, source r k=.store w k ∧ byte ra.data.value k.val=byte wa.data.value k.val := by\n    intro k\n    have comp := compatible r reader ra hr read k\n    cases hs : source r k with\n    | initial => exact False.elim (performed w r writer reader wa ra hw hr write read sw sr ordered k k (by rw [same]) hs)\n    | store other j =>\n      simp only [hs] at comp\n      obtain ⟨t,a,ha,store,space,address,value⟩ := comp\n      have eq : other=w := owner other t a ha store (space.trans sr) j k address\n      subst other\n      have accessEq : a=wa := by have := Option.some.inj (ha.symm.trans hw); cases this; rfl\n      subst a\n      have jk : j=k := by apply Fin.ext; omega\n      subst j\n      exact ⟨rfl,value⟩\n  exact ⟨Sources.word_eq_of_bytes _ _ (fun k => (chosen k).2),fun k => (chosen k).1⟩"
         }
       }
     },
@@ -440,7 +439,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentOrigins.lean",
         "passage": {
-          "quote": "theorem step_access_origin (h : Step cfg program thread s out)\n    (member : Event.data owner access \u2208 out.events) :\n    owner=thread \u2227 \u2203 op next,\n      program[(s.lanes thread).pc]?=some (.data op) \u2227 Data op (s.lanes thread) next (some access) := by\n  obtain \u27e8fresh,i,fetch,dispatch\u27e9 := h\n  cases dispatch with\n  | data h =>\n    cases ha : \u2039Option Access\u203a with\n    | none => simp [ha] at member\n    | some actual =>\n      simp only [ha,Option.toList_some,List.map_cons,List.map_nil,List.mem_singleton,Event.data.injEq] at member\n      obtain \u27e8rfl,rfl\u27e9 := member\n      exact \u27e8rfl,_,_,fetch,by simpa only [ha] using h\u27e9\n  | skip => simp at member\n  | sync =>\n    simp only [synchronize] at member\n    split at member <;> simp_all"
+          "quote": "theorem step_access_origin (h : Step cfg program thread s out)\n    (member : Event.data owner access ∈ out.events) :\n    owner=thread ∧ ∃ op next,\n      program[(s.lanes thread).pc]?=some (.data op) ∧ Data op (s.lanes thread) next (some access) := by\n  obtain ⟨fresh,i,fetch,dispatch⟩ := h\n  cases dispatch with\n  | data h =>\n    cases ha : ‹Option Access› with\n    | none => simp [ha] at member\n    | some actual =>\n      simp only [ha,Option.toList_some,List.map_cons,List.map_nil,List.mem_singleton,Event.data.injEq] at member\n      obtain ⟨rfl,rfl⟩ := member\n      exact ⟨rfl,_,_,fetch,by simpa only [ha] using h⟩\n  | skip => simp at member\n  | sync =>\n    simp only [synchronize] at member\n    split at member <;> simp_all"
         }
       }
     },
@@ -452,7 +451,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentOrigins.lean",
         "passage": {
-          "quote": "theorem padding_reaches_barrier (cfg : Config n) (program : List Instr) (s : State n) (thread : Fin n)\n    (fresh : s.barrier.arrived thread=false)\n    (guard : program[(s.lanes thread).pc]?=some (.skip active barrierPC))\n    (padding : active\u2264thread.val) (barrier : program[barrierPC]?=some (.sync 0)) :\n    \u2203 next out, Step cfg program thread s \u27e8next,[]\u27e9 \u2227\n      Step cfg program thread next out \u2227 out=synchronize cfg next thread 0 := by\n  let next := setLane s thread {s.lanes thread with pc:=barrierPC}\n  refine \u27e8next,synchronize cfg next thread 0,padding_guard cfg program s thread fresh guard padding,?_,rfl\u27e9\n  exact \u27e8fresh,_,by simpa [next,setLane] using barrier,Dispatch.sync\u27e9"
+          "quote": "theorem padding_reaches_barrier (cfg : Config n) (program : List Instr) (s : State n) (thread : Fin n)\n    (fresh : s.barrier.arrived thread=false)\n    (guard : program[(s.lanes thread).pc]?=some (.skip active barrierPC))\n    (padding : active≤thread.val) (barrier : program[barrierPC]?=some (.sync 0)) :\n    ∃ next out, Step cfg program thread s ⟨next,[]⟩ ∧\n      Step cfg program thread next out ∧ out=synchronize cfg next thread 0 := by\n  let next := setLane s thread {s.lanes thread with pc:=barrierPC}\n  refine ⟨next,synchronize cfg next thread 0,padding_guard cfg program s thread fresh guard padding,?_,rfl⟩\n  exact ⟨fresh,_,by simpa [next,setLane] using barrier,Dispatch.sync⟩"
         }
       }
     },
@@ -464,7 +463,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/BarrierChecks.lean",
         "passage": {
-          "quote": "theorem actual_read_correct (word : Word) (source : Nat \u2192 Fin 8 \u2192 Sources.Origin Nat)\n    (compatible : Visibility.Compatible (fun _ _ => 0) (result word).events source)\n    (performed : Visibility.Performed (result word).events source) : word=42 := by\n  rw [event_history] at compatible performed\n  exact (Visibility.read_from_writer compatible performed\n    (w:=0) (r:=5) (writer:=0) (reader:=1)\n    (wa:=\u27e8.shared,\u27e83,true,0,42\u27e9\u27e9) (ra:=\u27e8.shared,\u27e85,false,0,word\u27e9\u27e9)\n    rfl rfl rfl rfl rfl rfl rfl (ordered word) (unique_writer word)).1"
+          "quote": "theorem actual_read_correct (word : Word) (source : Nat → Fin 8 → Sources.Origin Nat)\n    (compatible : Visibility.Compatible (fun _ _ => 0) (result word).events source)\n    (performed : Visibility.Performed (result word).events source) : word=42 := by\n  rw [event_history] at compatible performed\n  exact (Visibility.read_from_writer compatible performed\n    (w:=0) (r:=5) (writer:=0) (reader:=1)\n    (wa:=⟨.shared,⟨3,true,0,42⟩⟩) (ra:=⟨.shared,⟨5,false,0,word⟩⟩)\n    rfl rfl rfl rfl rfl rfl rfl (ordered word) (unique_writer word)).1"
         }
       }
     },
@@ -476,7 +475,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentOrder.lean",
         "passage": {
-          "quote": "theorem access_after_barrier {start : State n} (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : \u2200 t, (start.lanes t).pc\u2264boundary)\n    (member : Event.data reader access\u2208events) (later : boundary<access.data.pc) :\n    \u2203 earlier suffix key, events=earlier++(.data reader access::suffix) \u2227\n      Event.barrier (.completion key)\u2208earlier \u2227 key.site=boundary \u2227\n      \u2200 t : Fin n, Event.barrier (.arrival key t)\u2208earlier := by\n  obtain \u27e8before,earlier,selected,out,suffix,hp,hs,hm,ht,he\u27e9 := run_access_prefix run member\n  obtain \u27e8eq,op,next,fetch,hd\u27e9 := step_access_origin hs hm\n  subst reader\n  have pc := access_pc hd\n  have aligned : Aligned start := by intro t h; simp [reset,Barrier.reset] at h\n  obtain \u27e8key,hkey,site\u27e9 := crossed_barrier hp aligned barrier stops initial selected (by omega)\n  refine \u27e8earlier,suffix,key,?_,hkey,site,?_\u27e9\n  \u00b7 simpa only [access_single hs hm,List.append_assoc,List.singleton_append] using he\n  \u00b7 obtain \u27e8c,hc,hce\u27e9 := List.mem_iff_getElem.mp hkey\n    have hcopt : earlier[c]?=some (.barrier (.completion key)) := by simp [hc,hce]\n    intro t\n    obtain \u27e8a,ha,hae\u27e9 := History.completed_arrivals hp reset c key hcopt t\n    exact List.mem_of_getElem? hae"
+          "quote": "theorem access_after_barrier {start : State n} (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : ∀ t, (start.lanes t).pc≤boundary)\n    (member : Event.data reader access∈events) (later : boundary<access.data.pc) :\n    ∃ earlier suffix key, events=earlier++(.data reader access::suffix) ∧\n      Event.barrier (.completion key)∈earlier ∧ key.site=boundary ∧\n      ∀ t : Fin n, Event.barrier (.arrival key t)∈earlier := by\n  obtain ⟨before,earlier,selected,out,suffix,hp,hs,hm,ht,he⟩ := run_access_prefix run member\n  obtain ⟨eq,op,next,fetch,hd⟩ := step_access_origin hs hm\n  subst reader\n  have pc := access_pc hd\n  have aligned : Aligned start := by intro t h; simp [reset,Barrier.reset] at h\n  obtain ⟨key,hkey,site⟩ := crossed_barrier hp aligned barrier stops initial selected (by omega)\n  refine ⟨earlier,suffix,key,?_,hkey,site,?_⟩\n  · simpa only [access_single hs hm,List.append_assoc,List.singleton_append] using he\n  · obtain ⟨c,hc,hce⟩ := List.mem_iff_getElem.mp hkey\n    have hcopt : earlier[c]?=some (.barrier (.completion key)) := by simp [hc,hce]\n    intro t\n    obtain ⟨a,ha,hae⟩ := History.completed_arrivals hp reset c key hcopt t\n    exact List.mem_of_getElem? hae"
         }
       }
     },
@@ -488,7 +487,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentProducer.lean",
         "passage": {
-          "quote": "theorem store_before_arrival {start : State n} {key : Barrier.Key} {events : List (Event n)} {a : Nat} (run : Runs cfg program start events final)\n    (aligned : Aligned start) (store : program[storePC]?=some (.data (.store64 sp addr src)))\n    (stops : StopsFor program writer storePC) (initial : (start.lanes writer).pc\u2264storePC)\n    (arrival : events[a]?=some (Event.barrier (.arrival key writer))) (later : storePC<key.site) :\n    \u2203 w access, w<a \u2227 events[w]?=some (Event.data writer access) \u2227\n      access.data.pc=storePC \u2227 access.data.store=true \u2227 access.space=sp"
+          "quote": "theorem store_before_arrival {start : State n} {key : Barrier.Key} {events : List (Event n)} {a : Nat} (run : Runs cfg program start events final)\n    (aligned : Aligned start) (store : program[storePC]?=some (.data (.store64 sp addr src)))\n    (stops : StopsFor program writer storePC) (initial : (start.lanes writer).pc≤storePC)\n    (arrival : events[a]?=some (Event.barrier (.arrival key writer))) (later : storePC<key.site) :\n    ∃ w access, w<a ∧ events[w]?=some (Event.data writer access) ∧\n      access.data.pc=storePC ∧ access.data.store=true ∧ access.space=sp"
         }
       }
     },
@@ -500,7 +499,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentProducer.lean",
         "passage": {
-          "quote": "theorem producer_across {start : State n} {events : List (Event n)} {r : Nat}\n    (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (store : program[storePC]?=some (.data (.store64 sp addr src)))\n    (writerStops : StopsFor program writer storePC)\n    (writerInitial : (start.lanes writer).pc\u2264storePC) (beforeBarrier : storePC<boundary)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : \u2200 t, (start.lanes t).pc\u2264boundary)\n    (observed : events[r]?=some (Event.data reader access)) (later : boundary<access.data.pc) :\n    \u2203 w wa, events[w]?=some (.data writer wa) \u2227 wa.data.pc=storePC \u2227\n      wa.data.store=true \u2227 wa.space=sp \u2227 Visibility.Across events w r"
+          "quote": "theorem producer_across {start : State n} {events : List (Event n)} {r : Nat}\n    (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (store : program[storePC]?=some (.data (.store64 sp addr src)))\n    (writerStops : StopsFor program writer storePC)\n    (writerInitial : (start.lanes writer).pc≤storePC) (beforeBarrier : storePC<boundary)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : ∀ t, (start.lanes t).pc≤boundary)\n    (observed : events[r]?=some (Event.data reader access)) (later : boundary<access.data.pc) :\n    ∃ w wa, events[w]?=some (.data writer wa) ∧ wa.data.pc=storePC ∧\n      wa.data.store=true ∧ wa.space=sp ∧ Visibility.Across events w r"
         }
       }
     },
@@ -524,7 +523,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentOwnership.lean",
         "passage": {
-          "quote": "theorem read_from_plane_producer {start : State n} {events : List (Event n)} {r : Nat}\n    (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation) (forward : Forward program)\n    (coverage : PlaneStores events base width site) (sites : Function.Injective site)\n    (plane : Fin 7) (store : program[site plane]?=some (.data (.store64 .shared addr src)))\n    (writerStops : StopsFor program writer (site plane))\n    (writerInitial : (start.lanes writer).pc\u2264site plane) (beforeBarrier : site plane<boundary)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : \u2200 t, (start.lanes t).pc\u2264boundary)\n    (observed : events[r]?=some (Event.data reader ra)) (later : boundary<ra.data.pc)\n    (read : ra.data.store=false) (shared : ra.space=.shared)\n    (address : ra.data.address=SharedPlane.address base width plane.val writer.val)\n    (compatible : Visibility.Compatible initialBytes events source)\n    (performed : Visibility.Performed events source) :\n    \u2203 w wa, events[w]?=some (.data writer wa) \u2227 wa.data.pc=site plane \u2227\n      Visibility.Across events w r \u2227 ra.data.value=wa.data.value \u2227\n      \u2200 k, source r k=.store w k"
+          "quote": "theorem read_from_plane_producer {start : State n} {events : List (Event n)} {r : Nat}\n    (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation) (forward : Forward program)\n    (coverage : PlaneStores events base width site) (sites : Function.Injective site)\n    (plane : Fin 7) (store : program[site plane]?=some (.data (.store64 .shared addr src)))\n    (writerStops : StopsFor program writer (site plane))\n    (writerInitial : (start.lanes writer).pc≤site plane) (beforeBarrier : site plane<boundary)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : ∀ t, (start.lanes t).pc≤boundary)\n    (observed : events[r]?=some (Event.data reader ra)) (later : boundary<ra.data.pc)\n    (read : ra.data.store=false) (shared : ra.space=.shared)\n    (address : ra.data.address=SharedPlane.address base width plane.val writer.val)\n    (compatible : Visibility.Compatible initialBytes events source)\n    (performed : Visibility.Performed events source) :\n    ∃ w wa, events[w]?=some (.data writer wa) ∧ wa.data.pc=site plane ∧\n      Visibility.Across events w r ∧ ra.data.value=wa.data.value ∧\n      ∀ k, source r k=.store w k"
         }
       }
     },
@@ -536,7 +535,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/CellMiddleChecks.lean",
         "passage": {
-          "quote": "theorem coverage {start : State 32} (width : Nat) (lo : 2\u2264width) (hi : width\u22645)\n    (run : Runs cfg (program width) start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (pcs : \u2200 t, (start.lanes t).pc=0)\n    (bases : \u2200 t, ((start.lanes t).regs 3).toNat=base)\n    (lanes : \u2200 t, ((start.lanes t).regs 14).toNat=t.val)\n    (fits : base+7*width*width*8\u22642^64) :\n    PlaneStores events base width (site (program width) width)"
+          "quote": "theorem coverage {start : State 32} (width : Nat) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (pcs : ∀ t, (start.lanes t).pc=0)\n    (bases : ∀ t, ((start.lanes t).regs 3).toNat=base)\n    (lanes : ∀ t, ((start.lanes t).regs 14).toNat=t.val)\n    (fits : base+7*width*width*8≤2^64) :\n    PlaneStores events base width (site (program width) width)"
         }
       }
     },
@@ -560,7 +559,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentPadding.lean",
         "passage": {
-          "quote": "theorem access_active (run : Runs cfg program start events final)\n    (aligned : Aligned start) (inv : Invariant program active start) (bounds : Boundaries program active)\n    (member : Event.data thread access\u2208events) : thread.val<active"
+          "quote": "theorem access_active (run : Runs cfg program start events final)\n    (aligned : Aligned start) (inv : Invariant program active start) (bounds : Boundaries program active)\n    (member : Event.data thread access∈events) : thread.val<active"
         }
       }
     },
@@ -572,7 +571,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/CellMiddleChecks.lean",
         "passage": {
-          "quote": "theorem checked (width : Nat) (lo : 2\u2264width) (hi : width\u22645) : Checked (program width) width"
+          "quote": "theorem checked (width : Nat) (lo : 2≤width) (hi : width≤5) : Checked (program width) width"
         }
       }
     },
@@ -584,7 +583,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/CellMiddleChecks.lean",
         "passage": {
-          "quote": "theorem publication {start : State 32} {events : List (Event 32)} {index : Nat}\n    (width : Nat) (lo : 2\u2264width) (hi : width\u22645)\n    (run : Runs cfg (program width) start events final)\n    (reset : start.barrier=Barrier.reset generation) (pcs : \u2200 t, (start.lanes t).pc=0)\n    (bases : \u2200 t, ((start.lanes t).regs 3).toNat=base)\n    (lanes : \u2200 t, ((start.lanes t).regs 14).toNat=t.val)\n    (fits : base+7*width*width*8\u22642^64)\n    (plane : Fin 7) (produced : plane\u22600) (writer : Fin 32) (active : writer.val<width*width)\n    (observed : events[index]?=some (.data reader access))\n    (later : boundary width (preceding plane)<access.data.pc)\n    (read : access.data.store=false) (shared : access.space=.shared)\n    (address : access.data.address=SharedPlane.address base width plane.val writer.val)\n    (compatible : Visibility.Compatible initialBytes events source)\n    (performed : Visibility.Performed events source) :\n    \u2203 w wa, events[w]?=some (.data writer wa) \u2227\n      access.data.value=wa.data.value \u2227 \u2200 k, source index k=.store w k"
+          "quote": "theorem publication {start : State 32} {events : List (Event 32)} {index : Nat}\n    (width : Nat) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (reset : start.barrier=Barrier.reset generation) (pcs : ∀ t, (start.lanes t).pc=0)\n    (bases : ∀ t, ((start.lanes t).regs 3).toNat=base)\n    (lanes : ∀ t, ((start.lanes t).regs 14).toNat=t.val)\n    (fits : base+7*width*width*8≤2^64)\n    (plane : Fin 7) (produced : plane≠0) (writer : Fin 32) (active : writer.val<width*width)\n    (observed : events[index]?=some (.data reader access))\n    (later : boundary width (preceding plane)<access.data.pc)\n    (read : access.data.store=false) (shared : access.space=.shared)\n    (address : access.data.address=SharedPlane.address base width plane.val writer.val)\n    (compatible : Visibility.Compatible initialBytes events source)\n    (performed : Visibility.Performed events source) :\n    ∃ w wa, events[w]?=some (.data writer wa) ∧\n      access.data.value=wa.data.value ∧ ∀ k, source index k=.store w k"
         }
       }
     },
@@ -596,7 +595,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/CellMiddleWitness.lean",
         "passage": {
-          "quote": "theorem finished : result.state.barrier.generation=3 \u2227\n    \u2200 t, (result.state.lanes t).pc=(code 2 0 64 128).length"
+          "quote": "theorem finished : result.state.barrier.generation=3 ∧\n    ∀ t, (result.state.lanes t).pc=(code 2 0 64 128).length"
         }
       }
     },
@@ -608,7 +607,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentReplay.lean",
         "passage": {
-          "quote": "theorem contraction (run : Runs cfg program start events final) (aligned : Aligned start)\n    (forward : Forward program) (pre suffix : List Op)\n    (slice : Slice program (pre++Contraction.program width acc a b++suffix)\n      pre.length (pre.length+(Contraction.program width acc a b).length))\n    (pc : (start.lanes thread).pc=pre.length)\n    (done : (final.lanes thread).pc=pre.length+(Contraction.program width acc a b).length)\n    (reads : Reads memory thread pre.length (pre.length+(Contraction.program width acc a b).length) events)\n    (allowed : Contraction.Accumulator acc)\n    (valid : \u2200 k<width, Contraction.Valid (view memory (start.lanes thread)) width k a \u2227\n      Contraction.Valid (view memory (start.lanes thread)) width k b) :\n    decode ((final.lanes thread).regs acc)=\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (view memory (start.lanes thread)) width a)\n        (Contraction.rightTensor (view memory (start.lanes thread)) width b)) 0 0"
+          "quote": "theorem contraction (run : Runs cfg program start events final) (aligned : Aligned start)\n    (forward : Forward program) (pre suffix : List Op)\n    (slice : Slice program (pre++Contraction.program width acc a b++suffix)\n      pre.length (pre.length+(Contraction.program width acc a b).length))\n    (pc : (start.lanes thread).pc=pre.length)\n    (done : (final.lanes thread).pc=pre.length+(Contraction.program width acc a b).length)\n    (reads : Reads memory thread pre.length (pre.length+(Contraction.program width acc a b).length) events)\n    (allowed : Contraction.Accumulator acc)\n    (valid : ∀ k<width, Contraction.Valid (view memory (start.lanes thread)) width k a ∧\n      Contraction.Valid (view memory (start.lanes thread)) width k b) :\n    decode ((final.lanes thread).regs acc)=\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (view memory (start.lanes thread)) width a)\n        (Contraction.rightTensor (view memory (start.lanes thread)) width b)) 0 0"
         }
       }
     },
@@ -620,7 +619,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/CellMiddleInputs.lean",
         "passage": {
-          "quote": "theorem initial_value {start : State 32} {events : List (Event 32)} {index : Nat}\n    (width : Nat) (lo : 2\u2264width) (hi : width\u22645)\n    (run : Runs cfg (program width) start events final)\n    (reset : start.barrier=Barrier.reset generation) (pcs : \u2200 t, (start.lanes t).pc=0)\n    (bases : \u2200 t, ((start.lanes t).regs 3).toNat=base)\n    (lanes : \u2200 t, ((start.lanes t).regs 14).toNat=t.val)\n    (fits : base+7*width*width*8\u22642^64)\n    (observed : events[index]?=some (.data reader access)) (read : access.data.store=false)\n    (input : access.space=.global \u2228 (base\u2264access.data.address \u2227 access.data.address+8\u2264base+width*width*8))\n    (compatible : Visibility.Compatible initial events source) :\n    access.data.value=read64 (initial access.space) access.data.address"
+          "quote": "theorem initial_value {start : State 32} {events : List (Event 32)} {index : Nat}\n    (width : Nat) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (reset : start.barrier=Barrier.reset generation) (pcs : ∀ t, (start.lanes t).pc=0)\n    (bases : ∀ t, ((start.lanes t).regs 3).toNat=base)\n    (lanes : ∀ t, ((start.lanes t).regs 14).toNat=t.val)\n    (fits : base+7*width*width*8≤2^64)\n    (observed : events[index]?=some (.data reader access)) (read : access.data.store=false)\n    (input : access.space=.global ∨ (base≤access.data.address ∧ access.data.address+8≤base+width*width*8))\n    (compatible : Visibility.Compatible initial events source) :\n    access.data.value=read64 (initial access.space) access.data.address"
         }
       }
     },
@@ -632,7 +631,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/ConcurrentComputedStore.lean",
         "passage": {
-          "quote": "theorem stored_contraction\n    (run : Runs cfg program start events before) (aligned : Aligned start)\n    (forward : Forward program) (pre suffix : List Op)\n    (slice : Slice program (pre++(Contraction.program width acc a b++storePrefix)++suffix)\n      pre.length (pre.length+(Contraction.program width acc a b++storePrefix).length))\n    (pc : (start.lanes thread).pc=pre.length)\n    (done : (before.lanes thread).pc=pre.length+(Contraction.program width acc a b++storePrefix).length)\n    (reads : Reads memory thread pre.length\n      (pre.length+(Contraction.program width acc a b++storePrefix).length) events)\n    (allowed : Contraction.Accumulator acc)\n    (valid : \u2200 k<width, Contraction.Valid (view memory (start.lanes thread)) width k a \u2227\n      Contraction.Valid (view memory (start.lanes thread)) width k b)\n    {address : Operand}\n    (step : Step cfg program selected before out)\n    (store : program[(before.lanes thread).pc]?=some (.data (.store64 .shared address (.reg acc))))\n    (observed : Event.data thread access\u2208out.events) :\n    access.data.store=true \u2227 access.space=.shared \u2227\n    decode access.data.value=\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (view memory (start.lanes thread)) width a)\n        (Contraction.rightTensor (view memory (start.lanes thread)) width b)) 0 0"
+          "quote": "theorem stored_contraction\n    (run : Runs cfg program start events before) (aligned : Aligned start)\n    (forward : Forward program) (pre suffix : List Op)\n    (slice : Slice program (pre++(Contraction.program width acc a b++storePrefix)++suffix)\n      pre.length (pre.length+(Contraction.program width acc a b++storePrefix).length))\n    (pc : (start.lanes thread).pc=pre.length)\n    (done : (before.lanes thread).pc=pre.length+(Contraction.program width acc a b++storePrefix).length)\n    (reads : Reads memory thread pre.length\n      (pre.length+(Contraction.program width acc a b++storePrefix).length) events)\n    (allowed : Contraction.Accumulator acc)\n    (valid : ∀ k<width, Contraction.Valid (view memory (start.lanes thread)) width k a ∧\n      Contraction.Valid (view memory (start.lanes thread)) width k b)\n    {address : Operand}\n    (step : Step cfg program selected before out)\n    (store : program[(before.lanes thread).pc]?=some (.data (.store64 .shared address (.reg acc))))\n    (observed : Event.data thread access∈out.events) :\n    access.data.store=true ∧ access.space=.shared ∧\n    decode access.data.value=\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (view memory (start.lanes thread)) width a)\n        (Contraction.rightTensor (view memory (start.lanes thread)) width b)) 0 0"
         }
       }
     },
@@ -645,6 +644,78 @@
         "path": "integration/torchlean/PoissonPTX/ConcurrentReplayChecks.lean",
         "passage": {
           "quote": "theorem stored_tensor : decode access.data.value=\n    Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (view memory (start.lanes 0)) 1 a)\n      (Contraction.rightTensor (view memory (start.lanes 0)) 1 b)) 0 0"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed middle-slice execution satisfying the necessary byte-source\nconstraints produces all six TorchLean intermediate tensors."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellMiddleCorrespondence.lean",
+        "passage": {
+          "quote": "theorem completed_middle (launch : Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (execution : Concurrent.Runs cfg (program width) start events final)\n    (done : ∀ thread, (final.lanes thread).pc=(program width).length)\n    (compatible : Visibility.Compatible initial events source) (performed : Visibility.Performed events source)\n    (plane : Fin 7) (positive : plane≠0) :\n    grid width bases (view width bases initial events) .shared (plane.val*width*width*8)=\n      entries (target (initialTensor width bases initial .global 0)\n        (initialTensor width bases initial .global (width*width*8+32))\n        (initialTensor width bases initial .global (2*(width*width*8+32)))\n        (initialTensor width bases initial .shared 0) plane.val)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every plane\nand coordinate, the proof identifies an actual shared store at that coordinate's\nbyte address and equates its decoded word with the TorchLean value."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellMiddleCorrespondence.lean",
+        "passage": {
+          "quote": "theorem completed_store (launch : Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (execution : Concurrent.Runs cfg (program width) start events final)\n    (done : ∀ thread, (final.lanes thread).pc=(program width).length)\n    (compatible : Visibility.Compatible initial events source) (performed : Visibility.Performed events source)\n    (plane : Fin 7) (positive : plane≠0) (i j : Fin width) :\n    ∃ (index : Nat) (thread : Fin 32) (access : Access),\n      thread.val=i.val*width+j.val ∧ events[index]?=some (.data thread access) ∧\n      access.data.store=true ∧ access.space=.shared ∧\n      access.data.address=SharedPlane.address (bases .shared).toNat width plane.val (i.val*width+j.val) ∧\n      decode access.data.value=Spec.get2 (target\n        (initialTensor width bases initial .global 0)\n        (initialTensor width bases initial .global (width*width*8+32))\n        (initialTensor width bases initial .global (2*(width*width*8+32)))\n        (initialTensor width bases initial .shared 0) plane.val) i j"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Address tracking discards loaded values, so locating a read does not assume that\nits value is already correct."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellLaunch.lean",
+        "passage": {
+          "quote": "theorem load_location (launch : Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (member : Event.data thread access∈events) (read : access.data.store=false) :\n    ∃ off : Word, access.data.address=(bases access.space+off).toNat ∧ off.toNat%8=0 ∧\n      (access.space=.shared → off.toNat<7*width*width*8 ∧\n        ∀ p : Fin 7, off.toNat/(width*width*8)=p.val → p≠0 → boundary width (preceding p)<access.data.pc)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Thus every load agrees with this view\nwithout an assumed per-load value, scalar trace or phase answer."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellReadValues.lean",
+        "passage": {
+          "quote": "theorem all_reads (launch : Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (compatible : Visibility.Compatible initial events source) (performed : Visibility.Performed events source) :\n    Symbolic.Reads (view width bases initial events) events"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A soundness theorem\nrelates these expressions to actual fetched instructions under any interleaving."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SymbolicRun.lean",
+        "passage": {
+          "quote": "theorem runs_invariant (run : Runs cfg code start events final) (aligned : Aligned start)\n    (inv : Invariant mode code active seeds bases memory start) (guards : Guards code active)\n    (reads : mode=.values → Reads memory events) :\n    Invariant mode code active seeds bases memory final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Its actual load choices and computed store words satisfy both\nnecessary byte-source constraints. This witnesses the completed numerical\ntheorem without an assumed phase value."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellMiddleNumericChecks.lean",
+        "passage": {
+          "quote": "theorem witness_correspondence (plane : Fin 7) (positive : plane≠0) :\n    grid 2 (fun _ => 0) (view 2 (fun _ => 0) (fun _ _ => 0) Witness.result.events) .shared (plane.val*2*2*8)=\n      Correspondence.entries (target\n        (initialTensor 2 (fun _ => 0) (fun _ _ => 0) .global 0)\n        (initialTensor 2 (fun _ => 0) (fun _ _ => 0) .global 64)\n        (initialTensor 2 (fun _ => 0) (fun _ _ => 0) .global 128)\n        (initialTensor 2 (fun _ => 0) (fun _ _ => 0) .shared 0) plane.val)"
         }
       }
     }

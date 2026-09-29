@@ -145,7 +145,8 @@ The contraction/store theorem composes the matrix calculation with that store.
 It derives the stored scalar from the byte-backed TorchLean matrix product and
 provides a completed execution witness. This directly applies to the adjacent
 `bu`, `du`, `bl`, and `dl` blocks. The `dx` and `dy` blocks additionally multiply
-by a weight before storing; that intervening operation still needs composition.
+by a weight before storing; `CellMiddleCorrespondence` now includes that
+operation in its whole-middle-slice proof.
 The final `x` and `y` contractions feed an addition and a global output store.
 
 `PoissonPTX/SharedPlane.lean` combines the words recovered from completed stores.
@@ -159,7 +160,9 @@ It does not assert that an arbitrary concurrent load observes the snapshot.
 The reusable fetched barrier model now proves arrival provenance, waiting, reuse
 and the single-writer byte-source visibility rule. Its full-cell instantiation
 still must establish the executed stores before arrival, the complete access
-coverage, and the subsequent reads for every phase. See the
+coverage, and the subsequent reads for every phase. The three middle phases
+now have this instantiation and numerical composition; gather and final output
+remain outside that result. See the
 [barrier visibility guide](poisson-barrier-visibility.md).
 The plain `st.shared.f64` instruction is weak by default; publication algebra
 alone must not silently supply synchronization. The source review used the pinned
@@ -173,4 +176,5 @@ eight contraction blocks in each of the three element entries. It checks the
 exact proved instruction lists on all 30 saved layouts and requires the four
 unweighted contraction/store pairs to be adjacent. It now also checks the five
 guards and four barrier boundaries syntactically. This does not prove their
-composition with the complete interpreted phase bodies or the complete launch.
+complete launch. The middle-body binding additionally checks every instruction
+against the program used by the completed middle-slice numerical theorem.

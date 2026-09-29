@@ -387,6 +387,18 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs'] = COUNTS.get('Pt
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks', 0) + 28
 TARGETS.update(['PoissonPTX.ConcurrentReplay', 'PoissonPTX.ConcurrentReadOnly', 'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs', 'PoissonPTX.ConcurrentReplayChecks'])
 
+# Whole middle-phase numerical correspondence and source-constrained witness.
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Symbolic'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Symbolic', 0) + 41
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Bits'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Bits', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Number'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.Number', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric', 0) + 49
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Launch'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Launch', 0) + 4
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.WordView'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.WordView', 0) + 7
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Geometry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Geometry', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.ZeroSources', 0) + 9
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.Checks', 0) + 9
+TARGETS.update(['PoissonPTX.Symbolic', 'PoissonPTX.SymbolicRun', 'PoissonPTX.CellSymbolic', 'PoissonPTX.CellLaunch', 'PoissonPTX.CellWordView', 'PoissonPTX.CellReadGeometry', 'PoissonPTX.CellReadValues', 'PoissonPTX.CellStoreValues', 'PoissonPTX.CellTensor', 'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.ZeroSources', 'PoissonPTX.CellMiddleNumericChecks'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -456,7 +468,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

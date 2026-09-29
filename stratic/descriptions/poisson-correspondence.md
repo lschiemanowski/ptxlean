@@ -92,9 +92,9 @@ than the complete PTX memory rules. A universal result over those candidates
 therefore needs no sequential-consistency assumption. The witness is an
 execution of this broader candidate model, not a full PTX admission or hardware
 progress theorem. Publication describes storage after the completed stores; the
-CUDA host-visibility mechanism is not proved. Shared-memory barriers, the cell
-phases, assembly, reductions, remaining PCG kernels and host launch composition
-still need their instruction-level connections. No premise that these phases
+CUDA host-visibility mechanism is not proved. The complete cell, assembly, reductions, remaining PCG kernels and host launch
+composition still need their instruction-level connections. The three middle
+cell phases have the stronger instruction theorem described below. No premise that these phases
 already compute their specified answers substitutes for that work.
 
 
@@ -115,9 +115,9 @@ A checked frontend compares all eight blocks in each element entry with the same
 Lean instruction programs used by the proofs.
 
 These local contraction contracts use supplied phase snapshots. They do not
-establish that prior stores and barriers provide those snapshots. Initial gather,
-control branches, weight multiplication, final addition,
-output stores and parallel admission remain to be connected. A hypothesis that
+establish that prior stores and barriers provide those snapshots. The middle-slice theorem below discharges its control, weight and barrier
+obligations. Initial gather, final addition, global output stores and complete
+parallel admission remain to be connected for the full cell. A hypothesis that
 a previous phase already computes its matrix answer cannot replace that work.
 
 Shared-plane publication connects a lane's register result to its eight stored
@@ -165,7 +165,7 @@ unpredicated barriers outside the skipped bodies, and no internal control
 transfer or change to the activity predicate. This text check does not prove
 that all phase bodies refine the concurrent machine. The full-cell proof must
 still derive the observed ordering paths and unique-writer coverage from its
-complete execution and join those events to the contraction/store results.
+complete execution; the middle-slice instantiation below covers three phases.
 
 If no branch can jump past a barrier, every access at a later instruction position
 has an actual completion and arrivals from all threads in its earlier execution
@@ -181,8 +181,8 @@ write before the writer reaches the barrier. Event positions connect this write,
 the writer's arrival, the common completion and a later read in strict order.
 Forward-only control also prevents a thread from executing the same store site
 twice. Combining this fact with the shared-plane address layout supplies storage
-ownership without assuming a phase's computed value. The complete generated
-cell still needs these structural conditions instantiated for its actual bodies.
+ownership without assuming a phase's computed value. The middle slice instantiates these conditions below. The complete generated
+cell still needs the gather and final bodies joined to that result.
 
 The three middle arithmetic phases have a concrete concurrent instruction
 program, including their padding branches, weighted contractions, six shared
@@ -195,9 +195,9 @@ addition instructions. A small check of the program's instruction sequence track
 when those two scratch registers are ready for a store; branch targets cannot
 enter halfway through that preparation. The shared base and lane registers stay
 unchanged, and inactive lanes cannot enter a data instruction. These facts turn
-the concrete slice's store records into the plane-ownership contract. The
-connection from candidate load values to the ordered tensor arithmetic, along
-with the complete gather and final output, remains a separate obligation.
+the concrete slice's store records into the plane-ownership contract. The whole-slice numerical proof connects candidate loads and those stored
+words to the ordered TorchLean arithmetic. The complete gather and final output
+remain separate obligations.
 
 The structural certificates cover Q1 through Q4 with the emitted arena layout:
 for matrix width m, the basis starts at offset zero, the derivative at 8m²+32
@@ -209,10 +209,15 @@ For this slice, address coverage and store non-repetition give each shared word
 a unique producer. A read of that word after the relevant barrier recovers the
 actual producer's stored bytes under the stated necessary source constraints.
 No assumed coverage or barrier-ordering relation is supplied for the execution.
-This still does not identify that stored value with a TorchLean tensor coordinate.
+The numerical theorem below identifies each stored decoded value with its
+TorchLean coordinate.
 A finite Q1 candidate run completes all three barriers with four active and 28
-padding lanes. Its existence is separate from source-admitted execution, full
-PTX admission and hardware progress.
+padding lanes. Its actual load choices and computed store words satisfy both
+necessary byte-source constraints. This witnesses the completed numerical
+theorem without an assumed phase value. It remains separate from arbitrary-input
+execution existence, full PTX admission and hardware progress. Negative code
+checks reject a changed matrix coordinate and replacing weight multiplication
+with addition.
 
 Within the middle slice, the later reads consume planes 1 through 4. Planes 5
 and 6 are produced here but consumed by the omitted final phase. Publication
@@ -237,10 +242,44 @@ for those computed values.
 The replayed contraction also determines the word emitted by the real shared
 store. The two preceding address instructions preserve the accumulator. A
 subsequent read recovers the decoded computed value when the separate publication
-proof identifies that store as its source. This is a reusable composition result,
-not yet a theorem for every complete middle-phase execution. The concrete
-remaining work is to derive each load's matrix address and each contraction's
-entry/exit state from the whole run, construct the intermediate byte views from
-actual producers, and include the weight multiplications. A nonzero two-thread
+proof identifies that store as its source. This reusable result complements the
+whole-slice symbolic proof below. A nonzero two-thread
 example checks the replay and actual-store connection with compatible sources;
 a wrong read from read-only bytes is rejected.
+
+Whole-slice numerical composition uses symbolic register expressions as proof
+bookkeeping: a record of how each value was calculated. A soundness theorem
+relates these expressions to actual fetched instructions under any interleaving.
+Address tracking discards loaded values, so locating a read does not assume that
+its value is already correct. Kernel-checked certificates identify every read's
+region and every store's exact matrix expression for Q1 through Q4.
+
+The word view used by the proof reads coefficients and plane zero from initial
+bytes. For intermediate planes it selects an actual store event. The control,
+ownership and barrier proofs establish that each required store exists, is the
+only writer, and supplies the later reads. Thus every load agrees with this view
+without an assumed per-load value, scalar trace or phase answer. Numerical
+tracking then derives each ordered contraction and both weight multiplications.
+Decoded floating-point equality retains the permitted freedom in NaN encodings.
+
+Every completed middle-slice execution satisfying the necessary byte-source
+constraints produces all six TorchLean intermediate tensors. For every plane
+and coordinate, the proof identifies an actual shared store at that coordinate's
+byte address and equates its decoded word with the TorchLean value.
+The result covers arbitrary initial words and permitted interleavings; no
+associativity of rounded addition is used. Each contraction starts at positive
+zero and uses increasing inner indices with separate multiplication and addition.
+Only the operands of an individual weight multiplication are exchanged.
+
+The entry conditions require all 32 threads at the slice's first instruction,
+a reset whole-block barrier, the correct global/shared bases, lane and row/column
+registers, and a nonwrapping seven-plane shared allocation. These are explicit
+conditions on the omitted prologue and gather. Actual execution supplies valid
+memory accesses. The theorem is conditional on completion; it does not assert
+termination for arbitrary inputs or a GPU scheduler. The source rules are
+necessary constraints, not complete PTX memory admission.
+
+The remaining whole-cell obligations are to establish the gathered input and
+entry registers, join the final two contractions, addition and output store,
+and prove the full launch and memory-admission connections. Assembly, reductions,
+PCG kernels and host composition retain their separate instruction obligations.

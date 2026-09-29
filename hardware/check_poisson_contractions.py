@@ -2,9 +2,10 @@
 """Bind local cell contraction and shared-store blocks to their proved Lean programs.
 
 Complete middle-phase bodies are bound to the concurrent Lean program with
-kernel-checked control and store-address certificates for Q1--Q4. The full cell
-gather, numerical phase composition, final output, launch composition and complete
-memory admission remain open. Contraction proofs use concrete phase snapshots.
+kernel-checked control, address and numerical certificates for Q1--Q4. Completed
+middle-slice executions satisfying necessary byte-source constraints store all
+six TorchLean intermediate tensors. The gather, prologue, final output, full
+launch composition and complete PTX memory admission remain open.
 """
 import argparse
 import hashlib
@@ -178,7 +179,8 @@ def check(run, output):
         raise ValueError('toolchain differs from pin')
     subprocess.run(['lake', '--no-cache', 'build', 'poissonContractions', 'PoissonPTX.ContractionFetched',
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
-                    'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
+                    'PoissonPTX.CellMiddleCorrespondence'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -191,9 +193,14 @@ def check(run, output):
               ('run_view', 'contraction', 'stored_contraction', 'published_contraction')]
     names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.'+n for n in
               ('shared_stores', 'global_readonly', 'input_readonly', 'initial_value')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.'+n for n in
+              ('data_sound', 'runs_invariant')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.'+n for n in
+              ('loads', 'stores', 'load_location', 'all_reads', 'store_expression',
+               'producer', 'plane_equations', 'completed_middle', 'completed_store')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\n'+
+        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)

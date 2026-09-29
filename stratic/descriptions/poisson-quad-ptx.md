@@ -38,7 +38,8 @@ tensor to TorchLean subtraction. It derives input values from byte-source
 constraints and disjoint output writes, then publishes the actual stores in any
 order. The proof assumes a closed launch with no external writer and uses
 necessary source conditions rather than a complete memory-admission model.
-The other kernels, shared-memory synchronization and host launch composition
+The three middle cell phases also have the numerical instruction theorem
+described below. The complete cell, other kernels and host launch composition
 still need their instruction proofs. Compilation and GPU execution retain
 separate evidence; no hardware-conformance or continuous PDE theorem is claimed.
 
@@ -72,38 +73,24 @@ parallel dot-product order is part of the GPU algorithm, so the solver's result
 is not required to be bitwise identical to the CPU PCG loop.
 
 
-The eight matrix contractions inside each cell kernel also have local instruction
-proofs: indexing, byte loads, and the ordered rounded operations produce the
-TorchLean matrix product of byte-backed operand views. These contracts preserve
-the input storage but require a supplied phase snapshot. The gather, surrounding
-branches, weighting, final addition, and barriers have not yet been joined into
-a complete cell execution theorem. Shared-store instruction proofs now connect
-producer registers to the eight-byte words of each plane. Disjoint lane ownership
-makes the resulting plane independent of publication order; proving that later
-threads observe it through the barriers remains a separate obligation.
+The eight matrix contractions inside each cell kernel have local instruction
+proofs: indexing, byte loads, and ordered rounded operations produce TorchLean
+matrix products of byte-backed operand views. Shared-store proofs connect the
+computed words to disjoint plane entries.
 
-A reusable binary64 concurrent fragment now proves fetched barrier completion,
-all-participant arrival histories, reuse, and exclusion of old initial bytes for
-a single-writer shared word. Candidate loads remain arbitrary until source
-constraints are checked. Applying these results to all generated cell phases
-still requires their complete control/data interpretation and access coverage.
+For the three middle arithmetic phases, the correspondence proof now covers
+complete interleaved execution, including padding branches, all six shared
+stores, both weight multiplications and three whole-block barriers. Every
+completed run satisfying the stated necessary byte-source constraints stores
+the six corresponding TorchLean intermediate tensors. Read addresses and values,
+producer ownership and barrier ordering are derived from execution; no phase
+answer is assumed. The certificates cover the emitted Q1–Q4 arena layouts,
+and the frontend compares every body instruction with saved PTX.
 
-For forward-only fragments, the barrier layer derives the producer's actual
-store before its arrival and a later read after completion. Disjoint plane
-addresses and the impossibility of repeating a store site establish its unique
-writer. Full-cell instantiation must still derive the required branch and
-address-coverage conditions and connect stored words to the tensor calculation.
-
-The concrete three middle arithmetic phases have derived shared-store address
-coverage and barrier publication for the four certified Q1--Q4 arena layouts.
-The complete bodies, including the weight loads and multiplication, are compared
-with emitted PTX. Numerical composition with TorchLean, gathered input, the
-prologue and final output remain unfinished; the slice's proved candidate
-execution witness is distinct from source-admitted or hardware execution.
-
-A reusable proof now connects an actual interleaved contraction and its shared
-store to the ordered TorchLean result when its recorded loads agree with a
-justified byte view. The concrete middle slice preserves global coefficients
-and the gathered input plane, so compatible reads from those regions recover
-initial bytes. Deriving every load's matrix address, composing intermediate
-views and weights, and obtaining complete cell correspondence remain open.
+This slice starts with gathered bytes and prepared base/lane/coordinate registers.
+It does not prove how the prologue and gather establish those inputs. The final
+two contractions, addition and global output must still be joined to obtain a
+complete cell theorem. Complete PTX memory admission, arbitrary-input execution
+existence, hardware progress and whole-solver instruction correspondence remain
+separate obligations. Documentation and saved empirical evidence distinguish
+these boundaries from the completed middle-slice theorem.
