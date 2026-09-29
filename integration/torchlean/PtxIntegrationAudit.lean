@@ -1,3 +1,11 @@
+import PoissonPTX.ConcurrentOrder
+import PoissonPTX.Concurrent
+import PoissonPTX.ConcurrentHistory
+import PoissonPTX.ConcurrentBarrier
+import PoissonPTX.ConcurrentExec
+import PoissonPTX.ConcurrentOrigins
+import PoissonPTX.BarrierSources
+import PoissonPTX.BarrierChecks
 import PoissonPTX.SharedStore
 import PoissonPTX.SharedPlane
 import PoissonPTX.SharedStoreChecks
@@ -3257,3 +3265,87 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.finals
 #print axioms PtxTorchLean.Poisson.PTX.SharedStore.Checks.reversed_publication
 #print axioms PtxTorchLean.Poisson.PTX.Contraction.renderedStores
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ordinary
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.data_pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.setLane
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.barrierConfig
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.barrierRequest
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.synchronize
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Step
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.waiting_blocks
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.setLane_aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.synchronize_aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.runs_aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.activeKey
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.WaitingOrigin
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.CompleteOrigins
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.FreshCompletions
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.step_history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.runs_history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.completed_arrivals
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.arrival_position_spec
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.before_certificate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.after_certificate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.afterRound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.roundPrefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.runs_append
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.barrier_round_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.two_barriers_exist
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.missing_blocks_release
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.evaluate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.evaluate_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.tick
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.tick_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.execute
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.execute_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.store_origin
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.load_origin
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.padding_guard
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.active_guard
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_access_origin
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Across
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.SoleWriter
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.read_from_writer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.across_arrivals
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.read_published
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ownership_of_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.cfg
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.seed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.program
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.schedule
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.successful
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.executed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.actual_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.event_history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.ordered
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.stale_candidate_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.stale_sources_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.inactive_missing
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.reuse
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.block32
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.state32
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.last_padding_blocks
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.fresh_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.fresh_performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.stale_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.unique_writer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.actual_read_correct
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.unsynchronized
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Checks.no_barrier_old_allowed
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.padding_reaches_barrier
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.run_access_prefix
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.release_aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.StopsAt
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_crosses_barrier
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.crossed_barrier
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.access_after_barrier

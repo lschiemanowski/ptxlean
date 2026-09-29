@@ -81,3 +81,9 @@ a complete cell execution theorem. Shared-store instruction proofs now connect
 producer registers to the eight-byte words of each plane. Disjoint lane ownership
 makes the resulting plane independent of publication order; proving that later
 threads observe it through the barriers remains a separate obligation.
+
+A reusable binary64 concurrent fragment now proves fetched barrier completion,
+all-participant arrival histories, reuse, and exclusion of old initial bytes for
+a single-writer shared word. Candidate loads remain arbitrary until source
+constraints are checked. Applying these results to all generated cell phases
+still requires their complete control/data interpretation and access coverage.

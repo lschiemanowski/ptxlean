@@ -14,10 +14,12 @@
     "Prove whole-vector residual subtraction under necessary byte-source constraints, with derived read-only inputs, actual instruction traces and arbitrary ordering of disjoint output stores.",
     "Keep complete memory admission, shared-memory barriers, cell phases, assembly, reductions and host launch composition explicit as remaining work.",
     "Prove the eight local cell contractions from fetched indexing, byte loads and separate rounded multiply/add operations; connect their byte-backed views to TorchLean while retaining the separate barrier-snapshot obligation.",
-    "Derive shared-plane bytes from actual store instructions and contraction results, with disjoint ownership, arbitrary publication order and execution witnesses; retain barrier visibility as a separate obligation."
+    "Derive shared-plane bytes from actual store instructions and contraction results, with disjoint ownership, arbitrary publication order and execution witnesses; retain barrier visibility as a separate obligation.",
+    "Derive common barrier arrivals from fetched binary64 candidate execution and exclude stale shared-byte sources across an executed whole-block barrier; distinguish the reusable fragment from its remaining full-cell instantiation.",
+    "Derive a preceding common barrier completion for every later access when branches cannot jump past the barrier, for arbitrary candidate executions."
   ],
   "realization": "partial",
-  "remaining": "Complete PTX memory admission, shared-memory phase availability, cell gather/control/weighting/final addition/output stores, assembly, reductions, other PCG kernels and host launches remain unproved. Residual correspondence uses necessary byte-source constraints; cell contractions use concrete phase snapshots. Neither is a full solver or GPU-progress theorem.",
+  "remaining": "Full-cell instantiation of the fetched binary64 barrier/source model remains: prologue and complete phase bodies, actual ordered access paths, unique-writer coverage and joining traces to contraction/store proofs. Complete PTX admission, gather/weighting/final output, assembly, reductions, PCG kernels and host launches remain unproved. The reusable barrier fragment and its witnesses use necessary source constraints, not full hardware admission or progress.",
   "links": [
     {
       "kind": "implementation",
@@ -376,6 +378,102 @@
         "path": "integration/torchlean/PoissonPTX/SharedPlane.lean",
         "passage": {
           "quote": "theorem contraction_value (initial : Memory) (base width plane : Nat)\n    (final : Fin (width*width) \u2192 State) (order : List (Fin (width*width)))\n    (complete : \u2200 i, i\u2208order) (s : State) (k : Nat) (m : Contraction.Matrix)\n    (sp : m.space=.shared) (hw : width\u22645)\n    (hr : ((m.row.operand k).eval s).toNat<width)\n    (hc : ((m.column.operand k).eval s).toNat<width)\n    (baseEq : (s.regs 3).toNat=base) (off : m.offset.toNat=plane*width*width*8)\n    (bound : base+plane*width*width*8+width*width*8\u22642^64)\n    (memory : s.shared=publish initial base width plane final order) :\n    \u2203 i : Fin (width*width),\n      i.val=((m.row.operand k).eval s).toNat*width+((m.column.operand k).eval s).toNat \u2227\n      Contraction.value s width k m = decode (read64 (final i).shared (address base width plane i.val)) := by\n  have indexBound : ((m.row.operand k).eval s).toNat*width+\n      ((m.column.operand k).eval s).toNat<width*width := by\n    nlinarith\n  let i : Fin (width*width) := \u27e8_,indexBound\u27e9\n  refine \u27e8i,rfl,?_\u27e9\n  have hb : (s.regs (Contraction.baseRegister m.space)).toNat+\n      (((m.row.operand k).eval s).toNat*width+((m.column.operand k).eval s).toNat)*8+\n      m.offset.toNat<2^64 := by\n    simp only [sp,Contraction.baseRegister,baseEq,off]; omega\n  unfold Contraction.value\n  rw [Contraction.location_exact s width k m hw hr hc hb]\n  simp only [sp,State.memory,Contraction.baseRegister,baseEq,off,memory]\n  have addr : base+(((m.row.operand k).eval s).toNat*width+\n      ((m.column.operand k).eval s).toNat)*8+plane*width*width*8=address base width plane i.val := by\n    simp [address,i]; ring\n  rw [addr,published_word _ _ _ _ _ _ i (complete i)]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A waiting\nthread cannot execute another instruction."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/Concurrent.lean",
+        "passage": {
+          "quote": "theorem waiting_blocks (waiting : s.barrier.arrived thread=true) : \u00acStep cfg program thread s out := by\n  intro h; have hf := h.1; simp [waiting] at hf"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Completion must have actual arrivals in the recorded history."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentHistory.lean",
+        "passage": {
+          "quote": "theorem completed_arrivals {cfg : Config n} {s : State n}\n    (run : Runs cfg program s events final) (reset : s.barrier = Barrier.reset generation) :\n    CompleteOrigins events := by\n  have aligned : Aligned s := by intro t ht; simp [reset,Barrier.reset] at ht\n  have origin : WaitingOrigin cfg s [] := by intro t ht; simp [reset,Barrier.reset] at ht\n  have complete : CompleteOrigins ([] : List (Event n)) := by intro c key h; simp at h\n  simpa using (runs_history run aligned origin complete).2"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Barrier zero records its instruction\nsite and reuse number, and releases only after every participant arrives at that\nsame site."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentBarrier.lean",
+        "passage": {
+          "quote": "theorem two_barriers_exist (cfg : Config n) (s : State n)\n    (pcs : \u2200 t, (s.lanes t).pc=0) (reset : s.barrier=Barrier.reset 0) (site : s.site=none) :\n    \u2203 events, Runs cfg [.sync 0,.sync 0] s events (afterRound (afterRound s 0) 1) := by\n  obtain \u27e8first,hfirst\u27e9 := barrier_round_exists cfg s [.sync 0,.sync 0] 0 0 pcs reset site rfl\n  obtain \u27e8second,hsecond\u27e9 := barrier_round_exists cfg (afterRound s 0) [.sync 0,.sync 0] 1 1\n    (by intro t; simp [afterRound,advance,pcs]) rfl rfl rfl\n  exact \u27e8first++second,runs_append hfirst hsecond\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Matching byte\naddresses and the absence of any other writer then force all eight read bytes\nto come from that store."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/BarrierSources.lean",
+        "passage": {
+          "quote": "theorem read_from_writer (compatible : Compatible initial events source)\n    (performed : Performed events source)\n    (hw : events[w]?=some (.data writer wa)) (hr : events[r]?=some (.data reader ra))\n    (write : wa.data.store=true) (read : ra.data.store=false)\n    (sw : wa.space=.shared) (sr : ra.space=.shared)\n    (same : wa.data.address=ra.data.address) (ordered : Across events w r)\n    (owner : SoleWriter events w ra.data.address) :\n    ra.data.value=wa.data.value \u2227 \u2200 k, source r k=.store w k := by\n  have chosen : \u2200 k, source r k=.store w k \u2227 byte ra.data.value k.val=byte wa.data.value k.val := by\n    intro k\n    have comp := compatible r reader ra hr read k\n    cases hs : source r k with\n    | initial => exact False.elim (performed w r writer reader wa ra hw hr write read sw sr ordered k k (by rw [same]) hs)\n    | store other j =>\n      simp only [hs] at comp\n      obtain \u27e8t,a,ha,store,space,address,value\u27e9 := comp\n      have eq : other=w := owner other t a ha store (space.trans sr) j k address\n      subst other\n      have accessEq : a=wa := by have := Option.some.inj (ha.symm.trans hw); cases this; rfl\n      subst a\n      have jk : j=k := by apply Fin.ext; omega\n      subst j\n      exact \u27e8rfl,value\u27e9\n  exact \u27e8Sources.word_eq_of_bytes _ _ (fun k => (chosen k).2),fun k => (chosen k).1\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Ordinary arithmetic and stores retain their instruction contracts."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentOrigins.lean",
+        "passage": {
+          "quote": "theorem step_access_origin (h : Step cfg program thread s out)\n    (member : Event.data owner access \u2208 out.events) :\n    owner=thread \u2227 \u2203 op next,\n      program[(s.lanes thread).pc]?=some (.data op) \u2227 Data op (s.lanes thread) next (some access) := by\n  obtain \u27e8fresh,i,fetch,dispatch\u27e9 := h\n  cases dispatch with\n  | data h =>\n    cases ha : \u2039Option Access\u203a with\n    | none => simp [ha] at member\n    | some actual =>\n      simp only [ha,Option.toList_some,List.map_cons,List.map_nil,List.mem_singleton,Event.data.injEq] at member\n      obtain \u27e8rfl,rfl\u27e9 := member\n      exact \u27e8rfl,_,_,fetch,by simpa only [ha] using h\u27e9\n  | skip => simp at member\n  | sync =>\n    simp only [synchronize] at member\n    split at member <;> simp_all"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Its combined padding guard uses a fixed thread-index\ncomparison; arbitrary predicate changes and the complete kernel prologue remain\noutside that abstraction."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentOrigins.lean",
+        "passage": {
+          "quote": "theorem padding_reaches_barrier (cfg : Config n) (program : List Instr) (s : State n) (thread : Fin n)\n    (fresh : s.barrier.arrived thread=false)\n    (guard : program[(s.lanes thread).pc]?=some (.skip active barrierPC))\n    (padding : active\u2264thread.val) (barrier : program[barrierPC]?=some (.sync 0)) :\n    \u2203 next out, Step cfg program thread s \u27e8next,[]\u27e9 \u2227\n      Step cfg program thread next out \u2227 out=synchronize cfg next thread 0 := by\n  let next := setLane s thread {s.lanes thread with pc:=barrierPC}\n  refine \u27e8next,synchronize cfg next thread 0,padding_guard cfg program s thread fresh guard padding,?_,rfl\u27e9\n  exact \u27e8fresh,_,by simpa [next,setLane] using barrier,Dispatch.sync\u27e9"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Execution witnesses and\nnegative examples check that this separation admits the expected value while\nrejecting old initial bytes only when the barrier constraint applies."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/BarrierChecks.lean",
+        "passage": {
+          "quote": "theorem actual_read_correct (word : Word) (source : Nat \u2192 Fin 8 \u2192 Sources.Origin Nat)\n    (compatible : Visibility.Compatible (fun _ _ => 0) (result word).events source)\n    (performed : Visibility.Performed (result word).events source) : word=42 := by\n  rw [event_history] at compatible performed\n  exact (Visibility.read_from_writer compatible performed\n    (w:=0) (r:=5) (writer:=0) (reader:=1)\n    (wa:=\u27e8.shared,\u27e83,true,0,42\u27e9\u27e9) (ra:=\u27e8.shared,\u27e85,false,0,word\u27e9\u27e9)\n    rfl rfl rfl rfl rfl rfl rfl (ordered word) (unique_writer word)).1"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "If no branch can jump past a barrier, every access at a later instruction position\nhas an actual completion and arrivals from all threads in its earlier execution\nhistory."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentOrder.lean",
+        "passage": {
+          "quote": "theorem access_after_barrier {start : State n} (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : \u2200 t, (start.lanes t).pc\u2264boundary)\n    (member : Event.data reader access\u2208events) (later : boundary<access.data.pc) :\n    \u2203 earlier suffix key, events=earlier++(.data reader access::suffix) \u2227\n      Event.barrier (.completion key)\u2208earlier \u2227 key.site=boundary \u2227\n      \u2200 t : Fin n, Event.barrier (.arrival key t)\u2208earlier := by\n  obtain \u27e8before,earlier,selected,out,suffix,hp,hs,hm,ht,he\u27e9 := run_access_prefix run member\n  obtain \u27e8eq,op,next,fetch,hd\u27e9 := step_access_origin hs hm\n  subst reader\n  have pc := access_pc hd\n  have aligned : Aligned start := by intro t h; simp [reset,Barrier.reset] at h\n  obtain \u27e8key,hkey,site\u27e9 := crossed_barrier hp aligned barrier stops initial selected (by omega)\n  refine \u27e8earlier,suffix,key,?_,hkey,site,?_\u27e9\n  \u00b7 simpa only [access_single hs hm,List.append_assoc,List.singleton_append] using he\n  \u00b7 obtain \u27e8c,hc,hce\u27e9 := List.mem_iff_getElem.mp hkey\n    have hcopt : earlier[c]?=some (.barrier (.completion key)) := by simp [hc,hce]\n    intro t\n    obtain \u27e8a,ha,hae\u27e9 := History.completed_arrivals hp reset c key hcopt t\n    exact List.mem_of_getElem? hae"
         }
       }
     }

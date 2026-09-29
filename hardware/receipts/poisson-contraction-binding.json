@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nThis does not check the gather, barriers, weighting, final addition,\nlaunch control, or weak-memory admission. Each proof uses a concrete phase snapshot.",
+  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nThe guard/barrier skeleton is checked syntactically. This does not prove the full\ncell interpretation, gather, weighting, final addition, launch composition, or\ncomplete memory admission. Contraction proofs use concrete phase snapshots.",
   "checked": [
     {
       "directory": "00-n1-q1",
@@ -297,6 +297,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "7d57a86ec4c348ac4e8bb9ba98db195fba176ce16367130eebd3de357afdd166"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -596,6 +622,32 @@
           "instructions": 3,
           "sha256": "7d57a86ec4c348ac4e8bb9ba98db195fba176ce16367130eebd3de357afdd166"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -893,6 +945,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "7d57a86ec4c348ac4e8bb9ba98db195fba176ce16367130eebd3de357afdd166"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -1192,6 +1270,32 @@
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -1489,6 +1593,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -1788,6 +1918,32 @@
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -2085,6 +2241,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "0d44904d55a079c151156af85fb0a4fb41750815144eb9de4e1cad4cc9290bf6"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -2384,6 +2566,32 @@
           "instructions": 3,
           "sha256": "0d44904d55a079c151156af85fb0a4fb41750815144eb9de4e1cad4cc9290bf6"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -2681,6 +2889,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "0d44904d55a079c151156af85fb0a4fb41750815144eb9de4e1cad4cc9290bf6"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -2980,6 +3214,32 @@
           "instructions": 3,
           "sha256": "6215a52730e684c7975c17392a6255a07c76e252a10b57c8a90c6ba02da6a45f"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -3277,6 +3537,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "6215a52730e684c7975c17392a6255a07c76e252a10b57c8a90c6ba02da6a45f"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -3576,6 +3862,32 @@
           "instructions": 3,
           "sha256": "6215a52730e684c7975c17392a6255a07c76e252a10b57c8a90c6ba02da6a45f"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -3873,6 +4185,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "6215a52730e684c7975c17392a6255a07c76e252a10b57c8a90c6ba02da6a45f"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -4172,6 +4510,32 @@
           "instructions": 3,
           "sha256": "7d57a86ec4c348ac4e8bb9ba98db195fba176ce16367130eebd3de357afdd166"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -4469,6 +4833,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -4768,6 +5158,32 @@
           "instructions": 3,
           "sha256": "0d44904d55a079c151156af85fb0a4fb41750815144eb9de4e1cad4cc9290bf6"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -5065,6 +5481,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "6215a52730e684c7975c17392a6255a07c76e252a10b57c8a90c6ba02da6a45f"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -5364,6 +5806,32 @@
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -5661,6 +6129,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -5960,6 +6454,32 @@
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -6257,6 +6777,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -6556,6 +7102,32 @@
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -6853,6 +7425,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "7d57a86ec4c348ac4e8bb9ba98db195fba176ce16367130eebd3de357afdd166"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 4,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -7152,6 +7750,32 @@
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -7449,6 +8073,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "0d44904d55a079c151156af85fb0a4fb41750815144eb9de4e1cad4cc9290bf6"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -7748,6 +8398,32 @@
           "instructions": 3,
           "sha256": "6215a52730e684c7975c17392a6255a07c76e252a10b57c8a90c6ba02da6a45f"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -8045,6 +8721,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "6215a52730e684c7975c17392a6255a07c76e252a10b57c8a90c6ba02da6a45f"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 25,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -8344,6 +9046,32 @@
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     },
     {
@@ -8641,6 +9369,32 @@
           "adjacent_contraction": "dl",
           "instructions": 3,
           "sha256": "0d44904d55a079c151156af85fb0a4fb41750815144eb9de4e1cad4cc9290bf6"
+        }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 16,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
         }
       ]
     },
@@ -8940,6 +9694,32 @@
           "instructions": 3,
           "sha256": "a4be5216834abd35dfbe939ad824793a02a67aa098501175115e4346fcdd65e9"
         }
+      ],
+      "control": [
+        {
+          "entry": "element_probe",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_p",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        },
+        {
+          "entry": "element_x",
+          "participants": 32,
+          "active_lanes": 9,
+          "phase_count": 5,
+          "barrier_resource": 0,
+          "completed_boundaries": 4
+        }
       ]
     }
   ],
@@ -8962,8 +9742,16 @@
   "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
   "source_sha256": {
     "integration/torchlean/PoissonPTX/Arithmetic.lean": "8fd4f79048a2452ec06f11fa6dd491ba1c2ceac1f0f73941aeb55558b9e16e2c",
+    "integration/torchlean/PoissonPTX/BarrierChecks.lean": "b821ce1ae932bbb62dd1bf151c3bf62e17865382805a394467179e9714681780",
+    "integration/torchlean/PoissonPTX/BarrierSources.lean": "b1c114dbc5ca25231c698ee764cb98bb9bc70066e2728a835b618022ef5c55bb",
     "integration/torchlean/PoissonPTX/Bytes.lean": "b1405bdaa8d08aabbe28aaa5880063e71cd5c1f25acfb961cf543172b3b26857",
     "integration/torchlean/PoissonPTX/Checks.lean": "5e26c62780181d10797da2e23a66417b6de25d24137601b32c288b1112f03992",
+    "integration/torchlean/PoissonPTX/Concurrent.lean": "a841cef5288ea511b927b2d36d2c61baf20310a36ab9600a6d0ee61cf367d07e",
+    "integration/torchlean/PoissonPTX/ConcurrentBarrier.lean": "b5d687cb1814b408241e0f695390f7dd34876137c6ce5d602e1b16a0a3c01439",
+    "integration/torchlean/PoissonPTX/ConcurrentExec.lean": "3d7aa623469b48c58035c3b8a73f4903b71767b97151499e50f1a3e0ee374cc5",
+    "integration/torchlean/PoissonPTX/ConcurrentHistory.lean": "df3f2d858f2367369281b7b7af4b921d266d1555ead3c229b851120327fabf0c",
+    "integration/torchlean/PoissonPTX/ConcurrentOrder.lean": "e4d9e9343b10eec28ca9730adf0ccf8795a67af6439b77e08812c3156596a655",
+    "integration/torchlean/PoissonPTX/ConcurrentOrigins.lean": "f72d32a2aa73f658ef8c884f1ea870d317dd5be52efadab33ba5191a5170a874",
     "integration/torchlean/PoissonPTX/Contraction.lean": "997e4308d47ce6e55e58feef0a2b96aedfbdd9a41a0d8f2cdb613a5777dfe5c3",
     "integration/torchlean/PoissonPTX/ContractionChecks.lean": "da51248a9435b6b2dd73d915a50de1e83d1a88c297301422903909ecbd458163",
     "integration/torchlean/PoissonPTX/ContractionFetched.lean": "475c65087beecdfc37d3c2810a48b483a349776f518159a2c8cb6a30251f6c85",
@@ -8991,11 +9779,11 @@
     "integration/torchlean/PoissonPTX/WeakResidual.lean": "0b8438f59d104b68834763b204674f7ae4cc428e192d7dc1bced7127a012de33",
     "integration/torchlean/PoissonContractionsMain.lean": "2764b2da88f98428aae7b9325538e3020eefb4f98895c155e710ab2fc2222cbb",
     "integration/torchlean/PoissonQuadCorrespondence.lean": "e5d177ec11019881d2732da0a605d7dd3c4f98ed23acfc2f84fb2b5f5441a211",
-    "integration/torchlean/check.py": "3dcd07609063aac5abba3ba727cd6ad4bd73deecf833bdce19cb98f00d850e01",
-    "integration/torchlean/lakefile.toml": "e5214b960d3b308c10e8f06bc2b2394ee40124aa6171d6d91a5e68808355d2ea",
+    "integration/torchlean/check.py": "4a60f7e3a96ef5eac0e5e815069f12a00f9a0f468c00752b45c583e43154271a",
+    "integration/torchlean/lakefile.toml": "33a56f8399062ad8094cb9a99d80a37a185d03704e9f6b2a0f25c056e0bab698",
     "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
     "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
-    "hardware/check_poisson_contractions.py": "50fd7859da4a148faad3b7e821060806ad8f9ccc7441a41e2bc05c04c3448e95",
+    "hardware/check_poisson_contractions.py": "f94d1dd238e5abf9163496c9b7a9da905fac8079276d7c60429c06d2fccc43cd",
     "hardware/check_poisson_ptx.py": "6165a8e3962b76285ffa475379ff3d44483ed248e42d5a1497ff4b34d9a99447"
   },
   "source_run_report_sha256": "c0334cbcbb6c4393c3045a73dbaf9ffb303e5103c33ce5b8f16196c3810ad613",

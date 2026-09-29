@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks, verify_stores
+from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control
 from poisson_kernels import Layout, module, PTX
 
 
@@ -44,6 +44,20 @@ class ContractionBinding(unittest.TestCase):
             with self.assertRaises(ValueError): verify_stores(self.ptx, plans, self.layout, self.expected)
         with self.assertRaises(ValueError):
             verify_stores(self.ptx.replace('st.shared.f64 [%addr+0], %value;', ''), stores, self.layout, self.expected)
+
+    def test_barrier_control(self):
+        self.assertEqual(len(verify_control(self.ptx, self.layout)), 3)
+        for old, new in [('.reqntid 32, 1, 1', '.reqntid 16, 1, 1'),
+                         ('bar.sync 0;', 'bar.sync 1;'),
+                         ('bar.sync 0;', '@%live bar.sync 0;'),
+                         ('bar.sync 0;', ''),
+                         ('@!%live bra stage_0_done;', '@!%live bra stage_1_done;'),
+                         ('stage_0_done:\nbar.sync 0;', 'bar.sync 0;\nstage_0_done:'),
+                         ('stage_1_done:', 'ret;\nstage_1_done:')]:
+            with self.subTest(new=new):
+                self.assertIn(old, self.ptx)
+                with self.assertRaises(ValueError):
+                    verify_control(self.ptx.replace(old,new,1), self.layout)
 
     def test_structure(self):
         self.assertEqual(len(verify_blocks(self.ptx, self.expected, self.layout)), 24)

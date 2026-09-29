@@ -1,0 +1,129 @@
+{
+  "id": "0ace9937-aa82-40a6-ae9e-51928752a919",
+  "base": "26fb11813050b6c1c410c1811ed8e1e67723c6ed",
+  "contentTree": "14cb5268b008b107ff44a2d4478e591eb3e6f64c",
+  "reviewer": "Codex",
+  "summary": "Prove fetched binary64 barrier ordering and single-writer byte visibility",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Adds a fetched binary64 candidate machine, actual all-participant barrier histories, reuse/existence witnesses, arbitrary-schedule no-bypass ordering, and necessary single-writer byte-source visibility. The full-cell prologue/body interpretation, writer-before-arrival paths and ownership instantiation remain explicit obligations."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Parent now records the reusable barrier/source fragment without claiming full generated-cell or whole-solver correspondence."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Existing source guard, exact dependency audit and separation of proof validity from semantic fidelity remain the contract. New endpoints are registered and reviewed against pinned PTX bar/st source; complete memory admission is not claimed."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The solver equations, residual certificate and numerical backend are unchanged. This change advances the separate instruction correspondence."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "14cb5268b008b107ff44a2d4478e591eb3e6f64c",
+      "method": "Full pinned integration and source/dependency checks; Python hardware checker regressions; refreshed saved PTX binding checks; pinned PTX semantic review; Stratic validation",
+      "outcome": "pass",
+      "environment": "Lean 4.34.0 with pinned TorchLean/FloatLib dependencies; Python3; existing saved GPU artifacts. No new GPU run or paid model call.",
+      "evidence": "Full integration check passed 2981 exact dependency reports with only standard Lean axioms. Targeted audit checked 81 new endpoints. All 26 hardware tests passed, including moved, omitted, predicated or renumbered barriers and the wrong block size. Lean examples also check missing participants and barrier reuse. Saved bindings checked 720 contraction blocks, 630 store blocks and 90 phase-control skeletons with 360 barrier boundaries across 30 layouts; residual instruction binding rechecked all 30 layouts. Pinned PTX 9.4 bar/st semantics and SHA256 reviewed. Stratic links and distribution guard pass. Initial tree dbc0bb4e0dc5e5469d24d5f6a3f63f2c910a34ab; integration sources stayed unchanged during verification. Later changes were the independently retested checker block-size guard and refreshed receipts. README unchanged. Scope remains the reusable fetched binary64 barrier/source fragment; full-cell body interpretation, store-before-arrival paths and ownership instantiation remain deliberately open. Final manual wording review expands memory-model jargon in the new guide; proof, checker and receipt files are unchanged from their passing runs.",
+      "tests": [],
+      "id": "de7c6f18-0eec-4b7e-bb46-00f9450ff051",
+      "recordedAt": "2026-09-29T07:59:24.723Z"
+    }
+  ],
+  "recordedAt": "2026-09-29T07:59:56.888Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "docs/foundations/poisson-cell-contractions.md",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/BarrierChecks.lean",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/BarrierSources.lean",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Concurrent.lean",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentBarrier.lean",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentExec.lean",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentHistory.lean",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentOrder.lean",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentOrigins.lean",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed support for the barrier-control and necessary byte-source fragment: definitions, executable witnesses, guard/barrier binding tests, audit configuration, refreshed receipts or explanatory guides. Principal contracts are linked from poisson-correspondence; complete cell instantiation remains deliberately partial."
+    }
+  ]
+}

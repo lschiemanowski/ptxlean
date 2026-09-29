@@ -131,7 +131,45 @@ A plane contains one word per active lane. Distinct lanes and distinct planes
 have disjoint byte ranges. Combining these actual store effects in any order
 recovers every producer's word and preserves all bytes outside the plane.
 This constructs the concrete snapshot for later matrix loads; it does not yet
-prove that a concurrent load observes that snapshot. The remaining barrier
-obligation is to derive arrival, completion and read-source restrictions from
-the fetched control flow, including inactive lanes and repeated barrier use.
+prove that a concurrent load observes that snapshot. The remaining full-cell barrier
+obligation is to instantiate the reusable arrival, completion and read-source
+results with every generated phase, including inactive lanes and repeated use.
 No assumed phase answer or assumed snapshot-visibility result closes that gap.
+
+Barrier reasoning uses fetched binary64 candidate executions: a load may choose
+an arbitrary eight-byte word before memory-source constraints are checked.
+Ordinary arithmetic and stores retain their instruction contracts. A waiting
+thread cannot execute another instruction. Barrier zero records its instruction
+site and reuse number, and releases only after every participant arrives at that
+same site. Completion must have actual arrivals in the recorded history.
+
+For a shared location with one program writer, a completed barrier between that
+write and a later read excludes the initial bytes as sources. Matching byte
+addresses and the absence of any other writer then force all eight read bytes
+to come from that store. This is a necessary memory constraint for the reviewed
+whole-block barrier fragment, not a full PTX admission procedure. Its connection
+to each generated cell phase must identify the actual store, intervening arrivals
+and completion, and subsequent load; a caller-supplied phase-result equality
+cannot replace those obligations.
+
+The concurrent fragment is restricted to resource zero and whole-block barriers
+without early exits. Its combined padding guard uses a fixed thread-index
+comparison; arbitrary predicate changes and the complete kernel prologue remain
+outside that abstraction. Candidate loads obtain values from the source relation,
+not from a shared sequentially consistent memory. Execution witnesses and
+negative examples check that this separation admits the expected value while
+rejecting old initial bytes only when the barrier constraint applies.
+
+The emitted cell code is checked for five matching guard/label pairs, four
+unpredicated barriers outside the skipped bodies, and no internal control
+transfer or change to the activity predicate. This text check does not prove
+that all phase bodies refine the concurrent machine. The full-cell proof must
+still derive the observed ordering paths and unique-writer coverage from its
+complete execution and join those events to the contraction/store results.
+
+If no branch can jump past a barrier, every access at a later instruction position
+has an actual completion and arrivals from all threads in its earlier execution
+history. This ordering theorem holds for arbitrary schedules and candidate load
+values. The condition concerns branch targets, not memory values or a presumed
+phase result. Establishing each writer's preceding store and complete address
+ownership for the full generated cell remains part of the phase instantiation.

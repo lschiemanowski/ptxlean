@@ -156,18 +156,21 @@ actual contraction/store execution. The later-load lemma explains how a
 row-major matrix operand reads its producer's word from this constructed snapshot.
 It does not assert that an arbitrary concurrent load observes the snapshot.
 
-The remaining synchronization proof must establish the executed stores before
-arrival, arrival of all 32 lanes (including inactive padding lanes), completion
-of each reuse of barrier zero, and the resulting restrictions on load sources.
+The reusable fetched barrier model now proves arrival provenance, waiting, reuse
+and the single-writer byte-source visibility rule. Its full-cell instantiation
+still must establish the executed stores before arrival, the complete access
+coverage, and the subsequent reads for every phase. See the
+[barrier visibility guide](poisson-barrier-visibility.md).
 The plain `st.shared.f64` instruction is weak by default; publication algebra
 alone must not silently supply synchronization. The source review used the pinned
 PTX 9.4 sections on `st` and `bar` (same manual hash as above): `bar.sync 0` uses
 the aligned, whole-thread-block form, and its completion orders prior accesses
-against later accesses of its participants. Those facts guide the next layer;
-this slice does not prove its control-flow or admission rules.
+against later accesses of its participants. Those facts underlie the explicit necessary source constraint;
+complete PTX admission and full-cell control/data composition remain open.
 
 The binding checker now compares all seven shared-store blocks as well as the
 eight contraction blocks in each of the three element entries. It checks the
 exact proved instruction lists on all 30 saved layouts and requires the four
-unweighted contraction/store pairs to be adjacent. This text check does not
-validate the surrounding branches, barrier placement, or complete launch.
+unweighted contraction/store pairs to be adjacent. It now also checks the five
+guards and four barrier boundaries syntactically. This does not prove their
+composition with the complete interpreted phase bodies or the complete launch.

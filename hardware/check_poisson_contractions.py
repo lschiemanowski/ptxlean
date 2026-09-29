@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Bind local cell contraction and shared-store blocks to their proved Lean programs.
 
-This does not check the gather, barriers, weighting, final addition,
-launch control, or weak-memory admission. Each proof uses a concrete phase snapshot.
+The guard/barrier skeleton is checked syntactically. This does not prove the full
+cell interpretation, gather, weighting, final addition, launch composition, or
+complete memory admission. Contraction proofs use concrete phase snapshots.
 """
 import argparse
 import hashlib
@@ -87,6 +88,42 @@ def verify_stores(ptx, rendered, layout, contractions):
     return checked
 
 
+def verify_control(ptx, layout):
+    """Check the generated five-phase skeleton, separately from body semantics."""
+    width = parameters(layout)['width']
+    checked = []
+    for entry in ('element_probe', 'element_p', 'element_x'):
+        bodies = re.findall(r'\.visible \.entry '+entry+r'\(\.param \.u64 arena\)\s*([^}]+)}', ptx)
+        if len(bodies) != 1:
+            raise ValueError('entry missing or duplicated')
+        body = [line.strip() for line in bodies[0].splitlines() if line.strip()]
+        if body[0] != '.reqntid 32, 1, 1':
+            raise ValueError('barrier fragment requires the generated 32-thread block')
+        guards = [i for i, line in enumerate(body) if line.startswith('@')]
+        labels = [i for i, line in enumerate(body) if line.endswith(':')]
+        barriers = [i for i, line in enumerate(body) if line.startswith(('bar.', 'barrier.'))]
+        if len(guards) != 5 or len(labels) != 5 or len(barriers) != 4:
+            raise ValueError('unexpected phase control count')
+        prelude = [f'setp.lt.u32 %live, %lane, {width*width};',
+                   f'div.u32 %i, %lane, {width};', f'rem.u32 %j, %lane, {width};']
+        if body[guards[0]-3:guards[0]] != prelude:
+            raise ValueError('unexpected live-lane predicate or matrix coordinates')
+        for phase, (guard, label) in enumerate(zip(guards, labels, strict=True)):
+            if body[guard] != f'@!%live bra stage_{phase}_done;' or body[label] != f'stage_{phase}_done:' or guard >= label:
+                raise ValueError('guard must skip its body to its own phase boundary')
+            for line in body[guard+1:label]:
+                if line.startswith(('bra', 'bar.', 'barrier.', 'ret', 'exit', 'call', '@')) or '%live' in line:
+                    raise ValueError('unsupported body control or predicate modification')
+            if phase < 4:
+                if barriers[phase] != label+1 or body[label+1] != 'bar.sync 0;' or guards[phase+1] != label+2:
+                    raise ValueError('all lanes must meet the unpredicated barrier before the next phase')
+            elif body[label+1:] != ['ret;']:
+                raise ValueError('unexpected final phase exit')
+        checked.append(dict(entry=entry, participants=32, active_lanes=width*width,
+                            phase_count=5, barrier_resource=0, completed_boundaries=4))
+    return checked
+
+
 def check(run, output):
     if output.exists():
         raise ValueError('output already exists')
@@ -127,7 +164,8 @@ def check(run, output):
         input=json.dumps([parameters(l) for l in layouts])+'\n', text=True))
     checked = [dict(directory=c['directory'], blocks=verify_blocks(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['contractions'], layout),
-        stores=verify_stores(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['stores'], layout, code['contractions']))
+        stores=verify_stores(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['stores'], layout, code['contractions']),
+        control=verify_control(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), layout))
         for c, layout, code in zip(report['cases'], layouts, rendered, strict=True)]
     checker.dependencies()
     if hashes != {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}:
