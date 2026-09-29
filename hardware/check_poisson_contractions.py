@@ -177,7 +177,8 @@ def check(run, output):
     if not version.startswith(f'Lean (version {pin},'):
         raise ValueError('toolchain differs from pin')
     subprocess.run(['lake', '--no-cache', 'build', 'poissonContractions', 'PoissonPTX.ContractionFetched',
-                    'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
+                    'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -186,9 +187,13 @@ def check(run, output):
               ('store_address', 'published_store', 'published_contraction', 'order_independent', 'contraction_value')]
     names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.'+n for n in
               ('q1', 'q2', 'q3', 'q4', 'checked', 'coverage', 'unique', 'publication')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.Replay.'+n for n in
+              ('run_view', 'contraction', 'stored_contraction', 'published_contraction')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.'+n for n in
+              ('shared_stores', 'global_readonly', 'input_readonly', 'initial_value')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\n'+
+        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)

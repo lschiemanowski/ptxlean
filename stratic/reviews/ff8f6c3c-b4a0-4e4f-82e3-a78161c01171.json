@@ -1,0 +1,109 @@
+{
+  "id": "ff8f6c3c-b4a0-4e4f-82e3-a78161c01171",
+  "base": "0219fdf505619d01bdead148fcad604c5471f938",
+  "contentTree": "3cf5c0af76c6232e1d76ed4b23908ed47bdcecc6",
+  "reviewer": "Codex",
+  "summary": "Connect concurrent Poisson contractions and stores to justified byte views",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Adds arbitrary-interleaving projection, actual contraction-store numerical endpoint, byte-source read-only lemmas and concrete Q1--Q4 coefficient/input-plane protection. Explicitly retains actual load coordinate/interval derivation, intermediate view and weighting composition, gather/final output and full-cell/source-admission obligations."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Records the reusable numerical bridge and concrete read-only storage results while preserving the unfinished complete cell contract."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive instruction, FP or memory-source semantics changed; only derived lemmas and proof checks are added. Semantic fidelity and runtime/hardware correspondence remain separate from Lean validity."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No change to discrete equations, GPU implementation, PCG iteration, or residual acceptance; this slice only extends the separate correspondence proof."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "3cf5c0af76c6232e1d76ed4b23908ed47bdcecc6",
+      "method": "integration/torchlean/check.sh; targeted 56-endpoint dependency audit; python3 -m unittest discover -s hardware -p test_*.py; saved Poisson contraction and residual binding checks; distribution guard; Stratic validation; git diff --check; manual semantic review recorded in /tmp/poisson-replay-review-notes.md",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0; 16 pinned integration dependencies; 323 guarded Lean source files. Existing saved GPU run .hardware-runs/poisson-certified; no new hardware run or external model calls.",
+      "evidence": "Final before/after content tree identical. Full integration: 3138 exact dependency reports, only propext/Classical.choice/Quot.sound allowed. 56 new endpoints checked; 27 Python tests passed. Saved binding: 30 layouts, 720 contractions, 630 store blocks, 90 middle slices / 270 phase bodies, 30 audited endpoints. Both receipt source hashes verified against final files. Stratic valid, distribution guard and diff check passed. README unchanged. Concrete load-coordinate/interval derivation and intermediate numerical phase composition remain explicitly incomplete.",
+      "tests": [],
+      "id": "0150770d-1d71-47b3-b11c-7c36a8f1d7af",
+      "recordedAt": "2026-09-29T11:05:54.735Z"
+    }
+  ],
+  "recordedAt": "2026-09-29T11:06:46.767Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Explains exact interleaving projection, justified byte views, decoded-versus-bit equality, protected inputs, nonzero fixture and the still-undischarged whole-run address/interval/intermediate/weighting obligations."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Builds and audits the reusable replay/store and concrete read-only input endpoints in the saved-artifact binding check. Rendering and PTX matching conditions are unchanged."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Successful 30-layout binding with 30 audited endpoints, unchanged 720 contractions/630 stores/270 complete middle bodies; refreshed hashes include five added proof files."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refreshes saved residual binding source digests because the receipt hashes all Poisson proof modules; no new GPU run or residual semantics change."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellMiddleInputs.lean",
+      "reason": "Kernel-checks shared-only stores for four exact layouts. Actual store origins and coverage exclude the plane-zero sentinel guard and byte overlap. Does not assume or establish the still-missing per-load matrix coordinate mapping."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentComputedStore.lean",
+      "reason": "Projects the actual contraction plus two address instructions; the accumulator is preserved and the actual store event is inspected. Publication transport is conditional on separately proved producer computation and existing source constraints."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentReadOnly.lean",
+      "reason": "No overlapping same-space store can supply any read byte. Compatibility forces initialization byte by byte and recovers read64; reusable conversion supplies replay Reads only when ownership is proved."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentReplay.lean",
+      "reason": "View changes only byte memories; operand, validity and register semantics are preserved. Actual fetched steps project to identical data steps or stutter; aligned barriers cannot skip an interval instruction. Reads is an explicit pending per-load byte obligation, not a claimed full-cell theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentReplayChecks.lean",
+      "reason": "Nonzero two-thread alternating execution, source-compatible inputs differing from candidate local memory, actual store record and use of generic stored_contraction. Rejects a wrong input read. This is a proof-interface fixture, not full-cell existence."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Adds explicit dependency reports for all 56 new public definition/theorem endpoints."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Registers exact namespace counts, targets and fresh input-certificate/nonzero-fixture checks without weakening source or axiom guards."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers five added proof modules; dependency and toolchain pins are unchanged."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed descriptions, summary and passage links distinguish completed modular replay/input results from incomplete concrete numerical composition."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed descriptions, summary and passage links distinguish completed modular replay/input results from incomplete concrete numerical composition."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed descriptions, summary and passage links distinguish completed modular replay/input results from incomplete concrete numerical composition."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed descriptions, summary and passage links distinguish completed modular replay/input results from incomplete concrete numerical composition."
+    }
+  ]
+}

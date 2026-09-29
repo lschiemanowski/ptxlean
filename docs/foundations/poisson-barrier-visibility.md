@@ -224,9 +224,9 @@ participate, and all threads finish after three releases. This witnesses the
 candidate instruction machine. A source-admitted execution witness for the
 complete slice is still a separate obligation.
 
-The full generated cell kernel is **not yet proved**. The next connection is
-between the candidate loads and stored words in these middle phases and the
-existing ordered TorchLean contraction proofs. The gathered input, complete
+The full generated cell kernel is **not yet proved**. The reusable connection between candidate loads, actual stored words and the
+ordered TorchLean contraction proof is described below. Its complete numerical
+instantiation for the concrete middle phases remains unfinished. The gathered input, complete
 prologue, final addition/output and whole-cell composition also remain open.
 The publication theorem does not identify its stored word with a mathematical
 or TorchLean coordinate by itself. Complete PTX admission, hardware progress
@@ -241,3 +241,72 @@ python3 -m unittest discover -s hardware -p 'test_*.py'
 
 The saved-artifact binding check is described in
 [the cell contraction guide](poisson-cell-contractions.md).
+
+## From interleaved instructions to a computed value
+
+Barrier visibility answers “which store supplied these bytes?” It does not yet
+answer “what did that store compute?” The replay proof joins these questions.
+
+Consider one thread between the start of a contraction and its final shared
+store. Other threads can execute in between any two of its instructions.
+`ConcurrentReplay.run_view` projects those actual steps onto the same scalar
+instructions used by the local contraction proof. It retains the thread's
+registers, instruction position and allocation bounds. For interpreting loads,
+it uses a **byte view**: a function giving the input byte at each address.
+The view is not taken from the candidate machine's possibly stale local memory.
+Every recorded read in the interval must first be proved equal to the eight
+bytes in this view. No numerical answer is assumed.
+
+Three facts make this projection sound:
+
+1. Each fetched instruction in the interval is the same store-free data
+   instruction as in the scalar program. Stores and branches cannot be silently
+   dropped.
+2. Other threads' ordinary steps leave this thread's registers unchanged.
+   A barrier cannot advance it while its next instruction is an arithmetic or
+   memory instruction: a valid release requires all participants at the same
+   barrier.
+3. Arithmetic uses the actual permitted rounded result. Replay does not
+   reassociate sums or restrict NaN payloads beyond the original contracts.
+
+`ConcurrentReplay.contraction` then obtains the pinned TorchLean matrix-product
+coordinate from the actual concurrent run. `ConcurrentComputedStore.stored_contraction`
+continues through the two address instructions and inspects the real store
+event. Its decoded stored word equals that coordinate. The publication theorem
+can transport this result to a later thread's load once it identifies the
+producer. Stored bits and decoded floating-point equality remain distinct.
+
+### Justifying the first inputs
+
+For the concrete certified Q1–Q4 middle programs, `CellMiddleInputs` proves that
+all executed stores are shared stores in planes 1–6. In particular:
+
+- global coefficients have no writer in the slice;
+- no store overlaps even one byte of input plane zero;
+- under byte-source compatibility, reads within those regions must recover
+  their initial bytes. The proof does not require whole-word atomicity or a
+  sequential schedule.
+
+Here “initial” means the storage at the start of this middle slice. The omitted
+gather still has to establish how those bytes represent the input tensor.
+
+### What this does and does not finish
+
+The reusable replay and actual-store theorems are completed. They require a
+proved load-byte view and actual interval endpoints. The concrete read-only
+input result is also completed, for reads whose addresses lie in the input
+region. It does **not** yet establish that every executed contraction load
+uses the expected matrix coordinate. That remaining address proof must derive
+the row, column, index multiplication and byte offset from the executed code.
+The whole-run proof must also locate contraction boundaries, build intermediate
+views from actual producer stores and include the weight multiplications.
+These are remaining proof obligations, not an assumed phase-correctness premise.
+
+`ConcurrentReplayChecks` provides a nonzero example: two threads alternate
+instructions while each computes a one-term contraction of 2 and 3. Compatible
+load sources justify the byte view; the generic theorem identifies the actual
+store of 6 with TorchLean's result. The fixture deliberately gives the candidate
+lanes different local bytes, so correctness cannot come from accidentally
+reading those local snapshots. A negative example rejects a fabricated read
+from the read-only input. This is a test of the reusable proof interface, not
+a replacement for Q1–Q4 numerical composition or a hardware experiment.

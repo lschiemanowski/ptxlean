@@ -217,3 +217,30 @@ PTX admission and hardware progress.
 Within the middle slice, the later reads consume planes 1 through 4. Planes 5
 and 6 are produced here but consumed by the omitted final phase. Publication
 to those final consumers remains part of complete cell composition.
+
+The numerical connection projects a thread's actual interleaved execution of a
+straight-line contraction onto the existing scalar instruction proof. Its memory
+view contains byte values justified for that phase; it must not replace arbitrary
+loads with a desired answer. Each load in the projected interval must agree with
+that view, while instruction positions, registers, allocation bounds and rounded
+arithmetic come from the concurrent execution. Other threads may run between
+these instructions. This bridge supplies the ordered TorchLean contraction once
+the phase's byte-source obligations have been discharged.
+
+For the middle slice, global coefficient storage and shared plane zero have no
+writers. Compatible byte sources therefore force their reads to recover the
+initial bytes, independently of scheduling. This does not prove how the omitted
+gather established plane zero. Reads of intermediate planes instead require the
+actual producer and barrier-publication results; initial bytes cannot substitute
+for those computed values.
+
+The replayed contraction also determines the word emitted by the real shared
+store. The two preceding address instructions preserve the accumulator. A
+subsequent read recovers the decoded computed value when the separate publication
+proof identifies that store as its source. This is a reusable composition result,
+not yet a theorem for every complete middle-phase execution. The concrete
+remaining work is to derive each load's matrix address and each contraction's
+entry/exit state from the whole run, construct the intermediate byte views from
+actual producers, and include the weight multiplications. A nonzero two-thread
+example checks the replay and actual-store connection with compatible sources;
+a wrong read from read-only bytes is rejected.

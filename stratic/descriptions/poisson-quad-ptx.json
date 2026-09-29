@@ -12,7 +12,8 @@
     "Certify accepted solutions with an exact residual checker; connect the residual kernel output to TorchLean under byte-source constraints while retaining the other implementation and hardware boundaries.",
     "Local cell-contraction instruction proofs connect byte-backed inputs to TorchLean matrix products; the complete cell launch and phase availability remain unproved.",
     "Connect actual shared-store blocks to order-independent plane bytes while retaining concurrent barrier visibility and full cell composition as unfinished obligations.",
-    "Derive shared-store addresses and barrier publication for the three concrete middle phases in certified Q1--Q4 layouts; tensor composition, gather, final output and the full cell remain unfinished."
+    "Derive shared-store addresses and barrier publication for the three concrete middle phases in certified Q1--Q4 layouts; tensor composition, gather, final output and the full cell remain unfinished.",
+    "Connect actual interleaved contraction/store execution to TorchLean using justified byte views; prove middle-slice input storage read-only while retaining full numerical phase composition as unfinished."
   ],
   "realization": "implemented",
   "links": [

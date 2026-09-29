@@ -100,3 +100,10 @@ The complete bodies, including the weight loads and multiplication, are compared
 with emitted PTX. Numerical composition with TorchLean, gathered input, the
 prologue and final output remain unfinished; the slice's proved candidate
 execution witness is distinct from source-admitted or hardware execution.
+
+A reusable proof now connects an actual interleaved contraction and its shared
+store to the ordered TorchLean result when its recorded loads agree with a
+justified byte view. The concrete middle slice preserves global coefficients
+and the gathered input plane, so compatible reads from those regions recover
+initial bytes. Deriving every load's matrix address, composing intermediate
+views and weights, and obtaining complete cell correspondence remain open.

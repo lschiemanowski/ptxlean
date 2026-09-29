@@ -380,6 +380,13 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks'] = 20
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness'] = 10
 TARGETS.update(['PoissonPTX.ConcurrentAddress', 'PoissonPTX.ConcurrentPadding', 'PoissonPTX.CellMiddle', 'PoissonPTX.CellMiddleChecks', 'PoissonPTX.CellMiddleWitness'])
 
+# Concurrent numerical replay and concrete read-only input storage.
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Replay'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Replay', 0) + 17
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Visibility'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Visibility', 0) + 4
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs', 0) + 7
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks', 0) + 28
+TARGETS.update(['PoissonPTX.ConcurrentReplay', 'PoissonPTX.ConcurrentReadOnly', 'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs', 'PoissonPTX.ConcurrentReplayChecks'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -449,7 +456,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

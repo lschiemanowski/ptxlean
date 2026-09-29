@@ -1,3 +1,8 @@
+import PoissonPTX.ConcurrentReplay
+import PoissonPTX.ConcurrentReadOnly
+import PoissonPTX.ConcurrentComputedStore
+import PoissonPTX.CellMiddleInputs
+import PoissonPTX.ConcurrentReplayChecks
 import PoissonPTX.ConcurrentAddress
 import PoissonPTX.ConcurrentPadding
 import PoissonPTX.CellMiddle
@@ -3467,3 +3472,60 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.executed
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.candidate_run
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.finished
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.noStore
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.operand_view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.view_assign
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.view_memory
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.view_start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.view_bytes
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.ordinary_view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.data_view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Slice
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.step_view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.run_view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.contraction
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ReadOnly
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.read_only_initial
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.read_only_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.readonly_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.storePrefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.stored_contraction
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.published_contraction
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.SharedStores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.shared_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.store_space
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.global_readonly
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.nonzero_plane
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.input_readonly
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.initial_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.two
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.three
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.six
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.memory
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.a
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.b
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.ops
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.kernel
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.seed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.cfg
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.schedule
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.choose
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.candidate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.executed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.actual_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.loadEvents
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.events_exact
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.input_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.stored
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.actual_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.access
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.store_record
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.no_store_ops
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.stored_tensor
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Replay.Checks.wrong_read_rejected

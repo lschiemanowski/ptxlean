@@ -18,10 +18,11 @@
     "Derive common barrier arrivals from fetched binary64 candidate execution and exclude stale shared-byte sources across an executed whole-block barrier; distinguish the reusable fragment from its remaining full-cell instantiation.",
     "Derive a preceding common barrier completion for every later access when branches cannot jump past the barrier, for arbitrary candidate executions.",
     "Derive producer-store ordering and non-repetition from fetched forward control, then combine event positions and shared-plane layout to justify ownership; instantiate these structural conditions separately for the complete cell.",
-    "Derive control, shared-store addresses and byte publication for the concrete three middle cell phases in the certified Q1--Q4 layouts; retain tensor phase composition, gather, final output and source-admitted existence as separate obligations."
+    "Derive control, shared-store addresses and byte publication for the concrete three middle cell phases in the certified Q1--Q4 layouts; retain tensor phase composition, gather, final output and source-admitted existence as separate obligations.",
+    "Project actual interleaved contraction instructions onto their scalar numerical proof using justified byte views; derive read-only input values from sources, retaining the intermediate-plane and full-cell composition obligations."
   ],
   "realization": "partial",
-  "remaining": "The concrete three middle phases have derived control, shared-store address coverage and barrier publication for the four certified Q1--Q4 arena layouts. Remaining: connect candidate load values and actual stores to the ordered tensor calculations; prove gathered input, full prologue and final output; establish source-admitted slice existence and complete cell composition. Other arena layouts need structural certificates. Complete PTX admission, assembly, reductions, PCG kernels and host launches remain unproved.",
+  "remaining": "The concrete three middle phases have derived control, shared-store coverage, barrier publication and read-only global/input-plane storage for certified Q1--Q4 layouts. A reusable concurrent replay theorem connects justified byte views to ordered TorchLean contraction results and actual shared stores. Full numerical instantiation still must derive each load address and contraction interval from whole runs, compose intermediate producer snapshots and weight multiplications. Gather, prologue, final output, source-admitted full-slice existence and complete cell composition remain open. Other layouts need structural certificates. Complete PTX admission, assembly, reductions, PCG kernels and host launches remain unproved.",
   "links": [
     {
       "kind": "implementation",
@@ -596,6 +597,54 @@
         "path": "integration/torchlean/PoissonPTX/CellMiddleWitness.lean",
         "passage": {
           "quote": "theorem finished : result.state.barrier.generation=3 \u2227\n    \u2200 t, (result.state.lanes t).pc=(code 2 0 64 128).length"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This bridge supplies the ordered TorchLean contraction once\nthe phase's byte-source obligations have been discharged."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentReplay.lean",
+        "passage": {
+          "quote": "theorem contraction (run : Runs cfg program start events final) (aligned : Aligned start)\n    (forward : Forward program) (pre suffix : List Op)\n    (slice : Slice program (pre++Contraction.program width acc a b++suffix)\n      pre.length (pre.length+(Contraction.program width acc a b).length))\n    (pc : (start.lanes thread).pc=pre.length)\n    (done : (final.lanes thread).pc=pre.length+(Contraction.program width acc a b).length)\n    (reads : Reads memory thread pre.length (pre.length+(Contraction.program width acc a b).length) events)\n    (allowed : Contraction.Accumulator acc)\n    (valid : \u2200 k<width, Contraction.Valid (view memory (start.lanes thread)) width k a \u2227\n      Contraction.Valid (view memory (start.lanes thread)) width k b) :\n    decode ((final.lanes thread).regs acc)=\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (view memory (start.lanes thread)) width a)\n        (Contraction.rightTensor (view memory (start.lanes thread)) width b)) 0 0"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For the middle slice, global coefficient storage and shared plane zero have no\nwriters. Compatible byte sources therefore force their reads to recover the\ninitial bytes, independently of scheduling."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellMiddleInputs.lean",
+        "passage": {
+          "quote": "theorem initial_value {start : State 32} {events : List (Event 32)} {index : Nat}\n    (width : Nat) (lo : 2\u2264width) (hi : width\u22645)\n    (run : Runs cfg (program width) start events final)\n    (reset : start.barrier=Barrier.reset generation) (pcs : \u2200 t, (start.lanes t).pc=0)\n    (bases : \u2200 t, ((start.lanes t).regs 3).toNat=base)\n    (lanes : \u2200 t, ((start.lanes t).regs 14).toNat=t.val)\n    (fits : base+7*width*width*8\u22642^64)\n    (observed : events[index]?=some (.data reader access)) (read : access.data.store=false)\n    (input : access.space=.global \u2228 (base\u2264access.data.address \u2227 access.data.address+8\u2264base+width*width*8))\n    (compatible : Visibility.Compatible initial events source) :\n    access.data.value=read64 (initial access.space) access.data.address"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The replayed contraction also determines the word emitted by the real shared\nstore. The two preceding address instructions preserve the accumulator."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentComputedStore.lean",
+        "passage": {
+          "quote": "theorem stored_contraction\n    (run : Runs cfg program start events before) (aligned : Aligned start)\n    (forward : Forward program) (pre suffix : List Op)\n    (slice : Slice program (pre++(Contraction.program width acc a b++storePrefix)++suffix)\n      pre.length (pre.length+(Contraction.program width acc a b++storePrefix).length))\n    (pc : (start.lanes thread).pc=pre.length)\n    (done : (before.lanes thread).pc=pre.length+(Contraction.program width acc a b++storePrefix).length)\n    (reads : Reads memory thread pre.length\n      (pre.length+(Contraction.program width acc a b++storePrefix).length) events)\n    (allowed : Contraction.Accumulator acc)\n    (valid : \u2200 k<width, Contraction.Valid (view memory (start.lanes thread)) width k a \u2227\n      Contraction.Valid (view memory (start.lanes thread)) width k b)\n    {address : Operand}\n    (step : Step cfg program selected before out)\n    (store : program[(before.lanes thread).pc]?=some (.data (.store64 .shared address (.reg acc))))\n    (observed : Event.data thread access\u2208out.events) :\n    access.data.store=true \u2227 access.space=.shared \u2227\n    decode access.data.value=\n      Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (view memory (start.lanes thread)) width a)\n        (Contraction.rightTensor (view memory (start.lanes thread)) width b)) 0 0"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A nonzero two-thread\nexample checks the replay and actual-store connection with compatible sources;\na wrong read from read-only bytes is rejected."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentReplayChecks.lean",
+        "passage": {
+          "quote": "theorem stored_tensor : decode access.data.value=\n    Spec.get2 (Spec.matMulSpec (Contraction.leftTensor (view memory (start.lanes 0)) 1 a)\n      (Contraction.rightTensor (view memory (start.lanes 0)) 1 b)) 0 0"
         }
       }
     }
