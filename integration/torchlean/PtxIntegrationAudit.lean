@@ -1,3 +1,6 @@
+import PoissonPTX.ConcurrentProducer
+import PoissonPTX.ConcurrentOwnership
+import PoissonPTX.ProducerChecks
 import PoissonPTX.ConcurrentOrder
 import PoissonPTX.Concurrent
 import PoissonPTX.ConcurrentHistory
@@ -3349,3 +3352,39 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_crosses_barrier
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.crossed_barrier
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.access_after_barrier
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.StopsFor
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_crosses_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.crossed_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.run_event_prefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_arrival_origin
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.store_before_arrival
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.access_after_barrier_index
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.producer_across
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Forward
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_pc_mono
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.runs_pc_mono
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.run_access_bound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_access_post
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AccessOrder
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_access_order
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.run_access_order
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.access_site_unique
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.PlaneStores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.plane_sole_writer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.read_from_plane_producer
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.forward
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.stops_writer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.stops_barrier
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.padding_cannot_supply_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.bypass_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.every_schedule_order
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.site
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.sites_injective
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.plane_coverage
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks.derived_read
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.access_pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.access_single

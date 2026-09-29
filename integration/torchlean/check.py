@@ -367,6 +367,11 @@ TARGETS.update(['PoissonPTX.SharedStore', 'PoissonPTX.SharedPlane', 'PoissonPTX.
 COUNTS.update({'PtxTorchLean.Poisson.PTX.Concurrent': 37, 'PtxTorchLean.Poisson.PTX.Concurrent.History': 10, 'PtxTorchLean.Poisson.PTX.Concurrent.Visibility': 8, 'PtxTorchLean.Poisson.PTX.Concurrent.Checks': 26})
 TARGETS.update(['PoissonPTX.Concurrent', 'PoissonPTX.ConcurrentHistory', 'PoissonPTX.ConcurrentBarrier', 'PoissonPTX.ConcurrentExec', 'PoissonPTX.ConcurrentOrigins', 'PoissonPTX.ConcurrentOrder', 'PoissonPTX.BarrierSources', 'PoissonPTX.BarrierChecks'])
 
+# Derived producer ordering, non-repetition and shared-plane ownership.
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent', 0) + 22
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.ProducerChecks', 0) + 10
+TARGETS.update(['PoissonPTX.ConcurrentProducer', 'PoissonPTX.ConcurrentOwnership', 'PoissonPTX.ProducerChecks'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -435,6 +440,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ContractionChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
+        subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):
             wrapper = subprocess.run(["lake", "--no-cache", "env", "lean", wrapper_file],

@@ -16,10 +16,11 @@
     "Prove the eight local cell contractions from fetched indexing, byte loads and separate rounded multiply/add operations; connect their byte-backed views to TorchLean while retaining the separate barrier-snapshot obligation.",
     "Derive shared-plane bytes from actual store instructions and contraction results, with disjoint ownership, arbitrary publication order and execution witnesses; retain barrier visibility as a separate obligation.",
     "Derive common barrier arrivals from fetched binary64 candidate execution and exclude stale shared-byte sources across an executed whole-block barrier; distinguish the reusable fragment from its remaining full-cell instantiation.",
-    "Derive a preceding common barrier completion for every later access when branches cannot jump past the barrier, for arbitrary candidate executions."
+    "Derive a preceding common barrier completion for every later access when branches cannot jump past the barrier, for arbitrary candidate executions.",
+    "Derive producer-store ordering and non-repetition from fetched forward control, then combine event positions and shared-plane layout to justify ownership; instantiate these structural conditions separately for the complete cell."
   ],
   "realization": "partial",
-  "remaining": "Full-cell instantiation of the fetched binary64 barrier/source model remains: prologue and complete phase bodies, actual ordered access paths, unique-writer coverage and joining traces to contraction/store proofs. Complete PTX admission, gather/weighting/final output, assembly, reductions, PCG kernels and host launches remain unproved. The reusable barrier fragment and its witnesses use necessary source constraints, not full hardware admission or progress.",
+  "remaining": "Full-cell instantiation of the fetched binary64 barrier/source model remains: prologue and complete phase bodies, branch and plane-store coverage conditions and joining traces to contraction/store proofs. Generic producer-store/arrival/completion/read ordering, forward-control non-repetition and ownership from plane geometry are proved. Complete PTX admission, gather/weighting/final output, assembly, reductions, PCG kernels and host launches remain unproved. Execution witnesses use necessary source constraints, not full hardware admission or progress.",
   "links": [
     {
       "kind": "implementation",
@@ -474,6 +475,54 @@
         "path": "integration/torchlean/PoissonPTX/ConcurrentOrder.lean",
         "passage": {
           "quote": "theorem access_after_barrier {start : State n} (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : \u2200 t, (start.lanes t).pc\u2264boundary)\n    (member : Event.data reader access\u2208events) (later : boundary<access.data.pc) :\n    \u2203 earlier suffix key, events=earlier++(.data reader access::suffix) \u2227\n      Event.barrier (.completion key)\u2208earlier \u2227 key.site=boundary \u2227\n      \u2200 t : Fin n, Event.barrier (.arrival key t)\u2208earlier := by\n  obtain \u27e8before,earlier,selected,out,suffix,hp,hs,hm,ht,he\u27e9 := run_access_prefix run member\n  obtain \u27e8eq,op,next,fetch,hd\u27e9 := step_access_origin hs hm\n  subst reader\n  have pc := access_pc hd\n  have aligned : Aligned start := by intro t h; simp [reset,Barrier.reset] at h\n  obtain \u27e8key,hkey,site\u27e9 := crossed_barrier hp aligned barrier stops initial selected (by omega)\n  refine \u27e8earlier,suffix,key,?_,hkey,site,?_\u27e9\n  \u00b7 simpa only [access_single hs hm,List.append_assoc,List.singleton_append] using he\n  \u00b7 obtain \u27e8c,hc,hce\u27e9 := List.mem_iff_getElem.mp hkey\n    have hcopt : earlier[c]?=some (.barrier (.completion key)) := by simp [hc,hce]\n    intro t\n    obtain \u27e8a,ha,hae\u27e9 := History.completed_arrivals hp reset c key hcopt t\n    exact List.mem_of_getElem? hae"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Producer ordering also follows from fetched execution. For an active writer,\na guard before its required store either executes the body or lands no later\nthan that store. Crossing the store instruction therefore records the actual\nwrite before the writer reaches the barrier."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentProducer.lean",
+        "passage": {
+          "quote": "theorem store_before_arrival {start : State n} {key : Barrier.Key} {events : List (Event n)} {a : Nat} (run : Runs cfg program start events final)\n    (aligned : Aligned start) (store : program[storePC]?=some (.data (.store64 sp addr src)))\n    (stops : StopsFor program writer storePC) (initial : (start.lanes writer).pc\u2264storePC)\n    (arrival : events[a]?=some (Event.barrier (.arrival key writer))) (later : storePC<key.site) :\n    \u2203 w access, w<a \u2227 events[w]?=some (Event.data writer access) \u2227\n      access.data.pc=storePC \u2227 access.data.store=true \u2227 access.space=sp"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Event positions connect this write,\nthe writer's arrival, the common completion and a later read in strict order."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentProducer.lean",
+        "passage": {
+          "quote": "theorem producer_across {start : State n} {events : List (Event n)} {r : Nat}\n    (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (store : program[storePC]?=some (.data (.store64 sp addr src)))\n    (writerStops : StopsFor program writer storePC)\n    (writerInitial : (start.lanes writer).pc\u2264storePC) (beforeBarrier : storePC<boundary)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : \u2200 t, (start.lanes t).pc\u2264boundary)\n    (observed : events[r]?=some (Event.data reader access)) (later : boundary<access.data.pc) :\n    \u2203 w wa, events[w]?=some (.data writer wa) \u2227 wa.data.pc=storePC \u2227\n      wa.data.store=true \u2227 wa.space=sp \u2227 Visibility.Across events w r"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Forward-only control also prevents a thread from executing the same store site\ntwice."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentOwnership.lean",
+        "passage": {
+          "quote": "theorem access_site_unique {events : List (Event n)} {i j : Nat}\n    (run : Runs cfg program start events final) (forward : Forward program)\n    (left : events[i]?=some (Event.data thread a)) (right : events[j]?=some (Event.data thread b))\n    (same : a.data.pc=b.data.pc) : i=j"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Combining this fact with the shared-plane address layout supplies storage\nownership without assuming a phase's computed value."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentOwnership.lean",
+        "passage": {
+          "quote": "theorem read_from_plane_producer {start : State n} {events : List (Event n)} {r : Nat}\n    (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation) (forward : Forward program)\n    (coverage : PlaneStores events base width site) (sites : Function.Injective site)\n    (plane : Fin 7) (store : program[site plane]?=some (.data (.store64 .shared addr src)))\n    (writerStops : StopsFor program writer (site plane))\n    (writerInitial : (start.lanes writer).pc\u2264site plane) (beforeBarrier : site plane<boundary)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : \u2200 t, (start.lanes t).pc\u2264boundary)\n    (observed : events[r]?=some (Event.data reader ra)) (later : boundary<ra.data.pc)\n    (read : ra.data.store=false) (shared : ra.space=.shared)\n    (address : ra.data.address=SharedPlane.address base width plane.val writer.val)\n    (compatible : Visibility.Compatible initialBytes events source)\n    (performed : Visibility.Performed events source) :\n    \u2203 w wa, events[w]?=some (.data writer wa) \u2227 wa.data.pc=site plane \u2227\n      Visibility.Across events w r \u2227 ra.data.value=wa.data.value \u2227\n      \u2200 k, source r k=.store w k"
         }
       }
     }

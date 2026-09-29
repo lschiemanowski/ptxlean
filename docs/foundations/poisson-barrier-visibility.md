@@ -56,6 +56,58 @@ an actual completion and all participants' arrivals in its earlier history.
 This holds for every schedule and candidate read value, and does not assume the
 phase's result. Instantiating the condition requires checking branch targets.
 
+## Why the producer cannot skip its store
+
+The completion history alone does not yet connect the producer's computation to
+the barrier. The producer must execute its store before arriving. A program
+counter is simply the position of the next instruction a thread will execute.
+`ConcurrentProducer.StopsFor` checks the branches before a required store: for
+this producer, each branch either takes the active path or lands at or before
+the store. The condition allows padding threads to skip the body, but it cannot
+be used to claim that such a thread produced a value.
+
+`store_before_arrival` proves that reaching a later barrier arrival forces an
+earlier store event from that producer. Arithmetic advances one instruction at
+a time, branches obey the condition above, and a barrier cannot release threads
+past a store because all releasing threads must be at the same barrier site.
+The proof retains each event's position in the history, even when records at
+two positions happen to have identical contents.
+
+`producer_across` joins this result with the consumer-side barrier theorem. For
+any candidate execution with a later read, it derives the strict sequence
+
+```text
+producer's store < producer's arrival < common completion < consumer's read
+```
+
+These are positions in the same actual execution history. The theorem takes
+fetched instruction and branch facts, not an assumed ordering path or a computed
+matrix answer. It applies to arbitrary interleavings of the participating threads.
+
+## Why there is only one writer
+
+Different matrix lanes write different eight-byte words; different temporary
+planes occupy separate storage. That geometric fact alone is insufficient:
+a thread might visit a store twice if the program contained a loop.
+`ConcurrentOwnership.Forward` rules out backward branches in the fragment.
+`access_site_unique` then proves that each thread emits at most one access at
+any instruction position. Waiting at a barrier does not count as another store.
+
+`PlaneStores` records the remaining structural obligation for a kernel: every
+shared store comes from an active lane, targets that lane's word in one of the
+seven planes, and occurs at that plane's designated instruction. It constrains
+addresses and instruction positions, not stored values. `plane_sole_writer`
+combines this coverage with disjoint byte ranges and the non-repetition proof
+to identify the unique actual store event covering a word.
+
+`read_from_plane_producer` composes these control and ownership results with the
+byte-source rules below. A read of the producer's plane entry must recover that
+producer's actual stored word, byte for byte. The theorem no longer takes an
+assumed barrier path or assumed unique-writer event. It still requires the
+kernel's structural branch and plane-coverage conditions to be proved. For the
+complete generated Poisson cell, this instantiation and the connection to the
+local contraction results remain unfinished.
+
 ## Why old bytes are excluded
 
 `BarrierSources.Compatible` requires each read byte to come from initial memory
@@ -98,6 +150,13 @@ barrier reuse, a missing inactive participant, and the last missing participant
 of a 32-thread block. Without a barrier, the necessary constraints permit an
 old-value source; this is a constraint witness, not a full PTX-admission claim.
 
+`ProducerChecks` reuses that executable fragment with the newly derived ordering
+and ownership. Its ordering theorem covers every candidate execution of the
+fragment, not only the example schedule. The concrete read theorem discharges
+plane coverage from the executed history and recovers the stored value through
+`read_from_plane_producer`. Negative checks reject a padding thread as the
+required producer and a branch that would bypass the barrier.
+
 The saved-PTX checker also verifies the five-phase control skeleton of each
 Poisson element entry: five matching guards and labels, four unpredicated
 `bar.sync 0` boundaries, the expected lane predicate, no internal control transfer
@@ -106,9 +165,9 @@ reject a skipped, moved, predicated, or renumbered barrier. This is a syntactic
 frontend check, separate from the Lean theorems.
 
 The full generated cell kernel is **not yet proved**. It remains necessary to
-connect its prologue and every phase body to this concurrent machine; derive the
-store/arrival/completion/read paths and single-writer coverage for all its
-permitted executions; and join those events to the local contraction/store
+connect its prologue and every phase body to this concurrent machine; instantiate the proved
+store/arrival/completion/read paths using its actual branches and establish
+plane-store address coverage for all its permitted executions; and join those events to the local contraction/store
 proofs. Gather, weighting, final addition/output, and whole-solver composition
 also remain open. The reusable visibility theorem must not be mistaken for a
 completed proof of those instantiations.

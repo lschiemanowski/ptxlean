@@ -1,0 +1,101 @@
+{
+  "id": "19e807ea-1ed6-40af-be14-16da263b6544",
+  "base": "f12a215d153a1be2af215c09114d60fe37802dd8",
+  "contentTree": "55876d8dccb8c73b2679269b87b297a30f397fc9",
+  "reviewer": "Codex",
+  "summary": "Derive binary64 producer ordering and shared-plane writer uniqueness",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Adds fetched producer-before-arrival ordering, exact event-position composition, forward-control access non-repetition and unique writer derivation from explicit plane-store coverage. The final read theorem derives ordering and ownership rather than assuming them; full-cell branch/address instantiation and connection to contraction values remain open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Records the stronger reusable ordering/ownership layer and retains the complete cell and hardware boundaries."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No execution or primitive memory rule changed. New lemmas are checked under the existing exact dependency audit and original source constraints, without a hardware-conformance claim."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The discrete equations, residual certificate, numerical backend and README are unchanged; this advances only the separate instruction correspondence."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "55876d8dccb8c73b2679269b87b297a30f397fc9",
+      "method": "integration/torchlean/check.sh; targeted new-endpoint Lean audit; python3 -m unittest discover -s hardware -p test_*.py; saved-artifact contraction and residual binding scripts; source-hash verification; python3 scripts/check_distribution.py; stratic validate; git diff --check; manual proof and semantic-boundary review",
+      "outcome": "pass",
+      "environment": "Linux; pinned Lean 4.34.0; 16 pinned integration dependencies; existing .hardware-runs/poisson-certified saved artifacts; no fresh GPU run or paid model calls.",
+      "evidence": "Unchanged before/after content tree. Full integration passed: 3013 exact dependency reports using only propext, Classical.choice and Quot.sound; 313 integration Lean source files guarded. 32 new explicit audit endpoints passed. All 26 hardware Python tests passed. Refreshed binding receipts passed across 30 layouts (720 contraction blocks, 630 shared-store blocks, 90 control skeletons/360 barrier boundaries, and residual binding); all recorded source hashes match. Distribution/link/diff checks passed. Reviewed strict event ordering, forward-control non-repetition, disjoint plane geometry and explicit remaining PlaneStores/full-cell obligations. Logs: /tmp/poisson-producer-integration.log, /tmp/poisson-producer-audit.log, /tmp/poisson-producer-python.log, /tmp/poisson-producer-binding.log, /tmp/poisson-producer-residual-binding.log, /tmp/poisson-producer-distribution.log; review notes: /tmp/poisson-producer-review-notes.md.",
+      "tests": [],
+      "id": "389e060a-8593-4408-bf8f-7d1351e3fadc",
+      "recordedAt": "2026-09-29T08:32:34.772Z"
+    }
+  ],
+  "recordedAt": "2026-09-29T08:33:20.019Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Readable explanation of derived producer order, event positions, non-repetition, explicit plane coverage and remaining full-cell obligations."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refreshed successful saved-artifact binding evidence; the numerical kernel and generated PTX are unchanged."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refreshed successful saved residual binding evidence because the receipt hashes all Poisson proof sources."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentOrder.lean",
+      "reason": "Exposes the existing access-PC and singleton-access lemmas for reuse; their proofs and statements are unchanged, and both are now explicit audit endpoints."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentOwnership.lean",
+      "reason": "Linked main contracts are supported by per-thread PC monotonicity, strict access order and disjoint byte geometry. PlaneStores is an explicit structural condition still to be derived for the full cell, not a stored-value or correctness premise."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentProducer.lean",
+      "reason": "Linked main contracts are supported by step/store crossing, precise indexed prefix decomposition, actual arrival origin and indexed consumer ordering. All new public definitions and theorems are audited."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ProducerChecks.lean",
+      "reason": "Checks arbitrary-schedule producer ordering for the existing fragment, concrete derived visibility and two meaningful invalid-control cases; does not claim arbitrary-schedule full-cell coverage."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Registers the 32 new audited definitions and theorems, including two previously private helpers."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Updates exact audit counts, target coverage and fresh-source regression execution for the new proof slice."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers the three new proof modules as explicit default targets."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed description and summary metadata for the new generic producer ordering and ownership result; full-cell obligations remain explicit and unchanged at broader mathematical scope."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed description and summary metadata for the new generic producer ordering and ownership result; full-cell obligations remain explicit and unchanged at broader mathematical scope."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed description and summary metadata for the new generic producer ordering and ownership result; full-cell obligations remain explicit and unchanged at broader mathematical scope."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed description and summary metadata for the new generic producer ordering and ownership result; full-cell obligations remain explicit and unchanged at broader mathematical scope."
+    }
+  ]
+}

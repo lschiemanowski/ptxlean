@@ -112,10 +112,10 @@ theorem crossed_barrier {start : State n} (run : Runs cfg program start events f
   simpa using invariant start events final run aligned []
     (by intro t ht; have := initial t; omega) thread after
 
-private theorem access_pc (h : Data op s t (some access)) : access.data.pc=s.pc := by
+theorem access_pc (h : Data op s t (some access)) : access.data.pc=s.pc := by
   cases h <;> rfl
 
-private theorem access_single (h : Step cfg program thread s out)
+theorem access_single (h : Step cfg program thread s out)
     (member : Event.data owner access∈out.events) : out.events=[.data owner access] := by
   obtain ⟨fresh,i,fetch,dispatch⟩ := h
   cases dispatch with

@@ -87,3 +87,9 @@ all-participant arrival histories, reuse, and exclusion of old initial bytes for
 a single-writer shared word. Candidate loads remain arbitrary until source
 constraints are checked. Applying these results to all generated cell phases
 still requires their complete control/data interpretation and access coverage.
+
+For forward-only fragments, the barrier layer derives the producer's actual
+store before its arrival and a later read after completion. Disjoint plane
+addresses and the impossibility of repeating a store site establish its unique
+writer. Full-cell instantiation must still derive the required branch and
+address-coverage conditions and connect stored words to the tensor calculation.

@@ -171,5 +171,15 @@ If no branch can jump past a barrier, every access at a later instruction positi
 has an actual completion and arrivals from all threads in its earlier execution
 history. This ordering theorem holds for arbitrary schedules and candidate load
 values. The condition concerns branch targets, not memory values or a presumed
-phase result. Establishing each writer's preceding store and complete address
-ownership for the full generated cell remains part of the phase instantiation.
+phase result. The full generated cell must instantiate these branch conditions and identify
+the instructions that produce and consume each plane.
+
+Producer ordering also follows from fetched execution. For an active writer,
+a guard before its required store either executes the body or lands no later
+than that store. Crossing the store instruction therefore records the actual
+write before the writer reaches the barrier. Event positions connect this write,
+the writer's arrival, the common completion and a later read in strict order.
+Forward-only control also prevents a thread from executing the same store site
+twice. Combining this fact with the shared-plane address layout supplies storage
+ownership without assuming a phase's computed value. The complete generated
+cell still needs these structural conditions instantiated for its actual bodies.
