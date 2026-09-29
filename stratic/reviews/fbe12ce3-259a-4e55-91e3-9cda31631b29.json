@@ -1,0 +1,117 @@
+{
+  "id": "fbe12ce3-259a-4e55-91e3-9cda31631b29",
+  "base": "604f6e0166eb7a1959a5a4394f45a86c16898d08",
+  "contentTree": "b059dba7143ec81eecfddae0313732c0435e8ffe",
+  "reviewer": "Codex",
+  "summary": "Derive concrete Poisson middle-phase address coverage and barrier publication",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Adds exact concurrent programs for the three middle arithmetic phases; generic scratch-address and padding invariants; kernel-checked certificates for four emitted Q1--Q4 layouts; derived store coverage, unique writers and publication for arbitrary candidate runs. Tensor value composition, gathered input, full prologue/final output, source-admitted slice existence and whole-cell composition remain explicit."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Records concrete middle-phase address/publication results and complete-body PTX binding without claiming full numerical or whole-cell correspondence."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive instruction or memory-source semantics changed. The exact standard-axiom audit now covers 69 added endpoints; finite structural certificates use kernel checking, while text binding and hardware conformance remain distinct."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Discrete equations, solver behavior and residual acceptance are unchanged. This slice advances the separate PTX correspondence layer."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "b059dba7143ec81eecfddae0313732c0435e8ffe",
+      "method": "integration/torchlean/check.sh; targeted 69-endpoint axiom audit with the allowlist checker; python3 -m unittest discover -s hardware -p test_*.py; saved contraction/middle/residual PTX binding scripts and source-hash verification; distribution guard; stratic validate; git diff --check; manual proof and semantic-boundary review",
+      "outcome": "pass",
+      "environment": "Linux; pinned Lean 4.34.0 and 16 integration dependencies; existing .hardware-runs/poisson-certified artifacts; no fresh GPU execution or paid model calls.",
+      "evidence": "Unchanged before/after content snapshot. Full integration passed 3082 exact dependency reports with only propext, Classical.choice and Quot.sound; 318 Lean sources checked. All 69 new explicit endpoints passed, including kernel-checked Q1--Q4 structural certificates, arbitrary-run coverage/publication, negative address/control checks and a finite 32-thread Q1 candidate witness. All 27 Python tests passed. Binding passed across 30 saved layouts: 720 contractions, 630 store blocks, 90 control skeletons and 90 complete middle slices (270 bodies), plus residual binding. Source hashes match refreshed receipts. Documentation states supported offsets, primitive source constraints, unproved tensor composition/gather/final output and source-admitted existence. Logs: /tmp/poisson-middle-integration.log, /tmp/poisson-middle-audit.log, /tmp/poisson-middle-python.log, /tmp/poisson-middle-binding.log, /tmp/poisson-middle-residual-binding.log, /tmp/poisson-middle-distribution.log. Proof review: /tmp/poisson-middle-review-notes.md.",
+      "tests": [],
+      "id": "f189cb0d-4ae9-4a2b-91ea-1666259b225e",
+      "recordedAt": "2026-09-29T09:25:35.982Z"
+    }
+  ],
+  "recordedAt": "2026-09-29T09:26:20.231Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Explains the exact middle-phase slice, address and padding invariants, four structural certificates, actual publication conclusion and remaining numerical/gather/final/source-admission obligations."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Binds all instructions of each middle-phase body and control positions to Lean-rendered code, checks certified arena offsets, and audits the concrete coverage/publication theorems."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refreshes checked code hashes, concrete publication theorem audit and complete-middle-body matches for all 30 saved layouts; no fresh hardware run."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refreshes residual receipt because its source digest includes every Poisson proof file; residual semantics are unchanged."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Adds mutations for weights, shared-base writes, missing/reordered phases and unsupported arena offsets; checks fail closed."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Renders the same concrete middle phase bodies used by the proof; accepts explicit weight offset and retains existing contraction/store output."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellMiddle.lean",
+      "reason": "Defines the actual three guarded middle bodies, weight instruction block, finite structural predicate, soundness of the checks and generic derivation of PlaneStores from fetched execution."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellMiddleChecks.lean",
+      "reason": "Principal coverage, checkedness and publication contracts are linked. Remaining regions define the four exact layouts, finite barrier/store/site certificates, ownership wrapper and negative checks. All public endpoints are audited."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellMiddleWitness.lean",
+      "reason": "Defines zero-data Q1 seed, full schedule with 28 padding lanes, executable witness and actual Runs proof; linked completion theorem states the precise candidate-execution scope."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentAddress.lean",
+      "reason": "Supports linked address invariant with syntactic scratch tags, fetched-step preservation and base/lane register preservation; no value/source semantics changed."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentPadding.lean",
+      "reason": "Supports linked no-padding-access theorem with explicit boundary constraints and step/run preservation; does not exempt padding from barriers."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Registers 69 new public definition/theorem dependency reports, including all concrete certificates and candidate witness."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Updates exact namespace and target counts and freshly checks concrete layout certificates and witness."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Registers the five proof modules as explicit default targets."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed description/summary metadata states the concrete middle-phase proof result and keeps numerical composition, prologue, gather, final output and source-admitted existence explicitly partial."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed description/summary metadata states the concrete middle-phase proof result and keeps numerical composition, prologue, gather, final output and source-admitted existence explicitly partial."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed description/summary metadata states the concrete middle-phase proof result and keeps numerical composition, prologue, gather, final output and source-admitted existence explicitly partial."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed description/summary metadata states the concrete middle-phase proof result and keeps numerical composition, prologue, gather, final output and source-admitted existence explicitly partial."
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Bind local cell contraction and shared-store blocks to their proved Lean programs.
 
-The guard/barrier skeleton is checked syntactically. This does not prove the full
-cell interpretation, gather, weighting, final addition, launch composition, or
-complete memory admission. Contraction proofs use concrete phase snapshots.
+Complete middle-phase bodies are bound to the concurrent Lean program with
+kernel-checked control and store-address certificates for Q1--Q4. The full cell
+gather, numerical phase composition, final output, launch composition and complete
+memory admission remain open. Contraction proofs use concrete phase snapshots.
 """
 import argparse
 import hashlib
@@ -24,7 +25,7 @@ def parameters(layout):
     if type(layout['bytes']) is not int or not 0 < layout['bytes'] < 2**64:
         raise ValueError('invalid arena size')
     result = {'width': width}
-    for name in ('B', 'D'):
+    for name in ('B', 'D', 'W'):
         field = layout['fields'][name]
         if (field['kind'] != 'd' or field['count'] != width*width or
                 type(field['offset']) is not int or field['offset'] < 0 or
@@ -124,6 +125,36 @@ def verify_control(ptx, layout):
     return checked
 
 
+def verify_middle(ptx, rendered, layout):
+    """Bind every instruction of phases 1--3, including weights and controls."""
+    params = parameters(layout)
+    width = params['width']
+    if (params['B'], params['D'], params['W']) != (0, width*width*8+32, 2*(width*width*8+32)):
+        raise ValueError('middle layout has no kernel-checked structural certificate')
+    verify_control(ptx, layout)
+    if len(rendered) != 3 or any(not body for body in rendered):
+        raise ValueError('expected three nonempty middle phase bodies')
+    checked = []
+    for entry in ('element_probe', 'element_p', 'element_x'):
+        bodies = re.findall(r'\.visible \.entry '+entry+r'\(\.param \.u64 arena\)\s*([^}]+)}', ptx)
+        if len(bodies) != 1:
+            raise ValueError('entry missing or duplicated')
+        lines = [line.strip() for line in bodies[0].splitlines() if line.strip()]
+        pc = 0
+        phases = []
+        for phase, code in enumerate(rendered, 1):
+            begin = lines.index(f'@!%live bra stage_{phase}_done;')
+            end = lines.index(f'stage_{phase}_done:')
+            if lines[begin+1:end] != code:
+                raise ValueError(f'{entry}/phase {phase}: complete middle body differs from Lean program')
+            phases.append(dict(phase=phase, guard_pc=pc, barrier_pc=pc+1+len(code),
+                               body_instructions=len(code)))
+            pc += len(code)+2
+        checked.append(dict(entry=entry, instructions=pc, phases=phases,
+                            sha256=hashlib.sha256(json.dumps(rendered).encode()).hexdigest()))
+    return checked
+
+
 def check(run, output):
     if output.exists():
         raise ValueError('output already exists')
@@ -146,16 +177,18 @@ def check(run, output):
     if not version.startswith(f'Lean (version {pin},'):
         raise ValueError('toolchain differs from pin')
     subprocess.run(['lake', '--no-cache', 'build', 'poissonContractions', 'PoissonPTX.ContractionFetched',
-                    'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
               ('fetched_correct', 'fetched_exists', 'valid_of_plane', 'fetched_contraction_store', 'fetched_contraction_store_exists')]
     names += ['PtxTorchLean.Poisson.PTX.SharedPlane.'+n for n in
               ('store_address', 'published_store', 'published_contraction', 'order_independent', 'contraction_value')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.'+n for n in
+              ('q1', 'q2', 'q3', 'q4', 'checked', 'coverage', 'unique', 'publication')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\n'+
+        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)
@@ -165,7 +198,8 @@ def check(run, output):
     checked = [dict(directory=c['directory'], blocks=verify_blocks(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['contractions'], layout),
         stores=verify_stores(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['stores'], layout, code['contractions']),
-        control=verify_control(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), layout))
+        control=verify_control(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), layout),
+        middle=verify_middle(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['middle'], layout))
         for c, layout, code in zip(report['cases'], layouts, rendered, strict=True)]
     checker.dependencies()
     if hashes != {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}:

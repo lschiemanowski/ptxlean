@@ -12,15 +12,16 @@
     "Reject malformed or nonfinite certificate input; keep compiled checking and saved GPU provenance distinct from kernel-checked proofs.",
     "Prove the complete true_residual entry per thread, including byte addresses, guard, execution existence and TorchLean subtraction; check its emitted instruction binding.",
     "Prove whole-vector residual subtraction under necessary byte-source constraints, with derived read-only inputs, actual instruction traces and arbitrary ordering of disjoint output stores.",
-    "Keep complete memory admission, shared-memory barriers, cell phases, assembly, reductions and host launch composition explicit as remaining work.",
+    "Keep complete memory admission, whole-cell composition, assembly, reductions and host launch composition explicit as remaining work.",
     "Prove the eight local cell contractions from fetched indexing, byte loads and separate rounded multiply/add operations; connect their byte-backed views to TorchLean while retaining the separate barrier-snapshot obligation.",
-    "Derive shared-plane bytes from actual store instructions and contraction results, with disjoint ownership, arbitrary publication order and execution witnesses; retain barrier visibility as a separate obligation.",
+    "Derive shared-plane bytes from actual store instructions and contraction results; join those local value proofs to the concurrent middle-phase publication theorem in a separate composition step.",
     "Derive common barrier arrivals from fetched binary64 candidate execution and exclude stale shared-byte sources across an executed whole-block barrier; distinguish the reusable fragment from its remaining full-cell instantiation.",
     "Derive a preceding common barrier completion for every later access when branches cannot jump past the barrier, for arbitrary candidate executions.",
-    "Derive producer-store ordering and non-repetition from fetched forward control, then combine event positions and shared-plane layout to justify ownership; instantiate these structural conditions separately for the complete cell."
+    "Derive producer-store ordering and non-repetition from fetched forward control, then combine event positions and shared-plane layout to justify ownership; instantiate these structural conditions separately for the complete cell.",
+    "Derive control, shared-store addresses and byte publication for the concrete three middle cell phases in the certified Q1--Q4 layouts; retain tensor phase composition, gather, final output and source-admitted existence as separate obligations."
   ],
   "realization": "partial",
-  "remaining": "Full-cell instantiation of the fetched binary64 barrier/source model remains: prologue and complete phase bodies, branch and plane-store coverage conditions and joining traces to contraction/store proofs. Generic producer-store/arrival/completion/read ordering, forward-control non-repetition and ownership from plane geometry are proved. Complete PTX admission, gather/weighting/final output, assembly, reductions, PCG kernels and host launches remain unproved. Execution witnesses use necessary source constraints, not full hardware admission or progress.",
+  "remaining": "The concrete three middle phases have derived control, shared-store address coverage and barrier publication for the four certified Q1--Q4 arena layouts. Remaining: connect candidate load values and actual stores to the ordered tensor calculations; prove gathered input, full prologue and final output; establish source-admitted slice existence and complete cell composition. Other arena layouts need structural certificates. Complete PTX admission, assembly, reductions, PCG kernels and host launches remain unproved.",
   "links": [
     {
       "kind": "implementation",
@@ -523,6 +524,78 @@
         "path": "integration/torchlean/PoissonPTX/ConcurrentOwnership.lean",
         "passage": {
           "quote": "theorem read_from_plane_producer {start : State n} {events : List (Event n)} {r : Nat}\n    (run : Runs cfg program start events final)\n    (reset : start.barrier=Barrier.reset generation) (forward : Forward program)\n    (coverage : PlaneStores events base width site) (sites : Function.Injective site)\n    (plane : Fin 7) (store : program[site plane]?=some (.data (.store64 .shared addr src)))\n    (writerStops : StopsFor program writer (site plane))\n    (writerInitial : (start.lanes writer).pc\u2264site plane) (beforeBarrier : site plane<boundary)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : \u2200 t, (start.lanes t).pc\u2264boundary)\n    (observed : events[r]?=some (Event.data reader ra)) (later : boundary<ra.data.pc)\n    (read : ra.data.store=false) (shared : ra.space=.shared)\n    (address : ra.data.address=SharedPlane.address base width plane.val writer.val)\n    (compatible : Visibility.Compatible initialBytes events source)\n    (performed : Visibility.Performed events source) :\n    \u2203 w wa, events[w]?=some (.data writer wa) \u2227 wa.data.pc=site plane \u2227\n      Visibility.Across events w r \u2227 ra.data.value=wa.data.value \u2227\n      \u2200 k, source r k=.store w k"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Shared-store address coverage is derived from the executed widening and base\naddition instructions."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellMiddleChecks.lean",
+        "passage": {
+          "quote": "theorem coverage {start : State 32} (width : Nat) (lo : 2\u2264width) (hi : width\u22645)\n    (run : Runs cfg (program width) start events final)\n    (reset : start.barrier=Barrier.reset generation)\n    (pcs : \u2200 t, (start.lanes t).pc=0)\n    (bases : \u2200 t, ((start.lanes t).regs 3).toNat=base)\n    (lanes : \u2200 t, ((start.lanes t).regs 14).toNat=t.val)\n    (fits : base+7*width*width*8\u22642^64) :\n    PlaneStores events base width (site (program width) width)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A small check of the program's instruction sequence tracks\nwhen those two scratch registers are ready for a store; branch targets cannot\nenter halfway through that preparation."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentAddress.lean",
+        "passage": {
+          "quote": "theorem runs_invariant (run : Runs cfg program start events final)\n    (aligned : Aligned start) (inv : Invariant program start) (entries : Entries program)\n    (base : Keeps program 3) (lane : Keeps program 14) : Invariant program final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The shared base and lane registers stay\nunchanged, and inactive lanes cannot enter a data instruction."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentPadding.lean",
+        "passage": {
+          "quote": "theorem access_active (run : Runs cfg program start events final)\n    (aligned : Aligned start) (inv : Invariant program active start) (bounds : Boundaries program active)\n    (member : Event.data thread access\u2208events) : thread.val<active"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The certificates are checked by Lean's kernel, independently of the frontend\nthat compares the complete phase bodies and guards with emitted PTX."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellMiddleChecks.lean",
+        "passage": {
+          "quote": "theorem checked (width : Nat) (lo : 2\u2264width) (hi : width\u22645) : Checked (program width) width"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A read of that word after the relevant barrier recovers the\nactual producer's stored bytes under the stated necessary source constraints.\nNo assumed coverage or barrier-ordering relation is supplied for the execution."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellMiddleChecks.lean",
+        "passage": {
+          "quote": "theorem publication {start : State 32} {events : List (Event 32)} {index : Nat}\n    (width : Nat) (lo : 2\u2264width) (hi : width\u22645)\n    (run : Runs cfg (program width) start events final)\n    (reset : start.barrier=Barrier.reset generation) (pcs : \u2200 t, (start.lanes t).pc=0)\n    (bases : \u2200 t, ((start.lanes t).regs 3).toNat=base)\n    (lanes : \u2200 t, ((start.lanes t).regs 14).toNat=t.val)\n    (fits : base+7*width*width*8\u22642^64)\n    (plane : Fin 7) (produced : plane\u22600) (writer : Fin 32) (active : writer.val<width*width)\n    (observed : events[index]?=some (.data reader access))\n    (later : boundary width (preceding plane)<access.data.pc)\n    (read : access.data.store=false) (shared : access.space=.shared)\n    (address : access.data.address=SharedPlane.address base width plane.val writer.val)\n    (compatible : Visibility.Compatible initialBytes events source)\n    (performed : Visibility.Performed events source) :\n    \u2203 w wa, events[w]?=some (.data writer wa) \u2227\n      access.data.value=wa.data.value \u2227 \u2200 k, source index k=.store w k"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A finite Q1 candidate run completes all three barriers with four active and 28\npadding lanes."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellMiddleWitness.lean",
+        "passage": {
+          "quote": "theorem finished : result.state.barrier.generation=3 \u2227\n    \u2200 t, (result.state.lanes t).pc=(code 2 0 64 128).length"
         }
       }
     }

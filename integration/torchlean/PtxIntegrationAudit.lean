@@ -1,3 +1,8 @@
+import PoissonPTX.ConcurrentAddress
+import PoissonPTX.ConcurrentPadding
+import PoissonPTX.CellMiddle
+import PoissonPTX.CellMiddleChecks
+import PoissonPTX.CellMiddleWitness
 import PoissonPTX.ConcurrentProducer
 import PoissonPTX.ConcurrentOwnership
 import PoissonPTX.ProducerChecks
@@ -3388,3 +3393,77 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.access_pc
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.access_single
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.nextTag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.tag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.tag_zero
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.tag_next
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.Ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.Keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.data_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.data_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.Entries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.Invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.step_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.runs_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.step_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Address.runs_invariant
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Padding.outside
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Padding.Boundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Padding.Invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Padding.step_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Padding.runs_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Padding.access_active
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.planeOffset
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.dot
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.weighted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.first
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.second
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.third
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.phase
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.code
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.site
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.checkAt
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checked
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.checked_at
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.checked_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.checked_entries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.checked_forward
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.checked_boundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.checked_writer_stops
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.plane_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.rendered
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.derivativeOffset
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.weightOffset
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.program
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.sites_injective
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.boundary
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.preceding
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.Bounded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.bounded_stops
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.boundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.wrong_scale_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.jump_into_store_rejected
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.seed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.cfg
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.schedule
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.candidate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.successful
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.executed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.candidate_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Witness.finished

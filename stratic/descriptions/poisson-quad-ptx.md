@@ -93,3 +93,10 @@ store before its arrival and a later read after completion. Disjoint plane
 addresses and the impossibility of repeating a store site establish its unique
 writer. Full-cell instantiation must still derive the required branch and
 address-coverage conditions and connect stored words to the tensor calculation.
+
+The concrete three middle arithmetic phases have derived shared-store address
+coverage and barrier publication for the four certified Q1--Q4 arena layouts.
+The complete bodies, including the weight loads and multiplication, are compared
+with emitted PTX. Numerical composition with TorchLean, gathered input, the
+prologue and final output remain unfinished; the slice's proved candidate
+execution witness is distinct from source-admitted or hardware execution.

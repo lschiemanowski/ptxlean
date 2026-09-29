@@ -164,13 +164,73 @@ or predicate modification in the bodies, and the final return. Mutation tests
 reject a skipped, moved, predicated, or renumbered barrier. This is a syntactic
 frontend check, separate from the Lean theorems.
 
-The full generated cell kernel is **not yet proved**. It remains necessary to
-connect its prologue and every phase body to this concurrent machine; instantiate the proved
-store/arrival/completion/read paths using its actual branches and establish
-plane-store address coverage for all its permitted executions; and join those events to the local contraction/store
-proofs. Gather, weighting, final addition/output, and whole-solver composition
-also remain open. The reusable visibility theorem must not be mistaken for a
-completed proof of those instantiations.
+## Applying the proof to the actual middle phases
+
+`CellMiddle` gives the actual instruction program for phases 1–3 of the generated
+cell kernel. A plane is one temporary matrix stored in shared memory. The slice
+starts just after phase 0 has gathered the input and synchronized the threads.
+It ends after phase 3 has stored its outputs and completed another barrier.
+
+| Phase | Computation in this slice | Shared outputs |
+| --- | --- | --- |
+| 1 | Two contractions using the gathered input | Planes 1 and 2 |
+| 2 | Two contractions, each multiplied by its integration weight | Planes 3 and 4 |
+| 3 | Two contractions using the weighted intermediates | Planes 5 and 6 |
+
+All 32 threads run the guards and barriers. Only the first m² lanes enter the
+arithmetic bodies, where m is the matrix width (2 through 5 for Q1 through Q4).
+The input plane's bytes are actual initial storage for this slice; the theorem
+does not assume they already represent the desired gathered tensor.
+
+The address proof uses two small, separately proved invariants:
+
+- `ConcurrentPadding` shows that inactive lanes remain at guards, barriers, or
+  the end of the slice. They emit no load or store events.
+- `ConcurrentAddress` tracks the preparation of the two address scratch
+  registers. Immediately before a shared store, the widened lane index and
+  shared base have been added by the actual preceding instructions. A branch
+  may not land halfway through that preparation. The shared base and lane
+  registers retain their initial values.
+
+`CellMiddle.Checked` is a finite check of instruction structure. It verifies
+these branch and register restrictions and identifies every shared store's
+plane and instruction position. `CellMiddleChecks` proves the checks with Lean's
+kernel for the four emitted layouts: basis offset 0, derivative offset 8m²+32,
+and weight offset 16m²+64, measured in bytes from the global arena base. Another
+arena layout requires another structural certificate; the generic address proof
+itself is parameterized by the program. Initial data and candidate read values
+are not enumerated or fixed by these certificates.
+
+`CellMiddleChecks.coverage` derives the plane-ownership condition from arbitrary
+candidate runs of these concrete programs. `unique` then identifies each word's
+only actual writer. `publication` joins these results with the barrier proof:
+a later read at a producer's plane address recovers its actual stored word,
+including the source of all eight bytes, under `Compatible` and `Performed`.
+Within this slice, the later reads consume planes 1–4. Planes 5 and 6 are
+produced here but consumed by the final phase outside this slice.
+The caller supplies initial PCs, lane/base registers, storage-size conditions
+and the read's location—not an assumed coverage or barrier-ordering relation.
+
+The frontend compares **every instruction** of the three bodies with this Lean
+program, including the weight loads and multiplications. It also checks the
+associated guards, branch labels and barriers. This is stricter than matching
+the contraction and store sub-blocks alone, and remains a frontend check rather
+than a verified general PTX parser. Mutation tests reject changed weights,
+extra writes to the shared base, incorrect addresses and missing/reordered phases.
+
+`CellMiddleWitness` supplies a finite Q1 candidate execution from zero storage:
+four active threads execute the bodies, 28 padding threads skip them, all 32
+participate, and all threads finish after three releases. This witnesses the
+candidate instruction machine. A source-admitted execution witness for the
+complete slice is still a separate obligation.
+
+The full generated cell kernel is **not yet proved**. The next connection is
+between the candidate loads and stored words in these middle phases and the
+existing ordered TorchLean contraction proofs. The gathered input, complete
+prologue, final addition/output and whole-cell composition also remain open.
+The publication theorem does not identify its stored word with a mathematical
+or TorchLean coordinate by itself. Complete PTX admission, hardware progress
+and whole-solver correspondence retain their separate boundaries.
 
 Run the checked proofs and regression tests from the repository root:
 

@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control
+from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle
 from poisson_kernels import Layout, module, PTX
 
 
@@ -58,6 +58,28 @@ class ContractionBinding(unittest.TestCase):
                 self.assertIn(old, self.ptx)
                 with self.assertRaises(ValueError):
                     verify_control(self.ptx.replace(old,new,1), self.layout)
+
+    def test_complete_middle_bodies(self):
+        # This is a mutation test. The separate receipt obtains expected text
+        # from Lean's renderer, not from this Python extraction.
+        lines = self.ptx.splitlines()
+        expected = [lines[lines.index(f'@!%live bra stage_{p}_done;')+1:
+                          lines.index(f'stage_{p}_done:')] for p in (1, 2, 3)]
+        self.assertEqual(len(verify_middle(self.ptx, expected, self.layout)), 3)
+        for old, new in [('mul.rn.f64 %acc, %acc, %c;', 'mul.rn.f64 %acc, %acc, %b;'),
+                         ('ld.global.f64 %c, [%addr];', 'ld.global.f64 %c, [%addr+8];'),
+                         ('stage_2_done:', 'mov.b64 %shared, 0;\nstage_2_done:')]:
+            with self.subTest(new=new):
+                self.assertIn(old, self.ptx)
+                with self.assertRaises(ValueError):
+                    verify_middle(self.ptx.replace(old, new, 1), expected, self.layout)
+        changed_layout = copy.deepcopy(self.layout)
+        changed_layout['fields']['W']['offset'] += 8
+        with self.assertRaises(ValueError):
+            verify_middle(self.ptx, expected, changed_layout)
+        for bodies in (expected[:-1], expected[::-1], expected+[expected[0]]):
+            with self.assertRaises(ValueError):
+                verify_middle(self.ptx, bodies, self.layout)
 
     def test_structure(self):
         self.assertEqual(len(verify_blocks(self.ptx, self.expected, self.layout)), 24)

@@ -1,6 +1,6 @@
 {
   "status": "pass",
-  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nThe guard/barrier skeleton is checked syntactically. This does not prove the full\ncell interpretation, gather, weighting, final addition, launch composition, or\ncomplete memory admission. Contraction proofs use concrete phase snapshots.",
+  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nComplete middle-phase bodies are bound to the concurrent Lean program with\nkernel-checked control and store-address certificates for Q1--Q4. The full cell\ngather, numerical phase composition, final output, launch composition and complete\nmemory admission remain open. Contraction proofs use concrete phase snapshots.",
   "checked": [
     {
       "directory": "00-n1-q1",
@@ -323,6 +323,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
         }
       ]
     },
@@ -648,6 +725,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        }
       ]
     },
     {
@@ -971,6 +1125,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
         }
       ]
     },
@@ -1296,6 +1527,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
       ]
     },
     {
@@ -1619,6 +1927,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
       ]
     },
@@ -1944,6 +2329,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
       ]
     },
     {
@@ -2267,6 +2729,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
         }
       ]
     },
@@ -2592,6 +3131,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        }
       ]
     },
     {
@@ -2915,6 +3531,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
         }
       ]
     },
@@ -3240,6 +3933,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        }
       ]
     },
     {
@@ -3563,6 +4333,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
         }
       ]
     },
@@ -3888,6 +4735,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        }
       ]
     },
     {
@@ -4211,6 +5135,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
         }
       ]
     },
@@ -4536,6 +5537,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        }
       ]
     },
     {
@@ -4859,6 +5937,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
       ]
     },
@@ -5184,6 +6339,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        }
       ]
     },
     {
@@ -5507,6 +6739,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
         }
       ]
     },
@@ -5832,6 +7141,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
       ]
     },
     {
@@ -6155,6 +7541,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
       ]
     },
@@ -6480,6 +7943,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
       ]
     },
     {
@@ -6803,6 +8343,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
         }
       ]
     },
@@ -7128,6 +8745,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
       ]
     },
     {
@@ -7451,6 +9145,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 196,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 61,
+              "body_instructions": 60
+            },
+            {
+              "phase": 2,
+              "guard_pc": 62,
+              "barrier_pc": 133,
+              "body_instructions": 70
+            },
+            {
+              "phase": 3,
+              "guard_pc": 134,
+              "barrier_pc": 195,
+              "body_instructions": 60
+            }
+          ],
+          "sha256": "5d54fd132123389ec7bf6c5b52c0809276d833d3207b66e14fb61bfaab38ed57"
         }
       ]
     },
@@ -7776,6 +9547,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
       ]
     },
     {
@@ -8099,6 +9947,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
         }
       ]
     },
@@ -8424,6 +10349,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        }
       ]
     },
     {
@@ -8747,6 +10749,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 430,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 139,
+              "body_instructions": 138
+            },
+            {
+              "phase": 2,
+              "guard_pc": 140,
+              "barrier_pc": 289,
+              "body_instructions": 148
+            },
+            {
+              "phase": 3,
+              "guard_pc": 290,
+              "barrier_pc": 429,
+              "body_instructions": 138
+            }
+          ],
+          "sha256": "51855a3c1d43d1b833cccc48e7e5a1fee6858e3a7910f40f594e630b6d308390"
         }
       ]
     },
@@ -9072,6 +11151,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
       ]
     },
     {
@@ -9395,6 +11551,83 @@
           "phase_count": 5,
           "barrier_resource": 0,
           "completed_boundaries": 4
+        }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 352,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 113,
+              "body_instructions": 112
+            },
+            {
+              "phase": 2,
+              "guard_pc": 114,
+              "barrier_pc": 237,
+              "body_instructions": 122
+            },
+            {
+              "phase": 3,
+              "guard_pc": 238,
+              "barrier_pc": 351,
+              "body_instructions": 112
+            }
+          ],
+          "sha256": "ce2b2823391bfc44b1a77588403cb20573effb4b9e73aaccfdff58cc4ff8849f"
         }
       ]
     },
@@ -9720,6 +11953,83 @@
           "barrier_resource": 0,
           "completed_boundaries": 4
         }
+      ],
+      "middle": [
+        {
+          "entry": "element_probe",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 274,
+          "phases": [
+            {
+              "phase": 1,
+              "guard_pc": 0,
+              "barrier_pc": 87,
+              "body_instructions": 86
+            },
+            {
+              "phase": 2,
+              "guard_pc": 88,
+              "barrier_pc": 185,
+              "body_instructions": 96
+            },
+            {
+              "phase": 3,
+              "guard_pc": 186,
+              "barrier_pc": 273,
+              "body_instructions": 86
+            }
+          ],
+          "sha256": "ea599068fcf2cc9b6c252905bc9022b59cd75d915e0044d764440724181a48dd"
+        }
       ]
     }
   ],
@@ -9737,22 +12047,35 @@
     "PtxTorchLean.Poisson.PTX.SharedPlane.published_store",
     "PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction",
     "PtxTorchLean.Poisson.PTX.SharedPlane.order_independent",
-    "PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value"
+    "PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value",
+    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1",
+    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2",
+    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3",
+    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4",
+    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked",
+    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage",
+    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique",
+    "PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication"
   ],
-  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
+  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n",
   "source_sha256": {
     "integration/torchlean/PoissonPTX/Arithmetic.lean": "8fd4f79048a2452ec06f11fa6dd491ba1c2ceac1f0f73941aeb55558b9e16e2c",
     "integration/torchlean/PoissonPTX/BarrierChecks.lean": "b821ce1ae932bbb62dd1bf151c3bf62e17865382805a394467179e9714681780",
     "integration/torchlean/PoissonPTX/BarrierSources.lean": "b1c114dbc5ca25231c698ee764cb98bb9bc70066e2728a835b618022ef5c55bb",
     "integration/torchlean/PoissonPTX/Bytes.lean": "b1405bdaa8d08aabbe28aaa5880063e71cd5c1f25acfb961cf543172b3b26857",
+    "integration/torchlean/PoissonPTX/CellMiddle.lean": "92c1e82e960ec182e24b4061092b5acbf01318279e87a52cd67e8a2a60382b5f",
+    "integration/torchlean/PoissonPTX/CellMiddleChecks.lean": "4a099bec0ae7364837f5b56f550e213a9483b8128831310598e8847cdaece7d4",
+    "integration/torchlean/PoissonPTX/CellMiddleWitness.lean": "5951b4743b6a4f95d24c5c82cbe24612b4df411d7b3517f07b5cb704b36adc01",
     "integration/torchlean/PoissonPTX/Checks.lean": "5e26c62780181d10797da2e23a66417b6de25d24137601b32c288b1112f03992",
     "integration/torchlean/PoissonPTX/Concurrent.lean": "a841cef5288ea511b927b2d36d2c61baf20310a36ab9600a6d0ee61cf367d07e",
+    "integration/torchlean/PoissonPTX/ConcurrentAddress.lean": "3a3880a40194c776535511b0b7ccdba182d70ba2c397472943a45d15dd1b57dc",
     "integration/torchlean/PoissonPTX/ConcurrentBarrier.lean": "b5d687cb1814b408241e0f695390f7dd34876137c6ce5d602e1b16a0a3c01439",
     "integration/torchlean/PoissonPTX/ConcurrentExec.lean": "3d7aa623469b48c58035c3b8a73f4903b71767b97151499e50f1a3e0ee374cc5",
     "integration/torchlean/PoissonPTX/ConcurrentHistory.lean": "df3f2d858f2367369281b7b7af4b921d266d1555ead3c229b851120327fabf0c",
     "integration/torchlean/PoissonPTX/ConcurrentOrder.lean": "33534c876ab8358dc83ab536d67a799fe221b06c84892684053d5376cb1eed5a",
     "integration/torchlean/PoissonPTX/ConcurrentOrigins.lean": "f72d32a2aa73f658ef8c884f1ea870d317dd5be52efadab33ba5191a5170a874",
     "integration/torchlean/PoissonPTX/ConcurrentOwnership.lean": "7826560307a665ce53d6448e0a93c8efcc7e6e09303690ca2ecf6b2d7abfd1ba",
+    "integration/torchlean/PoissonPTX/ConcurrentPadding.lean": "60de3f458574dc187181789778875c5ca4815c996b44a78ac35485278457a6fe",
     "integration/torchlean/PoissonPTX/ConcurrentProducer.lean": "5d769fa5c7e8afc5212abd59731bfdbe5007de0e3acbdcbaf7daff61fedae77e",
     "integration/torchlean/PoissonPTX/Contraction.lean": "997e4308d47ce6e55e58feef0a2b96aedfbdd9a41a0d8f2cdb613a5777dfe5c3",
     "integration/torchlean/PoissonPTX/ContractionChecks.lean": "da51248a9435b6b2dd73d915a50de1e83d1a88c297301422903909ecbd458163",
@@ -9780,13 +12103,13 @@
     "integration/torchlean/PoissonPTX/Weak.lean": "76ec84dcb9cb808b6e816ef57de62f2cdcf4b10fbe76dc604b6ead19b91a4a8d",
     "integration/torchlean/PoissonPTX/WeakPadding.lean": "920a80b3d0047288905e9bc2573b42937dbf7259c022c3adbb7c602ed9e43279",
     "integration/torchlean/PoissonPTX/WeakResidual.lean": "0b8438f59d104b68834763b204674f7ae4cc428e192d7dc1bced7127a012de33",
-    "integration/torchlean/PoissonContractionsMain.lean": "2764b2da88f98428aae7b9325538e3020eefb4f98895c155e710ab2fc2222cbb",
+    "integration/torchlean/PoissonContractionsMain.lean": "82a43506998beeaf7f0113926813d70b79b4d32fd1ee5b105261b9a7b359924c",
     "integration/torchlean/PoissonQuadCorrespondence.lean": "e5d177ec11019881d2732da0a605d7dd3c4f98ed23acfc2f84fb2b5f5441a211",
-    "integration/torchlean/check.py": "2b884b7d069e60351bfa103e4f0f8490e7a08d63cbdf61049cb761d8a96567c7",
-    "integration/torchlean/lakefile.toml": "f3b093865ac9efc91f858eee4d18b870cce3450578a2776d12fb2fa1f5214ff9",
+    "integration/torchlean/check.py": "326f831348fa98a872cfd24e20e2ab720c111ec667c787997c847bfa8d174af2",
+    "integration/torchlean/lakefile.toml": "27acd6314153417a1581fdce54bda29efbac8b6af51e33e4b95a352d50d4af15",
     "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
     "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
-    "hardware/check_poisson_contractions.py": "f94d1dd238e5abf9163496c9b7a9da905fac8079276d7c60429c06d2fccc43cd",
+    "hardware/check_poisson_contractions.py": "b5131f00ba9a5af51de8bc6b9d85e15c9c2f02484f2f08e6efa2bd3977473a6a",
     "hardware/check_poisson_ptx.py": "6165a8e3962b76285ffa475379ff3d44483ed248e42d5a1497ff4b34d9a99447"
   },
   "source_run_report_sha256": "c0334cbcbb6c4393c3045a73dbaf9ffb303e5103c33ce5b8f16196c3810ad613",

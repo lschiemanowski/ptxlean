@@ -183,3 +183,37 @@ Forward-only control also prevents a thread from executing the same store site
 twice. Combining this fact with the shared-plane address layout supplies storage
 ownership without assuming a phase's computed value. The complete generated
 cell still needs these structural conditions instantiated for its actual bodies.
+
+The three middle arithmetic phases have a concrete concurrent instruction
+program, including their padding branches, weighted contractions, six shared
+stores and three barriers. Starting immediately after the gathered-input barrier
+keeps the earlier gather outside this slice. The initial shared bytes remain
+explicit input storage; they are not assumed to equal a tensor answer.
+
+Shared-store address coverage is derived from the executed widening and base
+addition instructions. A small check of the program's instruction sequence tracks
+when those two scratch registers are ready for a store; branch targets cannot
+enter halfway through that preparation. The shared base and lane registers stay
+unchanged, and inactive lanes cannot enter a data instruction. These facts turn
+the concrete slice's store records into the plane-ownership contract. The
+connection from candidate load values to the ordered tensor arithmetic, along
+with the complete gather and final output, remains a separate obligation.
+
+The structural certificates cover Q1 through Q4 with the emitted arena layout:
+for matrix width m, the basis starts at offset zero, the derivative at 8m²+32
+bytes and the weights at 16m²+64 bytes. Other layouts require another certificate.
+The certificates are checked by Lean's kernel, independently of the frontend
+that compares the complete phase bodies and guards with emitted PTX.
+
+For this slice, address coverage and store non-repetition give each shared word
+a unique producer. A read of that word after the relevant barrier recovers the
+actual producer's stored bytes under the stated necessary source constraints.
+No assumed coverage or barrier-ordering relation is supplied for the execution.
+This still does not identify that stored value with a TorchLean tensor coordinate.
+A finite Q1 candidate run completes all three barriers with four active and 28
+padding lanes. Its existence is separate from source-admitted execution, full
+PTX admission and hardware progress.
+
+Within the middle slice, the later reads consume planes 1 through 4. Planes 5
+and 6 are produced here but consumed by the omitted final phase. Publication
+to those final consumers remains part of complete cell composition.
