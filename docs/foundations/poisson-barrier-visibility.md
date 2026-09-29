@@ -353,10 +353,10 @@ requires a completed run and the two necessary byte-source constraints,
 scalar traces, store coverage or producer-ordering paths.
 
 This finishes numerical correspondence for the **middle slice**. The complete
-cell still needs its prologue, gathered-input connection and a single concurrent
-trace extending through the final reads and global output. The final body now
-has a separate fetched proof and phase-by-phase composition described in the
-[final-output guide](poisson-final-output.md). The proof does not establish
+cell still needs its prologue, gathered-input connection and concurrent
+index/store/return tail. The final arithmetic consumer extension is described
+below. The [final-output guide](poisson-final-output.md) explains the separate
+fetched tail and earlier snapshot composition. The proof does not establish
 full PTX memory admission, arbitrary-input execution existence, GPU progress,
 or whole-solver correspondence.
 
@@ -368,3 +368,14 @@ lanes different local bytes, so correctness cannot come from accidentally
 reading those local snapshots. A negative example rejects a fabricated read
 from the read-only input. This is a test of the reusable proof interface, not
 a replacement for Q1–Q4 numerical composition or a hardware experiment.
+
+
+### Actual final consumers
+
+The [final-consumer proof](poisson-final-consumers.md) extends the concurrent
+program through the last two contractions and their addition. It derives actual
+final read values from planes 5 and 6 through the existing barrier, under one
+source assignment for the whole history. Its theorem takes a completed middle
+prefix and its actual continuation. The separate fetched output tail starts from
+the resulting concurrent state; full-kernel tail interleaving and prologue/gather
+remain outside this fragment.

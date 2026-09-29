@@ -163,7 +163,9 @@ still must establish the executed stores before arrival, the complete access
 coverage, and the subsequent reads for every phase. The three middle phases
 now have this instantiation and numerical composition. The final body has a
 separate fetched proof and phase-by-phase composition; gather and a single
-concurrent trace through final reads remain outside that result. See the
+concurrent output-tail composition remain outside that result. The
+[consumer extension](poisson-final-consumers.md) now justifies actual final reads
+and arithmetic under one whole-history source assignment. See the
 [barrier visibility guide](poisson-barrier-visibility.md).
 The plain `st.shared.f64` instruction is weak by default; publication algebra
 alone must not silently supply synchronization. The source review used the pinned
@@ -188,5 +190,5 @@ stored value, preserves unrelated bytes and supplies a completed execution for
 valid snapshots. A second theorem constructs those bytes from actual middle-run
 stores and obtains the whole TorchLean local cell result. See the
 [final-output guide](poisson-final-output.md) for its entry conditions and the
-remaining distinction between this phase-by-phase composition and one concurrent
-whole-cell trace. The frontend checks the entire final body, not just `x` and `y`.
+remaining distinction between these arithmetic proofs and a complete concurrent
+whole-cell execution, including the index/store/return tail. The frontend checks the entire final body, not just `x` and `y`.

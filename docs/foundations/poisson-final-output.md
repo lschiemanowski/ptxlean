@@ -64,9 +64,11 @@ result, provided its concrete input and output storage is valid.
 
 The distinction still matters: constructing a snapshot from stores does not
 prove that later loads in **one concurrent execution** observe that snapshot.
-The next full-cell obligation is to extend the executed store/barrier/read-source
-argument through these final loads. It must also connect the entry registers and
-initial shared input to the actual prologue and gather. Complete PTX memory
+The [concurrent final-consumer proof](poisson-final-consumers.md) now supplies
+that connection for the arithmetic fragment, under one whole-history source
+assignment. Its actual register result feeds the existing fetched output tail.
+That tail still needs incorporation into the concurrent machine; the entry
+registers and initial shared input still need the actual prologue and gather. Complete PTX memory
 admission, assembly, reductions, PCG kernels, host composition and hardware
 conformance retain their separate boundaries.
 

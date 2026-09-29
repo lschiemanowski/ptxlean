@@ -101,8 +101,10 @@ always terminates, converges, or returns an acceptable vector. The [residual ins
 addresses. A parallel theorem recovers the whole output tensor from necessary
 byte-source constraints and disjoint stores, without assuming sequential reads. The three middle cell phases also have instruction-level numerical correspondence;
 a [final-body proof](poisson-final-output.md) extends it through a constructed
-byte snapshot to the stored local cell result. Gather, one concurrent trace
-through the final reads, complete memory admission, remaining kernels and host
+byte snapshot to the stored local cell result. A [concurrent extension](poisson-final-consumers.md)
+now also justifies actual final arithmetic loads and connects its result state
+to the fetched output tail. Gather, concurrent tail interleaving, complete memory
+admission, remaining kernels and host
 launch composition still require their instruction-level connections. Bounds on scalar array indices alone are not a full memory-safety
 proof. GPU tests and the existing sanitizer evidence remain separate.
 

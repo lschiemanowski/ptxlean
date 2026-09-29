@@ -1,3 +1,9 @@
+import PoissonPTX.ConcurrentExtension
+import PoissonPTX.CellConsumerChecks
+import PoissonPTX.CellConsumerOutput
+import PoissonPTX.CellConsumerProgram
+import PoissonPTX.CellConsumerSources
+import PoissonPTX.CellConsumerValues
 import PoissonPTX.CellFinal
 import PoissonPTX.CellFinalChecks
 import PoissonPTX.CellFinalKernel
@@ -3730,3 +3736,55 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellFinal.result_tensor
 #print axioms PtxTorchLean.Poisson.PTX.CellFinal.rendered
 #print axioms PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Extension.run_append_code
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Extension.ReadOnly
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Extension.prefix_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Extension.compatible_prefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Extension.performed_prefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Extension.view_append
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.schedule
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.candidate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.successful
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.executed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.tail_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.finished
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.whole_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.zero_words
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.correspondence
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks.wrong_join_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.expected_tensor
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_arithmetic
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_local
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_completion
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.body
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.suffix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.program
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.checked
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.shared_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.sites
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.boundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.no_tail_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Results
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.results
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.loadCheck
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Loads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.loads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.guards
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.symbolic
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.coverage
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.unique
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.publication
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.active
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.load_location
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.load_view
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.combined
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_late
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_readonly
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.all_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.register_value

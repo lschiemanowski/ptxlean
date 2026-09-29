@@ -1,0 +1,133 @@
+{
+  "id": "14a3da0c-39ba-4327-9125-b097d512581b",
+  "base": "1c6cfc8e9b35deaf632247fe6ac0a85ac2d11886",
+  "contentTree": "6abe74b62887c7e2bc07a965fa6a05445f8d4461",
+  "reviewer": "Codex",
+  "summary": "Prove concurrent Poisson final-consumer correspondence with one source history.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Replace the unproved final-read connection with derived address/producer/barrier sources for the concurrent arithmetic extension. State actual prefix/continuation conditions and retain the index/store/return, prologue/gather and full-admission boundaries."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Record actual final-load and register correspondence and the fetched output tail from that real state; distinguish this from a complete concurrent kernel."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive instruction or memory-source rule changed. Finite code certificates use kernel reduction, every new public declaration is explicitly audited, and exact emitted-code binding remains separate from hardware fidelity."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The Poisson tensor operator, PTX implementation, accepted residual criterion and empirical algorithm are unchanged. This is a stronger instruction correspondence for a bounded fragment."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "6abe74b62887c7e2bc07a965fa6a05445f8d4461",
+      "method": "integration/torchlean/check.sh; python3 -m unittest discover -s hardware -p test_*.py; both saved Poisson binding checkers; python3 scripts/check_distribution.py; stratic validate; git diff --check; manual review of theorem conditions, history restriction, actual consumer sources and the separate output-tail boundary; local guide-link and receipt-source-hash checks.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 checked integration dependencies on Linux; 348 guarded integration Lean files. No GPU rerun, external model call or primitive-semantic change.",
+      "evidence": "Full integration passed 3369 exact dependency reports, including 51 new public declarations, with only standard Lean axioms. Fresh Q1–Q4 extended-program structural/read/result certificates and completed source-constrained Q1 witness passed; changed final addition is rejected. 28 hardware Python tests passed. Saved PTX binding passed on 30 layouts: 720 contractions, 630 shared stores, 90 middle slices, 90 final bodies and 30 residual entries. The focused binding audit passed 67 endpoints; both receipt source-hash maps match current files. The emission and README are unchanged. Stratic validation has no issues; all impact/mapping diagnostics are reviewed. Distribution and whitespace checks passed; local guide links resolve. Exact before/after snapshot trees match. The theorem takes an actual completed middle prefix and its continuation at the existing last barrier. The concurrent fragment ends after arithmetic; index/store/return use the separate fetched model. Automatic whole-run segmentation, concurrent tail interleaving, prologue/gather and full admission remain explicit obligations. Log SHA256: {\"/tmp/poisson-consumer-integration.log\": \"929e8cd1e025ff62b1818d8f0cef11a5b2e2e0091ac8a4de1b5b4375d88381f9\", \"/tmp/poisson-consumer-python.log\": \"b2208f783d34ea6faf914abf15c9021f2122728f9d778d306230152a45b50898\", \"/tmp/poisson-consumer-binding.log\": \"8841f97c9fc5ad31bf3c0bd9e1f33e461cd26c9ed8a64879ab96d4061af2ed39\", \"/tmp/poisson-consumer-residual-binding.log\": \"8942ebfd2c1a895f5a80851c10d393228fca29b14da03ecd4385962fa76d0ba6\", \"/tmp/poisson-consumer-distribution.log\": \"ab4407fa5ecd2285fe290ab8d820508349e8bd38b97e32fe1d25628a331df623\", \"/tmp/poisson-consumer-stratic.json\": \"ef43b0bc6092267f1be737777a2a9b9e3c4d6f42a1b9727d8a85102c54bbb45c\"}",
+      "tests": [],
+      "id": "35937a01-e4fc-4c57-9cf5-c275fc5b306e",
+      "recordedAt": "2026-09-29T18:26:35.856Z"
+    }
+  ],
+  "recordedAt": "2026-09-29T18:27:27.867Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-final-consumers.md",
+      "reason": "Reconcile the explanations with actual concurrent final consumers, one whole-history source assignment and the remaining arithmetic-cutoff, supplied segmentation, output-tail and full-kernel boundaries."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellConsumerChecks.lean",
+      "reason": "Provide a completed Q1 source-constrained whole-history witness using all 32 participants, apply the general correspondence theorem and reject a changed final arithmetic expression; no arbitrary-input existence claim."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellConsumerOutput.lean",
+      "reason": "Review actual shared producer/barrier visibility, derived store-free continuation, whole-history numerical tracking and TorchLean composition. The fetched output tail starts from the actual final state; concurrent tail interleaving is explicitly unproved."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellConsumerProgram.lean",
+      "reason": "Extend the concrete middle program through final arithmetic, with explicit padding cutoff; kernel-check guard/barrier/ownership, read geometry and result-expression certificates for Q1–Q4."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellConsumerSources.lean",
+      "reason": "Review actual shared producer/barrier visibility, derived store-free continuation, whole-history numerical tracking and TorchLean composition. The fetched output tail starts from the actual final state; concurrent tail interleaving is explicitly unproved."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellConsumerValues.lean",
+      "reason": "Review actual shared producer/barrier visibility, derived store-free continuation, whole-history numerical tracking and TorchLean composition. The fetched output tail starts from the actual final state; concurrent tail interleaving is explicitly unproved."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentExtension.lean",
+      "reason": "Prove code extension, restriction of compatible/performed source constraints to a prefix, and preservation of the actual-store word view when the continuation contains no stores."
+    },
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Reconcile the explanations with actual concurrent final consumers, one whole-history source assignment and the remaining arithmetic-cutoff, supplied segmentation, output-tail and full-kernel boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-cell-contractions.md",
+      "reason": "Reconcile the explanations with actual concurrent final consumers, one whole-history source assignment and the remaining arithmetic-cutoff, supplied segmentation, output-tail and full-kernel boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-correspondence.md",
+      "reason": "Reconcile the explanations with actual concurrent final consumers, one whole-history source assignment and the remaining arithmetic-cutoff, supplied segmentation, output-tail and full-kernel boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-final-output.md",
+      "reason": "Reconcile the explanations with actual concurrent final consumers, one whole-history source assignment and the remaining arithmetic-cutoff, supplied segmentation, output-tail and full-kernel boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-instructions.md",
+      "reason": "Reconcile the explanations with actual concurrent final consumers, one whole-history source assignment and the remaining arithmetic-cutoff, supplied segmentation, output-tail and full-kernel boundaries."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Audit the new source, arithmetic and output-tail endpoints, build their exact modules and state the refined binding scope. Existing matching logic and emitted instructions are unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register six modules and all 51 new public declarations in the pinned build and exact dependency audit; freshly execute the new certificates and witness checks."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register six modules and all 51 new public declarations in the pinned build and exact dependency audit; freshly execute the new certificates and witness checks."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register six modules and all 51 new public declarations in the pinned build and exact dependency audit; freshly execute the new certificates and witness checks."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Update the self-contained responsibility, summaries, partial-realization boundary and exact theorem passage links in lockstep with the proof work."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Update the self-contained responsibility, summaries, partial-realization boundary and exact theorem passage links in lockstep with the proof work."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Update the self-contained responsibility, summaries, partial-realization boundary and exact theorem passage links in lockstep with the proof work."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Update the self-contained responsibility, summaries, partial-realization boundary and exact theorem passage links in lockstep with the proof work."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh proof-source hashes and successful saved-PTX binding evidence for the unchanged emitted kernels; this is not a new GPU run."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh proof-source hashes and successful saved-PTX binding evidence for the unchanged emitted kernels; this is not a new GPU run."
+    }
+  ]
+}

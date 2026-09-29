@@ -95,8 +95,17 @@ TorchLean local cell result, with allocation and index conditions explicit.
 
 The middle slice starts with gathered bytes and prepared base/lane/coordinate
 registers. The final phase's entry registers are also explicit. The prologue and
-gather must establish those inputs, and one concurrent trace must still connect
-the final reads to the middle stores through the barriers. Complete PTX memory
+gather must establish those inputs, and the full kernel must still incorporate
+the final index/store/return tail into its concurrent execution. Complete PTX memory
 admission, general execution existence, hardware progress and whole-solver
 instruction correspondence remain separate obligations. Documentation and saved
 empirical evidence distinguish these from the completed phase-by-phase theorem.
+
+
+A concurrent arithmetic extension now proves that actual final loads recover the
+middle stores through the last barrier, using one source assignment for the whole
+history. It takes the actual middle prefix and its continuation at that barrier,
+and derives the final register's TorchLean local cell value. The fetched output
+tail starts from this actual state. The concurrent fragment itself stops before
+that tail; its interleaving, automatic decomposition of arbitrary full runs and
+the omitted prologue/gather remain explicit full-kernel obligations.

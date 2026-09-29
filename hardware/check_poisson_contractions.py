@@ -5,9 +5,13 @@ Complete middle-phase bodies are bound to the concurrent Lean program with
 kernel-checked control, address and numerical certificates for Q1--Q4. Completed
 middle-slice executions satisfying necessary byte-source constraints store all
 six TorchLean intermediate tensors. The final body has a fetched, snapshot-based
-store theorem and phase-by-phase composition with actual middle stores. Final
-read visibility in one concurrent full-cell trace, gather, prologue, full launch
-composition and complete PTX memory admission remain open.
+store theorem and phase-by-phase composition with actual middle stores. A
+concurrent arithmetic extension now justifies the actual final loads using one
+whole-history source assignment and connects its result to the fetched store.
+The arithmetic run is supplied as a middle prefix and continuation at the last
+barrier. Incorporating index/store/return into that concurrent machine, arbitrary
+full-run decomposition, gather, prologue, full launch composition and complete
+PTX memory admission remain open.
 """
 import argparse
 import hashlib
@@ -211,7 +215,7 @@ def check(run, output):
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
                     'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
                     'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.CellFinalSnapshot',
-                    'PoissonPTX.CellFinalLayout'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerOutput'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -233,9 +237,14 @@ def check(run, output):
               ('arithmetic_correct', 'fetched_correct', 'fetched_exists', 'inputs_of_matrices',
                'index_exact', 'location_exact', 'output_valid', 'read_wordBytes',
                'phase_result', 'completed_from_middle', 'exists_from_middle')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.Extension.'+n for n in
+              ('run_append_code', 'compatible_prefix', 'performed_prefix', 'view_append')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.'+n for n in
+              ('checked', 'loads', 'results', 'publication', 'load_view', 'tail_readonly',
+               'all_reads', 'register_value', 'completed_arithmetic', 'stored_local', 'tail_completion')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.CellConsumerOutput\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)

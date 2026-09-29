@@ -403,6 +403,10 @@ TARGETS.update(['PoissonPTX.Symbolic', 'PoissonPTX.SymbolicRun', 'PoissonPTX.Cel
 COUNTS.update({'PtxTorchLean.Poisson.PTX.CellFinal': 43, 'PtxTorchLean.Poisson.PTX.CellFinal.Checks': 13})
 TARGETS.update(['PoissonPTX.CellFinal', 'PoissonPTX.CellFinalChecks', 'PoissonPTX.CellFinalKernel', 'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellFinalSnapshot', 'PoissonPTX.CellFinalTensor', 'PoissonPTX.CellFinalText'])
 
+# Concurrent final consumer loads and actual arithmetic-to-store connection.
+COUNTS.update({'PtxTorchLean.Poisson.PTX.Concurrent.Extension': 6, 'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks': 13, 'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer': 32})
+TARGETS.update(['PoissonPTX.ConcurrentExtension', 'PoissonPTX.CellConsumerChecks', 'PoissonPTX.CellConsumerOutput', 'PoissonPTX.CellConsumerProgram', 'PoissonPTX.CellConsumerSources', 'PoissonPTX.CellConsumerValues'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -472,7 +476,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

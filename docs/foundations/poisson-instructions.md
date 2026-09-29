@@ -245,5 +245,6 @@ contracts. The three middle phases now have complete numerical composition,
 including their stores and barriers, under necessary byte-source constraints;
 the [final-body proof](poisson-final-output.md) composes its arithmetic and
 global store with a byte snapshot constructed from the middle stores. Gather,
-final-read visibility in one concurrent trace and the complete cell launch remain
-open.
+the concurrent index/store/return tail and the complete cell launch remain open.
+The [final-consumer extension](poisson-final-consumers.md) now proves the actual
+final arithmetic loads and result under one whole-history source assignment.

@@ -116,8 +116,9 @@ Lean instruction programs used by the proofs.
 
 These local contraction contracts use supplied phase snapshots. They do not
 establish that prior stores and barriers provide those snapshots. The middle-slice theorem below discharges its control, weight and barrier
-obligations. Initial gather, final-read visibility in one concurrent trace and complete
-parallel admission remain to be connected for the full cell. A hypothesis that
+obligations. The consumer extension below justifies final reads; initial gather,
+concurrent output-tail composition and complete parallel admission remain to be
+connected for the full cell. A hypothesis that
 a previous phase already computes its matrix answer cannot replace that work.
 
 Shared-plane publication connects a lane's register result to its eight stored
@@ -182,7 +183,8 @@ the writer's arrival, the common completion and a later read in strict order.
 Forward-only control also prevents a thread from executing the same store site
 twice. Combining this fact with the shared-plane address layout supplies storage
 ownership without assuming a phase's computed value. The middle slice instantiates these conditions below. The complete generated
-cell still needs the gather and final reads joined into the same concurrent trace.
+cell still needs the gather and index/store/return tail joined to the concurrent
+arithmetic fragment.
 
 The three middle arithmetic phases have a concrete concurrent instruction
 program, including their padding branches, weighted contractions, six shared
@@ -220,8 +222,9 @@ checks reject a changed matrix coordinate and replacing weight multiplication
 with addition.
 
 Within the middle slice, the later reads consume planes 1 through 4. Planes 5
-and 6 are produced here but consumed by the omitted final phase. Publication
-to those final consumers remains part of complete cell composition.
+and 6 are produced here and consumed by the final arithmetic extension below.
+That extension proves their publication to actual final reads; output-tail
+interleaving remains part of complete cell composition.
 
 The numerical connection projects a thread's actual interleaved execution of a
 straight-line contraction onto the existing scalar instruction proof. Its memory
@@ -280,7 +283,7 @@ termination for arbitrary inputs or a GPU scheduler. The source rules are
 necessary constraints, not complete PTX memory admission.
 
 The remaining whole-cell obligations are to establish the gathered input and
-entry registers, extend the concurrent trace through the final reads and stores,
+entry registers, incorporate the index/store/return tail into the concurrent machine,
 and prove the full launch and memory-admission connections. Assembly, reductions,
 PCG kernels and host composition retain their separate instruction obligations.
 
@@ -312,9 +315,9 @@ conditions are still explicit entry conditions.
 
 This composition uses a constructed snapshot. It does not yet prove that the
 final reads obtain those bytes within a single concurrent whole-cell execution.
-That requires extending the actual store/barrier/read-source argument through
-the final consumers of planes 5 and 6. Initial gather, full launch admission and
-host visibility remain separate from the completed phase-by-phase theorem.
+The concurrent consumer extension below supplies the actual read-source argument
+for the arithmetic fragment. Initial gather, concurrent output-tail composition,
+full launch admission and host visibility remain separate from that result.
 
 The frontend compares the complete final body and return in all three element
 entries with the Lean program used by these proofs. Kernel-checked examples
@@ -322,3 +325,41 @@ exercise nonzero, asymmetric matrices and a nonzero element/lane output offset;
 wrong addition, short or unaligned output storage, and index overflow have
 explicit checks. These checks support the general proofs and text binding;
 they are not a new GPU experiment or hardware-conformance claim.
+
+
+The concurrent arithmetic extension includes the final two contractions and
+addition after the middle phases' last barrier. It uses the same fetched
+candidate machine: loads may choose arbitrary words before their byte sources
+are checked. One source assignment covers the entire middle and final history.
+Final shared loads address planes 5 or 6 after the actual completed barrier.
+Derived store ownership and barrier ordering force each load to recover its
+unique producer's recorded bytes; initial bytes cannot replace that producer.
+
+The theorem takes an actual completed middle execution and its continuation
+from the same boundary state, at the existing last barrier. Lifting and joining
+these runs gives one fetched concurrent execution; no new barrier or memory
+snapshot is inserted. The continuation contains no stores. Therefore it cannot
+supply a new source for an earlier read, and the required middle-prefix source
+constraints follow from the whole-history constraints. They are not separate
+assumptions permitting unrelated accounts of memory.
+
+The real final arithmetic register equals the complete ordered TorchLean local
+cell calculation. Sound symbolic tracking follows the fetched operations and
+justified candidate loads, preserving rounding order and NaN encoding freedom.
+The existing fetched index/store/return proof starts from that actual concurrent
+result state and establishes the global output value. Its storage bounds remain
+explicit; the result does not depend on constructing a replacement input memory.
+
+This concurrent fragment stops after arithmetic. The integer index, global
+store and return still use the separate fetched model. Their interleaving with
+other final readers, automatic extraction of the supplied execution boundary
+from an arbitrary complete kernel run, prologue/gather, full launch composition
+and complete memory admission remain open. Inactive lanes skip the arithmetic
+to its cutoff; correspondence of the omitted tail and actual return belongs to
+the remaining full-kernel connection. No hardware progress claim follows.
+
+A completed zero-data Q1 execution witnesses the whole-history source conditions
+and final result with all 32 participants, including 28 padding lanes. This is
+finite existence evidence, not an arbitrary-input termination theorem. A changed
+final addition fails the symbolic numerical certificate. The existing nonzero
+final-body checks and saved-PTX bindings remain separate regression evidence.
