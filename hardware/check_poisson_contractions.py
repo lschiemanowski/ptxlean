@@ -14,9 +14,11 @@ derives that arithmetic execution, its ordered event embedding and result
 register relation, with only global output stores omitted. Byte-source
 restriction preserves retained reads when those stores are beyond the bounded
 coefficient region. Actual store addresses now follow from launch bounds, and
-each completed active lane's stored bytes have its TorchLean value. Publication
-of these per-lane stores into one global tensor remains open, as do
-gather, prologue, full launch composition and complete PTX memory admission.
+each completed active lane's stored bytes have its TorchLean value. Actual store
+occurrence and recorded values imply an order-independent published global
+tensor equal to TorchLean. This mathematical publication leaves CUDA host
+visibility, gather, prologue, full launch composition and complete PTX memory
+admission open.
 Saved output extents are checked disjoint; this is concrete layout evidence,
 separate from the general launch-derived address theorem and GPU conformance.
 """
@@ -233,7 +235,7 @@ def check(run, output):
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
                     'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
                     'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.CellFinalSnapshot',
-                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult', 'PoissonPTX.CellTailOwners'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult', 'PoissonPTX.CellTailOwners', 'PoissonPTX.CellOutputTensor'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -276,9 +278,14 @@ def check(run, output):
               ('tail_ready', 'runs_ready', 'runs_keeps', 'store_address', 'stored_word')]
     names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.'+n for n in
               ('store_bounds', 'coefficient_nowrap', 'result_from_launch', 'stored_from_launch', 'stores_disjoint')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.'+n for n in
+              ('store_value', 'completed_wrote', 'safe_records', 'present_record', 'published_word',
+               'published_outside', 'location_entry', 'published_entry', 'published_tensor')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.'+n for n in
+              ('word', 'permuted_word', 'outside')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)

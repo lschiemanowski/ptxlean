@@ -377,5 +377,7 @@ program through the last two contractions and their addition. It derives actual
 final read values from planes 5 and 6 through the existing barrier, under one
 source assignment for the whole history. Its theorem takes a completed middle
 prefix and its actual continuation. The separate fetched output tail starts from
-the resulting concurrent state; published global output recovery and prologue/gather
-remain outside this fragment.
+the resulting concurrent state. The [combined output proof](poisson-concurrent-output.md)
+now derives this connection from one run and recovers a global TorchLean tensor
+by publishing its actual store records. CUDA host visibility and prologue/gather
+remain outside that result.

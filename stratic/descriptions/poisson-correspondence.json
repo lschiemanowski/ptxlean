@@ -17,21 +17,22 @@
     "Derive shared-store ownership and barrier visibility from fetched control and addresses, rather than assuming producer ordering or phase values.",
     "Prove that every completed Q1\u2013Q4 middle-slice run satisfying necessary byte-source constraints stores all six TorchLean intermediate tensors, including weight multiplication.",
     "Derive every load address and source using sound symbolic bookkeeping and kernel-checked code certificates; retain NaN encoding freedom and ordered rounded sums.",
-    "Keep slice-entry registers and gathered bytes explicit; published global output recovery, full gather, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
+    "Keep slice-entry registers and gathered bytes explicit; full gather, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
     "Supply a completed zero-data Q1 execution satisfying both necessary byte-source constraints; reject wrong-coordinate and wrong-weight code mutations without claiming arbitrary-input existence.",
     "Connect the complete final arithmetic/store body to its actual byte inputs, and compose with middle-run stores through a proved byte snapshot while retaining the distinct whole-trace visibility obligation.",
     "Derive final consumer load values from actual middle stores and barrier history, then connect the actual arithmetic registers to the existing final-store proof without hiding the remaining model boundary.",
     "Derive the last-barrier execution split from one actual concurrent run, without an assumed boundary state or schedule; only the observed output thread must finish final arithmetic.",
     "Preserve byte-source choices under ordered event restriction when omitted output stores are disjoint from actual coefficient reads; derive the arithmetic execution and result-register relation from the concurrent tail.",
     "Derive the arithmetic run and ordered event embedding from a fetched concurrent output-tail execution, preserving the result register and actual padding returns without adding synchronization.",
-    "Derive that only global stores are omitted from the arithmetic projection; derive their addresses from launch conditions and retain publication into one global tensor as remaining work.",
+    "Derive that only global stores are omitted from the arithmetic projection; derive their addresses from launch conditions and derive publication into one global tensor.",
     "Witness a completed Q1 run with output stores interleaved before other final reads, all padding returns, and one compatible source assignment.",
     "Derive actual output-store addresses from launch registers and fetched tail steps, and connect completed active lanes' stored words to their arithmetic results.",
     "Prove each completed active lane's actual stored word equals TorchLean in the same concurrent run; derive distinct writers' disjoint output bytes from launch lane IDs and a common cell ID.",
-    "Require explicit nonwrapping launch index/address bounds for all lanes, including padding; keep global publication and host visibility separate."
+    "Require explicit nonwrapping launch index/address bounds for all lanes, including padding; distinguish mathematical global publication from CUDA host visibility.",
+    "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order."
   ],
   "realization": "partial",
-  "remaining": "Actual global-store bounds are now derived from launch registers and nonwrapping layout conditions. The same concurrent execution proves each completed active lane's actual stored bytes equal the TorchLean local cell result. Combining these per-lane stores into one published global output tensor remains open. Prologue/gather, arbitrary-input source-admitted existence, complete PTX memory admission, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations.",
+  "remaining": "Actual global-store occurrence, addresses and recorded values are derived from completed execution and launch bounds. Publishing the records in any order yields the TorchLean local-cell tensor. Prologue/gather, arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations.",
   "links": [
     {
       "kind": "implementation",
@@ -1218,6 +1219,102 @@
         "path": "integration/torchlean/PoissonPTX/CellTailAddressChecks.lean",
         "passage": {
           "quote": "theorem nonzero_store :\n    sampleResult.events=[.data 0 \u27e8.global,\u27e84,true,336,0x3ff0000000000000\u27e9\u27e9] \u2227\n    read64 (sampleResult.state.core.lanes 0).global 336=0x3ff0000000000000 \u2227\n    sampleResult.state.halted 0=true"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A completed\nactive lane is proved to have emitted its store: without that event, its program\ncounter cannot pass the store instruction."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellOutputOccurrence.lean",
+        "passage": {
+          "quote": "theorem completed_wrote (lo : 2\u2264width) (hi : width\u22645)\n    (run : WithTail.Runs cfg ctx (front width) (CellFinal.tail width output) start events final)\n    (aligned : Aligned start.core) (pcs : \u2200 t, (start.core.lanes t).pc=0)\n    (active : owner.val<width*width)\n    (finished : (front width).length+5\u2264(final.core.lanes owner).pc) : Wrote events owner"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The recorded word equals the lane's\nfinal arithmetic register because later steps preserve that register."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellOutputValues.lean",
+        "passage": {
+          "quote": "theorem store_value (lo : 2\u2264width) (hi : width\u22645)\n    (run : WithTail.Runs cfg ctx (front width) (CellFinal.tail width output) start events final)\n    (aligned : Aligned start.core) (pcs : \u2200 t, (start.core.lanes t).pc=0)\n    (member : Event.data owner a\u2208events) (store : a.data.store=true) (global : a.space=.global) :\n    a.data.value=(final.core.lanes owner).regs 11"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Publishing an event history means applying its global store records to one byte\nmemory; loads, shared accesses and barriers leave that memory unchanged."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/GlobalPublication.lean",
+        "passage": {
+          "quote": "records do not write the published global bytes. -/\ndef applyEvent (memory : Memory) : Event n \u2192 Memory\n  | .data _ a => if a.space=.global \u2227 a.data.store=true then\n      write64 memory a.data.address a.data.value else memory\n  | .barrier _ => memory\n\n/-- This is a mathematical merge of recorded writes, not a CUDA host-visibility\nor complete PTX memory-admission rule. -/\ndef publish (memory : Memory) : List (Event n) \u2192 Memory\n  | [] => memory\n  | e::rest => publish (applyEvent memory e) rest\n\ndef Safe (events : List (Event n)) (address : Nat) (value : Word) : Prop"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The resulting output\nword is therefore independent of publication order and of the old output bytes."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellOutputPublication.lean",
+        "passage": {
+          "quote": "theorem published_word (launch : Numeric.Launch width bases start.core) (lo : 2\u2264width) (hi : width\u22645)\n    (run : WithTail.Runs cfg ctx (front width) (CellFinal.tail width output) start events final)\n    (bounds : OutputBounds width output start) (cells : \u2200 t, (start.core.lanes t).regs 15=cell)\n    (permutation : order.Perm events) (owner : Fin 32) (active : owner.val<width*width)\n    (finished : (front width).length+5\u2264(final.core.lanes owner).pc) :\n    read64 (GlobalPublication.publish memory order)\n      (CellFinal.location (start.core.lanes owner) width output).toNat=(final.core.lanes owner).regs 11"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Bytes outside the output words remain unchanged."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellOutputPublication.lean",
+        "passage": {
+          "quote": "theorem published_outside (launch : Numeric.Launch width bases start.core) (lo : 2\u2264width) (hi : width\u22645)\n    (run : WithTail.Runs cfg ctx (front width) (CellFinal.tail width output) start events final)\n    (permutation : order.Perm events)\n    (outside : \u2200 t, p<(CellFinal.location (start.core.lanes t) width output).toNat \u2228\n      (CellFinal.location (start.core.lanes t) width output).toNat+8\u2264p) :\n    GlobalPublication.publish memory order p=memory p"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "If all active lanes have passed their stores, the ordinary row-major tensor\nview of the published bytes equals the ordered TorchLean local cell calculation."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellOutputTensor.lean",
+        "passage": {
+          "quote": "theorem published_tensor\n    (launch : Numeric.Launch width bases start.core) (lo : 2\u2264width) (hi : width\u22645)\n    (run : WithTail.Runs cfg ctx (front width) (CellFinal.tail width output) start events final)\n    (bounds : OutputBounds width output start) (offset : Coefficients.extent width\u2264output.toNat)\n    (cells : \u2200 t, (start.core.lanes t).regs 15=cell)\n    (compatible : Visibility.Compatible initial events original)\n    (performed : Visibility.Performed events original) (permutation : order.Perm events)\n    (finished : \u2200 t : Fin 32, t.val<width*width \u2192 (front width).length+5\u2264(final.core.lanes t).pc) :\n    tensor width (bases .global) cell output (GlobalPublication.publish memory order)=localAction\n      (Numeric.initialTensor width bases initial .global 0)\n      (Numeric.initialTensor width bases initial .global (width*width*8+32))\n      (Numeric.initialTensor width bases initial .global (2*(width*width*8+32)))\n      (Numeric.initialTensor width bases initial .shared 0)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The completed Q1 witness instantiates the whole-tensor theorem for arbitrary\nold output bytes and for reversed publication order."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPublicationChecks.lean",
+        "passage": {
+          "quote": "theorem reversed_output (memory : Memory) :\n    tensor 2 0 0 160 (GlobalPublication.publish memory Checks.result.events.reverse)=\n    tensor 2 0 0 160 (GlobalPublication.publish memory Checks.result.events)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Negative checks reject a missing\nstore and partially overlapping store bytes; distinct addresses alone do not\njustify disjoint words."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPublicationChecks.lean",
+        "passage": {
+          "quote": "theorem overlapping_store_rejected : \u00acGlobalPublication.Safe\n    ([.data 0 \u27e8.global,\u27e80,true,161,1\u27e9\u27e9] : List (Event 32)) 160 0"
         }
       }
     }

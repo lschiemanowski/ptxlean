@@ -432,12 +432,40 @@ After an active lane executes its store, reading its output word from that
 lane's actual byte memory yields the TorchLean local cell value. This holds
 in the same interleaved execution, even if other lanes have not completed.
 The result follows from the store's byte update and preservation through
-return; a separate tail run or memory snapshot is not assumed. This per-lane
-result still needs composition into one published global output tensor.
-That publication, host-visible completion and full memory admission are
-distinct obligations.
+return; a separate tail run or memory snapshot is not assumed. The actual
+recorded stores also compose into one global output tensor. Host-visible
+completion and full memory admission remain distinct obligations.
 
 Checks instantiate the stored-value theorem in the completed Q1 concurrent
 witness using launch conditions alone. A separate fetched tail checks nonzero
 base, cell and lane indices and a nonzero stored word. Mutated launch bounds
 reject 32-bit index overflow and 64-bit byte-address overflow.
+
+Global output publication uses the actual recorded global stores. A completed
+active lane is proved to have emitted its store: without that event, its program
+counter cannot pass the store instruction. The recorded word equals the lane's
+final arithmetic register because later steps preserve that register. No list
+of required stores or desired output words is supplied as an assumption.
+
+Publishing an event history means applying its global store records to one byte
+memory; loads, shared accesses and barriers leave that memory unchanged. Every
+store either belongs to the chosen output lane and writes its proved word, or
+has disjoint bytes because it belongs to another lane. The resulting output
+word is therefore independent of publication order and of the old output bytes.
+Bytes outside the output words remain unchanged. This mathematical merge does
+not assert CUDA host visibility or full PTX memory admission.
+
+If all active lanes have passed their stores, the ordinary row-major tensor
+view of the published bytes equals the ordered TorchLean local cell calculation.
+Its address is the launch base plus the cell offset, output offset and eight
+times the row-major coordinate. The theorem applies to every combined Q1–Q4
+execution satisfying the stated launch bounds and necessary byte-source
+constraints. Permuting records only changes their publication order; source
+constraints still concern the original execution history.
+
+The completed Q1 witness instantiates the whole-tensor theorem for arbitrary
+old output bytes and for reversed publication order. The nonzero fetched tail
+checks publication of its actual recorded word. Negative checks reject a missing
+store and partially overlapping store bytes; distinct addresses alone do not
+justify disjoint words. These checks do not establish arbitrary-input execution
+existence or the omitted whole-kernel stages.

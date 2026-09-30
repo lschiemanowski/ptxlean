@@ -1,0 +1,129 @@
+{
+  "id": "62a116c1-427f-438a-bc4d-153c4ab08f60",
+  "base": "3199f76b7c0309cdb1b0cb5d99fb2d5ab4bc2059",
+  "contentTree": "4a1e2de61989fa53602b8ba9fa2927554a363c23",
+  "reviewer": "Codex",
+  "summary": "Derive actual output records and publish the concurrent Poisson local-cell tensor independently of merge order.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Completed active lanes must emit stores. Actual recorded values equal preserved arithmetic registers; common-cell launch geometry derives disjoint words. Publishing actual events in any order yields the whole row-major TorchLean tensor, without supplied store completeness or output values. Host visibility and full PTX admission remain open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Advance the implementation boundary from per-lane bytes to an actual-record published tensor. Gather/prologue and complete launch/solver correspondence remain explicit."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Existing instruction and memory-source rules are unchanged. Mathematical publication is explicitly separate from PTX admission and CUDA visibility. All 33 new declarations are registered in the exact axiom audit; no sorry or unchecked axioms are added."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Equations, TorchLean calculation, GPU kernels, numerical residual criterion and measured behavior are unchanged; the bounded instruction correspondence is stronger."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "4a1e2de61989fa53602b8ba9fa2927554a363c23",
+      "method": "python3 /tmp/poisson-publication-verify.py; python3 hardware/check_poisson_contractions.py and hardware/check_poisson_ptx.py on .hardware-runs/poisson-certified; python3 -m unittest discover -s hardware -p test_*.py; python3 scripts/check_distribution.py; stratic validate; python3 /tmp/poisson-publication-final-check.py; exact final snapshots before and after checks",
+      "outcome": "pass",
+      "environment": "Lean 4.34.0 pinned with 16 verified dependencies; Linux x86_64; local Python; existing saved GPU run, no new GPU run or paid model calls.",
+      "evidence": "Complete registered build passed (4466 jobs); new CellPublicationChecks freshly kernel-checked; 3551 exact axiom reports contain only standard Lean axioms, no sorry or new unchecked axioms; 377 source guards passed. Unchanged legacy interpreter checks were not freshly rerun. 29 Python tests passed. Saved binding checks passed: 720 contraction and 630 shared-store blocks across 30 layouts, true_residual matching in 30 layouts; 114 contraction and 3 residual focused endpoints audited. Refreshed receipts match all 220 recorded source hashes. Final exact snapshot stable; Stratic valid, local doc links resolve, distribution guard and diff checks pass. README unchanged. Mathematical publication is distinct from CUDA host visibility and full PTX admission.",
+      "tests": [],
+      "id": "51faa45c-b432-46f8-becb-564acb08eea2",
+      "recordedAt": "2026-09-30T13:09:23.640Z"
+    }
+  ],
+  "recordedAt": "2026-09-30T13:10:15.920Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Explain actual store occurrence, stable recorded values, arbitrary-order global publication and the ordinary row-major tensor view. Retain all admission, gather, host visibility and solver boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-concurrent-output.md",
+      "reason": "Explain actual store occurrence, stable recorded values, arbitrary-order global publication and the ordinary row-major tensor view. Retain all admission, gather, host visibility and solver boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-correspondence.md",
+      "reason": "Explain actual store occurrence, stable recorded values, arbitrary-order global publication and the ordinary row-major tensor view. Retain all admission, gather, host visibility and solver boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-final-consumers.md",
+      "reason": "Explain actual store occurrence, stable recorded values, arbitrary-order global publication and the ordinary row-major tensor view. Retain all admission, gather, host visibility and solver boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-output-separation.md",
+      "reason": "Explain actual store occurrence, stable recorded values, arbitrary-order global publication and the ordinary row-major tensor view. Retain all admission, gather, host visibility and solver boundaries."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Audit twelve additional publication endpoints and update the proof boundary without changing emitted PTX matching logic."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh saved-PTX binding evidence and check every source hash against current files. No GPU rerun."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh saved-PTX binding evidence and check every source hash against current files. No GPU rerun."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellOutputOccurrence.lean",
+      "reason": "A PC invariant over actual front/tail steps proves an active lane cannot pass its store without recording it. Check inactive skip and collective release cases; no completion-of-stores premise."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellOutputPublication.lean",
+      "reason": "Discharge generic merger premises using actual run, launch geometry, same cell ID, store occurrence and recorded-value theorems; source constraints are not permuted."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellOutputTensor.lean",
+      "reason": "Prove fetched addresses equal natural row-major array addresses and lift per-word correspondence to tensor equality; active-lane completion, numerical source constraints and launch bounds remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellOutputValues.lean",
+      "reason": "Result register preservation through arbitrary subsequent steps connects every actual global record to its final writer register. Global records cannot originate in the shared-store front."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellPublicationChecks.lean",
+      "reason": "Instantiate whole-tensor publication and reverse-order equality on the completed Q1 run; publish a nonzero actual tail record; check coefficient byte preservation and rejection of missing/overlapping records."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/GlobalPublication.lean",
+      "reason": "Fold actual global records into bytes. Matching store existence plus agreeing or byte-disjoint writes proves target word recovery from arbitrary initial memory in every permutation. Outside bytes remain unchanged."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register six new modules and all 33 declarations; freshly execute the new publication regression module and audit all 3551 endpoints."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register six new modules and all 33 declarations; freshly execute the new publication regression module and audit all 3551 endpoints."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register six new modules and all 33 declarations; freshly execute the new publication regression module and audit all 3551 endpoints."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reconcile description, summary, remaining obligations and eight exact implementation links. Plain-English descriptions distinguish mathematical publication from CUDA visibility."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reconcile description, summary, remaining obligations and eight exact implementation links. Plain-English descriptions distinguish mathematical publication from CUDA visibility."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reconcile description, summary, remaining obligations and eight exact implementation links. Plain-English descriptions distinguish mathematical publication from CUDA visibility."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reconcile description, summary, remaining obligations and eight exact implementation links. Plain-English descriptions distinguish mathematical publication from CUDA visibility."
+    }
+  ]
+}

@@ -84,8 +84,9 @@ event positions and result-register relation are derived.
 
 [Output-store separation](poisson-output-separation.md) preserves retained
 read sources. Actual store bounds now follow from launch registers, and completed active
-lanes' byte memories contain their TorchLean values. Publication of those
-per-lane stores into one global output tensor remains explicit.
+lanes' byte memories contain their TorchLean values. The combined proof derives
+their actual store records and publishes them into one global TorchLean output
+tensor independently of merge order; CUDA host visibility remains separate.
 
 The automatic split is proved for this arithmetic fragment. Applying it inside
 a complete emitted-kernel correspondence still requires the omitted instructions

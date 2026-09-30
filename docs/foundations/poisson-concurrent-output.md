@@ -7,8 +7,9 @@ barrier to make this easier.
 
 The numerical theorem now derives actual output-store addresses from launch
 registers and nonwrapping integer bounds. In that same execution, each completed
-active lane's stored bytes equal its TorchLean local-cell result. Combining those
-per-lane stores into one published global output tensor remains separate.
+active lane's stored bytes equal its TorchLean local-cell result. Publishing the
+actual store records in any order now yields the complete TorchLean output
+tensor once all active lanes have passed their stores.
 
 ## One actual machine
 
@@ -105,10 +106,41 @@ address. Together with the output offset, this proves that those stores cannot
 overwrite coefficients. [CellTailOwners](../../integration/torchlean/PoissonPTX/CellTailOwners.lean)
 also derives disjoint output words for different lanes with a common cell ID.
 
-The result still concerns each writer's byte memory. Composing those stores into
-one published global tensor, proving host-visible completion, arbitrary-input
-termination, prologue/gather, complete PTX memory admission and hardware
-conformance remain separate obligations.
+## From actual stores to one output array
+
+[CellOutputOccurrence](../../integration/torchlean/PoissonPTX/CellOutputOccurrence.lean)
+proves that an active lane cannot pass the store instruction without emitting a
+global store record. This closes a possible circular argument: the caller does
+not hand the proof a list of stores containing the desired answers.
+[CellOutputValues](../../integration/torchlean/PoissonPTX/CellOutputValues.lean)
+then proves that the recorded word equals the writer's final arithmetic register.
+
+[GlobalPublication](../../integration/torchlean/PoissonPTX/GlobalPublication.lean)
+applies recorded global writes to a single byte memory. Other events leave this
+memory unchanged. For a chosen output word, each global store either writes the
+same word at the same address or touches disjoint bytes. A real matching store
+must occur. These facts make the final word independent of the merge order and
+of the old output bytes. Outside bytes are preserved.
+
+[CellOutputPublication](../../integration/torchlean/PoissonPTX/CellOutputPublication.lean)
+derives these conditions from the combined execution and launch geometry.
+[CellOutputTensor.published_tensor](../../integration/torchlean/PoissonPTX/CellOutputTensor.lean)
+reads a normal contiguous, row-major array from the merged bytes and proves it
+equals the TorchLean local cell result. In addition to the earlier numerical
+conditions, it requires a common cell ID and completion past the store for every
+active lane. It derives all required stores and their values.
+
+For example, Q1 has four output words at offsets 160, 168, 176 and 184 when the
+base and cell ID are zero. Publishing lane three before lane zero is harmless:
+their eight-byte words are disjoint. A write starting at offset 161 would not be
+harmless merely because 161 differs from 160; it overlaps seven output bytes.
+
+Only the merge order is varied. The byte-source constraints still use the
+original execution history, including its barriers. The merge is a mathematical
+observation of actual records; it is not a CUDA driver rule establishing when the
+host can read the result. Host-visible completion, arbitrary-input termination,
+prologue/gather, complete PTX memory admission and hardware conformance remain
+separate obligations.
 
 ## A completed execution
 
@@ -125,8 +157,12 @@ whole-history source assignment, and instantiates the numerical theorem.
 instantiates the stronger stored-byte theorem using launch conditions alone.
 It also executes a tail with nonzero base, cell, lane and stored word, and
 rejects mutated bounds with index overflow or byte-address overflow.
-These are kernel-checked finite witnesses, not GPU measurements or general
-termination proofs.
+[CellPublicationChecks](../../integration/torchlean/PoissonPTX/CellPublicationChecks.lean)
+instantiates the whole-tensor theorem, including reversed publication order and
+arbitrary old output memory. It also checks a nonzero actual store, coefficient
+byte preservation, rejection of missing stores and rejection of overlapping
+store words. These are kernel-checked finite witnesses, not GPU measurements or
+general termination proofs.
 
 Run the registered proofs, source guards and exact axiom audit with:
 

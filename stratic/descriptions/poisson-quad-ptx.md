@@ -119,7 +119,9 @@ separation argument. The combined numerical theorem now derives actual
 global-store addresses from launch registers and nonwrapping layout bounds.
 Each completed active lane's stored bytes equal its TorchLean local cell result
 in that same run. Distinct lane IDs and a common cell ID give disjoint output
-words. Combining those per-lane stores into one published global output tensor
-remains open. A completed zero-data Q1 witness includes interleaved output
+words. Completed active lanes are proved to emit their stores. Publishing those
+actual records in any order yields one row-major output tensor equal to the
+TorchLean local cell calculation, independently of the old output bytes. This
+mathematical publication does not prove CUDA host visibility or full PTX admission. A completed zero-data Q1 witness includes interleaved output
 stores, all padding returns and the whole-history source constraints. It does
 not establish general execution existence or whole-kernel correspondence.

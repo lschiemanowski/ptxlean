@@ -1,3 +1,9 @@
+import PoissonPTX.CellOutputValues
+import PoissonPTX.CellOutputOccurrence
+import PoissonPTX.GlobalPublication
+import PoissonPTX.CellOutputPublication
+import PoissonPTX.CellOutputTensor
+import PoissonPTX.CellPublicationChecks
 import PoissonPTX.CellTailAddressChecks
 import PoissonPTX.CellTailOwners
 import PoissonPTX.CellTailBounds
@@ -3979,3 +3985,37 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.sample_executed
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.sample_actual
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.nonzero_store
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.step_after
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.runs_after
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.step_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.store_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.Wrote
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.front_before_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.step_without_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.runs_without_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.completed_wrote
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.applyEvent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.publish
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.Safe
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.Present
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.apply_preserves
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.preserves
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.word
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.permuted_word
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.outside
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.safe_records
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.present_record
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_word
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_outside
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.tensor
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.location_entry
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_entry
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_tensor
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.cells
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.tensor_output
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.reversed_output
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.nonzero_publication
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.missing_store_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.overlapping_store_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.coefficient_bytes_preserved
