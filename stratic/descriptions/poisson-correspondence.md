@@ -469,3 +469,42 @@ checks publication of its actual recorded word. Negative checks reject a missing
 store and partially overlapping store bytes; distinct addresses alone do not
 justify disjoint words. These checks do not establish arbitrary-input execution
 existence or the omitted whole-kernel stages.
+
+The element-kernel prologue establishes its register setup by executing the
+seven emitted instructions before the first gather guard. The launch context
+supplies the arena parameter, the address of the allocated scratch array within
+shared memory, the thread index and the cell index. The program copies those
+addresses and indices, marks lanes below width squared as active, and computes
+the row and column by unsigned division and remainder. The 32-bit values occupy
+zero-extended words in the common register container.
+
+From any initial registers and bytes, a positive width whose square fits in
+32 bits gives a seven-step fetched execution starting at program counter zero.
+Every such execution has the explicitly computed final state at counter seven.
+All array bytes, allocation metadata and unrelated registers are preserved.
+For active lanes, both coordinates are within the cell, and row times width
+plus column reconstructs the lane index. For the 32-thread launch, the result
+derives the six register values used by the arithmetic entry contract.
+
+The prefix ends before gather, not at a kernel return. It does not reset a
+program counter or install gathered bytes to identify this state with the
+post-gather arithmetic entry. The indexed connectivity and input loads, shared
+store, first barrier and preservation of the setup registers through those
+instructions remain separate execution obligations. Shared-symbol resolution,
+parameter passing and special-register inputs are launch context assumptions,
+not a CUDA driver/ABI theorem. Zero divisors are outside this bounded fragment;
+PTX does not specify a unique result for them.
+
+The semantic review uses the pinned PTX 9.4 source for the selected unsigned
+forms, special-register moves and shared-symbol address move. The Lean renderer
+uses the same instruction list as the fetched proof. A separate source-binding
+check compares the complete entry declarations and seven instructions against
+the emitted kernels, rejecting added instructions, wrong register types,
+misaligned scratch declarations, wrong indices or predicate boundaries. Neither
+text equality nor Lean checking alone proves semantic fidelity or hardware
+conformance. The bounded prefix is not complete instruction-family coverage.
+
+Kernel-checked examples cover all 32 lanes at widths two through five with
+nonzero initial registers and bytes. They also check the maximum unsigned lane,
+wrong initial counter, unsupported zero divisor and mutations to the row and
+active-lane computations.

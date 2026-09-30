@@ -125,3 +125,11 @@ TorchLean local cell calculation, independently of the old output bytes. This
 mathematical publication does not prove CUDA host visibility or full PTX admission. A completed zero-data Q1 witness includes interleaved output
 stores, all padding returns and the whole-history source constraints. It does
 not establish general execution existence or whole-kernel correspondence.
+
+
+The seven-instruction register prologue is also proved from its launch context.
+It establishes arena and shared addresses, lane and cell IDs, an active-lane
+flag, and row/column coordinates, preserving memory and unrelated registers.
+Its instructions and declarations are bound to the emitted element entries.
+This is the state before gather; connecting the connectivity load, source-vector
+load, shared store and first barrier to the arithmetic entry remains open.

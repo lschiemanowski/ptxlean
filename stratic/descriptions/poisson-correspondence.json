@@ -29,10 +29,11 @@
     "Derive actual output-store addresses from launch registers and fetched tail steps, and connect completed active lanes' stored words to their arithmetic results.",
     "Prove each completed active lane's actual stored word equals TorchLean in the same concurrent run; derive distinct writers' disjoint output bytes from launch lane IDs and a common cell ID.",
     "Require explicit nonwrapping launch index/address bounds for all lanes, including padding; distinguish mathematical global publication from CUDA host visibility.",
-    "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order."
+    "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order.",
+    "Derive register setup from the emitted element prologue, preserving memory and keeping the later gather and barrier as separate execution obligations."
   ],
   "realization": "partial",
-  "remaining": "Actual global-store occurrence, addresses and recorded values are derived from completed execution and launch bounds. Publishing the records in any order yields the TorchLean local-cell tensor. Prologue/gather, arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations.",
+  "remaining": "Actual global-store occurrence, addresses and recorded values are derived from completed execution and launch bounds. Publishing the records in any order yields the TorchLean local-cell tensor. The register prologue is proved as a fetched prefix. Gather and composition through its first barrier, arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations.",
   "links": [
     {
       "kind": "implementation",
@@ -1315,6 +1316,102 @@
         "path": "integration/torchlean/PoissonPTX/CellPublicationChecks.lean",
         "passage": {
           "quote": "theorem overlapping_store_rejected : \u00acGlobalPublication.Safe\n    ([.data 0 \u27e8.global,\u27e80,true,161,1\u27e9\u27e9] : List (Event 32)) 160 0"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The element-kernel prologue establishes its register setup by executing the\nseven emitted instructions before the first gather guard."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPrologue.lean",
+        "passage": {
+          "quote": "def program (width : Nat) : List Instr"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "From any initial registers and bytes, a positive width whose square fits in\n32 bits gives a seven-step fetched execution starting at program counter zero."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPrologue.lean",
+        "passage": {
+          "quote": "theorem fetched_exists (ctx : Context) (s : State) (pc : s.core.pc=0)\n    (positive : 0<width) (fits : width*width<2^32) :\n    Runs ctx (program width) 7 s (finish ctx width s)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every such execution has the explicitly computed final state at counter seven."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPrologue.lean",
+        "passage": {
+          "quote": "theorem fetched_correct (run : Runs ctx (program width) 7 s t) (pc : s.core.pc=0)\n    (positive : 0<width) (fits : width*width<2^32) : t=finish ctx width s"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "All array bytes, allocation metadata and unrelated registers are preserved."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPrologue.lean",
+        "passage": {
+          "quote": "theorem memories (run : Runs ctx (program width) 7 s t) (pc : s.core.pc=0)\n    (positive : 0<width) (fits : width*width<2^32) :\n    t.core.global=s.core.global \u2227 t.core.shared=s.core.shared"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For active lanes, both coordinates are within the cell, and row times width\nplus column reconstructs the lane index."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPrologueEntry.lean",
+        "passage": {
+          "quote": "theorem coordinates (run : Runs ctx (program width) 7 s t) (pc : s.core.pc=0)\n    (positive : 0<width) (fits : width*width<2^32) (active : t.live=true) :\n    ctx.lane.toNat/width<width \u2227 ctx.lane.toNat%width<width \u2227\n      ctx.lane.toNat/width*width+ctx.lane.toNat%width=ctx.lane.toNat"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For the 32-thread launch, the result\nderives the six register values used by the arithmetic entry contract."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPrologueEntry.lean",
+        "passage": {
+          "quote": "theorem thread_registers\n    (run : Runs (threadContext bases cell thread) (program width) 7 s t) (pc : s.core.pc=0)\n    (positive : 0<width) (fits : width*width<2^32) :\n    t.core.regs 0=bases .global \u2227 t.core.regs 3=bases .shared \u2227\n    t.core.regs 14=BitVec.ofNat 64 thread.val \u2227 t.core.regs 15=cell.setWidth 64 \u2227\n    t.core.regs 16=BitVec.ofNat 64 (thread.val/width) \u2227\n    t.core.regs 17=BitVec.ofNat 64 (thread.val%width) \u2227\n    t.live=decide (thread.val<width*width)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The Lean renderer\nuses the same instruction list as the fetched proof."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPrologueEntry.lean",
+        "passage": {
+          "quote": "def rendered (width : Nat) : List String"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Kernel-checked examples cover all 32 lanes at widths two through five with\nnonzero initial registers and bytes."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellPrologueChecks.lean",
+        "passage": {
+          "quote": "theorem all_lanes : \u2200 w : Fin 4, \u2200 lane : Fin 32,\n    (execute (ctx lane.val) (program (w.val+2)) 7 start).map\n      (fun s => (s.core.pc,[s.core.regs 0,s.core.regs 3,s.core.regs 14,s.core.regs 15,\n        s.core.regs 16,s.core.regs 17,s.core.regs 11],s.live,[s.core.global 4100,s.core.shared 260]))=\n    some (7,[4096,256,BitVec.ofNat 64 lane.val,37,\n      BitVec.ofNat 64 (lane.val/(w.val+2)),BitVec.ofNat 64 (lane.val%(w.val+2)),\n      0xffffffffffffffff],decide (lane.val<(w.val+2)*(w.val+2)),[0xa5,0x5a])"
         }
       }
     }

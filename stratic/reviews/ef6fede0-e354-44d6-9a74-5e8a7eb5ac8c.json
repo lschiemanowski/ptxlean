@@ -1,0 +1,113 @@
+{
+  "id": "ef6fede0-e354-44d6-9a74-5e8a7eb5ac8c",
+  "base": "5dfc361b5ab609d02404c8cf4aca8cb543c24403",
+  "contentTree": "4fc36472fcfeb00fa87837052487ae524ac80390",
+  "reviewer": "Codex",
+  "summary": "Prove and bind the element-kernel register prologue before gather.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Prove the seven fetched register-setup instructions from launch context, including existence, exact state, coordinates, memory preservation and all 32 threads. Do not assume or synthesize the later gathered bytes or barrier state; composition with the existing arithmetic entry remains open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Record separately proved register prologue and exact emitted-prefix binding. Keep indexed gather, first barrier and whole-kernel/solver correspondence as remaining work."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Pinned PTX 9.4 source hash verified; selected unsigned div/rem, setp, mov and special-register semantics reviewed locally. Context-provided parameter and non-generic shared-symbol address remain explicit ABI assumptions; zero-divisor behavior is unsupported, not silently made deterministic. Lean checking and source fidelity are separate. No ISA coverage ledger expansion; all 34 new named declarations audited."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No changes to the mathematical equations, TorchLean tensor calculation, generated PTX, launch configuration or residual criterion. This adds a proof of a previously omitted prefix, not a numerical algorithm change."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "4fc36472fcfeb00fa87837052487ae524ac80390",
+      "method": "python3 /tmp/poisson-prologue-verify.py; hardware/check_poisson_contractions.py and hardware/check_poisson_ptx.py on .hardware-runs/poisson-certified; python3 -m unittest discover -s hardware -p test_*.py; scripts/check_distribution.py; stratic validate; /tmp/poisson-prologue-final-check.py; exact final snapshots",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, 16 verified dependencies; Linux x86_64 and local Python. Saved GPU artifacts only; no GPU rerun or paid calls.",
+      "evidence": "Complete registered build passed (4472 jobs); CellPrologueChecks freshly kernel-checked, including 128 width/lane combinations and boundary/mutation checks. Exact audit of 3585 declarations passed with only standard Lean axioms; no sorry or new unchecked axioms, 380 guarded sources. Unchanged legacy interpreter checks were not freshly rerun. All 30 Python tests passed. Prologue binding matched 90 entries in 30 saved layouts alongside existing 720 contraction/630 shared-store matches and true_residual matches. 124 contraction/prologue and 3 residual focused endpoints audited. All 226 receipt hashes match current sources. Pinned PTX 9.4 HTML hash verified and selected semantic sections reviewed, keeping non-generic scratch address, unsigned arithmetic, zero-divisor exclusion and context/ABI boundary explicit. Stratic valid; documentation links, distribution and whitespace checks pass; final snapshot stable, README unchanged. Gather/first-barrier composition remains open.",
+      "tests": [],
+      "id": "40e0b90d-ffca-4928-bc56-e34f0f3ff357",
+      "recordedAt": "2026-09-30T15:47:18.716Z"
+    }
+  ],
+  "recordedAt": "2026-09-30T15:47:58.090Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-concurrent-output.md",
+      "reason": "Explain launch context, exact seven-instruction boundary, unsigned coordinates, unchanged bytes/registers, nonzero divisor restriction and outstanding gather/barrier composition. Include source fidelity and exact binding distinctions."
+    },
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Explain launch context, exact seven-instruction boundary, unsigned coordinates, unchanged bytes/registers, nonzero divisor restriction and outstanding gather/barrier composition. Include source fidelity and exact binding distinctions."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Check complete declarations plus all seven instructions immediately before the first gather guard against Lean renderer; reject duplicate entries, extra instructions and incompatible allocation/declarations. Audit ten new prefix endpoints."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh saved-run PTX binding evidence, including all three element-entry prologues in each of 30 layouts, and validate source hashes. No GPU rerun."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh saved-run PTX binding evidence, including all three element-entry prologues in each of 30 layouts, and validate source hashes. No GPU rerun."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Mutation tests reject wrong context operands, unsigned types, shared symbol/alignment, division and guard boundaries, missing or extra setup instructions. Actual receipt uses independently rendered Lean program."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Expose prologue text by mapping the same typed instruction list consumed by fetched proofs; retain existing request validation and renderer outputs."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellPrologue.lean",
+      "reason": "Typed bounded entry interpreter uses actual PC fetch, unsigned low-word operands and explicit context. Prove soundness/completeness, execution existence, exact final state and unchanged bytes/registers. Seven-step completion is a prefix boundary, not kernel termination; zero divisor unsupported."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellPrologueChecks.lean",
+      "reason": "Kernel-check all 128 Q1-Q4 lane cases from nonzero state, maximum unsigned lane, wrong PC, unsupported zero divisor and incorrect row/guard mutations."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellPrologueEntry.lean",
+      "reason": "Derive entry registers, active predicate and valid row-major coordinates for actual runs, specialize to all 32 lane IDs, and render the same typed list. No fabricated post-gather state or register-correctness assumption."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register three modules and 34 exact declarations; include fresh finite prologue regression checks and maintain exact dependency counts."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register three modules and 34 exact declarations; include fresh finite prologue regression checks and maintain exact dependency counts."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register three modules and 34 exact declarations; include fresh finite prologue regression checks and maintain exact dependency counts."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Update prose, summary, remaining obligations and eight exact links before acceptance; keep stronger prefix proof separate from unproved gather and ABI composition."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Update prose, summary, remaining obligations and eight exact links before acceptance; keep stronger prefix proof separate from unproved gather and ABI composition."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Update prose, summary, remaining obligations and eight exact links before acceptance; keep stronger prefix proof separate from unproved gather and ABI composition."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Update prose, summary, remaining obligations and eight exact links before acceptance; keep stronger prefix proof separate from unproved gather and ABI composition."
+    }
+  ]
+}

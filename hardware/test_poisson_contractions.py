@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final
+from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue
 from poisson_kernels import Layout, module, PTX
 
 
@@ -23,6 +23,31 @@ class ContractionBinding(unittest.TestCase):
                  ('x', (5,'%i','k'), ('D','k','%j'), '%acc'),
                  ('y', (6,'%i','k'), ('B','k','%j'), '%acc2')]
         self.expected = [(name, g.dot(a,b,acc).splitlines()) for name,a,b,acc in specs]
+
+    def test_complete_prologue(self):
+        lines = self.ptx.splitlines()
+        start = lines.index('mov.u64 %shared, scratch;')
+        expected = lines[start:start+7]
+        self.assertEqual(len(verify_prologue(self.ptx, expected, self.layout)), 3)
+        width = self.layout['degree']+1
+        for old, new in [
+                ('mov.u32 %lane, %tid.x;', 'mov.u32 %lane, %ctaid.x;'),
+                ('mov.u64 %shared, scratch;', 'mov.u64 %shared, 0;'),
+                ('ld.param.u64 %base, [arena];', ''),
+                (f'div.u32 %i, %lane, {width};', f'rem.u32 %i, %lane, {width};'),
+                (f'rem.u32 %j, %lane, {width};', 'rem.u32 %j, %lane, 0;'),
+                (f'setp.lt.u32 %live, %lane, {width*width};',
+                 f'setp.le.u32 %live, %lane, {width*width};'),
+                ('@!%live bra stage_0_done;', 'mov.u32 %i, 0;\n@!%live bra stage_0_done;'),
+                ('.reg .u32 %lane', '.reg .s32 %lane'),
+                ('.shared .align 8', '.shared .align 4')]:
+            with self.subTest(new=new):
+                self.assertIn(old, self.ptx)
+                with self.assertRaises(ValueError):
+                    verify_prologue(self.ptx.replace(old, new, 1), expected, self.layout)
+        for expected_bad in (expected[:-1], expected[::-1], expected+[expected[0]]):
+            with self.assertRaises(ValueError):
+                verify_prologue(self.ptx, expected_bad, self.layout)
 
     def test_stores(self):
         g = PTX(self.obj)

@@ -169,3 +169,12 @@ Run the registered proofs, source guards and exact axiom audit with:
 ```sh
 integration/torchlean/check.sh
 ```
+
+
+## Establishing the entry state
+
+The [register prologue](poisson-entry.md) now has its own fetched execution and
+existence proofs. It derives the addresses, lane/cell IDs and row/column values
+from launch context while preserving all memory. It ends before the gather.
+Connecting the indexed gather and first barrier to this arithmetic/output proof
+still requires their execution and memory-source arguments.

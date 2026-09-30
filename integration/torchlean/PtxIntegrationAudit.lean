@@ -1,3 +1,6 @@
+import PoissonPTX.CellPrologue
+import PoissonPTX.CellPrologueEntry
+import PoissonPTX.CellPrologueChecks
 import PoissonPTX.CellOutputValues
 import PoissonPTX.CellOutputOccurrence
 import PoissonPTX.GlobalPublication
@@ -4019,3 +4022,38 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.missing_store_rejected
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.overlapping_store_rejected
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.PublicationChecks.coefficient_bytes_preserved
+
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Context
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Source
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Context.value
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Instr
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.State
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.assign
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.eval
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Step
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Runs
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.execute
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.execute_sound
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.execute_complete
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.program
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.finish
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.execution
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.fetched_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.fetched_correct
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.memories
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.other_register
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Ready
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.ready
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.coordinates
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.threadContext
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.thread_registers
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.render
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.rendered
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.ctx
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.all_lanes
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.zero_width_unsupported
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.wrong_pc_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.row_mutation_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.wrong_guard_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.high_unsigned_lane
