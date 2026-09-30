@@ -90,12 +90,12 @@ correspondence. Its explicit inputs include an actual retained arithmetic run,
 its ordered embedding into the larger history, and the omitted stores' address
 bounds. The larger history must satisfy the necessary byte-source constraints.
 
-The missing step is to derive that arithmetic run, event embedding, store-address
-bounds and relation to the final state from a full concurrent index/store/return
-execution. The theorem does not assume a desired register value or phase answer,
-but it also does not prove this missing execution connection. Complete PTX memory
-admission, prologue/gather, launch composition and general execution existence
-retain their existing boundaries.
+The [combined concurrent execution](poisson-concurrent-output.md) now derives
+the arithmetic run, event embedding, omitted-store classification and result
+register relation. The remaining connection is to derive actual output-store
+address bounds from launch registers and recover the final stored tensor from
+that same run. Complete PTX memory admission, prologue/gather, launch composition
+and general execution existence retain their existing boundaries.
 
 ## Checks
 

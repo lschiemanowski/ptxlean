@@ -76,16 +76,15 @@ execution-existence theorem under those conditions.
 
 ## The precise remaining boundary
 
-The concurrent fragment stops after the addition. The index/store/return tail
-still runs in the separate fetched model. We have not yet incorporated those
-global stores into the concurrent machine or proved their interleaving with other
-threads' final reads. In this arithmetic fragment, padding lanes jump to the
-arithmetic cutoff; the actual skipped tail and return require the full-kernel
-connection.
+The arithmetic fragment described above is now the target of a proved
+[execution projection](poisson-concurrent-output.md). A combined concurrent
+machine executes the index/store/return tail while other threads continue,
+and padding lanes branch to the real return. Its arithmetic run, retained
+event positions and result-register relation are derived.
 
-[Output-store separation](poisson-output-separation.md) now supplies the memory
-argument for removing disjoint output stores from an interleaved history. It
-does not yet derive the retained arithmetic execution from a full tail run.
+[Output-store separation](poisson-output-separation.md) preserves retained
+read sources. General address bounds for the actual interleaved stores and
+recovery of the final stored tensor remain explicit obligations.
 
 The automatic split is proved for this arithmetic fragment. Applying it inside
 a complete emitted-kernel correspondence still requires the omitted instructions

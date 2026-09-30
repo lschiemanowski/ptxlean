@@ -1,3 +1,12 @@
+import PoissonPTX.CellTailWitnessSources
+import PoissonPTX.CellTailChecks
+import PoissonPTX.CellTailResult
+import PoissonPTX.CellTailProgram
+import PoissonPTX.TailExecute
+import PoissonPTX.TailRunProjection
+import PoissonPTX.TailFrontProjection
+import PoissonPTX.ConcurrentTail
+import PoissonPTX.ProjectionBuild
 import PoissonPTX.ConcurrentProjection
 import PoissonPTX.ProjectionChecks
 import PoissonPTX.CellCoefficientProgram
@@ -3839,3 +3848,78 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.fetched_preserves_coefficients
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.distinct_outputs
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.projected_arithmetic
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.empty
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.drop
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.keep
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Omitted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.omitted_keep
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.omitted_drop
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.State
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.Outcome
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.lane
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.update
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.access
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.Step
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.Runs
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.halted_blocks
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.step_aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.eval_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.clip
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.Related
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.related_refl
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.related_live
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.related_update
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.synchronize_related
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.front_step
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.tail_related
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.project_filtered
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.project
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.tick
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.tick_sound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.execute
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.execute_sound
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.redirect
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.front
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.tail_length
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.front_length
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Bounded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.bounded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.clipped
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.tail_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.padding_return
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.arithmetic
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.OutputEvent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.tail_events
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.arithmetic_filtered
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_under_store_bounds
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.ctx
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.schedule
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.candidate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.successful
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.executed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.actual_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.returned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.padding_did_not_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.four_outputs
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.interleaved
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.stopped_again
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.projected
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.eventCheck
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.event_facts
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.facts_at
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.launch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.correspondence

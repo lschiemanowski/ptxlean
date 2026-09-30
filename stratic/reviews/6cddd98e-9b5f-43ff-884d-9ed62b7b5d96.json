@@ -1,0 +1,141 @@
+{
+  "id": "6cddd98e-9b5f-43ff-884d-9ed62b7b5d96",
+  "base": "8405b2834d44651c5beb23b74685a7f1cbd3f0c0",
+  "contentTree": "559cc63f6ba3eda2a5009c085f610642d0538f55",
+  "reviewer": "Codex",
+  "summary": "Derive Poisson arithmetic correspondence from concurrent output-tail execution.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Add one actual fetched concurrent front/tail machine, derive its arithmetic execution and event embedding, and connect its result register to TorchLean. Keep general actual-store bounds and final stored-tensor recovery as explicit remaining obligations."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Update the output-tail composition status and distinguish the conditional numerical theorem and completed Q1 witness from full-kernel correspondence."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The combined machine composes existing instruction rules without changing primitive semantics or byte-source rules. The simulation has no ghost execution in machine state, no numerical-answer premise and no extra barrier. Every new declaration is audited; finite witnesses use kernel reduction. Generic tail loads are not claimed to have full cross-thread memory semantics."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The tensor equations, GPU code and residual acceptance criterion are unchanged. This change strengthens the bounded instruction correspondence and does not alter the solver."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "559cc63f6ba3eda2a5009c085f610642d0538f55",
+      "method": "python3 /tmp/poisson-tail-verify.py; python3 -m unittest discover -s hardware -p test_*.py; saved-PTX contraction and instruction binding checkers; distribution guard; Stratic validation; git diff --check; manual semantic and documentation review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 locked dependencies; existing local TorchLean integration; saved poisson-certified GPU artifacts. No paid model calls or GPU rerun.",
+      "evidence": "Complete registered Lake build passes. Fresh kernel checks pass for CellTailProgram, CellTailChecks and CellTailWitnessSources; all 3476 exact dependency reports contain only standard Lean axioms. Proof source guard covers 364 Lean files. All 29 hardware Python tests pass. Binding checks pass for 30 saved layouts, 720 contraction blocks, 630 shared-store blocks and 30 residual entries; contraction audit covers 92 endpoints. All 98 contraction and 96 instruction receipt source hashes match. Proposed tree unchanged before/after checks. Stratic and local documentation links validate. Unchanged legacy interpreter checks were not freshly rerun. Semantic review confirms actual-machine state has no ghost execution, barrier release requires common live PC, tail frames preserve register 11, padding targets actual ret, and omitted events are global stores. General actual-store bounds and final stored-tensor recovery are explicitly unimplemented.",
+      "tests": [],
+      "id": "ca126bc3-f161-486a-ae7b-c49b8c6a6bd2",
+      "recordedAt": "2026-09-30T08:25:14.544Z"
+    }
+  ],
+  "recordedAt": "2026-09-30T08:26:09.539Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Explain the combined execution, live-lane/tail-lane simulation, ordered event occurrences and exact remaining geometry and stored-tensor obligations. Preserve semantic-fidelity and hardware boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-concurrent-output.md",
+      "reason": "Explain the combined execution, live-lane/tail-lane simulation, ordered event occurrences and exact remaining geometry and stored-tensor obligations. Preserve semantic-fidelity and hardware boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-correspondence.md",
+      "reason": "Explain the combined execution, live-lane/tail-lane simulation, ordered event occurrences and exact remaining geometry and stored-tensor obligations. Preserve semantic-fidelity and hardware boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-final-consumers.md",
+      "reason": "Explain the combined execution, live-lane/tail-lane simulation, ordered event occurrences and exact remaining geometry and stored-tensor obligations. Preserve semantic-fidelity and hardware boundaries."
+    },
+    {
+      "path": "docs/foundations/poisson-output-separation.md",
+      "reason": "Explain the combined execution, live-lane/tail-lane simulation, ordered event occurrences and exact remaining geometry and stored-tensor obligations. Preserve semantic-fidelity and hardware boundaries."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Audit nine combined-machine and projection endpoints and accurately scope the binding report. Existing instruction comparison and layout-separation logic are unchanged."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh passing saved-PTX binding evidence and verify all source hashes; no GPU run."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh passing saved-PTX binding evidence and verify all source hashes; no GPU run."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailChecks.lean",
+      "reason": "Kernel-check an actual Q1 run with stores before other lanes finish reading, four outputs, all 28 padding returns, zero words, aligned separated event addresses and a whole-history source assignment instantiating the numerical theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailProgram.lean",
+      "reason": "Check Q1-Q4 branch bounds, exact clipping to the existing arithmetic code, real padding return target, unchanged result register and global-only omitted stores."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailResult.lean",
+      "reason": "Compose derived arithmetic execution and omitted-global-store facts with whole-history byte-source restriction. Actual store geometry remains a visible premise, with no claimed final stored tensor."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailWitnessSources.lean",
+      "reason": "Kernel-check an actual Q1 run with stores before other lanes finish reading, four outputs, all 28 padding returns, zero words, aligned separated event addresses and a whole-history source assignment instantiating the numerical theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentTail.lean",
+      "reason": "Inspect fetched front/tail guards, absolute PCs, actual event operands, stopped-thread prohibition and result-register simulation relation; no projected run is stored in actual state."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ProjectionBuild.lean",
+      "reason": "Inspect increasing occurrence maps and omitted-event properties under step-by-step run projection, preserving actual events and the result-register relation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/TailExecute.lean",
+      "reason": "Prove interpreter soundness against the combined fetched machine, including guarded absolute-PC tail fetching and returned-thread rejection."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/TailFrontProjection.lean",
+      "reason": "Inspect selected-lane step simulation and full-block release alignment; a tail lane cannot be silently advanced by a projected barrier."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/TailRunProjection.lean",
+      "reason": "Inspect increasing occurrence maps and omitted-event properties under step-by-step run projection, preserving actual events and the result-register relation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register nine modules and 66 named declarations, preserve exact endpoint counts, and add fresh kernel checks for program certificates and completed interleaved execution."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register nine modules and 66 named declarations, preserve exact endpoint counts, and add fresh kernel checks for program certificates and completed interleaved execution."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register nine modules and 66 named declarations, preserve exact endpoint counts, and add fresh kernel checks for program certificates and completed interleaved execution."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reconcile descriptions, summaries, partial realization and exact proof links; distinguish proved projection from unresolved actual-store bounds and stored output."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reconcile descriptions, summaries, partial realization and exact proof links; distinguish proved projection from unresolved actual-store bounds and stored output."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reconcile descriptions, summaries, partial realization and exact proof links; distinguish proved projection from unresolved actual-store bounds and stored output."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reconcile descriptions, summaries, partial realization and exact proof links; distinguish proved projection from unresolved actual-store bounds and stored output."
+    }
+  ]
+}

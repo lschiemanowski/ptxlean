@@ -9,13 +9,15 @@ store theorem and phase-by-phase composition with actual middle stores. A
 concurrent arithmetic extension now justifies the actual final loads using one
 whole-history source assignment and connects its result to the fetched store.
 The arithmetic theorem derives its middle prefix and continuation at the last
-barrier from a single run. Incorporating index/store/return into that concurrent
-machine, gather, prologue, full launch composition and complete
-PTX memory admission remain open. Byte-source restriction is now proved for an
-order-preserving projection that omits only noninterfering stores. Actual
-coefficient loads are bounded, fetched output stores preserve that region, and
-saved output extents are checked disjoint. Constructing the projected execution
-from a full concurrent tail run is still an explicit obligation.
+barrier from a single run. A combined concurrent index/store/return machine now
+derives that arithmetic execution, its ordered event embedding and result
+register relation, with only global output stores omitted. Byte-source
+restriction preserves retained reads when those stores are beyond the bounded
+coefficient region. General output-store address bounds and recovery of the
+final stored tensor from that combined run remain explicit obligations, as do
+gather, prologue, full launch composition and complete PTX memory admission.
+Saved output extents are checked disjoint; this is concrete layout evidence,
+not a general theorem about all interleaved stores.
 """
 import argparse
 import hashlib
@@ -230,7 +232,7 @@ def check(run, output):
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
                     'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
                     'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.CellFinalSnapshot',
-                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -265,9 +267,13 @@ def check(run, output):
               ('checked', 'read_bounds')]
     names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.'+n for n in
               ('after_coefficients', 'fetched_preserves_coefficients', 'distinct_outputs', 'projected_arithmetic')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.WithTail.'+n for n in
+              ('halted_blocks', 'synchronize_related', 'front_step', 'project_filtered')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.'+n for n in
+              ('clipped', 'padding_return', 'tail_events', 'arithmetic_filtered', 'result_under_store_bounds')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)

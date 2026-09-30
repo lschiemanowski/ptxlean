@@ -355,13 +355,13 @@ The existing fetched index/store/return proof starts from that actual concurrent
 result state and establishes the global output value. Its storage bounds remain
 explicit; the result does not depend on constructing a replacement input memory.
 
-This concurrent fragment stops after arithmetic. The integer index, global
-store and return still use the separate fetched model. Their interleaving with
-other final readers, prologue/gather, full launch composition and complete
-memory admission remain open. The derived barrier split concerns this arithmetic
-fragment; it does not establish correspondence for omitted instructions.
-Inactive lanes skip the arithmetic to its cutoff; correspondence of the omitted tail and actual return belongs to
-the remaining full-kernel connection. No hardware progress claim follows.
+The arithmetic fragment remains useful as an intermediate proof model. A
+combined concurrent machine now continues each thread through integer indexing,
+the global store and return. It reuses the arithmetic/barrier rules before the
+cutoff and the existing fetched instruction rules afterwards. The machine stores
+only actual thread states, predicate bits and return flags; it does not contain
+an assumed arithmetic execution. Returned threads cannot step again. Inactive
+final lanes branch past all output operations to the actual return.
 
 A completed zero-data Q1 execution witnesses the whole-history source conditions
 and final result with all 32 participants, including 28 padding lanes. This is
@@ -389,13 +389,31 @@ index/store/return tail preserves every coefficient byte. Distinct bounded
 output indices also give disjoint eight-byte output words. The saved-PTX binding
 checker verifies separated coefficient/output extents, rejecting overlap.
 
-A larger history may therefore contain arbitrary interleavings of disjoint
-output stores while its retained arithmetic execution keeps the same TorchLean
-result. This theorem explicitly receives the retained arithmetic run, its
-order-preserving embedding into the larger history, and the omitted stores'
-address bounds. Deriving those inputs and the final-state relation from a full
-concurrent index/store/return execution remains unimplemented. This memory
-argument neither inserts a barrier nor proves that missing execution connection.
+From a combined execution, the proof derives its arithmetic run, retained event
+positions and arithmetic-result register relation. Every omitted event is a
+global output store; this follows from the concrete six-instruction tail.
+Arithmetic threads match their projected state exactly. Threads already in the
+tail may change scratch registers and output bytes while preserving register 11.
+A barrier release requires all participants at the same live barrier, so it
+cannot silently advance a thread already in its tail. This argument allows any
+schedule admitted by the combined machine and inserts no extra barrier.
+
+The resulting numerical theorem relates an actual thread's register 11 to the
+ordered TorchLean local cell result once that thread reaches the tail. It uses
+one whole-history source assignment and still explicitly requires every actual
+global store to lie beyond the coefficient region, as well as the nonwrapping
+coefficient base. Deriving those store bounds from launch registers throughout
+the combined run, and recovering the final stored output tensor from that run,
+remain separate obligations. They are not replaced by a desired-value premise.
 Regression histories preserve a shared producer across renumbering and reject
 an omitted store that overlaps a retained read by just one byte. These histories
 check the source transformation; they are not new GPU or whole-kernel witnesses.
+
+A kernel-checked zero-data Q1 execution includes all 32 threads and the real
+output tail. One lane stores and returns before another lane performs its
+remaining coefficient reads. Exactly four global output stores occur; all
+28 padding lanes return without storing. Its event addresses, zero words and
+whole-history source constraints satisfy the combined numerical theorem.
+This is finite existence evidence, not arbitrary-input termination or complete
+PTX memory admission. The omitted prologue/gather, launch composition, assembly,
+reductions and complete solver instruction correspondence remain open.

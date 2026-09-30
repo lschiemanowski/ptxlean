@@ -95,8 +95,8 @@ TorchLean local cell result, with allocation and index conditions explicit.
 
 The middle slice starts with gathered bytes and prepared base/lane/coordinate
 registers. The final phase's entry registers are also explicit. The prologue and
-gather must establish those inputs, and the full kernel must still incorporate
-the final index/store/return tail into its concurrent execution. Complete PTX memory
+gather must establish those inputs. The combined concurrent output tail still
+needs general store-address bounds and final stored-tensor recovery. Complete PTX memory
 admission, general execution existence, hardware progress and whole-solver
 instruction correspondence remain separate obligations. Documentation and saved
 empirical evidence distinguish these from the completed phase-by-phase theorem.
@@ -106,14 +106,18 @@ A concurrent arithmetic extension now proves that actual final loads recover the
 middle stores through the last barrier, using one source assignment for the whole
 history. From one actual run, it derives the middle prefix, the state after the
 last barrier and its continuation, then proves the final register's TorchLean
-local cell value. The fetched output
-tail starts from this actual state. The concurrent fragment itself stops before
-that tail; its interleaving and the omitted prologue/gather remain explicit
-full-kernel obligations.
+local cell value. A combined concurrent machine also executes the actual output
+index/store/return tail while other threads continue. Its arithmetic run,
+retained event positions and result-register relation are derived by proof;
+padding lanes branch to the actual return without storing.
 
 The memory proof also allows removing disjoint output stores from an interleaved
 history while preserving the byte sources of its retained arithmetic reads.
 Actual coefficient addresses are bounded, and the fetched output tail preserves
 those bytes under the nonwrapping layout bounds. This supplies the memory
-separation argument; deriving the retained execution and final-state relation
-from a full concurrent tail remains part of the unfinished connection.
+separation argument. The combined numerical theorem still explicitly requires
+the actual global stores' address bounds. Deriving these from launch registers
+and recovering the stored output tensor from that same run remain open. A
+completed zero-data Q1 witness includes interleaved output stores, all padding
+returns and the whole-history source constraints. It does not establish general
+execution existence or whole-kernel correspondence.

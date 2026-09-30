@@ -11,10 +11,10 @@
     "Use disjoint element storage and one writer per global node for deterministic assembly without floating-point atomics.",
     "Certify accepted solutions with an exact residual checker; connect the residual kernel output to TorchLean under byte-source constraints while retaining the other implementation and hardware boundaries.",
     "Prove the eight local contractions and actual shared stores, and connect all six outputs of the three completed middle phases to TorchLean under necessary byte-source constraints.",
-    "Derive middle-slice read addresses, intermediate values, weight operations, ownership and barrier ordering for certified Q1–Q4 layouts; check complete emitted bodies against the proved program.",
+    "Derive middle-slice read addresses, intermediate values, weight operations, ownership and barrier ordering for certified Q1\u2013Q4 layouts; check complete emitted bodies against the proved program.",
     "Keep gathered input and entry registers explicit; full cell composition, complete memory admission, general execution existence and host launches remain unproved.",
-    "Derive final-read visibility and ordered arithmetic from one source-constrained concurrent run, including its last-barrier split, then connect the result state to the separately fetched output tail; keep full-kernel composition explicit.",
-    "Prove coefficient/output byte separation and preserve retained read sources under interleaved output stores; the full concurrent tail execution connection remains open."
+    "Derive final-read visibility and ordered arithmetic from one source-constrained concurrent run, including its last-barrier split, derive its arithmetic projection from a combined concurrent index/store/return execution; keep full-kernel composition explicit.",
+    "Prove coefficient/output byte separation and preserve retained read sources under interleaved output stores; derive the concurrent arithmetic run and result register, while retaining general store-address bounds and stored-tensor recovery as open obligations."
   ],
   "realization": "implemented",
   "links": [
@@ -57,7 +57,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Validation covers Q1–Q4, numerical operator comparisons on supplied and varied\nvectors, complete solves, polynomial reproduction, boundary preservation,\niteration limits and invalid inputs. CPU references and device results start\nfrom identical setup arrays. Saved cases, PTX and binary hashes, launch records,\noutputs, toolchain identity and sanitizer logs make the observations reproducible.\nAll failures remain visible; tolerances are declared before running comparisons.\nNo throughput or benchmarking claim is part of this backend."
+        "quote": "Validation covers Q1\u2013Q4, numerical operator comparisons on supplied and varied\nvectors, complete solves, polynomial reproduction, boundary preservation,\niteration limits and invalid inputs. CPU references and device results start\nfrom identical setup arrays. Saved cases, PTX and binary hashes, launch records,\noutputs, toolchain identity and sanitizer logs make the observations reproducible.\nAll failures remain visible; tolerances are declared before running comparisons.\nNo throughput or benchmarking claim is part of this backend."
       },
       "to": {
         "path": "hardware/validate_poisson.py",
