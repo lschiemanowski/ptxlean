@@ -400,11 +400,11 @@ schedule admitted by the combined machine and inserts no extra barrier.
 
 The resulting numerical theorem relates an actual thread's register 11 to the
 ordered TorchLean local cell result once that thread reaches the tail. It uses
-one whole-history source assignment and still explicitly requires every actual
-global store to lie beyond the coefficient region, as well as the nonwrapping
-coefficient base. Deriving those store bounds from launch registers throughout
-the combined run, and recovering the final stored output tensor from that run,
-remain separate obligations. They are not replaced by a desired-value premise.
+one whole-history source assignment and derives every actual global-store
+address from the launch registers. The base, lane and cell registers are
+preserved throughout the combined run. The four index/address steps establish
+the store address at its actual fetched instruction. No later event-address
+bound or desired numerical value is supplied as a premise.
 Regression histories preserve a shared producer across renumbering and reject
 an omitted store that overlaps a retained read by just one byte. These histories
 check the source transformation; they are not new GPU or whole-kernel witnesses.
@@ -417,3 +417,27 @@ whole-history source constraints satisfy the combined numerical theorem.
 This is finite existence evidence, not arbitrary-input termination or complete
 PTX memory admission. The omitted prologue/gather, launch composition, assembly,
 reductions and complete solver instruction correspondence remain open.
+
+The launch layout places the output offset at or beyond the end of the
+coefficient region. Its bounds require the natural cell/lane index to fit in
+32 bits and the widened byte address to fit in 64 bits. The current interface
+conservatively checks these arithmetic bounds for all 32 lanes, including
+padding lanes; it does not require their unused output words to be allocated.
+These conditions imply the coefficient base does not wrap and every actual
+global store is beyond the coefficients. Allocation and alignment are checked
+by the actual store instruction. With a common cell ID, different launch lane
+IDs also imply disjoint eight-byte output words for their actual stores.
+
+After an active lane executes its store, reading its output word from that
+lane's actual byte memory yields the TorchLean local cell value. This holds
+in the same interleaved execution, even if other lanes have not completed.
+The result follows from the store's byte update and preservation through
+return; a separate tail run or memory snapshot is not assumed. This per-lane
+result still needs composition into one published global output tensor.
+That publication, host-visible completion and full memory admission are
+distinct obligations.
+
+Checks instantiate the stored-value theorem in the completed Q1 concurrent
+witness using launch conditions alone. A separate fetched tail checks nonzero
+base, cell and lane indices and a nonzero stored word. Mutated launch bounds
+reject 32-bit index overflow and 64-bit byte-address overflow.

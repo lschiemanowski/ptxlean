@@ -83,8 +83,9 @@ and padding lanes branch to the real return. Its arithmetic run, retained
 event positions and result-register relation are derived.
 
 [Output-store separation](poisson-output-separation.md) preserves retained
-read sources. General address bounds for the actual interleaved stores and
-recovery of the final stored tensor remain explicit obligations.
+read sources. Actual store bounds now follow from launch registers, and completed active
+lanes' byte memories contain their TorchLean values. Publication of those
+per-lane stores into one global output tensor remains explicit.
 
 The automatic split is proved for this arithmetic fragment. Applying it inside
 a complete emitted-kernel correspondence still requires the omitted instructions

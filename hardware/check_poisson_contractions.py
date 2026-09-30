@@ -13,11 +13,12 @@ barrier from a single run. A combined concurrent index/store/return machine now
 derives that arithmetic execution, its ordered event embedding and result
 register relation, with only global output stores omitted. Byte-source
 restriction preserves retained reads when those stores are beyond the bounded
-coefficient region. General output-store address bounds and recovery of the
-final stored tensor from that combined run remain explicit obligations, as do
+coefficient region. Actual store addresses now follow from launch bounds, and
+each completed active lane's stored bytes have its TorchLean value. Publication
+of these per-lane stores into one global tensor remains open, as do
 gather, prologue, full launch composition and complete PTX memory admission.
 Saved output extents are checked disjoint; this is concrete layout evidence,
-not a general theorem about all interleaved stores.
+separate from the general launch-derived address theorem and GPU conformance.
 """
 import argparse
 import hashlib
@@ -232,7 +233,7 @@ def check(run, output):
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
                     'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
                     'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.CellFinalSnapshot',
-                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult', 'PoissonPTX.CellTailOwners'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -271,9 +272,13 @@ def check(run, output):
               ('halted_blocks', 'synchronize_related', 'front_step', 'project_filtered')]
     names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.'+n for n in
               ('clipped', 'padding_return', 'tail_events', 'arithmetic_filtered', 'result_under_store_bounds')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.'+n for n in
+              ('tail_ready', 'runs_ready', 'runs_keeps', 'store_address', 'stored_word')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.'+n for n in
+              ('store_bounds', 'coefficient_nowrap', 'result_from_launch', 'stored_from_launch', 'stores_disjoint')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)

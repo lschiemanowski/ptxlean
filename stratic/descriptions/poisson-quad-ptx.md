@@ -96,7 +96,7 @@ TorchLean local cell result, with allocation and index conditions explicit.
 The middle slice starts with gathered bytes and prepared base/lane/coordinate
 registers. The final phase's entry registers are also explicit. The prologue and
 gather must establish those inputs. The combined concurrent output tail still
-needs general store-address bounds and final stored-tensor recovery. Complete PTX memory
+needs composition of its per-lane stored words into one global output tensor. Complete PTX memory
 admission, general execution existence, hardware progress and whole-solver
 instruction correspondence remain separate obligations. Documentation and saved
 empirical evidence distinguish these from the completed phase-by-phase theorem.
@@ -115,9 +115,11 @@ The memory proof also allows removing disjoint output stores from an interleaved
 history while preserving the byte sources of its retained arithmetic reads.
 Actual coefficient addresses are bounded, and the fetched output tail preserves
 those bytes under the nonwrapping layout bounds. This supplies the memory
-separation argument. The combined numerical theorem still explicitly requires
-the actual global stores' address bounds. Deriving these from launch registers
-and recovering the stored output tensor from that same run remain open. A
-completed zero-data Q1 witness includes interleaved output stores, all padding
-returns and the whole-history source constraints. It does not establish general
-execution existence or whole-kernel correspondence.
+separation argument. The combined numerical theorem now derives actual
+global-store addresses from launch registers and nonwrapping layout bounds.
+Each completed active lane's stored bytes equal its TorchLean local cell result
+in that same run. Distinct lane IDs and a common cell ID give disjoint output
+words. Combining those per-lane stores into one published global output tensor
+remains open. A completed zero-data Q1 witness includes interleaved output
+stores, all padding returns and the whole-history source constraints. It does
+not establish general execution existence or whole-kernel correspondence.

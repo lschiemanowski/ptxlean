@@ -1,0 +1,133 @@
+{
+  "id": "765418d2-bcd5-4787-a177-8ba0dce57b0e",
+  "base": "a552adb196439e18ad7a3777dd74001818c663a8",
+  "contentTree": "7740fc549274e4135bf20745004f0a61b8b89c8a",
+  "reviewer": "Codex",
+  "summary": "Derive concurrent Poisson output-store bounds and stored values from launch conditions.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Derive actual store addresses and coefficient separation from launch registers, prove actual per-lane stored bytes, and derive distinct writers disjointness. Publication into one global tensor remains unimplemented; no event-bound or desired-value premise is introduced."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Update the implementation boundary: launch-derived addresses and same-run per-lane stored values are proved, while global publication and omitted prologue/gather remain explicit."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No instruction, memory-source or concurrent execution rule changes. New invariants and kernel-checked syntax certificates derive address facts from existing steps. All new declarations are audited; launch arithmetic bounds, including conservative padding bounds, are explicit. Per-lane stored bytes are not presented as a published global tensor or host-visible output."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The Poisson equations, TorchLean calculation, GPU kernels and residual criterion are unchanged; the bounded correspondence is stronger."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "7740fc549274e4135bf20745004f0a61b8b89c8a",
+      "method": "python3 /tmp/poisson-address-verify.py; python3 -m unittest discover -s hardware -p test_*.py; saved-PTX contraction and instruction binding checkers; distribution guard; Stratic/link validation; git diff --check; manual semantic review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 locked dependencies; existing local TorchLean integration; saved poisson-certified GPU artifacts. No paid model calls or GPU rerun.",
+      "evidence": "Complete registered Lake build passes. Fresh kernel checks pass for CellTailShape and CellTailAddressChecks. All 3518 exact dependency reports contain only standard Lean axioms; source guard covers 371 Lean files. All 29 hardware Python tests pass. Binding checks pass for 30 saved layouts, 720 contraction blocks, 630 shared-store blocks and 30 residual entries; focused contraction audit covers 102 endpoints. All 105 contraction and 103 instruction receipt source hashes match. Exact proposed tree is unchanged before/after final verification. Stratic and local documentation links validate. Unchanged legacy interpreter checks were not freshly rerun. Manual review confirms PC-indexed address facts follow fetched steps, launch base/lane/cell registers are preserved, active lanes actual byte stores give the result without an assumed event geometry, and distinct lane IDs with a common cell ID give disjoint outputs. Launch arithmetic bounds conservatively cover padding lanes without requiring unused allocation; publication into one global tensor remains explicitly open.",
+      "tests": [],
+      "id": "7552b802-b769-420e-a460-50df26b06bff",
+      "recordedAt": "2026-09-30T11:43:50.474Z"
+    }
+  ],
+  "recordedAt": "2026-09-30T11:44:27.460Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-barrier-visibility.md",
+      "reason": "Update the study account to explain launch-only bounds, scratch-register address steps, actual stored bytes, conservative padding arithmetic conditions and the remaining global publication obligation."
+    },
+    {
+      "path": "docs/foundations/poisson-concurrent-output.md",
+      "reason": "Update the study account to explain launch-only bounds, scratch-register address steps, actual stored bytes, conservative padding arithmetic conditions and the remaining global publication obligation."
+    },
+    {
+      "path": "docs/foundations/poisson-correspondence.md",
+      "reason": "Update the study account to explain launch-only bounds, scratch-register address steps, actual stored bytes, conservative padding arithmetic conditions and the remaining global publication obligation."
+    },
+    {
+      "path": "docs/foundations/poisson-final-consumers.md",
+      "reason": "Update the study account to explain launch-only bounds, scratch-register address steps, actual stored bytes, conservative padding arithmetic conditions and the remaining global publication obligation."
+    },
+    {
+      "path": "docs/foundations/poisson-output-separation.md",
+      "reason": "Update the study account to explain launch-only bounds, scratch-register address steps, actual stored bytes, conservative padding arithmetic conditions and the remaining global publication obligation."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Extend focused dependency audit to ten launch-address/stored-byte endpoints and report the exact new proof boundary. Emitted-code comparison logic is unchanged."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh successful saved-PTX binding evidence and verify every recorded source hash; no GPU rerun."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh successful saved-PTX binding evidence and verify every recorded source hash; no GPU rerun."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailAddress.lean",
+      "reason": "Inspect the PC-indexed address invariant and actual store read-after-write fact. Each fetched integer/address step is proved from Kernel.Eval; inactive lanes do not acquire a false stored-value promise."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailAddressChecks.lean",
+      "reason": "Instantiate stored-byte correspondence on the existing completed concurrent Q1 witness using only launch conditions. Reject index/address overflow and check a fetched tail with nonzero base, cell, lane and stored bits."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailBounds.lean",
+      "reason": "Use explicit launch-only index/address nonwrapping conditions and output offset to discharge event bounds and prove actual per-lane stored TorchLean values. Bounds cover padding lanes conservatively without requiring unused allocation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailFrame.lean",
+      "reason": "Prove preservation of launch base, lane and cell registers, stable output location, and completed active lanes actual stored words in the same run."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailOwners.lean",
+      "reason": "Derive disjoint actual store byte ranges from launch lane IDs and a common cell ID, with explicit integer bounds; no supplied uniqueness assumption."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailShape.lean",
+      "reason": "Kernel-check Q1-Q4 register preservation, shared front stores and inactive-return branch shape. Prove the invariant through arbitrary front/tail interleavings and barrier releases."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailStores.lean",
+      "reason": "Locate each actual global store in a combined run and derive its address from the fetched tail and launch registers; no numerical or event-address premise."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register seven modules and all 42 new named declarations; add fresh finite program and execution/bounds regression checks."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register seven modules and all 42 new named declarations; add fresh finite program and execution/bounds regression checks."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register seven modules and all 42 new named declarations; add fresh finite program and execution/bounds regression checks."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reconcile complete descriptions, summaries, partial realization and exact implementation links, retaining global publication as open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reconcile complete descriptions, summaries, partial realization and exact implementation links, retaining global publication as open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reconcile complete descriptions, summaries, partial realization and exact implementation links, retaining global publication as open."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reconcile complete descriptions, summaries, partial realization and exact implementation links, retaining global publication as open."
+    }
+  ]
+}

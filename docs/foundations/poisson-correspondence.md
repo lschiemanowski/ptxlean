@@ -103,8 +103,7 @@ byte-source constraints and disjoint stores, without assuming sequential reads. 
 a [final-body proof](poisson-final-output.md) extends it through a constructed
 byte snapshot to the stored local cell result. A [concurrent extension](poisson-final-consumers.md)
 now also justifies actual final arithmetic loads and connects its result state
-to a [combined concurrent output tail](poisson-concurrent-output.md). General
-output-store bounds and stored-tensor recovery, gather, complete memory
+to a [combined concurrent output tail](poisson-concurrent-output.md). Published global output recovery, gather, complete memory
 admission, remaining kernels and host
 launch composition still require their instruction-level connections. Bounds on scalar array indices alone are not a full memory-safety
 proof. GPU tests and the existing sanitizer evidence remain separate.

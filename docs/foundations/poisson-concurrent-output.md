@@ -5,11 +5,10 @@ with the actual output indexing, store and return. A lane may store its answer
 and return while another lane is still computing. The proof does not insert a
 barrier to make this easier.
 
-The numerical theorem is still conditional on an important remaining obligation:
-every actual global store must lie beyond the coefficient tables. Earlier
-proofs establish the isolated tail's address calculation. Connecting that
-calculation to all interleaved stores from the launch registers remains work,
-as does recovering the final stored output tensor from this combined execution.
+The numerical theorem now derives actual output-store addresses from launch
+registers and nonwrapping integer bounds. In that same execution, each completed
+active lane's stored bytes equal its TorchLean local-cell result. Combining those
+per-lane stores into one published global output tensor remains separate.
 
 ## One actual machine
 
@@ -60,12 +59,13 @@ choose unrelated memory values for the two executions.
 
 ## Exactly what the numerical theorem says
 
-[CellTailResult.result_under_store_bounds](../../integration/torchlean/PoissonPTX/CellTailResult.lean)
+[CellTailBounds.result_from_launch](../../integration/torchlean/PoissonPTX/CellTailBounds.lean)
 takes:
 
 * Q1–Q4 launch registers and gathered initial bytes;
 * one actual combined execution;
-* a nonwrapping coefficient base and actual global-store bounds;
+* launch-only 32-bit index and 64-bit address bounds, with the output offset
+  beyond the coefficient tables;
 * compatible byte sources and the necessary barrier-publication constraint;
 * an active output lane that has reached or passed the arithmetic cutoff.
 
@@ -74,10 +74,41 @@ the ordered TorchLean local-cell calculation. Other lanes need not have
 completed. Neither the answer, a separate arithmetic execution, its event
 mapping, nor a last-barrier boundary state is supplied as an assumption.
 
-The theorem is about the arithmetic register in the combined execution. It
-does not yet recover the final global output tensor, prove arbitrary-input
-termination, establish prologue/gather or host launch correctness, or establish
-complete PTX memory admission or hardware conformance.
+The companion theorem `stored_from_launch` reaches the actual bytes written
+by that lane after its store. It takes the same execution and launch conditions,
+with the lane past the store instruction. It does not need a separate tail run
+or a fabricated memory snapshot.
+
+## How the address and stored-byte proofs work
+
+[CellTailShape](../../integration/torchlean/PoissonPTX/CellTailShape.lean)
+checks that the arithmetic front preserves registers 0, 14 and 15: the base,
+lane ID and cell ID. The tail preserves these registers too. Consequently, the
+address computed at any later store equals the address determined at launch.
+
+[CellTailAddress](../../integration/torchlean/PoissonPTX/CellTailAddress.lean)
+tracks scratch-register facts at each of the four index/address instructions.
+At the store, register 2 contains the computed output address. The store's own
+byte update establishes the read-after-write result; returning preserves it.
+Inactive lanes jump to return, and the stored-value property is required only
+for active lanes.
+
+The natural index is `cell * width² + lane`. The launch bounds require it to
+fit in 32 bits, and require `base + 8 * index + outputOffset` to fit in 64 bits.
+The current interface conservatively checks these arithmetic bounds for all
+32 lanes, including padding. It does not require padding output words to be
+allocated. The actual store rule checks alignment and allocation.
+
+[CellTailStores](../../integration/torchlean/PoissonPTX/CellTailStores.lean)
+locates every actual global store in the combined execution and derives its
+address. Together with the output offset, this proves that those stores cannot
+overwrite coefficients. [CellTailOwners](../../integration/torchlean/PoissonPTX/CellTailOwners.lean)
+also derives disjoint output words for different lanes with a common cell ID.
+
+The result still concerns each writer's byte memory. Composing those stores into
+one published global tensor, proving host-visible completion, arbitrary-input
+termination, prologue/gather, complete PTX memory admission and hardware
+conformance remain separate obligations.
 
 ## A completed execution
 
@@ -90,8 +121,12 @@ returned thread fails.
 [CellTailWitnessSources](../../integration/torchlean/PoissonPTX/CellTailWitnessSources.lean)
 checks the actual event words, alignment and output addresses, constructs one
 whole-history source assignment, and instantiates the numerical theorem.
-These are kernel-checked finite witnesses, not GPU measurements or a general
-proof of the remaining address obligation.
+[CellTailAddressChecks](../../integration/torchlean/PoissonPTX/CellTailAddressChecks.lean)
+instantiates the stronger stored-byte theorem using launch conditions alone.
+It also executes a tail with nonzero base, cell, lane and stored word, and
+rejects mutated bounds with index overflow or byte-address overflow.
+These are kernel-checked finite witnesses, not GPU measurements or general
+termination proofs.
 
 Run the registered proofs, source guards and exact axiom audit with:
 

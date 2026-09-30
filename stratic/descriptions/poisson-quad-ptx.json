@@ -14,7 +14,7 @@
     "Derive middle-slice read addresses, intermediate values, weight operations, ownership and barrier ordering for certified Q1\u2013Q4 layouts; check complete emitted bodies against the proved program.",
     "Keep gathered input and entry registers explicit; full cell composition, complete memory admission, general execution existence and host launches remain unproved.",
     "Derive final-read visibility and ordered arithmetic from one source-constrained concurrent run, including its last-barrier split, derive its arithmetic projection from a combined concurrent index/store/return execution; keep full-kernel composition explicit.",
-    "Prove coefficient/output byte separation and preserve retained read sources under interleaved output stores; derive the concurrent arithmetic run and result register, while retaining general store-address bounds and stored-tensor recovery as open obligations."
+    "Prove coefficient/output byte separation and preserve retained read sources under interleaved output stores; derive the concurrent arithmetic run and result register, derive store addresses from launch bounds and prove per-lane stored bytes, while retaining global publication as an open obligation."
   ],
   "realization": "implemented",
   "links": [

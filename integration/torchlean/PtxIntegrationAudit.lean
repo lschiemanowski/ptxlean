@@ -1,3 +1,10 @@
+import PoissonPTX.CellTailAddressChecks
+import PoissonPTX.CellTailOwners
+import PoissonPTX.CellTailBounds
+import PoissonPTX.CellTailStores
+import PoissonPTX.CellTailFrame
+import PoissonPTX.CellTailShape
+import PoissonPTX.CellTailAddress
 import PoissonPTX.CellTailWitnessSources
 import PoissonPTX.CellTailChecks
 import PoissonPTX.CellTailResult
@@ -3923,3 +3930,52 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.performed
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.launch
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Checks.correspondence
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.scaled
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.Ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.ready_before
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.tail_ready
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.fact
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.Checked
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.checked
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.front_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.tail_keeps_register
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.location_eq
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.Invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.front_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.step_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_ready
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.step_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_location
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.initial_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.stored_word
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.access_prefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.tail_address
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.step_address
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.store_address
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.OutputBounds
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.store_bounds
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.coefficient_nowrap
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_from_launch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stored_from_launch
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.output_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stores_disjoint
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.launch_bounds
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.stored
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.index_wrap_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.address_wrap_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.sample
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.cfg
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.ctx
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.sampleRun
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.sampleResult
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.sample_executed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.sample_actual
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.AddressChecks.nonzero_store

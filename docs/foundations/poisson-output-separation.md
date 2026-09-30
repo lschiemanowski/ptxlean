@@ -92,9 +92,9 @@ bounds. The larger history must satisfy the necessary byte-source constraints.
 
 The [combined concurrent execution](poisson-concurrent-output.md) now derives
 the arithmetic run, event embedding, omitted-store classification and result
-register relation. The remaining connection is to derive actual output-store
-address bounds from launch registers and recover the final stored tensor from
-that same run. Complete PTX memory admission, prologue/gather, launch composition
+register relation. It now also derives actual output-store addresses from
+launch bounds and proves the values in completed active lanes' byte memories.
+Publication of those per-lane stores into one global tensor remains open. Complete PTX memory admission, prologue/gather, launch composition
 and general execution existence retain their existing boundaries.
 
 ## Checks
