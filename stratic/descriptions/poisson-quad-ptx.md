@@ -110,3 +110,10 @@ local cell value. The fetched output
 tail starts from this actual state. The concurrent fragment itself stops before
 that tail; its interleaving and the omitted prologue/gather remain explicit
 full-kernel obligations.
+
+The memory proof also allows removing disjoint output stores from an interleaved
+history while preserving the byte sources of its retained arithmetic reads.
+Actual coefficient addresses are bounded, and the fetched output tail preserves
+those bytes under the nonwrapping layout bounds. This supplies the memory
+separation argument; deriving the retained execution and final-state relation
+from a full concurrent tail remains part of the unfinished connection.

@@ -1,0 +1,117 @@
+{
+  "id": "88aa76a9-a717-42c5-9a87-6cb0cb345dc2",
+  "base": "091addb0ac91f86402a33c163589f883006d32dc",
+  "contentTree": "dd7b1abc107162d0cd72d721861ec5c290263216",
+  "reviewer": "Codex",
+  "summary": "Prove byte-source preservation and coefficient separation for interleaved Poisson output stores.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Prove ordered byte-source restriction, actual coefficient-load bounds and fetched output-tail separation. Preserve the missing full-tail execution projection and final-state correspondence explicitly."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe the proved memory separation prerequisite while retaining the unimplemented full concurrent tail connection."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive instruction or memory-source rule changed. Finite code certificates use kernel reduction, every new public declaration is explicitly audited, and exact emitted-code binding remains separate from hardware fidelity."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The Poisson tensor operator, PTX implementation, accepted residual criterion and empirical algorithm are unchanged. This is a stronger instruction correspondence for a bounded fragment."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "dd7b1abc107162d0cd72d721861ec5c290263216",
+      "method": "python3 /tmp/poisson-separation-verify.py using the existing integration checker functions for pinned dependencies, source guard, exact target/endpoint counts and dependency auditing; complete lake --no-cache build; fresh CellCoefficientProgram and ProjectionChecks; python3 -m unittest discover -s hardware -p test_*.py; both saved Poisson PTX binding checkers; distribution guard; Stratic validation; git diff --check; manual proof/scope review, guide-link and receipt-hash checks.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, 16 dependencies, 355 guarded integration Lean files. No primitive-semantic changes, external model calls, GPU rerun or README edits.",
+      "evidence": "Targeted integration verification passed: 3410 exact dependency reports, including all 35 new declarations, with only standard Lean axioms. The complete registered build and fresh Q1-Q4 global coefficient-address certificates and projection regression module passed. Unchanged legacy interpreter checks were not freshly rerun. All 29 hardware Python tests passed, including coefficient/output alias rejection and adjacent-boundary acceptance. Saved PTX binding passed for 30 layouts: 720 contractions, 630 shared stores, 90 middle slices, 90 final bodies and 30 residual entries. All 30 concrete output extents are beyond their coefficient regions. Focused contraction audit passed 83 endpoints; 89 contraction-receipt and 87 residual-receipt source hashes match. Distribution and whitespace checks passed, guide links resolve, and Stratic has no issues. Exact before/after snapshots match. Source restriction preserves original store occurrences and barrier publication after renumbering; a one-byte-overlap mutation is rejected. Actual coefficient-load bounds and fetched output-tail frame properties are proved. The projected arithmetic theorem explicitly takes a retained arithmetic run, an order-preserving event embedding and omitted-store address bounds. Deriving these and the final-state relation from a full concurrent tail execution remains open, as do the previously stated full-kernel and PTX-admission boundaries. Log and verification-script SHA256: {\"integration.log\": \"e66b1232e0c4294f5ed56b264a4df5c443bc665b35c0565a26e61595c4a1e975\", \"python.log\": \"9027f024eed4093e068290bec06a57d73de9a9e19e247b9f551941ec46db3ba9\", \"binding.log\": \"b5fe404a1b2bf618e93294f3f79cc6fd41e55c6e7f526f33f43884d16bef8a1b\", \"residual-binding.log\": \"8916d728b6ad4e5a3d7c1804c517589fd49f9de167e5f3366c7cbcdc4688d911\", \"distribution.log\": \"ab4407fa5ecd2285fe290ab8d820508349e8bd38b97e32fe1d25628a331df623\", \"stratic.json\": \"ef43b0bc6092267f1be737777a2a9b9e3c4d6f42a1b9727d8a85102c54bbb45c\", \"verify.py\": \"a760a77afd1c041959f22dbb1c6c91d218561e2e456872f3d3c2c6bf56ad2ed9\"}",
+      "tests": [],
+      "id": "076dcba4-bc16-47a6-9b88-44e97bd0310a",
+      "recordedAt": "2026-09-30T07:55:18.070Z"
+    }
+  ],
+  "recordedAt": "2026-09-30T07:55:54.600Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-final-consumers.md",
+      "reason": "Explain actual coefficient/output geometry, order-preserving source restriction, classical inverse indexing and the exact remaining full-execution connection."
+    },
+    {
+      "path": "docs/foundations/poisson-output-separation.md",
+      "reason": "Explain actual coefficient/output geometry, order-preserving source restriction, classical inverse indexing and the exact remaining full-execution connection."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reject coefficient/output overlap, record concrete separated extents for every saved layout, and audit the new geometry and source-restriction endpoints. Instruction matching and emitted kernels are unchanged."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh successful binding evidence and source hashes. All concrete layouts pass separation; all source hashes match. No GPU rerun."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh successful binding evidence and source hashes. All concrete layouts pass separation; all source hashes match. No GPU rerun."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Reject aligned aliases into B, D and the last coefficient word; accept the exact adjacent non-overlapping boundary."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellCoefficientProgram.lean",
+      "reason": "Finite Q1-Q4 address-only certificates bound every active lane global load, including all eight bytes, over the actual arithmetic instruction program. No load values or phase answers are checked."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellCoefficientReads.lean",
+      "reason": "Connect the finite certificate to actual fetched loads using existing symbolic soundness and explicit global no-wrap bounds; no read-value premise."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellOutputSeparation.lean",
+      "reason": "Derive separation from existing actual integer/address calculations and fetched tail frame proof. The final wrapper explicitly requires a retained arithmetic run, event embedding and omitted-store bounds; it does not claim the missing full-tail execution refinement."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentProjection.lean",
+      "reason": "Inspect ordered event occurrence identity, exact inverse source renaming, exclusion of omitted source stores by byte separation, and preservation of actual barrier order. Unmapped helpers and proof bodies implement these linked contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ProjectionChecks.lean",
+      "reason": "Construct interleaved histories with shared-store publication and global reads, preserve the original source after renumbering, and reject one-byte overlap. These are transformation checks rather than new execution witnesses."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register five new modules and all 35 public declarations in the pinned build/dependency audit and fresh checks for the new finite certificate and regression histories."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register five new modules and all 35 public declarations in the pinned build/dependency audit and fresh checks for the new finite certificate and regression histories."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register five new modules and all 35 public declarations in the pinned build/dependency audit and fresh checks for the new finite certificate and regression histories."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reconcile self-contained descriptions, summaries, exact proof links and the partial-realization boundary before accepting the change."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reconcile self-contained descriptions, summaries, exact proof links and the partial-realization boundary before accepting the change."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reconcile self-contained descriptions, summaries, exact proof links and the partial-realization boundary before accepting the change."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reconcile self-contained descriptions, summaries, exact proof links and the partial-realization boundary before accepting the change."
+    }
+  ]
+}

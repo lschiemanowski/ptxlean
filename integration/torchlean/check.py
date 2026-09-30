@@ -412,6 +412,13 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Cut'] = 3
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer'] += 3
 TARGETS.update({'PoissonPTX.ConcurrentCut', 'PoissonPTX.CellConsumerRun'})
 
+# Byte-source restriction under interleaved disjoint output stores.
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Projection'] = 9
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks'] = 17
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients'] = 5
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output'] = 4
+TARGETS.update(['PoissonPTX.ConcurrentProjection', 'PoissonPTX.ProjectionChecks', 'PoissonPTX.CellCoefficientProgram', 'PoissonPTX.CellCoefficientReads', 'PoissonPTX.CellOutputSeparation'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -481,7 +488,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

@@ -13,7 +13,8 @@
     "Prove the eight local contractions and actual shared stores, and connect all six outputs of the three completed middle phases to TorchLean under necessary byte-source constraints.",
     "Derive middle-slice read addresses, intermediate values, weight operations, ownership and barrier ordering for certified Q1–Q4 layouts; check complete emitted bodies against the proved program.",
     "Keep gathered input and entry registers explicit; full cell composition, complete memory admission, general execution existence and host launches remain unproved.",
-    "Derive final-read visibility and ordered arithmetic from one source-constrained concurrent run, including its last-barrier split, then connect the result state to the separately fetched output tail; keep full-kernel composition explicit."
+    "Derive final-read visibility and ordered arithmetic from one source-constrained concurrent run, including its last-barrier split, then connect the result state to the separately fetched output tail; keep full-kernel composition explicit.",
+    "Prove coefficient/output byte separation and preserve retained read sources under interleaved output stores; the full concurrent tail execution connection remains open."
   ],
   "realization": "implemented",
   "links": [

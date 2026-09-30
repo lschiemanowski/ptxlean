@@ -1,3 +1,8 @@
+import PoissonPTX.ConcurrentProjection
+import PoissonPTX.ProjectionChecks
+import PoissonPTX.CellCoefficientProgram
+import PoissonPTX.CellCoefficientReads
+import PoissonPTX.CellOutputSeparation
 import PoissonPTX.ConcurrentCut
 import PoissonPTX.CellConsumerRun
 import PoissonPTX.ConcurrentExtension
@@ -3798,3 +3803,39 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.split
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_run
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_run
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Embedding
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Retained
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Separated
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.source
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.observed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.across
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.separated_by_fence
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.key
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.write
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.small
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.large
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.embedding
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.original
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.whole_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.whole_performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.separated
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.retained_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.retained_performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.renamed_source
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.ordered
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.overlapping
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.badEmbedding
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Projection.Checks.overlap_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.extent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.checkAt
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.Checked
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.checked
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.read_bounds
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.after_coefficients
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.fetched_preserves_coefficients
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.distinct_outputs
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.projected_arithmetic

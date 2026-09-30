@@ -83,6 +83,10 @@ threads' final reads. In this arithmetic fragment, padding lanes jump to the
 arithmetic cutoff; the actual skipped tail and return require the full-kernel
 connection.
 
+[Output-store separation](poisson-output-separation.md) now supplies the memory
+argument for removing disjoint output stores from an interleaved history. It
+does not yet derive the retained arithmetic execution from a full tail run.
+
 The automatic split is proved for this arithmetic fragment. Applying it inside
 a complete emitted-kernel correspondence still requires the omitted instructions
 and their control and memory effects. Prologue/gather, full

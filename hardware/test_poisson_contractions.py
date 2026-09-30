@@ -100,6 +100,20 @@ class ContractionBinding(unittest.TestCase):
             layout['fields']['element'][key] = value
             with self.assertRaises(ValueError): parameters(layout)
 
+    def test_output_coefficient_separation(self):
+        width = self.layout['degree']+1
+        end = max(self.layout['fields'][name]['offset']+width*width*8 for name in ('B', 'D', 'W'))
+        for offset in (self.layout['fields']['B']['offset'],
+                       self.layout['fields']['D']['offset'], end-8):
+            with self.subTest(offset=offset):
+                layout = copy.deepcopy(self.layout)
+                layout['fields']['element']['offset'] = offset
+                with self.assertRaisesRegex(ValueError, 'overlaps coefficient'):
+                    parameters(layout)
+        adjacent = copy.deepcopy(self.layout)
+        adjacent['fields']['element']['offset'] = end
+        self.assertEqual(parameters(adjacent)['output'], end)
+
     def test_structure(self):
         self.assertEqual(len(verify_blocks(self.ptx, self.expected, self.layout)), 24)
 

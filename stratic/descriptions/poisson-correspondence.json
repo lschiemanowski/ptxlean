@@ -21,10 +21,11 @@
     "Supply a completed zero-data Q1 execution satisfying both necessary byte-source constraints; reject wrong-coordinate and wrong-weight code mutations without claiming arbitrary-input existence.",
     "Connect the complete final arithmetic/store body to its actual byte inputs, and compose with middle-run stores through a proved byte snapshot while retaining the distinct whole-trace visibility obligation.",
     "Derive final consumer load values from actual middle stores and barrier history, then connect the actual arithmetic registers to the existing final-store proof without hiding the remaining model boundary.",
-    "Derive the last-barrier execution split from one actual concurrent run, without an assumed boundary state or schedule; only the observed output thread must finish final arithmetic."
+    "Derive the last-barrier execution split from one actual concurrent run, without an assumed boundary state or schedule; only the observed output thread must finish final arithmetic.",
+    "Preserve byte-source choices under ordered event restriction when omitted output stores are disjoint from actual coefficient reads; keep full-tail execution projection and state correspondence explicit."
   ],
   "realization": "partial",
-  "remaining": "Concurrent final arithmetic now recovers actual middle-store bytes through the barrier and produces the TorchLean local cell result under one whole-history source assignment. The last-barrier split is derived from one arithmetic-fragment run. Embedding index/store/return into the concurrent machine, their interleaving with other readers, prologue/gather, arbitrary-input source-admitted existence, full launch composition and complete PTX admission remain open. Assembly, reductions, remaining PCG kernels and host launches retain separate instruction obligations.",
+  "remaining": "Concurrent final arithmetic now recovers actual middle-store bytes through the barrier and produces the TorchLean local cell result under one whole-history source assignment. The last-barrier split is derived from one arithmetic-fragment run. Byte-source restriction and coefficient/output separation are proved, but deriving the retained arithmetic execution, event embedding and final-state relation from a full tail run remains open. Embedding index/store/return into the concurrent machine, their interleaving with other readers, prologue/gather, arbitrary-input source-admitted existence, full launch composition and complete PTX admission remain open. Assembly, reductions, remaining PCG kernels and host launches retain separate instruction obligations.",
   "links": [
     {
       "kind": "implementation",
@@ -959,6 +960,90 @@
         "path": "integration/torchlean/PoissonPTX/CellConsumerRun.lean",
         "passage": {
           "quote": "theorem split (launch : Numeric.Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (thread : Fin 32) (finished : (final.lanes thread).pc=(program width).length) :\n    ∃ before after ready,\n      events=before++after ∧ Runs cfg (Checks.program width) start before ready ∧\n      (∀ t, (ready.lanes t).pc=(Checks.program width).length) ∧\n      Runs cfg (program width) ready after final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This restriction preserves both byte-source compatibility and the requirement\nthat a write published through a barrier cannot be replaced by initial bytes."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentProjection.lean",
+        "passage": {
+          "quote": "theorem compatible (embedding : Embedding small large) (separated : Separated embedding)\n    (whole : Visibility.Compatible initial large original) :\n    Visibility.Compatible initial small (source embedding original)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This restriction preserves both byte-source compatibility and the requirement\nthat a write published through a barrier cannot be replaced by initial bytes."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentProjection.lean",
+        "passage": {
+          "quote": "theorem performed (embedding : Embedding small large)\n    (whole : Visibility.Performed large original) : Visibility.Performed small (source embedding original)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For Q1–Q4, instruction certificates and symbolic address tracking place every\nactual global read inside the region containing B, D and W."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellCoefficientReads.lean",
+        "passage": {
+          "quote": "theorem read_bounds {events : List (Event 32)} {reader : Fin 32} {access : Access}\n    (launch : Numeric.Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (nowrap : (bases .global).toNat+extent width≤2^64)\n    (member : Event.data reader access∈events) (read : access.data.store=false)\n    (global : access.space=.global) :\n    (bases .global).toNat≤access.data.address ∧\n      access.data.address+8≤(bases .global).toNat+extent width"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The fetched\nindex/store/return tail preserves every coefficient byte."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellOutputSeparation.lean",
+        "passage": {
+          "quote": "theorem fetched_preserves_coefficients (hi : width≤5)\n    (bound : (s.core.regs 15).toNat*(width*width)+(s.core.regs 14).toNat<2^32)\n    (nowrap : (s.core.regs 0).toNat+\n      ((s.core.regs 15).toNat*(width*width)+(s.core.regs 14).toNat)*8+output.toNat<2^64)\n    (offset : Coefficients.extent width≤output.toNat)\n    (running : s.halted=false)\n    (valid : Valid64 s.core.globalStart s.core.globalBytes (CellFinal.location s.core width output).toNat)\n    (precode : List Kernel.Instr) (pc : s.core.pc=precode.length)\n    (run : Kernel.Run ctx (precode++CellFinal.tail width output) s final)\n    (p : Nat) (coefficient : p<(s.core.regs 0).toNat+Coefficients.extent width) :\n    final.core.global p=s.core.global p"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Distinct bounded\noutput indices also give disjoint eight-byte output words."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellOutputSeparation.lean",
+        "passage": {
+          "quote": "theorem distinct_outputs (a b : PTX.State) (hi : width≤5)\n    (ab : (a.regs 15).toNat*(width*width)+(a.regs 14).toNat<2^32)\n    (bb : (b.regs 15).toNat*(width*width)+(b.regs 14).toNat<2^32)\n    (an : (a.regs 0).toNat+((a.regs 15).toNat*(width*width)+(a.regs 14).toNat)*8+output.toNat<2^64)\n    (bn : (b.regs 0).toNat+((b.regs 15).toNat*(width*width)+(b.regs 14).toNat)*8+output.toNat<2^64)\n    (base : a.regs 0=b.regs 0)\n    (different : (a.regs 15).toNat*(width*width)+(a.regs 14).toNat≠\n      (b.regs 15).toNat*(width*width)+(b.regs 14).toNat) :\n    (CellFinal.location a width output).toNat+8≤(CellFinal.location b width output).toNat ∨\n    (CellFinal.location b width output).toNat+8≤(CellFinal.location a width output).toNat"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This theorem explicitly receives the retained arithmetic run, its\norder-preserving embedding into the larger history, and the omitted stores'\naddress bounds."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellOutputSeparation.lean",
+        "passage": {
+          "quote": "theorem projected_arithmetic {whole : List (Event 32)}\n    (launch : Numeric.Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (embedding : Projection.Embedding events whole)\n    (nowrap : (bases .global).toNat+Coefficients.extent width≤2^64)\n    (writes : ∀ (w : Nat) (writer : Fin 32) (wa : Access), whole[w]?=some (.data writer wa) →\n      wa.data.store=true → ¬Projection.Retained embedding w →\n      wa.space=.global ∧ (bases .global).toNat+Coefficients.extent width≤wa.data.address)\n    (compatible : Visibility.Compatible initial whole original)\n    (performed : Visibility.Performed whole original)\n    (thread : Fin 32) (i j : Fin width) (lane : thread.val=i.val*width+j.val)\n    (finished : (final.lanes thread).pc=(program width).length) :\n    decode ((final.lanes thread).regs 11)=Spec.get2 (localAction\n      (Numeric.initialTensor width bases initial .global 0)\n      (Numeric.initialTensor width bases initial .global (width*width*8+32))\n      (Numeric.initialTensor width bases initial .global (2*(width*width*8+32)))\n      (Numeric.initialTensor width bases initial .shared 0)) i j"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Regression histories preserve a shared producer across renumbering and reject\nan omitted store that overlaps a retained read by just one byte."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ProjectionChecks.lean",
+        "passage": {
+          "quote": "theorem overlap_rejected : ¬Separated badEmbedding"
         }
       }
     }

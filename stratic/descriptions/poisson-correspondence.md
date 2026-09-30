@@ -368,3 +368,34 @@ and final result with all 32 participants, including 28 padding lanes. This is
 finite existence evidence, not an arbitrary-input termination theorem. A changed
 final addition fails the symbolic numerical certificate. The existing nonzero
 final-body checks and saved-PTX bindings remain separate regression evidence.
+
+Output stores may be interleaved with another thread's coefficient reads. The
+memory-source proof can remove those stores from a history if they touch none
+of the bytes read by the retained instructions. It keeps the remaining events
+in their original order and renumbers each chosen store source to its retained
+position. Two identical-looking store records still have distinct positions.
+This restriction preserves both byte-source compatibility and the requirement
+that a write published through a barrier cannot be replaced by initial bytes.
+It does not choose a fresh, unrelated account of memory.
+
+For Q1–Q4, instruction certificates and symbolic address tracking place every
+actual global read inside the region containing B, D and W. The region includes
+the gaps between those tables, and the bound covers all eight bytes of each
+read. A nonwrapping global base is required. The final integer index and byte
+address calculations place output words beyond this region when the output
+offset is at or beyond its end. This requires the existing 32-bit index bound
+and 64-bit address bound; modular wraparound is not ignored. The fetched
+index/store/return tail preserves every coefficient byte. Distinct bounded
+output indices also give disjoint eight-byte output words. The saved-PTX binding
+checker verifies separated coefficient/output extents, rejecting overlap.
+
+A larger history may therefore contain arbitrary interleavings of disjoint
+output stores while its retained arithmetic execution keeps the same TorchLean
+result. This theorem explicitly receives the retained arithmetic run, its
+order-preserving embedding into the larger history, and the omitted stores'
+address bounds. Deriving those inputs and the final-state relation from a full
+concurrent index/store/return execution remains unimplemented. This memory
+argument neither inserts a barrier nor proves that missing execution connection.
+Regression histories preserve a shared producer across renumbering and reject
+an omitted store that overlaps a retained read by just one byte. These histories
+check the source transformation; they are not new GPU or whole-kernel witnesses.

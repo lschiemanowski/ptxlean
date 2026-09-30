@@ -11,7 +11,11 @@ whole-history source assignment and connects its result to the fetched store.
 The arithmetic theorem derives its middle prefix and continuation at the last
 barrier from a single run. Incorporating index/store/return into that concurrent
 machine, gather, prologue, full launch composition and complete
-PTX memory admission remain open.
+PTX memory admission remain open. Byte-source restriction is now proved for an
+order-preserving projection that omits only noninterfering stores. Actual
+coefficient loads are bounded, fetched output stores preserve that region, and
+saved output extents are checked disjoint. Constructing the projected execution
+from a full concurrent tail run is still an explicit obligation.
 """
 import argparse
 import hashlib
@@ -45,8 +49,19 @@ def parameters(layout):
             or type(field['offset']) is not int or field['offset'] < 0 or field['offset'] % 8
             or field['offset']+field['count']*8 > layout['bytes']):
         raise ValueError('invalid element-output extent')
+    coefficient_end = max(result[name]+width*width*8 for name in ('B', 'D', 'W'))
+    if field['offset'] < coefficient_end:
+        raise ValueError('element output overlaps coefficient region')
     result['output'] = field['offset']
     return result
+
+
+def output_separation(layout):
+    params = parameters(layout)
+    field = layout['fields']['element']
+    return dict(coefficient_end=max(params[name]+params['width']**2*8 for name in ('B', 'D', 'W')),
+                output_start=params['output'], output_end=params['output']+field['count']*8,
+                output_words=field['count'])
 
 
 def verify_blocks(ptx, rendered, layout):
@@ -215,7 +230,7 @@ def check(run, output):
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
                     'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
                     'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.CellFinalSnapshot',
-                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -244,16 +259,22 @@ def check(run, output):
                'all_reads', 'register_value', 'completed_arithmetic', 'stored_local', 'tail_completion', 'split', 'completed_run', 'stored_run')]
     names += ['PtxTorchLean.Poisson.PTX.Concurrent.Cut.'+n for n in
               ('crossing_state', 'step_prefix', 'split_run')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.Projection.'+n for n in
+              ('compatible', 'across', 'performed', 'separated_by_fence')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.'+n for n in
+              ('checked', 'read_bounds')]
+    names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.'+n for n in
+              ('after_coefficients', 'fetched_preserves_coefficients', 'distinct_outputs', 'projected_arithmetic')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)
     layouts = [json.loads(read_artifact(run, report, c['directory']+'/layout.json')) for c in report['cases']]
     rendered = json.loads(subprocess.check_output([INTEGRATION/'.lake/build/bin/poissonContractions'],
         input=json.dumps([parameters(l) for l in layouts])+'\n', text=True))
-    checked = [dict(directory=c['directory'], blocks=verify_blocks(
+    checked = [dict(directory=c['directory'], separation=output_separation(layout), blocks=verify_blocks(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['contractions'], layout),
         stores=verify_stores(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['stores'], layout, code['contractions']),
         control=verify_control(read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), layout),
