@@ -407,6 +407,11 @@ TARGETS.update(['PoissonPTX.CellFinal', 'PoissonPTX.CellFinalChecks', 'PoissonPT
 COUNTS.update({'PtxTorchLean.Poisson.PTX.Concurrent.Extension': 6, 'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks': 13, 'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer': 32})
 TARGETS.update(['PoissonPTX.ConcurrentExtension', 'PoissonPTX.CellConsumerChecks', 'PoissonPTX.CellConsumerOutput', 'PoissonPTX.CellConsumerProgram', 'PoissonPTX.CellConsumerSources', 'PoissonPTX.CellConsumerValues'])
 
+# Derive the last-barrier cut from a single concurrent execution.
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Cut'] = 3
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer'] += 3
+TARGETS.update({'PoissonPTX.ConcurrentCut', 'PoissonPTX.CellConsumerRun'})
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

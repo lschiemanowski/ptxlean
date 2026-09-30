@@ -1,4 +1,4 @@
-import PoissonPTX.CellConsumerOutput
+import PoissonPTX.CellConsumerRun
 import PoissonPTX.CellMiddleNumericChecks
 
 namespace PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Checks
@@ -54,8 +54,7 @@ theorem correspondence (i j : Fin 2) :
         (Numeric.initialTensor 2 (fun _ => 0) (fun _ _ => 0) .global 64)
         (Numeric.initialTensor 2 (fun _ => 0) (fun _ _ => 0) .global 128)
         (Numeric.initialTensor 2 (fun _ => 0) (fun _ _ => 0) .shared 0)) i j :=
-  completed_arithmetic Numeric.Checks.launch (by decide) (by decide) Witness.candidate_run Witness.finished.2
-    tail_run compatible performed _ i j rfl (finished _)
+  completed_run Numeric.Checks.launch (by decide) (by decide) whole_run compatible performed _ i j rfl (finished _)
 
 /-- A changed arithmetic join fails the exact symbolic numerical certificate. -/
 theorem wrong_join_rejected : number (atPC .values

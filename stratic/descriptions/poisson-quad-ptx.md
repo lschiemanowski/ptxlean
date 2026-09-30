@@ -104,8 +104,9 @@ empirical evidence distinguish these from the completed phase-by-phase theorem.
 
 A concurrent arithmetic extension now proves that actual final loads recover the
 middle stores through the last barrier, using one source assignment for the whole
-history. It takes the actual middle prefix and its continuation at that barrier,
-and derives the final register's TorchLean local cell value. The fetched output
+history. From one actual run, it derives the middle prefix, the state after the
+last barrier and its continuation, then proves the final register's TorchLean
+local cell value. The fetched output
 tail starts from this actual state. The concurrent fragment itself stops before
-that tail; its interleaving, automatic decomposition of arbitrary full runs and
-the omitted prologue/gather remain explicit full-kernel obligations.
+that tail; its interleaving and the omitted prologue/gather remain explicit
+full-kernel obligations.

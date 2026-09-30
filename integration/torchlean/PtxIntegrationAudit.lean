@@ -1,3 +1,5 @@
+import PoissonPTX.ConcurrentCut
+import PoissonPTX.CellConsumerRun
 import PoissonPTX.ConcurrentExtension
 import PoissonPTX.CellConsumerChecks
 import PoissonPTX.CellConsumerOutput
@@ -3788,3 +3790,11 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_readonly
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.all_reads
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.register_value
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Cut.crossing_state
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Cut.step_prefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Cut.split_run
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.split
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_run

@@ -20,10 +20,11 @@
     "Keep slice-entry registers and gathered bytes explicit; concurrent index/store/return interleaving, full gather, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
     "Supply a completed zero-data Q1 execution satisfying both necessary byte-source constraints; reject wrong-coordinate and wrong-weight code mutations without claiming arbitrary-input existence.",
     "Connect the complete final arithmetic/store body to its actual byte inputs, and compose with middle-run stores through a proved byte snapshot while retaining the distinct whole-trace visibility obligation.",
-    "Derive final consumer load values from actual middle stores and barrier history, then connect the actual arithmetic registers to the existing final-store proof without hiding the remaining model boundary."
+    "Derive final consumer load values from actual middle stores and barrier history, then connect the actual arithmetic registers to the existing final-store proof without hiding the remaining model boundary.",
+    "Derive the last-barrier execution split from one actual concurrent run, without an assumed boundary state or schedule; only the observed output thread must finish final arithmetic."
   ],
   "realization": "partial",
-  "remaining": "Concurrent final arithmetic now recovers actual middle-store bytes through the barrier and produces the TorchLean local cell result under one whole-history source assignment. The execution is supplied as a completed middle prefix and its continuation at the existing last barrier. Automatic decomposition of arbitrary full runs, embedding index/store/return into the concurrent machine, their interleaving with other readers, prologue/gather, arbitrary-input source-admitted existence, full launch composition and complete PTX admission remain open. Assembly, reductions, remaining PCG kernels and host launches retain separate instruction obligations.",
+  "remaining": "Concurrent final arithmetic now recovers actual middle-store bytes through the barrier and produces the TorchLean local cell result under one whole-history source assignment. The last-barrier split is derived from one arithmetic-fragment run. Embedding index/store/return into the concurrent machine, their interleaving with other readers, prologue/gather, arbitrary-input source-admitted existence, full launch composition and complete PTX admission remain open. Assembly, reductions, remaining PCG kernels and host launches retain separate instruction obligations.",
   "links": [
     {
       "kind": "implementation",
@@ -907,9 +908,9 @@
         "quote": "The real final arithmetic register equals the complete ordered TorchLean local\ncell calculation."
       },
       "to": {
-        "path": "integration/torchlean/PoissonPTX/CellConsumerOutput.lean",
+        "path": "integration/torchlean/PoissonPTX/CellConsumerRun.lean",
         "passage": {
-          "quote": "theorem completed_arithmetic (launch : Numeric.Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (middle : Runs cfg (Checks.program width) start before ready)\n    (done : ∀ t, (ready.lanes t).pc=(Checks.program width).length)\n    (rest : Runs cfg (program width) ready after final)\n    (compatible : Visibility.Compatible initial (before++after) source)\n    (performed : Visibility.Performed (before++after) source)\n    (thread : Fin 32) (i j : Fin width) (lane : thread.val=i.val*width+j.val)\n    (finished : (final.lanes thread).pc=(program width).length) :\n    decode ((final.lanes thread).regs 11)=Spec.get2 (localAction\n      (Numeric.initialTensor width bases initial .global 0)\n      (Numeric.initialTensor width bases initial .global (width*width*8+32))\n      (Numeric.initialTensor width bases initial .global (2*(width*width*8+32)))\n      (Numeric.initialTensor width bases initial .shared 0)) i j"
+          "quote": "theorem completed_run (launch : Numeric.Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (compatible : Visibility.Compatible initial events source)\n    (performed : Visibility.Performed events source)\n    (thread : Fin 32) (i j : Fin width) (lane : thread.val=i.val*width+j.val)\n    (finished : (final.lanes thread).pc=(program width).length) :\n    decode ((final.lanes thread).regs 11)=Spec.get2 (localAction\n      (Numeric.initialTensor width bases initial .global 0)\n      (Numeric.initialTensor width bases initial .global (width*width*8+32))\n      (Numeric.initialTensor width bases initial .global (2*(width*width*8+32)))\n      (Numeric.initialTensor width bases initial .shared 0)) i j"
         }
       }
     },
@@ -919,9 +920,9 @@
         "quote": "The existing fetched index/store/return proof starts from that actual concurrent\nresult state and establishes the global output value."
       },
       "to": {
-        "path": "integration/torchlean/PoissonPTX/CellConsumerOutput.lean",
+        "path": "integration/torchlean/PoissonPTX/CellConsumerRun.lean",
         "passage": {
-          "quote": "theorem stored_local (launch : Numeric.Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (middle : Runs cfg (Checks.program width) start before ready)\n    (done : ∀ t, (ready.lanes t).pc=(Checks.program width).length)\n    (rest : Runs cfg (program width) ready after final)\n    (compatible : Visibility.Compatible initial (before++after) source)\n    (performed : Visibility.Performed (before++after) source)\n    (thread : Fin 32) (i j : Fin width) (lane : thread.val=i.val*width+j.val)\n    (finished : (final.lanes thread).pc=(program width).length)\n    (valid : Valid64 (final.lanes thread).globalStart (final.lanes thread).globalBytes\n      (CellFinal.location (final.lanes thread) width output).toNat)\n    (precode : List Kernel.Instr) (pc : (final.lanes thread).pc=precode.length)\n    (tailRun : Kernel.Run ctx (precode++CellFinal.tail width output)\n      ⟨final.lanes thread,false,false⟩ stored) :\n    decode (read64 stored.core.global (CellFinal.location (final.lanes thread) width output).toNat)=\n      Spec.get2 (localAction\n        (Numeric.initialTensor width bases initial .global 0)\n        (Numeric.initialTensor width bases initial .global (width*width*8+32))\n        (Numeric.initialTensor width bases initial .global (2*(width*width*8+32)))\n        (Numeric.initialTensor width bases initial .shared 0)) i j"
+          "quote": "theorem stored_run (launch : Numeric.Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (compatible : Visibility.Compatible initial events source)\n    (performed : Visibility.Performed events source)\n    (thread : Fin 32) (i j : Fin width) (lane : thread.val=i.val*width+j.val)\n    (finished : (final.lanes thread).pc=(program width).length)\n    (valid : Valid64 (final.lanes thread).globalStart (final.lanes thread).globalBytes\n      (CellFinal.location (final.lanes thread) width output).toNat)\n    (precode : List Kernel.Instr) (pc : (final.lanes thread).pc=precode.length)\n    (tailRun : Kernel.Run ctx (precode++CellFinal.tail width output)\n      ⟨final.lanes thread,false,false⟩ stored) :\n    decode (read64 stored.core.global (CellFinal.location (final.lanes thread) width output).toNat)=\n      Spec.get2 (localAction\n        (Numeric.initialTensor width bases initial .global 0)\n        (Numeric.initialTensor width bases initial .global (width*width*8+32))\n        (Numeric.initialTensor width bases initial .global (2*(width*width*8+32)))\n        (Numeric.initialTensor width bases initial .shared 0)) i j"
         }
       }
     },
@@ -934,6 +935,30 @@
         "path": "integration/torchlean/PoissonPTX/CellConsumerChecks.lean",
         "passage": {
           "quote": "theorem correspondence (i j : Fin 2) :\n    decode ((result.state.lanes ⟨i.val*2+j.val,by have"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "It derives the split at the last\nmiddle barrier from fetched instructions: branches cannot skip this barrier,\nand releasing it places every participant immediately after it."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentCut.lean",
+        "passage": {
+          "quote": "theorem split_run (run : Runs cfg (precode++suffix) start events final)\n    (aligned : Aligned start)\n    (size : precode.length=boundary+1)\n    (barrier : (precode++suffix)[boundary]?=some (.sync 0))\n    (stops : StopsAt (precode++suffix) boundary)\n    (initial : ∀ t, (start.lanes t).pc≤boundary)\n    (thread : Fin n) (after : boundary<(final.lanes thread).pc) :\n    ∃ before later ready,\n      events=before++later ∧ Runs cfg precode start before ready ∧\n      (∀ t, (ready.lanes t).pc=precode.length) ∧\n      Runs cfg (precode++suffix) ready later final"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Only the output thread under consideration must have finished final\narithmetic; other threads may still be computing."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellConsumerRun.lean",
+        "passage": {
+          "quote": "theorem split (launch : Numeric.Launch width bases start) (lo : 2≤width) (hi : width≤5)\n    (run : Runs cfg (program width) start events final)\n    (thread : Fin 32) (finished : (final.lanes thread).pc=(program width).length) :\n    ∃ before after ready,\n      events=before++after ∧ Runs cfg (Checks.program width) start before ready ∧\n      (∀ t, (ready.lanes t).pc=(Checks.program width).length) ∧\n      Runs cfg (program width) ready after final"
         }
       }
     }

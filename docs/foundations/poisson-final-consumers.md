@@ -13,11 +13,23 @@ conditions as for the middle slice.
 
 ## The theorem's input and result
 
-[completed_arithmetic](../../integration/torchlean/PoissonPTX/CellConsumerOutput.lean)
-takes a completed middle execution and its continuation from the same state at
-the existing last barrier. Both are executions of fetched instructions. A lifting
-lemma embeds the middle run into the extended program, and `combined` joins the
-runs without inserting a new barrier or replacing memory.
+[completed_run](../../integration/torchlean/PoissonPTX/CellConsumerRun.lean)
+takes one execution of the concurrent arithmetic fragment. It recovers the
+middle prefix and its continuation automatically. No intermediate state or
+prearranged schedule is supplied, and no extra barrier is inserted.
+
+Here is why the split exists. Initially every thread is before the last middle
+barrier. Guards cannot jump past it. The first step that puts any thread beyond
+it must therefore release that barrier. At this release, all participants are
+at the same barrier instruction, so all move to the instruction immediately
+after it. The steps up to and including that release form a completed middle
+execution; the remaining steps form its continuation. This argument works even
+when only the output thread being examined has finished final arithmetic.
+
+The reusable [split_run](../../integration/torchlean/PoissonPTX/ConcurrentCut.lean)
+lemma proves this for any prefix ending in a protected barrier in the current
+concurrent model. Here “protected” means every earlier branch lands no later
+than the barrier; the Q1–Q4 instruction certificates establish that condition.
 
 One byte-source assignment must satisfy the necessary `Compatible` and
 `Performed` constraints on the entire event history. Compatibility says that each
@@ -56,7 +68,7 @@ freedom in NaN bit encodings.
    loads and registers to the two ordered products and final addition. Substituting
    the proved middle-plane equations gives the complete local cell formula.
 
-`stored_local` then applies the existing fetched integer-index, global-store and
+`stored_run` then applies the existing fetched integer-index, global-store and
 return proof to this **actual concurrent result state**. Its input is no longer
 a manufactured shared-memory snapshot. The output location must satisfy the
 existing alignment and allocation conditions; the fetched tail has an independent
@@ -71,9 +83,9 @@ threads' final reads. In this arithmetic fragment, padding lanes jump to the
 arithmetic cutoff; the actual skipped tail and return require the full-kernel
 connection.
 
-The theorem is supplied with the actual cut at the last barrier. Extracting this
-cut automatically from every complete kernel execution is also still an
-obligation. No extra synchronization is assumed or added. Prologue/gather, full
+The automatic split is proved for this arithmetic fragment. Applying it inside
+a complete emitted-kernel correspondence still requires the omitted instructions
+and their control and memory effects. Prologue/gather, full
 launch and host composition, complete PTX memory admission, arbitrary-input
 execution existence and GPU progress retain their separate boundaries.
 
@@ -86,7 +98,8 @@ python3 -m unittest discover -s hardware -p 'test_poisson*.py'
 
 `CellConsumerChecks` gives a completed zero-data Q1 execution with 32 threads,
 including 28 padding lanes. Its actual loads and stores satisfy the single
-whole-history source assignment, and the main theorem supplies its result.
+whole-history source assignment, and the single-run theorem supplies its result
+without accepting the witness's preconstructed middle/final split as an input.
 This establishes nonvacuity, not general termination. A changed final addition
 fails the symbolic numerical certificate. Existing asymmetric nonzero final-body
 examples and saved-PTX bindings provide separate regression evidence.

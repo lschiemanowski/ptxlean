@@ -335,8 +335,13 @@ Final shared loads address planes 5 or 6 after the actual completed barrier.
 Derived store ownership and barrier ordering force each load to recover its
 unique producer's recorded bytes; initial bytes cannot replace that producer.
 
-The theorem takes an actual completed middle execution and its continuation
-from the same boundary state, at the existing last barrier. Lifting and joining
+The theorem takes one actual concurrent run. It derives the split at the last
+middle barrier from fetched instructions: branches cannot skip this barrier,
+and releasing it places every participant immediately after it. The prefix
+therefore completes the middle program, and the remaining steps are its actual
+continuation. No boundary state, schedule, extra barrier or memory snapshot is
+assumed. Only the output thread under consideration must have finished final
+arithmetic; other threads may still be computing. Lifting and joining
 these runs gives one fetched concurrent execution; no new barrier or memory
 snapshot is inserted. The continuation contains no stores. Therefore it cannot
 supply a new source for an earlier read, and the required middle-prefix source
@@ -352,10 +357,10 @@ explicit; the result does not depend on constructing a replacement input memory.
 
 This concurrent fragment stops after arithmetic. The integer index, global
 store and return still use the separate fetched model. Their interleaving with
-other final readers, automatic extraction of the supplied execution boundary
-from an arbitrary complete kernel run, prologue/gather, full launch composition
-and complete memory admission remain open. Inactive lanes skip the arithmetic
-to its cutoff; correspondence of the omitted tail and actual return belongs to
+other final readers, prologue/gather, full launch composition and complete
+memory admission remain open. The derived barrier split concerns this arithmetic
+fragment; it does not establish correspondence for omitted instructions.
+Inactive lanes skip the arithmetic to its cutoff; correspondence of the omitted tail and actual return belongs to
 the remaining full-kernel connection. No hardware progress claim follows.
 
 A completed zero-data Q1 execution witnesses the whole-history source conditions

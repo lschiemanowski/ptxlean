@@ -1,0 +1,101 @@
+{
+  "id": "dc51d6ee-d981-4d83-96d1-0cce07b167b9",
+  "base": "a3fa9559e4f2118fd43801e872f1a030eeb647e6",
+  "contentTree": "eace2ea771800afb7c62a60f9e564ab154a4e0d2",
+  "reviewer": "Codex",
+  "summary": "Derive the Poisson last-barrier split and local correspondence from one concurrent run.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Derive the middle execution and completed barrier state from a single run rather than receiving that split as a premise. Preserve actual byte-source, arithmetic-cutoff and separate fetched-tail contracts."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Expose the stronger single-run arithmetic theorem while preserving prologue/gather and concurrent output-tail limitations."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive instruction or memory-source rule changed. Finite code certificates use kernel reduction, every new public declaration is explicitly audited, and exact emitted-code binding remains separate from hardware fidelity."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The Poisson tensor operator, PTX implementation, accepted residual criterion and empirical algorithm are unchanged. This is a stronger instruction correspondence for a bounded fragment."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "eace2ea771800afb7c62a60f9e564ab154a4e0d2",
+      "method": "integration/torchlean/check.sh; python3 -m unittest discover -s hardware -p test_*.py; both saved Poisson PTX binding checkers; python3 scripts/check_distribution.py; stratic validate; git diff --check; manual review of barrier transition cases, derived execution decomposition, theorem premises and remaining scope; receipt source-hash and local guide-link checks.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, 16 checked dependencies, 350 guarded integration Lean files. No GPU rerun, primitive semantic change or external model call.",
+      "evidence": "Full integration passed 3375 exact dependency reports, including all six new declarations, with only standard Lean axioms. The existing completed source-constrained Q1 witness now uses the single-run theorem rather than supplying the middle/final split. Fresh Q1-Q4 certificates and negative arithmetic mutation check passed. All 28 hardware Python tests passed. Saved PTX binding passed for 30 layouts: 720 contractions, 630 shared stores, 90 middle slices, 90 final bodies and 30 residual entries. Focused contraction audit passed 73 endpoints; 84 contraction-receipt and 82 residual-receipt source hashes match current files. Distribution and whitespace checks passed, guide links resolve, and Stratic reports no issues. Before/after snapshots match exactly. README and emitted kernels are unchanged. The split is derived for the concurrent arithmetic fragment; index/store/return still run in a separate fetched model, with concurrent tail interleaving, prologue/gather, full launch composition and complete PTX memory admission still open. Log SHA256: {\"integration.log\": \"8a89748d7254c8cb7ea7515dedbebc1479bebdc299efa8ca72840a5b63cab206\", \"python.log\": \"4aecd878326312f10849c11216422dc6a8549d70befd9b7ca671f38eed97082e\", \"binding.log\": \"ee7b4ffb5d7fa0cea85ed9e4f68b5c33a4ed044e19ebe8ba3aeb43ed526f8994\", \"residual-binding.log\": \"05ef02bb72a1f2a3776586048335b6a89c8517f134dd56de4126702d2773bbbb\", \"distribution.log\": \"ab4407fa5ecd2285fe290ab8d820508349e8bd38b97e32fe1d25628a331df623\", \"stratic.json\": \"ef43b0bc6092267f1be737777a2a9b9e3c4d6f42a1b9727d8a85102c54bbb45c\"}",
+      "tests": [],
+      "id": "c70f19e0-076e-436f-be00-a4936749034b",
+      "recordedAt": "2026-09-30T07:18:47.691Z"
+    }
+  ],
+  "recordedAt": "2026-09-30T07:19:37.304Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-final-consumers.md",
+      "reason": "Explain the derived barrier split, one-run theorem and retained output-tail and whole-kernel boundaries."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Audit all six new declarations and update binding scope without changing emitted-code matching."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh successful saved-PTX binding receipts and exact source hashes; all source hashes are checked. No GPU rerun."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh successful saved-PTX binding receipts and exact source hashes; all source hashes are checked. No GPU rerun."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellConsumerChecks.lean",
+      "reason": "Apply the new single-run theorem to the completed source-constrained witness instead of supplying its middle/final split."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellConsumerRun.lean",
+      "reason": "Derive the barrier cut from launch and instruction certificates, then expose arithmetic and separate fetched-tail correspondence from one run. Linked statements cover the public contract; proofs and imports implement it."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentCut.lean",
+      "reason": "Inspect each transition kind: only a release can cross the protected site; all participant counters advance together. Induction extracts the actual prefix and continuation without a schedule or boundary premise."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register two new proof modules and all six declarations in the pinned build and exact dependency audit."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register two new proof modules and all six declarations in the pinned build and exact dependency audit."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register two new proof modules and all six declarations in the pinned build and exact dependency audit."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reconcile descriptions, summaries, remaining obligations and exact proof links with automatic extraction of the last-barrier split."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reconcile descriptions, summaries, remaining obligations and exact proof links with automatic extraction of the last-barrier split."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reconcile descriptions, summaries, remaining obligations and exact proof links with automatic extraction of the last-barrier split."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reconcile descriptions, summaries, remaining obligations and exact proof links with automatic extraction of the last-barrier split."
+    }
+  ]
+}
