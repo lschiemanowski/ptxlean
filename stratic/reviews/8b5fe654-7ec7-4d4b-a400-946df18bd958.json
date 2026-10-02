@@ -1,0 +1,157 @@
+{
+  "id": "8b5fe654-7ec7-4d4b-a400-946df18bd958",
+  "base": "9cb1bea09d0d98ed9a40317261bafb80a2564043",
+  "contentTree": "6e908695c0ef94eb78a6116308574bc5bae01a7e",
+  "reviewer": "Codex",
+  "summary": "Compose actual cell publications with source-admitted ordered assembly using checked serialized integer rows; verify nonzero composition with resource-bounded kernel checks.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Derive ordered table representation, active-cell store confinement and metadata preservation; compose actual cell execution families with admitted assembly. Explain finite witness checker soundness and remaining grid/solver obligations; maintain summaries and exact links."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Add the cell-to-assembly operator connection and correct stale remaining assembly obligations without claiming arbitrary grid schedules or full solver correspondence."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Equations, TorchLean reference code, emitted kernels, host solver and README are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Review verifies actual event provenance, padding exclusion, disjoint cell planes, common input memory and CTA identities, ordered integer reconstruction, preservation of metadata and byte-source soundness. Neither a desired intermediate tensor nor an assembled result is an execution premise. Full PTX admission and CUDA transport are not claimed."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "6e908695c0ef94eb78a6116308574bc5bae01a7e",
+      "method": "Sequential resource-limited Lean checks of all 17 new modules; exact full declaration-dependency audit; pin/source guards; saved emitted-code bindings; 27 Poisson Python tests; receipt hash verification; Stratic validation and manual proof/contract review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins. Heavy checks under a hard 6 GiB cgroup cap, no swap, 150 percent CPU quota. No GPU rerun or paid model calls.",
+      "evidence": "4547 exact dependency reports, only standard Lean axioms; 531 guarded Lean sources. All new modules freshly checked through sequential limited runs: the first eight and the next five passed unchanged; the revised padding checker and new whole-word checker passed separately; the final nonzero witness and composition regression passed, followed by the complete dependency audit. Initial resource-limit failures were resolved with sound finite-checker changes; no failing check is accepted. The full registered build and unchanged legacy interpreter checks were not rerun. Existing targeted build/binding commands pass against 30 saved layouts (720 contraction and 630 shared-store blocks); 27 Python tests pass. All 528 receipt source hashes match. CSR reconstruction preserves rounded order; metadata preservation follows from actual active-lane store addresses; cell publication supplies actual assembly inputs. Nonzero synthetic composition produces eight and a forged read is rejected. General cell existence, grid scheduling, imperative array bridge, serialization and remaining solver correspondence are still explicit. Stratic valid, final snapshots identical, README unchanged.",
+      "tests": [],
+      "id": "303cca35-c95e-481a-9ba4-085d0ecd8951",
+      "recordedAt": "2026-10-02T15:42:02.995Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T15:43:10.613Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-operator-composition.md",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyCompressedRows.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyMeshRows.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyOperator.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyRowRepresentation.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyTableCheck.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyTableChecks.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyTableConstruction.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAssembly.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAssemblyChecks.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAssemblyWitness.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellExecution.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellExecutionStores.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellFamily.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellFamilyInputs.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellTailPadding.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/OperatorMesh.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/SourceCheckWords.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed supporting ordered-table, cell publication/composition and finite-checker proofs, nonzero and corruption regressions, exact audit registration, saved-run receipt hashes and explanatory guide."
+    }
+  ]
+}

@@ -847,3 +847,50 @@ unmasked entry executions, two publication orders, and ordered-scatter equality.
 A separate observed execution records an index load, a nonzero floating-point
 load and a disjoint output store, with compatible byte sources and successful
 replay. The finite source checker rejects a forged floating-point read.
+
+The mesh-to-assembly connection must explain the integer tables rather than
+assume each thread receives the desired row. A compressed row table stores all
+per-node contribution lists consecutively and records each list's start in an
+offset table. Constructing those lists by scanning element-major, row-major
+connectivity must preserve the original order. Decoding these serialized input
+integers should establish the assembly range/index conditions and recover each
+ordered list; it must not assume a floating-point result. The published cell
+values can then be substituted into the proved assembly sum to recover the
+TorchLean operator, with boundary masking stated separately.
+
+Composing cells with assembly requires an explicit record of each actual cell
+execution: initial memory and layout, fetched execution, completed lanes and
+admitted byte sources. Such a record may package the existing theorem's
+premises, but must not include a desired tensor or output value. Its published
+tensor is a proved consequence. Combining cells must also account for inactive
+lanes: they return without writing into the next cell's output region.
+
+The compressed-row checker inspects the initial four-byte offset and index
+words. Its soundness theorem derives the ordered-row representation and access
+bounds. Cell executions share one initial global memory and a contiguous output
+array. Every actual global store belongs to an active coordinate of its own
+cell; inactive lanes cannot access the following cell's storage. Publishing
+these histories preserves the uploaded assembly tables and boundary flags.
+Assembly consumes that publication and computes the TorchLean tensor operator
+for the actual represented connectivity arrays, without an assumed cell value
+or assembled result.
+
+The cell-family composition boundary is explicit. It packages actual per-cell
+executions, not an already-proved arbitrary device-wide schedule. Its next
+launch starts from mathematical publication of the preceding store histories.
+General admitted cell existence, grid scheduling, CUDA transport, external
+serialization and remaining solver instructions retain their own obligations.
+
+A nonzero kernel-checked composition exercises this connection. A two-by-two
+synthetic cell with identity coefficient matrices, unit weights and unit gathered
+values publishes four twos. The uploaded ordered row table directs assembly to
+all four values, yielding eight. The cell execution, source checks and assembly
+existence proof supply the result; the example does not assume the cell output.
+This tests the composition mechanism, not a physical quadrature construction.
+
+Finite witness checking should avoid expanding the same large execution for
+every byte. A whole-word checker may compare a read with initialization or a
+matching actual store once, provided its soundness proof derives every required
+byte-source equality. This optimization is restricted to whole-word source
+choices; it neither changes the byte-level contract nor establishes the
+separate performed-write condition or complete PTX memory admission.

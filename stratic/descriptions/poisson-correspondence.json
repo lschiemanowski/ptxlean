@@ -16,10 +16,11 @@
     "Construct an admitted returning parallel assembly execution for every valid input, independently of the universal correctness theorem.",
     "Connect complete true_residual entry and whole-vector subtraction to the specification under necessary byte-source constraints.",
     "Bind emitted instructions to Lean representations and keep kernel proofs, source-fidelity review, compiled checks and saved GPU observations distinct.",
-    "Keep arbitrary-input whole-cell existence, setup serialization, remaining solver instructions, launch composition, complete PTX admission and hardware correspondence explicit."
+    "Keep arbitrary-input whole-cell existence, setup serialization, remaining solver instructions, launch composition, complete PTX admission and hardware correspondence explicit.",
+    "Decode ordered assembly tables and compose actual cell publications with assembly to obtain the TorchLean tensor operator; exercise the connection with a nonzero kernel-checked example."
   ],
   "realization": "partial",
-  "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, complete PTX memory admission, CUDA host visibility, host/launch composition, reductions and remaining solver instructions remain open.",
+  "remaining": "Arbitrary-input cell execution existence, device-wide grid scheduling, external coefficient/index serialization, the imperative array operator bridge, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
   "links": [
     {
       "kind": "implementation",
@@ -2610,6 +2611,162 @@
         "path": "integration/torchlean/PoissonPTX/AssemblyParallelExists.lean",
         "passage": {
           "quote": "theorem Arena.parallel_exists_correct (a : Arena n) (memory : Memory) (regs : Fin n → Registers)\n    (contents : a.Contents memory) (separated : a.InputSeparation) (mask : Bool) :\n    ∃ words indices final,\n      Flow.Parallel.Runs a.context\n        (entryCode (BitVec.ofNat 32 n) a.offsets a.entries a.element mask a.boundary a.output)\n        (fun i => a.start memory (regs i)) words indices final ∧\n      (∀ i, (final i).halted=true) ∧\n      Concurrent.Visibility.Compatible (fun space => match space with | .global => memory | .shared => fun _ => 0)\n        words (fun _ _ => .initial) ∧\n      IndexSources.Compatible memory words indices (fun _ _ => .initial) ∧\n      ∀ i, decode (read64 (Concurrent.GlobalPublication.publish memory words) (Snapshot.address a i))=a.value memory i mask := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The mesh-to-assembly connection must explain the integer tables rather than\nassume each thread receives the desired row. A compressed row table stores all\nper-node contribution lists consecutively and records each list's start in an\noffset table. Constructing those lists by scanning element-major, row-major\nconnectivity must preserve the original order. Decoding these serialized input\nintegers should establish the assembly range/index conditions and recover each\nordered list; it must not assume a floating-point result. The published cell\nvalues can then be substituted into the proved assembly sum to recover the\nTorchLean operator, with boundary masking stated separately."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/AssemblyCompressedRows.lean",
+        "passage": {
+          "quote": "theorem reconstruct (rows : List (List Nat)) (i : Nat) (inside : i<rows.length) :\n    ((List.range' (offset rows i) (offset rows (i+1)-offset rows i)).map\n      (fun k => rows.flatten[k]?.getD 0))=rows[i] := by\n  rw [offset_next rows i inside,Nat.add_sub_cancel_left]\n  apply List.ext_getElem\n  · simp\n  · intro k left right\n    simp only [List.getElem_map,List.getElem_range',Nat.one_mul]\n    rw [entry rows i inside k right]\n    simp [List.getElem?_eq_getElem right]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The mesh-to-assembly connection must explain the integer tables rather than\nassume each thread receives the desired row. A compressed row table stores all\nper-node contribution lists consecutively and records each list's start in an\noffset table. Constructing those lists by scanning element-major, row-major\nconnectivity must preserve the original order. Decoding these serialized input\nintegers should establish the assembly range/index conditions and recover each\nordered list; it must not assume a floating-point result. The published cell\nvalues can then be substituted into the proved assembly sum to recover the\nTorchLean operator, with boundary masking stated separately."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/AssemblyTableConstruction.lean",
+        "passage": {
+          "quote": "theorem scan_selected : scan locations node=selected locations node := by\n  simpa [scan] using scan_from locations (fun _ => []) node"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The compressed-row checker inspects the initial four-byte offset and index\nwords. Its soundness theorem derives the ordered-row representation and access\nbounds. Cell executions share one initial global memory and a contiguous output\narray. Every actual global store belongs to an active coordinate of its own\ncell; inactive lanes cannot access the following cell's storage. Publishing\nthese histories preserves the uploaded assembly tables and boundary flags.\nAssembly consumes that publication and computes the TorchLean tensor operator\nfor the actual represented connectivity arrays, without an assumed cell value\nor assembled result."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/AssemblyTableCheck.lean",
+        "passage": {
+          "quote": "theorem Arena.checkRows_sound (checked : a.checkRows memory rows=true) : a.RowsEncoded memory rows := by\n  simp only [Arena.checkRows,Bool.and_eq_true,decide_eq_true_eq,List.all_eq_true] at checked\n  rcases checked with ⟨⟨⟨⟨count,size⟩,offsets⟩,entries⟩,bounded⟩\n  refine ⟨count,size,?_,?_,bounded⟩\n  · intro i inside; exact offsets i (List.mem_range.mpr (by omega))\n  · intro k inside; exact entries k (List.mem_range.mpr inside)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Composing cells with assembly requires an explicit record of each actual cell\nexecution: initial memory and layout, fetched execution, completed lanes and\nadmitted byte sources. Such a record may package the existing theorem's\npremises, but must not include a desired tensor or output value. Its published\ntensor is a proved consequence. Combining cells must also account for inactive\nlanes: they return without writing into the next cell's output region."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellExecution.lean",
+        "passage": {
+          "quote": "structure Execution (o : Operator) (values : Array Float) (cell : BitVec 32) where\n  cfg : Concurrent.Config 32\n  bases : Space → Word\n  (cells source output : Word)\n  bodyContext : Fin 32 → Kernel.Context\n  memory : Space → Memory\n  (start final : State)\n  events : List (Concurrent.Event 32)\n  indices : List (Fin 32 × IndexSources.Access)\n  allSources : Nat → Fin 8 → Sources.Origin Nat\n  indexChoices : Nat → Fin 4 → Sources.Origin Nat\n  generation : Nat\n  run : Runs cfg bases cell o.nodes.size cells source output bodyContext start events indices final\n  aligned : Concurrent.Aligned start.core\n  initial : ∀ u, (start.core.lanes u).global=memory .global\n  pcs : ∀ u, (start.core.lanes u).pc=0\n  running : ∀ u, start.halted u=false\n  positive : 0<o.nodes.size\n  small : o.nodes.size*o.nodes.size≤32\n  space : (bases .shared).toNat+7*o.nodes.size*o.nodes.size*8≤2^64\n  layout : ∀ u : Fin 32, u.val<o.nodes.size*o.nodes.size →\n    CellGather.Layout (CellEntry.Local.beforeGather (CellPrologue.threadContext bases cell u) o.nodes.size (CellEntry.lane (entry start) u))\n      o.nodes.size cells source\n  cellsBefore : ∀ (u : Fin 32) (active : u.val<o.nodes.size*o.nodes.size),\n    cells.toNat+(layout u active).cellCount*(o.nodes.size*o.nodes.size)*4≤output.toNat\n  sourceBefore : ∀ (u : Fin 32) (active : u.val<o.nodes.size*o.nodes.size),\n    source.toNat+(layout u active).pointCount*8≤output.toNat\n  connectivity : ∀ u : Fin 32, u.val<o.nodes.size*o.nodes.size → ∀ k<o.nodes.size*o.nodes.size,\n    (read32 (start.core.lanes u).global ((start.core.lanes u).globalStart+cells.toNat+\n      (cell.toNat*(o.nodes.size*o.nodes.size)+k)*4)).toNat=(o.mesh.cells[cell.toNat]!)[k]!\n  contents : ∀ (u : Fin 32) (active : u.val<o.nodes.size*o.nodes.size), ∀ k<(layout u active).pointCount,\n    decode (read64 (start.core.lanes u).global ((start.core.lanes u).globalStart+source.toNat+k*8))=values[k]!\n  coefficients : CoefficientRepresentation.Represents o bases memory\n  lo : 2≤o.nodes.size\n  hi : o.nodes.size≤5\n  reset : start.core.barrier=Ptx.Barrier.reset generation\n  bounds : OutputLayout bases cell o.nodes.size output\n  offset : Concurrent.CellConsumer.Coefficients.extent o.nodes.size≤output.toNat\n  jointIndices : IndexSources.Compatible (memory .global) events indices indexChoices\n  joint : Concurrent.Visibility.Compatible memory events allSources\n  performed : Concurrent.Visibility.Performed events allSources\n  finished : ∀ u : Fin 32, u.val<o.nodes.size*o.nodes.size →\n    21+(Concurrent.CellConsumer.WithOutput.front o.nodes.size).length+5≤(final.core.lanes u).pc"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Composing cells with assembly requires an explicit record of each actual cell\nexecution: initial memory and layout, fetched execution, completed lanes and\nadmitted byte sources. Such a record may package the existing theorem's\npremises, but must not include a desired tensor or output value. Its published\ntensor is a proved consequence. Combining cells must also account for inactive\nlanes: they return without writing into the next cell's output region."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellExecution.lean",
+        "passage": {
+          "quote": "theorem Execution.tensor (execution : Execution o values cell) (outputMemory : Memory) :\n    Concurrent.CellConsumer.WithOutput.Publication.tensor o.nodes.size (execution.bases .global) (cell.setWidth 64) execution.output\n      (Concurrent.GlobalPublication.publish outputMemory execution.events)=\n        localAction o.b o.d o.w (Poisson.gather o values cell.toNat) :=\n  operator_tensor o values execution.run execution.aligned execution.initial execution.pcs execution.running\n    execution.positive execution.small execution.space execution.layout execution.cellsBefore execution.sourceBefore\n    execution.connectivity execution.contents execution.coefficients execution.lo execution.hi execution.reset\n    execution.bounds execution.offset execution.jointIndices execution.joint execution.performed execution.finished"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The compressed-row checker inspects the initial four-byte offset and index\nwords. Its soundness theorem derives the ordered-row representation and access\nbounds. Cell executions share one initial global memory and a contiguous output\narray. Every actual global store belongs to an active coordinate of its own\ncell; inactive lanes cannot access the following cell's storage. Publishing\nthese histories preserves the uploaded assembly tables and boundary flags.\nAssembly consumes that publication and computes the TorchLean tensor operator\nfor the actual represented connectivity arrays, without an assumed cell value\nor assembled result."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellTailPadding.lean",
+        "passage": {
+          "quote": "theorem access_active (lo : 2≤width) (hi : width≤5)\n    (run : WithTail.Runs cfg ctx (front width) (CellFinal.tail width output) start events final)\n    (aligned : Aligned start.core) (pcs : ∀ t, (start.core.lanes t).pc=0)\n    (member : Event.data owner access∈events) : owner.val<width*width := by\n  obtain ⟨before,earlier,selected,out,rest,prior,step,record,suffix⟩ := Address.access_prefix run member\n  have inv : Invariant width before := runs_invariant lo hi prior aligned (by intro t _; rw [pcs]; exact initial lo hi)\n  by_contra inactive\n  have inactive : width*width≤owner.val := by omega\n  cases step with\n  | front _ one =>\n    obtain ⟨eq,op,next,fetch,execution⟩ := step_access_origin one record\n    subst selected\n    have bad := inv owner inactive\n    have before := (List.getElem?_eq_some_iff.mp fetch).1\n    simp only [allowed,if_pos before,Concurrent.Padding.outside,fetch,Bool.false_eq_true] at bad\n  | tail _ _ past fetch eval =>\n    simp only [List.mem_map,Option.mem_toList] at record\n    obtain ⟨a,observed,eq⟩ := record\n    cases eq\n    have permitted := inv owner inactive\n    have low : (front width).length+5≤(before.core.lanes owner).pc := by\n      simpa [allowed,show ¬(before.core.lanes owner).pc<(front width).length by omega] using permitted\n    have bound := (List.getElem?_eq_some_iff.mp fetch).1\n    rw [tail_length] at bound\n    have atReturn : (before.core.lanes owner).pc-(front width).length=5 := by omega\n    rw [atReturn] at fetch\n    simp [CellFinal.tail,storeCode,addressCode] at fetch\n    subst_vars\n    simp [WithTail.access] at observed"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The compressed-row checker inspects the initial four-byte offset and index\nwords. Its soundness theorem derives the ordered-row representation and access\nbounds. Cell executions share one initial global memory and a contiguous output\narray. Every actual global store belongs to an active coordinate of its own\ncell; inactive lanes cannot access the following cell's storage. Publishing\nthese histories preserves the uploaded assembly tables and boundary flags.\nAssembly consumes that publication and computes the TorchLean tensor operator\nfor the actual represented connectivity arrays, without an assumed cell value\nor assembled result."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFamily.lean",
+        "passage": {
+          "quote": "theorem Family.published_entry (family : Family o values) (memory : Memory)\n    (order : List (Fin o.mesh.cells.size)) (cell : Fin o.mesh.cells.size) (included : cell∈order)\n    (i j : Fin o.nodes.size) :\n    decode (read64 (family.publish memory order) (family.address cell i j))=\n      Correspondence.entries (localAction o.b o.d o.w (Poisson.gather o values cell.val)) i j := by\n  induction order with\n  | nil => simp at included\n  | cons other rest ih =>\n    by_cases same : other=cell\n    · subst other; exact family.entry _ cell i j\n    · rw [Family.publish,family.other_preserves _ cell other (Ne.symm same) i j]\n      exact ih ((List.mem_cons.mp included).resolve_left (Ne.symm same))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The compressed-row checker inspects the initial four-byte offset and index\nwords. Its soundness theorem derives the ordered-row representation and access\nbounds. Cell executions share one initial global memory and a contiguous output\narray. Every actual global store belongs to an active coordinate of its own\ncell; inactive lanes cannot access the following cell's storage. Publishing\nthese histories preserves the uploaded assembly tables and boundary flags.\nAssembly consumes that publication and computes the TorchLean tensor operator\nfor the actual represented connectivity arrays, without an assumed cell value\nor assembled result."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellFamilyInputs.lean",
+        "passage": {
+          "quote": "theorem Family.assembly_tables (family : Family o values) (memory : Memory)\n    (order : List (Fin o.mesh.cells.size)) (a : Assembly.Arena n)\n    (base : a.base=family.base)\n    (offsetsBefore : a.offsets.toNat+(n+1)*4≤family.output.toNat)\n    (entriesBefore : a.entries.toNat+a.entryCount*4≤family.output.toNat)\n    (encoded : a.RowsEncoded memory rows) : a.RowsEncoded (family.publish memory order) rows := by\n  refine ⟨encoded.count,encoded.size,?_,?_,encoded.bounded⟩\n  · intro i inside\n    unfold Assembly.Arena.offset\n    rw [family.input_word32]\n    · exact encoded.offsets i inside\n    · rw [base]; omega\n  · intro k inside\n    unfold Assembly.Arena.entryIndex\n    rw [family.input_word32]\n    · exact encoded.entries k inside\n    · rw [base]; omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The compressed-row checker inspects the initial four-byte offset and index\nwords. Its soundness theorem derives the ordered-row representation and access\nbounds. Cell executions share one initial global memory and a contiguous output\narray. Every actual global store belongs to an active coordinate of its own\ncell; inactive lanes cannot access the following cell's storage. Publishing\nthese histories preserves the uploaded assembly tables and boundary flags.\nAssembly consumes that publication and computes the TorchLean tensor operator\nfor the actual represented connectivity arrays, without an assumed cell value\nor assembled result."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellAssembly.lean",
+        "passage": {
+          "quote": "theorem cell_assembly_operator {o : Operator} {values : Array Float}\n    {words : List (Concurrent.Event o.mesh.points.size)}\n    {indices : List (Fin o.mesh.points.size × IndexSources.Access)}\n    {final : Fin o.mesh.points.size → Flow.State}\n    (family : CellWhole.Family o values) (shape : OperatorMesh o)\n    (same : o.q.size=o.nodes.size)\n    (order : List (Fin o.mesh.cells.size)) (complete : ∀ i, i∈order)\n    (a : Assembly.Arena o.mesh.points.size)\n    (base : a.base=family.base) (element : a.element=family.output)\n    (offsetsBefore : a.offsets.toNat+(o.mesh.points.size+1)*4≤family.output.toNat)\n    (entriesBefore : a.entries.toNat+a.entryCount*4≤family.output.toNat)\n    (boundaryBefore : a.boundary.toNat+o.mesh.points.size*4≤family.output.toNat)\n    (tables : a.RowsEncoded family.memory (Assembly.nodeRows o.mesh.points.size (Assembly.MeshRows.locations shape.connectivity)))\n    (separated : a.InputSeparation)\n    (regs : Fin o.mesh.points.size → Registers)\n    (run : Flow.Parallel.Runs a.context\n      (Assembly.entryCode (BitVec.ofNat 32 o.mesh.points.size) a.offsets a.entries a.element mask a.boundary a.output)\n      (fun i => a.start (family.publish family.memory order) (regs i)) words indices final)\n    (compatible : Concurrent.Visibility.Compatible\n      (fun space => match space with | .global => family.publish family.memory order | .shared => fun _ => 0) words wordSource)\n    (indexCompatible : IndexSources.Compatible (family.publish family.memory order) words indices indexSource)\n    (done : ∀ i, (final i).halted=true) (node : Fin o.mesh.points.size) :\n    decode (read64 (Concurrent.GlobalPublication.publish (family.publish family.memory order) words) (Assembly.Snapshot.address a node))=\n      if mask=true ∧ read32 family.memory (a.base.toNat+a.boundary.toNat+node.val*4)≠0 then 0 else\n        shape.operator same values node := by\n  rw [← family.input_word32 family.memory order (a.base.toNat+a.boundary.toNat+node.val*4)\n    (by rw [base]; have := node.isLt; omega)]\n  apply a.parallel_operator shape.connectivity\n    (CoefficientRepresentation.rows same o.b) (CoefficientRepresentation.rows same o.d)\n    (CoefficientRepresentation.square same o.w) (OperatorMesh.input values)\n    run compatible indexCompatible (family.assembly_tables family.memory order a base offsetsBefore entriesBefore tables)\n    separated done\n  intro cell i j\n  rw [CoefficientRepresentation.local_action,← shape.gather]\n  have result := family.published_entry family.memory order cell (complete cell) i j\n  unfold Assembly.Arena.elementValue\n  rw [base,element]\n  simpa only [CellWhole.Family.address,Nat.add_mul,Nat.add_assoc,Nat.add_left_comm,Nat.add_comm] using result"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The cell-family composition boundary is explicit. It packages actual per-cell\nexecutions, not an already-proved arbitrary device-wide schedule. Its next\nlaunch starts from mathematical publication of the preceding store histories.\nGeneral admitted cell existence, grid scheduling, CUDA transport, external\nserialization and remaining solver instructions retain their own obligations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellAssembly.lean",
+        "passage": {
+          "quote": "theorem cell_assembly_exists {o : Operator} {values : Array Float}\n    (family : CellWhole.Family o values) (shape : OperatorMesh o)\n    (same : o.q.size=o.nodes.size)\n    (order : List (Fin o.mesh.cells.size)) (complete : ∀ i, i∈order)\n    (a : Assembly.Arena o.mesh.points.size)\n    (base : a.base=family.base) (element : a.element=family.output)\n    (offsetsBefore : a.offsets.toNat+(o.mesh.points.size+1)*4≤family.output.toNat)\n    (entriesBefore : a.entries.toNat+a.entryCount*4≤family.output.toNat)\n    (boundaryBefore : a.boundary.toNat+o.mesh.points.size*4≤family.output.toNat)\n    (tables : a.RowsEncoded family.memory (Assembly.nodeRows o.mesh.points.size (Assembly.MeshRows.locations shape.connectivity)))\n    (separated : a.InputSeparation) (regs : Fin o.mesh.points.size → Registers) (mask : Bool) :\n    ∃ words indices final,\n      Flow.Parallel.Runs a.context\n        (Assembly.entryCode (BitVec.ofNat 32 o.mesh.points.size) a.offsets a.entries a.element mask a.boundary a.output)\n        (fun i => a.start (family.publish family.memory order) (regs i)) words indices final ∧\n      (∀ i, (final i).halted=true) ∧\n      Concurrent.Visibility.Compatible\n        (fun space => match space with | .global => family.publish family.memory order | .shared => fun _ => 0)\n        words (fun _ _ => .initial) ∧\n      IndexSources.Compatible (family.publish family.memory order) words indices (fun _ _ => .initial) ∧\n      ∀ node, decode (read64 (Concurrent.GlobalPublication.publish (family.publish family.memory order) words) (Assembly.Snapshot.address a node))=\n        if mask=true ∧ read32 family.memory (a.base.toNat+a.boundary.toNat+node.val*4)≠0 then 0 else\n          shape.operator same values node := by\n  have encoded := family.assembly_tables family.memory order a base offsetsBefore entriesBefore tables\n  obtain ⟨words,indices,final,run,done,compatible,indexCompatible⟩ :=\n    a.parallel_exists (family.publish family.memory order) regs encoded.contents mask\n  exact ⟨words,indices,final,run,done,compatible,indexCompatible,\n    cell_assembly_operator family shape same order complete a base element offsetsBefore entriesBefore\n      boundaryBefore tables separated regs run compatible indexCompatible done⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The compressed-row checker inspects the initial four-byte offset and index\nwords. Its soundness theorem derives the ordered-row representation and access\nbounds. Cell executions share one initial global memory and a contiguous output\narray. Every actual global store belongs to an active coordinate of its own\ncell; inactive lanes cannot access the following cell's storage. Publishing\nthese histories preserves the uploaded assembly tables and boundary flags.\nAssembly consumes that publication and computes the TorchLean tensor operator\nfor the actual represented connectivity arrays, without an assumed cell value\nor assembled result."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/OperatorMesh.lean",
+        "passage": {
+          "quote": "structure OperatorMesh (o : Operator) : Prop where\n  width : ∀ e<o.mesh.cells.size, o.mesh.cells[e]!.size=o.nodes.size*o.nodes.size\n  nodes : ∀ e<o.mesh.cells.size, ∀ k<o.nodes.size*o.nodes.size, (o.mesh.cells[e]!)[k]!<o.mesh.points.size"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A nonzero kernel-checked composition exercises this connection. A two-by-two\nsynthetic cell with identity coefficient matrices, unit weights and unit gathered\nvalues publishes four twos. The uploaded ordered row table directs assembly to\nall four values, yielding eight. The cell execution, source checks and assembly\nexistence proof supply the result; the example does not assume the cell output.\nThis tests the composition mechanism, not a physical quadrature construction.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellAssemblyChecks.lean",
+        "passage": {
+          "quote": "theorem composed : ∃ words indices final,\n    Flow.Parallel.Runs arena.context (Assembly.entryCode 1 208 240 256 false 232 216)\n      (fun _ => arena.start (family.publish memory [⟨0,by decide⟩]) (fun _ => 0)) words indices final ∧\n    (∀ i, (final i).halted=true) ∧\n    Concurrent.Visibility.Compatible\n      (fun space => match space with | .global => family.publish memory [⟨0,by decide⟩] | .shared => fun _ => 0)\n      words (fun _ _ => .initial) ∧\n    IndexSources.Compatible (family.publish memory [⟨0,by decide⟩]) words indices (fun _ _ => .initial) ∧\n    decode (read64 (Concurrent.GlobalPublication.publish (family.publish memory [⟨0,by decide⟩]) words) 216)=8 := by\n  obtain ⟨words,indices,final,run,done,compatible,indexCompatible,correct⟩ :=\n    cell_assembly_exists family meshShape rfl [⟨0,by decide⟩] (by intro i; fin_cases i; simp) arena rfl rfl\n      (by decide) (by decide) (by decide) (arena.checkRows_sound tables_checked) separated (fun _ _ => 0) false\n  refine ⟨words,indices,final,run,done,compatible,indexCompatible,?_⟩\n  have value := correct ⟨0,by decide⟩\n  simpa only [Assembly.Snapshot.address,show family.memory=memory from rfl,\n    show arena.base.toNat+arena.output.toNat+0*8=216 from rfl,\n    Bool.false_eq_true,false_and,ite_false,numerical] using value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Finite witness checking should avoid expanding the same large execution for\nevery byte. A whole-word checker may compare a read with initialization or a\nmatching actual store once, provided its soundness proof derives every required\nbyte-source equality. This optimization is restricted to whole-word source\nchoices; it neither changes the byte-level contract nor establishes the\nseparate performed-write condition or complete PTX memory admission."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SourceCheckWords.lean",
+        "passage": {
+          "quote": "theorem sound (checked : check initial events=true) :\n    Visibility.Compatible initial events (ZeroSources.source events) := by\n  intro r reader ra observed read k\n  have equal := List.all_eq_true.mp checked (.data reader ra) (List.mem_of_getElem? observed)\n  have value : ra.data.value=expected initial events ra.space ra.data.address := by\n    simpa [read] using equal\n  simp only [ZeroSources.source,observed]\n  by_cases found : events.findIdx (ZeroSources.writes ra.space ra.data.address)<events.length\n  · simp only [found,ite_true]\n    let w := events.findIdx (ZeroSources.writes ra.space ra.data.address)\n    have yes := List.findIdx_getElem (p:=ZeroSources.writes ra.space ra.data.address) (xs:=events) (w:=found)\n    have fetched : events[w]?=some events[w] := List.getElem?_eq_some_iff.mpr ⟨found,rfl⟩\n    cases he : events[w] with\n    | barrier => simp [w,he,ZeroSources.writes] at yes\n    | data writer wa =>\n      have props : (wa.data.store=true ∧ wa.space=ra.space) ∧ wa.data.address=ra.data.address := by\n        simpa [← show w=events.findIdx (ZeroSources.writes ra.space ra.data.address) from rfl,he,ZeroSources.writes] using yes\n      have observedW : events[w]?=some (.data writer wa) := by simpa [he] using fetched\n      have words : ra.data.value=wa.data.value := by simpa [expected,found,← show w=events.findIdx (ZeroSources.writes ra.space ra.data.address) from rfl,he,show w<events.length from found] using value\n      exact ⟨writer,wa,observedW,props.1.1,props.1.2,by rw [props.2],by rw [words]⟩\n  · simp only [found,ite_false]\n    have words : ra.data.value=read64 (initial ra.space) ra.data.address := by simpa [expected,found] using value\n    rw [words]\n    exact Sources.byte_read64 _ _ _"
         }
       }
     }

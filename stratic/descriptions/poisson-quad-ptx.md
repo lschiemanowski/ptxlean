@@ -262,3 +262,17 @@ unmasked entry executions, two publication orders, and ordered-scatter equality.
 A separate observed execution records an index load, a nonzero floating-point
 load and a disjoint output store, with compatible byte sources and successful
 replay. The finite source checker rejects a forged floating-point read.
+
+The cell-to-assembly theorem uses the operator's actual connectivity arrays.
+A finite checker decodes ordered contribution rows from the uploaded integer
+tables. Actual cell executions share one initial global memory; their stores
+are confined to their own active output coordinates and preserve assembly
+metadata. Publishing these histories and executing assembly produces the
+TorchLean tensor operator with the same rounded addition order and optional
+boundary mask. A nonzero complete-cell and assembly example checks the
+connection without supplying expected intermediate values.
+
+This composition still distinguishes per-cell executions from a device-wide
+grid schedule and mathematical publication from CUDA visibility. Arbitrary-input
+cell existence, external serialization, the imperative array implementation
+bridge, remaining reductions and solver instructions remain explicit work.

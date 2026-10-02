@@ -1,3 +1,20 @@
+import PoissonPTX.SourceCheckWords
+import PoissonPTX.AssemblyCompressedRows
+import PoissonPTX.AssemblyRowRepresentation
+import PoissonPTX.AssemblyMeshRows
+import PoissonPTX.AssemblyTableConstruction
+import PoissonPTX.AssemblyOperator
+import PoissonPTX.AssemblyTableCheck
+import PoissonPTX.AssemblyTableChecks
+import PoissonPTX.CellExecution
+import PoissonPTX.CellTailPadding
+import PoissonPTX.CellExecutionStores
+import PoissonPTX.CellFamily
+import PoissonPTX.OperatorMesh
+import PoissonPTX.CellFamilyInputs
+import PoissonPTX.CellAssembly
+import PoissonPTX.CellAssemblyWitness
+import PoissonPTX.CellAssemblyChecks
 import PoissonPTX.AssemblyBeforeStore
 import PoissonPTX.AssemblyInputSeparation
 import PoissonPTX.AssemblyObservedBounds
@@ -5056,3 +5073,117 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.data_read_witness
 #print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.step_read_witness
 #print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.walk
+
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.CompressedRows.offset
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.CompressedRows.offset_le_length
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.CompressedRows.offset_next
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.CompressedRows.entry
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.CompressedRows.range_inside
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.CompressedRows.reconstruct
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.RowsEncoded
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.RowsEncoded.contents
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.RowsEncoded.row
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.nodeRows
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.nodeRows_get
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.RowsEncoded.selected
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.MeshRows.locations
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.MeshRows.scatter_indices
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.MeshRows.contributions_eq
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.MeshRows.operator_sum
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Rows.insert
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Rows.scan
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Rows.scan_from
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Rows.scan_selected
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Rows.selected_bound
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.nodeRows_bound
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_operator
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_masked_operator
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.checkRows
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.checkRows_sound
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.checkRows_complete
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.TableChecks.input_checked
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.TableChecks.input_represented
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.TableChecks.wrong_order_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.TableChecks.corrupt_offset_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.TableChecks.corrupt_index_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.TableChecks.empty_rows
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.TableChecks.host_scan
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Execution
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Execution.tensor
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.allowed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.Boundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.boundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.initial
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.Invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.step_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.runs_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.access_active
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Execution.global_store
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Execution.outside
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.address
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.cell_nat
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.entry
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.different_plane
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.other_preserves
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.publish
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.published_entry
+#print axioms PtxTorchLean.Poisson.PTX.OperatorMesh
+#print axioms PtxTorchLean.Poisson.PTX.OperatorMesh.connectivity
+#print axioms PtxTorchLean.Poisson.PTX.OperatorMesh.input
+#print axioms PtxTorchLean.Poisson.PTX.OperatorMesh.gather
+#print axioms PtxTorchLean.Poisson.PTX.OperatorMesh.operator
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.before
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.input_word32
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.assembly_tables
+#print axioms PtxTorchLean.Poisson.PTX.cell_assembly_operator
+#print axioms PtxTorchLean.Poisson.PTX.cell_assembly_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.one
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.memory
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.operator
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.values
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.seed
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.start
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.cfg
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.bases
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.context
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.prefixChoice
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.prefixCandidate
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.prefixResult
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.prefix_executed
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.addressSeed
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.addressStep
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.addressState
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.bodyChoice
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.bodyStart
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.bodyCandidate
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.bodyResult
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.body_executed
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.events
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.final
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.actual
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.returned
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.initial
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.admitted
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.aligned
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.performed
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.indices_admitted
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.layout
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.coefficients
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.execution
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.family
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.meshShape
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.arena
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.tables_checked
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.separated
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.numerical
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.composed
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.checkBoundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Padding.checkBoundaries_sound
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WordSourceCheck.expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WordSourceCheck.check
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WordSourceCheck.sound
+
+#print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.forged_word_rejected
