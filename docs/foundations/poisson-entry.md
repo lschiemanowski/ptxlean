@@ -214,10 +214,9 @@ a gathered slot must return the gathered word. It cannot use old initialization
 after the performed write. Different bytes may still choose different source
 records; every covering record supplies the same proved byte.
 
-The theorem takes actual prefix and continuation runs. It still takes the
-prefix input-source constraints separately from the joint history's constraints.
-Restricting those inputs in the presence of later global stores remains open,
-The numerical proof now uses a derived initial-byte view, as explained below. The continuation changes only the instruction-counter origin;
+The theorem takes actual prefix and continuation runs. Its prefix input-source
+premises are discharged by the joint-history theorem described below. The
+numerical proof uses a derived initial-byte view, also explained below. The continuation changes only the instruction-counter origin;
 it does not install a convenient shared snapshot.
 
 [Visibility checks](../../integration/torchlean/PoissonPTX/CellEntryVisibilityChecks.lean)
@@ -245,9 +244,9 @@ from gathered slots preserves its subsequent performed-write conditions.
 [CellEntryCorrespondence](../../integration/torchlean/PoissonPTX/CellEntryCorrespondence.lean)
 then connects the actual numerical result and published cell-output tensor to
 TorchLean's gather and cell calculation. Coefficients are read from their initial
-arena tables. Output records may be published in any order. The proof still
-takes prefix and body executions separately, and separately admits the prefix's
-input sources. Deriving both from one full-entry run remains open.
+arena tables. Output records may be published in any order. The modular proof takes prefix and body executions separately. The joint-history
+version derives the prefix's input admission; obtaining both executions from
+one full-entry run remains open.
 
 [The rebasing regression](../../integration/torchlean/PoissonPTX/CellEntryRebaseChecks.lean)
 executes lane two through a coefficient load and a shared load after the actual
@@ -255,3 +254,35 @@ nonzero gather. The latter reads lane zero's minus-two word. Lane two's local
 bytes at that address are still the old pattern; the checked source account,
 not a fabricated memory update, establishes the new value. This partial witness
 exercises both source contracts without claiming complete-run existence.
+
+## Why the earlier input reads are justified
+
+The full history contains global output stores. Therefore “the gather contains
+no global stores” alone does not justify its earlier reads: their possible byte
+sources are checked against the whole history. The proof derives separation in
+an order that avoids assuming the answer.
+
+1. [Control](../../integration/torchlean/PoissonPTX/CellEntryControl.lean)
+   derives the arena, lane and cell registers without any read-value premise.
+   [The branch proof](../../integration/torchlean/PoissonPTX/CellEntryActive.lean)
+   excludes padding lanes from the gather.
+2. [Connectivity addresses](../../integration/torchlean/PoissonPTX/CellEntryIndexAddress.lean)
+   follow the actual low-word multiply-add and four-byte scaling instructions.
+   The input layout places these bytes before the output region.
+3. [Index admission](../../integration/torchlean/PoissonPTX/CellEntryIndexInputs.lean)
+   excludes every later output store and forces the four-byte index to come
+   from initialization.
+4. [Source addresses](../../integration/torchlean/PoissonPTX/CellEntrySourceAddress.lean)
+   use those justified indices. Initial connectivity bounds and the source
+   array's separation then force the eight-byte value reads to initialization.
+
+[The joint-history cell theorem](../../integration/torchlean/PoissonPTX/CellEntryJointCorrespondence.lean)
+uses this result to remove separate prefix-admission premises from the published
+TorchLean tensor result. Input and output arrays must be disjoint in the stated
+layout, and integer address calculations must not wrap. These are physical
+storage conditions; no desired intermediate or final value is supplied.
+
+[The regression](../../integration/torchlean/PoissonPTX/CellEntryJointChecks.lean)
+instantiates derived admission on the nonzero gather and actual cross-lane
+continuation. It also rejects a layout placing output over connectivity.
+The runs are still modular, and the continuation witness remains partial.

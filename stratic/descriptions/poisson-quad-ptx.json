@@ -20,7 +20,7 @@
     "Connect the active gather body to TorchLean input gathering with explicit four-byte indices, derived access bounds and preserved registers; derive its concurrent input sources and retain whole-entry source composition as open.",
     "Derive gathering and the arithmetic launch contract from concurrent setup, branching and the first barrier; retain whole-entry source composition and whole-solver instruction composition as open.",
     "Derive actual gather-store coverage and byte ownership from entry execution; derive later read visibility from real barrier order and preservation by the body.",
-    "Compose actual gathering, barrier visibility and arithmetic into a published cell tensor through proved source rebasing; retain full-entry source restriction and execution composition."
+    "Compose actual gathering, barrier visibility and arithmetic into a published cell tensor through proved source rebasing; derive prefix input admission from joint histories and retain single-entry execution composition."
   ],
   "realization": "implemented",
   "links": [
@@ -97,5 +97,5 @@
       }
     }
   ],
-  "remaining": "Actual global-store occurrence, addresses and recorded values are derived from completed execution and launch bounds. Publishing the records in any order yields the TorchLean local-cell tensor. The register prologue is proved as a fetched prefix. The active gather has a fetched snapshot proof; whole-entry input-source restriction and single-entry execution composition, arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations."
+  "remaining": "Single-entry execution composition, arbitrary-input source-admitted existence, coefficient-table setup representation, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open."
 }

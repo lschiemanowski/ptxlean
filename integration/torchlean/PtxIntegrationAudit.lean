@@ -1,3 +1,13 @@
+import PoissonPTX.CellEntryControl
+import PoissonPTX.CellEntryActive
+import PoissonPTX.CellEntryIndexAddress
+import PoissonPTX.CellEntryInputLayout
+import PoissonPTX.CellEntryIndexInputs
+import PoissonPTX.CellEntrySourceAddress
+import PoissonPTX.CellEntryWordInputs
+import PoissonPTX.CellEntryJointInputs
+import PoissonPTX.CellEntryJointCorrespondence
+import PoissonPTX.CellEntryJointChecks
 import PoissonPTX.SourceCut
 import PoissonPTX.SourceCheck
 import PoissonPTX.CellEntryPublication
@@ -4385,3 +4395,64 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.snapshot_sound
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.rebased_sources
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.cross_lane_read
+
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.Ready
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.initial
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.later
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.setup
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.preserves
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.preserves_data
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.gather_preserves
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.gather
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.gather_past
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.skip_pc
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.sync_pc
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.step
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.from_run
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.launch
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.Active
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.active_initial
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.setup_pc
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.setup_next
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.active_step
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.active_run
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.live_gather
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.indexWord
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.indexScale
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.IndexReady
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_initial
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_outside
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.gather_index
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_step
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_run
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.InputLayout
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_nat
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_address
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_below
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.output_fence
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_instruction
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_origin
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_step_bound
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.index_bounds
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_indices
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.indices_compatible
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.nodeWord
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.sourceScale
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.SourceReady
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.source_initial
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.source_outside
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.gather_source
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.source_step
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.source_below
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.word_instruction
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.word_origin
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.word_step_bound
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.word_bounds
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_words
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.InputLayout.of_gather
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_sources
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.joint_cell_tensor
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.JointChecks.inputs
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.JointChecks.joint_indices
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.JointChecks.derived_prefix
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.JointChecks.overlapping_output_rejected

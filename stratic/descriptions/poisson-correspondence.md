@@ -638,12 +638,11 @@ bytes through the necessary performed-write rule. Byte sources remain independen
 all covering stores have the same relevant byte, so whole-word atomicity and
 a unique chosen event are unnecessary assumptions.
 
-This modular theorem still requires the prefix's input-source constraints as
-well as compatible and performed sources for the concatenated history. Deriving
-that prefix restriction in the presence of later global output stores is still
-open. The body numerical theorem now uses an initial-byte view proved from
-these actual gathered producers. Neither condition is hidden in a desired read
-value. Whole-entry execution composition, general execution existence, assembly,
+The modular visibility theorem takes prefix input-source constraints. The
+joint-history theorem derives them from the actual prefix and continuation,
+using the input/output layout separation described below. The body numerical
+theorem uses an initial-byte view proved from the actual gathered producers.
+Neither step assumes a desired read value. Whole-entry execution composition, general execution existence, assembly,
 reductions and solver/launch composition remain separate obligations.
 
 The nonzero Q1 regression proves the order of every active producer before its
@@ -685,10 +684,10 @@ tables to a particular operator setup remains an input representation task;
 this theorem does not certify how an external host generated the tables.
 
 The composition currently takes the actual prefix and actual continuation runs
-separately, and still requires the prefix's input-source constraints in addition
-to the joint history's constraints. A single full-entry execution and its
-derived input-source restriction remain open. The numerical connection itself
-no longer assumes gathered shared memory at the arithmetic entry.
+separately. Its joint-history form derives prefix input admission from the same
+history that supplies the arithmetic reads. A single full-entry execution still
+needs to establish this split. The numerical connection does not assume
+gathered shared memory at the arithmetic entry.
 
 A nonzero regression continues the actual Q1 entry state through lane two's
 first coefficient and shared-input loads. Checked sources make it read lane
@@ -697,3 +696,12 @@ still contain the old repeated-byte pattern. The rebased source contract is
 instantiated on this real execution. This is a partial body witness, not general
 existence of a complete cell or solver run. The finite compatibility checker
 proves the existing per-byte relation; performed-write checks remain separate.
+
+Input admission for the complete history must not depend circularly on assuming
+that the input reads were already correct. The setup and address-control
+registers are established independently of loaded values. The branch guard
+excludes padding lanes from gathering. Connectivity addresses are then derived
+before admitting the four-byte indices, and source-vector addresses are derived
+from those admitted indices. Disjoint input and output arrays exclude later
+output stores as byte suppliers. These steps derive the prefix source contract from the joint history without
+assuming its input values or the final tensor.

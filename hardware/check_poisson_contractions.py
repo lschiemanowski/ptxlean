@@ -330,7 +330,7 @@ def check(run, output):
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
                     'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
                     'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.CellFinalSnapshot',
-                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult', 'PoissonPTX.CellTailOwners', 'PoissonPTX.CellOutputTensor', 'PoissonPTX.CellPrologueEntry', 'PoissonPTX.CellGatherTensor', 'PoissonPTX.CellEntryLaunch', 'PoissonPTX.CellEntryProducers', 'PoissonPTX.CellEntryStoreTensor', 'PoissonPTX.CellEntryContinuation', 'PoissonPTX.CellEntryCorrespondence'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult', 'PoissonPTX.CellTailOwners', 'PoissonPTX.CellOutputTensor', 'PoissonPTX.CellPrologueEntry', 'PoissonPTX.CellGatherTensor', 'PoissonPTX.CellEntryLaunch', 'PoissonPTX.CellEntryProducers', 'PoissonPTX.CellEntryStoreTensor', 'PoissonPTX.CellEntryContinuation', 'PoissonPTX.CellEntryCorrespondence', 'PoissonPTX.CellEntryJointCorrespondence'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -395,9 +395,12 @@ def check(run, output):
     names += ['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.preserves_gather']
     names += ['PtxTorchLean.Poisson.PTX.CellEntry.' + name for name in ('publication_sound', 'publication_torchlean', 'body_sources', 'body_result', 'published_result', 'cell_result', 'cell_tensor')]
     names += ['PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.' + name for name in ('compatible', 'performed')]
+    names += ['PtxTorchLean.Poisson.PTX.CellEntry.joint_cell_tensor']
+    names += ['PtxTorchLean.Poisson.PTX.CellEntry.Control.' + name for name in
+              ('launch', 'live_gather', 'index_run', 'output_fence', 'joint_indices', 'source_step', 'joint_words', 'joint_sources')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.CellEntryCorrespondence\nimport PoissonPTX.CellEntryContinuation\nimport PoissonPTX.CellEntryProducers\nimport PoissonPTX.CellEntryStoreTensor\nimport PoissonPTX.CellEntryLaunch\nimport PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.CellEntryJointCorrespondence\nimport PoissonPTX.CellEntryCorrespondence\nimport PoissonPTX.CellEntryContinuation\nimport PoissonPTX.CellEntryProducers\nimport PoissonPTX.CellEntryStoreTensor\nimport PoissonPTX.CellEntryLaunch\nimport PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)

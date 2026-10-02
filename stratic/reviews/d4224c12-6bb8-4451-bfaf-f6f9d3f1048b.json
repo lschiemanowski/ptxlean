@@ -1,0 +1,129 @@
+{
+  "id": "d4224c12-6bb8-4451-bfaf-f6f9d3f1048b",
+  "base": "80161143c3d4e6795d90853fa5449d13afa623f4",
+  "contentTree": "30d6bb00e128b644149948e8f5aff4fa607cb474",
+  "reviewer": "Codex",
+  "summary": "Derive prefix input admission from joint history and actual output-store separation before composing the published TorchLean cell tensor.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Remove independent prefix source admission from the joint cell theorem. Control and connectivity addresses are derived before initial index values, followed by source addresses. Both array separation and nonwrapping bounds are explicit."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Record derived prefix admission and preserve the outstanding single-entry, execution-existence and whole-solver obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No equation, TorchLean algorithm, emitted GPU kernel, or host solver changed. This strengthens proof composition only."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The proof does not assume actual read values, store addresses or the target tensor. InputLayout is derived from allocated initial arrays and physical input/output separation. The nonzero partial execution instantiates joint admission and rejects an overlapping layout; no new PTX/hardware fidelity or full-run existence claim."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "30d6bb00e128b644149948e8f5aff4fa607cb474",
+      "method": "Complete registered Lean build; fresh CellEntryJointChecks kernel regression; exact PtxIntegrationAudit dependency audit; source guards and pinned dependency check; both saved Poisson instruction/contraction binding checkers; 24 Python Poisson tests; Stratic validation and manual proof/contract review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 verified dependency pins; local CPU checking, saved GPU artifacts only. No GPU rerun or paid model calls.",
+      "evidence": "3926 exact dependency reports, only standard Lean axioms; 430 guarded files; full registered build and fresh nonzero joint-admission / overlapping-layout regression passed. 720 contraction blocks, 630 shared-store blocks and 90 entry prefixes across 30 saved layouts; true_residual binding across 30 layouts. 326 receipt source hashes verified. 24 Python tests passed. Stratic valid; study links exist; git diff --check clean; README unchanged. Joint source constraints now derive prefix admission through source-independent control and two-stage index/value address proofs. Input/output separation and nonwrapping bounds remain explicit. Single-entry composition and remaining solver obligations are not claimed.",
+      "tests": [],
+      "id": "7b2d3187-8bf6-4610-912f-bf88932e5d35",
+      "recordedAt": "2026-10-02T10:04:52.234Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T10:06:23.488Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryActive.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryControl.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryIndexAddress.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryIndexInputs.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryInputLayout.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryJointChecks.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryJointCorrespondence.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryJointInputs.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntrySourceAddress.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryWordInputs.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Supporting control/address invariants, registered kernel checks and exact audits, source-bound receipts, or reader documentation for joint-history prefix admission. Reviewed against the mapped joint_sources and joint_cell_tensor contracts."
+    }
+  ]
+}

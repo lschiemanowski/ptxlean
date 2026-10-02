@@ -7,43 +7,18 @@
     }
   },
   "summary": [
-    "Prove that accepted binary64 solutions have zero boundary and satisfy the exact requested residual bound for the represented discrete equations.",
-    "Connect ordered cell calculations and assembly to TorchLean without assuming associativity of rounded addition; preserve the distinct GPU reduction order.",
-    "Reject malformed or nonfinite certificate input; keep compiled checking and saved GPU provenance distinct from kernel-checked proofs.",
-    "Prove the complete true_residual entry per thread, including byte addresses, guard, execution existence and TorchLean subtraction; check its emitted instruction binding.",
-    "Prove whole-vector residual subtraction under necessary byte-source constraints, with derived read-only inputs, actual instruction traces and arbitrary ordering of disjoint output stores.",
-    "Keep complete memory admission, whole-cell composition, assembly, reductions and host launch composition explicit as remaining work.",
-    "Prove the eight local cell contractions from fetched indexing, byte loads and separate rounded multiply/add operations; connect their byte-backed views to TorchLean.",
-    "Derive shared-store ownership and barrier visibility from fetched control and addresses, rather than assuming producer ordering or phase values.",
-    "Prove that every completed Q1\u2013Q4 middle-slice run satisfying necessary byte-source constraints stores all six TorchLean intermediate tensors, including weight multiplication.",
-    "Derive every load address and source using sound symbolic bookkeeping and kernel-checked code certificates; retain NaN encoding freedom and ordered rounded sums.",
-    "Derive slice-entry registers and gathered words from the concurrent prefix; whole-entry source composition, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
-    "Supply a completed zero-data Q1 execution satisfying both necessary byte-source constraints; reject wrong-coordinate and wrong-weight code mutations without claiming arbitrary-input existence.",
-    "Connect the complete final arithmetic/store body to its actual byte inputs, and compose with middle-run stores through a proved byte snapshot while retaining the distinct whole-trace visibility obligation.",
-    "Derive final consumer load values from actual middle stores and barrier history, then connect the actual arithmetic registers to the existing final-store proof without hiding the remaining model boundary.",
-    "Derive the last-barrier execution split from one actual concurrent run, without an assumed boundary state or schedule; only the observed output thread must finish final arithmetic.",
-    "Preserve byte-source choices under ordered event restriction when omitted output stores are disjoint from actual coefficient reads; derive the arithmetic execution and result-register relation from the concurrent tail.",
-    "Derive the arithmetic run and ordered event embedding from a fetched concurrent output-tail execution, preserving the result register and actual padding returns without adding synchronization.",
-    "Derive that only global stores are omitted from the arithmetic projection; derive their addresses from launch conditions and derive publication into one global tensor.",
-    "Witness a completed Q1 run with output stores interleaved before other final reads, all padding returns, and one compatible source assignment.",
-    "Derive actual output-store addresses from launch registers and fetched tail steps, and connect completed active lanes' stored words to their arithmetic results.",
-    "Prove each completed active lane's actual stored word equals TorchLean in the same concurrent run; derive distinct writers' disjoint output bytes from launch lane IDs and a common cell ID.",
-    "Require explicit nonwrapping launch index/address bounds for all lanes, including padding; distinguish mathematical global publication from CUDA host visibility.",
-    "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order.",
-    "Derive register setup from the emitted element prologue, preserving memory and keeping the later gather and barrier as separate execution obligations.",
-    "Gather through an actual four-byte unsigned connectivity load and eight-byte value load/store, with distinct bounds and preserved entry registers.",
-    "Prove the twelve-step active gather from four-byte connectivity and eight-byte source storage, derive access safety from array bounds, preserve setup registers and connect its stored bits to TorchLean input gathering; joint-history continuation visibility remains open.",
-    "Justify concurrent four-byte connectivity reads against actual store bytes and derive read-only inputs before composing entry execution and first-barrier visibility; do not assume the gathered answer.",
-    "Derive original input reads, local gather results, collective barrier completion and arithmetic-entry registers from the concurrent twenty-one-instruction prefix; retain joint-history continuation visibility as the next obligation.",
-    "Derive actual gather-store occurrence, address, value and disjoint ownership from the completed entry run to support first-barrier publication.",
-    "Derive actual gather-store coverage, padding exclusion, physical addresses, copied values and disjoint byte ownership; connect recorded values to TorchLean inputs without assuming the store list.",
-    "Derive actual gather-store ordering before the first barrier and use necessary byte-source rules to establish continuation visibility without assuming read values.",
-    "Prove that actual arithmetic/output continuation reads see gathered words: derive first-barrier ordering and slot preservation; retain prefix input-source restriction as open.",
-    "Rebase continuation sources to a proved publication of actual gathered words, and connect that input-byte view to TorchLean gathering without changing execution state.",
-    "Connect actual gather execution through proved source rebasing to the arithmetic result and order-independent published cell tensor, with decoded input coefficient tables and TorchLean connectivity gathering."
+    "Prove that accepted binary64 solutions have zero boundary and satisfy the exact requested fresh-residual bound for the represented discrete equations.",
+    "Connect ordered local cell arithmetic to TorchLean, retaining separate rounded multiply/add operations, NaN encoding freedom and the GPU reduction order.",
+    "Prove complete true_residual entry and whole-vector subtraction under explicit source constraints, with derived input reads and arbitrary publication order of disjoint outputs.",
+    "Derive register setup, connectivity gathering, shared-store ownership, actual barrier history and continuation visibility from fetched instructions.",
+    "Prove all eight cell contractions and publication of the actual whole-cell tensor using TorchLean gathering and decoded coefficient tables.",
+    "Derive prefix input admission from the joint history: establish control and connectivity addresses first, force initial indices, then justify source-vector reads using physical input/output separation.",
+    "Rebase sources to a proved publication of actual gathered bytes without changing execution state or assuming computed read values.",
+    "Keep single-entry composition, general execution existence, complete PTX admission, coefficient setup representation and remaining solver/launch correspondence explicit.",
+    "Bind emitted instructions to Lean representations and check nonzero and interleaved finite witnesses while preserving the distinction between kernel proofs, compiled checks and saved GPU observations."
   ],
   "realization": "partial",
-  "remaining": "The concurrent entry and actual gather-store occurrence, values and byte ownership are proved. Whole-entry/body composition still needs joint-history source restriction and first-barrier visibility of those records to later arithmetic reads. Arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open.",
+  "remaining": "Single-entry execution composition, arbitrary-input source-admitted existence, coefficient-table setup representation, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open.",
   "links": [
     {
       "kind": "implementation",
@@ -1806,6 +1781,54 @@
         "path": "integration/torchlean/PoissonPTX/SourceCheck.lean",
         "passage": {
           "quote": "theorem sound (checked : Checked initial events source) : Visibility.Compatible initial events source"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The setup and address-control\nregisters are established independently of loaded values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryControl.lean",
+        "passage": {
+          "quote": "theorem launch {s t : State 32} {cfg : Concurrent.Config 32}\n    (run : Runs cfg (CellPrologue.threadContext bases cell) (program width cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (pcs : \u2200 u, (s.core.lanes u).pc=0)\n    (done : \u2200 u, (t.core.lanes u).pc=21) (positive : 0<width) (fits : width*width<2^32)\n    (space : (bases .shared).toNat+7*width*width*8\u22642^64) :\n    Nonempty (Concurrent.CellMiddle.Numeric.Launch width bases (resume t))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The branch guard\nexcludes padding lanes from gathering."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryActive.lean",
+        "passage": {
+          "quote": "theorem live_gather (run : Runs cfg ctx (program width cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (pcs : \u2200 u, (s.core.lanes u).pc=0)\n    (positive : 0<width) (fits : width*width<2^32)\n    (lo : 8\u2264(t.core.lanes owner).pc) (hi : (t.core.lanes owner).pc<20) :\n    (ctx owner).lane.toNat<width*width"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Disjoint input and output arrays exclude later\noutput stores as byte suppliers."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryJointInputs.lean",
+        "passage": {
+          "quote": "theorem joint_sources {later : List (Concurrent.Event 32)}\n    (run : Runs cfg (CellPrologue.threadContext bases cell) (program width cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (pcs : \u2200 u, (s.core.lanes u).pc=0)\n    (done : \u2200 u, (t.core.lanes u).pc=21) (lo : 2\u2264width) (hi : width\u22645)\n    (space : (bases .shared).toNat+7*width*width*8\u22642^64)\n    (layout : \u2200 u : Fin 32, u.val<width*width \u2192\n      InputLayout (memory .global) (CellPrologue.threadContext bases cell u) width cells source output)\n    (body : Concurrent.WithTail.Runs cfg bodyContext (Concurrent.CellConsumer.WithOutput.front width)\n      (CellFinal.tail width output) (continuation t) later final)\n    (bounds : Concurrent.CellConsumer.WithOutput.OutputBounds width output (continuation t))\n    (indicesJoint : IndexSources.Compatible (memory .global) (events++later) indices indexChoices)\n    (wordsJoint : Concurrent.Visibility.Compatible memory (events++later) wordChoices) :\n    Concurrent.Visibility.Compatible memory events (fun _ _ => .initial) \u2227\n      IndexSources.Compatible (memory .global) events indices (fun _ _ => .initial)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Its joint-history form derives prefix input admission from the same\nhistory that supplies the arithmetic reads."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryJointCorrespondence.lean",
+        "passage": {
+          "quote": "theorem joint_cell_tensor (o : Operator) (values : Array Float)\n    (run : Runs cfg (CellPrologue.threadContext bases cell) (program o.nodes.size cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (initial : \u2200 u, (s.core.lanes u).global=memory .global)\n    (pcs : \u2200 u, (s.core.lanes u).pc=0) (done : \u2200 u, (t.core.lanes u).pc=21)\n    (positive : 0<o.nodes.size) (small : o.nodes.size*o.nodes.size\u226432)\n    (space : (bases .shared).toNat+7*o.nodes.size*o.nodes.size*8\u22642^64)\n    (layout : \u2200 u : Fin 32, u.val<o.nodes.size*o.nodes.size \u2192\n      CellGather.Layout (Local.beforeGather (CellPrologue.threadContext bases cell u) o.nodes.size (lane s u))\n        o.nodes.size cells source)\n    (cellsBefore : \u2200 (u : Fin 32) (active : u.val<o.nodes.size*o.nodes.size),\n      cells.toNat+(layout u active).cellCount*(o.nodes.size*o.nodes.size)*4\u2264output.toNat)\n    (sourceBefore : \u2200 (u : Fin 32) (active : u.val<o.nodes.size*o.nodes.size),\n      source.toNat+(layout u active).pointCount*8\u2264output.toNat)\n    (connectivity : \u2200 u : Fin 32, u.val<o.nodes.size*o.nodes.size \u2192 \u2200 k<o.nodes.size*o.nodes.size,\n      (read32 (s.core.lanes u).global ((s.core.lanes u).globalStart+cells.toNat+\n        (cell.toNat*(o.nodes.size*o.nodes.size)+k)*4)).toNat=(o.mesh.cells[cell.toNat]!)[k]!)\n    (contents : \u2200 (u : Fin 32) (active : u.val<o.nodes.size*o.nodes.size), \u2200 k<(layout u active).pointCount,\n      decode (read64 (s.core.lanes u).global ((s.core.lanes u).globalStart+source.toNat+k*8))=values[k]!)\n    (lo : 2\u2264o.nodes.size) (hi : o.nodes.size\u22645)\n    (body : Concurrent.WithTail.Runs cfg bodyContext (Concurrent.CellConsumer.WithOutput.front o.nodes.size)\n      (CellFinal.tail o.nodes.size output) (continuation t) later final)\n    (reset : s.core.barrier=Ptx.Barrier.reset generation)\n    (bounds : Concurrent.CellConsumer.WithOutput.OutputBounds o.nodes.size output (continuation t))\n    (offset : Concurrent.CellConsumer.Coefficients.extent o.nodes.size\u2264output.toNat)\n    (jointIndices : IndexSources.Compatible (memory .global) (events++later) indices indexChoices)\n    (joint : Concurrent.Visibility.Compatible memory (events++later) allSources)\n    (performed : Concurrent.Visibility.Performed (events++later) allSources)\n    (permutation : order.Perm later)\n    (finished : \u2200 u : Fin 32, u.val<o.nodes.size*o.nodes.size \u2192\n      (Concurrent.CellConsumer.WithOutput.front o.nodes.size).length+5\u2264(final.core.lanes u).pc) :\n    Concurrent.CellConsumer.WithOutput.Publication.tensor o.nodes.size (bases .global) (cell.setWidth 64) output\n      (Concurrent.GlobalPublication.publish outputMemory order)=localAction\n        (Concurrent.CellMiddle.Numeric.initialTensor o.nodes.size bases memory .global 0)\n        (Concurrent.CellMiddle.Numeric.initialTensor o.nodes.size bases memory .global (o.nodes.size*o.nodes.size*8+32))\n        (Concurrent.CellMiddle.Numeric.initialTensor o.nodes.size bases memory .global (2*(o.nodes.size*o.nodes.size*8+32)))\n        (Poisson.gather o values cell.toNat)"
         }
       }
     }
