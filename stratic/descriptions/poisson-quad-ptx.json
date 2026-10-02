@@ -17,7 +17,8 @@
     "Prove coefficient/output byte separation and preserve retained read sources under interleaved output stores; derive the concurrent arithmetic run and result register, derive store addresses from launch bounds and prove per-lane stored bytes, and recover the TorchLean tensor by publishing actual store records in any order.",
     "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order.",
     "Prove the seven-instruction register prologue and bind it to emitted entries; keep the indexed gather and first-barrier connection to the arithmetic entry explicit.",
-    "Connect the active gather body to TorchLean input gathering with explicit four-byte indices, derived access bounds and preserved registers; retain concurrent sources and first-barrier composition as open obligations."
+    "Connect the active gather body to TorchLean input gathering with explicit four-byte indices, derived access bounds and preserved registers; derive its concurrent input sources and retain continuation visibility as open.",
+    "Derive gathering and the arithmetic launch contract from concurrent setup, branching and the first barrier; retain joint-history visibility and whole-solver instruction composition as open."
   ],
   "realization": "implemented",
   "links": [
@@ -94,5 +95,5 @@
       }
     }
   ],
-  "remaining": "Actual global-store occurrence, addresses and recorded values are derived from completed execution and launch bounds. Publishing the records in any order yields the TorchLean local-cell tensor. The register prologue is proved as a fetched prefix. The active gather has a fetched snapshot proof; concurrent gather and composition through its first barrier, arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations."
+  "remaining": "Actual global-store occurrence, addresses and recorded values are derived from completed execution and launch bounds. Publishing the records in any order yields the TorchLean local-cell tensor. The register prologue is proved as a fetched prefix. The active gather has a fetched snapshot proof; joint-history gather-to-arithmetic visibility, arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations."
 }

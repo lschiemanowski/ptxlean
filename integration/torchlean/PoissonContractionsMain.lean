@@ -1,3 +1,4 @@
+import PoissonPTX.CellEntryText
 import PoissonPTX.CellGatherText
 import PoissonPTX.CellPrologueEntry
 import PoissonPTX.ContractionText
@@ -21,7 +22,7 @@ def main (args : List String) : IO UInt32 := do
       let sources ← request.getObjValAs? (Array Nat) "sources"
       if width < 2 || width > 5 || b ≥ 2^64 || d ≥ 2^64 || w ≥ 2^64 || output ≥ 2^64 || cells ≥ 2^64 || sources.size != 3 || sources.any (· ≥ 2^64) then
         throw "expected Q1--Q4 width and 64-bit offsets"
-      return Json.mkObj [("gathers", toJson (sources.toList.map fun source => CellGather.rendered width (BitVec.ofNat 64 cells) (BitVec.ofNat 64 source))), ("prologue", toJson (CellPrologue.rendered width)), ("contractions", toJson (Contraction.rendered width (BitVec.ofNat 64 b) (BitVec.ofNat 64 d))),
+      return Json.mkObj [("entries", toJson (sources.toList.map fun source => CellEntry.rendered width (BitVec.ofNat 64 cells) (BitVec.ofNat 64 source))), ("gathers", toJson (sources.toList.map fun source => CellGather.rendered width (BitVec.ofNat 64 cells) (BitVec.ofNat 64 source))), ("prologue", toJson (CellPrologue.rendered width)), ("contractions", toJson (Contraction.rendered width (BitVec.ofNat 64 b) (BitVec.ofNat 64 d))),
         ("stores", toJson (Contraction.renderedStores width)),
         ("final", toJson (CellFinal.rendered width (BitVec.ofNat 64 b) (BitVec.ofNat 64 d) (BitVec.ofNat 64 output))),
         ("middle", toJson (Concurrent.CellMiddle.rendered width (BitVec.ofNat 64 b) (BitVec.ofNat 64 d) (BitVec.ofNat 64 w)))]

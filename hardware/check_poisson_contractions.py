@@ -21,8 +21,10 @@ visibility, entry composition and complete PTX memory admission open.
 The seven-instruction register prologue is separately proved from launch context
 and bound with its declarations to each emitted element entry. The twelve-step
 active gather has a fetched snapshot proof, derived layout safety and a TorchLean
-input theorem; its complete body is bound for all three source vectors. Concurrent
-gather and first-barrier connection to the arithmetic slice remain open.
+input theorem; its complete body is bound for all three source vectors. The
+concurrent 21-instruction prefix now derives original input reads, gathered bits,
+actual barrier completion and the arithmetic launch contract. Joint-history
+visibility to subsequent arithmetic and whole-kernel composition remain open.
 Saved output extents are checked disjoint; this is concrete layout evidence,
 separate from the general launch-derived address theorem and GPU conformance.
 """
@@ -205,6 +207,27 @@ def verify_prologue(ptx, rendered, layout):
     return checked
 
 
+def verify_entry(ptx, rendered, layout):
+    """Bind the concurrent setup/guard/gather/barrier program as one prefix."""
+    parameters(layout)
+    if len(rendered) != 3 or any(len(code) != 22 for code in rendered):
+        raise ValueError('expected three complete 21-instruction entry prefixes plus label')
+    checked = []
+    for entry, code in zip(('element_probe', 'element_p', 'element_x'), rendered, strict=True):
+        bodies = re.findall(r'\.visible \.entry '+entry+r'\(\.param \.u64 arena\)\s*([^}]+)}', ptx)
+        if len(bodies) != 1:
+            raise ValueError('entry missing or duplicated')
+        body = [line.strip() for line in bodies[0].splitlines() if line.strip()]
+        scratch = [i for i, line in enumerate(body) if line.startswith('.shared ')]
+        boundary = '@!%live bra stage_1_done;'
+        if len(scratch) != 1 or body.count(boundary) != 1:
+            raise ValueError('entry declaration or arithmetic boundary missing')
+        if body[scratch[0]+1:body.index(boundary)] != code:
+            raise ValueError('complete concurrent entry prefix differs from proved program')
+        checked.append(dict(entry=entry, instructions=21, barrier_pc=20, resume_pc=21))
+    return checked
+
+
 def verify_gather(ptx, rendered, layout):
     """Bind all twelve active gather instructions, including the four-byte load."""
     parameters(layout)
@@ -302,7 +325,7 @@ def check(run, output):
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
                     'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
                     'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.CellFinalSnapshot',
-                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult', 'PoissonPTX.CellTailOwners', 'PoissonPTX.CellOutputTensor', 'PoissonPTX.CellPrologueEntry', 'PoissonPTX.CellGatherTensor'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult', 'PoissonPTX.CellTailOwners', 'PoissonPTX.CellOutputTensor', 'PoissonPTX.CellPrologueEntry', 'PoissonPTX.CellGatherTensor', 'PoissonPTX.CellEntryLaunch'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -356,16 +379,20 @@ def check(run, output):
     names += ['PtxTorchLean.Poisson.PTX.CellGather.'+n for n in
               ('execution', 'correct', 'stored', 'registers', 'fetched_correct', 'fetched_exists',
                'index_exact', 'connectivity_address', 'node_inside', 'valid_of_layout', 'torchlean')]
+    names += ['PtxTorchLean.Poisson.PTX.CellEntry.'+n for n in
+              ('no_global_store', 'index_value', 'word_value', 'actual_trace', 'completed_lane',
+               'gathered_bits', 'gathered_torchlean', 'completed_barrier', 'arithmetic_launch')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.CellEntryLaunch\nimport PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)
     layouts = [json.loads(read_artifact(run, report, c['directory']+'/layout.json')) for c in report['cases']]
     rendered = json.loads(subprocess.check_output([INTEGRATION/'.lake/build/bin/poissonContractions'],
         input=json.dumps([parameters(l) for l in layouts])+'\n', text=True))
-    checked = [dict(directory=c['directory'], gather=verify_gather(
+    checked = [dict(directory=c['directory'], entry_prefix=verify_entry(
+        read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['entries'], layout), gather=verify_gather(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['gathers'], layout), prologue=verify_prologue(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['prologue'], layout), separation=output_separation(layout), blocks=verify_blocks(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['contractions'], layout),

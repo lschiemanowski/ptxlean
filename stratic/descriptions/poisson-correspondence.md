@@ -489,7 +489,8 @@ derives the six register values used by the arithmetic entry contract.
 The prefix ends before gather, not at a kernel return. It does not reset a
 program counter or install gathered bytes to identify this state with the
 post-gather arithmetic entry. The active gather now has a separate fetched snapshot proof;
-concurrent gather and its first barrier remain execution obligations. Shared-symbol resolution,
+concurrent gather now also has a prefix theorem. Visibility to later arithmetic
+and composition with that continuation remain execution obligations. Shared-symbol resolution,
 parameter passing and special-register inputs are launch context assumptions,
 not a CUDA driver/ABI theorem. Zero divisors are outside this bounded fragment;
 PTX does not specify a unique result for them.
@@ -528,9 +529,9 @@ base, cell, lane, row and column registers follow from execution.
 The decoded shared word equals the corresponding entry of TorchLean's cell
 gather when initial connectivity and source bytes represent the input arrays.
 These are input representation conditions, not assumptions about the output.
-This theorem currently reads a fixed input memory; it does not establish the
-concurrent read sources or visibility through the first barrier. Those remain
-necessary to connect the whole entry to the arithmetic execution.
+This local theorem reads a fixed input memory. A separate concurrent prefix
+theorem below establishes its input reads and barrier control; visibility to
+later arithmetic still needs the combined execution history.
 
 The typed gather program also renders the complete guarded body for each of
 the three source vectors. Binding checks reject incorrect load width, index
@@ -538,3 +539,48 @@ stride, source index, shared destination, extra instructions or a missing first
 barrier. Kernel checks cover four-byte-only allocations, adjacent index entries,
 unaligned or truncated indices and out-of-range nodes. Bit-copy checks include
 nonzero cells, lanes and base addresses and unusual floating-point encodings.
+
+Concurrent gathering must justify both load sizes from actual execution records.
+Each connectivity byte may name initialization or a byte of a recorded store;
+an eight-byte store overlapping only part of an index still counts. If no global
+store covers the input bytes, source compatibility must force the original
+input word. The four-byte read records can be kept separately from the existing
+eight-byte/barrier history because they neither write memory nor synchronize.
+Their sources still refer to actual stores in that history. This restricted
+representation covers unsigned global index reads, not general mixed-width PTX.
+The entry must then execute the prologue, active-lane branch, gather and first
+barrier, deriving the arithmetic entry state and shared input without assuming
+the gathered answer or a completed barrier.
+
+The concurrent entry executes the emitted setup at counters zero through six,
+the active-lane branch at seven, the twelve gather instructions at eight through
+nineteen, and the full-block barrier at twenty. Waiting threads cannot execute
+another instruction. Every input load initially chooses arbitrary bits. The
+executed prefix has no global stores, so byte-source compatibility forces all
+connectivity and source-vector reads to their initial bytes, including partial
+byte overlaps. It does not impose a single source on an entire word.
+
+From that concurrent history, the proof derives each lane's local instruction
+trace. An active lane that reaches counter twenty-one has stored exactly its
+TorchLean cell input; padding lanes follow the actual branch. Crossing counter
+twenty requires a genuine barrier release, advances every participant to
+twenty-one and resets the used barrier generation. No completed barrier or
+ready shared tensor is supplied as a premise.
+
+The base, lane, row and column registers and the actual barrier state establish
+the arithmetic entry contract. Re-expressing instruction counters relative to
+the next instruction preserves all registers, bytes and allocation metadata.
+This change of numbering does not execute instructions or install shared values.
+The remaining shared-memory obligation is to connect the actual gathered store
+records to the continuation's loads using their joint history and synchronization.
+The current prefix source argument also needs extension to exclude later output
+stores from the input bytes when the whole entry and body are composed.
+
+A completed 32-thread Q1 witness uses nonzero arena and shared bases, cell one,
+nonidentity connectivity, ordinary values, signed zero and a NaN payload. Its
+word and index sources are checked, and the general arithmetic-entry theorem
+is instantiated on that run. Omitting the last participant prevents release;
+wrong index values and overlapping mixed-size accesses fail their checks.
+This witness establishes a permitted candidate in the stated source model,
+not arbitrary-input existence or full PTX admission. The complete twenty-one
+instruction prefix and its label are bound to all three emitted element entries.

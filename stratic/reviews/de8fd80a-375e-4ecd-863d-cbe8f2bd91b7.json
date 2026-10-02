@@ -1,0 +1,145 @@
+{
+  "id": "de8fd80a-375e-4ecd-863d-cbe8f2bd91b7",
+  "base": "473d58f6c49e70e1bb934ccf5658c5b89bf23795",
+  "contentTree": "d3e315eab01f8a294d4225497a91efd5fddba729",
+  "reviewer": "Codex",
+  "summary": "Derive concurrent cell gathering, first-barrier completion and arithmetic entry.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Extend necessary byte sources to four-byte unsigned global indices. Prove actual prefix has no global stores, derive its load values/local traces, gathered TorchLean words, real collective release and arithmetic launch state; keep continuation visibility and full solver composition open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Record concurrent entry result and state exact remaining joint-history source and shared-visibility obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No equation, TorchLean algorithm, GPU kernel or host solver change. The entry proof establishes a stronger implementation boundary without changing numerical policy."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Preserve distinct Lean validity, pinned PTX fidelity, candidate source admission and hardware evidence. New interpreter reuses checked instruction and barrier transitions. Index records reference actual word stores per byte; no general mixed-width ISA claim. Prefix event absence of global stores is proved from code, not assumed."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "d3e315eab01f8a294d4225497a91efd5fddba729",
+      "method": "Complete registered Lean build; fresh CellEntryChecks; exact axiom and source guard audit; 24 Poisson unit tests; full emitted-prefix binding; pinned source and documentation review",
+      "outcome": "pass",
+      "environment": "Pinned Lean toolchain, 16 locked dependencies, local CPU proof checks and existing saved GPU artifacts; no GPU rerun",
+      "evidence": "3761 exact dependency reports use only standard Lean axioms; 399 guarded source files. A 32-thread nonzero execution has checked sources and instantiates the general launch theorem. All 90 complete entry prefixes match the typed renderer across 30 saved layouts, alongside existing bindings. All 264 receipt source hashes, Stratic links, Markdown links and whitespace checks pass; README unchanged. Joint-history continuation visibility and whole-solver proofs remain explicit.",
+      "tests": [],
+      "id": "ccee2f09-90c0-4c15-b959-385ed0edd37e",
+      "recordedAt": "2026-10-02T08:04:25.747Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T08:05:15.876Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Describe input-source, fetched prefix, actual barrier and launch derivation; keep joint-history continuation visibility, general existence and full solver obligations explicit; update exact links."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Bind the complete prefix between declarations and arithmetic guard; preserve separate declaration and gather checks; audit concurrent result endpoints."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh exact saved-PTX bindings and axiom/source evidence, without GPU rerun."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh exact saved-PTX bindings and axiom/source evidence, without GPU rerun."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Reject reversed predicate, wrong barrier resource, moved label and inserted post-barrier instruction."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Render the same full typed prefix, actual branch target label and all three source offsets."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntry.lean",
+      "reason": "Fetched 21-instruction concurrent entry with actual predicate branch and reused full-block barrier; waiting threads cannot step."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryBarrier.lean",
+      "reason": "Only actual collective release can cross PC20; all lanes then reach PC21 and no further prefix step is possible."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryChecks.lean",
+      "reason": "32-thread nonzero Q1 execution, verified word/index sources, general launch theorem instance, padding/no-early-release and invalid mixed-width/source tests."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryExec.lean",
+      "reason": "Executable chosen-load interpreter is proved sound for the relational entry model; successful execution alone does not assert source compatibility."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryInputs.lean",
+      "reason": "Derive no global stores and unchanged input bytes from actual prefix code; force permitted index and value reads from initialization."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryLaunch.lean",
+      "reason": "Derive arithmetic launch registers and actual reset barrier state; change counter origin while preserving every byte and register. No fabricated snapshot."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryLocal.lean",
+      "reason": "Construct deterministic per-lane trace and exact state; the local sync case is only a projection of genuine collective release, not a replacement barrier semantics."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryReplay.lean",
+      "reason": "Derive local trace from arbitrary concurrent interleaving and actual read-source constraints. Shared loads are absent by code, not assumed correct."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryResult.lean",
+      "reason": "Completed active lanes store the exact input word and TorchLean gather entry, assuming input representation and access validity; output value is not a premise."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryText.lean",
+      "reason": "Render the same full typed prefix, actual branch target label and all three source offsets."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/IndexSources.lean",
+      "reason": "Unsigned four-byte reads choose initial/store bytes independently; reads cannot synchronize or write, and partial overlap with an eight-byte store is preserved."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/IndexedCandidate.lean",
+      "reason": "Nondeterministic load relation with records, instruction replay and unchanged-global lemmas. All memory bounds remain in instruction rules."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register twelve modules and 111 new named declarations; exact dependency counts and fresh execution checks."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register twelve modules and 111 new named declarations; exact dependency counts and fresh execution checks."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register twelve modules and 111 new named declarations; exact dependency counts and fresh execution checks."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Describe input-source, fetched prefix, actual barrier and launch derivation; keep joint-history continuation visibility, general existence and full solver obligations explicit; update exact links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Describe input-source, fetched prefix, actual barrier and launch derivation; keep joint-history continuation visibility, general existence and full solver obligations explicit; update exact links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Describe input-source, fetched prefix, actual barrier and launch derivation; keep joint-history continuation visibility, general existence and full solver obligations explicit; update exact links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Describe input-source, fetched prefix, actual barrier and launch derivation; keep joint-history continuation visibility, general existence and full solver obligations explicit; update exact links."
+    }
+  ]
+}

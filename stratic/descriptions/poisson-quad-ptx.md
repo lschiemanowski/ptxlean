@@ -94,8 +94,8 @@ constructs its shared bytes from actual middle-run stores and proves the stored
 TorchLean local cell result, with allocation and index conditions explicit.
 
 The middle slice starts with gathered bytes and prepared base/lane/coordinate
-registers. The final phase's entry registers are also explicit. The prologue and
-gather must establish those inputs. The combined concurrent output tail publishes its actual stores as one tensor. Complete PTX memory
+registers. The final phase's entry registers are also explicit. The entry prefix now derives the registers and gathered words; visibility of
+those words in the arithmetic continuation remains a joint-history obligation. The combined concurrent output tail publishes its actual stores as one tensor. Complete PTX memory
 admission, general execution existence, hardware progress and whole-solver
 instruction correspondence remain separate obligations. Documentation and saved
 empirical evidence distinguish these from the completed phase-by-phase theorem.
@@ -132,6 +132,7 @@ flag, and row/column coordinates, preserving memory and unrelated registers.
 Its instructions and declarations are bound to the emitted element entries.
 The active gather now separately proves its four-byte connectivity load, indexed
 eight-byte source load and shared store, with derived access bounds and preserved
-setup registers. Its stored word agrees with TorchLean input gathering. This is
-a fixed-input memory proof; concurrent source justification and the first barrier
-still need to connect it to the arithmetic entry.
+setup registers. Its stored word agrees with TorchLean input gathering. A concurrent prefix theorem now derives the original input reads, each gathered
+word, actual first-barrier completion and the arithmetic entry registers. The
+remaining connection concerns the gathered store records and later arithmetic
+loads in one joint history, not a presumed shared snapshot.

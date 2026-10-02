@@ -17,7 +17,7 @@
     "Derive shared-store ownership and barrier visibility from fetched control and addresses, rather than assuming producer ordering or phase values.",
     "Prove that every completed Q1\u2013Q4 middle-slice run satisfying necessary byte-source constraints stores all six TorchLean intermediate tensors, including weight multiplication.",
     "Derive every load address and source using sound symbolic bookkeeping and kernel-checked code certificates; retain NaN encoding freedom and ordered rounded sums.",
-    "Keep slice-entry registers and gathered bytes explicit; full gather, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
+    "Derive slice-entry registers and gathered words from the concurrent prefix; continuation visibility, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
     "Supply a completed zero-data Q1 execution satisfying both necessary byte-source constraints; reject wrong-coordinate and wrong-weight code mutations without claiming arbitrary-input existence.",
     "Connect the complete final arithmetic/store body to its actual byte inputs, and compose with middle-run stores through a proved byte snapshot while retaining the distinct whole-trace visibility obligation.",
     "Derive final consumer load values from actual middle stores and barrier history, then connect the actual arithmetic registers to the existing final-store proof without hiding the remaining model boundary.",
@@ -32,10 +32,12 @@
     "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order.",
     "Derive register setup from the emitted element prologue, preserving memory and keeping the later gather and barrier as separate execution obligations.",
     "Gather through an actual four-byte unsigned connectivity load and eight-byte value load/store, with distinct bounds and preserved entry registers.",
-    "Prove the twelve-step active gather from four-byte connectivity and eight-byte source storage, derive access safety from array bounds, preserve setup registers and connect its stored bits to TorchLean input gathering; concurrent sources and first-barrier composition remain open."
+    "Prove the twelve-step active gather from four-byte connectivity and eight-byte source storage, derive access safety from array bounds, preserve setup registers and connect its stored bits to TorchLean input gathering; joint-history continuation visibility remains open.",
+    "Justify concurrent four-byte connectivity reads against actual store bytes and derive read-only inputs before composing entry execution and first-barrier visibility; do not assume the gathered answer.",
+    "Derive original input reads, local gather results, collective barrier completion and arithmetic-entry registers from the concurrent twenty-one-instruction prefix; retain joint-history continuation visibility as the next obligation."
   ],
   "realization": "partial",
-  "remaining": "Actual global-store occurrence, addresses and recorded values are derived from completed execution and launch bounds. Publishing the records in any order yields the TorchLean local-cell tensor. The register prologue is proved as a fetched prefix. The active gather has a fetched snapshot proof; concurrent gather and composition through its first barrier, arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations.",
+  "remaining": "The concurrent twenty-one-instruction entry derives original input bytes, the gathered per-lane store, barrier completion and arithmetic launch registers. Whole-entry/body composition still needs joint-history source restriction and visibility of the gathered stores to later reads. Arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open.",
   "links": [
     {
       "kind": "implementation",
@@ -1474,6 +1476,90 @@
         "path": "integration/torchlean/PoissonPTX/CellGatherChecks.lean",
         "passage": {
           "quote": "theorem four_byte_extent :\n    Valid32 4 4 4 \u2227 \u00acValid64 4 4 4 \u2227\n    (Indexed.eval (.load32 18 2) {(start 0) with regs:=fun _ => 4, globalStart:=4,globalBytes:=4}).isSome=true"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The\nexecuted prefix has no global stores, so byte-source compatibility forces all\nconnectivity and source-vector reads to their initial bytes, including partial\nbyte overlaps."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryInputs.lean",
+        "passage": {
+          "quote": "theorem index_value {r : Nat} {access : IndexSources.Access} (run : Runs cfg ctx (program width cells source) s events indices t)\n    (compatible : IndexSources.Compatible initial events indices chosen)\n    (observed : indices[r]?=some (thread,access)) : access.value=read32 initial access.address"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "From that concurrent history, the proof derives each lane's local instruction\ntrace."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryReplay.lean",
+        "passage": {
+          "quote": "theorem actual_trace (run : Runs cfg ctx (program width cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (initial : \u2200 t, (s.core.lanes t).global=memory .global)\n    (words : Concurrent.Visibility.Compatible memory events chosen)\n    (indexSources : IndexSources.Compatible (memory .global) events indices selected)\n    (thread : Fin n) :\n    Local.Runs (ctx thread) (program width cells source) (lane s thread) (lane t thread)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An active lane that reaches counter twenty-one has stored exactly its\nTorchLean cell input; padding lanes follow the actual branch."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryResult.lean",
+        "passage": {
+          "quote": "theorem gathered_torchlean (o : Operator) (values : Array Float) (e : Nat)\n    (run : Runs cfg ctx (program o.nodes.size cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (initial : \u2200 u, (s.core.lanes u).global=memory .global)\n    (words : Concurrent.Visibility.Compatible memory events chosen)\n    (indexSources : IndexSources.Compatible (memory .global) events indices selected)\n    (thread : Fin n) (pc : (s.core.lanes thread).pc=0) (done : (t.core.lanes thread).pc=21)\n    (positive : 0<o.nodes.size) (fits : o.nodes.size*o.nodes.size<2^32)\n    (active : (ctx thread).lane.toNat<o.nodes.size*o.nodes.size)\n    (layout : CellGather.Layout (Local.beforeGather (ctx thread) o.nodes.size (lane s thread)) o.nodes.size cells source)\n    (cell : ((Local.beforeGather (ctx thread) o.nodes.size (lane s thread)).regs 15).toNat=e)\n    (i j : Fin o.nodes.size)\n    (coordinate : ((Local.beforeGather (ctx thread) o.nodes.size (lane s thread)).regs 14).toNat=i.val*o.nodes.size+j.val)\n    (connectivity : \u2200 k<o.nodes.size*o.nodes.size,\n      (read32 (s.core.lanes thread).global ((s.core.lanes thread).globalStart+cells.toNat+(e*(o.nodes.size*o.nodes.size)+k)*4)).toNat=\n        (o.mesh.cells[e]!)[k]!)\n    (contents : \u2200 k<layout.pointCount,\n      decode (read64 (s.core.lanes thread).global ((s.core.lanes thread).globalStart+source.toNat+k*8))=values[k]!) :\n    decode (read64 (t.core.lanes thread).shared\n      (CellGather.destination (Local.beforeGather (ctx thread) o.nodes.size (lane s thread))).toNat)=\n        Spec.get2 (Poisson.gather o values e) i j"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Crossing counter\ntwenty requires a genuine barrier release, advances every participant to\ntwenty-one and resets the used barrier generation."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryBarrier.lean",
+        "passage": {
+          "quote": "theorem completed_barrier (run : Runs cfg ctx (program width cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (initial : \u2200 u, (s.core.lanes u).pc\u226420)\n    (thread : Fin n) (done : 20<(t.core.lanes thread).pc) :\n    (\u2200 u, (t.core.lanes u).pc=21) \u2227 t.core.site=none \u2227\n    \u2203 generation key, t.core.barrier=Barrier.reset (generation+1) \u2227\n      key.site=20 \u2227 Concurrent.Event.barrier (.completion key)\u2208events"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The base, lane, row and column registers and the actual barrier state establish\nthe arithmetic entry contract."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryLaunch.lean",
+        "passage": {
+          "quote": "theorem arithmetic_launch\n    (run : Runs cfg (CellPrologue.threadContext bases cell) (program width cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (initial : \u2200 u, (s.core.lanes u).global=memory .global)\n    (words : Concurrent.Visibility.Compatible memory events chosen)\n    (indexSources : IndexSources.Compatible (memory .global) events indices selected)\n    (pcs : \u2200 u, (s.core.lanes u).pc=0)\n    (thread : Fin 32) (finished : 20<(t.core.lanes thread).pc)\n    (positive : 0<width) (fits : width*width<2^32)\n    (space : (bases .shared).toNat+7*width*width*8\u22642^64)\n    (valid : \u2200 u, (CellPrologue.threadContext bases cell u).lane.toNat<width*width \u2192\n      CellGather.Valid (Local.beforeGather (CellPrologue.threadContext bases cell u) width (lane s u)) width cells source) :\n    Nonempty (Concurrent.CellMiddle.Numeric.Launch width bases (resume t))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Its\nword and index sources are checked, and the general arithmetic-entry theorem\nis instantiated on that run."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryChecks.lean",
+        "passage": {
+          "quote": "theorem launch_from_execution :\n    Nonempty (Concurrent.CellMiddle.Numeric.Launch 2 bases (resume result.state))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Omitting the last participant prevents release;"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryChecks.lean",
+        "passage": {
+          "quote": "theorem no_early_release :\n    (execute cfg ctx kernel choose (schedule.take (schedule.length-1)) start).map\n      (fun out => (out.state.core.barrier.generation,(out.state.core.lanes 0).pc))=some (0,20)"
         }
       }
     }

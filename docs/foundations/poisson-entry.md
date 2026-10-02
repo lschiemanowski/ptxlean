@@ -109,9 +109,9 @@ relates the stored word to `gather o values e`. Its premises say how the initial
 connectivity bytes and source-vector bytes represent those inputs. The source
 index is obtained by executing the load; the desired result is not supplied.
 
-This is a snapshot proof: the loads read a fixed initial input memory. Establishing
-that the concurrent execution sees those inputs, and that the first barrier
-makes the shared stores visible to later arithmetic, remains open. We do not
+This is a snapshot proof: the loads read a fixed initial input memory. The concurrent prefix theorem below now establishes
+its input reads. Connecting its shared store records to later arithmetic loads
+in a joint history remains open. We do not
 reset the program counter or install gathered bytes and call that composition.
 
 The pinned PTX review covers unsigned `mad.lo.u32`, `mul.wide.u32`, and
@@ -128,3 +128,43 @@ and preservation of unusual floating-point bit patterns.
 
 Run `integration/torchlean/check.sh` for the registered proofs and axiom audit,
 and `python3 -m unittest discover -s hardware -p 'test_*.py'` for binding tests.
+
+## The concurrent entry
+
+[CellEntry](../../integration/torchlean/PoissonPTX/CellEntry.lean) combines the
+seven setup instructions, the active-lane branch, twelve gather instructions,
+and the first barrier. The barrier occupies counter 20; the next instruction
+is 21. Threads may interleave arbitrarily, and waiting threads cannot advance.
+
+Loads choose candidate values. [IndexSources](../../integration/torchlean/PoissonPTX/IndexSources.lean)
+checks the four-byte indices against individual initial bytes or bytes from
+actual eight-byte stores. The read records are separate from the existing
+word/barrier list because these index reads cannot write or synchronize. This
+is a restricted global-index extension, not a general mixed-width PTX model.
+
+[CellEntryInputs](../../integration/torchlean/PoissonPTX/CellEntryInputs.lean)
+proves that the prefix has no global stores. Consequently compatible global
+reads must recover their initial values. [CellEntryReplay](../../integration/torchlean/PoissonPTX/CellEntryReplay.lean)
+uses this result to recover each lane's local instruction trace from the actual
+concurrent execution. No local trace or desired gather answer is an input.
+
+[CellEntryResult](../../integration/torchlean/PoissonPTX/CellEntryResult.lean)
+therefore proves that a completed active lane's shared word is its TorchLean
+gather entry. [CellEntryBarrier](../../integration/torchlean/PoissonPTX/CellEntryBarrier.lean)
+proves that crossing counter 20 requires an actual release and advances every
+lane to 21. [CellEntryLaunch](../../integration/torchlean/PoissonPTX/CellEntryLaunch.lean)
+derives the arithmetic launch contract. Its `resume` operation merely numbers
+the continuation from zero: it preserves all memory, registers and barrier state.
+
+A [32-thread witness](../../integration/torchlean/PoissonPTX/CellEntryChecks.lean)
+uses nonzero bases, cell one, permuted connectivity, ordinary numbers, signed
+zero and a NaN payload. Its complete execution and sources are checked. Leaving
+out the last barrier participant prevents release. The same witness instantiates
+the general launch theorem. This is an existence example, not the eventual
+general existence proof.
+
+The remaining issue is shared visibility in the continuation. Each lane has
+executed its store, but subsequent loads must be tied to those records through
+the barrier in one combined history. Source restriction must also account for
+later output stores, which were absent in the prefix. Neither a copied shared
+snapshot nor the change in counter numbering proves that obligation.

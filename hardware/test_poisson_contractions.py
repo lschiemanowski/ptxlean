@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue, verify_gather
+from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue, verify_gather, verify_entry
 from poisson_kernels import Layout, module, PTX
 
 
@@ -48,6 +48,23 @@ class ContractionBinding(unittest.TestCase):
         for expected_bad in (expected[:-1], expected[::-1], expected+[expected[0]]):
             with self.assertRaises(ValueError):
                 verify_prologue(self.ptx, expected_bad, self.layout)
+
+    def test_complete_entry(self):
+        import re
+        expected = []
+        for entry in ('element_probe', 'element_p', 'element_x'):
+            body = re.search(r'\.visible \.entry '+entry+r'\(.*?\n}', self.ptx, re.S)[0].splitlines()
+            first = next(i for i, line in enumerate(body) if line.startswith('.shared '))+1
+            expected.append(body[first:body.index('@!%live bra stage_1_done;')])
+        self.assertEqual(len(verify_entry(self.ptx, expected, self.layout)), 3)
+        for old, new in [('@!%live bra stage_0_done;', '@%live bra stage_0_done;'),
+                         ('stage_0_done:\nbar.sync 0;', 'stage_0_done:\nbar.sync 1;'),
+                         ('stage_0_done:\nbar.sync 0;', 'bar.sync 0;\nstage_0_done:'),
+                         ('@!%live bra stage_1_done;', 'mov.u32 %i, 0;\n@!%live bra stage_1_done;')]:
+            with self.subTest(new=new):
+                self.assertIn(old, self.ptx)
+                with self.assertRaises(ValueError):
+                    verify_entry(self.ptx.replace(old,new,1), expected, self.layout)
 
     def test_complete_gather(self):
         import re
