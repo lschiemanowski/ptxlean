@@ -287,3 +287,10 @@ in the same order and perform the same rounded updates. With valid finite input,
 the public Poisson.apply function returns exactly the vector published by the
 unmasked cell/assembly composition; no change to the reference computation or
 its input validation is needed.
+
+Supplied admitted cell executions with common entry arguments now construct an
+actual grid schedule and its admitted sources. A serial block order is used
+only to witness existence; the correctness theorem still covers arbitrary
+admitted interleavings. Constructing the local cell runs for arbitrary inputs
+remains separate. The nonzero cell/assembly regression checks both constructed
+launches rather than assuming a grid execution.

@@ -19,7 +19,8 @@
     "Keep arbitrary-input whole-cell existence, setup serialization, remaining solver instructions, launch composition, complete PTX admission and hardware correspondence explicit.",
     "Decode ordered assembly tables and compose actual cell publications with assembly to obtain the TorchLean tensor operator; exercise the connection with a nonzero kernel-checked example.",
     "Connect the ordered tensor operator to the executable array reference, preserving its original scatter order and input validation.",
-    "Compose actual cell instruction interleavings with private shared-memory identity and derived source contracts; chronological publication followed by assembly yields the executable TorchLean operator."
+    "Compose actual cell instruction interleavings with private shared-memory identity and derived source contracts; chronological publication followed by assembly yields the executable TorchLean operator.",
+    "Construct grid scheduling and admitted sources from supplied complete local cell runs, while keeping arbitrary-input local existence separate."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3009,6 +3010,66 @@
         "path": "integration/torchlean/PoissonPTX/CellGridChecks.lean",
         "passage": {
           "quote": "theorem foreign_shared_rejected : ¬Compatible (fun _ => 0) (fun _ _ => 0) sharedEvents foreign := by\n  intro compatible\n  have owner := shared_source_owner compatible\n    (block:=1) (r:=0) (reader:=0) (ra:=⟨.shared,⟨0,false,256,7⟩⟩)\n    (by decide +kernel) rfl rfl (k:=0) (writerBlock:=0) (w:=0) (j:=0) rfl\n  have different : (0 : Fin 2)≠1 := by decide\n  exact different owner"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The construction schedules a finite prefix of blocks, proving that completed\nblocks retain their final states and unscheduled blocks retain their initial\nstates. Each projected history is exactly the supplied local history. Lifting\nlocal store sources with the writer's own block preserves initialization,\nbyte equality and barrier conditions. Consequently any supplied family of\nadmitted cell executions with common entry arguments has an admitted grid\nexecution. Combining it with assembly constructs a returning assembly launch\nwithout an extra grid-execution premise. The nonzero synthetic cell exercises\nthis construction and again produces eight. General existence of those local\ncell runs for arbitrary inputs remains open."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridSchedule.lean",
+        "passage": {
+          "quote": "theorem serial_exists (start final : State count)\n    (events : Fin count → List (Concurrent.Event 32)) (indices : Fin count → List (Fin 32 × IndexSources.Access))\n    (localRuns : ∀ block, CellWhole.Runs (config block) (launch.bases block) (BitVec.ofNat 32 block.val)\n      launch.width launch.cells launch.source launch.output (launch.context block)\n      (start block) (events block) (indices block) (final block)) :\n    ∃ words indexes, Runs launch start words indexes final ∧\n      (∀ block, forBlock block words=events block) ∧\n      (∀ block, forBlock block indexes=indices block) := by\n  obtain ⟨words,indexes,run,wordEq,indexEq⟩ := prefix_exists start final events indices localRuns count (by omega)\n  have states : prefixState start final count=final := by funext block; simp [prefixState,block.isLt]\n  exact ⟨words,indexes,by simpa [states] using run,\n    fun block => by simpa [block.isLt] using wordEq block,\n    fun block => by simpa [block.isLt] using indexEq block⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The construction schedules a finite prefix of blocks, proving that completed\nblocks retain their final states and unscheduled blocks retain their initial\nstates. Each projected history is exactly the supplied local history. Lifting\nlocal store sources with the writer's own block preserves initialization,\nbyte equality and barrier conditions. Consequently any supplied family of\nadmitted cell executions with common entry arguments has an admitted grid\nexecution. Combining it with assembly constructs a returning assembly launch\nwithout an extra grid-execution premise. The nonzero synthetic cell exercises\nthis construction and again produces eight. General existence of those local\ncell runs for arbitrary inputs remains open."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridLiftSources.lean",
+        "passage": {
+          "quote": "theorem compatible_lift\n    (source : Fin count → Nat → Fin 8 → PTX.Sources.Origin Nat)\n    (projected : ∀ block, forBlock block events=localEvents block)\n    (sameGlobal : ∀ block, memory block .global=global)\n    (localCompatible : ∀ block, Concurrent.Visibility.Compatible (memory block) (localEvents block) (source block)) :\n    Compatible global (fun block => memory block .shared) events\n      (fun block r k => liftSource block (source block r k)) := by\n  intro block r reader ra observed read k\n  rw [projected] at observed\n  have h := localCompatible block r reader ra observed read k\n  cases chosen : source block r k with\n  | initial =>\n    simp only [chosen] at h\n    simp only [chosen,liftSource]\n    cases space : ra.space <;> simpa [initial,space,sameGlobal] using h\n  | store w j =>\n    simp only [chosen,liftSource]\n    simp only [chosen] at h\n    obtain ⟨writer,wa,found,store,space,address,value⟩ := h\n    refine ⟨writer,wa,by simpa [projected] using found,store,?_,value⟩\n    rw [space,address]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The construction schedules a finite prefix of blocks, proving that completed\nblocks retain their final states and unscheduled blocks retain their initial\nstates. Each projected history is exactly the supplied local history. Lifting\nlocal store sources with the writer's own block preserves initialization,\nbyte equality and barrier conditions. Consequently any supplied family of\nadmitted cell executions with common entry arguments has an admitted grid\nexecution. Combining it with assembly constructs a returning assembly launch\nwithout an extra grid-execution premise. The nonzero synthetic cell exercises\nthis construction and again produces eight. General existence of those local\ncell runs for arbitrary inputs remains open."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridCandidates.lean",
+        "passage": {
+          "quote": "def Family.candidates (family : Family o values) : CellGrid.Candidates o values :=\n  ⟨family.base,family.output,family.memory,family.small,\n    fun block => (family.execution block).candidate,\n    family.sameInitial,family.sameCTA,family.sameBase,family.sameOutput⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The construction schedules a finite prefix of blocks, proving that completed\nblocks retain their final states and unscheduled blocks retain their initial\nstates. Each projected history is exactly the supplied local history. Lifting\nlocal store sources with the writer's own block preserves initialization,\nbyte equality and barrier conditions. Consequently any supplied family of\nadmitted cell executions with common entry arguments has an admitted grid\nexecution. Combining it with assembly constructs a returning assembly launch\nwithout an extra grid-execution premise. The nonzero synthetic cell exercises\nthis construction and again produces eight. General existence of those local\ncell runs for arbitrary inputs remains open."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridExists.lean",
+        "passage": {
+          "quote": "theorem family_exists (family : CellWhole.Family o values) (cells source : Word)\n    (sameCells : ∀ block, (family.execution block).cells=cells)\n    (sameSource : ∀ block, (family.execution block).source=source) :\n    ∃ grid : Admitted o values, grid.candidates=family.candidates := by\n  let launch := familyLaunch family cells source\n  have localRuns : ∀ block, CellWhole.Runs (config block) (launch.bases block) (BitVec.ofNat 32 block.val)\n      launch.width launch.cells launch.source launch.output (launch.context block)\n      (family.execution block).start (family.execution block).events (family.execution block).indices (family.execution block).final := by\n    intro block\n    have run := (family.execution block).run\n    rw [family_config family block,sameCells,sameSource,family.sameOutput] at run\n    exact run\n  obtain ⟨events,indices,run,projected,indexProjected⟩ := serial_exists\n    (fun block => (family.execution block).start) (fun block => (family.execution block).final)\n    (fun block => (family.execution block).events) (fun block => (family.execution block).indices) localRuns\n  let ws : Sources o.mesh.cells.size := fun block r k => liftSource block ((family.execution block).allSources r k)\n  let ix : IndexChoices o.mesh.cells.size := fun block r k => liftSource block ((family.execution block).indexChoices r k)\n  have words : Compatible family.memory (fun block => (family.execution block).memory .shared) events ws :=\n    compatible_lift (fun block => (family.execution block).allSources) projected family.sameInitial\n      (fun block => (family.execution block).joint)\n  have indexes : IndexCompatible family.memory events indices ix := by\n    apply index_compatible_lift (fun block => (family.execution block).indexChoices) projected indexProjected\n    intro block\n    have valid := (family.execution block).jointIndices\n    rw [family.sameInitial] at valid\n    exact valid\n  have performed : Performed events ws :=\n    performed_lift (fun block => (family.execution block).allSources) projected\n      (fun block => (family.execution block).performed)\n  exact ⟨{\n    candidates := family.candidates\n    launch := launch\n    width := rfl\n    configs := family_config family\n    bases := fun _ => rfl\n    cells := sameCells\n    source := sameSource\n    output := family.sameOutput\n    contexts := fun _ => rfl\n    events := events\n    indices := indices\n    run := run\n    projected := projected\n    indexProjected := indexProjected\n    wordSource := ws\n    indexSource := ix\n    words := words\n    indexes := indexes\n    performed := performed },rfl⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The construction schedules a finite prefix of blocks, proving that completed\nblocks retain their final states and unscheduled blocks retain their initial\nstates. Each projected history is exactly the supplied local history. Lifting\nlocal store sources with the writer's own block preserves initialization,\nbyte equality and barrier conditions. Consequently any supplied family of\nadmitted cell executions with common entry arguments has an admitted grid\nexecution. Combining it with assembly constructs a returning assembly launch\nwithout an extra grid-execution premise. The nonzero synthetic cell exercises\nthis construction and again produces eight. General existence of those local\ncell runs for arbitrary inputs remains open."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridExistsChecks.lean",
+        "passage": {
+          "quote": "theorem nonzero_assembly : ∃ grid : Admitted operator values, ∃ words indices final,\n    Flow.Parallel.Runs arena.context (Assembly.entryCode 1 208 240 256 false 232 216)\n      (fun _ => arena.start (publish grid.candidates.memory grid.events) (fun _ => 0)) words indices final ∧\n    (∀ i, (final i).halted=true) ∧\n    Concurrent.Visibility.Compatible\n      (fun space => match space with | .global => publish grid.candidates.memory grid.events | .shared => fun _ => 0)\n      words (fun _ _ => .initial) ∧\n    IndexSources.Compatible (publish grid.candidates.memory grid.events) words indices (fun _ _ => .initial) ∧\n    decode (read64 (Concurrent.GlobalPublication.publish (publish grid.candidates.memory grid.events) words) 216)=8 := by\n  obtain ⟨grid,same⟩ := nonzero_grid\n  have base : arena.base=grid.candidates.base := by rw [same]; rfl\n  have output : arena.element=grid.candidates.output := by rw [same]; rfl\n  have offsets : arena.offsets.toNat+(operator.mesh.points.size+1)*4≤grid.candidates.output.toNat := by rw [same]; decide\n  have entries : arena.entries.toNat+arena.entryCount*4≤grid.candidates.output.toNat := by rw [same]; decide\n  have boundary : arena.boundary.toNat+operator.mesh.points.size*4≤grid.candidates.output.toNat := by rw [same]; decide\n  have tables : arena.RowsEncoded grid.candidates.memory\n      (Assembly.nodeRows operator.mesh.points.size (Assembly.MeshRows.locations meshShape.connectivity)) := by\n    rw [same]; exact arena.checkRows_sound tables_checked\n  obtain ⟨words,indices,final,run,done,compatible,indexCompatible,correct⟩ :=\n    assembly_exists grid meshShape rfl arena base output offsets entries boundary tables separated (fun _ _ => 0) false\n  refine ⟨grid,words,indices,final,run,done,compatible,indexCompatible,?_⟩\n  have value := correct ⟨0,by decide⟩\n  simpa only [Assembly.Snapshot.address,\n    show arena.base.toNat+arena.output.toNat+0*8=216 from rfl,\n    Bool.false_eq_true,false_and,ite_false,numerical] using value"
         }
       }
     }

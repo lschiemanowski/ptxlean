@@ -950,3 +950,23 @@ admitted cell grid. This does not construct a cell grid for arbitrary inputs or
 prove GPU scheduling progress. It does not establish CUDA transport between
 launches or termination of every padding lane; completed active output lanes
 suffice for the stated publication theorem.
+
+Scheduling supplied complete cell runs is a separate existence problem from
+constructing those runs. The grid scheduler should be able to run one block at
+a time, preserving every local instruction, read, store and barrier record.
+Serial scheduling is an existence witness, not a restriction on the universal
+interleaving theorem or a prediction of the GPU scheduler. Lifting each local
+source with its block identity must preserve both source compatibility and
+performed-write constraints. This construction must not require a desired cell
+result or assume an actual grid run that it is supposed to construct.
+
+The construction schedules a finite prefix of blocks, proving that completed
+blocks retain their final states and unscheduled blocks retain their initial
+states. Each projected history is exactly the supplied local history. Lifting
+local store sources with the writer's own block preserves initialization,
+byte equality and barrier conditions. Consequently any supplied family of
+admitted cell executions with common entry arguments has an admitted grid
+execution. Combining it with assembly constructs a returning assembly launch
+without an extra grid-execution premise. The nonzero synthetic cell exercises
+this construction and again produces eight. General existence of those local
+cell runs for arbitrary inputs remains open.

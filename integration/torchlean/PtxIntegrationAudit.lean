@@ -1,3 +1,8 @@
+import PoissonPTX.CellGridSchedule
+import PoissonPTX.CellGridLiftSources
+import PoissonPTX.CellGridCandidates
+import PoissonPTX.CellGridExists
+import PoissonPTX.CellGridExistsChecks
 import PoissonPTX.CellGrid
 import PoissonPTX.CellGridSources
 import PoissonPTX.CellGridPublication
@@ -5297,3 +5302,21 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.first_step
 #print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.two_blocks
 #print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.projected_step
+
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.append
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.lift_block
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.prefixState
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.prefix_update
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.prefix_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.serial_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.liftSource
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.compatible_lift
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.index_compatible_lift
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.performed_lift
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Execution.candidate
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Family.candidates
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.familyLaunch
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.family_config
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.family_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.ExistsChecks.nonzero_grid
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.ExistsChecks.nonzero_assembly

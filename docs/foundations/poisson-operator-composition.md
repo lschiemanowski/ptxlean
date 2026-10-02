@@ -110,3 +110,23 @@ existence, the remaining PCG/reduction instructions and the final host/solver
 connection remain separate obligations. The table checker is a Lean definition;
 its existence alone does not establish that the Python byte serializer or
 runtime invokes it correctly.
+
+A [schedule-construction theorem](../../integration/torchlean/PoissonPTX/CellGridSchedule.lean)
+removes the need to supply a separate grid schedule when local cell executions
+are already available. It runs block zero's instructions, then block one's,
+and so on. At every stage, completed blocks retain their final states and
+unscheduled blocks retain their initial states. Every projected history equals
+the original local history, including barrier arrivals and completions.
+
+[Source lifting](../../integration/torchlean/PoissonPTX/CellGridLiftSources.lean)
+adds the source block to each local writer index. This preserves the original
+byte equalities and barrier conditions. The resulting
+[grid-existence theorem](../../integration/torchlean/PoissonPTX/CellGridExists.lean)
+takes supplied admitted local cell executions with common entry arguments;
+it assumes neither a grid execution nor expected intermediate results.
+The [nonzero regression](../../integration/torchlean/PoissonPTX/CellGridExistsChecks.lean)
+constructs this grid and the following assembly launch, whose final value is
+eight. It reuses checked cell evidence rather than recomputing the large witness.
+Serial scheduling witnesses existence only; the universal correctness theorem
+still permits arbitrary admitted instruction interleavings. Constructing local
+cell runs for arbitrary inputs remains open.
