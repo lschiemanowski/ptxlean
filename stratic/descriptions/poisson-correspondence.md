@@ -970,3 +970,23 @@ execution. Combining it with assembly constructs a returning assembly launch
 without an extra grid-execution premise. The nonzero synthetic cell exercises
 this construction and again produces eight. General existence of those local
 cell runs for arbitrary inputs remains open.
+
+The fresh-residual connection must consume the operator's actual published
+bytes. Its subtraction computes the right-hand side minus the just-assembled
+operator result, preserving the same optional boundary mask. The right-hand
+side must survive both the cell and assembly launches: its region lies below
+the cell-output region and is disjoint from assembly outputs. These geometric
+conditions must imply preservation from actual stores, rather than assume the
+loaded values. Residual input and output bounds and byte-source constraints
+remain explicit. This establishes a rounded binary64 residual computation;
+an exact-real residual bound and the solver's stopping logic remain distinct.
+
+The connection proves preservation of each right-hand-side word from the actual
+cell and assembly store addresses. The residual arena then consumes precisely
+the assembly publication, and its admitted fetched subtraction publishes the
+original right-hand side minus the proved rounded operator value. Both masked
+and unmasked assembly are covered. A constructed synthetic cell, assembly and
+residual example publishes one minus eight, namely minus seven, without an
+assumed intermediate value. The subtraction has its own valid execution and
+source witness. Exact-real residual certification, reductions and solver
+stopping still require their separate connections.

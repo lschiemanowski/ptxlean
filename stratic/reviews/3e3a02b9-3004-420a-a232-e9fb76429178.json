@@ -1,0 +1,105 @@
+{
+  "id": "3e3a02b9-3004-420a-a232-e9fb76429178",
+  "base": "bca821101c72a1bf574f2a18a791008e2412f640",
+  "contentTree": "bccb17a2b064d5197a2b224ed3734d92b461a919",
+  "reviewer": "Codex",
+  "summary": "Connect actual cell and assembly publication to the fresh-residual kernel, deriving right-hand-side preservation and rounded subtraction.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Derive right-hand-side word preservation from actual store bounds, compose operator publication with the residual input arena, and prove actual admitted subtraction outputs the rounded residual. Add complete proof links and constructed nonzero regression."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Explain the actual operator-to-residual connection while preserving exact-real norm, reductions, solver stopping, serialization and hardware boundaries."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The public reference, mathematical equations, setup, emitted numerical order and input validation are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The new physical connection contains only address and extent conditions; input preservation and operator values are derived. Original residual instruction and source semantics are unchanged. Rounded subtraction is not presented as an exact-real norm bound or complete PCG proof."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "bccb17a2b064d5197a2b224ed3734d92b461a919",
+      "method": "Sequential limited checks of four new Lean modules; full exact theorem dependency audit; pinned/source guards; saved PTX bindings and receipt hashes; Stratic validation and manual contract review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 with 16 dependency pins. All heavy checks bounded by a 6 GiB cgroup, no swap and 150 percent CPU quota. No GPU execution or paid model call.",
+      "evidence": "4661 exact declaration dependency reports, only permitted standard Lean axioms; 558 guarded Lean sources. Actual-store input preservation, physical residual layout, rounded residual correspondence and constructed regression checked sequentially. Manual review follows the right-hand-side bytes through both preceding publications, maps the residual applied-input address to the actual assembly output, uses the original residual source constraints and physical output ownership, and retains optional assembly masking. The nonzero regression constructs the grid, returning assembly and actual residual execution, deriving one minus eight equals minus seven from checked cell evidence. No result-value assumption is introduced. Saved binding checks pass for 30 layouts, 720 contraction blocks and 630 shared stores; all refreshed receipt hashes match. README unchanged and Stratic valid with equal final snapshots. Existing Python runtime tests, full registered build and legacy interpreter checks were not repeated because emitted kernels/runtime are unchanged. General cell-grid existence, serialization, remaining solver/reduction instructions and host orchestration remain explicit, as do full PTX admission and CUDA/hardware boundaries.",
+      "tests": [],
+      "id": "ae7db3fd-ff55-4d9b-879a-a6b96ea7c10d",
+      "recordedAt": "2026-10-02T17:14:42.917Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T17:15:51.086Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-operator-composition.md",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyPreservation.lean",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGridResidual.lean",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGridResidualChecks.lean",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGridResidualInputs.lean",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed actual grid and candidate/source proofs, interleaved publication and assembly/reference composition, regression and audit registration, saved binding receipts and explanatory guide."
+    }
+  ]
+}

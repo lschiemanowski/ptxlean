@@ -294,3 +294,10 @@ only to witness existence; the correctness theorem still covers arbitrary
 admitted interleavings. Constructing the local cell runs for arbitrary inputs
 remains separate. The nonzero cell/assembly regression checks both constructed
 launches rather than assuming a grid execution.
+
+The fresh-residual subtraction consumes actual cell/assembly publication.
+Right-hand-side preservation follows from the preceding stores and disjoint
+physical arrays. The resulting binary64 residual equals that original
+right-hand side minus the rounded operator, with the same optional assembly
+mask. A constructed nonzero example covers all three stages. This is separate
+from exact-real residual certification, reduction order and solver stopping.

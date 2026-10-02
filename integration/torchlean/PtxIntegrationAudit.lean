@@ -1,3 +1,7 @@
+import PoissonPTX.AssemblyPreservation
+import PoissonPTX.CellGridResidualInputs
+import PoissonPTX.CellGridResidual
+import PoissonPTX.CellGridResidualChecks
 import PoissonPTX.CellGridSchedule
 import PoissonPTX.CellGridLiftSources
 import PoissonPTX.CellGridCandidates
@@ -5320,3 +5324,11 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellGrid.family_exists
 #print axioms PtxTorchLean.Poisson.PTX.CellGrid.ExistsChecks.nonzero_grid
 #print axioms PtxTorchLean.Poisson.PTX.CellGrid.ExistsChecks.nonzero_assembly
+
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_preserves_word
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.ResidualLayout
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Admitted.input_word64
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.ResidualLayout.rhs_preserved
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.residual_correspondence
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.ResidualChecks.residualArena
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.ResidualChecks.fresh_minus_seven

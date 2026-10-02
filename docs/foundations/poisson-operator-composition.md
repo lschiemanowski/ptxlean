@@ -130,3 +130,22 @@ eight. It reuses checked cell evidence rather than recomputing the large witness
 Serial scheduling witnesses existence only; the universal correctness theorem
 still permits arbitrary admitted instruction interleavings. Constructing local
 cell runs for arbitrary inputs remains open.
+
+The [fresh-residual connection](../../integration/torchlean/PoissonPTX/CellGridResidual.lean)
+continues from the actual assembled memory. Think of the right-hand side as an
+input vector that must survive while the operator is computed. Its bytes lie
+below the cell-output region and outside the assembly-output vector. Actual
+store addresses imply that both launches preserve those bytes; this is proved
+in [the layout connection](../../integration/torchlean/PoissonPTX/CellGridResidualInputs.lean)
+and [assembly preservation](../../integration/torchlean/PoissonPTX/AssemblyPreservation.lean).
+
+The residual kernel's source constraints then force its two input words to be
+the preserved right-hand side and the just-published operator result. Its
+subtraction follows the binary64 rule and writes a separate output vector.
+The theorem allows the same boundary mask as assembly. The
+[constructed regression](../../integration/torchlean/PoissonPTX/CellGridResidualChecks.lean)
+uses a right-hand side of one and the synthetic operator value eight, yielding
+minus seven through actual cell, assembly and residual instruction executions.
+It supplies neither an expected assembly word nor an expected residual word.
+This proves the rounded residual computation. Relating it to an exact-real
+norm bound, the reductions and the solver's stopping decision is separate.
