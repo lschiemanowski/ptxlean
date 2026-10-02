@@ -518,6 +518,17 @@ COUNTS['PtxTorchLean.Poisson.PTX.Assembly.EntryChecks'] = COUNTS.get('PtxTorchLe
 COUNTS['PtxTorchLean.Poisson.PTX.Assembly.Text'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly.Text', 0) + 3
 TARGETS.update(['PoissonPTX.ControlFlowWindow', 'PoissonPTX.ControlFlowSequence', 'PoissonPTX.AssemblyWindow', 'PoissonPTX.AssemblyPrologue', 'PoissonPTX.AssemblySetup', 'PoissonPTX.AssemblyMask', 'PoissonPTX.IndexedFrames', 'PoissonPTX.AssemblyOutput', 'PoissonPTX.AssemblyEntry', 'PoissonPTX.AssemblyEntryResult', 'PoissonPTX.ControlFlowWindowExists', 'PoissonPTX.AssemblyWindowExists', 'PoissonPTX.AssemblyInactive', 'PoissonPTX.AssemblyEntryExists', 'PoissonPTX.AssemblyEntryChecks', 'PoissonPTX.AssemblyEntryText'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly.Arena', 0) + 27
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly.Rows'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly.Rows', 0) + 4
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly.Snapshot'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly.Snapshot', 0) + 10
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly.ArenaChecks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly.ArenaChecks', 0) + 11
+COUNTS['PtxTorchLean.Poisson.PTX.Flow.Observed'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Observed', 0) + 20
+COUNTS['PtxTorchLean.Poisson.PTX.Flow.Parallel'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Parallel', 0) + 9
+COUNTS['PtxTorchLean.Poisson.PTX.Flow.Observed.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Observed.Checks', 0) + 17
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress', 0) + 5
+TARGETS.update(['PoissonPTX.AssemblyArena', 'PoissonPTX.AssemblyArenaSafety', 'PoissonPTX.AssemblyArenaValues', 'PoissonPTX.AssemblyRows', 'PoissonPTX.AssemblySnapshotPublication', 'PoissonPTX.AssemblyArenaChecks', 'PoissonPTX.ControlFlowObserved', 'PoissonPTX.ObservedMemoryFrame', 'PoissonPTX.ObservedReplay', 'PoissonPTX.ObservedExists', 'PoissonPTX.ObservedParallel', 'PoissonPTX.ObservedParallelReplay', 'PoissonPTX.ObservedChecks', 'PoissonPTX.AssemblyObservedAddress', 'PoissonPTX.AssemblyObservedStores', 'PoissonPTX.AssemblyParallelStores'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -587,7 +598,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks", "CellGatherChecks", "CellEntryChecks", "CellEntryProducerChecks", "CellEntryVisibilityChecks", "CellEntryRebaseChecks", "CellEntryJointChecks", "CellWholeChecks", "CellWholeZero", "AssemblyChecks", "AssemblyEntryChecks"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks", "CellGatherChecks", "CellEntryChecks", "CellEntryProducerChecks", "CellEntryVisibilityChecks", "CellEntryRebaseChecks", "CellEntryJointChecks", "CellWholeChecks", "CellWholeZero", "AssemblyChecks", "AssemblyEntryChecks", "AssemblyArenaChecks", "ObservedChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

@@ -408,3 +408,71 @@ the branch reaches 29. The unmasked entry then stores and returns. The masked
 entry first reads the node's boundary flag and selects zero when it is nonzero.
 [The checked examples](../../integration/torchlean/PoissonPTX/AssemblyEntryChecks.lean)
 run both paths with the same cancellation inputs used in the shorter loop study.
+
+## Physical arrays, ordered rows and observed reads
+
+Assembly access safety now follows from the physical array layout and the
+ordinary 256-thread node indexing. The arena contract specifies nonwrapping
+allocation, field alignment and extents, and the host layout's node-count bound.
+Initial index bytes must delimit ordered ranges inside the contribution table,
+and every contribution index must name an allocated cell value. These input
+conditions discharge the complete entry's memory premises and establish a
+returning execution for every active node. Distinct nodes have disjoint
+eight-byte output slots, including a nonzero arena base.
+
+The entry's stored value equals the ordered sum obtained by reading its index
+list and following those indices into the cell-value array, with optional
+boundary masking. Filtering an element-major list into one list per mesh node
+preserves the exact rounded scatter sum. The connection to a serialized mesh
+is an explicit input representation contract on ordered index lists; it does
+not assume an output sum. A mathematical publication theorem merges the actual
+output words of complete snapshot executions in any order containing every
+active node and preserves all other bytes. This theorem is still about snapshot
+executions; parallel read visibility is a separate obligation.
+
+The branching execution model also records freely chosen read bits: eight-byte
+floating-point loads/stores and four-byte index loads. Arbitrary thread
+interleavings project to each thread's actual fetched control flow. Necessary
+byte-source checks relate read bytes to initialization or actual recorded
+stores. When all recorded stores are disjoint from the read locations, these
+checks force the initial read bits and recover the complete snapshot execution,
+including loops and stores. The proof maintains local memory agreement across
+writes instead of replacing a thread's memory by an assumed snapshot.
+
+For assembly, store ownership is already proved independently of any read
+choices. The actual instruction graph preserves the parameter base, launch
+index and final address calculation, so every recorded write has its owner's
+node address. This holds for whole interleavings and implies that distinct
+nodes' writes are disjoint. Deriving the corresponding read footprints from
+source-admitted offset/index loads remains necessary before the generic replay
+result supplies unconditional assembly parallel correspondence. Its separation
+premise is an explicit intermediate obligation, not an established property of
+all assembly reads.
+
+Kernel-checked examples exercise two nodes at a nonzero base, masked and
+unmasked entry executions, two publication orders, and ordered-scatter equality.
+A separate observed execution records an index load, a nonzero floating-point
+load and a disjoint output store, with compatible byte sources and successful
+replay. The finite source checker rejects a forged floating-point read.
+
+[The arena contract](../../integration/torchlean/PoissonPTX/AssemblyArena.lean)
+contains storage facts and initial integer-table conditions.
+[Its safety theorem](../../integration/torchlean/PoissonPTX/AssemblyArenaSafety.lean)
+discharges all memory premises of the complete entry. Arbitrary incoming
+register contents are allowed: the actual prologue initializes the registers
+that matter.
+
+[Ordered rows](../../integration/torchlean/PoissonPTX/AssemblyRows.lean)
+explain why grouping contributions by node does not change addition order.
+For locations `(0,0), (1,1), (0,2), (1,3), (0,4)`, node zero receives indices
+`[0,2,4]` and node one receives `[1,3]`. Each node keeps its original order.
+[Snapshot publication](../../integration/torchlean/PoissonPTX/AssemblySnapshotPublication.lean)
+then combines the one-word updates; it does not prove their input visibility.
+
+[Observed execution](../../integration/torchlean/PoissonPTX/ControlFlowObserved.lean)
+allows a load to propose bits. [Source replay](../../integration/torchlean/PoissonPTX/ObservedParallelReplay.lean)
+uses recorded byte sources and separation to establish whether those bits can
+come from initialization. [Assembly ownership](../../integration/torchlean/PoissonPTX/AssemblyParallelStores.lean)
+already fixes every writer's address without using any proposed read value.
+The next obligation is to establish the read footprints in the same joint
+history, in order: first the offsets, then contribution indices, then values.

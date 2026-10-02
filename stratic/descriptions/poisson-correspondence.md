@@ -787,3 +787,47 @@ Lean instruction lists. Kernel-checked full-entry examples exercise nonzero
 cancellation in two orders, boundary masking, padded return with no allocation,
 and rejection of invalid offset, value and output accesses. These checks and
 the instruction proofs are distinct from testing or validating GPU hardware.
+
+Assembly access safety now follows from the physical array layout and the
+ordinary 256-thread node indexing. The arena contract specifies nonwrapping
+allocation, field alignment and extents, and the host layout's node-count bound.
+Initial index bytes must delimit ordered ranges inside the contribution table,
+and every contribution index must name an allocated cell value. These input
+conditions discharge the complete entry's memory premises and establish a
+returning execution for every active node. Distinct nodes have disjoint
+eight-byte output slots, including a nonzero arena base.
+
+The entry's stored value equals the ordered sum obtained by reading its index
+list and following those indices into the cell-value array, with optional
+boundary masking. Filtering an element-major list into one list per mesh node
+preserves the exact rounded scatter sum. The connection to a serialized mesh
+is an explicit input representation contract on ordered index lists; it does
+not assume an output sum. A mathematical publication theorem merges the actual
+output words of complete snapshot executions in any order containing every
+active node and preserves all other bytes. This theorem is still about snapshot
+executions; parallel read visibility is a separate obligation.
+
+The branching execution model also records freely chosen read bits: eight-byte
+floating-point loads/stores and four-byte index loads. Arbitrary thread
+interleavings project to each thread's actual fetched control flow. Necessary
+byte-source checks relate read bytes to initialization or actual recorded
+stores. When all recorded stores are disjoint from the read locations, these
+checks force the initial read bits and recover the complete snapshot execution,
+including loops and stores. The proof maintains local memory agreement across
+writes instead of replacing a thread's memory by an assumed snapshot.
+
+For assembly, store ownership is already proved independently of any read
+choices. The actual instruction graph preserves the parameter base, launch
+index and final address calculation, so every recorded write has its owner's
+node address. This holds for whole interleavings and implies that distinct
+nodes' writes are disjoint. Deriving the corresponding read footprints from
+source-admitted offset/index loads remains necessary before the generic replay
+result supplies unconditional assembly parallel correspondence. Its separation
+premise is an explicit intermediate obligation, not an established property of
+all assembly reads.
+
+Kernel-checked examples exercise two nodes at a nonzero base, masked and
+unmasked entry executions, two publication orders, and ordered-scatter equality.
+A separate observed execution records an index load, a nonzero floating-point
+load and a disjoint output store, with compatible byte sources and successful
+replay. The finite source checker rejects a forged floating-point read.

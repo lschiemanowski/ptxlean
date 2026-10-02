@@ -1,0 +1,153 @@
+{
+  "id": "4a198bfa-fcb4-402c-8002-6eca04701b83",
+  "base": "a3ef50097f32213866015cb1efecb8c04197a66d",
+  "contentTree": "768ebfbbf89ab46c9f9ad296f45c33332d0a2892",
+  "reviewer": "Codex",
+  "summary": "Derive physical assembly safety and ordered snapshot publication; add branching observed execution, source replay and actual concurrent store ownership.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Discharge complete entry access premises from physical arrays. Relate physical row folds to ordered scatter, publish disjoint snapshot outputs, and develop actual observed histories and source replay. Assembly stores are derived from a control/address invariant independently of proposed read bits."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Clarify the boundary between complete snapshot assembly, source-based replay and the remaining proof of actual read footprints in one joint history."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No equation, emitted kernel, TorchLean calculation, README or host solver changed."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Reviewed initial memory and ordered-index contracts, nonwrapping launch/array arithmetic, node output ownership, preservation across disjoint writes, and source admission separately from candidate execution. Full control graph cases derive output addresses with arbitrary observed loads. The generic replay separation premise remains visibly uninstantiated for assembly reads; no hardware or full PTX admission claim was added."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "768ebfbbf89ab46c9f9ad296f45c33332d0a2892",
+      "method": "Complete registered Lean build; fresh AssemblyArenaChecks and ObservedChecks kernel regressions; exact dependency audit; source guards and pins; complete emitted assembly/cell binding on saved runs; 27 Python Poisson tests; Stratic validation and manual contract review.",
+      "outcome": "pass",
+      "environment": "Lean 4.34.0; 16 verified dependency pins; CPU proof checks and saved GPU artifacts, without GPU reruns or paid calls.",
+      "evidence": "4372 exact dependency reports, only standard Lean axioms; 492 guarded files; 16 pins. Complete registered build and fresh nonzero-base two-node assembly/publication, observed source/replay and forged-read rejection regressions pass. Physical arrays discharge full entry memory conditions; ordered rows preserve scatter order; arbitrary snapshot publication orders preserve node values. Arbitrary candidate interleavings project/replay under byte-source compatibility and explicit access separation. Actual assembly store addresses and distinct-node ownership are derived independently of read choices. 27 Python tests and all saved bindings pass. 450 receipt source hashes match; final snapshot differs from the checked source snapshot only in verified generated receipts; final before/after snapshots match. README unchanged, Stratic valid, git diff clean. Source-admitted assembly read footprints, complete parallel publication and solver/launch correspondence remain open",
+      "tests": [],
+      "id": "f783a75a-35f1-450d-8124-25f90de29363",
+      "recordedAt": "2026-10-02T12:51:01.624Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T12:52:06.672Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyArena.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyArenaChecks.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyArenaSafety.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyArenaValues.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyObservedAddress.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyObservedStores.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyParallelStores.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyRows.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblySnapshotPublication.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowObserved.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedChecks.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedExists.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedMemoryFrame.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedParallel.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedParallelReplay.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedReplay.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed supporting physical array geometry, ordered row/scatter and snapshot publication proofs, observed branching/interleaving semantics, source replay, store-address invariants, build/audit registration, regressions, receipts or explanatory documentation."
+    }
+  ]
+}

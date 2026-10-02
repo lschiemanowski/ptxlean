@@ -22,7 +22,8 @@
     "Derive actual gather-store coverage and byte ownership from entry execution; derive later read visibility from real barrier order and preservation by the body.",
     "Compose actual gathering, barrier visibility and arithmetic into a published cell tensor through proved source rebasing; derive prefix input admission from joint histories and retain general execution existence.",
     "Connect complete cell execution to its represented operator and prove ordered assembly-loop correctness and existence; keep concurrent assembly publication and launch composition explicit.",
-    "Prove complete assembly entry output and execution existence, binding all emitted instructions while retaining concurrent publication and launch visibility obligations."
+    "Prove complete assembly entry output and execution existence, binding all emitted instructions while retaining concurrent publication and launch visibility obligations.",
+    "Derive assembly layout safety and ordered snapshot publication; prove observed-store ownership and generic source replay while keeping assembly read footprints explicit."
   ],
   "realization": "implemented",
   "links": [
@@ -99,5 +100,5 @@
       }
     }
   ],
-  "remaining": "Arbitrary-input cell execution existence, external coefficient generation/serialization, complete PTX memory admission, CUDA host visibility, host/launch composition, concurrent assembly publication, reductions and remaining solver instructions remain open."
+  "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, complete PTX memory admission, CUDA host visibility, host/launch composition, source-admitted assembly read footprints and parallel publication, reductions and remaining solver instructions remain open."
 }
