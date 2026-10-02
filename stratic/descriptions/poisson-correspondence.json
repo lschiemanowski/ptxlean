@@ -38,7 +38,9 @@
     "Derive actual gather-store occurrence, address, value and disjoint ownership from the completed entry run to support first-barrier publication.",
     "Derive actual gather-store coverage, padding exclusion, physical addresses, copied values and disjoint byte ownership; connect recorded values to TorchLean inputs without assuming the store list.",
     "Derive actual gather-store ordering before the first barrier and use necessary byte-source rules to establish continuation visibility without assuming read values.",
-    "Prove that actual arithmetic/output continuation reads see gathered words: derive first-barrier ordering and slot preservation; retain prefix input-source restriction and numerical source rebasing as open."
+    "Prove that actual arithmetic/output continuation reads see gathered words: derive first-barrier ordering and slot preservation; retain prefix input-source restriction as open.",
+    "Rebase continuation sources to a proved publication of actual gathered words, and connect that input-byte view to TorchLean gathering without changing execution state.",
+    "Connect actual gather execution through proved source rebasing to the arithmetic result and order-independent published cell tensor, with decoded input coefficient tables and TorchLean connectivity gathering."
   ],
   "realization": "partial",
   "remaining": "The concurrent entry and actual gather-store occurrence, values and byte ownership are proved. Whole-entry/body composition still needs joint-history source restriction and first-barrier visibility of those records to later arithmetic reads. Arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open.",
@@ -1720,6 +1722,90 @@
         "path": "integration/torchlean/PoissonPTX/CellEntryVisibilityChecks.lean",
         "passage": {
           "quote": "theorem stale_read_rejected :\n    \u00ac(Concurrent.Visibility.Compatible initial (result.events++[read 0x5a5a5a5a5a5a5a5a]) source \u2227\n      Concurrent.Visibility.Performed (result.events++[read 0x5a5a5a5a5a5a5a5a]) source)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every recorded gather store agrees with this view\nbyte for byte, and bytes outside the gathered slots retain their original\ninitialization."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryPublication.lean",
+        "passage": {
+          "quote": "theorem publication_sound (small : width*width\u226432) :\n    Concurrent.SourceCut.Published memory (publication width small bases memory t) events"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A source-rebasing theorem carries the joint history into the arithmetic proof."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SourceCut.lean",
+        "passage": {
+          "quote": "theorem compatible (publication : Published initial snapshot before) (ordered : Ordered before)\n    (whole : Visibility.Compatible initial (before++after) original)\n    (performed : Visibility.Performed (before++after) original) :\n    Visibility.Compatible snapshot after (source before.length original)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "the continuation also retains its performed-write constraints."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SourceCut.lean",
+        "passage": {
+          "quote": "theorem performed (separate : Separate before after)\n    (whole : Visibility.Compatible initial (before++after) original)\n    (performs : Visibility.Performed (before++after) original) :\n    Visibility.Performed after (source before.length original)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The rebased shared-input tensor equals TorchLean's connectivity gather when\ninitial index and source arrays represent that input."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryPublishedTensor.lean",
+        "passage": {
+          "quote": "theorem publication_torchlean (o : Operator) (values : Array Float)\n    (run : Runs cfg (CellPrologue.threadContext bases cell) (program o.nodes.size cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (initial : \u2200 u, (s.core.lanes u).global=memory .global)\n    (words : Concurrent.Visibility.Compatible memory events chosen)\n    (indexSources : IndexSources.Compatible (memory .global) events indices selected)\n    (pcs : \u2200 u, (s.core.lanes u).pc=0) (done : \u2200 u, (t.core.lanes u).pc=21)\n    (positive : 0<o.nodes.size) (small : o.nodes.size*o.nodes.size\u226432)\n    (space : (bases .shared).toNat+7*o.nodes.size*o.nodes.size*8\u22642^64)\n    (layout : \u2200 u : Fin 32, u.val<o.nodes.size*o.nodes.size \u2192\n      CellGather.Layout (Local.beforeGather (CellPrologue.threadContext bases cell u) o.nodes.size (lane s u))\n        o.nodes.size cells source)\n    (connectivity : \u2200 u : Fin 32, u.val<o.nodes.size*o.nodes.size \u2192 \u2200 k<o.nodes.size*o.nodes.size,\n      (read32 (s.core.lanes u).global ((s.core.lanes u).globalStart+cells.toNat+\n        (cell.toNat*(o.nodes.size*o.nodes.size)+k)*4)).toNat=(o.mesh.cells[cell.toNat]!)[k]!)\n    (contents : \u2200 (u : Fin 32) (active : u.val<o.nodes.size*o.nodes.size), \u2200 k<(layout u active).pointCount,\n      decode (read64 (s.core.lanes u).global ((s.core.lanes u).globalStart+source.toNat+k*8))=values[k]!) :\n    Concurrent.CellMiddle.Numeric.initialTensor o.nodes.size bases\n      (publication o.nodes.size small bases memory t) .shared 0=Poisson.gather o values cell.toNat"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Combining this fact with the existing\narithmetic proof establishes the actual result register and the published\nwhole-cell output tensor, independently of output-record publication order."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryCorrespondence.lean",
+        "passage": {
+          "quote": "theorem cell_tensor (o : Operator) (values : Array Float)\n    (run : Runs cfg (CellPrologue.threadContext bases cell) (program o.nodes.size cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (initial : \u2200 u, (s.core.lanes u).global=memory .global)\n    (words : Concurrent.Visibility.Compatible memory events chosen)\n    (indexSources : IndexSources.Compatible (memory .global) events indices selected)\n    (pcs : \u2200 u, (s.core.lanes u).pc=0) (done : \u2200 u, (t.core.lanes u).pc=21)\n    (positive : 0<o.nodes.size) (small : o.nodes.size*o.nodes.size\u226432)\n    (space : (bases .shared).toNat+7*o.nodes.size*o.nodes.size*8\u22642^64)\n    (layout : \u2200 u : Fin 32, u.val<o.nodes.size*o.nodes.size \u2192\n      CellGather.Layout (Local.beforeGather (CellPrologue.threadContext bases cell u) o.nodes.size (lane s u))\n        o.nodes.size cells source)\n    (connectivity : \u2200 u : Fin 32, u.val<o.nodes.size*o.nodes.size \u2192 \u2200 k<o.nodes.size*o.nodes.size,\n      (read32 (s.core.lanes u).global ((s.core.lanes u).globalStart+cells.toNat+\n        (cell.toNat*(o.nodes.size*o.nodes.size)+k)*4)).toNat=(o.mesh.cells[cell.toNat]!)[k]!)\n    (contents : \u2200 (u : Fin 32) (active : u.val<o.nodes.size*o.nodes.size), \u2200 k<(layout u active).pointCount,\n      decode (read64 (s.core.lanes u).global ((s.core.lanes u).globalStart+source.toNat+k*8))=values[k]!)\n    (lo : 2\u2264o.nodes.size) (hi : o.nodes.size\u22645)\n    (body : Concurrent.WithTail.Runs cfg bodyContext (Concurrent.CellConsumer.WithOutput.front o.nodes.size)\n      (CellFinal.tail o.nodes.size output) (continuation t) later final)\n    (reset : s.core.barrier=Ptx.Barrier.reset generation)\n    (bounds : Concurrent.CellConsumer.WithOutput.OutputBounds o.nodes.size output (continuation t))\n    (offset : Concurrent.CellConsumer.Coefficients.extent o.nodes.size\u2264output.toNat)\n    (joint : Concurrent.Visibility.Compatible memory (events++later) allSources)\n    (performed : Concurrent.Visibility.Performed (events++later) allSources)\n    (permutation : order.Perm later)\n    (finished : \u2200 u : Fin 32, u.val<o.nodes.size*o.nodes.size \u2192\n      (Concurrent.CellConsumer.WithOutput.front o.nodes.size).length+5\u2264(final.core.lanes u).pc) :\n    Concurrent.CellConsumer.WithOutput.Publication.tensor o.nodes.size (bases .global) (cell.setWidth 64) output\n      (Concurrent.GlobalPublication.publish outputMemory order)=localAction\n        (Concurrent.CellMiddle.Numeric.initialTensor o.nodes.size bases memory .global 0)\n        (Concurrent.CellMiddle.Numeric.initialTensor o.nodes.size bases memory .global (o.nodes.size*o.nodes.size*8+32))\n        (Concurrent.CellMiddle.Numeric.initialTensor o.nodes.size bases memory .global (2*(o.nodes.size*o.nodes.size*8+32)))\n        (Poisson.gather o values cell.toNat)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The rebased source contract is\ninstantiated on this real execution."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryRebaseChecks.lean",
+        "passage": {
+          "quote": "theorem rebased_sources :\n    Concurrent.Visibility.Compatible (publication 2 (by decide) bases initial result.state)\n      bodyResult.events (Concurrent.SourceCut.source result.events.length sources) \u2227\n    Concurrent.Visibility.Performed bodyResult.events (Concurrent.SourceCut.source result.events.length sources)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The finite compatibility checker\nproves the existing per-byte relation; performed-write checks remain separate."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/SourceCheck.lean",
+        "passage": {
+          "quote": "theorem sound (checked : Checked initial events source) : Visibility.Compatible initial events source"
         }
       }
     }

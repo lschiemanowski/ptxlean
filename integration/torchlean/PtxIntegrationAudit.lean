@@ -1,3 +1,10 @@
+import PoissonPTX.SourceCut
+import PoissonPTX.SourceCheck
+import PoissonPTX.CellEntryPublication
+import PoissonPTX.CellEntryPublishedTensor
+import PoissonPTX.CellEntryRebase
+import PoissonPTX.CellEntryCorrespondence
+import PoissonPTX.CellEntryRebaseChecks
 import PoissonPTX.BarrierValue
 import PoissonPTX.CellEntryHistory
 import PoissonPTX.CellEntryVisibility
@@ -4332,3 +4339,49 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.append_complete
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.synchronize_history
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.ordinary_history
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.Covered
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.Published
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.source
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.Ordered
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.Separate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.left
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.right
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.across
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.initial_unchanged
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.across_right
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCheck.byteCompatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCheck.Checked
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.SourceCheck.sound
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.publication
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.publication_lane
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.publication_word
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.publication_sound
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.publication_ordered
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.before_ids
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.publication_torchlean
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.body_sources
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.body_result
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.continued_cell
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.published_result
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.cell_result
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.cell_tensor
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.bodyStart
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.bodyContext
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.choose
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.candidate
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.bodyResult
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.executed
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.actual_body
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.reads
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.whole
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.sources
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.checked
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.compatible
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.shared_read_at
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.performed
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.snapshot_sound
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.rebased_sources
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.RebaseChecks.cross_lane_read

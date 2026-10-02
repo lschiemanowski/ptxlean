@@ -217,11 +217,41 @@ records; every covering record supplies the same proved byte.
 The theorem takes actual prefix and continuation runs. It still takes the
 prefix input-source constraints separately from the joint history's constraints.
 Restricting those inputs in the presence of later global stores remains open,
-as does translating gathered producers into the body numerical theorem's
-initial-byte view. The continuation changes only the instruction-counter origin;
+The numerical proof now uses a derived initial-byte view, as explained below. The continuation changes only the instruction-counter origin;
 it does not install a convenient shared snapshot.
 
 [Visibility checks](../../integration/torchlean/PoissonPTX/CellEntryVisibilityChecks.lean)
 exercise actual producer ordering on the nonzero 32-thread prefix, force a later
 observation to see its gathered minus-two bits, and reject stale bytes. The
 appended observation is a memory-interface test, not a fetched arithmetic run.
+
+## Connecting visibility to the numerical result
+
+The arithmetic theorem calls its input memory “initial.” At the start of the
+whole kernel, shared memory has not yet been filled; at the start of arithmetic,
+its input is what the gather just published. These are different proof views.
+
+[CellEntryPublication](../../integration/torchlean/PoissonPTX/CellEntryPublication.lean)
+builds the second view from actual post-gather lane memories. It proves agreement
+with every gathered store byte and preservation of untouched bytes. This is an
+accounting view, not a replacement of the running threads' memories.
+
+[SourceCut](../../integration/torchlean/PoissonPTX/SourceCut.lean) converts the
+joint byte-source assignment: prefix stores become this view's initial bytes,
+and later stores retain their identities with shifted positions. The real
+barrier excludes stale initialization on covered bytes. The body's separation
+from gathered slots preserves its subsequent performed-write conditions.
+
+[CellEntryCorrespondence](../../integration/torchlean/PoissonPTX/CellEntryCorrespondence.lean)
+then connects the actual numerical result and published cell-output tensor to
+TorchLean's gather and cell calculation. Coefficients are read from their initial
+arena tables. Output records may be published in any order. The proof still
+takes prefix and body executions separately, and separately admits the prefix's
+input sources. Deriving both from one full-entry run remains open.
+
+[The rebasing regression](../../integration/torchlean/PoissonPTX/CellEntryRebaseChecks.lean)
+executes lane two through a coefficient load and a shared load after the actual
+nonzero gather. The latter reads lane zero's minus-two word. Lane two's local
+bytes at that address are still the old pattern; the checked source account,
+not a fabricated memory update, establishes the new value. This partial witness
+exercises both source contracts without claiming complete-run existence.

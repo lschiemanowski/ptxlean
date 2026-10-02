@@ -641,7 +641,7 @@ a unique chosen event are unnecessary assumptions.
 This modular theorem still requires the prefix's input-source constraints as
 well as compatible and performed sources for the concatenated history. Deriving
 that prefix restriction in the presence of later global output stores is still
-open. So is adapting the existing body numerical theorem's initial-byte view to
+open. The body numerical theorem now uses an initial-byte view proved from
 these actual gathered producers. Neither condition is hidden in a desired read
 value. Whole-entry execution composition, general execution existence, assembly,
 reductions and solver/launch composition remain separate obligations.
@@ -651,3 +651,49 @@ real barrier completion. An appended shared observation must see the gathered
 minus-two bit pattern, and the old repeated-byte pattern is rejected. This
 observation check exercises the memory interface; it does not claim a fetched
 arithmetic execution for the appended test record.
+
+To compose the numerical result, the continuation's proof may use a starting
+byte view assembled from completed gather stores. This view must be proved to
+agree with every recorded prefix store and to preserve untouched bytes. Source
+rebasing must map those prefix-store origins to initialization, retain later
+store origins with corrected event indices, and preserve both compatibility and
+performed-write constraints. The actual execution state is not replaced. The
+assembled input tensor must agree with TorchLean gathering under explicit input
+array representation and memory-layout conditions.
+
+The arithmetic proof's starting byte view is now constructed from the real
+post-gather lane memories. Every recorded gather store agrees with this view
+byte for byte, and bytes outside the gathered slots retain their original
+initialization. The view is a description used in the proof; the actual lane
+states, including their old copies of other lanes' shared bytes, are unchanged.
+
+A source-rebasing theorem carries the joint history into the arithmetic proof.
+A byte supplied by a real pre-barrier store becomes an initial byte of that
+proof view. Sources from later stores keep their byte offsets and receive
+shifted event positions. A read which originally chose initialization cannot
+cover an earlier performed gather store. Later shared writes are disjoint from
+those stores, so the continuation also retains its performed-write constraints.
+No desired read value or completed tensor is a premise of this rebasing.
+
+The rebased shared-input tensor equals TorchLean's connectivity gather when
+initial index and source arrays represent that input. Cell and lane coordinates
+are derived from the launch context. Combining this fact with the existing
+arithmetic proof establishes the actual result register and the published
+whole-cell output tensor, independently of output-record publication order.
+Its coefficient tensors are the decoded initial arena tables. Relating those
+tables to a particular operator setup remains an input representation task;
+this theorem does not certify how an external host generated the tables.
+
+The composition currently takes the actual prefix and actual continuation runs
+separately, and still requires the prefix's input-source constraints in addition
+to the joint history's constraints. A single full-entry execution and its
+derived input-source restriction remain open. The numerical connection itself
+no longer assumes gathered shared memory at the arithmetic entry.
+
+A nonzero regression continues the actual Q1 entry state through lane two's
+first coefficient and shared-input loads. Checked sources make it read lane
+zero's minus-two word although lane two's own local shared bytes at that address
+still contain the old repeated-byte pattern. The rebased source contract is
+instantiated on this real execution. This is a partial body witness, not general
+existence of a complete cell or solver run. The finite compatibility checker
+proves the existing per-byte relation; performed-write checks remain separate.

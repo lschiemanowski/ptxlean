@@ -1,0 +1,117 @@
+{
+  "id": "014d463d-6382-4119-9812-59b3821b8a44",
+  "base": "00d56b425005079af73c0bae3253db2c5103df63",
+  "contentTree": "accc2dc1e5fb539ae9ebda465ce7cf60572c0e12",
+  "reviewer": "Codex",
+  "summary": "Compose real gather execution with arithmetic and published TorchLean cell outputs through proved source rebasing.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Derive a publication from actual gathered stores, preserve byte sources across its barrier cut, and connect the numerical and published cell results to TorchLean gathering. Keep single-entry composition and prefix source restriction open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Record modular cell composition with decoded input coefficient tables; do not claim complete solver instruction correspondence or arbitrary-input existence."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No equation, TorchLean algorithm, GPU kernel or host solver change. The entry proof establishes a stronger implementation boundary without changing numerical policy."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Source rebasing changes only the proof view, not executed states. Published-byte and untouched-byte obligations are proved from records. The necessary per-byte compatibility relation has a sound finite checker; performed constraints are independent. A nonzero fetched cross-lane continuation has checked original and rebased sources."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "accc2dc1e5fb539ae9ebda465ce7cf60572c0e12",
+      "method": "Complete registered Lean build; fresh CellEntryRebaseChecks; exact axiom/source audit; 24 Poisson checker tests; saved PTX bindings and source/Stratic review",
+      "outcome": "pass",
+      "environment": "Pinned Lean toolchain, 16 locked dependencies, local CPU proof checks and existing saved GPU artifacts; no GPU rerun",
+      "evidence": "3866 exact dependency reports use only standard Lean axioms; 420 guarded files and 16 pins. A nonzero fetched cross-lane continuation checks original and rebased sources while retaining stale local bytes. Actual publication and TorchLean gather imply register and full-cell tensor results. All 30 saved layouts and 90 prefixes bind; all 306 source hashes, study links and whitespace checks pass; Stratic validates; README unchanged. Prefix source restriction and single-entry composition remain open. The initial verification was stopped after excessive repeated elaboration in the new regression; explicit opaque elaboration boundaries and source parameters fixed it without changing assertions or using unchecked evaluation. This result records the complete successful rerun.",
+      "tests": [],
+      "id": "50f6887d-fa69-4e71-8b6c-5e6bf0e5f00b",
+      "recordedAt": "2026-10-02T09:32:51.661Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T09:33:48.206Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryCorrespondence.lean",
+      "reason": "Kernel-checked source rebasing, actual publication, tensor connection or nonzero regression. All input representation and modular execution conditions remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryPublication.lean",
+      "reason": "Kernel-checked source rebasing, actual publication, tensor connection or nonzero regression. All input representation and modular execution conditions remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryPublishedTensor.lean",
+      "reason": "Kernel-checked source rebasing, actual publication, tensor connection or nonzero regression. All input representation and modular execution conditions remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryRebase.lean",
+      "reason": "Kernel-checked source rebasing, actual publication, tensor connection or nonzero regression. All input representation and modular execution conditions remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryRebaseChecks.lean",
+      "reason": "Kernel-checked source rebasing, actual publication, tensor connection or nonzero regression. All input representation and modular execution conditions remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/SourceCheck.lean",
+      "reason": "Kernel-checked source rebasing, actual publication, tensor connection or nonzero regression. All input representation and modular execution conditions remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/SourceCut.lean",
+      "reason": "Kernel-checked source rebasing, actual publication, tensor connection or nonzero regression. All input representation and modular execution conditions remain explicit."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Align audit registration, exact bindings and receipts, study guide and Stratic contracts with the modular gathered cell correspondence."
+    }
+  ]
+}

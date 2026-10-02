@@ -139,6 +139,9 @@ body numerical theorem, including a common account of input read sources.
 Actual gather-store records are also derived from that run: every active lane
 writes, padding lanes do not, and each record has the proved source word at its
 own disjoint shared slot. Real first-barrier arrivals and continuation slot preservation now establish
-what later arithmetic reads see. The numerical theorem still needs its input-byte
-view connected to those producers; the prefix input-source argument also needs
-restriction from the whole history with global output stores.
+what later arithmetic reads see. The numerical theorem now uses a byte view derived from those producers,
+with a proved change of source accounting. Its actual result and published
+whole-cell tensor use TorchLean connectivity gathering and decoded coefficient
+tables. The prefix input-source argument still needs restriction from the whole
+history with global output stores, and a single full-entry execution remains
+to be composed. No convenient shared bytes are installed in the execution.
