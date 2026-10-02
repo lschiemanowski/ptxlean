@@ -34,10 +34,12 @@
     "Gather through an actual four-byte unsigned connectivity load and eight-byte value load/store, with distinct bounds and preserved entry registers.",
     "Prove the twelve-step active gather from four-byte connectivity and eight-byte source storage, derive access safety from array bounds, preserve setup registers and connect its stored bits to TorchLean input gathering; joint-history continuation visibility remains open.",
     "Justify concurrent four-byte connectivity reads against actual store bytes and derive read-only inputs before composing entry execution and first-barrier visibility; do not assume the gathered answer.",
-    "Derive original input reads, local gather results, collective barrier completion and arithmetic-entry registers from the concurrent twenty-one-instruction prefix; retain joint-history continuation visibility as the next obligation."
+    "Derive original input reads, local gather results, collective barrier completion and arithmetic-entry registers from the concurrent twenty-one-instruction prefix; retain joint-history continuation visibility as the next obligation.",
+    "Derive actual gather-store occurrence, address, value and disjoint ownership from the completed entry run to support first-barrier publication.",
+    "Derive actual gather-store coverage, padding exclusion, physical addresses, copied values and disjoint byte ownership; connect recorded values to TorchLean inputs without assuming the store list."
   ],
   "realization": "partial",
-  "remaining": "The concurrent twenty-one-instruction entry derives original input bytes, the gathered per-lane store, barrier completion and arithmetic launch registers. Whole-entry/body composition still needs joint-history source restriction and visibility of the gathered stores to later reads. Arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open.",
+  "remaining": "The concurrent entry and actual gather-store occurrence, values and byte ownership are proved. Whole-entry/body composition still needs joint-history source restriction and first-barrier visibility of those records to later arithmetic reads. Arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open.",
   "links": [
     {
       "kind": "implementation",
@@ -1560,6 +1562,90 @@
         "path": "integration/torchlean/PoissonPTX/CellEntryChecks.lean",
         "passage": {
           "quote": "theorem no_early_release :\n    (execute cfg ctx kernel choose (schedule.take (schedule.length-1)) start).map\n      (fun out => (out.state.core.barrier.generation,(out.state.core.lanes 0).pc))=some (0,20)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The producer theorem now derives a store record for every completed active lane."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryProducers.lean",
+        "passage": {
+          "quote": "theorem producer (owner : Fin 32) (active : owner.val<width*width) :\n    \u2203 (position : Nat) (access : Concurrent.Access), events[position]?=some (.data owner access) \u2227\n      access.data.store=true \u2227 access.space=.shared \u2227 access.data.pc=19 \u2227\n      access.data.address=(bases .shared).toNat+owner.val*8 \u2227\n      access.data.value=value bases cell width cells source s owner"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "an active lane cannot\nreach completion while avoiding the store, and a padding lane cannot reach that\ninstruction."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryPadding.lean",
+        "passage": {
+          "quote": "theorem store_active (run : Runs cfg ctx (program width cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (initial : \u2200 u, (s.core.lanes u).global=memory .global)\n    (words : Concurrent.Visibility.Compatible memory events chosen)\n    (indexSources : IndexSources.Compatible (memory .global) events indices selected)\n    (pc : (s.core.lanes owner).pc=0) (positive : 0<width) (fits : width*width<2^32)\n    (member : Concurrent.Event.data owner access\u2208events) (store : access.data.store=true) :\n    (ctx owner).lane.toNat<width*width"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Once a lane passes the store, its remaining prefix steps preserve all\nof its data except the instruction counter."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryStores.lean",
+        "passage": {
+          "quote": "theorem runs_after_store (run : Runs cfg ctx (program width cells source) s events indices t)\n    (owner : Fin n) (past : 20\u2264(s.core.lanes owner).pc) :\n    20\u2264(t.core.lanes owner).pc \u2227 contents (t.core.lanes owner)=contents (s.core.lanes owner)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Decoding an actual record yields the corresponding\nTorchLean cell-input entry under the same input representation conditions."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryStoreTensor.lean",
+        "passage": {
+          "quote": "theorem recorded_torchlean (o : Operator) (values : Array Float) (e : Nat)\n    (run : Runs cfg ctx (program o.nodes.size cells source) s events indices t)\n    (aligned : Concurrent.Aligned s.core) (initial : \u2200 u, (s.core.lanes u).global=memory .global)\n    (words : Concurrent.Visibility.Compatible memory events chosen)\n    (indexSources : IndexSources.Compatible (memory .global) events indices selected)\n    (thread : Fin n) (pc : (s.core.lanes thread).pc=0) (done : (t.core.lanes thread).pc=21)\n    (positive : 0<o.nodes.size) (fits : o.nodes.size*o.nodes.size<2^32)\n    (active : (ctx thread).lane.toNat<o.nodes.size*o.nodes.size)\n    (layout : CellGather.Layout (Local.beforeGather (ctx thread) o.nodes.size (lane s thread)) o.nodes.size cells source)\n    (cell : ((Local.beforeGather (ctx thread) o.nodes.size (lane s thread)).regs 15).toNat=e)\n    (i j : Fin o.nodes.size)\n    (coordinate : ((Local.beforeGather (ctx thread) o.nodes.size (lane s thread)).regs 14).toNat=i.val*o.nodes.size+j.val)\n    (connectivity : \u2200 k<o.nodes.size*o.nodes.size,\n      (read32 (s.core.lanes thread).global ((s.core.lanes thread).globalStart+cells.toNat+(e*(o.nodes.size*o.nodes.size)+k)*4)).toNat=\n        (o.mesh.cells[e]!)[k]!)\n    (contents : \u2200 k<layout.pointCount,\n      decode (read64 (s.core.lanes thread).global ((s.core.lanes thread).globalStart+source.toNat+k*8))=values[k]!)\n    (member : Concurrent.Event.data thread access\u2208events) (store : access.data.store=true) :\n    decode access.data.value=Spec.get2 (Poisson.gather o values e) i j"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Distinct lane IDs produce disjoint eight-byte slots."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryProducers.lean",
+        "passage": {
+          "quote": "theorem different_writers (left : Concurrent.Event.data a wa\u2208events) (leftStore : wa.data.store=true)\n    (right : Concurrent.Event.data b wb\u2208events) (rightStore : wb.data.store=true) (different : a\u2260b) :\n    Sources.Disjoint wa.data.address wb.data.address"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A store covering a byte of\none slot must come from that lane, at the same byte offset, and must contain its\nproved word."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryProducers.lean",
+        "passage": {
+          "quote": "theorem byte_owner (member : Concurrent.Event.data writer access\u2208events) (store : access.data.store=true)\n    (owner : Fin 32) (j k : Fin 8)\n    (same : access.data.address+j.val=(bases .shared).toNat+owner.val*8+k.val) :\n    writer=owner \u2227 j=k \u2227 access.data.value=value bases cell width cells source s owner"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Coverage, padding exclusion and these ownership results are\ninstantiated on the nonzero 32-thread witness."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryProducerChecks.lean",
+        "passage": {
+          "quote": "theorem actual_producer (owner : Fin 32) (active : owner.val<4) :\n    \u2203 (position : Nat) (access : Concurrent.Access), result.events[position]?=some (.data owner access) \u2227\n      access.data.store=true \u2227 access.space=.shared \u2227 access.data.pc=19 \u2227\n      access.data.address=256+owner.val*8 \u2227\n      access.data.value=Producers.value bases 1 2 0 64 start owner"
         }
       }
     }

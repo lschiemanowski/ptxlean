@@ -168,3 +168,31 @@ executed its store, but subsequent loads must be tied to those records through
 the barrier in one combined history. Source restriction must also account for
 later output stores, which were absent in the prefix. Neither a copied shared
 snapshot nor the change in counter numbering proves that obligation.
+
+## From lane results to recorded stores
+
+A lane's final local memory is only one part of a concurrent execution. The
+memory argument for another lane needs an actual store record: who wrote,
+where, when in the program, and which bits. It also needs to know that another
+writer cannot overwrite those bytes.
+
+[CellEntryOccurrence](../../integration/torchlean/PoissonPTX/CellEntryOccurrence.lean)
+proves that a completed active lane cannot avoid instruction 19, its store.
+This remains true even if the old bytes already contain the correct answer.
+[CellEntryPadding](../../integration/torchlean/PoissonPTX/CellEntryPadding.lean)
+proves the opposite for inactive lanes: their branch bypasses the store.
+
+[CellEntryProducers](../../integration/torchlean/PoissonPTX/CellEntryProducers.lean)
+then derives each record's address and word from the actual execution. It proves
+that different lanes' eight-byte slots do not overlap and that a byte covering
+a given slot must belong to its owner, at the matching within-word offset.
+[CellEntryStoreTensor](../../integration/torchlean/PoissonPTX/CellEntryStoreTensor.lean)
+connects the recorded value to TorchLean's cell-input entry. The ordinary
+allocation, initial-byte representation and completed-run conditions remain
+visible; no desired store list or output word is supplied.
+
+[The producer checks](../../integration/torchlean/PoissonPTX/CellEntryProducerChecks.lean)
+instantiate coverage, padding exclusion and separation on the nonzero 32-thread
+run. These results provide the writer side of the next proof. The joint history
+must still establish the relevant barrier ordering and sources of the later
+arithmetic reads.

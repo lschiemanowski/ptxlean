@@ -136,3 +136,8 @@ setup registers. Its stored word agrees with TorchLean input gathering. A concur
 word, actual first-barrier completion and the arithmetic entry registers. The
 remaining connection concerns the gathered store records and later arithmetic
 loads in one joint history, not a presumed shared snapshot.
+
+Actual gather-store records are also derived from that run: every active lane
+writes, padding lanes do not, and each record has the proved source word at its
+own disjoint shared slot. Their visibility to later arithmetic remains the
+joint-history obligation.

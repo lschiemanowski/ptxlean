@@ -18,7 +18,8 @@
     "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order.",
     "Prove the seven-instruction register prologue and bind it to emitted entries; keep the indexed gather and first-barrier connection to the arithmetic entry explicit.",
     "Connect the active gather body to TorchLean input gathering with explicit four-byte indices, derived access bounds and preserved registers; derive its concurrent input sources and retain continuation visibility as open.",
-    "Derive gathering and the arithmetic launch contract from concurrent setup, branching and the first barrier; retain joint-history visibility and whole-solver instruction composition as open."
+    "Derive gathering and the arithmetic launch contract from concurrent setup, branching and the first barrier; retain joint-history visibility and whole-solver instruction composition as open.",
+    "Derive actual gather-store coverage and byte ownership from entry execution; keep later visibility distinct from producing the correct record."
   ],
   "realization": "implemented",
   "links": [

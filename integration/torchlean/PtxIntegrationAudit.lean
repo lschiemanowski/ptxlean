@@ -1,3 +1,11 @@
+import PoissonPTX.CellEntryStores
+import PoissonPTX.CellEntryStorePath
+import PoissonPTX.CellEntryOccurrence
+import PoissonPTX.CellEntryPadding
+import PoissonPTX.CellEntryStoreValue
+import PoissonPTX.CellEntryProducers
+import PoissonPTX.CellEntryProducerChecks
+import PoissonPTX.CellEntryStoreTensor
 import PoissonPTX.IndexSources
 import PoissonPTX.IndexedCandidate
 import PoissonPTX.CellEntry
@@ -4256,3 +4264,40 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.label
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.render
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.rendered
+
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.store_instruction
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.store_origin
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.contents
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.step_after_store
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.runs_after_store
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.recorded_store
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.block_split
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Local.Avoid
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Local.cannot_avoid
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Local.reaches_store
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Wrote
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.store_fetch
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.missing_stutters
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.local_store_not_self
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.avoid_missing
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.completed_wrote
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Local.Avoid.trans
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Local.prologue_avoids
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Local.padding_avoids
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.recorded_path
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.store_active
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.context_lane
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.destination_context
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.destination_address
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.recorded_gather
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Producers.value
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Producers.info
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Producers.producer
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Producers.byte_owner
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Producers.different_writers
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.ProducerChecks.aligned
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.ProducerChecks.valid
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.ProducerChecks.actual_producer
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.ProducerChecks.padding_has_no_store
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.ProducerChecks.independent_slots
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.recorded_torchlean

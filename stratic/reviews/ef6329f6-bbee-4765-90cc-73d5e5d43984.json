@@ -1,0 +1,121 @@
+{
+  "id": "ef6329f6-bbee-4765-90cc-73d5e5d43984",
+  "base": "4ec1cba6c2f1f0893527a0a0880195ec4f9b0618",
+  "contentTree": "42e15a56b2b6156086d2275db72a19dfa96b1dc9",
+  "reviewer": "Codex",
+  "summary": "Derive actual gathered store coverage, values, padding exclusion and disjoint byte ownership.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Prove each completed active lane has an actual recorded store, derive its address and gathered value, exclude padding stores, and prove byte ownership. Preserve joint-history visibility as remaining work."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Record actual gather producer milestone and retain whole-entry and solver composition obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No equation, TorchLean algorithm, GPU kernel or host solver change. The entry proof establishes a stronger implementation boundary without changing numerical policy."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Preserve distinct Lean validity, pinned PTX fidelity, candidate source admission and hardware evidence. New interpreter reuses checked instruction and barrier transitions. Index records reference actual word stores per byte; no general mixed-width ISA claim. Prefix event absence of global stores is proved from code, not assumed."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "42e15a56b2b6156086d2275db72a19dfa96b1dc9",
+      "method": "Complete registered Lean build; fresh CellEntryProducerChecks; exact axiom/source audit; 24 Poisson checker tests; saved PTX bindings and source/description review",
+      "outcome": "pass",
+      "environment": "Pinned Lean toolchain, 16 locked dependencies, local CPU proof checks and existing saved GPU artifacts; no GPU rerun",
+      "evidence": "3797 exact dependency reports use only standard Lean axioms; 407 guarded files and 16 pinned dependencies. New nonzero Q1 checks exercise actual store coverage, padding exclusion and independent slots. Existing bindings pass across 30 layouts, including all 90 full prefixes. All 280 receipt source hashes and whitespace checks pass. README unchanged. Joint-history barrier visibility and whole-solver correspondence remain open.",
+      "tests": [],
+      "id": "18d56a53-e3cb-4c28-b0dc-1df08ab47120",
+      "recordedAt": "2026-10-02T08:34:30.132Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T08:35:29.672Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryOccurrence.lean",
+      "reason": "Kernel-checked actual-store derivation with explicit source and layout premises; no assumed output values or producer list."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryPadding.lean",
+      "reason": "Kernel-checked actual-store derivation with explicit source and layout premises; no assumed output values or producer list."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryProducerChecks.lean",
+      "reason": "Kernel-checked actual-store derivation with explicit source and layout premises; no assumed output values or producer list."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryProducers.lean",
+      "reason": "Kernel-checked actual-store derivation with explicit source and layout premises; no assumed output values or producer list."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryStorePath.lean",
+      "reason": "Kernel-checked actual-store derivation with explicit source and layout premises; no assumed output values or producer list."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryStoreTensor.lean",
+      "reason": "Kernel-checked actual-store derivation with explicit source and layout premises; no assumed output values or producer list."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryStoreValue.lean",
+      "reason": "Kernel-checked actual-store derivation with explicit source and layout premises; no assumed output values or producer list."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryStores.lean",
+      "reason": "Kernel-checked actual-store derivation with explicit source and layout premises; no assumed output values or producer list."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Keep proof registration, audit receipts, study explanation and Stratic links consistent with actual gathered producer theorem."
+    }
+  ]
+}

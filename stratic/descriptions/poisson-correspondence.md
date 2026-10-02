@@ -584,3 +584,31 @@ wrong index values and overlapping mixed-size accesses fail their checks.
 This witness establishes a permitted candidate in the stated source model,
 not arbitrary-input existence or full PTX admission. The complete twenty-one
 instruction prefix and its label are bound to all three emitted element entries.
+
+Shared publication must use recorded gather stores from the actual entry run.
+Every completed active lane must have emitted its store; a list of required
+stores is not an input assumption. Each record must have the lane's derived
+shared address and copied bits. Later prefix steps preserve that stored value,
+and distinct active lanes own disjoint words. These facts must supply the
+producer side of the first-barrier visibility argument.
+
+The producer theorem now derives a store record for every completed active lane.
+It follows the actual branch and instruction counter: an active lane cannot
+reach completion while avoiding the store, and a padding lane cannot reach that
+instruction. This argument is independent of whether the old shared bytes
+happen to equal the desired result.
+
+Every recorded gather store uses counter nineteen, the shared-memory base plus
+eight times its lane index, and the word read through that lane's connectivity
+entry. Once a lane passes the store, its remaining prefix steps preserve all
+of its data except the instruction counter. The recorded bits therefore equal
+the proved final gather value. Decoding an actual record yields the corresponding
+TorchLean cell-input entry under the same input representation conditions.
+
+The address calculation and allocation bounds also establish byte ownership.
+Distinct lane IDs produce disjoint eight-byte slots. A store covering a byte of
+one slot must come from that lane, at the same byte offset, and must contain its
+proved word. Coverage, padding exclusion and these ownership results are
+instantiated on the nonzero 32-thread witness. Connecting those records and
+arrivals to the arithmetic continuation remains open; the producer theorem is
+not itself a claim of visibility or a full-kernel correspondence theorem.
