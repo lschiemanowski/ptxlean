@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue, verify_gather, verify_entry, verify_whole
+from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue, verify_gather, verify_entry, verify_whole, verify_assembly_loop
 from poisson_kernels import Layout, module, PTX
 
 
@@ -211,6 +211,18 @@ class ContractionBinding(unittest.TestCase):
         for mutated in (self.ptx.replace('bar.sync 0;', 'mov.u32 %i, 0;\nbar.sync 0;', 1),
                         self.ptx.replace('stage_4_done:', 'ret;\nstage_4_done:', 1)):
             with self.assertRaises(ValueError): verify_whole(mutated, code, self.layout)
+
+    def test_assembly_loop(self):
+        import re
+        lines = re.search(r'\.visible \.entry assemble_probe\(.*?\n}', self.ptx, re.S)[0].splitlines()
+        expected = lines[lines.index('loop:'):lines.index('done:')+1]
+        self.assertEqual(len(verify_assembly_loop(self.ptx, expected, self.layout)), 2)
+        for old,new in [('setp.ge.u32 %p0, %cursor, %end;', 'setp.gt.u32 %p0, %cursor, %end;'),
+                        ('add.rn.f64 %acc, %acc, %a;', 'add.rn.f64 %acc, %acc, %b;'),
+                        ('add.u32 %cursor, %cursor, 1;', 'add.u32 %cursor, %cursor, 2;'),
+                        ('bra loop;', 'ret;'), ('@%p0 bra done;', '@!%p0 bra done;')]:
+            with self.subTest(new=new), self.assertRaises(ValueError):
+                verify_assembly_loop(self.ptx.replace(old,new,1), expected, self.layout)
 
     def test_structure(self):
         self.assertEqual(len(verify_blocks(self.ptx, self.expected, self.layout)), 24)

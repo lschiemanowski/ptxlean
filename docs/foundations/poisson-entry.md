@@ -317,3 +317,51 @@ checks a gather and cross-lane read. [The complete zero-data witness](../../inte
 executes all 32 threads through return, including the 28 padding lanes, and
 checks its four output stores and necessary byte-source conditions. These
 witnesses do not establish termination for every input or GPU scheduling policy.
+
+## Naming the operator and assembling cells
+
+The complete cell theorem names the operator whose coefficients were uploaded.
+A representation contract relates each initial binary64 word of the B, D and W
+tables to the corresponding TorchLean coefficient, and requires equal numbers
+of quadrature points and interpolation nodes for this square-table kernel.
+The proof preserves the ordered calculation when transporting tensor dimensions
+and concludes equality with that operator's localAction. This is an input
+representation contract, not an assumption about the computed output. External
+host generation and serialization of those tables are not proved by it.
+
+[The operator theorem](../../integration/torchlean/PoissonPTX/CellOperatorCorrespondence.lean)
+concludes equality with `localAction o.b o.d o.w (gather o values cell)`.
+Its new premises specify the input bytes and dimensions. They do not state
+anything about intermediate or output values.
+
+The assembly traversal loop now has correctness and execution-existence
+proofs. Every completed fetched execution performs the ordered left fold over
+its initial cursor range, including its actual four-byte contribution indices
+and eight-byte values. A physical layout of the two allocated input arrays,
+with every index in range, discharges all access premises. If the cursor starts
+at or before the unsigned end index, each iteration advances it without wrap,
+so a returning execution exists. No iteration count, read value or result is
+assumed. The proof uses a read-only memory snapshot for this loop slice.
+
+The emitted loop slice is bound to its Lean instruction list through the exit
+label. The isolated loop theorem returns at that label; the emitted entry
+continues with optional boundary masking and an output store. Entry setup,
+that continuation and inter-launch memory visibility still need composition.
+A nonzero kernel-checked witness sums the same three contributions in two
+orders and obtains different results, exercising the reason for preserving
+floating-point order. Empty-list, insufficient-fuel and invalid-index checks
+exercise completion and failure behavior. Fuel is only a bound on executable
+witness search; it is absent from the relational correctness theorem.
+
+[The loop proof](../../integration/torchlean/PoissonPTX/AssemblyLoop.lean)
+recovers all iterations from comparisons, branches and fetched loads.
+[The layout proof](../../integration/torchlean/PoissonPTX/AssemblyLayout.lean)
+explains why each index and value read fits its allocation.
+[Existence](../../integration/torchlean/PoissonPTX/AssemblyExists.lean)
+follows by decreasing the number of entries remaining.
+
+For example, adding `2^53`, `1`, then `-2^53` in binary64 yields zero; adding
+`-2^53`, `2^53`, then `1` yields one.
+[The checked execution](../../integration/torchlean/PoissonPTX/AssemblyChecks.lean)
+loads those values via actual four-byte index tables. The table order is part
+of correctness, even though both orders enumerate the same values.

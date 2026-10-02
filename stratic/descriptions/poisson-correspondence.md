@@ -92,10 +92,10 @@ than the complete PTX memory rules. A universal result over those candidates
 therefore needs no sequential-consistency assumption. The witness is an
 execution of this broader candidate model, not a full PTX admission or hardware
 progress theorem. Publication describes storage after the completed stores; the
-CUDA host-visibility mechanism is not proved. The complete cell, assembly, reductions, remaining PCG kernels and host launch
-composition still need their instruction-level connections. The three middle
-cell phases have the stronger instruction theorem described below. No premise that these phases
-already compute their specified answers substitutes for that work.
+CUDA host-visibility mechanism is not proved. Assembly entry/output composition, reductions, remaining PCG kernels and host
+launch composition still need their instruction-level connections. The complete
+cell entry and the isolated assembly traversal have the stronger instruction
+theorems described below. Their output values follow from executed instructions.
 
 
 The eight unrolled cell contractions have local fetched-instruction proofs.
@@ -679,9 +679,9 @@ initial index and source arrays represent that input. Cell and lane coordinates
 are derived from the launch context. Combining this fact with the existing
 arithmetic proof establishes the actual result register and the published
 whole-cell output tensor, independently of output-record publication order.
-Its coefficient tensors are the decoded initial arena tables. Relating those
-tables to a particular operator setup remains an input representation task;
-this theorem does not certify how an external host generated the tables.
+Its coefficient tensors are the decoded initial arena tables. The operator
+representation theorem below relates them to the stated TorchLean operator;
+it does not certify how an external host generated or serialized the tables.
 
 A single execution of the complete cell entry now derives the first-barrier
 split and both fetched subruns. Instruction counters stay absolute in the
@@ -721,3 +721,42 @@ A separate zero-data Q1 witness reaches all 32 returns and publishes four
 outputs, with checked index, word-source and performed-write admission. These
 finite witnesses establish existence for their inputs; arbitrary-input
 execution existence and the remaining solver launches are separate obligations.
+
+The complete cell theorem names the operator whose coefficients were uploaded.
+A representation contract relates each initial binary64 word of the B, D and W
+tables to the corresponding TorchLean coefficient, and requires equal numbers
+of quadrature points and interpolation nodes for this square-table kernel.
+The proof preserves the ordered calculation when transporting tensor dimensions
+and concludes equality with that operator's localAction. This is an input
+representation contract, not an assumption about the computed output. External
+host generation and serialization of those tables are not proved by it.
+
+Assembly uses one thread per global mesh node. Each thread reads a pair of
+offsets delimiting that node's list of contributing cell entries, then adds
+those entries in their stored order. The traversal must be proved from actual
+unsigned index loads, comparison, conditional branch, increment and backward
+branch instructions. The offset list preserves the reference's element-major
+order; floating-point addition is not reassociated. Boundary masking and the
+final global store are part of the fetched program. The initial memory view
+and its separation from outputs must remain explicit until launch composition
+justifies them. A reusable control-flow interpreter should support these loops
+without installing a loop result or iteration count as an execution premise.
+
+The assembly traversal loop now has correctness and execution-existence
+proofs. Every completed fetched execution performs the ordered left fold over
+its initial cursor range, including its actual four-byte contribution indices
+and eight-byte values. A physical layout of the two allocated input arrays,
+with every index in range, discharges all access premises. If the cursor starts
+at or before the unsigned end index, each iteration advances it without wrap,
+so a returning execution exists. No iteration count, read value or result is
+assumed. The proof uses a read-only memory snapshot for this loop slice.
+
+The emitted loop slice is bound to its Lean instruction list through the exit
+label. The isolated loop theorem returns at that label; the emitted entry
+continues with optional boundary masking and an output store. Entry setup,
+that continuation and inter-launch memory visibility still need composition.
+A nonzero kernel-checked witness sums the same three contributions in two
+orders and obtains different results, exercising the reason for preserving
+floating-point order. Empty-list, insufficient-fuel and invalid-index checks
+exercise completion and failure behavior. Fuel is only a bound on executable
+witness search; it is absent from the relational correctness theorem.

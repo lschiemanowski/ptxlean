@@ -30,7 +30,12 @@ continuation reads from those gathered stores. Source rebasing now connects the
 actual gather to the numerical body and its published TorchLean cell tensor.
 A single native-counter run now derives the prefix/body split and joint-history
 input admission, and publishes the TorchLean cell tensor. Remaining solver
-instructions and launch composition remain open.
+entry composition and launch composition remain open. The isolated assembly
+traversal now has ordered-fold correctness and general existence from allocated
+input arrays; its emitted loop slice is bound separately. Entry setup, masking,
+output publication and inter-launch visibility are not part of that slice.
+A coefficient representation contract also connects the complete cell theorem
+to the stated TorchLean operator, with equal quadrature and node dimensions.
 Saved output extents are checked disjoint; this is concrete layout evidence,
 separate from the general launch-derived address theorem and GPU conformance.
 """
@@ -75,6 +80,12 @@ def parameters(layout):
             type(cells['offset']) is not int or cells['offset'] < 0 or cells['offset'] % 4 or
             cells['offset']+cells['count']*4 > layout['bytes']):
         raise ValueError('invalid connectivity extent')
+    indices = layout['fields']['entries']
+    if (indices['kind'] != 'I' or type(indices['count']) is not int or indices['count'] != field['count']
+            or type(indices['offset']) is not int or indices['offset'] < 0 or indices['offset'] % 4
+            or indices['offset']+indices['count']*4 > layout['bytes']):
+        raise ValueError('invalid assembly contribution-index extent')
+    result['entries'] = indices['offset']
     result['cells'] = cells['offset']
     result['sources'] = []
     for name in ('probe', 'p', 'x'):
@@ -341,6 +352,30 @@ def verify_whole(ptx, code, layout):
     return checked
 
 
+def verify_assembly_loop(ptx, rendered, layout):
+    """Bind the ordered traversal slice, excluding entry setup/mask/store."""
+    parameters(layout)
+    if len(rendered) != 15 or rendered[0] != 'loop:' or rendered[-1] != 'done:':
+        raise ValueError('expected complete assembly traversal with exit label')
+    if any(token in ptx for token in ('//', '/*', '*/')):
+        raise ValueError('comments are outside the exact generated dialect')
+    checked = []
+    for entry in ('assemble_probe', 'assemble_ap'):
+        bodies = re.findall(r'\.visible \.entry '+entry+r'\(\.param \.u64 arena\)\s*([^}]+)}', ptx)
+        if len(bodies) != 1:
+            raise ValueError('assembly entry missing or duplicated')
+        lines = [line.strip() for line in bodies[0].splitlines() if line.strip()]
+        if lines.count('loop:') != 1 or lines.count('done:') != 1:
+            raise ValueError('assembly traversal labels missing or duplicated')
+        start, end = lines.index('loop:'), lines.index('done:')
+        if lines[start:end+1] != rendered:
+            raise ValueError('assembly traversal differs from proved loop')
+        checked.append(dict(entry=entry, instructions=13,
+                            scope='Loop slice only; entry setup, masking, output and inter-launch memory remain separate.',
+                            sha256=hashlib.sha256(('\n'.join(rendered)+'\n').encode()).hexdigest()))
+    return checked
+
+
 def check(run, output):
     if output.exists():
         raise ValueError('output already exists')
@@ -366,7 +401,7 @@ def check(run, output):
                     'PoissonPTX.ContractionLayout', 'PoissonPTX.SharedPlane', 'PoissonPTX.CellMiddleChecks',
                     'PoissonPTX.ConcurrentComputedStore', 'PoissonPTX.CellMiddleInputs',
                     'PoissonPTX.CellMiddleCorrespondence', 'PoissonPTX.CellFinalSnapshot',
-                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult', 'PoissonPTX.CellTailOwners', 'PoissonPTX.CellOutputTensor', 'PoissonPTX.CellPrologueEntry', 'PoissonPTX.CellGatherTensor', 'PoissonPTX.CellEntryLaunch', 'PoissonPTX.CellEntryProducers', 'PoissonPTX.CellEntryStoreTensor', 'PoissonPTX.CellEntryContinuation', 'PoissonPTX.CellEntryCorrespondence', 'PoissonPTX.CellEntryJointCorrespondence', 'PoissonPTX.CellWholeCorrespondence'], cwd=INTEGRATION, check=True)
+                    'PoissonPTX.CellFinalLayout', 'PoissonPTX.CellConsumerRun', 'PoissonPTX.CellOutputSeparation', 'PoissonPTX.CellTailResult', 'PoissonPTX.CellTailOwners', 'PoissonPTX.CellOutputTensor', 'PoissonPTX.CellPrologueEntry', 'PoissonPTX.CellGatherTensor', 'PoissonPTX.CellEntryLaunch', 'PoissonPTX.CellEntryProducers', 'PoissonPTX.CellEntryStoreTensor', 'PoissonPTX.CellEntryContinuation', 'PoissonPTX.CellEntryCorrespondence', 'PoissonPTX.CellEntryJointCorrespondence', 'PoissonPTX.CellWholeCorrespondence', 'PoissonPTX.CellOperatorCorrespondence', 'PoissonPTX.AssemblyLayout'], cwd=INTEGRATION, check=True)
     names = ['PtxTorchLean.Poisson.PTX.Contraction.'+n for n in
              ('fetched_correct', 'fetched_exists', 'valid_of_matrix', 'plans_accumulator')]
     names += ['PtxTorchLean.Poisson.PTX.SharedStore.'+n for n in
@@ -435,16 +470,20 @@ def check(run, output):
     names += ['PtxTorchLean.Poisson.PTX.CellEntry.Control.' + name for name in
               ('launch', 'live_gather', 'index_run', 'output_fence', 'joint_indices', 'source_step', 'joint_words', 'joint_sources')]
     names += ['PtxTorchLean.Poisson.PTX.CellWhole.' + name for name in ('executions', 'histories', 'sources', 'output_bounds', 'tensor')]
+    names += ['PtxTorchLean.Poisson.PTX.CellWhole.operator_tensor']
+    names += ['PtxTorchLean.Poisson.PTX.CoefficientRepresentation.' + name for name in ('tensors', 'calculation')]
+    names += ['PtxTorchLean.Poisson.PTX.Assembly.' + name for name in ('body_correct', 'traversal_correct', 'fetched_correct', 'traversal_exists', 'fetched_exists', 'valid_of_layout', 'layout_correct', 'layout_exists')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.CellWholeCorrespondence\nimport PoissonPTX.CellEntryJointCorrespondence\nimport PoissonPTX.CellEntryCorrespondence\nimport PoissonPTX.CellEntryContinuation\nimport PoissonPTX.CellEntryProducers\nimport PoissonPTX.CellEntryStoreTensor\nimport PoissonPTX.CellEntryLaunch\nimport PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.CellOperatorCorrespondence\nimport PoissonPTX.AssemblyLayout\nimport PoissonPTX.CellWholeCorrespondence\nimport PoissonPTX.CellEntryJointCorrespondence\nimport PoissonPTX.CellEntryCorrespondence\nimport PoissonPTX.CellEntryContinuation\nimport PoissonPTX.CellEntryProducers\nimport PoissonPTX.CellEntryStoreTensor\nimport PoissonPTX.CellEntryLaunch\nimport PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)
     layouts = [json.loads(read_artifact(run, report, c['directory']+'/layout.json')) for c in report['cases']]
     rendered = json.loads(subprocess.check_output([INTEGRATION/'.lake/build/bin/poissonContractions'],
         input=json.dumps([parameters(l) for l in layouts])+'\n', text=True))
-    checked = [dict(directory=c['directory'], whole_entry=verify_whole(
+    checked = [dict(directory=c['directory'], assembly_loop=verify_assembly_loop(
+        read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['assembly'], layout), whole_entry=verify_whole(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code, layout), entry_prefix=verify_entry(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['entries'], layout), gather=verify_gather(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['gathers'], layout), prologue=verify_prologue(

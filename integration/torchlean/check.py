@@ -499,6 +499,17 @@ COUNTS['PtxTorchLean.Poisson.PTX.CellWhole.Checks'] = COUNTS.get('PtxTorchLean.P
 COUNTS['PtxTorchLean.Poisson.PTX.CellWhole.Zero'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellWhole.Zero', 0) + 22
 TARGETS.update(['PoissonPTX.Relocate', 'PoissonPTX.RelocateInverse', 'PoissonPTX.RelocateKernel', 'PoissonPTX.OffsetExecution', 'PoissonPTX.CellWhole', 'PoissonPTX.CellWholeCut', 'PoissonPTX.RelabelHistory', 'PoissonPTX.BarrierClock', 'PoissonPTX.ExecutionClock', 'PoissonPTX.RelabelShift', 'PoissonPTX.CellWholeSources', 'PoissonPTX.CellWholeBounds', 'PoissonPTX.CellWholeCorrespondence', 'PoissonPTX.CellWholeCompose', 'PoissonPTX.CellWholeChecks', 'PoissonPTX.CellWholeZero', 'PoissonPTX.CellWholeText'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.CoefficientRepresentation'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CoefficientRepresentation', 0) + 9
+COUNTS['PtxTorchLean.Poisson.PTX.CellWhole'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellWhole', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Flow'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow', 0) + 28
+COUNTS['PtxTorchLean.Poisson.PTX.Flow.Compare'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Compare', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Flow.Loop'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Loop', 0) + 8
+COUNTS['PtxTorchLean.Poisson.PTX.Indexed'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Indexed', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly', 0) + 31
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly.Checks', 0) + 14
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly.Text'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly.Text', 0) + 9
+TARGETS.update(['PoissonPTX.CellCoefficientRepresentation', 'PoissonPTX.CellOperatorCorrespondence', 'PoissonPTX.ControlFlow', 'PoissonPTX.ControlFlowBlocks', 'PoissonPTX.ControlFlowLoop', 'PoissonPTX.ControlFlowLoopExists', 'PoissonPTX.IndexedBlocks', 'PoissonPTX.AssemblyLookup', 'PoissonPTX.AssemblyLoop', 'PoissonPTX.AssemblyExists', 'PoissonPTX.AssemblyLayout', 'PoissonPTX.AssemblyChecks', 'PoissonPTX.AssemblyText'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -568,7 +579,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks", "CellGatherChecks", "CellEntryChecks", "CellEntryProducerChecks", "CellEntryVisibilityChecks", "CellEntryRebaseChecks", "CellEntryJointChecks", "CellWholeChecks", "CellWholeZero"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks", "CellGatherChecks", "CellEntryChecks", "CellEntryProducerChecks", "CellEntryVisibilityChecks", "CellEntryRebaseChecks", "CellEntryJointChecks", "CellWholeChecks", "CellWholeZero", "AssemblyChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

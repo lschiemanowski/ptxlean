@@ -147,3 +147,31 @@ setup/control and input addresses are established before admitting each load,
 and the actual output stores are separated from the input arrays. The full-entry theorem derives the actual prefix and continuation from one
 execution and transports the same byte-source constraints between their
 instruction-counter views. No convenient shared bytes are installed in the execution.
+
+The complete cell theorem names the operator whose coefficients were uploaded.
+A representation contract relates each initial binary64 word of the B, D and W
+tables to the corresponding TorchLean coefficient, and requires equal numbers
+of quadrature points and interpolation nodes for this square-table kernel.
+The proof preserves the ordered calculation when transporting tensor dimensions
+and concludes equality with that operator's localAction. This is an input
+representation contract, not an assumption about the computed output. External
+host generation and serialization of those tables are not proved by it.
+
+The assembly traversal loop now has correctness and execution-existence
+proofs. Every completed fetched execution performs the ordered left fold over
+its initial cursor range, including its actual four-byte contribution indices
+and eight-byte values. A physical layout of the two allocated input arrays,
+with every index in range, discharges all access premises. If the cursor starts
+at or before the unsigned end index, each iteration advances it without wrap,
+so a returning execution exists. No iteration count, read value or result is
+assumed. The proof uses a read-only memory snapshot for this loop slice.
+
+The emitted loop slice is bound to its Lean instruction list through the exit
+label. The isolated loop theorem returns at that label; the emitted entry
+continues with optional boundary masking and an output store. Entry setup,
+that continuation and inter-launch memory visibility still need composition.
+A nonzero kernel-checked witness sums the same three contributions in two
+orders and obtains different results, exercising the reason for preserving
+floating-point order. Empty-list, insufficient-fuel and invalid-index checks
+exercise completion and failure behavior. Fuel is only a bound on executable
+witness search; it is absent from the relational correctness theorem.

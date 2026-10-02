@@ -1,3 +1,16 @@
+import PoissonPTX.CellCoefficientRepresentation
+import PoissonPTX.CellOperatorCorrespondence
+import PoissonPTX.ControlFlow
+import PoissonPTX.ControlFlowBlocks
+import PoissonPTX.ControlFlowLoop
+import PoissonPTX.ControlFlowLoopExists
+import PoissonPTX.IndexedBlocks
+import PoissonPTX.AssemblyLookup
+import PoissonPTX.AssemblyLoop
+import PoissonPTX.AssemblyExists
+import PoissonPTX.AssemblyLayout
+import PoissonPTX.AssemblyChecks
+import PoissonPTX.AssemblyText
 import PoissonPTX.Relocate
 import PoissonPTX.RelocateInverse
 import PoissonPTX.RelocateKernel
@@ -4615,3 +4628,107 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.performed
 #print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.indices_admitted
 #print axioms PtxTorchLean.Poisson.PTX.CellWhole.shape
+
+#print axioms PtxTorchLean.Poisson.PTX.CoefficientRepresentation.rows
+#print axioms PtxTorchLean.Poisson.PTX.CoefficientRepresentation.square
+#print axioms PtxTorchLean.Poisson.PTX.CoefficientRepresentation.get_rows
+#print axioms PtxTorchLean.Poisson.PTX.CoefficientRepresentation.get_square
+#print axioms PtxTorchLean.Poisson.PTX.CoefficientRepresentation.local_action
+#print axioms PtxTorchLean.Poisson.PTX.CoefficientRepresentation.Represents
+#print axioms PtxTorchLean.Poisson.PTX.CoefficientRepresentation.tensor_ext
+#print axioms PtxTorchLean.Poisson.PTX.CoefficientRepresentation.tensors
+#print axioms PtxTorchLean.Poisson.PTX.CoefficientRepresentation.calculation
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.operator_tensor
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Compare
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Compare.apply
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Source
+#print axioms PtxTorchLean.Poisson.PTX.Flow.source
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Instr
+#print axioms PtxTorchLean.Poisson.PTX.Flow.State
+#print axioms PtxTorchLean.Poisson.PTX.Flow.next
+#print axioms PtxTorchLean.Poisson.PTX.Flow.halt
+#print axioms PtxTorchLean.Poisson.PTX.Flow.goto
+#print axioms PtxTorchLean.Poisson.PTX.Flow.simple
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Eval
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Step
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Runs
+#print axioms PtxTorchLean.Poisson.PTX.Flow.eval
+#print axioms PtxTorchLean.Poisson.PTX.Flow.tick
+#print axioms PtxTorchLean.Poisson.PTX.Flow.execute
+#print axioms PtxTorchLean.Poisson.PTX.Flow.eval_sound
+#print axioms PtxTorchLean.Poisson.PTX.Flow.tick_sound
+#print axioms PtxTorchLean.Poisson.PTX.Flow.execute_sound
+#print axioms PtxTorchLean.Poisson.PTX.Flow.append
+#print axioms PtxTorchLean.Poisson.PTX.Flow.halted_no_step
+#print axioms PtxTorchLean.Poisson.PTX.Flow.invariant
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Counted
+#print axioms PtxTorchLean.Poisson.PTX.Flow.counted
+#print axioms PtxTorchLean.Poisson.PTX.Flow.counted_run
+#print axioms PtxTorchLean.Poisson.PTX.Flow.peel
+#print axioms PtxTorchLean.Poisson.PTX.Flow.peel_simple
+#print axioms PtxTorchLean.Poisson.PTX.Flow.peel_block
+#print axioms PtxTorchLean.Poisson.PTX.Flow.block_run
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Loop.header
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Loop.program
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Loop.exhausted
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Loop.Traversal
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Loop.halted_eq
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Loop.counted_traversal
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Loop.traversal
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Loop.traversal_runs
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.append
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.split
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.lookupCode
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.indexAddress
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.index
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.valueAddress
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.value
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Valid
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.loaded
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.lookup_execution
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.lookup_correct
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.body
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Stable
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.body_correct
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.body_exists
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.cursor
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.limit
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.atCursor
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.contribution
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.stable_refl
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.stable_trans
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.stable_limit
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.valid_at
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.value_at
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.cursor_increment
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.traversal_correct
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.fetched_correct
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.traversal_exists
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.fetched_exists
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Layout
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.valid_of_layout
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.layout_correct
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.layout_exists
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.memory
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.ctx
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.code
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.candidate
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.result
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.executed
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.actual
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.cancellation
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.layout
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.fold_result
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.fuel_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.bad_index_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Checks.empty
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Text.register
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Text.operand
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Text.data
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Text.indexed
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Text.label
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Text.comparison
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Text.source
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Text.instruction
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Text.rendered

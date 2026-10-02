@@ -1,0 +1,149 @@
+{
+  "id": "81d446ae-d9ac-415a-adff-8951c98f47ce",
+  "base": "f23af73bbe88b2eaf65ce7e8e6288aaef0da1d50",
+  "contentTree": "ee34ecaf6272a91646a163dd8863bdab6c4d2539",
+  "reviewer": "Codex",
+  "summary": "Connect full cell execution to the represented TorchLean operator and prove ordered assembly traversal correctness, access safety and execution existence from actual loop instructions.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Add explicit per-coefficient representation and dimension transport, then prove actual operator equality. Add fetched comparison/branch loop extraction, ordered accumulation, allocated-array safety and general existence by decreasing remaining entries."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Document operator representation and isolated assembly loop guarantees, preserving full assembly entry/output, external serialization and launch obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No equation, TorchLean algorithm, emitted GPU kernel, or host solver changed. This strengthens proof composition only."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Manual review checked branch predicates and targets, unsigned cursor wrap exclusion, actual index/value loads, ordered binary64 addition and state preservation. Traversal extraction and reconstruction both use fetched steps. Witness fuel cannot return a partial success. Emitted loop binding excludes the isolated terminal ret and explicitly retains entry/mask/output composition. No desired read, sum or iteration count is an execution premise; no new hardware conformance claim."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "ee34ecaf6272a91646a163dd8863bdab6c4d2539",
+      "method": "Complete registered Lean build; fresh AssemblyChecks kernel regressions; exact PtxIntegrationAudit dependency audit; source guards and pinned dependency check; saved Poisson binding checkers including whole-cell counters and assembly loop text; 26 Python Poisson tests; Stratic validation and manual proof/contract review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 verified dependency pins; local CPU checking, saved GPU artifacts only. No GPU rerun or paid model calls.",
+      "evidence": "4170 exact dependency reports, only standard Lean axioms; 460 guarded files; complete registered build and fresh nonzero cancellation, empty range, insufficient fuel and invalid-index checks passed. 60 assembly loop slices, 90 whole cell entries, 720 contractions and 630 shared stores bound across 30 saved layouts; true_residual binding also passed. 386 receipt source hashes verified. 26 Python tests passed. Stratic valid and git diff --check clean; README unchanged. Complete cell theorem now names represented operator coefficients. Assembly loop correctness and general existence follow from fetched control/data steps and allocated initial arrays. Full assembly entry/output, launch composition and other solver obligations remain open.",
+      "tests": [],
+      "id": "b59de369-ffe2-4806-b0fd-e99bda0a96a6",
+      "recordedAt": "2026-10-02T11:26:44.234Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T11:27:43.445Z",
+  "unmapped": [
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyChecks.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyExists.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyLayout.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyLookup.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyLoop.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyText.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellCoefficientRepresentation.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellOperatorCorrespondence.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlow.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowBlocks.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowLoop.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowLoopExists.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/IndexedBlocks.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed supporting coefficient representation, fetched assembly loop semantics and existence proofs, build/audit registration, source-bound receipts, mutation checks or explanatory documentation for the mapped correspondence contracts."
+    }
+  ]
+}
