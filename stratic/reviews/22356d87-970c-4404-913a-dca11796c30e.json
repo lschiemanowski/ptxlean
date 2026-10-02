@@ -1,0 +1,109 @@
+{
+  "id": "22356d87-970c-4404-913a-dca11796c30e",
+  "base": "ebe7a2ee77abbbd1283a1a8e018b4278ba8b87c2",
+  "contentTree": "3f40c7f016dc111b494374f9c317839c37e4af0b",
+  "reviewer": "Codex",
+  "summary": "Connect actual unmasked cell/assembly publication directly to the public executable TorchLean array reference.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Prove the actual public reference uses the same ordered array scatter and tensor contributions; retain input validation and connect the PTX publication theorem directly to Poisson.apply. Add exact links and clarify remaining obligations."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Close the imperative array-reference bridge while retaining general existence, grid, serialization and full solver boundaries."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No reference computation, input validation, equation, emitted kernel, host algorithm or README changed."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Review confirms that proof views of private helpers are linked by definitional equality to the public entry, array bounds and update behavior are retained, flattened and nested coordinates enumerate in identical order, coefficient dimension transport is explicit, and no floating-point associativity or desired output is assumed."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "3f40c7f016dc111b494374f9c317839c37e4af0b",
+      "method": "Sequential resource-limited checks of five new Lean modules, full exact dependency audit and source/pin guards; saved PTX bindings; receipt hashes; Stratic validation and manual proof/contract review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins. Heavy checks under hard 6 GiB cgroup cap, no swap, 150 percent CPU quota. No GPU rerun or paid model call.",
+      "evidence": "4572 exact declaration dependency reports, only permitted standard Lean axioms; 536 guarded Lean files. All five new modules passed individual limited checks. Kernel regressions cover public reference value eight, rejection of wrong vector length and infinity, and two distinct cancellation orders. Source/function linkage is proved by definitional reduction of the actual public entry with its input checks; nested loops are converted to the same rounded ordered fold and matched to shape-safe tensor contributions. The final theorem composes actual source-admitted cell/assembly publication directly with Poisson.apply. Existing targeted build/binding commands pass across 30 saved layouts; all 538 receipt source hashes match. The prior 27 Python tests were not repeated because emitted code, Python runtime, and tests are unchanged; only binding-audit declarations and receipts changed. Full registered build and unchanged legacy interpreter checks were not repeated. Stratic valid, final snapshots equal, reference source and README untouched. General cell existence, grid scheduling, serialization, remaining solver/reduction instructions, and host orchestration remain explicit.",
+      "tests": [],
+      "id": "f27f82c9-f41e-464a-84ee-c9c4c6cb3718",
+      "recordedAt": "2026-10-02T16:04:08.364Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T16:05:16.267Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-operator-composition.md",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAssemblyReference.lean",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/OperatorArray.lean",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/OperatorArrayChecks.lean",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/OperatorArrayCorrespondence.lean",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/OperatorArrayRows.lean",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed array/reference helper proofs, ordered row enumeration, direct execution composition, success/rejection/cancellation regressions, exact audits, saved-code receipts and teaching documentation."
+    }
+  ]
+}

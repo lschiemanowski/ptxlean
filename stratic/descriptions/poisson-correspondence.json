@@ -17,10 +17,11 @@
     "Connect complete true_residual entry and whole-vector subtraction to the specification under necessary byte-source constraints.",
     "Bind emitted instructions to Lean representations and keep kernel proofs, source-fidelity review, compiled checks and saved GPU observations distinct.",
     "Keep arbitrary-input whole-cell existence, setup serialization, remaining solver instructions, launch composition, complete PTX admission and hardware correspondence explicit.",
-    "Decode ordered assembly tables and compose actual cell publications with assembly to obtain the TorchLean tensor operator; exercise the connection with a nonzero kernel-checked example."
+    "Decode ordered assembly tables and compose actual cell publications with assembly to obtain the TorchLean tensor operator; exercise the connection with a nonzero kernel-checked example.",
+    "Connect the ordered tensor operator to the executable array reference, preserving its original scatter order and input validation."
   ],
   "realization": "partial",
-  "remaining": "Arbitrary-input cell execution existence, device-wide grid scheduling, external coefficient/index serialization, the imperative array operator bridge, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
+  "remaining": "Arbitrary-input cell execution existence, device-wide grid scheduling, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
   "links": [
     {
       "kind": "implementation",
@@ -2767,6 +2768,90 @@
         "path": "integration/torchlean/PoissonPTX/SourceCheckWords.lean",
         "passage": {
           "quote": "theorem sound (checked : check initial events=true) :\n    Visibility.Compatible initial events (ZeroSources.source events) := by\n  intro r reader ra observed read k\n  have equal := List.all_eq_true.mp checked (.data reader ra) (List.mem_of_getElem? observed)\n  have value : ra.data.value=expected initial events ra.space ra.data.address := by\n    simpa [read] using equal\n  simp only [ZeroSources.source,observed]\n  by_cases found : events.findIdx (ZeroSources.writes ra.space ra.data.address)<events.length\n  · simp only [found,ite_true]\n    let w := events.findIdx (ZeroSources.writes ra.space ra.data.address)\n    have yes := List.findIdx_getElem (p:=ZeroSources.writes ra.space ra.data.address) (xs:=events) (w:=found)\n    have fetched : events[w]?=some events[w] := List.getElem?_eq_some_iff.mpr ⟨found,rfl⟩\n    cases he : events[w] with\n    | barrier => simp [w,he,ZeroSources.writes] at yes\n    | data writer wa =>\n      have props : (wa.data.store=true ∧ wa.space=ra.space) ∧ wa.data.address=ra.data.address := by\n        simpa [← show w=events.findIdx (ZeroSources.writes ra.space ra.data.address) from rfl,he,ZeroSources.writes] using yes\n      have observedW : events[w]?=some (.data writer wa) := by simpa [he] using fetched\n      have words : ra.data.value=wa.data.value := by simpa [expected,found,← show w=events.findIdx (ZeroSources.writes ra.space ra.data.address) from rfl,he,show w<events.length from found] using value\n      exact ⟨writer,wa,observedW,props.1.1,props.1.2,by rw [props.2],by rw [words]⟩\n  · simp only [found,ite_false]\n    have words : ra.data.value=read64 (initial ra.space) ra.data.address := by simpa [expected,found] using value\n    rw [words]\n    exact Sources.byte_read64 _ _ _"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The tensor operator must also agree with the executable array-based reference.\nThat connection follows its actual nested element/local-coordinate loops and\nin-place array updates, preserving the order of rounded additions. It requires\nvalid connectivity shape and node bounds, and preserves the reference's vector\nlength and finiteness checks. A public proof view may expose private helper\ncomputations only with a proved connection to the function actually called;\na second unconnected implementation is insufficient."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/OperatorArray.lean",
+        "passage": {
+          "quote": "theorem apply_valid (o : Operator) (values : Array Float)\n    (size : values.size=o.mesh.points.size) (finite : values.all Float.isFinite=true) :\n    Poisson.apply o values=.ok (result o values) := by\n  change ((do\n    if values.size != o.mesh.points.size then\n      throw s!\"expected vector of length {o.mesh.points.size}, got {values.size}\"\n    if !(values.all Float.isFinite) then throw \"vector must be finite\"\n    pure () : Except String Unit) >>= fun _ => pure (result o values)) = _\n  simp only [finite]\n  simp [size]\n  rfl"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The array-reference bridge proves that connection for every well-shaped,\nin-bounds mesh with the supported equal quadrature and interpolation dimensions.\nIt turns the actual nested loops into an ordered fold, relates each array update\nto the tensor scatter update, and checks that both enumerate identical local\nentries. For a finite vector of the required length, the public Poisson.apply\nentry therefore returns the tensor operator's vector. Combined with the actual\nunmasked cell/assembly execution, it returns exactly the published PTX vector.\nWrong lengths and nonfinite values retain their original reference errors."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/OperatorArray.lean",
+        "passage": {
+          "quote": "theorem scatter_fold (cells : Array (Array Nat)) (locals : Array (Array Float)) (size : Nat) :\n    scatter cells locals size=(contributions cells locals).foldl addAt (Array.replicate size 0) := by\n  change scatter cells locals size=(contributions cells locals).foldl addAt (Array.replicate size 0.0)\n  simp [scatter,contributions,addAt,List.forIn_pure_yield_eq_foldl,List.foldl_flatMap,List.foldl_map,List.range_eq_range']"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The array-reference bridge proves that connection for every well-shaped,\nin-bounds mesh with the supported equal quadrature and interpolation dimensions.\nIt turns the actual nested loops into an ordered fold, relates each array update\nto the tensor scatter update, and checks that both enumerate identical local\nentries. For a finite vector of the required length, the public Poisson.apply\nentry therefore returns the tensor operator's vector. Combined with the actual\nunmasked cell/assembly execution, it returns exactly the published PTX vector.\nWrong lengths and nonfinite values retain their original reference errors."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/OperatorArray.lean",
+        "passage": {
+          "quote": "theorem fold_get (items : List (Nat × Float)) (out : Array Float) (state : Nat → Float)\n    (same : ∀ i<out.size, out[i]! = state i) (i : Nat) (inside : i<out.size) :\n    (items.foldl addAt out)[i]! = items.foldl scatterStep state i := by\n  induction items generalizing out state with\n  | nil => exact same i inside\n  | cons item rest ih =>\n    simp only [List.foldl_cons]\n    apply ih (addAt out item) (scatterStep state item) _ (by simpa using inside)\n    intro j hj\n    have hj' : j<out.size := by simpa using hj\n    rw [addAt_get out item j hj']\n    by_cases eq : item.1=j\n    · subst j; simp [scatterStep,same _ hj']\n    · simp [eq,scatterStep,Function.update_of_ne (Ne.symm eq),same _ hj']"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The array-reference bridge proves that connection for every well-shaped,\nin-bounds mesh with the supported equal quadrature and interpolation dimensions.\nIt turns the actual nested loops into an ordered fold, relates each array update\nto the tensor scatter update, and checks that both enumerate identical local\nentries. For a finite vector of the required length, the public Poisson.apply\nentry therefore returns the tensor operator's vector. Combined with the actual\nunmasked cell/assembly execution, it returns exactly the published PTX vector.\nWrong lengths and nonfinite values retain their original reference errors."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/OperatorArrayRows.lean",
+        "passage": {
+          "quote": "theorem contributions_tensor (o : Operator) (shape : OperatorMesh o) (values : Array Float) :\n    contributions o.mesh.cells (localValues o values)=\n      (Correspondence.contributions shape.connectivity (fun e => entries (localAction o.b o.d o.w (gather o values e.val)))).map\n        (fun item => (item.1.val,item.2)) := by\n  simp only [contributions,Correspondence.contributions,List.map_flatMap,List.map_map,Function.comp_def]\n  rw [← finRange_values o.mesh.cells.size,List.flatMap_map]\n  congr 1\n  funext e\n  rw [shape.width e.val e.isLt,range_product]\n  simp only [List.map_flatMap,List.map_map]\n  rw [← finRange_values o.nodes.size,List.flatMap_map]\n  congr 1\n  funext i\n  simp only [List.map_map]\n  congr 1\n  funext j\n  simp only [Function.comp_def,localValues_entry]\n  rfl"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The array-reference bridge proves that connection for every well-shaped,\nin-bounds mesh with the supported equal quadrature and interpolation dimensions.\nIt turns the actual nested loops into an ordered fold, relates each array update\nto the tensor scatter update, and checks that both enumerate identical local\nentries. For a finite vector of the required length, the public Poisson.apply\nentry therefore returns the tensor operator's vector. Combined with the actual\nunmasked cell/assembly execution, it returns exactly the published PTX vector.\nWrong lengths and nonfinite values retain their original reference errors."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/OperatorArrayCorrespondence.lean",
+        "passage": {
+          "quote": "theorem apply_correspondence (o : Operator) (shape : OperatorMesh o) (same : o.q.size=o.nodes.size)\n    (values : Array Float) (size : values.size=o.mesh.points.size)\n    (finite : values.all Float.isFinite=true) :\n    Poisson.apply o values=.ok (Array.ofFn (shape.operator same values)) := by\n  rw [apply_valid o values size finite,result_tensor o shape same values]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The array-reference bridge proves that connection for every well-shaped,\nin-bounds mesh with the supported equal quadrature and interpolation dimensions.\nIt turns the actual nested loops into an ordered fold, relates each array update\nto the tensor scatter update, and checks that both enumerate identical local\nentries. For a finite vector of the required length, the public Poisson.apply\nentry therefore returns the tensor operator's vector. Combined with the actual\nunmasked cell/assembly execution, it returns exactly the published PTX vector.\nWrong lengths and nonfinite values retain their original reference errors."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellAssemblyReference.lean",
+        "passage": {
+          "quote": "theorem cell_assembly_reference {o : Operator} {values : Array Float}\n    {words : List (Concurrent.Event o.mesh.points.size)}\n    {indices : List (Fin o.mesh.points.size × IndexSources.Access)}\n    {final : Fin o.mesh.points.size → Flow.State}\n    (family : CellWhole.Family o values) (shape : OperatorMesh o)\n    (same : o.q.size=o.nodes.size)\n    (order : List (Fin o.mesh.cells.size)) (complete : ∀ i, i∈order)\n    (a : Assembly.Arena o.mesh.points.size)\n    (base : a.base=family.base) (element : a.element=family.output)\n    (offsetsBefore : a.offsets.toNat+(o.mesh.points.size+1)*4≤family.output.toNat)\n    (entriesBefore : a.entries.toNat+a.entryCount*4≤family.output.toNat)\n    (boundaryBefore : a.boundary.toNat+o.mesh.points.size*4≤family.output.toNat)\n    (tables : a.RowsEncoded family.memory (Assembly.nodeRows o.mesh.points.size (Assembly.MeshRows.locations shape.connectivity)))\n    (separated : a.InputSeparation)\n    (regs : Fin o.mesh.points.size → Registers)\n    (run : Flow.Parallel.Runs a.context\n      (Assembly.entryCode (BitVec.ofNat 32 o.mesh.points.size) a.offsets a.entries a.element false a.boundary a.output)\n      (fun i => a.start (family.publish family.memory order) (regs i)) words indices final)\n    (compatible : Concurrent.Visibility.Compatible\n      (fun space => match space with | .global => family.publish family.memory order | .shared => fun _ => 0) words wordSource)\n    (indexCompatible : IndexSources.Compatible (family.publish family.memory order) words indices indexSource)\n    (done : ∀ i, (final i).halted=true)\n    (size : values.size=o.mesh.points.size) (finite : values.all Float.isFinite=true) :\n    Poisson.apply o values=.ok (Array.ofFn fun node : Fin o.mesh.points.size =>\n      decode (read64 (Concurrent.GlobalPublication.publish (family.publish family.memory order) words)\n        (Assembly.Snapshot.address a node))) := by\n  rw [ArrayOperator.apply_correspondence o shape same values size finite]\n  congr 1\n  apply congrArg Array.ofFn\n  funext node\n  have result := cell_assembly_operator family shape same order complete a base element\n    offsetsBefore entriesBefore boundaryBefore tables separated regs run compatible indexCompatible done node\n  simpa only [Bool.false_eq_true,false_and,ite_false] using result.symm"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The array-reference bridge proves that connection for every well-shaped,\nin-bounds mesh with the supported equal quadrature and interpolation dimensions.\nIt turns the actual nested loops into an ordered fold, relates each array update\nto the tensor scatter update, and checks that both enumerate identical local\nentries. For a finite vector of the required length, the public Poisson.apply\nentry therefore returns the tensor operator's vector. Combined with the actual\nunmasked cell/assembly execution, it returns exactly the published PTX vector.\nWrong lengths and nonfinite values retain their original reference errors."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/OperatorArrayChecks.lean",
+        "passage": {
+          "quote": "theorem cancellation_order :\n    scatter #[#[0,0,0],#[0]] #[#[9007199254740992,1,-9007199254740992],#[2]] 1=#[2] ∧\n    scatter #[#[0,0,0],#[0]] #[#[9007199254740992,-9007199254740992,1],#[2]] 1=#[3] := by\n  decide +kernel"
         }
       }
     }

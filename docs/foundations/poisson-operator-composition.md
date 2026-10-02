@@ -61,6 +61,16 @@ row table sends those four entries to one node, whose assembled value is eight.
 This exercises nonzero arithmetic, actual byte-source checking and publication.
 The coefficients are a synthetic test, not a claim about physical quadrature.
 
+The [array-reference bridge](../../integration/torchlean/PoissonPTX/OperatorArrayCorrespondence.lean)
+then connects this tensor operator to the public `Poisson.apply` function that
+the executable reference calls. It follows the actual nested loops and rounded
+array updates, rather than substituting a new scatter algorithm. The
+[direct PTX/reference theorem](../../integration/torchlean/PoissonPTX/CellAssemblyReference.lean)
+therefore equates that reference result with the actual unmasked publication.
+It requires the reference's normal vector length and finiteness checks.
+A cancellation regression distinguishes two encounter orders, and invalid
+length and infinity regressions retain the existing error behavior.
+
 These are compositional execution and mathematical publication results. The
 cell family does not yet derive arbitrary grid scheduling from one device-wide
 run. The next-launch byte state is explicitly the publication of the preceding

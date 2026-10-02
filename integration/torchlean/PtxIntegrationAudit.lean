@@ -1,3 +1,8 @@
+import PoissonPTX.OperatorArray
+import PoissonPTX.OperatorArrayRows
+import PoissonPTX.OperatorArrayCorrespondence
+import PoissonPTX.CellAssemblyReference
+import PoissonPTX.OperatorArrayChecks
 import PoissonPTX.SourceCheckWords
 import PoissonPTX.AssemblyCompressedRows
 import PoissonPTX.AssemblyRowRepresentation
@@ -5187,3 +5192,29 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.WordSourceCheck.sound
 
 #print axioms PtxTorchLean.Poisson.PTX.CellAssemblyWitness.forged_word_rejected
+
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.scatter
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.flat
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.localValues
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.result
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.apply_valid
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.addAt
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.contributions
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.scatter_fold
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.addAt_size
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.addAt_get
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.fold_size
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.fold_get
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.range_product
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.finRange_values
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.localValues_entry
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.contributions_tensor
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.result_size
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.result_get
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.result_tensor
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.apply_correspondence
+#print axioms PtxTorchLean.Poisson.PTX.cell_assembly_reference
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.Checks.reference_nonzero
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.Checks.wrong_length
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.Checks.nonfinite
+#print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.Checks.cancellation_order

@@ -894,3 +894,20 @@ matching actual store once, provided its soundness proof derives every required
 byte-source equality. This optimization is restricted to whole-word source
 choices; it neither changes the byte-level contract nor establishes the
 separate performed-write condition or complete PTX memory admission.
+
+The tensor operator must also agree with the executable array-based reference.
+That connection follows its actual nested element/local-coordinate loops and
+in-place array updates, preserving the order of rounded additions. It requires
+valid connectivity shape and node bounds, and preserves the reference's vector
+length and finiteness checks. A public proof view may expose private helper
+computations only with a proved connection to the function actually called;
+a second unconnected implementation is insufficient.
+
+The array-reference bridge proves that connection for every well-shaped,
+in-bounds mesh with the supported equal quadrature and interpolation dimensions.
+It turns the actual nested loops into an ordered fold, relates each array update
+to the tensor scatter update, and checks that both enumerate identical local
+entries. For a finite vector of the required length, the public Poisson.apply
+entry therefore returns the tensor operator's vector. Combined with the actual
+unmasked cell/assembly execution, it returns exactly the published PTX vector.
+Wrong lengths and nonfinite values retain their original reference errors.

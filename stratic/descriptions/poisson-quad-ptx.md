@@ -274,5 +274,12 @@ connection without supplying expected intermediate values.
 
 This composition still distinguishes per-cell executions from a device-wide
 grid schedule and mathematical publication from CUDA visibility. Arbitrary-input
-cell existence, external serialization, the imperative array implementation
-bridge, remaining reductions and solver instructions remain explicit work.
+cell existence, external serialization, remaining reductions and solver
+instructions remain explicit work.
+
+The executable array reference and the tensor operator now have a proved
+connection. The actual reference loops enumerate cells and local coordinates
+in the same order and perform the same rounded updates. With valid finite input,
+the public Poisson.apply function returns exactly the vector published by the
+unmasked cell/assembly composition; no change to the reference computation or
+its input validation is needed.
