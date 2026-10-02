@@ -1,9 +1,43 @@
 {
   "status": "pass",
-  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nComplete middle-phase bodies are bound to the concurrent Lean program with\nkernel-checked control, address and numerical certificates for Q1--Q4. Completed\nmiddle-slice executions satisfying necessary byte-source constraints store all\nsix TorchLean intermediate tensors. The final body has a fetched, snapshot-based\nstore theorem and phase-by-phase composition with actual middle stores. A\nconcurrent arithmetic extension now justifies the actual final loads using one\nwhole-history source assignment and connects its result to the fetched store.\nThe arithmetic theorem derives its middle prefix and continuation at the last\nbarrier from a single run. A combined concurrent index/store/return machine now\nderives that arithmetic execution, its ordered event embedding and result\nregister relation, with only global output stores omitted. Byte-source\nrestriction preserves retained reads when those stores are beyond the bounded\ncoefficient region. Actual store addresses now follow from launch bounds, and\neach completed active lane's stored bytes have its TorchLean value. Actual store\noccurrence and recorded values imply an order-independent published global\ntensor equal to TorchLean. This mathematical publication leaves CUDA host\nvisibility and complete PTX memory admission open.\nThe seven-instruction register prologue is separately proved from launch context\nand bound with its declarations to each emitted element entry. The twelve-step\nactive gather has a fetched snapshot proof, derived layout safety and a TorchLean\ninput theorem; its complete body is bound for all three source vectors. The\nconcurrent 21-instruction prefix now derives original input reads, gathered bits,\nactual barrier completion and the arithmetic launch contract. Actual store\ncoverage, values, padding exclusion and byte ownership are also proved. Actual\nfirst-barrier ordering and preservation by the arithmetic/output body now derive\ncontinuation reads from those gathered stores. Source rebasing now connects the\nactual gather to the numerical body and its published TorchLean cell tensor.\nA single native-counter run now derives the prefix/body split and joint-history\ninput admission, and publishes the TorchLean cell tensor. Remaining solver\nentry composition and launch composition remain open. The isolated assembly\ntraversal now has ordered-fold correctness and general existence from allocated\ninput arrays; its emitted loop slice is bound separately. Entry setup, masking,\noutput publication and inter-launch visibility are not part of that slice.\nA coefficient representation contract also connects the complete cell theorem\nto the stated TorchLean operator, with equal quadrature and node dimensions.\nSaved output extents are checked disjoint; this is concrete layout evidence,\nseparate from the general launch-derived address theorem and GPU conformance.",
+  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nComplete middle-phase bodies are bound to the concurrent Lean program with\nkernel-checked control, address and numerical certificates for Q1--Q4. Completed\nmiddle-slice executions satisfying necessary byte-source constraints store all\nsix TorchLean intermediate tensors. The final body has a fetched, snapshot-based\nstore theorem and phase-by-phase composition with actual middle stores. A\nconcurrent arithmetic extension now justifies the actual final loads using one\nwhole-history source assignment and connects its result to the fetched store.\nThe arithmetic theorem derives its middle prefix and continuation at the last\nbarrier from a single run. A combined concurrent index/store/return machine now\nderives that arithmetic execution, its ordered event embedding and result\nregister relation, with only global output stores omitted. Byte-source\nrestriction preserves retained reads when those stores are beyond the bounded\ncoefficient region. Actual store addresses now follow from launch bounds, and\neach completed active lane's stored bytes have its TorchLean value. Actual store\noccurrence and recorded values imply an order-independent published global\ntensor equal to TorchLean. This mathematical publication leaves CUDA host\nvisibility and complete PTX memory admission open.\nThe seven-instruction register prologue is separately proved from launch context\nand bound with its declarations to each emitted element entry. The twelve-step\nactive gather has a fetched snapshot proof, derived layout safety and a TorchLean\ninput theorem; its complete body is bound for all three source vectors. The\nconcurrent 21-instruction prefix now derives original input reads, gathered bits,\nactual barrier completion and the arithmetic launch contract. Actual store\ncoverage, values, padding exclusion and byte ownership are also proved. Actual\nfirst-barrier ordering and preservation by the arithmetic/output body now derive\ncontinuation reads from those gathered stores. Source rebasing now connects the\nactual gather to the numerical body and its published TorchLean cell tensor.\nA single native-counter run now derives the prefix/body split and joint-history\ninput admission, and publishes the TorchLean cell tensor. Remaining solver\nentry composition and launch composition remain open. The isolated assembly\ntraversal now has ordered-fold correctness and general existence from allocated\ninput arrays. Complete assembly entries also have snapshot correctness and\nexistence, including offset loads, boundary masking, output stores and padded\nreturns. Both complete emitted entries and their native branch targets are\nbound. Concurrent output publication and inter-launch visibility remain open.\nA coefficient representation contract also connects the complete cell theorem\nto the stated TorchLean operator, with equal quadrature and node dimensions.\nSaved output extents are checked disjoint; this is concrete layout evidence,\nseparate from the general launch-derived address theorem and GPU conformance.",
   "checked": [
     {
       "directory": "00-n1-q1",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "f079ac3cc79f56e56954136e88bd31a00703418ca4097565468231888e17c31f"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "d502ab4ade9fb527778037802ba8c28ab32b94919eae0bf5cacf2dc2990d5292"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -603,6 +637,40 @@
     },
     {
       "directory": "01-n2-q1",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "bb50d7e4f02b482e5a5964eb5fc06690231589a35a4212435e991637decc18bb"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "9de66ee8394980bceeb08aa5d22bae56fbb5098a82c0060067ca78f4b4654bcc"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -1202,6 +1270,40 @@
     },
     {
       "directory": "02-n4-q1",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "050e3babfdbed80e20514bd0bedbf82895383c8b278d6241839317cf1ea3f2cf"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "5dc2c37f910b38290193481fb3b17157ee070de55ae71e79a5e510f9e7444e58"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -1801,6 +1903,40 @@
     },
     {
       "directory": "03-n1-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "5d09cd27ce9f0b1540d4024eb1fe85a34c3f60dc970746e8ddfba7b97b05b89b"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "5037acaec013b041033947a5a140e2a34db71082708e67a6be7ff758d00d3a43"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -2400,6 +2536,40 @@
     },
     {
       "directory": "04-n2-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "98242dde7ee8e2b879383d6e23dd6e6cd96585b66bd517675ce0aef79f30fb6a"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "fd1673d89dad00949b1a8911f22c6030fed3f89f1db710d4f581366b95e0d678"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -2999,6 +3169,40 @@
     },
     {
       "directory": "05-n4-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "6d497dbabd31502efdf0639cce9faf6ed1f821f988a3cf6819d3501e2d16fe36"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "5fba69e2f5172402dda4d1ba6be1b176a30c53e427991e1a885aa94ef9f3ce7b"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -3598,6 +3802,40 @@
     },
     {
       "directory": "06-n1-q3",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "478927ca0cc9e0cac9878faa6c5c8f0483a17a73b961c3c7e779ba67fb163f5c"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "b1aba762ac2d60327b6653d0183c5dc1f91b1eb483a68d320614bebb40e1deb1"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -4197,6 +4435,40 @@
     },
     {
       "directory": "07-n2-q3",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "7399d8649502e6eac9aa2ec174d8dd5734be8310f1bc8687babf6b4fec8b8620"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "c75b0272775cda8ee73594e2e214a9432fa0d3faa767ad697774fbbca4be4844"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -4796,6 +5068,40 @@
     },
     {
       "directory": "08-n4-q3",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "6fc50613a0df321138e8e0aa738cbd8b12eda1bc820ebac5a91796b7a3ed858f"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "6115ee9f0ac787cfd833d2ed7c2fb9c2e4eb52fb375d4d001b55a98b97bd850f"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -5395,6 +5701,40 @@
     },
     {
       "directory": "09-n1-q4",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "b768f5a6f62e6a76a14fa145745147620978dd345482bee4f2c3771c5fb8b179"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "2262d8b8678b77d0b7b80e8447a63dbed2ca7a8fbebdc18b441500cb65600f14"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -5994,6 +6334,40 @@
     },
     {
       "directory": "10-n2-q4",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "c62133d8b0cdcfd5553b0d85bee751410e9b992e16266c140d34514f911882d6"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "725b4ae8b1d2786e02cc5539e114408b33531b3ec500faa8b0ff98d398c1bd57"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -6593,6 +6967,40 @@
     },
     {
       "directory": "11-n4-q4",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "33b245897aaffb9f644130d10b6ed3c480ae7bcba315f25c71d2b84cb2855a25"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "d4b4e90434613ca46a628addb1ab1441e35b016365842ec422b3c1e7bb006499"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -7192,6 +7600,40 @@
     },
     {
       "directory": "12-n8-q4",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "80a0c6237fdd36e289b59b38503cba6fa117332f3c30bd2df30459dcea555e3c"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "216b2fe7dfaaf5689ca8f3a2e21982c0a3d7bd2c4ef3c09f624c234a21e08cea"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -7791,6 +8233,40 @@
     },
     {
       "directory": "13-n2-q1",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "bb50d7e4f02b482e5a5964eb5fc06690231589a35a4212435e991637decc18bb"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "9de66ee8394980bceeb08aa5d22bae56fbb5098a82c0060067ca78f4b4654bcc"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -8390,6 +8866,40 @@
     },
     {
       "directory": "14-n2-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "98242dde7ee8e2b879383d6e23dd6e6cd96585b66bd517675ce0aef79f30fb6a"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "fd1673d89dad00949b1a8911f22c6030fed3f89f1db710d4f581366b95e0d678"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -8989,6 +9499,40 @@
     },
     {
       "directory": "15-n2-q3",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "7399d8649502e6eac9aa2ec174d8dd5734be8310f1bc8687babf6b4fec8b8620"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "c75b0272775cda8ee73594e2e214a9432fa0d3faa767ad697774fbbca4be4844"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -9588,6 +10132,40 @@
     },
     {
       "directory": "16-n2-q4",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "c62133d8b0cdcfd5553b0d85bee751410e9b992e16266c140d34514f911882d6"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "725b4ae8b1d2786e02cc5539e114408b33531b3ec500faa8b0ff98d398c1bd57"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -10187,6 +10765,40 @@
     },
     {
       "directory": "17-n2-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "98242dde7ee8e2b879383d6e23dd6e6cd96585b66bd517675ce0aef79f30fb6a"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "fd1673d89dad00949b1a8911f22c6030fed3f89f1db710d4f581366b95e0d678"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -10786,6 +11398,40 @@
     },
     {
       "directory": "18-n2-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "98242dde7ee8e2b879383d6e23dd6e6cd96585b66bd517675ce0aef79f30fb6a"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "fd1673d89dad00949b1a8911f22c6030fed3f89f1db710d4f581366b95e0d678"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -11385,6 +12031,40 @@
     },
     {
       "directory": "19-n2-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "98242dde7ee8e2b879383d6e23dd6e6cd96585b66bd517675ce0aef79f30fb6a"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "fd1673d89dad00949b1a8911f22c6030fed3f89f1db710d4f581366b95e0d678"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -11984,6 +12664,40 @@
     },
     {
       "directory": "20-n2-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "98242dde7ee8e2b879383d6e23dd6e6cd96585b66bd517675ce0aef79f30fb6a"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "fd1673d89dad00949b1a8911f22c6030fed3f89f1db710d4f581366b95e0d678"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -12583,6 +13297,40 @@
     },
     {
       "directory": "21-n2-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "98242dde7ee8e2b879383d6e23dd6e6cd96585b66bd517675ce0aef79f30fb6a"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "fd1673d89dad00949b1a8911f22c6030fed3f89f1db710d4f581366b95e0d678"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -13182,6 +13930,40 @@
     },
     {
       "directory": "22-n3-q1",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "e41e740e9b480e78ff6aeea5513d357a5bbd663f1034dc5029c8a590597294fa"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "c61b4fcfd964fe3dfaaa120b7a332c63a1deebdfad03ea29c5fe2d54e8430596"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -13781,6 +14563,40 @@
     },
     {
       "directory": "23-n3-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "45b2e6504adbfa2d369db44a6eba267cd209c416234526349b3a39fd03cfb2c4"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "cb36a03a6774c0256db67ccd94ac6b4ed620512d3c3bff7b0f198000b53edbb4"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -14380,6 +15196,40 @@
     },
     {
       "directory": "24-n3-q3",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "3823ee13555a892a83c835693f5d2d9d08931a276d6f44a785e2a2898f5968dc"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "f17ae79cc63eed5a3f701505d31bbd8d239ed4b9883da3804a5347c7b0e0e2e2"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -14979,6 +15829,40 @@
     },
     {
       "directory": "25-n3-q4",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "2dbdf74fa449101466c814e2092431f63cca8902fb1d65d5dd1deda9604c0cb3"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "d8386f07c17a3a4b3a34c79b41a2faadb8e10e10b168d63375fdf5102e6cea30"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -15578,6 +16462,40 @@
     },
     {
       "directory": "26-n8-q4",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "80a0c6237fdd36e289b59b38503cba6fa117332f3c30bd2df30459dcea555e3c"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "216b2fe7dfaaf5689ca8f3a2e21982c0a3d7bd2c4ef3c09f624c234a21e08cea"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -16177,6 +17095,40 @@
     },
     {
       "directory": "27-n16-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "31a21469d7d1aeb1c3895d140f0b678f0d3aabb6ff80a37050b57d49d3a6eccf"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "bfbc4ab7e13b3e0e79c23f286594b941d10b06781e88d2dc15766e7c61f8bb00"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -16776,6 +17728,40 @@
     },
     {
       "directory": "28-n4-q3",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "6fc50613a0df321138e8e0aa738cbd8b12eda1bc820ebac5a91796b7a3ed858f"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "6115ee9f0ac787cfd833d2ed7c2fb9c2e4eb52fb375d4d001b55a98b97bd850f"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -17375,6 +18361,40 @@
     },
     {
       "directory": "29-n2-q2",
+      "assembly_entries": [
+        {
+          "entry": "assemble_probe",
+          "instructions": 34,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "98242dde7ee8e2b879383d6e23dd6e6cd96585b66bd517675ce0aef79f30fb6a"
+        },
+        {
+          "entry": "assemble_ap",
+          "instructions": 40,
+          "branches": [
+            [
+              17,
+              29
+            ],
+            [
+              28,
+              16
+            ]
+          ],
+          "scope": "Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.",
+          "sha256": "fd1673d89dad00949b1a8911f22c6030fed3f89f1db710d4f581366b95e0d678"
+        }
+      ],
       "assembly_loop": [
         {
           "entry": "assemble_probe",
@@ -18165,17 +19185,32 @@
     "PtxTorchLean.Poisson.PTX.Assembly.fetched_exists",
     "PtxTorchLean.Poisson.PTX.Assembly.valid_of_layout",
     "PtxTorchLean.Poisson.PTX.Assembly.layout_correct",
-    "PtxTorchLean.Poisson.PTX.Assembly.layout_exists"
+    "PtxTorchLean.Poisson.PTX.Assembly.layout_exists",
+    "PtxTorchLean.Poisson.PTX.Assembly.entry_written",
+    "PtxTorchLean.Poisson.PTX.Assembly.entry_exists",
+    "PtxTorchLean.Poisson.PTX.Assembly.inactive_result"
   ],
-  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.run_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.stored_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.published_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.shared_stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.global_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.input_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.initial_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.runs_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_location' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.all_reads' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.inputs_of_matrices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.index_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.location_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.output_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.read_wordBytes' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.phase_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.completed_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.run_append_code' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.compatible_prefix' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.performed_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.view_append' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.results' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.load_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.all_reads' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.register_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_local' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_completion' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.split' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_run' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.crossing_state' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.step_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.split_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.across' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.performed' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.separated_by_fence' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.checked' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.read_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.after_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.fetched_preserves_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.distinct_outputs' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.projected_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.halted_blocks' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.synchronize_related' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.front_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.project_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.clipped' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.padding_return' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.tail_events' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.arithmetic_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_under_store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.tail_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_keeps' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.store_address' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.stored_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.coefficient_nowrap' depends on axioms: [propext,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stored_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stores_disjoint' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.store_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.completed_wrote' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.safe_records' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.present_record' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_outside' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.location_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_tensor' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.word' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.permuted_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.outside' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_sound' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_complete' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.memories' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.other_register' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.ready' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.thread_registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.stored' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.index_exact' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.CellGather.connectivity_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.node_inside' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.valid_of_layout' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.no_global_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.index_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.word_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.actual_trace' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_lane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.gathered_bits' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.gathered_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_barrier' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.arithmetic_launch' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_wrote' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_active' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_gather' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.info' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.producer' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.byte_owner' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.different_writers' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_arrivals' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_before_arrival' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_before_completion' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.continuation_read' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.preserves_gather' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.publication_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.publication_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.body_sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.body_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.published_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.cell_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.cell_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.performed' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.joint_cell_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.launch' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.live_gather' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.index_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.output_fence' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_indices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.source_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_words' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.executions' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.histories' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.output_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.operator_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CoefficientRepresentation.tensors' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CoefficientRepresentation.calculation' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.body_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.traversal_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.traversal_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.valid_of_layout' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.layout_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.layout_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
+  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.run_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.stored_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.published_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.shared_stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.global_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.input_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.initial_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.runs_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_location' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.all_reads' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.inputs_of_matrices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.index_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.location_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.output_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.read_wordBytes' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.phase_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.completed_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.run_append_code' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.compatible_prefix' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.performed_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.view_append' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.results' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.load_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.all_reads' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.register_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_local' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_completion' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.split' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_run' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.crossing_state' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.step_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.split_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.across' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.performed' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.separated_by_fence' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.checked' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.read_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.after_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.fetched_preserves_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.distinct_outputs' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.projected_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.halted_blocks' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.synchronize_related' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.front_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.project_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.clipped' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.padding_return' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.tail_events' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.arithmetic_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_under_store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.tail_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_keeps' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.store_address' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.stored_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.coefficient_nowrap' depends on axioms: [propext,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stored_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stores_disjoint' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.store_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.completed_wrote' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.safe_records' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.present_record' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_outside' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.location_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_tensor' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.word' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.permuted_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.outside' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_sound' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_complete' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.memories' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.other_register' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.ready' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.thread_registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.stored' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.index_exact' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.CellGather.connectivity_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.node_inside' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.valid_of_layout' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.no_global_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.index_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.word_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.actual_trace' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_lane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.gathered_bits' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.gathered_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_barrier' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.arithmetic_launch' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_wrote' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_active' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_gather' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.info' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.producer' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.byte_owner' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.different_writers' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_arrivals' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_before_arrival' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_before_completion' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.continuation_read' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.preserves_gather' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.publication_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.publication_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.body_sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.body_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.published_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.cell_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.cell_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.performed' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.joint_cell_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.launch' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.live_gather' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.index_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.output_fence' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_indices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.source_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_words' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.executions' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.histories' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.output_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.operator_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CoefficientRepresentation.tensors' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CoefficientRepresentation.calculation' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.body_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.traversal_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.traversal_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.valid_of_layout' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.layout_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.layout_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.entry_written' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.entry_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Assembly.inactive_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
   "source_sha256": {
     "integration/torchlean/PoissonPTX/Arithmetic.lean": "8fd4f79048a2452ec06f11fa6dd491ba1c2ceac1f0f73941aeb55558b9e16e2c",
     "integration/torchlean/PoissonPTX/AssemblyChecks.lean": "ab75459633ea16f91715a5256faa11e1e443249cfaaee481eb89e30abd4e75b1",
+    "integration/torchlean/PoissonPTX/AssemblyEntry.lean": "3dad9e0a02e1579ed2ed12f8c8891c753a2cd9677970d7c8eb3d20933a42f084",
+    "integration/torchlean/PoissonPTX/AssemblyEntryChecks.lean": "949a93e8fbcfed5094d12790ea30a0ed8f49fe04228ce1344e4cc780b93fc87e",
+    "integration/torchlean/PoissonPTX/AssemblyEntryExists.lean": "01544c7c4910e7c7de05a7dfa204bf4dbad5416ad72fe1042d8b9dc2bf363346",
+    "integration/torchlean/PoissonPTX/AssemblyEntryResult.lean": "59a7d6c53ee72ccbb74229a3b332f4ffdf15b91abccf532bcd97691051f9ce80",
+    "integration/torchlean/PoissonPTX/AssemblyEntryText.lean": "a296e28639fe37dbf3ed691bb2bc5146121a55095c648b6cc65d667fc99f106a",
     "integration/torchlean/PoissonPTX/AssemblyExists.lean": "75de1c8a4df73f0b322b4f108e6c2f7cedc6ef84db5352e1b15e15b6f34cbdd3",
+    "integration/torchlean/PoissonPTX/AssemblyInactive.lean": "a7ca7c658b1974bc4096b9117a4d71dc8aea81fe4546fb2492e09c2448c7213b",
     "integration/torchlean/PoissonPTX/AssemblyLayout.lean": "6e969902aad82ad115a5330b175d7d1c2c5c75f46977945492e9c0dc7982801c",
     "integration/torchlean/PoissonPTX/AssemblyLookup.lean": "fee69319dcd322994a97f92145c3d59a4358acb3b260c424885b0b2a3e983681",
     "integration/torchlean/PoissonPTX/AssemblyLoop.lean": "df5e30b82a374722692f41ca65c930e6b28f82a9e03fa3514d61e5627fabadd5",
-    "integration/torchlean/PoissonPTX/AssemblyText.lean": "92b2ad4cf83d550793d1a111398f6fd098042e223d9cc5a50c8a1b5b760c9a55",
+    "integration/torchlean/PoissonPTX/AssemblyMask.lean": "aa59d6c3de0057cbe6de3cccf0deb23f90a9a0ed521fa4daec8240b07f78c857",
+    "integration/torchlean/PoissonPTX/AssemblyOutput.lean": "c65c42127996bb105b23be6f90910262ba0c16cd9f2c3ffc3855d39d16300253",
+    "integration/torchlean/PoissonPTX/AssemblyPrologue.lean": "5909fa6ca3fa07e3ab6ed50ba147d0341f33f8deab0edaec127d6ec171df7b79",
+    "integration/torchlean/PoissonPTX/AssemblySetup.lean": "580f2a8ccbb72954c5fe44ed3490e130706237de9f24ca0a850b741a4af3d18c",
+    "integration/torchlean/PoissonPTX/AssemblyText.lean": "36ec530b0ef469e5c59a9272ad8419dddea6a8d632eb76623e8210d91f349e65",
+    "integration/torchlean/PoissonPTX/AssemblyWindow.lean": "cf99b29cdcc3a012afc37fb9e7c8a3fcab0a42219331bb44fc6d9b80621c208e",
+    "integration/torchlean/PoissonPTX/AssemblyWindowExists.lean": "66513c03afdee1722c5014cddb429ad247add54f5fc6cfada894e0b018d011f3",
     "integration/torchlean/PoissonPTX/BarrierChecks.lean": "b821ce1ae932bbb62dd1bf151c3bf62e17865382805a394467179e9714681780",
     "integration/torchlean/PoissonPTX/BarrierClock.lean": "8857b4464acd442121ea4b9a6f75c0b051ab0e4a504707aa1f365d2ee2fc0652",
     "integration/torchlean/PoissonPTX/BarrierSources.lean": "b1c114dbc5ca25231c698ee764cb98bb9bc70066e2728a835b618022ef5c55bb",
@@ -18313,11 +19348,15 @@
     "integration/torchlean/PoissonPTX/ControlFlowBlocks.lean": "5a1a514fff2dc8a47d6af587a7135c55ff2b2669a1a027dda2af7a045ebaba75",
     "integration/torchlean/PoissonPTX/ControlFlowLoop.lean": "fd802e5ee16b734d52b940551734063b02cc81989f4ab05316ff5c5018d52a53",
     "integration/torchlean/PoissonPTX/ControlFlowLoopExists.lean": "09567a493758324ff23d4bfb703fba49420c8e252a2d9181046632344b9d0abd",
+    "integration/torchlean/PoissonPTX/ControlFlowSequence.lean": "38e949fa3c72861a9b7222546bedbe007d719923d9321359945c88bd76b6739f",
+    "integration/torchlean/PoissonPTX/ControlFlowWindow.lean": "d2aa4593d32d2c1554bd8df24933fffc07301934f5a47eafc65d307058e3ed22",
+    "integration/torchlean/PoissonPTX/ControlFlowWindowExists.lean": "305e141a2d697907c7d9b938f5ad3a4ec4476d426f83fe6e76d3bae05cc1360d",
     "integration/torchlean/PoissonPTX/ExecutionClock.lean": "2720eb1100acf536765ae47aa6118f2b9afc548f941ab92d9f741698eecf5115",
     "integration/torchlean/PoissonPTX/GlobalPublication.lean": "5c0f5002f713a69029328c0a4b933531ab291509d37ace14fbb930c9df52d4c4",
     "integration/torchlean/PoissonPTX/IndexSources.lean": "3a17c43096f7e624aed228a0dfb0ea2ae8876b73f5327bb362f9e27afb33be80",
     "integration/torchlean/PoissonPTX/IndexedBlocks.lean": "9f65a1c4b0eb336549675bc2c3ed18844487aac8b59bc0ae28a03e16e07f6a46",
     "integration/torchlean/PoissonPTX/IndexedCandidate.lean": "0fb7adb016cd0d1d1fb6935b726d31b70042b631a1f04d12e6d8fbf1f3a45ee9",
+    "integration/torchlean/PoissonPTX/IndexedFrames.lean": "9d5f49d58d284ea66c12b4fc9ae0a321737bbd98cacfb57e96767c14ddc8689d",
     "integration/torchlean/PoissonPTX/IndexedMemory.lean": "7dde53ff3e831fe7adde920461a968cef61a49c355acae5260013482206994e8",
     "integration/torchlean/PoissonPTX/Kernel.lean": "ea4455c6b5c72b1566b369ff99c144751a62f5ca25647bfa71ba5550b16e82d6",
     "integration/torchlean/PoissonPTX/Layout.lean": "584efde27d90c4591c76ace8a6c4064daf83ff43db5c07850dd4b807ed26a031",
@@ -18355,13 +19394,13 @@
     "integration/torchlean/PoissonPTX/WeakPadding.lean": "920a80b3d0047288905e9bc2573b42937dbf7259c022c3adbb7c602ed9e43279",
     "integration/torchlean/PoissonPTX/WeakResidual.lean": "0b8438f59d104b68834763b204674f7ae4cc428e192d7dc1bced7127a012de33",
     "integration/torchlean/PoissonPTX/ZeroSources.lean": "efbd8cea410e6ea0c7820b4b4f081e805206641ab808951692bf4af91ca4c079",
-    "integration/torchlean/PoissonContractionsMain.lean": "40dc78266340edd53cbca8faa9654745cc93c07eacda2767faeb5d8fda964c2f",
+    "integration/torchlean/PoissonContractionsMain.lean": "e3b53204e1190e320509b1fb8eba30b1bf17a4064338096aeafc9eb389de8773",
     "integration/torchlean/PoissonQuadCorrespondence.lean": "e5d177ec11019881d2732da0a605d7dd3c4f98ed23acfc2f84fb2b5f5441a211",
-    "integration/torchlean/check.py": "1be1d88ae55adae8e4d05c13910d10b48aee1d40cf00dbc77ab4f1329b229d57",
-    "integration/torchlean/lakefile.toml": "4d93f2a5376350f232fbf432cb8e1d1e5b3005cdd5ac28936d0f6f474bf8709b",
+    "integration/torchlean/check.py": "40953fe5d29c4638b8143bce3d708661df2e84dacdc10adf6c6ace310de9f762",
+    "integration/torchlean/lakefile.toml": "c487e12d46b9eeb71c3acc05f9ddda346d603af8afb79145ec4b3b1d52f60cc6",
     "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
     "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
-    "hardware/check_poisson_contractions.py": "6d4456fe6e3d60798ec39b5cd1265c26bd3ee6ba21dcf0b0859d9df8c837dfed",
+    "hardware/check_poisson_contractions.py": "960a2e6c8caa36d5f607689c1cdc281fbaa2c9c118946c3e8cb9ec348b609034",
     "hardware/check_poisson_ptx.py": "6165a8e3962b76285ffa475379ff3d44483ed248e42d5a1497ff4b34d9a99447"
   },
   "source_run_report_sha256": "c0334cbcbb6c4393c3045a73dbaf9ffb303e5103c33ce5b8f16196c3810ad613",

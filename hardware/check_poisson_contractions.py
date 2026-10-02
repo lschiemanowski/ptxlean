@@ -32,8 +32,10 @@ A single native-counter run now derives the prefix/body split and joint-history
 input admission, and publishes the TorchLean cell tensor. Remaining solver
 entry composition and launch composition remain open. The isolated assembly
 traversal now has ordered-fold correctness and general existence from allocated
-input arrays; its emitted loop slice is bound separately. Entry setup, masking,
-output publication and inter-launch visibility are not part of that slice.
+input arrays. Complete assembly entries also have snapshot correctness and
+existence, including offset loads, boundary masking, output stores and padded
+returns. Both complete emitted entries and their native branch targets are
+bound. Concurrent output publication and inter-launch visibility remain open.
 A coefficient representation contract also connects the complete cell theorem
 to the stated TorchLean operator, with equal quadrature and node dimensions.
 Saved output extents are checked disjoint; this is concrete layout evidence,
@@ -95,6 +97,20 @@ def parameters(layout):
                 f['offset']+f['count']*8 > layout['bytes']):
             raise ValueError('invalid gather source extent')
         result['sources'].append(f['offset'])
+    result['count'] = layout['fields']['probe']['count']
+    if result['count'] >= 2**32 or any(layout['fields'][name]['count'] != result['count'] for name in ('p','x')):
+        raise ValueError('invalid or inconsistent node count')
+    for name, kind, count, alignment in (
+            ('offsets','I',result['count']+1,4), ('boundary','I',result['count'],4),
+            ('applied','d',result['count'],8), ('ap','d',result['count'],8)):
+        f = layout['fields'][name]
+        if (f['kind'] != kind or type(f['count']) is not int or f['count'] != count or
+                type(f['offset']) is not int or f['offset'] < 0 or f['offset'] % alignment or
+                f['offset']+count*alignment > layout['bytes']):
+            raise ValueError('invalid assembly '+name+' extent')
+    result['offsets'] = layout['fields']['offsets']['offset']
+    result['boundary'] = layout['fields']['boundary']['offset']
+    result['targets'] = [layout['fields'][name]['offset'] for name in ('applied','ap')]
     return result
 
 
@@ -376,6 +392,48 @@ def verify_assembly_loop(ptx, rendered, layout):
     return checked
 
 
+def verify_assembly_entries(ptx, rendered, layout):
+    """Bind complete assembly entries and absolute branch targets to Lean."""
+    params = parameters(layout)
+    if len(rendered) != 2 or any(token in ptx for token in ('//','/*','*/')):
+        raise ValueError('expected two entries in the exact generated dialect')
+    declarations = [
+        '.reqntid 256, 1, 1', '{',
+        '.reg .u32 %lane, %cell, %i, %j, %k, %idx, %node, %cursor, %end, %other, %flag, %flag2, %global;',
+        '.reg .b64 %base, %off, %addr, %shared;',
+        '.reg .f64 %a, %b, %c, %d, %acc, %acc2, %prod, %value;',
+        '.reg .pred %live, %p0, %p1, %p2, %p3;']
+    checked = []
+    for entry, expected in zip(('assemble_probe','assemble_ap'), rendered, strict=True):
+        bodies = re.findall(r'\.visible \.entry '+entry+r'\(\.param \.u64 arena\)\s*([^}]+)}', ptx)
+        if len(bodies) != 1 or len(re.findall(r'\.entry\s+'+entry+r'\b', ptx)) != 1:
+            raise ValueError('assembly entry missing or duplicated')
+        lines = [line.strip() for line in bodies[0].splitlines() if line.strip()]
+        if lines[:len(declarations)] != declarations or lines[len(declarations):] != expected['code']:
+            raise ValueError('complete assembly entry differs from proved program')
+        launch = layout['launches'][entry]
+        if launch != dict(groups=(params['count']+255)//256, threads=256, shared_bytes=0):
+            raise ValueError('assembly launch differs from reviewed shape')
+        instructions, labels = [], {}
+        for line in expected['code']:
+            if line.endswith(':'):
+                if line[:-1] in labels: raise ValueError('duplicate assembly label')
+                labels[line[:-1]] = len(instructions)
+            else: instructions.append(line)
+        branches = []
+        for pc,line in enumerate(instructions):
+            match = re.fullmatch(r'(?:@%p0 )?bra (\w+);', line)
+            if match:
+                if match[1] not in labels: raise ValueError('unresolved assembly label')
+                branches.append([pc,labels[match[1]]])
+        if [len(instructions),branches] != expected['shape']:
+            raise ValueError('assembly counters differ from fetched Lean code')
+        checked.append(dict(entry=entry,instructions=len(instructions),branches=branches,
+            scope='Complete per-thread snapshot execution; concurrent publication and launch visibility remain separate.',
+            sha256=hashlib.sha256(('\n'.join(expected['code'])+'\n').encode()).hexdigest()))
+    return checked
+
+
 def check(run, output):
     if output.exists():
         raise ValueError('output already exists')
@@ -472,17 +530,18 @@ def check(run, output):
     names += ['PtxTorchLean.Poisson.PTX.CellWhole.' + name for name in ('executions', 'histories', 'sources', 'output_bounds', 'tensor')]
     names += ['PtxTorchLean.Poisson.PTX.CellWhole.operator_tensor']
     names += ['PtxTorchLean.Poisson.PTX.CoefficientRepresentation.' + name for name in ('tensors', 'calculation')]
-    names += ['PtxTorchLean.Poisson.PTX.Assembly.' + name for name in ('body_correct', 'traversal_correct', 'fetched_correct', 'traversal_exists', 'fetched_exists', 'valid_of_layout', 'layout_correct', 'layout_exists')]
+    names += ['PtxTorchLean.Poisson.PTX.Assembly.' + name for name in ('body_correct', 'traversal_correct', 'fetched_correct', 'traversal_exists', 'fetched_exists', 'valid_of_layout', 'layout_correct', 'layout_exists', 'entry_written', 'entry_exists', 'inactive_result')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.CellOperatorCorrespondence\nimport PoissonPTX.AssemblyLayout\nimport PoissonPTX.CellWholeCorrespondence\nimport PoissonPTX.CellEntryJointCorrespondence\nimport PoissonPTX.CellEntryCorrespondence\nimport PoissonPTX.CellEntryContinuation\nimport PoissonPTX.CellEntryProducers\nimport PoissonPTX.CellEntryStoreTensor\nimport PoissonPTX.CellEntryLaunch\nimport PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.AssemblyEntryExists\nimport PoissonPTX.AssemblyInactive\nimport PoissonPTX.CellOperatorCorrespondence\nimport PoissonPTX.AssemblyLayout\nimport PoissonPTX.CellWholeCorrespondence\nimport PoissonPTX.CellEntryJointCorrespondence\nimport PoissonPTX.CellEntryCorrespondence\nimport PoissonPTX.CellEntryContinuation\nimport PoissonPTX.CellEntryProducers\nimport PoissonPTX.CellEntryStoreTensor\nimport PoissonPTX.CellEntryLaunch\nimport PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)
     layouts = [json.loads(read_artifact(run, report, c['directory']+'/layout.json')) for c in report['cases']]
     rendered = json.loads(subprocess.check_output([INTEGRATION/'.lake/build/bin/poissonContractions'],
         input=json.dumps([parameters(l) for l in layouts])+'\n', text=True))
-    checked = [dict(directory=c['directory'], assembly_loop=verify_assembly_loop(
+    checked = [dict(directory=c['directory'], assembly_entries=verify_assembly_entries(
+        read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['assembly_entries'], layout), assembly_loop=verify_assembly_loop(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['assembly'], layout), whole_entry=verify_whole(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code, layout), entry_prefix=verify_entry(
         read_artifact(run, report, c['directory']+'/kernel.ptx').decode(), code['entries'], layout), gather=verify_gather(

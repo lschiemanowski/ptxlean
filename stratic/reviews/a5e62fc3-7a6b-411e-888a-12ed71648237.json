@@ -1,0 +1,165 @@
+{
+  "id": "a5e62fc3-7a6b-411e-888a-12ed71648237",
+  "base": "4772617097f3617a322b0b9a108eeb84f13471ad",
+  "contentTree": "c8a82f4785989fe2e1d0786ea5138fae1ff19bca",
+  "reviewer": "Codex",
+  "summary": "Prove complete assembly entry correctness and execution existence through the actual guard, loaded cursor range, absolute-counter loop, boundary mask, store and return.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Compose the actual entry with no supplied ready execution, loop result or iteration count. Derive one stored word and unchanged other bytes; handle padded return and prove general existence."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Record complete snapshot assembly contracts and exact emitted-entry binding while retaining concurrent publication and launch obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No equations, TorchLean calculation, emitted kernel or host algorithm changed."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Reviewed both directions of fetched-loop traversal, actual loaded bounds, unsigned cursor termination, node/base preservation, boundary flag meaning, exact final write and inactive early return. The code checker binds declarations, launch shape and native targets. Snapshot source conditions are explicit; there is no new hardware or full PTX admission claim."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "c8a82f4785989fe2e1d0786ea5138fae1ff19bca",
+      "method": "Complete registered Lean build; fresh AssemblyEntryChecks kernel regressions; exact dependency audit; source guards and pins; complete emitted assembly/cell binding on saved runs; 27 Python Poisson tests; Stratic validation and manual contract review.",
+      "outcome": "pass",
+      "environment": "Lean 4.34.0; 16 verified dependency pins; CPU proof checks and saved GPU artifacts, without GPU reruns or paid calls.",
+      "evidence": "4267 exact audited declarations, only standard Lean axioms; 476 guarded files. Whole active assembly entry output correctness and finite execution existence; padding correctness/existence without allocated inputs; fresh cancellation, mask, padding and invalid-access tests. Both complete assembly entries (60 total) and native branches bound across 30 layouts, alongside 90 complete cell entries and previous residual binding. 418 receipt source hashes verified; 27 Python tests pass. Identical before/after snapshots, Stratic valid, README unchanged. Concurrent assembly publication, input serialization and solver/launch correspondence remain explicit.",
+      "tests": [],
+      "id": "d46db6f4-6336-4bb4-b20b-7727a0f91c22",
+      "recordedAt": "2026-10-02T12:10:33.273Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T12:11:36.385Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyEntry.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyEntryChecks.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyEntryExists.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyEntryResult.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyEntryText.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyInactive.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyMask.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyOutput.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyPrologue.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblySetup.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyText.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyWindow.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyWindowExists.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowSequence.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowWindow.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowWindowExists.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/IndexedFrames.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed supporting full-entry semantics, output/existence proofs, audit/build registration, source-bound receipts, mutation tests or explanatory documentation for the mapped correspondence contract."
+    }
+  ]
+}

@@ -343,10 +343,10 @@ at or before the unsigned end index, each iteration advances it without wrap,
 so a returning execution exists. No iteration count, read value or result is
 assumed. The proof uses a read-only memory snapshot for this loop slice.
 
-The emitted loop slice is bound to its Lean instruction list through the exit
-label. The isolated loop theorem returns at that label; the emitted entry
-continues with optional boundary masking and an output store. Entry setup,
-that continuation and inter-launch memory visibility still need composition.
+The isolated loop theorem returns at the exit label. The complete entry proof
+instead cuts the actual execution at that label and follows its real optional
+boundary-mask and output-store instructions. Concurrent publication and
+inter-launch memory visibility remain separate from this snapshot execution.
 A nonzero kernel-checked witness sums the same three contributions in two
 orders and obtains different results, exercising the reason for preserving
 floating-point order. Empty-list, insufficient-fuel and invalid-index checks
@@ -365,3 +365,46 @@ For example, adding `2^53`, `1`, then `-2^53` in binary64 yields zero; adding
 [The checked execution](../../integration/torchlean/PoissonPTX/AssemblyChecks.lean)
 loads those values via actual four-byte index tables. The table order is part
 of correctness, even though both orders enumerate the same values.
+
+## Following a complete assembly entry
+
+The complete assembly entry now has correctness and general execution-existence
+proofs. Starting at the first instruction, an active thread computes its node
+index from the launch context and loads the two offsets that delimit its
+contribution list. Its actual branches use absolute instruction positions.
+The proof derives the loop entry and exit from that single execution, then
+follows the real boundary-mask and output-store instructions through return.
+The final byte memory is exactly the initial memory with the computed word
+written at the node's address; all other bytes are preserved. A padded thread
+returns at the initial guard without any array access or memory change.
+
+The premises describe input memory: the two offset loads, allocated index and
+value arrays, an ordered cursor range, and valid boundary/output addresses.
+Setup and loop-entry states appearing in these premises are pure functions of
+the raw initial state, not supplied executions or desired intermediate values.
+The represented index list fixes the order of rounded additions. Every safe
+ordered range has a finite returning execution, without a fuel assumption.
+This is still a per-thread memory snapshot: simultaneous thread publication,
+its relation to the serialized mesh lists, and inter-launch visibility need
+separate proofs.
+
+The exact-code checker binds both complete emitted assembly entries, their
+register declarations, launch shapes and absolute branch destinations to the
+Lean instruction lists. Kernel-checked full-entry examples exercise nonzero
+cancellation in two orders, boundary masking, padded return with no allocation,
+and rejection of invalid offset, value and output accesses. These checks and
+the instruction proofs are distinct from testing or validating GPU hardware.
+
+Read [the complete output theorem](../../integration/torchlean/PoissonPTX/AssemblyEntryResult.lean)
+as a statement about a fetched run from instruction zero to return. The range
+is read from memory; the theorem does not ask you to provide a correct loop
+result. [Existence](../../integration/torchlean/PoissonPTX/AssemblyEntryExists.lean)
+constructs a run using that range as a decreasing measure.
+
+For a one-node example with three contributions, setup executes instructions
+0 through 15. The comparison and conditional branch are at 16 and 17; the
+body is 18 through 27, and instruction 28 jumps back to 16. On exhaustion,
+the branch reaches 29. The unmasked entry then stores and returns. The masked
+entry first reads the node's boundary flag and selects zero when it is nonzero.
+[The checked examples](../../integration/torchlean/PoissonPTX/AssemblyEntryChecks.lean)
+run both paths with the same cancellation inputs used in the shorter loop study.

@@ -92,7 +92,7 @@ than the complete PTX memory rules. A universal result over those candidates
 therefore needs no sequential-consistency assumption. The witness is an
 execution of this broader candidate model, not a full PTX admission or hardware
 progress theorem. Publication describes storage after the completed stores; the
-CUDA host-visibility mechanism is not proved. Assembly entry/output composition, reductions, remaining PCG kernels and host
+CUDA host-visibility mechanism is not proved. Concurrent assembly publication, reductions, remaining PCG kernels and host
 launch composition still need their instruction-level connections. The complete
 cell entry and the isolated assembly traversal have the stronger instruction
 theorems described below. Their output values follow from executed instructions.
@@ -751,12 +751,39 @@ at or before the unsigned end index, each iteration advances it without wrap,
 so a returning execution exists. No iteration count, read value or result is
 assumed. The proof uses a read-only memory snapshot for this loop slice.
 
-The emitted loop slice is bound to its Lean instruction list through the exit
-label. The isolated loop theorem returns at that label; the emitted entry
-continues with optional boundary masking and an output store. Entry setup,
-that continuation and inter-launch memory visibility still need composition.
+The isolated loop theorem returns at the exit label. The complete entry proof
+instead cuts the actual execution at that label and follows its real optional
+boundary-mask and output-store instructions. Concurrent publication and
+inter-launch memory visibility remain separate from this snapshot execution.
 A nonzero kernel-checked witness sums the same three contributions in two
 orders and obtains different results, exercising the reason for preserving
 floating-point order. Empty-list, insufficient-fuel and invalid-index checks
 exercise completion and failure behavior. Fuel is only a bound on executable
 witness search; it is absent from the relational correctness theorem.
+
+The complete assembly entry now has correctness and general execution-existence
+proofs. Starting at the first instruction, an active thread computes its node
+index from the launch context and loads the two offsets that delimit its
+contribution list. Its actual branches use absolute instruction positions.
+The proof derives the loop entry and exit from that single execution, then
+follows the real boundary-mask and output-store instructions through return.
+The final byte memory is exactly the initial memory with the computed word
+written at the node's address; all other bytes are preserved. A padded thread
+returns at the initial guard without any array access or memory change.
+
+The premises describe input memory: the two offset loads, allocated index and
+value arrays, an ordered cursor range, and valid boundary/output addresses.
+Setup and loop-entry states appearing in these premises are pure functions of
+the raw initial state, not supplied executions or desired intermediate values.
+The represented index list fixes the order of rounded additions. Every safe
+ordered range has a finite returning execution, without a fuel assumption.
+This is still a per-thread memory snapshot: simultaneous thread publication,
+its relation to the serialized mesh lists, and inter-launch visibility need
+separate proofs.
+
+The exact-code checker binds both complete emitted assembly entries, their
+register declarations, launch shapes and absolute branch destinations to the
+Lean instruction lists. Kernel-checked full-entry examples exercise nonzero
+cancellation in two orders, boundary masking, padded return with no allocation,
+and rejection of invalid offset, value and output accesses. These checks and
+the instruction proofs are distinct from testing or validating GPU hardware.

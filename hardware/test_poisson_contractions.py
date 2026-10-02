@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue, verify_gather, verify_entry, verify_whole, verify_assembly_loop
+from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue, verify_gather, verify_entry, verify_whole, verify_assembly_loop, verify_assembly_entries
 from poisson_kernels import Layout, module, PTX
 
 
@@ -23,6 +23,36 @@ class ContractionBinding(unittest.TestCase):
                  ('x', (5,'%i','k'), ('D','k','%j'), '%acc'),
                  ('y', (6,'%i','k'), ('B','k','%j'), '%acc2')]
         self.expected = [(name, g.dot(a,b,acc).splitlines()) for name,a,b,acc in specs]
+
+    def test_complete_assembly(self):
+        import re
+        expected = []
+        for entry in ('assemble_probe','assemble_ap'):
+            body = re.search(r'\.visible \.entry '+entry+r'\(.*?\n}', self.ptx, re.S)[0].splitlines()
+            code = body[body.index('ld.param.u64 %base, [arena];'):-1]
+            expected.append(dict(code=code,shape=[len(code)-2,[[17,29],[28,16]]]))
+        self.assertEqual(len(verify_assembly_entries(self.ptx, expected, self.layout)),2)
+        begin = self.ptx.index('.visible .entry assemble_probe')
+        end = self.ptx.index('\n}',begin)+2
+        chunk = self.ptx[begin:end]
+        for old,new in [
+                ('add.u32 %idx, %global, 1;', 'add.u32 %idx, %global, 2;'),
+                ('mov.f64 %acc, 0d0000000000000000;', 'mov.f64 %acc, 0d3ff0000000000000;'),
+                ('bra loop;', 'bra done;'),
+                ('st.global.f64 [%addr], %acc;', 'st.global.f64 [%addr], %a;'),
+                ('.reqntid 256, 1, 1', '.reqntid 128, 1, 1'),
+                ('.reg .u32 %lane', '.reg .s32 %lane'),
+                ('@%p0 ret;', '@!%p0 ret;')]:
+            with self.subTest(new=new):
+                self.assertIn(old,chunk)
+                altered=self.ptx[:begin]+chunk.replace(old,new,1)+self.ptx[end:]
+                with self.assertRaises(ValueError): verify_assembly_entries(altered,expected,self.layout)
+        altered=self.ptx.replace('@%p0 mov.f64 %acc, 0d0000000000000000;', '@!%p0 mov.f64 %acc, 0d0000000000000000;',1)
+        with self.assertRaises(ValueError): verify_assembly_entries(altered,expected,self.layout)
+        bad=copy.deepcopy(expected);bad[0]['shape'][1][0][1]=30
+        with self.assertRaises(ValueError): verify_assembly_entries(self.ptx,bad,self.layout)
+        bad=copy.deepcopy(self.layout);bad['launches']['assemble_probe']['threads']=128
+        with self.assertRaises(ValueError): verify_assembly_entries(self.ptx,expected,bad)
 
     def test_complete_prologue(self):
         lines = self.ptx.splitlines()

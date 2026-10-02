@@ -6,6 +6,7 @@ namespace PtxTorchLean.Poisson.PTX.Assembly.Text
 def register : Nat → String
   | 19 => "%cursor"
   | 20 => "%end"
+  | 21 => "%flag"
   | r => PTX.Text.register r
 
 def operand : Operand → String
@@ -45,8 +46,8 @@ def instruction (finish : Nat) : Flow.Instr → String
   | .ret => "ret;"
 
 /-- Bind the loop slice up to its exit label. The isolated theorem's terminal
-ret is replaced by the still-unproved masking/store continuation in the emitted
-entry; this renderer does not claim that continuation has been composed. -/
+ret is replaced by the masking/store continuation in the emitted entry. The
+separate full-entry renderer binds that continuation and the absolute counters. -/
 def rendered (entries element : Word) : List String :=
   ["loop:"]++((Flow.Loop.program 19 20 (body entries element)).dropLast.map
     (instruction ((body entries element).length+3)))++["done:"]
