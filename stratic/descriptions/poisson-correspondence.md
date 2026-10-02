@@ -878,8 +878,9 @@ or assembled result.
 The cell-family composition boundary is explicit. It packages actual per-cell
 executions, not an already-proved arbitrary device-wide schedule. Its next
 launch starts from mathematical publication of the preceding store histories.
-General admitted cell existence, grid scheduling, CUDA transport, external
-serialization and remaining solver instructions retain their own obligations.
+The grid extension below supplies interleaved instruction scheduling. General
+admitted cell existence, CUDA transport, external serialization and remaining
+solver instructions retain their own obligations.
 
 A nonzero kernel-checked composition exercises this connection. A two-by-two
 synthetic cell with identity coefficient matrices, unit weights and unit gathered
@@ -911,3 +912,41 @@ entries. For a finite vector of the required length, the public Poisson.apply
 entry therefore returns the tensor operator's vector. Combined with the actual
 unmasked cell/assembly execution, it returns exactly the published PTX vector.
 Wrong lengths and nonfinite values retain their original reference errors.
+
+A multi-block cell launch must retain each block's fetched execution while
+allowing their instruction steps to interleave. A block is a cooperating group
+of threads with its own shared memory and barriers. The grid state therefore
+keeps separate lane and barrier states for every block, and records each event's
+block identity. Global addresses name common storage; shared addresses name
+storage belonging to their own block. Equal numeric shared addresses in two
+blocks cannot justify a cross-block read. Projecting the grid history onto one
+block must recover its actual whole-cell execution; publication and source
+projection must then connect the grid to the existing cell/assembly theorem.
+
+Grid source projection must follow the address-dependency order. First derive
+actual global-store bounds from fetched control flow, without using read-source
+admission. Then establish initial connectivity bytes, bound the resulting
+source-vector reads, and separate all global reads from cell outputs. Shared
+reads must retain their own block identity. Only after these steps may the
+projected source constraints complete each cell's existing correspondence
+record. Packaging candidate execution separately from source admission prevents
+a circular argument about memory safety and read values.
+
+The grid extension proves this projection and source-admission chain. Its
+execution record ties the input layouts and completed active lanes to the same
+interleaved instruction history, initial states, launch parameters and final
+states. Shared sources carry both block identity and local event index. A
+performed-write condition preserves the existing requirement that a read after
+a block barrier cannot select initialization instead of an overlapping write
+performed before that barrier. These are necessary source constraints, not a
+claim of complete PTX memory-model admission.
+
+Chronological publication of the grid's actual global stores yields each cell's
+TorchLean tensor and preserves the uploaded assembly metadata. Starting the
+actual assembly execution with those bytes yields the tensor operator and,
+without boundary masking and with valid finite input, the public Poisson.apply
+result. Valid tables also admit a returning assembly launch after any supplied
+admitted cell grid. This does not construct a cell grid for arbitrary inputs or
+prove GPU scheduling progress. It does not establish CUDA transport between
+launches or termination of every padding lane; completed active output lanes
+suffice for the stated publication theorem.

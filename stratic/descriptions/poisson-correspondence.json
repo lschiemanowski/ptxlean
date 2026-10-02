@@ -18,10 +18,11 @@
     "Bind emitted instructions to Lean representations and keep kernel proofs, source-fidelity review, compiled checks and saved GPU observations distinct.",
     "Keep arbitrary-input whole-cell existence, setup serialization, remaining solver instructions, launch composition, complete PTX admission and hardware correspondence explicit.",
     "Decode ordered assembly tables and compose actual cell publications with assembly to obtain the TorchLean tensor operator; exercise the connection with a nonzero kernel-checked example.",
-    "Connect the ordered tensor operator to the executable array reference, preserving its original scatter order and input validation."
+    "Connect the ordered tensor operator to the executable array reference, preserving its original scatter order and input validation.",
+    "Compose actual cell instruction interleavings with private shared-memory identity and derived source contracts; chronological publication followed by assembly yields the executable TorchLean operator."
   ],
   "realization": "partial",
-  "remaining": "Arbitrary-input cell execution existence, device-wide grid scheduling, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
+  "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
   "links": [
     {
       "kind": "implementation",
@@ -2726,7 +2727,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The cell-family composition boundary is explicit. It packages actual per-cell\nexecutions, not an already-proved arbitrary device-wide schedule. Its next\nlaunch starts from mathematical publication of the preceding store histories.\nGeneral admitted cell existence, grid scheduling, CUDA transport, external\nserialization and remaining solver instructions retain their own obligations."
+        "quote": "The cell-family composition boundary is explicit. It packages actual per-cell\nexecutions, not an already-proved arbitrary device-wide schedule. Its next\nlaunch starts from mathematical publication of the preceding store histories.\nThe grid extension below supplies interleaved instruction scheduling. General\nadmitted cell existence, CUDA transport, external serialization and remaining\nsolver instructions retain their own obligations."
       },
       "to": {
         "path": "integration/torchlean/PoissonPTX/CellAssembly.lean",
@@ -2852,6 +2853,162 @@
         "path": "integration/torchlean/PoissonPTX/OperatorArrayChecks.lean",
         "passage": {
           "quote": "theorem cancellation_order :\n    scatter #[#[0,0,0],#[0]] #[#[9007199254740992,1,-9007199254740992],#[2]] 1=#[2] ∧\n    scatter #[#[0,0,0],#[0]] #[#[9007199254740992,-9007199254740992,1],#[2]] 1=#[3] := by\n  decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A multi-block cell launch must retain each block's fetched execution while\nallowing their instruction steps to interleave. A block is a cooperating group\nof threads with its own shared memory and barriers. The grid state therefore\nkeeps separate lane and barrier states for every block, and records each event's\nblock identity. Global addresses name common storage; shared addresses name\nstorage belonging to their own block. Equal numeric shared addresses in two\nblocks cannot justify a cross-block read. Projecting the grid history onto one\nblock must recover its actual whole-cell execution; publication and source\nprojection must then connect the grid to the existing cell/assembly theorem."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGrid.lean",
+        "passage": {
+          "quote": "theorem project (run : Runs launch start events indices final) (block : Fin count) :\n    CellWhole.Runs (config block) (launch.bases block) (BitVec.ofNat 32 block.val)\n      launch.width launch.cells launch.source launch.output (launch.context block)\n      (start block) (forBlock block events) (forBlock block indices) (final block) := by\n  induction run with\n  | nil => exact .nil\n  | @cons selected thread s out events indices final step rest ih =>\n    by_cases same : selected=block\n    · subst selected\n      simp only [Function.update_self] at ih\n      simpa using CellWhole.Runs.cons step ih\n    · simpa [same,Function.update,Ne.symm same] using ih"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Grid source projection must follow the address-dependency order. First derive\nactual global-store bounds from fetched control flow, without using read-source\nadmission. Then establish initial connectivity bytes, bound the resulting\nsource-vector reads, and separate all global reads from cell outputs. Shared\nreads must retain their own block identity. Only after these steps may the\nprojected source constraints complete each cell's existing correspondence\nrecord. Packaging candidate execution separately from source admission prevents\na circular argument about memory safety and read values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridSources.lean",
+        "passage": {
+          "quote": "theorem compatible_project (compatible : Compatible global shared events source)\n    (apart : NoForeignOverlap events) (block : Fin count) :\n    Concurrent.Visibility.Compatible (initial global shared block) (forBlock block events) (localSource source block) := by\n  intro r reader ra observed read k\n  have h := compatible block r reader ra observed read k\n  cases chosen : source block r k with\n  | initial => simpa [localSource,chosen] using h\n  | store where_ j =>\n    obtain ⟨writerBlock,w⟩ := where_\n    have same := source_owner compatible apart observed read chosen\n    subst writerBlock\n    rw [chosen] at h\n    obtain ⟨writer,wa,found,store,address,value⟩ := h\n    simp only [localSource,chosen]\n    refine ⟨writer,wa,found,store,?_,?_,value⟩\n    · cases ws : wa.space <;> cases rs : ra.space <;> simp [byteAddress,ws,rs] at address ⊢\n    · cases ws : wa.space <;> cases rs : ra.space <;> simpa [byteAddress,ws,rs] using address"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Chronological publication of the grid's actual global stores yields each cell's\nTorchLean tensor and preserves the uploaded assembly metadata. Starting the\nactual assembly execution with those bytes yields the tensor operator and,\nwithout boundary masking and with valid finite input, the public Poisson.apply\nresult. Valid tables also admit a returning assembly launch after any supplied\nadmitted cell grid. This does not construct a cell grid for arbitrary inputs or\nprove GPU scheduling progress. It does not establish CUDA transport between\nlaunches or termination of every padding lane; completed active output lanes\nsuffice for the stated publication theorem.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridPublication.lean",
+        "passage": {
+          "quote": "theorem publication_word (events : List (Event count)) (block : Fin count)\n    (memory : Memory) (address : Nat)\n    (apart : ∀ other owner access, (other,Concurrent.Event.data owner access)∈events → other≠block →\n      access.space=.global → access.data.store=true →\n      access.data.address+8≤address ∨ address+8≤access.data.address) :\n    read64 (publish memory events) address=\n      read64 (Concurrent.GlobalPublication.publish memory (forBlock block events)) address := by\n  apply PTX.Sources.word_eq_of_bytes\n  intro k\n  simp only [PTX.Sources.byte_read64]\n  apply publication_byte events block memory memory (address+k.val) rfl\n  intro other owner access member different global store\n  have disjoint := apart other owner access member different global store\n  have bound := k.isLt\n  omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Chronological publication of the grid's actual global stores yields each cell's\nTorchLean tensor and preserves the uploaded assembly metadata. Starting the\nactual assembly execution with those bytes yields the tensor operator and,\nwithout boundary masking and with valid finite input, the public Poisson.apply\nresult. Valid tables also admit a returning assembly launch after any supplied\nadmitted cell grid. This does not construct a cell grid for arbitrary inputs or\nprove GPU scheduling progress. It does not establish CUDA transport between\nlaunches or termination of every padding lane; completed active output lanes\nsuffice for the stated publication theorem.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridFamily.lean",
+        "passage": {
+          "quote": "theorem family_entry (family : CellWhole.Family o values)\n    (events : List (Event o.mesh.cells.size))\n    (projected : ∀ cell, forBlock cell events=(family.execution cell).events)\n    (cell : Fin o.mesh.cells.size) (i j : Fin o.nodes.size) :\n    decode (read64 (publish family.memory events) (family.address cell i j))=\n      Correspondence.entries (localAction o.b o.d o.w (gather o values cell.val)) i j := by\n  rw [publication_word events cell family.memory (family.address cell i j) ?_,projected]\n  exact family.entry family.memory cell i j\n  intro other owner access member different global store\n  have localMember : Concurrent.Event.data owner access∈(family.execution other).events := by\n    rw [← projected]\n    exact (mem_forBlock other events _).mpr member\n  obtain ⟨active,address⟩ := (family.execution other).global_store localMember store global\n  rw [family.sameBase,family.sameOutput,family.cell_nat] at address\n  rw [address]\n  have apart := cell_words_disjoint (fun eq => different (Fin.ext eq.symm))\n    (Correspondence.row_major_bound i j) active\n  unfold CellWhole.Family.address\n  rcases apart with before | after\n  · left; omega\n  · right; omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Grid source projection must follow the address-dependency order. First derive\nactual global-store bounds from fetched control flow, without using read-source\nadmission. Then establish initial connectivity bytes, bound the resulting\nsource-vector reads, and separate all global reads from cell outputs. Shared\nreads must retain their own block identity. Only after these steps may the\nprojected source constraints complete each cell's existing correspondence\nrecord. Packaging candidate execution separately from source admission prevents\na circular argument about memory safety and read values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellCandidate.lean",
+        "passage": {
+          "quote": "theorem Candidate.global_store (execution : Candidate o values cell)\n    (member : Concurrent.Event.data owner access∈execution.events)\n    (store : access.data.store=true) (global : access.space=.global) :\n    owner.val<o.nodes.size*o.nodes.size ∧\n    access.data.address=(execution.bases .global).toNat+\n      (cell.toNat*(o.nodes.size*o.nodes.size)+owner.val)*8+execution.output.toNat := by\n  have activeZero : (0 : Fin 32).val<o.nodes.size*o.nodes.size := by have := execution.positive; change 0<o.nodes.size*o.nodes.size; nlinarith\n  have past : 20<(execution.final.core.lanes (0 : Fin 32)).pc := by have := execution.finished 0 activeZero; omega\n  obtain ⟨before,after,ready,localFinal,eventEq,first,done,site,finalEq,body⟩ :=\n    executions execution.run execution.aligned execution.pcs execution.running 0 past\n  rw [eventEq] at member\n  rcases List.mem_append.mp member with prefixMember | bodyMember\n  · exact False.elim (CellEntry.no_global_store first prefixMember store global)\n  obtain ⟨event,localMember,eq⟩ := List.mem_map.mp bodyMember\n  cases event with\n  | barrier => simp [Relocate.event] at eq\n  | data thread recorded =>\n    simp only [Relocate.event,Concurrent.Event.data.injEq] at eq\n    obtain ⟨rfl,rfl⟩ := eq\n    change recorded.data.store=true at store\n    change recorded.space=.global at global\n    obtain ⟨launch⟩ := CellEntry.Control.launch first execution.aligned execution.pcs done\n      execution.positive (by have := execution.small; omega) execution.space\n    have bounds := output_bounds first execution.aligned execution.pcs done execution.positive\n      (by have := execution.small; omega) execution.bounds\n    have control := CellEntry.Control.from_run first execution.aligned\n      (fun u => CellEntry.Control.initial (s:=CellEntry.lane (entry execution.start) u) (execution.pcs u))\n      execution.positive (by have := execution.small; omega)\n    have cellReg : ((CellEntry.continuation (entry ready)).core.lanes thread).regs 15=cell.setWidth 64 := by\n      exact (control thread).2.2.2.1 (by change 4≤(ready.core.lanes thread).pc; rw [done]; decide)\n    have baseReg : ((CellEntry.continuation (entry ready)).core.lanes thread).regs 0=execution.bases .global := launch.global thread\n    have laneNat : (((CellEntry.continuation (entry ready)).core.lanes thread).regs 14).toNat=thread.val := launch.lane_nat thread\n    refine ⟨Padding.access_active execution.lo execution.hi body launch.aligned launch.pcs localMember,?_⟩\n    change recorded.data.address=_\n    rw [Address.store_address execution.lo execution.hi body launch.aligned launch.pcs localMember store global,\n      CellFinal.location_exact _ execution.hi (bounds thread).1 (bounds thread).2,\n      baseReg,laneNat,cellReg]\n    have small : cell.toNat<2^64 := by have := cell.isLt; omega\n    simp only [BitVec.toNat_setWidth,Nat.mod_eq_of_lt small]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Grid source projection must follow the address-dependency order. First derive\nactual global-store bounds from fetched control flow, without using read-source\nadmission. Then establish initial connectivity bytes, bound the resulting\nsource-vector reads, and separate all global reads from cell outputs. Shared\nreads must retain their own block identity. Only after these steps may the\nprojected source constraints complete each cell's existing correspondence\nrecord. Packaging candidate execution separately from source admission prevents\na circular argument about memory safety and read values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellCandidateBounds.lean",
+        "passage": {
+          "quote": "theorem Candidate.word_bound (execution : Candidate o values cell)\n    (indexValues : CellEntry.Indices (execution.memory .global) execution.indices)\n    (member : Concurrent.Event.data owner access∈execution.events)\n    (read : access.data.store=false) (global : access.space=.global) :\n    access.data.address+8≤(execution.bases .global).toNat+execution.output.toNat := by\n  obtain ⟨before,after,ready,localFinal,eventEq,first,done,site,finalEq,body⟩ :=\n    executions execution.run execution.aligned execution.pcs execution.running 0 execution.past\n  rw [eventEq] at member\n  rcases List.mem_append.mp member with prefixMember | bodyMember\n  · exact (CellEntry.Control.word_bounds first execution.aligned\n      (fun u => CellEntry.Control.initial (s:=CellEntry.lane (entry execution.start) u) (execution.pcs u))\n      (fun u => CellEntry.Control.active_initial (s:=CellEntry.lane (entry execution.start) u) (execution.pcs u))\n      (fun u => CellEntry.Control.index_initial (s:=CellEntry.lane (entry execution.start) u) (execution.pcs u))\n      (fun u => CellEntry.Control.source_initial (s:=CellEntry.lane (entry execution.start) u) (execution.pcs u))\n      execution.positive (by have := execution.small; omega) indexValues\n      (fun u live => execution.inputLayout u (by simpa only [CellEntry.context_lane] using live))\n      (fun _ => rfl) prefixMember read).2\n  · obtain ⟨event,localMember,eq⟩ := List.mem_map.mp bodyMember\n    cases event with\n    | barrier => simp [Relocate.event] at eq\n    | data thread recorded =>\n      simp only [Relocate.event,Concurrent.Event.data.injEq] at eq\n      obtain ⟨rfl,rfl⟩ := eq\n      change recorded.data.store=false at read\n      change recorded.space=.global at global\n      obtain ⟨launch⟩ := CellEntry.Control.launch first execution.aligned execution.pcs done\n        execution.positive (by have := execution.small; omega) execution.space\n      obtain ⟨small,shadow,arithmetic,embedding,omitted,related⟩ :=\n        arithmetic_filtered execution.lo execution.hi body launch.aligned launch.pcs\n      obtain ⟨r,observed⟩ := List.mem_iff_getElem?.mp localMember\n      have kept : Concurrent.Projection.Retained embedding r := by\n        by_contra missing\n        have kind := omitted r (.data thread recorded) observed missing\n        simp [OutputEvent,read] at kind\n      obtain ⟨v,inside,position⟩ := kept\n      have seen : small[v]?=some (.data thread recorded) := by\n        rw [← embedding.fetch v inside,position,observed]\n      have nowrap : (execution.bases .global).toNat+Concurrent.CellConsumer.Coefficients.extent o.nodes.size≤2^64 := by\n        have bound := (execution.bounds 0).2\n        have offset := execution.offset\n        omega\n      have bound := Concurrent.CellConsumer.Coefficients.read_bounds launch execution.lo execution.hi\n        arithmetic nowrap (List.mem_of_getElem? seen) read global\n      change recorded.data.address+8≤_\n      have offset := execution.offset\n      omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Grid source projection must follow the address-dependency order. First derive\nactual global-store bounds from fetched control flow, without using read-source\nadmission. Then establish initial connectivity bytes, bound the resulting\nsource-vector reads, and separate all global reads from cell outputs. Shared\nreads must retain their own block identity. Only after these steps may the\nprojected source constraints complete each cell's existing correspondence\nrecord. Packaging candidate execution separately from source admission prevents\na circular argument about memory safety and read values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridIndices.lean",
+        "passage": {
+          "quote": "theorem index_initial {count : Nat} {global : Memory} {events : List (Event count)}\n    {indices : List (Index count)} {source : IndexChoices count}\n    {block : Fin count} {r fence : Nat} {reader : Fin 32} {ra : IndexSources.Access}\n    (compatible : IndexCompatible global events indices source)\n    (observed : (forBlock block indices)[r]?=some (reader,ra))\n    (upper : ra.address+4≤fence)\n    (lower : ∀ writerBlock writer wa, .data writer wa∈forBlock writerBlock events →\n      wa.data.store=true → wa.space=.global → fence≤wa.data.address) :\n    ra.value=read32 global ra.address := by\n  apply IndexSources.word_eq_of_bytes\n  intro k\n  have h := compatible block r reader ra observed k\n  cases chosen : source block r k with\n  | initial => simpa [chosen,IndexSources.byte_read32] using h\n  | store location j =>\n    obtain ⟨writerBlock,w⟩ := location\n    rw [chosen] at h\n    obtain ⟨writer,wa,found,store,space,address,value⟩ := h\n    have below := lower writerBlock writer wa (List.mem_of_getElem? found) store space\n    have bound := k.isLt\n    omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Grid source projection must follow the address-dependency order. First derive\nactual global-store bounds from fetched control flow, without using read-source\nadmission. Then establish initial connectivity bytes, bound the resulting\nsource-vector reads, and separate all global reads from cell outputs. Shared\nreads must retain their own block identity. Only after these steps may the\nprojected source constraints complete each cell's existing correspondence\nrecord. Packaging candidate execution separately from source admission prevents\na circular argument about memory safety and read values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridAdmission.lean",
+        "passage": {
+          "quote": "def Candidates.withSources (c : Candidates o values)\n    (events : List (Event o.mesh.cells.size)) (indices : List (Index o.mesh.cells.size))\n    (projected : ∀ block, forBlock block events=(c.candidate block).events)\n    (indexProjected : ∀ block, forBlock block indices=(c.candidate block).indices)\n    (wordSource : Sources o.mesh.cells.size) (indexSource : IndexChoices o.mesh.cells.size)\n    (words : Compatible c.memory (fun block => (c.candidate block).memory .shared) events wordSource)\n    (indexes : IndexCompatible c.memory events indices indexSource)\n    (performed : Performed events wordSource) : CellWhole.Family o values := by\n  have indexValues := c.index_values events indices projected indexProjected indexes\n  have apart := c.separated events projected indexValues\n  let executed (block : Fin o.mesh.cells.size) : CellWhole.Execution o values (BitVec.ofNat 32 block.val) :=\n    (c.candidate block).withSources (localSource wordSource block) (fun _ _ => .initial)\n      (by rw [c.sameInitial]; exact CellEntry.Control.indices_compatible (indexValues block))\n      (by\n        have result := compatible_project words apart block\n        rw [projected] at result\n        have memoryEq : (c.candidate block).memory=initial c.memory (fun block => (c.candidate block).memory .shared) block := by\n          funext space\n          cases space\n          · exact c.sameInitial block\n          · rfl\n        rw [memoryEq]\n        exact result)\n      (by have result := performed_project performed block; simpa only [projected] using result)\n  exact ⟨c.base,c.output,c.memory,c.small,executed,c.sameInitial,c.sameCTA,c.sameBase,c.sameOutput⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Chronological publication of the grid's actual global stores yields each cell's\nTorchLean tensor and preserves the uploaded assembly metadata. Starting the\nactual assembly execution with those bytes yields the tensor operator and,\nwithout boundary masking and with valid finite input, the public Poisson.apply\nresult. Valid tables also admit a returning assembly launch after any supplied\nadmitted cell grid. This does not construct a cell grid for arbitrary inputs or\nprove GPU scheduling progress. It does not establish CUDA transport between\nlaunches or termination of every padding lane; completed active output lanes\nsuffice for the stated publication theorem.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridExecution.lean",
+        "passage": {
+          "quote": "theorem Admitted.entry (grid : Admitted o values) (cell : Fin o.mesh.cells.size)\n    (i j : Fin o.nodes.size) :\n    decode (read64 (publish grid.candidates.memory grid.events) (grid.family.address cell i j))=\n      Correspondence.entries (localAction o.b o.d o.w (gather o values cell.val)) i j := by\n  exact family_entry grid.family grid.events grid.projected cell i j"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Chronological publication of the grid's actual global stores yields each cell's\nTorchLean tensor and preserves the uploaded assembly metadata. Starting the\nactual assembly execution with those bytes yields the tensor operator and,\nwithout boundary masking and with valid finite input, the public Poisson.apply\nresult. Valid tables also admit a returning assembly launch after any supplied\nadmitted cell grid. This does not construct a cell grid for arbitrary inputs or\nprove GPU scheduling progress. It does not establish CUDA transport between\nlaunches or termination of every padding lane; completed active output lanes\nsuffice for the stated publication theorem.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridInputs.lean",
+        "passage": {
+          "quote": "theorem Admitted.assembly_tables (grid : Admitted o values) (a : Assembly.Arena n)\n    (base : a.base=grid.candidates.base)\n    (offsetsBefore : a.offsets.toNat+(n+1)*4≤grid.candidates.output.toNat)\n    (entriesBefore : a.entries.toNat+a.entryCount*4≤grid.candidates.output.toNat)\n    (encoded : a.RowsEncoded grid.candidates.memory rows) :\n    a.RowsEncoded (publish grid.candidates.memory grid.events) rows := by\n  refine ⟨encoded.count,encoded.size,?_,?_,encoded.bounded⟩\n  · intro i inside\n    unfold Assembly.Arena.offset\n    rw [grid.input_word32]\n    · exact encoded.offsets i inside\n    · rw [base]; omega\n  · intro k inside\n    unfold Assembly.Arena.entryIndex\n    rw [grid.input_word32]\n    · exact encoded.entries k inside\n    · rw [base]; omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Chronological publication of the grid's actual global stores yields each cell's\nTorchLean tensor and preserves the uploaded assembly metadata. Starting the\nactual assembly execution with those bytes yields the tensor operator and,\nwithout boundary masking and with valid finite input, the public Poisson.apply\nresult. Valid tables also admit a returning assembly launch after any supplied\nadmitted cell grid. This does not construct a cell grid for arbitrary inputs or\nprove GPU scheduling progress. It does not establish CUDA transport between\nlaunches or termination of every padding lane; completed active output lanes\nsuffice for the stated publication theorem.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridAssembly.lean",
+        "passage": {
+          "quote": "theorem assembly_operator {o : Operator} {values : Array Float}\n    {words : List (Concurrent.Event o.mesh.points.size)}\n    {indices : List (Fin o.mesh.points.size × IndexSources.Access)}\n    {final : Fin o.mesh.points.size → Flow.State}\n    (grid : Admitted o values) (shape : OperatorMesh o)\n    (same : o.q.size=o.nodes.size)\n    (a : Assembly.Arena o.mesh.points.size)\n    (base : a.base=grid.candidates.base) (element : a.element=grid.candidates.output)\n    (offsetsBefore : a.offsets.toNat+(o.mesh.points.size+1)*4≤grid.candidates.output.toNat)\n    (entriesBefore : a.entries.toNat+a.entryCount*4≤grid.candidates.output.toNat)\n    (boundaryBefore : a.boundary.toNat+o.mesh.points.size*4≤grid.candidates.output.toNat)\n    (tables : a.RowsEncoded grid.candidates.memory (Assembly.nodeRows o.mesh.points.size (Assembly.MeshRows.locations shape.connectivity)))\n    (separated : a.InputSeparation)\n    (regs : Fin o.mesh.points.size → Registers)\n    (run : Flow.Parallel.Runs a.context\n      (Assembly.entryCode (BitVec.ofNat 32 o.mesh.points.size) a.offsets a.entries a.element mask a.boundary a.output)\n      (fun i => a.start (publish grid.candidates.memory grid.events) (regs i)) words indices final)\n    (compatible : Concurrent.Visibility.Compatible\n      (fun space => match space with | .global => publish grid.candidates.memory grid.events | .shared => fun _ => 0) words wordSource)\n    (indexCompatible : IndexSources.Compatible (publish grid.candidates.memory grid.events) words indices indexSource)\n    (done : ∀ i, (final i).halted=true) (node : Fin o.mesh.points.size) :\n    decode (read64 (Concurrent.GlobalPublication.publish (publish grid.candidates.memory grid.events) words) (Assembly.Snapshot.address a node))=\n      if mask=true ∧ read32 grid.candidates.memory (a.base.toNat+a.boundary.toNat+node.val*4)≠0 then 0 else\n        shape.operator same values node := by\n  rw [← grid.input_word32 (a.base.toNat+a.boundary.toNat+node.val*4)\n    (by rw [base]; have := node.isLt; omega)]\n  apply a.parallel_operator shape.connectivity\n    (CoefficientRepresentation.rows same o.b) (CoefficientRepresentation.rows same o.d)\n    (CoefficientRepresentation.square same o.w) (OperatorMesh.input values)\n    run compatible indexCompatible (grid.assembly_tables a base offsetsBefore entriesBefore tables)\n    separated done\n  intro cell i j\n  rw [CoefficientRepresentation.local_action,← shape.gather]\n  have result := grid.entry cell i j\n  unfold Assembly.Arena.elementValue\n  rw [base,element]\n  simpa only [Admitted.family,Candidates.withSources,CellWhole.Family.address,Nat.add_mul,Nat.add_assoc,Nat.add_left_comm,Nat.add_comm] using result"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Chronological publication of the grid's actual global stores yields each cell's\nTorchLean tensor and preserves the uploaded assembly metadata. Starting the\nactual assembly execution with those bytes yields the tensor operator and,\nwithout boundary masking and with valid finite input, the public Poisson.apply\nresult. Valid tables also admit a returning assembly launch after any supplied\nadmitted cell grid. This does not construct a cell grid for arbitrary inputs or\nprove GPU scheduling progress. It does not establish CUDA transport between\nlaunches or termination of every padding lane; completed active output lanes\nsuffice for the stated publication theorem.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridReference.lean",
+        "passage": {
+          "quote": "theorem assembly_reference {o : Operator} {values : Array Float}\n    {words : List (Concurrent.Event o.mesh.points.size)}\n    {indices : List (Fin o.mesh.points.size × IndexSources.Access)}\n    {final : Fin o.mesh.points.size → Flow.State}\n    (grid : Admitted o values) (shape : OperatorMesh o)\n    (same : o.q.size=o.nodes.size)\n    (a : Assembly.Arena o.mesh.points.size)\n    (base : a.base=grid.candidates.base) (element : a.element=grid.candidates.output)\n    (offsetsBefore : a.offsets.toNat+(o.mesh.points.size+1)*4≤grid.candidates.output.toNat)\n    (entriesBefore : a.entries.toNat+a.entryCount*4≤grid.candidates.output.toNat)\n    (boundaryBefore : a.boundary.toNat+o.mesh.points.size*4≤grid.candidates.output.toNat)\n    (tables : a.RowsEncoded grid.candidates.memory (Assembly.nodeRows o.mesh.points.size (Assembly.MeshRows.locations shape.connectivity)))\n    (separated : a.InputSeparation)\n    (regs : Fin o.mesh.points.size → Registers)\n    (run : Flow.Parallel.Runs a.context\n      (Assembly.entryCode (BitVec.ofNat 32 o.mesh.points.size) a.offsets a.entries a.element false a.boundary a.output)\n      (fun i => a.start (publish grid.candidates.memory grid.events) (regs i)) words indices final)\n    (compatible : Concurrent.Visibility.Compatible\n      (fun space => match space with | .global => publish grid.candidates.memory grid.events | .shared => fun _ => 0) words wordSource)\n    (indexCompatible : IndexSources.Compatible (publish grid.candidates.memory grid.events) words indices indexSource)\n    (done : ∀ i, (final i).halted=true)\n    (size : values.size=o.mesh.points.size) (finite : values.all Float.isFinite=true) :\n    Poisson.apply o values=.ok (Array.ofFn fun node : Fin o.mesh.points.size =>\n      decode (read64 (Concurrent.GlobalPublication.publish (publish grid.candidates.memory grid.events) words)\n        (Assembly.Snapshot.address a node))) := by\n  rw [ArrayOperator.apply_correspondence o shape same values size finite]\n  congr 1\n  apply congrArg Array.ofFn\n  funext node\n  have result := assembly_operator grid shape same a base element\n    offsetsBefore entriesBefore boundaryBefore tables separated regs run compatible indexCompatible done node\n  simpa only [Bool.false_eq_true,false_and,ite_false] using result.symm"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A multi-block cell launch must retain each block's fetched execution while\nallowing their instruction steps to interleave. A block is a cooperating group\nof threads with its own shared memory and barriers. The grid state therefore\nkeeps separate lane and barrier states for every block, and records each event's\nblock identity. Global addresses name common storage; shared addresses name\nstorage belonging to their own block. Equal numeric shared addresses in two\nblocks cannot justify a cross-block read. Projecting the grid history onto one\nblock must recover its actual whole-cell execution; publication and source\nprojection must then connect the grid to the existing cell/assembly theorem."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGridChecks.lean",
+        "passage": {
+          "quote": "theorem foreign_shared_rejected : ¬Compatible (fun _ => 0) (fun _ _ => 0) sharedEvents foreign := by\n  intro compatible\n  have owner := shared_source_owner compatible\n    (block:=1) (r:=0) (reader:=0) (ra:=⟨.shared,⟨0,false,256,7⟩⟩)\n    (by decide +kernel) rfl rfl (k:=0) (writerBlock:=0) (w:=0) (j:=0) rfl\n  have different : (0 : Fin 2)≠1 := by decide\n  exact different owner"
         }
       }
     }

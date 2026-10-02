@@ -272,10 +272,14 @@ TorchLean tensor operator with the same rounded addition order and optional
 boundary mask. A nonzero complete-cell and assembly example checks the
 connection without supplying expected intermediate values.
 
-This composition still distinguishes per-cell executions from a device-wide
-grid schedule and mathematical publication from CUDA visibility. Arbitrary-input
-cell existence, external serialization, remaining reductions and solver
-instructions remain explicit work.
+The grid extension interleaves actual cell instruction steps across blocks and
+keeps each block's shared memory and barriers private. It derives the original
+cell source contracts from the one tagged history and proves that chronological
+publication preserves both cell results and assembly metadata. The next launch
+then computes the same operator. Mathematical publication remains distinct from
+CUDA visibility. Arbitrary-input cell-grid existence, GPU scheduling progress,
+external serialization, remaining reductions and solver instructions remain
+explicit work.
 
 The executable array reference and the tensor operator now have a proved
 connection. The actual reference loops enumerate cells and local coordinates

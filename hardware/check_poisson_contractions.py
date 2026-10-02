@@ -1,50 +1,24 @@
 #!/usr/bin/env python3
-"""Bind local cell contraction and shared-store blocks to their proved Lean programs.
+"""Bind emitted cell and assembly entries to their proved Lean representations.
 
-Complete middle-phase bodies are bound to the concurrent Lean program with
-kernel-checked control, address and numerical certificates for Q1--Q4. Completed
-middle-slice executions satisfying necessary byte-source constraints store all
-six TorchLean intermediate tensors. The final body has a fetched, snapshot-based
-store theorem and phase-by-phase composition with actual middle stores. A
-concurrent arithmetic extension now justifies the actual final loads using one
-whole-history source assignment and connects its result to the fetched store.
-The arithmetic theorem derives its middle prefix and continuation at the last
-barrier from a single run. A combined concurrent index/store/return machine now
-derives that arithmetic execution, its ordered event embedding and result
-register relation, with only global output stores omitted. Byte-source
-restriction preserves retained reads when those stores are beyond the bounded
-coefficient region. Actual store addresses now follow from launch bounds, and
-each completed active lane's stored bytes have its TorchLean value. Actual store
-occurrence and recorded values imply an order-independent published global
-tensor equal to TorchLean. This mathematical publication leaves CUDA host
-visibility and complete PTX memory admission open.
-The seven-instruction register prologue is separately proved from launch context
-and bound with its declarations to each emitted element entry. The twelve-step
-active gather has a fetched snapshot proof, derived layout safety and a TorchLean
-input theorem; its complete body is bound for all three source vectors. The
-concurrent 21-instruction prefix now derives original input reads, gathered bits,
-actual barrier completion and the arithmetic launch contract. Actual store
-coverage, values, padding exclusion and byte ownership are also proved. Actual
-first-barrier ordering and preservation by the arithmetic/output body now derive
-continuation reads from those gathered stores. Source rebasing now connects the
-actual gather to the numerical body and its published TorchLean cell tensor.
-A single native-counter run now derives the prefix/body split and joint-history
-input admission, and publishes the TorchLean cell tensor. Remaining solver
-entry composition and launch composition remain open. The isolated assembly
-traversal now has ordered-fold correctness and general existence from allocated
-input arrays. Complete assembly entries also have snapshot correctness and
-existence, including offset loads, boundary masking, output stores and padded
-returns. Both complete emitted entries and their native branch targets are
-bound. Physical array layouts discharge entry safety, and ordered-row/snapshot
-publication theorems connect node sums to scatter without reassociation.
-Observed branching runs and interleavings admit source-based replay under
-explicit access separation. Assembly store ownership is derived independently
-of load choices; the joint-history read-footprint proof remains open. Full
-concurrent output publication and inter-launch visibility remain open.
-A coefficient representation contract also connects the complete cell theorem
-to the stated TorchLean operator, with equal quadrature and node dimensions.
-Saved output extents are checked disjoint; this is concrete layout evidence,
-separate from the general launch-derived address theorem and GPU conformance.
+Checks cover Q1--Q4 instruction bodies, native branch targets, declarations,
+launch shapes and saved arena layouts. The cell proof connects actual fetched
+setup, gather, barriers, binary64 contractions and output stores to TorchLean.
+Necessary byte-source and performed-write constraints derive read visibility;
+coefficient, connectivity and input representations remain explicit contracts.
+
+Assembly has ordered rounded correctness and returning-execution existence
+from physical input arrays and source constraints. Checked serialized integer
+rows preserve contribution order. Actual cell instruction interleavings keep
+shared storage private to each block. Their chronological global stores preserve
+assembly inputs, and the next assembly launch yields the tensor operator and,
+for valid finite input without masking, the public Poisson.apply reference.
+
+This receipt binds saved code and layouts; it is not a new GPU execution.
+Arbitrary-input cell-grid existence, external serialization correctness,
+remaining reductions and solver orchestration are separate obligations.
+Mathematical publication does not establish CUDA transport, GPU scheduling
+progress, complete PTX memory-model admission or hardware conformance.
 """
 import argparse
 import hashlib
@@ -542,10 +516,10 @@ def check(run, output):
     names += ['PtxTorchLean.Poisson.PTX.' + name for name in (
         'Assembly.CompressedRows.reconstruct', 'Assembly.Arena.checkRows_sound',
         'CellWhole.Execution.tensor', 'CellWhole.Family.published_entry',
-        'cell_assembly_operator', 'cell_assembly_exists', 'ArrayOperator.apply_correspondence', 'cell_assembly_reference')]
+        'cell_assembly_operator', 'cell_assembly_exists', 'ArrayOperator.apply_correspondence', 'cell_assembly_reference', 'CellGrid.assembly_operator', 'CellGrid.assembly_exists', 'CellGrid.assembly_reference')]
     with tempfile.TemporaryDirectory(prefix='poisson-contraction-audit-') as tmp:
         p = Path(tmp)/'Audit.lean'
-        p.write_text('import PoissonPTX.CellAssemblyReference\nimport PoissonPTX.CellAssembly\nimport PoissonPTX.AssemblyTableCheck\nimport PoissonPTX.AssemblyParallelExists\nimport PoissonPTX.AssemblyParallelStores\nimport PoissonPTX.AssemblySnapshotPublication\nimport PoissonPTX.AssemblyEntryExists\nimport PoissonPTX.AssemblyInactive\nimport PoissonPTX.CellOperatorCorrespondence\nimport PoissonPTX.AssemblyLayout\nimport PoissonPTX.CellWholeCorrespondence\nimport PoissonPTX.CellEntryJointCorrespondence\nimport PoissonPTX.CellEntryCorrespondence\nimport PoissonPTX.CellEntryContinuation\nimport PoissonPTX.CellEntryProducers\nimport PoissonPTX.CellEntryStoreTensor\nimport PoissonPTX.CellEntryLaunch\nimport PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
+        p.write_text('import PoissonPTX.CellGridReference\nimport PoissonPTX.CellAssemblyReference\nimport PoissonPTX.CellAssembly\nimport PoissonPTX.AssemblyTableCheck\nimport PoissonPTX.AssemblyParallelExists\nimport PoissonPTX.AssemblyParallelStores\nimport PoissonPTX.AssemblySnapshotPublication\nimport PoissonPTX.AssemblyEntryExists\nimport PoissonPTX.AssemblyInactive\nimport PoissonPTX.CellOperatorCorrespondence\nimport PoissonPTX.AssemblyLayout\nimport PoissonPTX.CellWholeCorrespondence\nimport PoissonPTX.CellEntryJointCorrespondence\nimport PoissonPTX.CellEntryCorrespondence\nimport PoissonPTX.CellEntryContinuation\nimport PoissonPTX.CellEntryProducers\nimport PoissonPTX.CellEntryStoreTensor\nimport PoissonPTX.CellEntryLaunch\nimport PoissonPTX.CellGatherTensor\nimport PoissonPTX.CellPrologueEntry\nimport PoissonPTX.CellOutputTensor\nimport PoissonPTX.CellTailOwners\nimport PoissonPTX.CellTailResult\nimport PoissonPTX.CellOutputSeparation\nimport PoissonPTX.CellConsumerRun\nimport PoissonPTX.SharedPlane\nimport PoissonPTX.ContractionFetched\nimport PoissonPTX.ContractionLayout\nimport PoissonPTX.ContractionText\nimport PoissonPTX.CellMiddleChecks\nimport PoissonPTX.ConcurrentComputedStore\nimport PoissonPTX.CellMiddleInputs\nimport PoissonPTX.CellMiddleCorrespondence\nimport PoissonPTX.CellFinalSnapshot\nimport PoissonPTX.CellFinalLayout\n'+
                      ''.join('#print axioms '+n+'\n' for n in names))
         audit = subprocess.check_output(['lake', '--no-cache', 'env', 'lean', p], cwd=INTEGRATION, text=True)
         checker.audit_dependencies(audit, names)

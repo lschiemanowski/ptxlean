@@ -71,11 +71,42 @@ It requires the reference's normal vector length and finiteness checks.
 A cancellation regression distinguishes two encounter orders, and invalid
 length and infinity regressions retain the existing error behavior.
 
-These are compositional execution and mathematical publication results. The
-cell family does not yet derive arbitrary grid scheduling from one device-wide
-run. The next-launch byte state is explicitly the publication of the preceding
-histories; this is not a proof of CUDA transport or host visibility. General
-admitted cell execution existence, the remaining PCG/reduction instructions
-and the final host/solver connection remain separate obligations. The table
-checker is a Lean definition; its existence alone does not establish that the
-Python byte serializer or runtime invokes it correctly.
+The [grid extension](../../integration/torchlean/PoissonPTX/CellGrid.lean)
+now schedules actual instructions from different cells in one tagged history.
+For example, block zero may store an output, block one may store its output,
+and block zero may take another step. Filtering the history by block preserves
+its actual instruction order and all barrier records. It is unnecessary to
+pretend that one complete block ran before another.
+
+Shared memory needs an extra identity. The numeric shared address 256 in block
+zero names different storage from address 256 in block one. A proposed source
+that connects these two is rejected even when the stored and loaded words happen
+to be equal. Global address 256, in contrast, has one identity across the grid.
+The [regressions](../../integration/torchlean/PoissonPTX/CellGridChecks.lean)
+check this distinction, interleaved publication, and two actual setup instructions
+that update their own blocks independently.
+
+The [admission proof](../../integration/torchlean/PoissonPTX/CellGridAdmission.lean)
+first establishes global store addresses without using read-source admission.
+All stores lie in the cell-output region. Connectivity reads are below that
+region, so admitted connectivity bytes must come from uploaded memory. Their
+values then bound the later vector reads, which are also below the output
+region. This ordering avoids assuming correct gathered values in order to prove
+that they are correct. Shared reads retain their own block and the existing
+performed-write requirement across its barriers.
+
+The [grid/assembly theorem](../../integration/torchlean/PoissonPTX/CellGridAssembly.lean)
+uses the chronological store publication directly. Other blocks' output slots
+are disjoint, and uploaded assembly tables remain unchanged. Its
+[reference corollary](../../integration/torchlean/PoissonPTX/CellGridReference.lean)
+connects the unmasked result to the public array reference. These theorems assume
+a supplied actual grid with the stated input layouts, source constraints and
+completed active output lanes; they do not construct an admitted cell grid for
+arbitrary inputs or prove termination of every padding lane.
+
+The next-launch byte state remains explicit mathematical publication, not a
+proof of CUDA transport or host visibility. General admitted cell execution
+existence, the remaining PCG/reduction instructions and the final host/solver
+connection remain separate obligations. The table checker is a Lean definition;
+its existence alone does not establish that the Python byte serializer or
+runtime invokes it correctly.

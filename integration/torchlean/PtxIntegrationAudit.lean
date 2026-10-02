@@ -1,3 +1,16 @@
+import PoissonPTX.CellGrid
+import PoissonPTX.CellGridSources
+import PoissonPTX.CellGridPublication
+import PoissonPTX.CellGridFamily
+import PoissonPTX.CellCandidate
+import PoissonPTX.CellCandidateBounds
+import PoissonPTX.CellGridIndices
+import PoissonPTX.CellGridAdmission
+import PoissonPTX.CellGridExecution
+import PoissonPTX.CellGridInputs
+import PoissonPTX.CellGridAssembly
+import PoissonPTX.CellGridReference
+import PoissonPTX.CellGridChecks
 import PoissonPTX.OperatorArray
 import PoissonPTX.OperatorArrayRows
 import PoissonPTX.OperatorArrayCorrespondence
@@ -5218,3 +5231,69 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.Checks.wrong_length
 #print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.Checks.nonfinite
 #print axioms PtxTorchLean.Poisson.PTX.ArrayOperator.Checks.cancellation_order
+
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Launch
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.config
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Runs
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.forBlock
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.forBlock_append
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.forBlock_tag
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.project
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.ByteAddress
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.byteAddress
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.global_common
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.shared_private
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.initial
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Compatible
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.localSource
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.NoForeignOverlap
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.shared_source_owner
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.source_owner
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.compatible_project
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Performed
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.performed_project
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.publish
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.applyEvent_congr
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.publication_byte
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.publication_word
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.mem_forBlock
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.cell_words_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.family_entry
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.family_before
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Candidate
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Candidate.withSources
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Candidate.global_store
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Candidate.inputLayout
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Candidate.past
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Candidate.index_bound
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Candidate.word_bound
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.IndexCompatible
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.index_initial
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Candidates
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Candidates.store_lower
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Candidates.index_values
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Candidates.separated
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Candidates.withSources
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Execution
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Admitted
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Admitted.family
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Admitted.entry
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Admitted.before
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Admitted.input_word32
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Admitted.assembly_tables
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.assembly_operator
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.assembly_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.assembly_reference
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.sharedEvents
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.foreign
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.foreign_shared_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.identities
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.stores
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.interleaved_publication
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.seed
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.launch
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.after
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.first_step
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.two_blocks
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.Checks.projected_step
