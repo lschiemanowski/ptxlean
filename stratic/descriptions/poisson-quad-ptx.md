@@ -144,5 +144,6 @@ with a proved change of source accounting. Its actual result and published
 whole-cell tensor use TorchLean connectivity gathering and decoded coefficient
 tables. The prefix input-source constraints are derived from the joint history:
 setup/control and input addresses are established before admitting each load,
-and the actual output stores are separated from the input arrays. A single
-full-entry execution remains to be composed. No convenient shared bytes are installed in the execution.
+and the actual output stores are separated from the input arrays. The full-entry theorem derives the actual prefix and continuation from one
+execution and transports the same byte-source constraints between their
+instruction-counter views. No convenient shared bytes are installed in the execution.

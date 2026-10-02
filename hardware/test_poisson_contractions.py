@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue, verify_gather, verify_entry
+from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue, verify_gather, verify_entry, verify_whole
 from poisson_kernels import Layout, module, PTX
 
 
@@ -176,6 +176,41 @@ class ContractionBinding(unittest.TestCase):
         adjacent = copy.deepcopy(self.layout)
         adjacent['fields']['element']['offset'] = end
         self.assertEqual(parameters(adjacent)['output'], end)
+
+    def test_whole_native_counters(self):
+        # Mutation evidence only; production expected shapes come from Lean.
+        import re
+        lines = re.search(r'\.visible \.entry element_probe\(.*?\n}', self.ptx, re.S)[0].splitlines()
+        begin = next(i for i,line in enumerate(lines) if line.startswith('.shared '))+1
+        body = lines[begin:-1]
+        instructions = [line for line in body if not line.endswith(':')]
+        labels = {}
+        pc = 0
+        for line in body:
+            if line.endswith(':'): labels[line[:-1]] = pc
+            else: pc += 1
+        branches = [[pc, labels[re.fullmatch(r'@!%live bra (\w+);', line)[1]]]
+                    for pc,line in enumerate(instructions) if line.startswith('@')]
+        entries = []
+        for entry in ('element_probe', 'element_p', 'element_x'):
+            section = re.search(r'\.visible \.entry '+entry+r'\(.*?\n}', self.ptx, re.S)[0].splitlines()
+            first = next(i for i,line in enumerate(section) if line.startswith('.shared '))+1
+            entries.append(section[first:section.index('@!%live bra stage_1_done;')])
+        code = dict(prologue=body[:7], entries=entries,
+                    middle=[body[body.index(f'@!%live bra stage_{p}_done;')+1:body.index(f'stage_{p}_done:')] for p in (1,2,3)],
+                    final=body[body.index('@!%live bra stage_4_done;')+1:body.index('stage_4_done:')]+['ret;'],
+                    shape=[len(instructions), [[pc for pc,line in enumerate(instructions) if line=='bar.sync 0;'], branches]])
+        self.assertEqual(len(verify_whole(self.ptx, code, self.layout)), 3)
+        for modify in ('count', 'barrier', 'branch'):
+            changed = copy.deepcopy(code)
+            if modify=='count': changed['shape'][0] += 1
+            elif modify=='barrier': changed['shape'][1][0][1] -= 21
+            else: changed['shape'][1][1][-1][1] -= 5
+            with self.subTest(modify=modify), self.assertRaisesRegex(ValueError, 'absolute instruction counters'):
+                verify_whole(self.ptx, changed, self.layout)
+        for mutated in (self.ptx.replace('bar.sync 0;', 'mov.u32 %i, 0;\nbar.sync 0;', 1),
+                        self.ptx.replace('stage_4_done:', 'ret;\nstage_4_done:', 1)):
+            with self.assertRaises(ValueError): verify_whole(mutated, code, self.layout)
 
     def test_structure(self):
         self.assertEqual(len(verify_blocks(self.ptx, self.expected, self.layout)), 24)

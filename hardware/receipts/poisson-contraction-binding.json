@@ -1,9 +1,110 @@
 {
   "status": "pass",
-  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nComplete middle-phase bodies are bound to the concurrent Lean program with\nkernel-checked control, address and numerical certificates for Q1--Q4. Completed\nmiddle-slice executions satisfying necessary byte-source constraints store all\nsix TorchLean intermediate tensors. The final body has a fetched, snapshot-based\nstore theorem and phase-by-phase composition with actual middle stores. A\nconcurrent arithmetic extension now justifies the actual final loads using one\nwhole-history source assignment and connects its result to the fetched store.\nThe arithmetic theorem derives its middle prefix and continuation at the last\nbarrier from a single run. A combined concurrent index/store/return machine now\nderives that arithmetic execution, its ordered event embedding and result\nregister relation, with only global output stores omitted. Byte-source\nrestriction preserves retained reads when those stores are beyond the bounded\ncoefficient region. Actual store addresses now follow from launch bounds, and\neach completed active lane's stored bytes have its TorchLean value. Actual store\noccurrence and recorded values imply an order-independent published global\ntensor equal to TorchLean. This mathematical publication leaves CUDA host\nvisibility, entry composition and complete PTX memory admission open.\nThe seven-instruction register prologue is separately proved from launch context\nand bound with its declarations to each emitted element entry. The twelve-step\nactive gather has a fetched snapshot proof, derived layout safety and a TorchLean\ninput theorem; its complete body is bound for all three source vectors. The\nconcurrent 21-instruction prefix now derives original input reads, gathered bits,\nactual barrier completion and the arithmetic launch contract. Actual store\ncoverage, values, padding exclusion and byte ownership are also proved. Actual\nfirst-barrier ordering and preservation by the arithmetic/output body now derive\ncontinuation reads from those gathered stores. Source rebasing now connects the\nactual gather to the numerical body and its published TorchLean cell tensor.\nWhole-entry input-source restriction and single-entry execution composition\nremain open, alongside the remaining solver instructions.\nSaved output extents are checked disjoint; this is concrete layout evidence,\nseparate from the general launch-derived address theorem and GPU conformance.",
+  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nComplete middle-phase bodies are bound to the concurrent Lean program with\nkernel-checked control, address and numerical certificates for Q1--Q4. Completed\nmiddle-slice executions satisfying necessary byte-source constraints store all\nsix TorchLean intermediate tensors. The final body has a fetched, snapshot-based\nstore theorem and phase-by-phase composition with actual middle stores. A\nconcurrent arithmetic extension now justifies the actual final loads using one\nwhole-history source assignment and connects its result to the fetched store.\nThe arithmetic theorem derives its middle prefix and continuation at the last\nbarrier from a single run. A combined concurrent index/store/return machine now\nderives that arithmetic execution, its ordered event embedding and result\nregister relation, with only global output stores omitted. Byte-source\nrestriction preserves retained reads when those stores are beyond the bounded\ncoefficient region. Actual store addresses now follow from launch bounds, and\neach completed active lane's stored bytes have its TorchLean value. Actual store\noccurrence and recorded values imply an order-independent published global\ntensor equal to TorchLean. This mathematical publication leaves CUDA host\nvisibility and complete PTX memory admission open.\nThe seven-instruction register prologue is separately proved from launch context\nand bound with its declarations to each emitted element entry. The twelve-step\nactive gather has a fetched snapshot proof, derived layout safety and a TorchLean\ninput theorem; its complete body is bound for all three source vectors. The\nconcurrent 21-instruction prefix now derives original input reads, gathered bits,\nactual barrier completion and the arithmetic launch contract. Actual store\ncoverage, values, padding exclusion and byte ownership are also proved. Actual\nfirst-barrier ordering and preservation by the arithmetic/output body now derive\ncontinuation reads from those gathered stores. Source rebasing now connects the\nactual gather to the numerical body and its published TorchLean cell tensor.\nA single native-counter run now derives the prefix/body split and joint-history\ninput admission, and publishes the TorchLean cell tensor. Remaining solver\ninstructions and launch composition remain open.\nSaved output extents are checked disjoint; this is concrete layout evidence,\nseparate from the general launch-derived address theorem and GPU conformance.",
   "checked": [
     {
       "directory": "00-n1-q1",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "d8908d83ed6f9b0942cfec4f10d4b3659fb64f903a33ae504899af29ee0c317f"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "2f24e8598eb2950b3414c8c59ea88a99e70b5712f03a0af37e17dea063aed644"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "54b4178aa8ceb722b4345f492d0c664d4218dbe67235e6a27723deb4262a2f3e"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -488,6 +589,107 @@
     },
     {
       "directory": "01-n2-q1",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "ec07e77c9d1904346fb24d71eb1c17423ea72b1c5918bb3f254c8b3739fa54ed"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "24c68e610290291c17475d913269880725984940eb53ca242b3791b287b4982a"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "ab8f7bf91a75600cfc2d47047c6524697a24ed12b808e9dfd819b5905a2cf58d"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -972,6 +1174,107 @@
     },
     {
       "directory": "02-n4-q1",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "2bce72524ce45c88475142368e957d1f113baf2de016f1899b9dcabd522ded90"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "5c127c6f76a35ef7bf3ea8fd38dcc8c7ef5905c1933fcf8aa1c283c69067eeb6"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "8504566a3a6a9eb607de4f816a2a37f63b06d19448f83f7acdb950dfb60fb3fa"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -1456,6 +1759,107 @@
     },
     {
       "directory": "03-n1-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "f988f32ab6980af22e169410775f2abc57f80ec71a69db613157082c2a724453"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "9d990073a91156cff503916fbdef801e0363d8a4e2e91f8f9e8e6f348857f3b4"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "4bd669c03e75555aeabf1f8ad2875dcb1c22145ce2d550379adcff3e8cf3dc49"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -1940,6 +2344,107 @@
     },
     {
       "directory": "04-n2-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "33f4832756687fb5baf987e666bf3fb9727fe7f49ead1cab23c3cdf534e21fab"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "fedd91bc7608e9adf4541278c36f8013154a259b2f6d0269d33805c89f97c259"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "f6832dcaac8afc340c6df0bd4bd386839e2eee8fd6d7c21151d8f9c3e8143b61"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -2424,6 +2929,107 @@
     },
     {
       "directory": "05-n4-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "0f2958181c7a8664b0de793541cd779ac0bd466463cd6e36e103f36a4f2ea85f"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "14c32021189eb2cdf66ff1bea9d4843e919e9ae2615bab0f721deaa47d5289d5"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "2c6482843b034b0247aa1340f40f110eda256c0e9c84953d52a218bd7094f025"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -2908,6 +3514,107 @@
     },
     {
       "directory": "06-n1-q3",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "c376e2e69ecd577954095213a35b99a180c6fcbfc9a0545051b1354e7be44b0a"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "8fdf5d3a2269d257bc8e6d639238f63070693baf0c74984c8f9478269094c2a0"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "4e00376f8d190c226b4f73311f79e06a59bbf640d03789b93d2716fc0d8f3d63"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -3392,6 +4099,107 @@
     },
     {
       "directory": "07-n2-q3",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "34303f82ae8f7142cea9164e379ac54cc8bb56026b6a1be72ebfa6d4f029ac8e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "417558f43bb4bb713184379e623981c09c868a782bfbe95a8f3f73865dd18e29"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "f58ab2b3d2a6d0b1dc983f4c1b6c0484655036367f7b9f543660103907fbd245"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -3876,6 +4684,107 @@
     },
     {
       "directory": "08-n4-q3",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "cf992169bf878a11ebf14937ca45d2590e4b8ec82ad0a928ec4989ee4a431e1a"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "620fbf1eda5773e4cc12ecf374498c3573bcb24ab697ebd8eb89834def47c39f"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "c6dfb3e52d34e8e96ea39f0925adc2f8ac5a3020aee00a31dd6db4e6df1f33c6"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -4360,6 +5269,107 @@
     },
     {
       "directory": "09-n1-q4",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "114189b35cbbd18e410ea447953e42cc125c7fb4db86a927a2792aa3143a0b50"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "70808e4d6235aee5873055bb23f49d875d58c3c1ebaaa4b7d6349703e1b9fab0"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "6f9caa63cd7f99b7ef7554de1d420a54fb99bab8a4fb83406f8e98b7145f2fab"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -4844,6 +5854,107 @@
     },
     {
       "directory": "10-n2-q4",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "61ca35079c3a83d2c5f573f056735783d608f9f86664e50a014191649f5425e9"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "fe51842d87e106011a0fa1f49b095e3aadf0cc12d0b6d3c2d60e2bf1bd21ec84"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "586d8bdb03ed88f71378d65d3516859005a1e2c57afb5146dfc8b03e663c004c"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -5328,6 +6439,107 @@
     },
     {
       "directory": "11-n4-q4",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "f44bc19ab237e66cc283c4869ed6ca9d9ea5e5870a811a5477e39872c1c9eaff"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "fd45160057957b06cbafe8191c6c76e5be7e134f3aa6340fd11c06efa90853a5"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "3d591a29e043b04d65ab0d0ebe08441856ff0bb4031f96ab6a6644c379f2d366"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -5812,6 +7024,107 @@
     },
     {
       "directory": "12-n8-q4",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "a6c44ce83a9ba0cac7d5ca4c444de73494cce227b2d8fbc2c7d32ebae59cbd41"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "b62ca174a550d2775563a2b56ed60f6ad0a9b5069f998c71cc430eed65445f11"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "57035214bf64bd7c49ea9c7e8d200c44d90d1d4445ec09f87c23384334537f2f"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -6296,6 +7609,107 @@
     },
     {
       "directory": "13-n2-q1",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "ec07e77c9d1904346fb24d71eb1c17423ea72b1c5918bb3f254c8b3739fa54ed"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "24c68e610290291c17475d913269880725984940eb53ca242b3791b287b4982a"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "ab8f7bf91a75600cfc2d47047c6524697a24ed12b808e9dfd819b5905a2cf58d"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -6780,6 +8194,107 @@
     },
     {
       "directory": "14-n2-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "33f4832756687fb5baf987e666bf3fb9727fe7f49ead1cab23c3cdf534e21fab"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "fedd91bc7608e9adf4541278c36f8013154a259b2f6d0269d33805c89f97c259"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "f6832dcaac8afc340c6df0bd4bd386839e2eee8fd6d7c21151d8f9c3e8143b61"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -7264,6 +8779,107 @@
     },
     {
       "directory": "15-n2-q3",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "34303f82ae8f7142cea9164e379ac54cc8bb56026b6a1be72ebfa6d4f029ac8e"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "417558f43bb4bb713184379e623981c09c868a782bfbe95a8f3f73865dd18e29"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "f58ab2b3d2a6d0b1dc983f4c1b6c0484655036367f7b9f543660103907fbd245"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -7748,6 +9364,107 @@
     },
     {
       "directory": "16-n2-q4",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "61ca35079c3a83d2c5f573f056735783d608f9f86664e50a014191649f5425e9"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "fe51842d87e106011a0fa1f49b095e3aadf0cc12d0b6d3c2d60e2bf1bd21ec84"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "586d8bdb03ed88f71378d65d3516859005a1e2c57afb5146dfc8b03e663c004c"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -8232,6 +9949,107 @@
     },
     {
       "directory": "17-n2-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "33f4832756687fb5baf987e666bf3fb9727fe7f49ead1cab23c3cdf534e21fab"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "fedd91bc7608e9adf4541278c36f8013154a259b2f6d0269d33805c89f97c259"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "f6832dcaac8afc340c6df0bd4bd386839e2eee8fd6d7c21151d8f9c3e8143b61"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -8716,6 +10534,107 @@
     },
     {
       "directory": "18-n2-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "33f4832756687fb5baf987e666bf3fb9727fe7f49ead1cab23c3cdf534e21fab"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "fedd91bc7608e9adf4541278c36f8013154a259b2f6d0269d33805c89f97c259"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "f6832dcaac8afc340c6df0bd4bd386839e2eee8fd6d7c21151d8f9c3e8143b61"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -9200,6 +11119,107 @@
     },
     {
       "directory": "19-n2-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "33f4832756687fb5baf987e666bf3fb9727fe7f49ead1cab23c3cdf534e21fab"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "fedd91bc7608e9adf4541278c36f8013154a259b2f6d0269d33805c89f97c259"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "f6832dcaac8afc340c6df0bd4bd386839e2eee8fd6d7c21151d8f9c3e8143b61"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -9684,6 +11704,107 @@
     },
     {
       "directory": "20-n2-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "33f4832756687fb5baf987e666bf3fb9727fe7f49ead1cab23c3cdf534e21fab"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "fedd91bc7608e9adf4541278c36f8013154a259b2f6d0269d33805c89f97c259"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "f6832dcaac8afc340c6df0bd4bd386839e2eee8fd6d7c21151d8f9c3e8143b61"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -10168,6 +12289,107 @@
     },
     {
       "directory": "21-n2-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "33f4832756687fb5baf987e666bf3fb9727fe7f49ead1cab23c3cdf534e21fab"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "fedd91bc7608e9adf4541278c36f8013154a259b2f6d0269d33805c89f97c259"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "f6832dcaac8afc340c6df0bd4bd386839e2eee8fd6d7c21151d8f9c3e8143b61"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -10652,6 +12874,107 @@
     },
     {
       "directory": "22-n3-q1",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "90932c7cc657a17d323a2a2c2dfb526e1862f43f8d59fc01998e7d6b3d8cc936"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "e341bff8a35f71834d62d4c522bb2977bc9541b13dc780ad24399218d46246fd"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 279,
+          "barriers": [
+            20,
+            82,
+            154,
+            216
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              82
+            ],
+            [
+              83,
+              154
+            ],
+            [
+              155,
+              216
+            ],
+            [
+              217,
+              278
+            ]
+          ],
+          "sha256": "dc023ba7a7503c99f74c543bf8522d589f4b0b54b99fa3267eb5076bfc46ce68"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -11136,6 +13459,107 @@
     },
     {
       "directory": "23-n3-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "587d7fb98ca0521b98c5e348a8aaa01df97b4f2abd9955bee23ae27cc4ebb0f7"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "5d62214d9847f8311be69de10c6a271bccdfeec28862f3e7926815c8e93d8f1c"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "81fdfb1f792b0556eb76cf66f0861c80bc9a135b4cafc5bd13b18853aebd1208"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -11620,6 +14044,107 @@
     },
     {
       "directory": "24-n3-q3",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "4ff3bd902724d4cacd3abea251ba8e87c3d0db90bf8cfbd0a7186dff3307bc8c"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "6092105d2f0fb7b1cb993e736c287fd8da1f852b3e115c7a326ae011069b06ee"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "6b2807c27e3a0c654e3f1c0d73fa18f7b5dc7d4381ca4bb046f365a291016fa4"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -12104,6 +14629,107 @@
     },
     {
       "directory": "25-n3-q4",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "9d0fc27bd6ddc2edfed6dc58d7b3490b6e60171e0aef73efbf8aa5c8a8f23759"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "2f45155a82868a7803d173ea5a91b8449cda5dd054498fea17b59e47b90ae91a"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "1bca96b55170293bfe2ba2837b5b3e485befecfb8e0ce5525a8728630e691179"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -12588,6 +15214,107 @@
     },
     {
       "directory": "26-n8-q4",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "a6c44ce83a9ba0cac7d5ca4c444de73494cce227b2d8fbc2c7d32ebae59cbd41"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "b62ca174a550d2775563a2b56ed60f6ad0a9b5069f998c71cc430eed65445f11"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 591,
+          "barriers": [
+            20,
+            160,
+            310,
+            450
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              160
+            ],
+            [
+              161,
+              310
+            ],
+            [
+              311,
+              450
+            ],
+            [
+              451,
+              590
+            ]
+          ],
+          "sha256": "57035214bf64bd7c49ea9c7e8d200c44d90d1d4445ec09f87c23384334537f2f"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -13072,6 +15799,107 @@
     },
     {
       "directory": "27-n16-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "8b103a546071f62695bbbfd694d1f7596b6884e37e4f0bf6f02801cfce8ed638"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "b50702ccf1381f86baf9664642578d8621fb0e08e5079873685399a9ada03dbc"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "b7f363319b1323d387a6e84251e250f5df083587848a01967863940385d39ab1"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -13556,6 +16384,107 @@
     },
     {
       "directory": "28-n4-q3",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "cf992169bf878a11ebf14937ca45d2590e4b8ec82ad0a928ec4989ee4a431e1a"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "620fbf1eda5773e4cc12ecf374498c3573bcb24ab697ebd8eb89834def47c39f"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 487,
+          "barriers": [
+            20,
+            134,
+            258,
+            372
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              134
+            ],
+            [
+              135,
+              258
+            ],
+            [
+              259,
+              372
+            ],
+            [
+              373,
+              486
+            ]
+          ],
+          "sha256": "c6dfb3e52d34e8e96ea39f0925adc2f8ac5a3020aee00a31dd6db4e6df1f33c6"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -14040,6 +16969,107 @@
     },
     {
       "directory": "29-n2-q2",
+      "whole_entry": [
+        {
+          "entry": "element_probe",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "33f4832756687fb5baf987e666bf3fb9727fe7f49ead1cab23c3cdf534e21fab"
+        },
+        {
+          "entry": "element_p",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "fedd91bc7608e9adf4541278c36f8013154a259b2f6d0269d33805c89f97c259"
+        },
+        {
+          "entry": "element_x",
+          "instructions": 383,
+          "barriers": [
+            20,
+            108,
+            206,
+            294
+          ],
+          "branches": [
+            [
+              7,
+              20
+            ],
+            [
+              21,
+              108
+            ],
+            [
+              109,
+              206
+            ],
+            [
+              207,
+              294
+            ],
+            [
+              295,
+              382
+            ]
+          ],
+          "sha256": "f6832dcaac8afc340c6df0bd4bd386839e2eee8fd6d7c21151d8f9c3e8143b61"
+        }
+      ],
       "entry_prefix": [
         {
           "entry": "element_probe",
@@ -14699,12 +17729,18 @@
     "PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_indices",
     "PtxTorchLean.Poisson.PTX.CellEntry.Control.source_step",
     "PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_words",
-    "PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_sources"
+    "PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_sources",
+    "PtxTorchLean.Poisson.PTX.CellWhole.executions",
+    "PtxTorchLean.Poisson.PTX.CellWhole.histories",
+    "PtxTorchLean.Poisson.PTX.CellWhole.sources",
+    "PtxTorchLean.Poisson.PTX.CellWhole.output_bounds",
+    "PtxTorchLean.Poisson.PTX.CellWhole.tensor"
   ],
-  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.run_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.stored_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.published_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.shared_stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.global_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.input_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.initial_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.runs_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_location' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.all_reads' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.inputs_of_matrices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.index_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.location_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.output_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.read_wordBytes' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.phase_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.completed_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.run_append_code' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.compatible_prefix' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.performed_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.view_append' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.results' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.load_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.all_reads' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.register_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_local' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_completion' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.split' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_run' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.crossing_state' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.step_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.split_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.across' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.performed' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.separated_by_fence' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.checked' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.read_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.after_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.fetched_preserves_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.distinct_outputs' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.projected_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.halted_blocks' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.synchronize_related' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.front_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.project_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.clipped' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.padding_return' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.tail_events' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.arithmetic_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_under_store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.tail_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_keeps' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.store_address' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.stored_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.coefficient_nowrap' depends on axioms: [propext,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stored_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stores_disjoint' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.store_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.completed_wrote' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.safe_records' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.present_record' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_outside' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.location_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_tensor' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.word' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.permuted_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.outside' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_sound' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_complete' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.memories' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.other_register' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.ready' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.thread_registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.stored' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.index_exact' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.CellGather.connectivity_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.node_inside' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.valid_of_layout' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.no_global_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.index_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.word_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.actual_trace' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_lane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.gathered_bits' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.gathered_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_barrier' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.arithmetic_launch' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_wrote' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_active' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_gather' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.info' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.producer' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.byte_owner' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.different_writers' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_arrivals' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_before_arrival' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_before_completion' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.continuation_read' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.preserves_gather' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.publication_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.publication_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.body_sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.body_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.published_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.cell_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.cell_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.performed' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.joint_cell_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.launch' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.live_gather' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.index_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.output_fence' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_indices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.source_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_words' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
+  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.run_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.stored_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.published_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.shared_stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.global_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.input_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.initial_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.runs_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_location' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.all_reads' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.inputs_of_matrices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.index_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.location_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.output_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.read_wordBytes' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.phase_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.completed_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.run_append_code' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.compatible_prefix' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.performed_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.view_append' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.results' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.load_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.all_reads' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.register_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_local' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_completion' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.split' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_run' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.crossing_state' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.step_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.split_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.across' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.performed' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.separated_by_fence' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.checked' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.read_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.after_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.fetched_preserves_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.distinct_outputs' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.projected_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.halted_blocks' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.synchronize_related' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.front_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.project_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.clipped' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.padding_return' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.tail_events' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.arithmetic_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_under_store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.tail_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_keeps' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.store_address' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.stored_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.coefficient_nowrap' depends on axioms: [propext,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stored_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stores_disjoint' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.store_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.completed_wrote' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.safe_records' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.present_record' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_outside' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.location_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_tensor' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.word' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.permuted_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.outside' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_sound' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_complete' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.memories' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.other_register' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.ready' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.thread_registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.stored' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.index_exact' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.CellGather.connectivity_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.node_inside' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.valid_of_layout' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.no_global_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.index_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.word_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.actual_trace' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_lane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.gathered_bits' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.gathered_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_barrier' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.arithmetic_launch' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_wrote' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_active' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_gather' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.recorded_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.info' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.producer' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.byte_owner' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Producers.different_writers' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.completed_arrivals' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_before_arrival' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.store_before_completion' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.continuation_read' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.preserves_gather' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.publication_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.publication_torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.body_sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.body_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.published_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.cell_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.cell_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.SourceCut.performed' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.joint_cell_tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.launch' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.live_gather' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.index_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.output_fence' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_indices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.source_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_words' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellEntry.Control.joint_sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.executions' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.histories' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.sources' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.output_bounds' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellWhole.tensor' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
   "source_sha256": {
     "integration/torchlean/PoissonPTX/Arithmetic.lean": "8fd4f79048a2452ec06f11fa6dd491ba1c2ceac1f0f73941aeb55558b9e16e2c",
     "integration/torchlean/PoissonPTX/BarrierChecks.lean": "b821ce1ae932bbb62dd1bf151c3bf62e17865382805a394467179e9714681780",
+    "integration/torchlean/PoissonPTX/BarrierClock.lean": "8857b4464acd442121ea4b9a6f75c0b051ab0e4a504707aa1f365d2ee2fc0652",
     "integration/torchlean/PoissonPTX/BarrierSources.lean": "b1c114dbc5ca25231c698ee764cb98bb9bc70066e2728a835b618022ef5c55bb",
     "integration/torchlean/PoissonPTX/BarrierValue.lean": "0ce05e9866ded173f4f4c61d1ae88c887c36469d82d2b0589773b17d762d8dcb",
     "integration/torchlean/PoissonPTX/Bytes.lean": "b1405bdaa8d08aabbe28aaa5880063e71cd5c1f25acfb961cf543172b3b26857",
@@ -14799,6 +17835,15 @@
     "integration/torchlean/PoissonPTX/CellTailStores.lean": "1ea6804eb3811ac16e111d68da1f9092a1c5eed60bc7588e739defdb9e5b9b4f",
     "integration/torchlean/PoissonPTX/CellTailWitnessSources.lean": "1b3a776c40632c9c9cf8d0c5e4b1d6a4711be960792cd1a6fd744fbe072b77ec",
     "integration/torchlean/PoissonPTX/CellTensor.lean": "fc3ed175a501b4aeb61e33f62d3f42d24054f8470c988a624796279eb49df94a",
+    "integration/torchlean/PoissonPTX/CellWhole.lean": "815caee5310195621320b2e1ef72f1cf38a6208382f846959d90736265072173",
+    "integration/torchlean/PoissonPTX/CellWholeBounds.lean": "5e4b947ea3e2bfad0e532eecad557a8474a710f17b962811c2052e4614e8dc09",
+    "integration/torchlean/PoissonPTX/CellWholeChecks.lean": "647b11640007e23824de273762658975ff527055bd16144f6a143758fa34d9f5",
+    "integration/torchlean/PoissonPTX/CellWholeCompose.lean": "3a58232b2125d1218de609c58a9630f317619642b350186d19e67e8e31ab2028",
+    "integration/torchlean/PoissonPTX/CellWholeCorrespondence.lean": "954d2ee959a0ebfd9dca292acb2883a4f5855c1eddf86a8100c0a0d8463128e6",
+    "integration/torchlean/PoissonPTX/CellWholeCut.lean": "e94f33beab2f38cbff1f6e14037bf82247612a9b0d02d66bf05d5daa1fb84b44",
+    "integration/torchlean/PoissonPTX/CellWholeSources.lean": "304eecf3269c1d4f1e4a73e562554508ecba6e2e65f45e3bd54d0a7e58942b50",
+    "integration/torchlean/PoissonPTX/CellWholeText.lean": "979553ff499565a613ad0d85e115ab80a25757a479ee9c1caf1e9facc0d0110b",
+    "integration/torchlean/PoissonPTX/CellWholeZero.lean": "c7b2a29493147ffd963e160ce7cff808aedfdcec8bb3289f3b8205821f6bd1a2",
     "integration/torchlean/PoissonPTX/CellWordView.lean": "c300caf16e31e8eb5f4985949dd0f461b9c6d6ce547d3d7c9da0ab9322ee9f94",
     "integration/torchlean/PoissonPTX/Checks.lean": "5e26c62780181d10797da2e23a66417b6de25d24137601b32c288b1112f03992",
     "integration/torchlean/PoissonPTX/Concurrent.lean": "a841cef5288ea511b927b2d36d2c61baf20310a36ab9600a6d0ee61cf367d07e",
@@ -14825,6 +17870,7 @@
     "integration/torchlean/PoissonPTX/ContractionLayout.lean": "81f3b3777f4e98512fec220c329cda7c89f227983cbbe5493e439c50ef600b84",
     "integration/torchlean/PoissonPTX/ContractionLoads.lean": "313a35403b8a6b62efc373867a354e7772f1595dc1b6ea0abff077d0896df53c",
     "integration/torchlean/PoissonPTX/ContractionText.lean": "6dd3164161a87f853175f34ff587fab704ab644673563f48ba9521ea01e6f4a2",
+    "integration/torchlean/PoissonPTX/ExecutionClock.lean": "2720eb1100acf536765ae47aa6118f2b9afc548f941ab92d9f741698eecf5115",
     "integration/torchlean/PoissonPTX/GlobalPublication.lean": "5c0f5002f713a69029328c0a4b933531ab291509d37ace14fbb930c9df52d4c4",
     "integration/torchlean/PoissonPTX/IndexSources.lean": "3a17c43096f7e624aed228a0dfb0ea2ae8876b73f5327bb362f9e27afb33be80",
     "integration/torchlean/PoissonPTX/IndexedCandidate.lean": "0fb7adb016cd0d1d1fb6935b726d31b70042b631a1f04d12e6d8fbf1f3a45ee9",
@@ -14833,6 +17879,7 @@
     "integration/torchlean/PoissonPTX/Layout.lean": "584efde27d90c4591c76ace8a6c4064daf83ff43db5c07850dd4b807ed26a031",
     "integration/torchlean/PoissonPTX/Machine.lean": "cf3f3031dac0c1a78a272f43b41076c19335996ab627b2676a71b7652fac95f3",
     "integration/torchlean/PoissonPTX/MemoryBlocks.lean": "b6afd6d47fab2e6673cfa6135bb3c234bc2df02220fb74f099a4520b0df9f8e7",
+    "integration/torchlean/PoissonPTX/OffsetExecution.lean": "8b4312ae7a675b1b02acd6fc3d6fd3ce90111dd0df3ee2517de2f036ec859790",
     "integration/torchlean/PoissonPTX/ParallelResidual.lean": "d0d7b84eded3884c33bbfabbeb9bada6bff6502f904efdb7411a6a077710e2a2",
     "integration/torchlean/PoissonPTX/ParallelResidualChecks.lean": "d878a43d15f1b85ad7fc05c742e7f1a72b44794d218e80922c4f6c26862228b8",
     "integration/torchlean/PoissonPTX/ParallelResidualLayout.lean": "7e25c85ce9b58add3a28aa7f4965e61084805df57984f0644c477e1eb135150a",
@@ -14840,6 +17887,11 @@
     "integration/torchlean/PoissonPTX/ProducerChecks.lean": "d4f9f653bdfaca5f8b7d24c3e885db4a7142eb4943b7f32932d712edac246017",
     "integration/torchlean/PoissonPTX/ProjectionBuild.lean": "023ab3d7d96abfb5da2daf6ae404d6c8d8cf2a4d5a594bd4f5f2c0298256453b",
     "integration/torchlean/PoissonPTX/ProjectionChecks.lean": "05b883bb21c0393f62b2abb4a07fa2b946c7e8d1b211f061767dc75f7cee2779",
+    "integration/torchlean/PoissonPTX/RelabelHistory.lean": "351f1af9ff53e0742cb8849fb26ce09672ca5d8abd7d2a853ce94c4ad3f55d56",
+    "integration/torchlean/PoissonPTX/RelabelShift.lean": "b3dae0e9e6b1bcf2fd7eca09df976620e74fe784b9ea6abafd1dede75aed7607",
+    "integration/torchlean/PoissonPTX/Relocate.lean": "522234894f1b02248304492d0df3b477126609d846ebe4cf91e32cb14c8aaa5a",
+    "integration/torchlean/PoissonPTX/RelocateInverse.lean": "be9429206486579ea09253e5e56f899fbf86f90f7421c8198ebe62449252e3c1",
+    "integration/torchlean/PoissonPTX/RelocateKernel.lean": "830b62778d666aa691b73a9736709517155892111f776b2336f5c6c78c06999d",
     "integration/torchlean/PoissonPTX/Residual.lean": "aa8833e97674b820de08a5b96e41fe9accd4f220c15c2ef8ccf0ecaced405643",
     "integration/torchlean/PoissonPTX/ResidualKernel.lean": "fc8808b3a38ba7cc4d4f99e498f17aa2861506f08749b2d4542b1d71d01b51b8",
     "integration/torchlean/PoissonPTX/SharedPlane.lean": "ce9518f92a6b1faea87539aba9186fe4f2758e63980138b4addd0e35f1af2098",
@@ -14859,13 +17911,13 @@
     "integration/torchlean/PoissonPTX/WeakPadding.lean": "920a80b3d0047288905e9bc2573b42937dbf7259c022c3adbb7c602ed9e43279",
     "integration/torchlean/PoissonPTX/WeakResidual.lean": "0b8438f59d104b68834763b204674f7ae4cc428e192d7dc1bced7127a012de33",
     "integration/torchlean/PoissonPTX/ZeroSources.lean": "efbd8cea410e6ea0c7820b4b4f081e805206641ab808951692bf4af91ca4c079",
-    "integration/torchlean/PoissonContractionsMain.lean": "e1fe5119632be22b604091daae008b22567b0a6705cf8deaff95d04d40520538",
+    "integration/torchlean/PoissonContractionsMain.lean": "b72b4b632fe70216873b76bfb929260941384a708ccf799566e999a2b2d97771",
     "integration/torchlean/PoissonQuadCorrespondence.lean": "e5d177ec11019881d2732da0a605d7dd3c4f98ed23acfc2f84fb2b5f5441a211",
-    "integration/torchlean/check.py": "bfb990d4bfa3c316c3da704693ce83a7884864dd46e9ee60d2e2e1d077d6fc6a",
-    "integration/torchlean/lakefile.toml": "a54aa85e80806830b53f2816ed608431ead9eb4bd3654eb2b14d784c34f66670",
+    "integration/torchlean/check.py": "a27b1622ba8b10b715a7019335044e5c6b118476d9585d51e23092da1ff4633f",
+    "integration/torchlean/lakefile.toml": "762aa9585ef08616ed024d7076b745d750e7732660bf1e91afa2e0a7e4a3b74c",
     "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
     "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
-    "hardware/check_poisson_contractions.py": "f5bfae5b44cb927938c7506594a49a8e1a339a170258731f1426f8611b011e14",
+    "hardware/check_poisson_contractions.py": "1b521b5cf934fe723320491bd527575ddaf770a13d74606cf60d60a4decee2b8",
     "hardware/check_poisson_ptx.py": "6165a8e3962b76285ffa475379ff3d44483ed248e42d5a1497ff4b34d9a99447"
   },
   "source_run_report_sha256": "c0334cbcbb6c4393c3045a73dbaf9ffb303e5103c33ce5b8f16196c3810ad613",

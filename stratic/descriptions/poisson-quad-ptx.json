@@ -17,10 +17,10 @@
     "Prove coefficient/output byte separation and preserve retained read sources under interleaved output stores; derive the concurrent arithmetic run and result register, derive store addresses from launch bounds and prove per-lane stored bytes, and recover the TorchLean tensor by publishing actual store records in any order.",
     "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order.",
     "Prove the seven-instruction register prologue and bind it to emitted entries; keep the indexed gather and first-barrier connection to the arithmetic entry explicit.",
-    "Connect the active gather body to TorchLean input gathering with explicit four-byte indices, derived access bounds and preserved registers; derive its concurrent input sources and retain whole-entry source composition as open.",
-    "Derive gathering and the arithmetic launch contract from concurrent setup, branching and the first barrier; retain whole-entry source composition and whole-solver instruction composition as open.",
+    "Connect the active gather body to TorchLean input gathering with explicit four-byte indices, derived access bounds and preserved registers; derive its input sources from the full execution history.",
+    "Derive gathering and the arithmetic launch contract from concurrent setup, branching and the first barrier; derive its complete cell result from one fetched execution; retain whole-solver instruction composition as open.",
     "Derive actual gather-store coverage and byte ownership from entry execution; derive later read visibility from real barrier order and preservation by the body.",
-    "Compose actual gathering, barrier visibility and arithmetic into a published cell tensor through proved source rebasing; derive prefix input admission from joint histories and retain single-entry execution composition."
+    "Compose actual gathering, barrier visibility and arithmetic into a published cell tensor through proved source rebasing; derive prefix input admission from joint histories and retain general execution existence."
   ],
   "realization": "implemented",
   "links": [
@@ -97,5 +97,5 @@
       }
     }
   ],
-  "remaining": "Single-entry execution composition, arbitrary-input source-admitted existence, coefficient-table setup representation, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open."
+  "remaining": "Arbitrary-input source-admitted execution existence, coefficient-table setup representation, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open."
 }

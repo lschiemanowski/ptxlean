@@ -1,3 +1,20 @@
+import PoissonPTX.Relocate
+import PoissonPTX.RelocateInverse
+import PoissonPTX.RelocateKernel
+import PoissonPTX.OffsetExecution
+import PoissonPTX.CellWhole
+import PoissonPTX.CellWholeCut
+import PoissonPTX.RelabelHistory
+import PoissonPTX.BarrierClock
+import PoissonPTX.ExecutionClock
+import PoissonPTX.RelabelShift
+import PoissonPTX.CellWholeSources
+import PoissonPTX.CellWholeBounds
+import PoissonPTX.CellWholeCorrespondence
+import PoissonPTX.CellWholeCompose
+import PoissonPTX.CellWholeChecks
+import PoissonPTX.CellWholeZero
+import PoissonPTX.CellWholeText
 import PoissonPTX.CellEntryControl
 import PoissonPTX.CellEntryActive
 import PoissonPTX.CellEntryIndexAddress
@@ -4456,3 +4473,145 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.JointChecks.joint_indices
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.JointChecks.derived_prefix
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.JointChecks.overlapping_output_rejected
+
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.scalar
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.scalar_pc
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.scalar_regs
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.operand
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.scalar_advance
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.scalar_assign
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.scalar_put
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.memory
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.start
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.bytes
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.eval
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.access
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.key
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.barrierEvent
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.event
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.core
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.outcome
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.key_injective
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.data
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.barrierConfig
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.request
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.barrierResult
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.barrier_step
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.core_lane
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.core_barrier
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.core_site
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.core_setLane
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.shifted_config
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.shifted_request
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.synchronize
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.instruction
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.dispatch
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.eval_back
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.data_back
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.scalar_injective
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.core_injective
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.dispatch_back
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.kernel
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.kernel_simple
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.kernel_eval
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.kernel_back
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.tailState
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.tailOutcome
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.tail_lane
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.tail_update
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.tail_access
+#print axioms PtxTorchLean.Poisson.PTX.Relocate.tailState_injective
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AtOffset.Step
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AtOffset.Runs
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AtOffset.aligned
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AtOffset.step_forward
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AtOffset.step_back
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AtOffset.run_forward
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AtOffset.run_back
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.entry
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.entryState
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Outcome
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Step
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Runs
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.step_aligned
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.before
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.split
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.ready_view
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.body_run
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.executions
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.EventRelated
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.at_old
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.at_new
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.across
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.indices
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.Before
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.generation
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.monotone
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.carry
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.emitted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.before_reset
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.Progress
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.Progress.refl
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.Progress.trans
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.unchanged
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.sync_barrier
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.sync_events
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.sync_progress
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Clock.dispatch_progress
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.clock_step
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.clock_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.clock_step
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.clock_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.renameAfter
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.before_event
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.after_event
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.before_history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.after_history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.joined
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.histories
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.sources
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Relabel.published
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.append
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.no_stores
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.OutputLayout
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.output_bounds
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.tensor
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.begin
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.append
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.prefix_run
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.offset_run
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.compose
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Checks.events
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Checks.final
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Checks.actual
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Checks.shifted_reads
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Checks.native_pc
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Checks.checked
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Checks.admitted
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Checks.extracted
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Checks.barrier_sites
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.seed
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.start
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.cfg
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.bases
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.prefixCandidate
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.prefixResult
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.prefix_executed
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.ctx
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.bodyStart
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.bodyCandidate
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.bodyResult
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.body_executed
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.events
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.final
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.actual
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.returned
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.four_outputs
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.zero
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.admitted
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.aligned
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.performed
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Zero.indices_admitted
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.shape

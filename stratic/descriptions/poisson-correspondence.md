@@ -683,11 +683,18 @@ Its coefficient tensors are the decoded initial arena tables. Relating those
 tables to a particular operator setup remains an input representation task;
 this theorem does not certify how an external host generated the tables.
 
-The composition currently takes the actual prefix and actual continuation runs
-separately. Its joint-history form derives prefix input admission from the same
-history that supplies the arithmetic reads. A single full-entry execution still
-needs to establish this split. The numerical connection does not assume
-gathered shared memory at the arithmetic entry.
+A single execution of the complete cell entry now derives the first-barrier
+split and both fetched subruns. Instruction counters stay absolute in the
+execution: arithmetic starts at counter 21. The proof translates its local
+view in both directions, including branch destinations, data records and
+barrier sites. A barrier generation counts completed uses of the barrier;
+events before and after the first release use different generations, so
+translating later sites leaves the earlier barrier's identity unchanged.
+This transports the byte-source conditions without supplying computed values.
+The resulting theorem publishes the TorchLean cell tensor from the full run's
+actual global-store history. Layout, represented input arrays, necessary
+byte-source admission and completion of the active lanes remain explicit
+premises. Coefficient tables are still decoded initial inputs.
 
 A nonzero regression continues the actual Q1 entry state through lane two's
 first coefficient and shared-input loads. Checked sources make it read lane
@@ -705,3 +712,12 @@ before admitting the four-byte indices, and source-vector addresses are derived
 from those admitted indices. Disjoint input and output arrays exclude later
 output stores as byte suppliers. These steps derive the prefix source contract from the joint history without
 assuming its input values or the final tensor.
+
+The whole-entry instruction binding compares every emitted instruction through
+return and the absolute counters of all branches and barriers against the Lean
+program lists. It rejects a shifted barrier site or an incorrect return target.
+A nonzero partial witness checks cross-lane gathering with absolute counters.
+A separate zero-data Q1 witness reaches all 32 returns and publishes four
+outputs, with checked index, word-source and performed-write admission. These
+finite witnesses establish existence for their inputs; arbitrary-input
+execution existence and the remaining solver launches are separate obligations.

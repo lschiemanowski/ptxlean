@@ -1,0 +1,165 @@
+{
+  "id": "2e88052b-c909-4845-b8d6-d986cd996290",
+  "base": "89aaa3fb46a681733ccb8957a97ddd8fe5acc249",
+  "contentTree": "377c8fe303d119a154d88ecb6d25583bd31d4cea",
+  "reviewer": "Codex",
+  "summary": "Prove full cell entry correspondence from one native-counter fetched execution, preserving actual barrier identities, sources and publication; check admitted complete and nonzero partial executions.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Derive prefix/body executions from one full run, relocate instruction and barrier sites in both directions, transport sources using actual barrier generations, and prove published TorchLean cell tensor. Explicit layout, input representation, necessary source admission and completed active lanes remain."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Document complete cell-entry correspondence and finite admitted execution witnesses while retaining general existence, coefficient setup and whole-solver obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No equation, TorchLean algorithm, emitted GPU kernel, or host solver changed. This strengthens proof composition only."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Manual review confirms the actual full-run rules fetch disjoint prefix/body counter ranges; source transport changes only labels, with keys tied to actual barrier generations. No desired read value, supplied intermediate run or desired result is an assumption. Exact emitted counter binding and negative tests check frontend correspondence; no hardware/full PTX admission claim."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "377c8fe303d119a154d88ecb6d25583bd31d4cea",
+      "method": "Complete registered Lean build; fresh CellWholeChecks and CellWholeZero kernel regressions; exact PtxIntegrationAudit dependency audit; source guards and pinned dependency check; both saved Poisson binding checkers including whole-entry absolute-counter binding; 25 Python Poisson tests; Stratic validation and manual proof/contract review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 verified dependency pins; local CPU checking, saved GPU artifacts only. No GPU rerun or paid model calls.",
+      "evidence": "4067 exact dependency reports, only standard Lean axioms; 447 guarded files; full 4606-job registered build; both fresh witness modules passed. 90 whole-cell native-counter entries, 720 contractions and 630 shared stores across 30 saved layouts; true_residual in 30 layouts; 360 receipt source hashes verified. 25 Python tests passed. Stratic valid; git diff --check clean; README unchanged. One full run derives its prefix/body split, byte-source transport and published TorchLean tensor. Necessary admission, layout and completion remain explicit. General existence and remaining solver obligations are not claimed.",
+      "tests": [],
+      "id": "e94ce5eb-f79a-4f98-a2fa-80c0090cec94",
+      "recordedAt": "2026-10-02T10:53:26.875Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T10:54:59.877Z",
+  "unmapped": [
+    {
+      "path": "integration/torchlean/PoissonPTX/BarrierClock.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWhole.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWholeBounds.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWholeChecks.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWholeCompose.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWholeCorrespondence.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWholeCut.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWholeSources.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWholeText.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWholeZero.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ExecutionClock.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/OffsetExecution.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RelabelHistory.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RelabelShift.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Relocate.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RelocateInverse.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RelocateKernel.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed supporting native-counter semantics, proof composition, exact audit/build registration, source-bound receipts, binding mutation tests or explanatory documentation for the mapped full-entry tensor theorem."
+    }
+  ]
+}

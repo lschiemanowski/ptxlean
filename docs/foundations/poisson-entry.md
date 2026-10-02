@@ -246,7 +246,7 @@ then connects the actual numerical result and published cell-output tensor to
 TorchLean's gather and cell calculation. Coefficients are read from their initial
 arena tables. Output records may be published in any order. The modular proof takes prefix and body executions separately. The joint-history
 version derives the prefix's input admission; obtaining both executions from
-one full-entry run remains open.
+one full-entry run is now proved.
 
 [The rebasing regression](../../integration/torchlean/PoissonPTX/CellEntryRebaseChecks.lean)
 executes lane two through a coefficient load and a shared load after the actual
@@ -285,4 +285,35 @@ storage conditions; no desired intermediate or final value is supplied.
 [The regression](../../integration/torchlean/PoissonPTX/CellEntryJointChecks.lean)
 instantiates derived admission on the nonzero gather and actual cross-lane
 continuation. It also rejects a layout placing output over connectivity.
-The runs are still modular, and the continuation witness remains partial.
+That witness remains partial. A separate full-entry witness now executes the
+zero-data case through all four barriers and every thread's return; it checks
+four output stores and both byte-source admission conditions.
+
+## One execution from entry to return
+
+A single execution of the complete cell entry now derives the first-barrier
+split and both fetched subruns. Instruction counters stay absolute in the
+execution: arithmetic starts at counter 21. The proof translates its local
+view in both directions, including branch destinations, data records and
+barrier sites. A barrier generation counts completed uses of the barrier;
+events before and after the first release use different generations, so
+translating later sites leaves the earlier barrier's identity unchanged.
+This transports the byte-source conditions without supplying computed values.
+The resulting theorem publishes the TorchLean cell tensor from the full run's
+actual global-store history. Layout, represented input arrays, necessary
+byte-source admission and completion of the active lanes remain explicit
+premises. Coefficient tables are still decoded initial inputs.
+
+[The full-entry theorem](../../integration/torchlean/PoissonPTX/CellWholeCorrespondence.lean)
+uses one execution, starting at instruction zero. It derives the first-barrier
+boundary rather than asking the caller to identify it. The native execution
+uses the emitted instruction counters throughout. Its proof view subtracts 21
+from body counters and records; a generation-sensitive change of barrier keys
+preserves which writes precede which reads. Memory addresses, loaded bits,
+thread identities and source positions do not change.
+
+[The nonzero witness](../../integration/torchlean/PoissonPTX/CellWholeChecks.lean)
+checks a gather and cross-lane read. [The complete zero-data witness](../../integration/torchlean/PoissonPTX/CellWholeZero.lean)
+executes all 32 threads through return, including the 28 padding lanes, and
+checks its four output stores and necessary byte-source conditions. These
+witnesses do not establish termination for every input or GPU scheduling policy.
