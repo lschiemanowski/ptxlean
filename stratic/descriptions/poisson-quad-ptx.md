@@ -192,9 +192,10 @@ Setup and loop-entry states appearing in these premises are pure functions of
 the raw initial state, not supplied executions or desired intermediate values.
 The represented index list fixes the order of rounded additions. Every safe
 ordered range has a finite returning execution, without a fuel assumption.
-This is still a per-thread memory snapshot: simultaneous thread publication,
-its relation to the serialized mesh lists, and inter-launch visibility need
-separate proofs.
+This entry theorem uses a per-thread memory snapshot. The parallel theorem
+below derives that snapshot from source-constrained execution and publishes
+actual stores. Serialized mesh representation and inter-launch visibility
+remain separate obligations.
 
 The exact-code checker binds both complete emitted assembly entries, their
 register declarations, launch shapes and absolute branch destinations to the
@@ -219,8 +220,8 @@ preserves the exact rounded scatter sum. The connection to a serialized mesh
 is an explicit input representation contract on ordered index lists; it does
 not assume an output sum. A mathematical publication theorem merges the actual
 output words of complete snapshot executions in any order containing every
-active node and preserves all other bytes. This theorem is still about snapshot
-executions; parallel read visibility is a separate obligation.
+active node and preserves all other bytes. The parallel theorem below
+derives this snapshot view from one admitted joint execution.
 
 The branching execution model also records freely chosen read bits: eight-byte
 floating-point loads/stores and four-byte index loads. Arbitrary thread
@@ -231,15 +232,30 @@ checks force the initial read bits and recover the complete snapshot execution,
 including loops and stores. The proof maintains local memory agreement across
 writes instead of replacing a thread's memory by an assumed snapshot.
 
-For assembly, store ownership is already proved independently of any read
-choices. The actual instruction graph preserves the parameter base, launch
-index and final address calculation, so every recorded write has its owner's
-node address. This holds for whole interleavings and implies that distinct
-nodes' writes are disjoint. Deriving the corresponding read footprints from
-source-admitted offset/index loads remains necessary before the generic replay
-result supplies unconditional assembly parallel correspondence. Its separation
-premise is an explicit intermediate obligation, not an established property of
-all assembly reads.
+For assembly, every recorded store has its owner's node address, independently
+of proposed read values. Input arrays occupy byte ranges disjoint from the
+output vector; either physical order is allowed. The actual offset-load
+addresses therefore force their bytes to initialization. The resulting cursor
+bounds constrain each contribution-index load, whose admitted bytes in turn
+bound the cell-value address. This dependency order derives every read footprint
+from the same joint history and discharges the replay separation condition.
+No desired cursor range, read value or local snapshot execution is assumed.
+
+The chronological global stores of that actual interleaving publish the ordered
+rounded row sum at each node, with the emitted optional boundary mask. A local
+byte changes exactly when its instruction records a global store; other threads
+write disjoint node slots. Thus the joint publication agrees with the final
+local output word, without assumed store coverage or a supplied publication
+schedule. This is mathematical publication of recorded writes, not a CUDA
+host-visibility claim.
+
+Every valid physical assembly input also has a returning joint execution with
+compatible initialization sources. Each scalar execution reads its inputs
+before its sole output store. Its recorded reads therefore use initial bytes;
+combining the returning threads constructs an actual admitted interleaving.
+This general existence proof does not depend on interpreter fuel or specific
+numerical values. Kernel-checked two-node examples instantiate it with nonzero
+values, both masking choices, and a nonzero arena base.
 
 Kernel-checked examples exercise two nodes at a nonzero base, masked and
 unmasked entry executions, two publication orders, and ordered-scatter equality.

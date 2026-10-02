@@ -7,23 +7,15 @@
     }
   },
   "summary": [
-    "Run the matrix-free Poisson operator and PCG numerical iterations in binary64 PTX using setup supplied by Lean.",
-    "Use disjoint element storage and one writer per global node for deterministic assembly without floating-point atomics.",
-    "Certify accepted solutions with an exact residual checker; connect the residual kernel output to TorchLean under byte-source constraints while retaining the other implementation and hardware boundaries.",
-    "Prove the eight local contractions and actual shared stores, and connect all six outputs of the three completed middle phases to TorchLean under necessary byte-source constraints.",
-    "Derive middle-slice read addresses, intermediate values, weight operations, ownership and barrier ordering for certified Q1\u2013Q4 layouts; check complete emitted bodies against the proved program.",
-    "Keep gathered input and entry registers explicit; full cell composition, complete memory admission, general execution existence and host launches remain unproved.",
-    "Derive final-read visibility and ordered arithmetic from one source-constrained concurrent run, including its last-barrier split, derive its arithmetic projection from a combined concurrent index/store/return execution; keep full-kernel composition explicit.",
-    "Prove coefficient/output byte separation and preserve retained read sources under interleaved output stores; derive the concurrent arithmetic run and result register, derive store addresses from launch bounds and prove per-lane stored bytes, and recover the TorchLean tensor by publishing actual store records in any order.",
-    "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order.",
-    "Prove the seven-instruction register prologue and bind it to emitted entries; keep the indexed gather and first-barrier connection to the arithmetic entry explicit.",
-    "Connect the active gather body to TorchLean input gathering with explicit four-byte indices, derived access bounds and preserved registers; derive its input sources from the full execution history.",
-    "Derive gathering and the arithmetic launch contract from concurrent setup, branching and the first barrier; derive its complete cell result from one fetched execution; retain whole-solver instruction composition as open.",
-    "Derive actual gather-store coverage and byte ownership from entry execution; derive later read visibility from real barrier order and preservation by the body.",
-    "Compose actual gathering, barrier visibility and arithmetic into a published cell tensor through proved source rebasing; derive prefix input admission from joint histories and retain general execution existence.",
-    "Connect complete cell execution to its represented operator and prove ordered assembly-loop correctness and existence; keep concurrent assembly publication and launch composition explicit.",
-    "Prove complete assembly entry output and execution existence, binding all emitted instructions while retaining concurrent publication and launch visibility obligations.",
-    "Derive assembly layout safety and ordered snapshot publication; prove observed-store ownership and generic source replay while keeping assembly read footprints explicit."
+    "Run the matrix-free Poisson operator and PCG iterations in binary64 PTX using mesh, quadrature, load and diagonal setup supplied by Lean.",
+    "Use disjoint element storage and one writer per global node for deterministic ordered assembly without floating-point atomics.",
+    "Certify accepted solutions with an exact residual checker for the represented coefficients; retain separate instruction-correspondence obligations.",
+    "Prove whole-cell tensor correspondence from actual gathering, all eight contractions, barrier visibility and publication of computed stores.",
+    "Prove complete assembly entry correctness and general returning execution from valid arrays, including boundary masking and inactive-thread return.",
+    "Derive assembly read visibility from one joint history and prove its published ordered scatter; construct admitted returning parallel witnesses for arbitrary valid inputs.",
+    "Connect the complete true_residual kernel to its subtraction specification under explicit byte-source constraints.",
+    "Check emitted entries and launch shapes against Lean representations, preserving numerical order and the distinction between proof checking and GPU observations.",
+    "Keep arbitrary-input whole-cell existence, serialized setup representation, remaining PCG/reduction instructions, launch composition, complete PTX admission and hardware conformance as separate obligations."
   ],
   "realization": "implemented",
   "links": [
@@ -66,7 +58,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "Validation covers Q1\u2013Q4, numerical operator comparisons on supplied and varied\nvectors, complete solves, polynomial reproduction, boundary preservation,\niteration limits and invalid inputs. CPU references and device results start\nfrom identical setup arrays. Saved cases, PTX and binary hashes, launch records,\noutputs, toolchain identity and sanitizer logs make the observations reproducible.\nAll failures remain visible; tolerances are declared before running comparisons.\nNo throughput or benchmarking claim is part of this backend."
+        "quote": "Validation covers Q1–Q4, numerical operator comparisons on supplied and varied\nvectors, complete solves, polynomial reproduction, boundary preservation,\niteration limits and invalid inputs. CPU references and device results start\nfrom identical setup arrays. Saved cases, PTX and binary hashes, launch records,\noutputs, toolchain identity and sanitizer logs make the observations reproducible.\nAll failures remain visible; tolerances are declared before running comparisons.\nNo throughput or benchmarking claim is part of this backend."
       },
       "to": {
         "path": "hardware/validate_poisson.py",
@@ -96,6 +88,42 @@
         "path": "hardware/validate_poisson.py",
         "passage": {
           "quote": "        from certify_poisson import certify\n        certificate = certify(directory, directory/'certification')\n        report['certification'] = dict(status=certificate['status'],\n            theorem=certificate['theorem'], cases=len(certificate['checks']),\n            report='certification/certification.json')"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For assembly, every recorded store has its owner's node address, independently\nof proposed read values. Input arrays occupy byte ranges disjoint from the\noutput vector; either physical order is allowed. The actual offset-load\naddresses therefore force their bytes to initialization. The resulting cursor\nbounds constrain each contribution-index load, whose admitted bytes in turn\nbound the cell-value address. This dependency order derives every read footprint\nfrom the same joint history and discharges the replay separation condition.\nNo desired cursor range, read value or local snapshot execution is assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/AssemblyReadFootprints.lean",
+        "passage": {
+          "quote": "theorem Arena.read_footprints\n    (run : Flow.Parallel.Runs a.context\n      (entryCode (BitVec.ofNat 32 n) a.offsets a.entries a.element mask a.boundary a.output)\n      (fun i => a.start memory (regs i)) words indices t)\n    (compatible : IndexSources.Compatible memory words indices indexSource)\n    (contents : a.Contents memory) (separated : a.InputSeparation) (thread : Fin n) :\n    (∀ read∈Flow.Parallel.wordsFor thread words, read.data.store=false →\n      read.space=.global ∧ a.InputRead 8 read.data.address) ∧\n    (∀ read∈Flow.Parallel.indicesFor thread indices, a.InputRead 4 read.address) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The chronological global stores of that actual interleaving publish the ordered\nrounded row sum at each node, with the emitted optional boundary mask. A local\nbyte changes exactly when its instruction records a global store; other threads\nwrite disjoint node slots. Thus the joint publication agrees with the final\nlocal output word, without assumed store coverage or a supplied publication\nschedule. This is mathematical publication of recorded writes, not a CUDA\nhost-visibility claim."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/AssemblyParallelCorrespondence.lean",
+        "passage": {
+          "quote": "theorem Arena.parallel_value\n    (run : Flow.Parallel.Runs a.context\n      (entryCode (BitVec.ofNat 32 n) a.offsets a.entries a.element mask a.boundary a.output)\n      (fun i => a.start memory (regs i)) words indices t)\n    (compatible : Concurrent.Visibility.Compatible (fun space => match space with | .global => memory | .shared => fun _ => 0) words wordSource)\n    (indexCompatible : IndexSources.Compatible memory words indices indexSource)\n    (contents : a.Contents memory) (separated : a.InputSeparation)\n    (done : ∀ i, (t i).halted=true) (thread : Fin n) :\n    decode (read64 (Concurrent.GlobalPublication.publish memory words) (Snapshot.address a thread))=\n      a.value memory thread mask := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every valid physical assembly input also has a returning joint execution with\ncompatible initialization sources. Each scalar execution reads its inputs\nbefore its sole output store. Its recorded reads therefore use initial bytes;\ncombining the returning threads constructs an actual admitted interleaving.\nThis general existence proof does not depend on interpreter fuel or specific\nnumerical values. Kernel-checked two-node examples instantiate it with nonzero\nvalues, both masking choices, and a nonzero arena base."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/AssemblyParallelExists.lean",
+        "passage": {
+          "quote": "theorem Arena.parallel_exists_correct (a : Arena n) (memory : Memory) (regs : Fin n → Registers)\n    (contents : a.Contents memory) (separated : a.InputSeparation) (mask : Bool) :\n    ∃ words indices final,\n      Flow.Parallel.Runs a.context\n        (entryCode (BitVec.ofNat 32 n) a.offsets a.entries a.element mask a.boundary a.output)\n        (fun i => a.start memory (regs i)) words indices final ∧\n      (∀ i, (final i).halted=true) ∧\n      Concurrent.Visibility.Compatible (fun space => match space with | .global => memory | .shared => fun _ => 0)\n        words (fun _ _ => .initial) ∧\n      IndexSources.Compatible memory words indices (fun _ _ => .initial) ∧\n      ∀ i, decode (read64 (Concurrent.GlobalPublication.publish memory words) (Snapshot.address a i))=a.value memory i mask := by"
         }
       }
     }

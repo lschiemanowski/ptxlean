@@ -1,3 +1,25 @@
+import PoissonPTX.AssemblyBeforeStore
+import PoissonPTX.AssemblyInputSeparation
+import PoissonPTX.AssemblyObservedBounds
+import PoissonPTX.AssemblyObservedIndexBound
+import PoissonPTX.AssemblyObservedOffsets
+import PoissonPTX.AssemblyObservedReadAddress
+import PoissonPTX.AssemblyOffsetRecords
+import PoissonPTX.AssemblyOffsetSources
+import PoissonPTX.AssemblyParallelChecks
+import PoissonPTX.AssemblyParallelCorrespondence
+import PoissonPTX.AssemblyParallelExists
+import PoissonPTX.AssemblyParallelReplay
+import PoissonPTX.AssemblyReadFields
+import PoissonPTX.AssemblyReadFootprints
+import PoissonPTX.AssemblyReadSites
+import PoissonPTX.AssemblyRecordedWitness
+import PoissonPTX.ObservedAccessShape
+import PoissonPTX.ObservedParallelExists
+import PoissonPTX.ObservedParallelPublication
+import PoissonPTX.ObservedPublication
+import PoissonPTX.ObservedReadWitness
+import PoissonPTX.ObservedWalk
 import PoissonPTX.AssemblyArena
 import PoissonPTX.AssemblyArenaSafety
 import PoissonPTX.AssemblyArenaValues
@@ -4968,3 +4990,69 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Assembly.parallel_stores
 #print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_store
 #print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_owners
+
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.BeforeStore
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.before_store_step
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.FieldApart
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.InputSeparation
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.index_initial
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.word_initial
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.BoundsReady
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.bounds_initial
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.bounds_step
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.IndexReady
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.index_initial
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.index_step
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.nodeWord
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.nextWord
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.nodeScale
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.nextScale
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.OffsetsReady
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.offsets_initial
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.offsets_step
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.scaled4
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.scaled8
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.ReadAddressReady
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.read_address_initial
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.read_address_step
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.offset_address
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.offset_records
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.offset_record
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.offset_source
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ParallelChecks.separated
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ParallelChecks.nonzero_admitted
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ParallelChecks.separation_cases
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_publication
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_value
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_scatter
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_exists
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_exists_correct
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_separate
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.parallel_replay
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.finished
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.loop_index_field
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.boundary_field
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.element_field
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.InputRead
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.read_footprints
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.index_site
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.ObservedAddress.word_site
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.recorded_witness
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.index_shape
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.load_shape
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.append
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.lift
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.combine
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.all_threads
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.publication_byte
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.publication_word
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.applyAccess
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.data_memory
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.simple_memory
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.step_memory
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.applyAccess_congr
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.applyAccess_outside
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.applyEvent_eq
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.data_read_witness
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.step_read_witness
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.walk
