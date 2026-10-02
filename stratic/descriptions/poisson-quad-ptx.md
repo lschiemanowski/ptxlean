@@ -316,3 +316,11 @@ emitted dot kernels. This covers one active lane's pairwise update on a byte
 view. The whole reduction still needs that view derived from actual concurrent
 sources, the strided input accumulation and all tree stages composed in their
 specified numerical order.
+
+Reduction source selection now uses each word's owning lane and the shrinking
+active ranges. Once store sites and active lanes are established, the own-word
+and neighbor reads recover the intended previous write without presumed load
+values. A completed four-lane example checks two real rounded update stages,
+barriers and explicit byte sources, including rejection of an obsolete neighbor
+value. Deriving the required coverage and control facts for the emitted
+256-lane entry, and composing its input loop and tree, remain separate work.

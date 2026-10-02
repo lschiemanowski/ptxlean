@@ -1,3 +1,8 @@
+import PoissonPTX.ReductionSources
+import PoissonPTX.ReductionStageSources
+import PoissonPTX.ReductionTreeWitness
+import PoissonPTX.ReductionTreeSources
+import PoissonPTX.ReductionTreeAdmission
 import PoissonPTX.ReductionUpdate
 import PoissonPTX.ReductionUpdateChecks
 import PoissonPTX.RepeatedShared
@@ -5402,3 +5407,53 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.rounding
 #print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.rounded_addition
 #print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.instruction_text
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.LaneStores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.owner_of_overlap
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.before_of_pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.own_writers_around
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.neighbor_writers_around
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.own_read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.neighbor_read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.active
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.active_antitone
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.StageStores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.own_gap
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.neighbor_last
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.stage_own_read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.stage_neighbor_read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.program
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.input
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.cfg
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.choose
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.schedule
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.execution
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.sum
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.fence
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.recorded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.executed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.actual
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.completed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.forward
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.lane_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.own_gap
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.neighbor_last
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.neighbor_across
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.forced_final_inputs
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.forced_final_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.final_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.read_index
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.store_index
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.sourceIndex
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.sources
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.ordered
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.admitted_result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.stale_neighbor_rejected
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.stale_sources
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.stale_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.stale_candidate

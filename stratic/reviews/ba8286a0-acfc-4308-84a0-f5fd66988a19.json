@@ -1,0 +1,109 @@
+{
+  "id": "ba8286a0-acfc-4308-84a0-f5fd66988a19",
+  "base": "d2117ee51e14800fb76a6313cc65ec450a818596",
+  "contentTree": "7de3fe1d910af90ebd4983c276af7226571ea3f0",
+  "reviewer": "Codex",
+  "summary": "Derive shrinking-tree read sources and check admitted and obsolete two-stage executions.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Add generic lane/stage source selection and actual positive/negative two-stage candidates. Derive source identity rather than assume read results. Retain the full emitted entry coverage, actual publication existence, read-site and barrier obligations explicitly."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe the new source-selection and checked two-stage result without claiming full 256-thread reduction or solver correspondence."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Mathematical equations, reference implementation, emitted PTX and runtime are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive semantics or old theorem hypotheses changed. Combined lane guards are explicitly restricted control, not a proof about emitted predicate instructions. The necessary source rules remain distinct from full PTX admission, and the concrete history regression is distinct from universal whole-kernel correctness."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "7de3fe1d910af90ebd4983c276af7226571ea3f0",
+      "method": "Five sequential capped Lean module checks; full exact declaration dependency audit; dependency and source guards; saved-code binding refresh; manual proof/scope review; receipt hashes and Stratic snapshot/link validation.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, 16 dependency pins. Heavy checks use 6 GiB hard cgroups, no swap, 150 percent CPU quota; new Lean checks use one thread. No GPU or paid model calls.",
+      "evidence": "4772 exact dependency reports, only allowed standard Lean axioms; 568 guarded sources. Generic lane ownership and instruction-order proofs derive WritersAround; eight-stage shrinking active ranges derive own-read gaps and last neighbor writes. Coverage, actual selected publications and barrier edges remain explicit kernel obligations. The four-lane two-stage candidate uses actual pair-update instructions, combined lane guards and barrier steps. Its event history and all-lane completion are checked; explicit sources satisfy compatibility and necessary repeated-write rules. General final-input/store selection for actual runs of the given history shape forces four and six, then ten. A second actual obsolete-neighbor candidate has byte-compatible sources but fails ordered admission, so the negative test is nonvacuous. The positive witness is concrete; no arbitrary-input or arbitrary-history complete tree theorem is claimed. Saved bindings refreshed for 720 contractions, 630 stores, residual entries and 1440 local updates in 30 layouts. Source-identical legacy build targets were reused after hash verification; binding and dependency audits reran. Full legacy rebuild/interpreter suite and hardware runs were not repeated. All receipt hashes match, descriptions/links validate, snapshots agree and README is unchanged. Full emitted predicate/control, ownership/coverage, input loop, complete tree and solver correspondence remain open.",
+      "tests": [],
+      "id": "5971881f-2fc7-4fb5-96bf-d8f69b372ab1",
+      "recordedAt": "2026-10-02T19:57:22.020Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T19:58:31.538Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-reduction-sources.md",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionSources.lean",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionStageSources.lean",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionTreeAdmission.lean",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionTreeSources.lean",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionTreeWitness.lean",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed source-selection lemmas, actual execution and admission regressions, audit registration, refreshed source receipts and explanatory guide."
+    }
+  ]
+}

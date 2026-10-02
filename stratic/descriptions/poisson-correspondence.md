@@ -1055,3 +1055,45 @@ and an addition that visibly rounds. A frontend check renders this same Lean
 instruction list and compares all eight local updates in each of the six dot
 kernels, including their immediate guards and barriers. It does not bind the
 rest of the entry or discharge the concurrent shared-source obligations.
+
+Reduction visibility distinguishes two reads. A lane reads its own word before
+its next overwrite. Its neighbor is a lane that no longer writes once the
+active range shrinks below that neighbor. Shared words are eight bytes apart
+and are owned by their lane, so an overlapping store must come from the same
+owner. Forward instruction control orders that owner's earlier and later
+stores. The source proof should derive the repeated-write history condition
+from this geometry and the executed instruction positions, retaining the
+separate obligation to derive those positions and active ranges from the
+complete emitted reduction.
+
+The reduction source lemmas now derive the current word byte by byte from
+lane ownership, forward instruction order and the classification of stores
+by stage. Overlap identifies a store's owning lane. For an own-word read,
+consecutive publication sites leave no intervening write; later writes follow
+the read in that same thread. For a neighbor read, the shrinking active ranges
+prove that its owner cannot write again. An actual barrier arrival/completion
+edge supplies the cross-thread order. The active ranges include the initial
+256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read
+value, a chosen source nor the general repeated-write history condition is
+assumed by these selection theorems. Store coverage, actual publication
+occurrences, increasing sites, read positions and the barrier edge remain
+explicit premises to derive
+from the full kernel; they are not yet discharged for the emitted entry.
+
+A four-lane, two-stage regression connects the real pair-update body to actual
+fetched execution and the necessary shared-source rules. The initial words
+one, two, three and four become four and six, then ten. Every lane reaches the
+end, every read has byte-compatible sources, and an explicit coherence witness
+satisfies the repeated-write constraints. For any actual run with the stated
+history shape, arbitrary proposed final read bits are forced to four and six;
+the overwritten neighbor value two is rejected. The history shape fixes the
+earlier stage for this regression, and its positive execution is independently
+checked. This is not a universal theorem for arbitrary complete reduction
+histories or inputs. Its existing combined lane-test/branch instruction also
+leaves the emitted predicate-instruction correspondence separate. No full PTX
+admission, strided input-loop, host launch or complete solver result follows
+from this example.
+
+A second actual candidate reads the overwritten neighbor value two. Its byte
+sources are compatible, but the repeated-write ordering rules reject them;
+this rejection does not rely on an impossible candidate-execution premise.

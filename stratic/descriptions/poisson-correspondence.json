@@ -23,7 +23,8 @@
     "Construct grid scheduling and admitted sources from supplied complete local cell runs, while keeping arbitrary-input local existence separate.",
     "Connect actual cell and assembly publication to fresh-residual subtraction, deriving preservation of the right-hand side from store bounds.",
     "Derive repeated shared-word read sources from actual ordering and explicit necessary coherence constraints; distinguish obsolete and future writes from initialization.",
-    "Derive each active binary64 reduction update, its fetched execution and allocation bounds; concurrent stage visibility and the whole reduction remain separate."
+    "Derive each active binary64 reduction update, its fetched execution and allocation bounds; concurrent stage visibility and the whole reduction remain separate.",
+    "Derive reduction sources from lane ownership and shrinking stage coverage, and check a completed two-stage concurrent witness; full emitted-entry coverage remains open."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3313,6 +3314,150 @@
         "path": "hardware/check_poisson_reduction_updates.py",
         "passage": {
           "quote": "def verify_updates(ptx, rendered):\n    if any(token in ptx for token in ('//', '/*', '*/')):\n        raise ValueError('comments are outside the exact generated dialect')\n    if len(rendered) != len(STRIDES) or any(len(code) != 6 for code in rendered):\n        raise ValueError('expected eight six-instruction Lean updates')\n    lines = [line.strip() for line in ptx.splitlines() if line.strip()]\n    if lines[:3] not in ([f'.version {v}', '.target sm_120', '.address_size 64'] for v in ('9.2', '9.4')):\n        raise ValueError('unreviewed target/version')\n    checked = []\n    for entry in ENTRIES:\n        bodies = re.findall(r'\\.visible \\.entry '+entry+r'\\(\\.param \\.u64 arena\\)\\s*([^}]+)}', ptx)\n        if len(bodies) != 1 or len(re.findall(r'\\.entry\\s+'+entry+r'\\b', ptx)) != 1:\n            raise ValueError('entry missing or duplicated: '+entry)\n        body = [line.strip() for line in bodies[0].splitlines() if line.strip()]\n        if body[0] != '.reqntid 256, 1, 1' or body.count('.shared .align 8 .b8 scratch[2048];') != 1:\n            raise ValueError('unexpected reduction allocation or block shape')\n        positions = []\n        for stride, code in zip(STRIDES, rendered, strict=True):\n            guard = f'setp.ge.u32 %p0, %lane, {stride};'\n            branch, label = f'@%p0 bra next_{stride};', f'next_{stride}:'\n            if any(body.count(line) != 1 for line in (guard, branch, label)):\n                raise ValueError('missing or duplicated stage boundary')\n            pos = body.index(guard)\n            expected = [guard, branch, *code, label, 'bar.sync 0;']\n            if body[pos:pos+len(expected)] != expected:\n                raise ValueError(f'{entry}/{stride}: differs from proved local update')\n            positions.append(pos)\n            checked.append(dict(entry=entry, stride=stride,\n                sha256=hashlib.sha256(('\\n'.join(code)+'\\n').encode()).hexdigest()))\n        if any(b != a+10 for a, b in zip(positions, positions[1:])):\n            raise ValueError('stages are reordered or separated by extra instructions')\n    return checked"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionSources.lean",
+        "passage": {
+          "quote": "theorem owner_of_overlap (stores : LaneStores events base)\n    (found : events[index]?=some (.data thread access))\n    (store : access.data.store=true) (shared : access.space=.shared)\n    (same : access.data.address+j.val=base+owner.val*8+k.val) :\n    thread=owner := by\n  have addr := stores index thread access found store shared\n  have hj := j.isLt; have hk := k.isLt\n  apply Fin.ext\n  omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionSources.lean",
+        "passage": {
+          "quote": "theorem before_of_pc (run : Runs cfg program start events final) (forward : Forward program)\n    (left : events[a]?=some (.data thread la)) (right : events[b]?=some (.data thread ra))\n    (pc : la.data.pc<ra.data.pc) : Before events a b := by\n  obtain ⟨ha,ea⟩ := List.getElem?_eq_some_iff.mp left\n  obtain ⟨hb,eb⟩ := List.getElem?_eq_some_iff.mp right\n  have increasing := run_access_order run forward\n  have lt : a<b := by\n    rcases lt_trichotomy a b with lt | eq | gt\n    · exact lt\n    · subst b\n      have same := Option.some.inj (left.symm.trans right)\n      cases same\n      omega\n    · have wrong := increasing.rel_getElem_of_lt hb ha gt thread ra la eb ea\n      omega\n  exact .edge (.inl ⟨thread,la,ra,left,right,lt⟩)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionStageSources.lean",
+        "passage": {
+          "quote": "def StageStores (events : List (Event n)) (base : Nat) (site : Fin 9 → Nat) : Prop :=\n  LaneStores events base ∧ ∀ (index : Nat) (thread : Fin n) (access : Access),\n    events[index]?=some (.data thread access) → access.data.store=true → access.space=.shared →\n    ∃ stage, access.data.pc=site stage ∧ thread.val<active stage"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionStageSources.lean",
+        "passage": {
+          "quote": "theorem stage_own_read (run : Runs cfg program start events final) (forward : Forward program)\n    (stores : StageStores events base site) (sites : StrictMono site)\n    (compatible : Visibility.Compatible initial events source) (ordered : OrderedSources events source)\n    (stage : Fin 8) (hw : events[w]?=some (.data owner wa))\n    (hr : events[r]?=some (.data owner ra))\n    (write : wa.data.store=true) (read : ra.data.store=false)\n    (sw : wa.space=.shared) (sr : ra.space=.shared)\n    (address : ra.data.address=base+owner.val*8)\n    (previous : wa.data.pc=site ⟨stage.val,by omega⟩) (before : wa.data.pc<ra.data.pc)\n    (next : ra.data.pc<site ⟨stage.val+1,by omega⟩) :\n    ra.data.value=wa.data.value ∧ ∀ k, source r k=.store w k :=\n  own_read run forward stores.1 compatible ordered hw hr write read sw sr address before\n    (fun _ _ found store shared => own_gap stores sites stage previous next found store shared)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionStageSources.lean",
+        "passage": {
+          "quote": "theorem stage_neighbor_read (run : Runs cfg program start events final) (forward : Forward program)\n    (stores : StageStores events base site) (sites : StrictMono site)\n    (compatible : Visibility.Compatible initial events source) (ordered : OrderedSources events source)\n    (stage : Fin 8) (hw : events[w]?=some (.data owner wa))\n    (hr : events[r]?=some (.data reader ra))\n    (write : wa.data.store=true) (read : ra.data.store=false)\n    (sw : wa.space=.shared) (sr : ra.space=.shared)\n    (address : ra.data.address=base+owner.val*8)\n    (previous : wa.data.pc=site ⟨stage.val,by omega⟩)\n    (inactive : active ⟨stage.val+1,by omega⟩≤owner.val)\n    (across : Visibility.Across events w r) :\n    ra.data.value=wa.data.value ∧ ∀ k, source r k=.store w k :=\n  neighbor_read run forward stores.1 compatible ordered hw hr write read sw sr address across\n    (fun _ _ found store shared => neighbor_last stores sites stage previous inactive found store shared)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A four-lane, two-stage regression connects the real pair-update body to actual\nfetched execution and the necessary shared-source rules. The initial words\none, two, three and four become four and six, then ten. Every lane reaches the\nend, every read has byte-compatible sources, and an explicit coherence witness\nsatisfies the repeated-write constraints. For any actual run with the stated\nhistory shape, arbitrary proposed final read bits are forced to four and six;\nthe overwritten neighbor value two is rejected. The history shape fixes the\nearlier stage for this regression, and its positive execution is independently\nchecked. This is not a universal theorem for arbitrary complete reduction\nhistories or inputs. Its existing combined lane-test/branch instruction also\nleaves the emitted predicate-instruction correspondence separate. No full PTX\nadmission, strided input-loop, host launch or complete solver result follows\nfrom this example.\n\nA second actual candidate reads the overwritten neighbor value two. Its byte\nsources are compatible, but the repeated-write ordering rules reject them;\nthis rejection does not rely on an impossible candidate-execution premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionTreeWitness.lean",
+        "passage": {
+          "quote": "theorem recorded : (execution four six).map Outcome.events=some (history four six) := by\n  decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A four-lane, two-stage regression connects the real pair-update body to actual\nfetched execution and the necessary shared-source rules. The initial words\none, two, three and four become four and six, then ten. Every lane reaches the\nend, every read has byte-compatible sources, and an explicit coherence witness\nsatisfies the repeated-write constraints. For any actual run with the stated\nhistory shape, arbitrary proposed final read bits are forced to four and six;\nthe overwritten neighbor value two is rejected. The history shape fixes the\nearlier stage for this regression, and its positive execution is independently\nchecked. This is not a universal theorem for arbitrary complete reduction\nhistories or inputs. Its existing combined lane-test/branch instruction also\nleaves the emitted predicate-instruction correspondence separate. No full PTX\nadmission, strided input-loop, host launch or complete solver result follows\nfrom this example.\n\nA second actual candidate reads the overwritten neighbor value two. Its byte\nsources are compatible, but the repeated-write ordering rules reject them;\nthis rejection does not rely on an impossible candidate-execution premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionTreeWitness.lean",
+        "passage": {
+          "quote": "theorem completed : ∀ t : Fin 4, ((result four six).state.lanes t).pc = program.length := by\n  decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A four-lane, two-stage regression connects the real pair-update body to actual\nfetched execution and the necessary shared-source rules. The initial words\none, two, three and four become four and six, then ten. Every lane reaches the\nend, every read has byte-compatible sources, and an explicit coherence witness\nsatisfies the repeated-write constraints. For any actual run with the stated\nhistory shape, arbitrary proposed final read bits are forced to four and six;\nthe overwritten neighbor value two is rejected. The history shape fixes the\nearlier stage for this regression, and its positive execution is independently\nchecked. This is not a universal theorem for arbitrary complete reduction\nhistories or inputs. Its existing combined lane-test/branch instruction also\nleaves the emitted predicate-instruction correspondence separate. No full PTX\nadmission, strided input-loop, host launch or complete solver result follows\nfrom this example.\n\nA second actual candidate reads the overwritten neighbor value two. Its byte\nsources are compatible, but the repeated-write ordering rules reject them;\nthis rejection does not rely on an impossible candidate-execution premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionTreeSources.lean",
+        "passage": {
+          "quote": "theorem forced_final_inputs\n    (run : Runs cfg program start (history left right) final)\n    (compatible : Visibility.Compatible initial (history left right) source)\n    (ordered : OrderedSources (history left right) source) :\n    left=four ∧ right=six ∧\n      (∀ k, source 20 k=.store 11 k) ∧ (∀ k, source 21 k=.store 14 k) := by\n  have own := own_read run forward (lane_stores left right) compatible ordered\n    (w:=11) (r:=20) (owner:=0) (wa:=⟨.shared,⟨10,true,0,four⟩⟩)\n    (ra:=⟨.shared,⟨15,false,0,left⟩⟩) rfl rfl rfl rfl rfl rfl rfl (by change 10<15; decide)\n    (fun _ _ found store shared => own_gap found store shared)\n  have neighbor := neighbor_read run forward (lane_stores left right) compatible ordered\n    (w:=14) (r:=21) (owner:=1) (reader:=0) (wa:=⟨.shared,⟨10,true,8,six⟩⟩)\n    (ra:=⟨.shared,⟨16,false,8,right⟩⟩) rfl rfl rfl rfl rfl rfl rfl (neighbor_across left right)\n    (fun _ _ found store shared => neighbor_last found store shared)\n  exact ⟨own.1,neighbor.1,own.2,neighbor.2⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A four-lane, two-stage regression connects the real pair-update body to actual\nfetched execution and the necessary shared-source rules. The initial words\none, two, three and four become four and six, then ten. Every lane reaches the\nend, every read has byte-compatible sources, and an explicit coherence witness\nsatisfies the repeated-write constraints. For any actual run with the stated\nhistory shape, arbitrary proposed final read bits are forced to four and six;\nthe overwritten neighbor value two is rejected. The history shape fixes the\nearlier stage for this regression, and its positive execution is independently\nchecked. This is not a universal theorem for arbitrary complete reduction\nhistories or inputs. Its existing combined lane-test/branch instruction also\nleaves the emitted predicate-instruction correspondence separate. No full PTX\nadmission, strided input-loop, host launch or complete solver result follows\nfrom this example.\n\nA second actual candidate reads the overwritten neighbor value two. Its byte\nsources are compatible, but the repeated-write ordering rules reject them;\nthis rejection does not rely on an impossible candidate-execution premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionTreeSources.lean",
+        "passage": {
+          "quote": "theorem forced_final_store (run : Runs cfg program start (history left right) final)\n    (compatible : Visibility.Compatible initial (history left right) source)\n    (ordered : OrderedSources (history left right) source) :\n    (history left right)[22]?=\n      some (.data 0 ⟨.shared,⟨18,true,0,0x4024000000000000⟩⟩) := by\n  obtain ⟨rfl,rfl,_,_⟩ := forced_final_inputs run compatible ordered\n  decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A four-lane, two-stage regression connects the real pair-update body to actual\nfetched execution and the necessary shared-source rules. The initial words\none, two, three and four become four and six, then ten. Every lane reaches the\nend, every read has byte-compatible sources, and an explicit coherence witness\nsatisfies the repeated-write constraints. For any actual run with the stated\nhistory shape, arbitrary proposed final read bits are forced to four and six;\nthe overwritten neighbor value two is rejected. The history shape fixes the\nearlier stage for this regression, and its positive execution is independently\nchecked. This is not a universal theorem for arbitrary complete reduction\nhistories or inputs. Its existing combined lane-test/branch instruction also\nleaves the emitted predicate-instruction correspondence separate. No full PTX\nadmission, strided input-loop, host launch or complete solver result follows\nfrom this example.\n\nA second actual candidate reads the overwritten neighbor value two. Its byte\nsources are compatible, but the repeated-write ordering rules reject them;\nthis rejection does not rely on an impossible candidate-execution premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionTreeAdmission.lean",
+        "passage": {
+          "quote": "theorem admitted_result :\n    Runs cfg program start (history four six) (result four six).state ∧\n    (∀ t : Fin 4, ((result four six).state.lanes t).pc=program.length) ∧\n    Visibility.Compatible (fun _ _ => 0) (history four six) sources ∧\n    OrderedSources (history four six) sources ∧\n    (result four six).events[22]?=\n      some (.data 0 ⟨.shared,⟨18,true,0,0x4024000000000000⟩⟩) :=\nby\n  refine ⟨actual,completed,compatible,ordered,?_⟩\n  rw [executed.2]\n  exact forced_final_store actual compatible ordered"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A four-lane, two-stage regression connects the real pair-update body to actual\nfetched execution and the necessary shared-source rules. The initial words\none, two, three and four become four and six, then ten. Every lane reaches the\nend, every read has byte-compatible sources, and an explicit coherence witness\nsatisfies the repeated-write constraints. For any actual run with the stated\nhistory shape, arbitrary proposed final read bits are forced to four and six;\nthe overwritten neighbor value two is rejected. The history shape fixes the\nearlier stage for this regression, and its positive execution is independently\nchecked. This is not a universal theorem for arbitrary complete reduction\nhistories or inputs. Its existing combined lane-test/branch instruction also\nleaves the emitted predicate-instruction correspondence separate. No full PTX\nadmission, strided input-loop, host launch or complete solver result follows\nfrom this example.\n\nA second actual candidate reads the overwritten neighbor value two. Its byte\nsources are compatible, but the repeated-write ordering rules reject them;\nthis rejection does not rely on an impossible candidate-execution premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionTreeAdmission.lean",
+        "passage": {
+          "quote": "theorem stale_neighbor_rejected\n    (run : Runs cfg program start (history four two) final)\n    (compatible : Visibility.Compatible initial (history four two) source) :\n    ¬OrderedSources (history four two) source := by\n  intro accepted\n  have forced := forced_final_inputs run compatible accepted\n  exact (by decide : two≠six) forced.2.1"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A four-lane, two-stage regression connects the real pair-update body to actual\nfetched execution and the necessary shared-source rules. The initial words\none, two, three and four become four and six, then ten. Every lane reaches the\nend, every read has byte-compatible sources, and an explicit coherence witness\nsatisfies the repeated-write constraints. For any actual run with the stated\nhistory shape, arbitrary proposed final read bits are forced to four and six;\nthe overwritten neighbor value two is rejected. The history shape fixes the\nearlier stage for this regression, and its positive execution is independently\nchecked. This is not a universal theorem for arbitrary complete reduction\nhistories or inputs. Its existing combined lane-test/branch instruction also\nleaves the emitted predicate-instruction correspondence separate. No full PTX\nadmission, strided input-loop, host launch or complete solver result follows\nfrom this example.\n\nA second actual candidate reads the overwritten neighbor value two. Its byte\nsources are compatible, but the repeated-write ordering rules reject them;\nthis rejection does not rely on an impossible candidate-execution premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionTreeAdmission.lean",
+        "passage": {
+          "quote": "theorem stale_candidate : ∃ final,\n    Runs cfg program start (history four two) final ∧\n    Visibility.Compatible (fun _ _ => 0) (history four two) stale_sources ∧\n    ¬OrderedSources (history four two) stale_sources := by\n  have record : (execution four two).map Outcome.events=some (history four two) := by\n    decide +kernel\n  obtain ⟨out,executed,events⟩ := Option.map_eq_some_iff.mp record\n  have run : Runs cfg program start (history four two) out.state :=\n    events ▸ execute_sound executed\n  exact ⟨out.state,run,stale_compatible,stale_neighbor_rejected run stale_compatible⟩"
         }
       }
     }
