@@ -22,7 +22,8 @@
     "Compose actual cell instruction interleavings with private shared-memory identity and derived source contracts; chronological publication followed by assembly yields the executable TorchLean operator.",
     "Construct grid scheduling and admitted sources from supplied complete local cell runs, while keeping arbitrary-input local existence separate.",
     "Connect actual cell and assembly publication to fresh-residual subtraction, deriving preservation of the right-hand side from store bounds.",
-    "Derive repeated shared-word read sources from actual ordering and explicit necessary coherence constraints; distinguish obsolete and future writes from initialization."
+    "Derive repeated shared-word read sources from actual ordering and explicit necessary coherence constraints; distinguish obsolete and future writes from initialization.",
+    "Derive each active binary64 reduction update, its fetched execution and allocation bounds; concurrent stage visibility and the whole reduction remain separate."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3216,6 +3217,102 @@
         "path": "integration/torchlean/PoissonPTX/RepeatedSharedOrderChecks.lean",
         "passage": {
           "quote": "theorem synchronized (value : Word) : Before (history value) 0 5 :=\n  .edge (.inr ⟨0,1,⟨.shared,⟨1,true,0,7⟩⟩,⟨.shared,⟨3,false,0,value⟩⟩,\n    ⟨0,0,0,2⟩,1,3,rfl,rfl,rfl,rfl,by decide,by decide,by decide⟩)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The six-instruction update now has a universal effect theorem: every completed\nexecution stores the rounded sum of the two words it read, preserves global\nmemory and all other shared bytes, and changes only its scratch registers.\nValid accesses give a constructed fetched execution. The allocation theorem\ncovers every active lane for strides up to 128. Checked examples include the\nlast allocated neighbor word, rejection of unaligned and out-of-bounds reads,\nand an addition that visibly rounds. A frontend check renders this same Lean\ninstruction list and compares all eight local updates in each of the six dot\nkernels, including their immediate guards and barriers. It does not bind the\nrest of the entry or discharge the concurrent shared-source obligations.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionUpdate.lean",
+        "passage": {
+          "quote": "theorem effect (h : Block (code offset) s t) :\n    ∃ out, FP.Result .add (left s) (right s offset) out ∧\n      t=finish s offset out := by\n  cases h with | cons h1 rest =>\n    cases h1\n    cases rest with | cons h2 rest =>\n      cases h2\n      cases rest with | cons h3 rest =>\n        cases h3\n        cases rest with | cons h4 rest =>\n          cases h4\n          cases rest with | cons h5 rest =>\n            cases h5 with | fp allowed =>\n              rename_i out\n              cases rest with | cons h6 rest =>\n                cases h6\n                cases rest\n                refine ⟨out, ?_, ?_⟩\n                · simpa [FP.Result,Operand.eval,address,left,right,wide,assign,advance,\n                    State.memory] using allowed\n                · simp [finish,loaded,address,left,right,wide,Operand.eval,assign,advance,\n                    State.memory]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The six-instruction update now has a universal effect theorem: every completed\nexecution stores the rounded sum of the two words it read, preserves global\nmemory and all other shared bytes, and changes only its scratch registers.\nValid accesses give a constructed fetched execution. The allocation theorem\ncovers every active lane for strides up to 128. Checked examples include the\nlast allocated neighbor word, rejection of unaligned and out-of-bounds reads,\nand an addition that visibly rounds. A frontend check renders this same Lean\ninstruction list and compares all eight local updates in each of the six dot\nkernels, including their immediate guards and barriers. It does not bind the\nrest of the entry or discharge the concurrent shared-source obligations.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionUpdate.lean",
+        "passage": {
+          "quote": "theorem preserves_other_bytes (h : Block (code offset) s t)\n    (outside : p < (address s).toNat ∨ (address s).toNat+8≤p) :\n    t.shared p=s.shared p := by\n  obtain ⟨out,_,rfl⟩ := effect h\n  exact write64_outside s.shared (address s).toNat out p outside"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The six-instruction update now has a universal effect theorem: every completed\nexecution stores the rounded sum of the two words it read, preserves global\nmemory and all other shared bytes, and changes only its scratch registers.\nValid accesses give a constructed fetched execution. The allocation theorem\ncovers every active lane for strides up to 128. Checked examples include the\nlast allocated neighbor word, rejection of unaligned and out-of-bounds reads,\nand an addition that visibly rounds. A frontend check renders this same Lean\ninstruction list and compares all eight local updates in each of the six dot\nkernels, including their immediate guards and barriers. It does not bind the\nrest of the entry or discharge the concurrent shared-source obligations.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionUpdate.lean",
+        "passage": {
+          "quote": "theorem fetched_correct (pre suffix : List Op) (pc : s.pc=pre.length)\n    (execution : Runs (pre++code offset++suffix) s t)\n    (done : t.pc=pre.length+(code offset).length) :\n    decode (read64 t.shared (address s).toNat) =\n      decode (left s) + decode (right s offset) ∧ t.global=s.global := by\n  have result := correct (Contraction.fetched_block _ _ _ execution pc done)\n  exact ⟨result.1,result.2.1⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The six-instruction update now has a universal effect theorem: every completed\nexecution stores the rounded sum of the two words it read, preserves global\nmemory and all other shared bytes, and changes only its scratch registers.\nValid accesses give a constructed fetched execution. The allocation theorem\ncovers every active lane for strides up to 128. Checked examples include the\nlast allocated neighbor word, rejection of unaligned and out-of-bounds reads,\nand an addition that visibly rounds. A frontend check renders this same Lean\ninstruction list and compares all eight local updates in each of the six dot\nkernels, including their immediate guards and barriers. It does not bind the\nrest of the entry or discharge the concurrent shared-source obligations.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionUpdate.lean",
+        "passage": {
+          "quote": "theorem fetched_exists (valid : Valid s offset) (pre suffix : List Op)\n    (pc : s.pc=pre.length) :\n    ∃ t, Runs (pre++code offset++suffix) s t ∧\n      t.pc=pre.length+(code offset).length := by\n  obtain ⟨t,ht⟩ := exists_execution valid\n  exact ⟨t,block_fetched ht pre suffix pc,by rw [block_pc ht,pc]⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The six-instruction update now has a universal effect theorem: every completed\nexecution stores the rounded sum of the two words it read, preserves global\nmemory and all other shared bytes, and changes only its scratch registers.\nValid accesses give a constructed fetched execution. The allocation theorem\ncovers every active lane for strides up to 128. Checked examples include the\nlast allocated neighbor word, rejection of unaligned and out-of-bounds reads,\nand an addition that visibly rounds. A frontend check renders this same Lean\ninstruction list and compares all eight local updates in each of the six dot\nkernels, including their immediate guards and barriers. It does not bind the\nrest of the entry or discharge the concurrent shared-source obligations.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionUpdate.lean",
+        "passage": {
+          "quote": "theorem valid_of_active (s : State) (stride : Nat)\n    (lane : (s.regs 14).toNat < stride) (hs : stride≤128)\n    (base : (s.regs 3).toNat=s.sharedStart) (aligned : s.sharedStart%8=0)\n    (fits : 2048≤s.sharedBytes) (noWrap : s.sharedStart+s.sharedBytes≤2^64) :\n    Valid s (BitVec.ofNat 64 (stride*8)) := by\n  have offBound : stride*8 < 2^64 := by omega\n  have ownBound : (s.regs 3).toNat+(s.regs 14).toNat*8+0 < 2^64 := by\n    rw [base]; omega\n  have otherBound : (s.regs 3).toNat+(s.regs 14).toNat*8+\n      (BitVec.ofNat 64 (stride*8)).toNat < 2^64 := by\n    rw [BitVec.toNat_ofNat,Nat.mod_eq_of_lt offBound,base]; omega\n  have own := SharedStore.location_exact s 0 (by omega) (by simpa using ownBound)\n  have other := SharedStore.location_exact s (BitVec.ofNat 64 (stride*8)) (by omega) otherBound\n  have ownExact : (address s).toNat = (s.regs 3).toNat+(s.regs 14).toNat*8 := by\n    simpa [SharedStore.location,address] using own\n  change (address s + BitVec.ofNat 64 (stride*8)).toNat = _ at other\n  rw [BitVec.toNat_ofNat,Nat.mod_eq_of_lt offBound] at other\n  unfold Valid\n  rw [ownExact,other,base]\n  constructor\n  · exact ⟨by omega,by simp [Nat.add_mod,aligned],by omega,noWrap⟩\n  · exact ⟨by omega,by simp [Nat.add_mod,aligned],by omega,noWrap⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The six-instruction update now has a universal effect theorem: every completed\nexecution stores the rounded sum of the two words it read, preserves global\nmemory and all other shared bytes, and changes only its scratch registers.\nValid accesses give a constructed fetched execution. The allocation theorem\ncovers every active lane for strides up to 128. Checked examples include the\nlast allocated neighbor word, rejection of unaligned and out-of-bounds reads,\nand an addition that visibly rounds. A frontend check renders this same Lean\ninstruction list and compares all eight local updates in each of the six dot\nkernels, including their immediate guards and barriers. It does not bind the\nrest of the entry or discharge the concurrent shared-source obligations.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionUpdateChecks.lean",
+        "passage": {
+          "quote": "theorem boundary_sum :\n    (run (code 1024) state).map (fun s => read64 s.shared 1016) =\n      some 0x4008000000000000 := by decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The six-instruction update now has a universal effect theorem: every completed\nexecution stores the rounded sum of the two words it read, preserves global\nmemory and all other shared bytes, and changes only its scratch registers.\nValid accesses give a constructed fetched execution. The allocation theorem\ncovers every active lane for strides up to 128. Checked examples include the\nlast allocated neighbor word, rejection of unaligned and out-of-bounds reads,\nand an addition that visibly rounds. A frontend check renders this same Lean\ninstruction list and compares all eight local updates in each of the six dot\nkernels, including their immediate guards and barriers. It does not bind the\nrest of the entry or discharge the concurrent shared-source obligations.\n"
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionUpdateChecks.lean",
+        "passage": {
+          "quote": "theorem rounded_addition :\n    (run (code 1024) rounding).map (fun s => read64 s.shared 1016) =\n      some 0x4340000000000000 := by decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The six-instruction update now has a universal effect theorem: every completed\nexecution stores the rounded sum of the two words it read, preserves global\nmemory and all other shared bytes, and changes only its scratch registers.\nValid accesses give a constructed fetched execution. The allocation theorem\ncovers every active lane for strides up to 128. Checked examples include the\nlast allocated neighbor word, rejection of unaligned and out-of-bounds reads,\nand an addition that visibly rounds. A frontend check renders this same Lean\ninstruction list and compares all eight local updates in each of the six dot\nkernels, including their immediate guards and barriers. It does not bind the\nrest of the entry or discharge the concurrent shared-source obligations.\n"
+      },
+      "to": {
+        "path": "hardware/check_poisson_reduction_updates.py",
+        "passage": {
+          "quote": "def verify_updates(ptx, rendered):\n    if any(token in ptx for token in ('//', '/*', '*/')):\n        raise ValueError('comments are outside the exact generated dialect')\n    if len(rendered) != len(STRIDES) or any(len(code) != 6 for code in rendered):\n        raise ValueError('expected eight six-instruction Lean updates')\n    lines = [line.strip() for line in ptx.splitlines() if line.strip()]\n    if lines[:3] not in ([f'.version {v}', '.target sm_120', '.address_size 64'] for v in ('9.2', '9.4')):\n        raise ValueError('unreviewed target/version')\n    checked = []\n    for entry in ENTRIES:\n        bodies = re.findall(r'\\.visible \\.entry '+entry+r'\\(\\.param \\.u64 arena\\)\\s*([^}]+)}', ptx)\n        if len(bodies) != 1 or len(re.findall(r'\\.entry\\s+'+entry+r'\\b', ptx)) != 1:\n            raise ValueError('entry missing or duplicated: '+entry)\n        body = [line.strip() for line in bodies[0].splitlines() if line.strip()]\n        if body[0] != '.reqntid 256, 1, 1' or body.count('.shared .align 8 .b8 scratch[2048];') != 1:\n            raise ValueError('unexpected reduction allocation or block shape')\n        positions = []\n        for stride, code in zip(STRIDES, rendered, strict=True):\n            guard = f'setp.ge.u32 %p0, %lane, {stride};'\n            branch, label = f'@%p0 bra next_{stride};', f'next_{stride}:'\n            if any(body.count(line) != 1 for line in (guard, branch, label)):\n                raise ValueError('missing or duplicated stage boundary')\n            pos = body.index(guard)\n            expected = [guard, branch, *code, label, 'bar.sync 0;']\n            if body[pos:pos+len(expected)] != expected:\n                raise ValueError(f'{entry}/{stride}: differs from proved local update')\n            positions.append(pos)\n            checked.append(dict(entry=entry, stride=stride,\n                sha256=hashlib.sha256(('\\n'.join(code)+'\\n').encode()).hexdigest()))\n        if any(b != a+10 for a, b in zip(positions, positions[1:])):\n            raise ValueError('stages are reordered or separated by extra instructions')\n    return checked"
         }
       }
     }

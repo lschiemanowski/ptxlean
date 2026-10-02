@@ -1033,3 +1033,25 @@ does not establish complete PTX admission. The actual 256-thread reduction must
 still derive ownership and stage ordering and connect the exact rounded fold
 and tree to its emitted instructions. No existing cell theorem or its source
 hypotheses were strengthened to obtain these new results.
+
+An active tree-reduction lane executes six instructions: form its shared-memory
+address, read its own word and the word one stride away, add those two values
+with binary64 rounding, and replace its own word. The local proof must derive
+this effect from the instructions, retain all permitted result bit patterns,
+and construct an execution whenever both eight-byte accesses are valid.
+For the emitted 256-lane allocation, a lane below a stride of at most 128 must
+have both accesses inside the 2048-byte shared region, provided the base is
+aligned and the allocation does not wrap around the address space. This local
+calculation takes a shared-memory view as input; selecting that view from the
+concurrent reduction history remains the repeated-write visibility obligation.
+
+The six-instruction update now has a universal effect theorem: every completed
+execution stores the rounded sum of the two words it read, preserves global
+memory and all other shared bytes, and changes only its scratch registers.
+Valid accesses give a constructed fetched execution. The allocation theorem
+covers every active lane for strides up to 128. Checked examples include the
+last allocated neighbor word, rejection of unaligned and out-of-bounds reads,
+and an addition that visibly rounds. A frontend check renders this same Lean
+instruction list and compares all eight local updates in each of the six dot
+kernels, including their immediate guards and barriers. It does not bind the
+rest of the entry or discharge the concurrent shared-source obligations.

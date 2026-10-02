@@ -1,0 +1,105 @@
+{
+  "id": "47c488ef-ade8-429b-b67f-0c4061a9bfe5",
+  "base": "b8a237c783a378abccce5c6d99302797fe6446f3",
+  "contentTree": "aced34e5558399e02b2eb0076b9f600446968be8",
+  "reviewer": "Codex",
+  "summary": "Prove and bind the Poisson reduction pair update, including rounded effects, fetched existence and shared-memory bounds.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Add the exact local instruction effect, existence and memory-frame/bounds proofs, regressions, and emitted-stage binding. Explicitly retain actual concurrent view selection, remaining reduction instructions and solver correspondence as open work."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Explain the new local rounded reduction result without implying a full parallel reduction or solver theorem."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The equations, reference, runtime, emitted kernels and full solver specification are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Reuse existing instruction and binary64 contracts without modification. The frontend renders the proved list and checks saved text separately from the Lean proof. Memory conditions are explicit; the proof assumes no desired arithmetic answer or concurrent source-selection result."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "aced34e5558399e02b2eb0076b9f600446968be8",
+      "method": "Sequential capped Lean checks of ReductionUpdate and ReductionUpdateChecks; full dependency audit, source/dependency guards; three frontend mutation tests; saved-code bindings; manual proof and scope review; Stratic validation and exact snapshot comparison.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins. Heavy checks in 6 GiB hard cgroups with no swap and 150 percent CPU quota. One Lean thread for new checks. No GPU or paid model calls.",
+      "evidence": "4724 exact declaration dependency reports, only allowed standard Lean axioms; 563 source files pass escape guards. Universal six-instruction effect, rounded value, byte/register frames, fetched correctness and existence, and 2048-byte allocation bounds pass. Kernel-checked boundary, unchanged neighbor, invalid alignment/extent and rounding regressions pass. Three Python mutation tests pass. Lean-rendered updates match 1440 stages in 30 saved layouts; altered address, rounding, store, guard, barrier, allocation, duplication and stage adjacency are rejected. Existing 720 contraction/630 shared-store bindings and residual bindings refreshed. Legacy build targets reused only after their source hashes matched previous receipts; their dependency audits and bindings were rerun. Full legacy build/interpreter suite and GPU runs were not repeated. Proof review checked arbitrary arithmetic outputs remain relational, operands are derived from bytes and the local snapshot is explicitly not concurrent source selection. No primitive instruction semantics or old theorem hypotheses changed. All receipt hashes, Stratic links, snapshots and whitespace checks pass; README untouched. Input accumulation, actual concurrent source/ownership derivation, complete reduction and solver correspondence remain open.",
+      "tests": [],
+      "id": "0c823070-b3d0-4707-baba-0836d6a4bd41",
+      "recordedAt": "2026-10-02T18:32:59.959Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T18:34:10.541Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-reduction-update.md",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/check_poisson_reduction_updates.py",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "hardware/test_poisson_reduction_updates.py",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionUpdate.lean",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionUpdateChecks.lean",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed local reduction proofs, tests, rendering/binding checker, dependency registration, evidence receipts and explanatory guide."
+    }
+  ]
+}

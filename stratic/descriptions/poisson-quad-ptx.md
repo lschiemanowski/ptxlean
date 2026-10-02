@@ -309,3 +309,10 @@ identity and read value follow byte by byte from actual history conditions,
 with positive and negative fetched-execution regressions. This prepares the
 memory argument; the emitted 256-thread reduction's ownership, ordering,
 numerical computation and execution existence remain unproved.
+
+The local tree-reduction update now has instruction-level rounded correctness,
+execution existence and memory bounds, with source-text checks against the six
+emitted dot kernels. This covers one active lane's pairwise update on a byte
+view. The whole reduction still needs that view derived from actual concurrent
+sources, the strided input accumulation and all tree stages composed in their
+specified numerical order.

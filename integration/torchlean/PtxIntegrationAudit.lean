@@ -1,3 +1,5 @@
+import PoissonPTX.ReductionUpdate
+import PoissonPTX.ReductionUpdateChecks
 import PoissonPTX.RepeatedShared
 import PoissonPTX.RepeatedSharedChecks
 import PoissonPTX.RepeatedSharedOrderChecks
@@ -5376,3 +5378,27 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.executed
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.actual
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.synchronized
+
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.code
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.address
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.left
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.right
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.loaded
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.finish
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Valid
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.effect
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.run_update
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.exists_execution
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.correct
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.preserves_other_bytes
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.fetched_correct
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.fetched_exists
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.valid_of_active
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.state
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.boundary_sum
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.neighbor_unchanged
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.past_end_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.misaligned_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.rounding
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.rounded_addition
+#print axioms PtxTorchLean.Poisson.PTX.Reduction.Update.Checks.instruction_text
