@@ -21,7 +21,8 @@
     "Connect the ordered tensor operator to the executable array reference, preserving its original scatter order and input validation.",
     "Compose actual cell instruction interleavings with private shared-memory identity and derived source contracts; chronological publication followed by assembly yields the executable TorchLean operator.",
     "Construct grid scheduling and admitted sources from supplied complete local cell runs, while keeping arbitrary-input local existence separate.",
-    "Connect actual cell and assembly publication to fresh-residual subtraction, deriving preservation of the right-hand side from store bounds."
+    "Connect actual cell and assembly publication to fresh-residual subtraction, deriving preservation of the right-hand side from store bounds.",
+    "Derive repeated shared-word read sources from actual ordering and explicit necessary coherence constraints; distinguish obsolete and future writes from initialization."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3119,6 +3120,102 @@
         "path": "integration/torchlean/PoissonPTX/CellGridResidualChecks.lean",
         "passage": {
           "quote": "theorem fresh_minus_seven : ∃ grid : Admitted operator values, ∃ words indices final,\n    Flow.Parallel.Runs arena.context (Assembly.entryCode 1 208 240 256 false 232 216)\n      (fun _ => arena.start (publish grid.candidates.memory grid.events) (fun _ => 0)) words indices final ∧\n    (∀ i, (final i).halted=true) ∧\n    Concurrent.Visibility.Compatible\n      (fun space => match space with | .global => publish grid.candidates.memory grid.events | .shared => fun _ => 0)\n      words (fun _ _ => .initial) ∧\n    IndexSources.Compatible (publish grid.candidates.memory grid.events) words indices (fun _ _ => .initial) ∧\n    ∃ candidate : Weak.Residual.Parallel.Candidate\n        (residualArena.inputs (Concurrent.GlobalPublication.publish (publish grid.candidates.memory grid.events) words) (fun _ _ => 0)),\n      PTX.Sources.Compatible\n        (Concurrent.GlobalPublication.publish (publish grid.candidates.memory grid.events) words)\n        (Weak.Residual.Parallel.events\n          (residualArena.inputs (Concurrent.GlobalPublication.publish (publish grid.candidates.memory grid.events) words) (fun _ _ => 0)) candidate)\n        (fun _ _ => .initial) ∧\n      decode (read64 (Weak.Residual.Parallel.publish\n        (residualArena.inputs (Concurrent.GlobalPublication.publish (publish grid.candidates.memory grid.events) words) (fun _ _ => 0))\n        candidate [⟨0,by decide⟩]) 320)=(-7 : Float) := by\n  obtain ⟨grid,same⟩ := ExistsChecks.nonzero_grid\n  have base : arena.base=grid.candidates.base := by rw [same]; rfl\n  have output : arena.element=grid.candidates.output := by rw [same]; rfl\n  have offsets : arena.offsets.toNat+(operator.mesh.points.size+1)*4≤grid.candidates.output.toNat := by rw [same]; decide\n  have entries : arena.entries.toNat+arena.entryCount*4≤grid.candidates.output.toNat := by rw [same]; decide\n  have boundary : arena.boundary.toNat+operator.mesh.points.size*4≤grid.candidates.output.toNat := by rw [same]; decide\n  have tables : arena.RowsEncoded grid.candidates.memory\n      (Assembly.nodeRows operator.mesh.points.size (Assembly.MeshRows.locations meshShape.connectivity)) := by\n    rw [same]; exact arena.checkRows_sound tables_checked\n  obtain ⟨words,indices,final,run,done,compatible,indexCompatible,correct⟩ :=\n    assembly_exists grid meshShape rfl arena base output offsets entries boundary tables separated (fun _ _ => 0) false\n  let memory := Concurrent.GlobalPublication.publish (publish grid.candidates.memory grid.events) words\n  let p := residualArena.inputs memory (fun _ _ => 0)\n  let candidate := Weak.Residual.Parallel.witness p\n  have source := Weak.Residual.Parallel.witness_sources p\n  refine ⟨grid,words,indices,final,run,done,compatible,indexCompatible,candidate,source,?_⟩\n  have layout : ResidualLayout grid arena residualArena := {\n    base := rfl\n    cellBase := base\n    applied := rfl\n    rhsBefore := by rw [same]; decide\n    rhsApart := by decide }\n  have value := residual_correspondence grid meshShape rfl arena base output offsets entries boundary tables separated\n    (fun _ _ => 0) run compatible indexCompatible done residualArena layout (fun _ _ => 0)\n    candidate (fun _ _ => .initial) source [⟨0,by decide⟩] (by intro i; fin_cases i; simp) ⟨0,by decide⟩\n  change decode (read64 _ 320)=_ at value\n  rw [value]\n  simp only [Bool.false_eq_true,false_and,ite_false,numerical,same]\n  change decode (read64 CellAssemblyWitness.memory 224)-(8 : Float)=(-7 : Float)\n  decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The repeated-write source theorem now proves this byte-by-byte selection.\nOrderedSources states the necessary coherence, no-future and no-obsolete-source\nrules explicitly and implies the earlier Performed condition. Actual small\nfetched executions show the difference: a read between writes of seven and\nnine can select either an older three or the future nine under the earlier\nconstraints, while the new rules reject both and admit seven. A universal\nregression forces seven for arbitrary proposed read bits and source choices.\nA separate two-thread execution derives cross-thread order through its actual\nbarrier, while an unsynchronized pair has no such order merely because its\nrecords occur consecutively."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/RepeatedShared.lean",
+        "passage": {
+          "quote": "structure OrderedSources (events : List (Event n)) (source : Nat → Fin 8 → Sources.Origin Nat) : Prop where\n  ordered : ∃ coherence : Nat → Nat → Prop,\n    (∀ a b left right la ra, events[a]?=some (.data left la) → events[b]?=some (.data right ra) →\n      la.data.store=true → ra.data.store=true → la.space=.shared → ra.space=.shared →\n      Before events a b → ∀ j k : Fin 8, la.data.address+j.val=ra.data.address+k.val → coherence a b) ∧\n    (∀ r w reader writer ra wa, events[r]?=some (.data reader ra) → events[w]?=some (.data writer wa) →\n      ra.data.store=false → wa.data.store=true → ra.space=.shared → wa.space=.shared →\n      Before events r w → ∀ j k : Fin 8, wa.data.address+j.val=ra.data.address+k.val → source r k≠.store w j) ∧\n    (∀ w r writer reader wa ra, events[w]?=some (.data writer wa) → events[r]?=some (.data reader ra) →\n      wa.data.store=true → ra.data.store=false → wa.space=.shared → ra.space=.shared →\n      Before events w r → ∀ j k : Fin 8, wa.data.address+j.val=ra.data.address+k.val →\n      match source r k with | .initial => False | .store old _ => ¬coherence old w)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The repeated-write source theorem now proves this byte-by-byte selection.\nOrderedSources states the necessary coherence, no-future and no-obsolete-source\nrules explicitly and implies the earlier Performed condition. Actual small\nfetched executions show the difference: a read between writes of seven and\nnine can select either an older three or the future nine under the earlier\nconstraints, while the new rules reject both and admit seven. A universal\nregression forces seven for arbitrary proposed read bits and source choices.\nA separate two-thread execution derives cross-thread order through its actual\nbarrier, while an unsynchronized pair has no such order merely because its\nrecords occur consecutively."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/RepeatedShared.lean",
+        "passage": {
+          "quote": "theorem read_from_stage (compatible : Compatible initial events source)\n    (admitted : OrderedSources events source)\n    (hw : events[w]?=some (.data writer wa)) (hr : events[r]?=some (.data reader ra))\n    (write : wa.data.store=true) (read : ra.data.store=false)\n    (sw : wa.space=.shared) (sr : ra.space=.shared)\n    (same : wa.data.address=ra.data.address) (before : Before events w r)\n    (around : WritersAround events w r ra.data.address) :\n    ra.data.value=wa.data.value ∧ ∀ k, source r k=.store w k := by\n  obtain ⟨coherence,ordered,future,stale⟩ := admitted.ordered\n  have chosen : ∀ k, source r k=.store w k ∧ byte ra.data.value k.val=byte wa.data.value k.val := by\n    intro k\n    have h := compatible r reader ra hr read k\n    have recent := stale w r writer reader wa ra hw hr write read sw sr before k k (by rw [same])\n    cases hs : source r k with\n    | initial => simpa [hs] using recent\n    | store other j =>\n      simp only [hs] at h recent\n      obtain ⟨thread,access,found,store,space,address,value⟩ := h\n      have shared := space.trans sr\n      rcases around other thread access found store shared j k address with own | earlier | later\n      · subst other\n        have eq : access=wa := by have e := Option.some.inj (found.symm.trans hw); cases e; rfl\n        subst access\n        have jk : j=k := by apply Fin.ext; omega\n        subst j\n        exact ⟨rfl,value⟩\n      · exact False.elim (recent (ordered other w thread writer access wa found hw store write shared sw earlier\n          j k (by simpa [same] using address)))\n      · exact False.elim (future r other reader thread ra access hr found read store sr shared later j k address hs)\n  exact ⟨Sources.word_eq_of_bytes _ _ (fun k => (chosen k).2),fun k => (chosen k).1⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The repeated-write source theorem now proves this byte-by-byte selection.\nOrderedSources states the necessary coherence, no-future and no-obsolete-source\nrules explicitly and implies the earlier Performed condition. Actual small\nfetched executions show the difference: a read between writes of seven and\nnine can select either an older three or the future nine under the earlier\nconstraints, while the new rules reject both and admit seven. A universal\nregression forces seven for arbitrary proposed read bits and source choices.\nA separate two-thread execution derives cross-thread order through its actual\nbarrier, while an unsynchronized pair has no such order merely because its\nrecords occur consecutively."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/RepeatedSharedChecks.lean",
+        "passage": {
+          "quote": "theorem forced_stage (compatible : Compatible initial (history value) choices)\n    (admitted : OrderedSources (history value) choices) : value=7 ∧ ∀ k, choices 6 k=.store 3 k := by\n  apply read_from_stage compatible admitted (w:=3) (r:=6) (writer:=0) (reader:=0)\n    (wa:=⟨.shared,⟨2,true,0,7⟩⟩) (ra:=⟨.shared,⟨4,false,0,value⟩⟩)\n    rfl rfl rfl rfl rfl rfl rfl (thread_before 3 6 rfl rfl (by decide))\n  intro other thread access found store shared j k address\n  rcases store_index found store with zero | current | last\n  · right; left; subst other; exact thread_before 0 3 rfl rfl (by decide)\n  · exact .inl current\n  · right; right; subst other; exact thread_before 6 7 rfl rfl (by decide)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The repeated-write source theorem now proves this byte-by-byte selection.\nOrderedSources states the necessary coherence, no-future and no-obsolete-source\nrules explicitly and implies the earlier Performed condition. Actual small\nfetched executions show the difference: a read between writes of seven and\nnine can select either an older three or the future nine under the earlier\nconstraints, while the new rules reject both and admit seven. A universal\nregression forces seven for arbitrary proposed read bits and source choices.\nA separate two-thread execution derives cross-thread order through its actual\nbarrier, while an unsynchronized pair has no such order merely because its\nrecords occur consecutively."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/RepeatedSharedChecks.lean",
+        "passage": {
+          "quote": "theorem newest_admissible : OrderedSources (history 7) (source 3) := by\n  refine ⟨Nat.lt,?_,?_,?_⟩\n  · intro a b left right la ra ha hb ls rs lsp rsp before j k address\n    exact before_lt before\n  · intro r w reader writer ra wa hr hw read store rs ws before j k address\n    have eq := read_index hr read\n    have lt := before_lt before\n    intro equal\n    have same : 3=w := (Sources.Origin.store.inj equal).1\n    omega\n  · intro w r writer reader wa ra hw hr store read ws rs before j k address\n    have eq := read_index hr read\n    have lt := before_lt before\n    have options := store_index hw store\n    change ¬3<w\n    omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The repeated-write source theorem now proves this byte-by-byte selection.\nOrderedSources states the necessary coherence, no-future and no-obsolete-source\nrules explicitly and implies the earlier Performed condition. Actual small\nfetched executions show the difference: a read between writes of seven and\nnine can select either an older three or the future nine under the earlier\nconstraints, while the new rules reject both and admit seven. A universal\nregression forces seven for arbitrary proposed read bits and source choices.\nA separate two-thread execution derives cross-thread order through its actual\nbarrier, while an unsynchronized pair has no such order merely because its\nrecords occur consecutively."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/RepeatedSharedChecks.lean",
+        "passage": {
+          "quote": "theorem obsolete_rejected : ¬OrderedSources (history 3) (source 0) := by\n  intro h\n  obtain ⟨coherence,ordered,future,stale⟩ := h.ordered\n  have co := ordered 0 3 0 0 ⟨.shared,⟨0,true,0,3⟩⟩ ⟨.shared,⟨2,true,0,7⟩⟩\n    rfl rfl rfl rfl rfl rfl (thread_before 0 3 rfl rfl (by decide)) 0 0 rfl\n  have noOld := stale 3 6 0 0 ⟨.shared,⟨2,true,0,7⟩⟩ ⟨.shared,⟨4,false,0,3⟩⟩\n    rfl rfl rfl rfl rfl rfl (thread_before 3 6 rfl rfl (by decide)) 0 0 rfl\n  exact noOld co"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The repeated-write source theorem now proves this byte-by-byte selection.\nOrderedSources states the necessary coherence, no-future and no-obsolete-source\nrules explicitly and implies the earlier Performed condition. Actual small\nfetched executions show the difference: a read between writes of seven and\nnine can select either an older three or the future nine under the earlier\nconstraints, while the new rules reject both and admit seven. A universal\nregression forces seven for arbitrary proposed read bits and source choices.\nA separate two-thread execution derives cross-thread order through its actual\nbarrier, while an unsynchronized pair has no such order merely because its\nrecords occur consecutively."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/RepeatedSharedChecks.lean",
+        "passage": {
+          "quote": "theorem future_rejected : ¬OrderedSources (history 9) (source 7) := by\n  intro h\n  obtain ⟨coherence,ordered,future,stale⟩ := h.ordered\n  exact future 6 7 0 0 ⟨.shared,⟨4,false,0,9⟩⟩ ⟨.shared,⟨5,true,0,9⟩⟩\n    rfl rfl rfl rfl rfl rfl (thread_before 6 7 rfl rfl (by decide)) 0 0 rfl rfl"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The repeated-write source theorem now proves this byte-by-byte selection.\nOrderedSources states the necessary coherence, no-future and no-obsolete-source\nrules explicitly and implies the earlier Performed condition. Actual small\nfetched executions show the difference: a read between writes of seven and\nnine can select either an older three or the future nine under the earlier\nconstraints, while the new rules reject both and admit seven. A universal\nregression forces seven for arbitrary proposed read bits and source choices.\nA separate two-thread execution derives cross-thread order through its actual\nbarrier, while an unsynchronized pair has no such order merely because its\nrecords occur consecutively."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/RepeatedSharedOrderChecks.lean",
+        "passage": {
+          "quote": "theorem chronological_is_not_causal : ¬Before separate 0 1 := by\n  intro path\n  exact Ptx.Path.contained (s:=fun _ _ => False) (fun a b h => no_edge a b h)\n    (fun _ _ _ h _ => h) path"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The repeated-write source theorem now proves this byte-by-byte selection.\nOrderedSources states the necessary coherence, no-future and no-obsolete-source\nrules explicitly and implies the earlier Performed condition. Actual small\nfetched executions show the difference: a read between writes of seven and\nnine can select either an older three or the future nine under the earlier\nconstraints, while the new rules reject both and admit seven. A universal\nregression forces seven for arbitrary proposed read bits and source choices.\nA separate two-thread execution derives cross-thread order through its actual\nbarrier, while an unsynchronized pair has no such order merely because its\nrecords occur consecutively."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/RepeatedSharedOrderChecks.lean",
+        "passage": {
+          "quote": "theorem synchronized (value : Word) : Before (history value) 0 5 :=\n  .edge (.inr ⟨0,1,⟨.shared,⟨1,true,0,7⟩⟩,⟨.shared,⟨3,false,0,value⟩⟩,\n    ⟨0,0,0,2⟩,1,3,rfl,rfl,rfl,rfl,by decide,by decide,by decide⟩)"
         }
       }
     }

@@ -990,3 +990,46 @@ residual example publishes one minus eight, namely minus seven, without an
 assumed intermediate value. The subtraction has its own valid execution and
 source witness. Exact-real residual certification, reductions and solver
 stopping still require their separate connections.
+
+Reduction stages reuse shared-memory words. The single-writer cell argument
+therefore does not suffice: excluding initialization still permits an obsolete
+store, or even a future store, to supply a read. The repeated-write extension
+must record the necessary write ordering and visibility constraints explicitly.
+Coherence orders overlapping writes; causality is the order established by
+instructions within a thread and synchronization between threads. An order
+edge comes from actual same-thread accesses or an actual barrier arrival and
+completion; chronological interleaving alone must not order different threads.
+Causally ordered overlapping writes must agree with coherence. A read must not
+use a causally later write or a coherence-older value than a write already
+ordered before it, including initialization. These are necessary conditions
+for this synchronous, generic-proxy shared-memory fragment, not complete PTX
+memory admission or a replacement for dependent-execution no-thin-air rules.
+
+For a reduction-stage read, source selection must be derived from geometry and
+history: the intended write is before the read, and every other overlapping
+store is either before that write or after the read. The theorem must then
+force every source byte and the resulting word, without an assumed read value
+or whole-word atomicity. Positive execution witnesses and negative obsolete-
+and future-source examples must exercise the distinction from the earlier
+Compatible and Performed constraints. The emitted reduction's stage ordering,
+numerical fold and full instruction correspondence remain separate obligations.
+
+The repeated-write source theorem now proves this byte-by-byte selection.
+OrderedSources states the necessary coherence, no-future and no-obsolete-source
+rules explicitly and implies the earlier Performed condition. Actual small
+fetched executions show the difference: a read between writes of seven and
+nine can select either an older three or the future nine under the earlier
+constraints, while the new rules reject both and admit seven. A universal
+regression forces seven for arbitrary proposed read bits and source choices.
+A separate two-thread execution derives cross-thread order through its actual
+barrier, while an unsynchronized pair has no such order merely because its
+records occur consecutively.
+
+Source fidelity for this extension is a review of the pinned PTX 9.4
+initialization, synchronization, causality-order, coherence, causality and
+barrier sections. The binary64 source contract remains a necessary fragment;
+it is not a formal adapter from the separate fixed-size u32 byte graph and
+does not establish complete PTX admission. The actual 256-thread reduction must
+still derive ownership and stage ordering and connect the exact rounded fold
+and tree to its emitted instructions. No existing cell theorem or its source
+hypotheses were strengthened to obtain these new results.

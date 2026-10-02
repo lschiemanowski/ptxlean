@@ -301,3 +301,11 @@ physical arrays. The resulting binary64 residual equals that original
 right-hand side minus the rounded operator, with the same optional assembly
 mask. A constructed nonzero example covers all three stages. This is separate
 from exact-real residual certification, reduction order and solver stopping.
+
+The in-place reductions require more visibility information than the cell's
+single-writer arrays. A necessary repeated-write contract now excludes obsolete
+and future sources using explicit coherence and causal order. The producer's
+identity and read value follow byte by byte from actual history conditions,
+with positive and negative fetched-execution regressions. This prepares the
+memory argument; the emitted 256-thread reduction's ownership, ordering,
+numerical computation and execution existence remain unproved.

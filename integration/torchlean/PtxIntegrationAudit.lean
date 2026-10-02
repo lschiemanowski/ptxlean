@@ -1,3 +1,6 @@
+import PoissonPTX.RepeatedShared
+import PoissonPTX.RepeatedSharedChecks
+import PoissonPTX.RepeatedSharedOrderChecks
 import PoissonPTX.AssemblyPreservation
 import PoissonPTX.CellGridResidualInputs
 import PoissonPTX.CellGridResidual
@@ -5332,3 +5335,44 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellGrid.residual_correspondence
 #print axioms PtxTorchLean.Poisson.PTX.CellGrid.ResidualChecks.residualArena
 #print axioms PtxTorchLean.Poisson.PTX.CellGrid.ResidualChecks.fresh_minus_seven
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.ThreadBefore
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Edge
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Before
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.before_lt
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderedSources
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderedSources.performed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.WritersAround
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.read_from_stage
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.program
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.cfg
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.execution
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.source
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.executed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.actual
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.read_index
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.store_index
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.old_constraints
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.obsolete_passes_old
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.future_passes_old
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.newest_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.thread_before
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.future_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.obsolete_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.newest_admissible
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Checks.forced_stage
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.separate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.no_edge
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.chronological_is_not_causal
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.program
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.cfg
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.execution
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.executed
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.actual
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.OrderChecks.synchronized

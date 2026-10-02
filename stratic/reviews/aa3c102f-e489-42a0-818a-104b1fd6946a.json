@@ -1,0 +1,97 @@
+{
+  "id": "aa3c102f-e489-42a0-818a-104b1fd6946a",
+  "base": "7fd766d0dca0437366f5150ea09033faf828f347",
+  "contentTree": "cf2693227bb3bf89acac0bc3ab4f40fe42442957",
+  "reviewer": "Codex",
+  "summary": "Add necessary repeated shared-write source constraints, derive stage read values, and verify obsolete/future rejection with actual execution regressions.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Prepare in-place reduction visibility with explicit coherence and causality constraints, exact source-selection theorem, positive and negative fetched regressions and implementation links. Keep full reduction and complete admission unimplemented."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Explain why repeated-write visibility differs from single-writer cell planes and retain remaining reduction, solver and hardware boundaries."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Reference computations, equations, setup, emitted kernels and solver numerical order are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Reviewed the exact pinned primary-source sections and their applicability to synchronous identity-address shared accesses with generic proxy and full-block barriers. Lean checks the stated necessary constraints, not their equivalence to all NVIDIA executions. Producer/source identity is derived; no desired read result or assumed word atomicity replaces proof obligations."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "cf2693227bb3bf89acac0bc3ab4f40fe42442957",
+      "method": "Three sequential resource-limited Lean module checks; full exact dependency audit; pinned source review and dependency/source guards; saved PTX bindings and receipt hashes; Stratic validation and manual semantic/proof review.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 with 16 dependency pins. Heavy checks bounded by 6 GiB cgroup, no swap, 150 percent CPU quota. No GPU or paid model calls.",
+      "evidence": "4701 exact declaration reports, only standard Lean axioms; 561 guarded sources. New positive and negative actual fetched executions distinguish the earlier Compatible/Performed constraints from necessary repeated-write OrderedSources. Obsolete and future sources are rejected; source existence and universal stage read forcing pass. Cross-thread tests reject chronological order as synchronization and derive a barrier edge from actual arrival/completion events. Manually checked pinned PTX SHA256 0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed and sections 8.2.6, 8.9.4, 8.9.5, 8.10.1, 8.10.6 and 9.7.15.1. These necessary constraints are a documented source interpretation, not full PTX admission or a formal binary64/u32-graph adapter. Existing cell theorem hypotheses and execution semantics are unchanged. Saved bindings and receipt hashes pass; emitted kernels and runtime are unchanged, so no GPU rerun, full registered build, old interpreter checks or Python runtime tests were repeated. Stratic links valid, snapshots equal, README unchanged. Actual reduction ownership, stage order, numerical fold/tree and full solver correspondence remain open.",
+      "tests": [],
+      "id": "8a69feb4-6958-47af-8793-624243dc611f",
+      "recordedAt": "2026-10-02T18:12:14.865Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T18:13:21.953Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-repeated-shared.md",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RepeatedShared.lean",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RepeatedSharedChecks.lean",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RepeatedSharedOrderChecks.lean",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed repeated-write source rules and bytewise theorem, actual execution regressions, audit registration, refreshed source receipts and source-linked study guide."
+    }
+  ]
+}
