@@ -1,0 +1,117 @@
+{
+  "id": "4853c6f6-860d-48b2-9efd-22fbdb953f81",
+  "base": "a0893483d86623a34f4ee19d8367422b32ef54c5",
+  "contentTree": "f64429d4d332e8a283906435d80b6b906cc7c309",
+  "reviewer": "Codex",
+  "summary": "Derive first-barrier gather visibility for actual arithmetic and output continuations.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Derive all participant arrivals, producer order and body slot preservation, then actual continuation read values. Retain prefix source restriction and numerical source rebasing as explicit remaining work."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Update concrete visibility milestone without elevating it to whole-entry or solver correspondence."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "No equation, TorchLean algorithm, GPU kernel or host solver change. The entry proof establishes a stronger implementation boundary without changing numerical policy."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Reuse existing barrier transitions; expose proved history helpers without changing semantics. Keep necessary source admission distinct from full PTX conformance. Preserve byte-by-byte choices; appended observation regression is explicitly not a fetched body run."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "f64429d4d332e8a283906435d80b6b906cc7c309",
+      "method": "Complete registered Lean build; fresh CellEntryVisibilityChecks; exact axiom/source audit; 24 Poisson checker tests; saved PTX bindings and source/Stratic review",
+      "outcome": "pass",
+      "environment": "Pinned Lean toolchain, 16 locked dependencies, local CPU proof checks and existing saved GPU artifacts; no GPU rerun",
+      "evidence": "3821 exact dependency reports use only standard Lean axioms; 413 guarded files and 16 pinned dependencies. Actual prefix producer ordering and stale-read rejection checks pass. Body slot preservation follows from real instruction runs. Bindings pass across 30 layouts, including all 90 prefixes. All 292 receipt source hashes and whitespace checks pass; Stratic validates; README unchanged. Prefix input-source restriction, numerical source rebasing and whole-solver correspondence remain open.",
+      "tests": [],
+      "id": "2f7ff150-d4f3-4720-b5fb-3eed51f5f169",
+      "recordedAt": "2026-10-02T09:02:20.531Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T09:03:21.072Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/BarrierValue.lean",
+      "reason": "Derive visibility from actual instruction/barrier records and address preservation; no assumed tensor or read value. Generic byte-value helper preserves independent source choices."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryContinuation.lean",
+      "reason": "Derive visibility from actual instruction/barrier records and address preservation; no assumed tensor or read value. Generic byte-value helper preserves independent source choices."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryHistory.lean",
+      "reason": "Derive visibility from actual instruction/barrier records and address preservation; no assumed tensor or read value. Generic byte-value helper preserves independent source choices."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryVisibility.lean",
+      "reason": "Derive visibility from actual instruction/barrier records and address preservation; no assumed tensor or read value. Generic byte-value helper preserves independent source choices."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryVisibilityChecks.lean",
+      "reason": "Derive visibility from actual instruction/barrier records and address preservation; no assumed tensor or read value. Generic byte-value helper preserves independent source choices."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGatherPreservation.lean",
+      "reason": "Derive visibility from actual instruction/barrier records and address preservation; no assumed tensor or read value. Generic byte-value helper preserves independent source choices."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentHistory.lean",
+      "reason": "Derive visibility from actual instruction/barrier records and address preservation; no assumed tensor or read value. Generic byte-value helper preserves independent source choices."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Keep exact audit registration, binding receipts, Stratic contracts and study explanation consistent with the first-barrier visibility result."
+    }
+  ]
+}

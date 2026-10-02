@@ -133,11 +133,12 @@ Its instructions and declarations are bound to the emitted element entries.
 The active gather now separately proves its four-byte connectivity load, indexed
 eight-byte source load and shared store, with derived access bounds and preserved
 setup registers. Its stored word agrees with TorchLean input gathering. A concurrent prefix theorem now derives the original input reads, each gathered
-word, actual first-barrier completion and the arithmetic entry registers. The
-remaining connection concerns the gathered store records and later arithmetic
-loads in one joint history, not a presumed shared snapshot.
+word, actual first-barrier completion and the arithmetic entry registers. The next composition step connects its actual gathered producers to the
+body numerical theorem, including a common account of input read sources.
 
 Actual gather-store records are also derived from that run: every active lane
 writes, padding lanes do not, and each record has the proved source word at its
-own disjoint shared slot. Their visibility to later arithmetic remains the
-joint-history obligation.
+own disjoint shared slot. Real first-barrier arrivals and continuation slot preservation now establish
+what later arithmetic reads see. The numerical theorem still needs its input-byte
+view connected to those producers; the prefix input-source argument also needs
+restriction from the whole history with global output stores.

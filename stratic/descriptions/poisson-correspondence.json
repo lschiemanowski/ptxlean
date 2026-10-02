@@ -17,7 +17,7 @@
     "Derive shared-store ownership and barrier visibility from fetched control and addresses, rather than assuming producer ordering or phase values.",
     "Prove that every completed Q1\u2013Q4 middle-slice run satisfying necessary byte-source constraints stores all six TorchLean intermediate tensors, including weight multiplication.",
     "Derive every load address and source using sound symbolic bookkeeping and kernel-checked code certificates; retain NaN encoding freedom and ordered rounded sums.",
-    "Derive slice-entry registers and gathered words from the concurrent prefix; continuation visibility, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
+    "Derive slice-entry registers and gathered words from the concurrent prefix; whole-entry source composition, complete PTX admission, general execution existence and whole-solver instruction correspondence remain open.",
     "Supply a completed zero-data Q1 execution satisfying both necessary byte-source constraints; reject wrong-coordinate and wrong-weight code mutations without claiming arbitrary-input existence.",
     "Connect the complete final arithmetic/store body to its actual byte inputs, and compose with middle-run stores through a proved byte snapshot while retaining the distinct whole-trace visibility obligation.",
     "Derive final consumer load values from actual middle stores and barrier history, then connect the actual arithmetic registers to the existing final-store proof without hiding the remaining model boundary.",
@@ -36,7 +36,9 @@
     "Justify concurrent four-byte connectivity reads against actual store bytes and derive read-only inputs before composing entry execution and first-barrier visibility; do not assume the gathered answer.",
     "Derive original input reads, local gather results, collective barrier completion and arithmetic-entry registers from the concurrent twenty-one-instruction prefix; retain joint-history continuation visibility as the next obligation.",
     "Derive actual gather-store occurrence, address, value and disjoint ownership from the completed entry run to support first-barrier publication.",
-    "Derive actual gather-store coverage, padding exclusion, physical addresses, copied values and disjoint byte ownership; connect recorded values to TorchLean inputs without assuming the store list."
+    "Derive actual gather-store coverage, padding exclusion, physical addresses, copied values and disjoint byte ownership; connect recorded values to TorchLean inputs without assuming the store list.",
+    "Derive actual gather-store ordering before the first barrier and use necessary byte-source rules to establish continuation visibility without assuming read values.",
+    "Prove that actual arithmetic/output continuation reads see gathered words: derive first-barrier ordering and slot preservation; retain prefix input-source restriction and numerical source rebasing as open."
   ],
   "realization": "partial",
   "remaining": "The concurrent entry and actual gather-store occurrence, values and byte ownership are proved. Whole-entry/body composition still needs joint-history source restriction and first-barrier visibility of those records to later arithmetic reads. Arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions remain open.",
@@ -1646,6 +1648,78 @@
         "path": "integration/torchlean/PoissonPTX/CellEntryProducerChecks.lean",
         "passage": {
           "quote": "theorem actual_producer (owner : Fin 32) (active : owner.val<4) :\n    \u2203 (position : Nat) (access : Concurrent.Access), result.events[position]?=some (.data owner access) \u2227\n      access.data.store=true \u2227 access.space=.shared \u2227 access.data.pc=19 \u2227\n      access.data.address=256+owner.val*8 \u2227\n      access.data.value=Producers.value bases 1 2 0 64 start owner"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Starting from a reset barrier, the entry history proves that every observed\ncompletion has earlier real arrivals by all thirty-two participants."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryHistory.lean",
+        "passage": {
+          "quote": "theorem completed_arrivals (run : Runs cfg ctx code s events indices t)\n    (reset : s.core.barrier=Barrier.reset generation) : Concurrent.History.CompleteOrigins events"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A gather\nstore is before its writer's arrival: after reaching the barrier, that lane\ncannot execute another store in the prefix."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryHistory.lean",
+        "passage": {
+          "quote": "theorem store_before_arrival {w a : Nat} {owner : Fin n} {access : Concurrent.Access} (run : Runs cfg ctx (program width cells source) s events indices t)\n    (write : events[w]?=some (.data owner access)) (store : access.data.store=true)\n    (arrival : events[a]?=some (.barrier (.arrival key owner))) : w<a"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Actual\nshared stores in the continuation therefore cannot overwrite any gathered slot."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGatherPreservation.lean",
+        "passage": {
+          "quote": "theorem preserves_gather (launch : Numeric.Launch width bases start.core) (lo : 2\u2264width) (hi : width\u22645)\n    (run : WithTail.Runs cfg ctx (front width) (CellFinal.tail width output) start events final)\n    (member : Event.data writer access\u2208events) (store : access.data.store=true) (shared : access.space=.shared)\n    (owner : Fin 32) (active : owner.val<width*width) :\n    Sources.Disjoint access.data.address ((bases .shared).toNat+owner.val*8)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For an actual prefix followed by an actual arithmetic/output run, every shared\nread of a gathered slot equals that slot's proved gathered word."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryContinuation.lean",
+        "passage": {
+          "quote": "theorem continuation_read {later : List (Concurrent.Event 32)} {r : Nat}\n    (lo : 2\u2264width) (hi : width\u22645)\n    (body : Concurrent.WithTail.Runs cfg bodyContext (Concurrent.CellConsumer.WithOutput.front width)\n      (CellFinal.tail width output) (continuation t) later final)\n    (reset : s.core.barrier=Ptx.Barrier.reset generation)\n    (joint : Concurrent.Visibility.Compatible memory (events++later) allSources)\n    (performed : Concurrent.Visibility.Performed (events++later) allSources)\n    (owner : Fin 32) (active : owner.val<width*width)\n    (observed : later[r]?=some (.data reader access))\n    (read : access.data.store=false) (shared : access.space=.shared)\n    (address : access.data.address=(bases .shared).toNat+owner.val*8) :\n    access.data.value=Producers.value bases cell width cells source s owner"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "all covering stores have the same relevant byte, so whole-word atomicity and\na unique chosen event are unnecessary assumptions."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/BarrierValue.lean",
+        "passage": {
+          "quote": "theorem read_from_value {events : List (Event n)} {w r : Nat}\n    (compatible : Compatible initial events source) (performed : Performed events source)\n    (hw : events[w]?=some (.data writer wa)) (hr : events[r]?=some (.data reader ra))\n    (write : wa.data.store=true) (read : ra.data.store=false)\n    (sw : wa.space=.shared) (sr : ra.space=.shared)\n    (same : wa.data.address=ra.data.address) (ordered : Across events w r)\n    (values : \u2200 (other : Nat) (thread : Fin n) (access : Access), events[other]?=some (.data thread access) \u2192\n      access.data.store=true \u2192 access.space=.shared \u2192 \u2200 j k : Fin 8,\n      access.data.address+j.val=ra.data.address+k.val \u2192 byte access.data.value j.val=byte value k.val) :\n    ra.data.value=value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "An appended shared observation must see the gathered\nminus-two bit pattern, and the old repeated-byte pattern is rejected."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellEntryVisibilityChecks.lean",
+        "passage": {
+          "quote": "theorem stale_read_rejected :\n    \u00ac(Concurrent.Visibility.Compatible initial (result.events++[read 0x5a5a5a5a5a5a5a5a]) source \u2227\n      Concurrent.Visibility.Performed (result.events++[read 0x5a5a5a5a5a5a5a5a]) source)"
         }
       }
     }

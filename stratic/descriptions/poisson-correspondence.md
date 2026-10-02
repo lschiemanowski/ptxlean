@@ -571,8 +571,8 @@ The base, lane, row and column registers and the actual barrier state establish
 the arithmetic entry contract. Re-expressing instruction counters relative to
 the next instruction preserves all registers, bytes and allocation metadata.
 This change of numbering does not execute instructions or install shared values.
-The remaining shared-memory obligation is to connect the actual gathered store
-records to the continuation's loads using their joint history and synchronization.
+The actual gathered store records now determine the continuation's plane-zero
+loads using their joint history and synchronization.
 The current prefix source argument also needs extension to exclude later output
 stores from the input bytes when the whole entry and body are composed.
 
@@ -609,6 +609,45 @@ The address calculation and allocation bounds also establish byte ownership.
 Distinct lane IDs produce disjoint eight-byte slots. A store covering a byte of
 one slot must come from that lane, at the same byte offset, and must contain its
 proved word. Coverage, padding exclusion and these ownership results are
-instantiated on the nonzero 32-thread witness. Connecting those records and
-arrivals to the arithmetic continuation remains open; the producer theorem is
-not itself a claim of visibility or a full-kernel correspondence theorem.
+instantiated on the nonzero 32-thread witness. The producer theorem alone is not a visibility claim; the following barrier
+argument connects its records to actual continuation reads.
+
+The first barrier's history must be derived from its actual requests. Starting
+from a reset barrier, every completion must have earlier arrivals by every
+participant. Each gathered store must precede its writer's arrival, and therefore
+the completion. A subsequent shared read can then use these actual records and
+the necessary byte-source rules to exclude stale initialization. This reasoning
+must preserve byte-level source freedom and must not assume a desired read value.
+
+Starting from a reset barrier, the entry history proves that every observed
+completion has earlier real arrivals by all thirty-two participants. A gather
+store is before its writer's arrival: after reaching the barrier, that lane
+cannot execute another store in the prefix. The same barrier transition and
+history rules are reused by the entry and arithmetic machines.
+
+The arithmetic body stores only in shared planes one through six; plane zero
+holds the gathered inputs. Its output tail adds only global stores. Actual
+shared stores in the continuation therefore cannot overwrite any gathered slot.
+This preservation depends on fetched instructions and derived addresses, and
+does not assume a correct arithmetic value.
+
+For an actual prefix followed by an actual arithmetic/output run, every shared
+read of a gathered slot equals that slot's proved gathered word. The proof
+derives store-before-arrival-before-completion order and excludes stale initial
+bytes through the necessary performed-write rule. Byte sources remain independent:
+all covering stores have the same relevant byte, so whole-word atomicity and
+a unique chosen event are unnecessary assumptions.
+
+This modular theorem still requires the prefix's input-source constraints as
+well as compatible and performed sources for the concatenated history. Deriving
+that prefix restriction in the presence of later global output stores is still
+open. So is adapting the existing body numerical theorem's initial-byte view to
+these actual gathered producers. Neither condition is hidden in a desired read
+value. Whole-entry execution composition, general execution existence, assembly,
+reductions and solver/launch composition remain separate obligations.
+
+The nonzero Q1 regression proves the order of every active producer before its
+real barrier completion. An appended shared observation must see the gathered
+minus-two bit pattern, and the old repeated-byte pattern is rejected. This
+observation check exercises the memory interface; it does not claim a fetched
+arithmetic execution for the appended test record.

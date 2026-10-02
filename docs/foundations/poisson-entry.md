@@ -163,7 +163,7 @@ out the last barrier participant prevents release. The same witness instantiates
 the general launch theorem. This is an existence example, not the eventual
 general existence proof.
 
-The remaining issue is shared visibility in the continuation. Each lane has
+The next issue is connecting this visibility result to the numerical theorem. Each lane has
 executed its store, but subsequent loads must be tied to those records through
 the barrier in one combined history. Source restriction must also account for
 later output stores, which were absent in the prefix. Neither a copied shared
@@ -193,6 +193,35 @@ visible; no desired store list or output word is supplied.
 
 [The producer checks](../../integration/torchlean/PoissonPTX/CellEntryProducerChecks.lean)
 instantiate coverage, padding exclusion and separation on the nonzero 32-thread
-run. These results provide the writer side of the next proof. The joint history
-must still establish the relevant barrier ordering and sources of the later
-arithmetic reads.
+run. These results provide the writer side of the barrier visibility proof below.
+
+## Why another lane sees the gathered word
+
+[CellEntryHistory](../../integration/torchlean/PoissonPTX/CellEntryHistory.lean)
+recovers an actual arrival by every participant before the first barrier
+completes. It proves every gather store precedes its writer's arrival. Once
+a lane reaches instruction 20, its remaining prefix contains no more stores.
+Padding lanes must arrive too, even though they wrote no gathered values.
+
+[CellGatherPreservation](../../integration/torchlean/PoissonPTX/CellGatherPreservation.lean)
+checks the other side of the interval: the later arithmetic writes only shared
+planes 1 through 6, and the output tail writes global memory. The gathered
+plane 0 is untouched. This fact is derived for arbitrary actual body runs.
+
+[CellEntryContinuation](../../integration/torchlean/PoissonPTX/CellEntryContinuation.lean)
+combines those facts with the necessary byte-source rules. A subsequent read of
+a gathered slot must return the gathered word. It cannot use old initialization
+after the performed write. Different bytes may still choose different source
+records; every covering record supplies the same proved byte.
+
+The theorem takes actual prefix and continuation runs. It still takes the
+prefix input-source constraints separately from the joint history's constraints.
+Restricting those inputs in the presence of later global stores remains open,
+as does translating gathered producers into the body numerical theorem's
+initial-byte view. The continuation changes only the instruction-counter origin;
+it does not install a convenient shared snapshot.
+
+[Visibility checks](../../integration/torchlean/PoissonPTX/CellEntryVisibilityChecks.lean)
+exercise actual producer ordering on the nonzero 32-thread prefix, force a later
+observation to see its gathered minus-two bits, and reject stale bytes. The
+appended observation is a memory-interface test, not a fetched arithmetic run.

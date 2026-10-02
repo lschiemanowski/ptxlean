@@ -1,3 +1,9 @@
+import PoissonPTX.BarrierValue
+import PoissonPTX.CellEntryHistory
+import PoissonPTX.CellEntryVisibility
+import PoissonPTX.CellGatherPreservation
+import PoissonPTX.CellEntryContinuation
+import PoissonPTX.CellEntryVisibilityChecks
 import PoissonPTX.CellEntryStores
 import PoissonPTX.CellEntryStorePath
 import PoissonPTX.CellEntryOccurrence
@@ -4301,3 +4307,28 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.ProducerChecks.padding_has_no_store
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.ProducerChecks.independent_slots
 #print axioms PtxTorchLean.Poisson.PTX.CellEntry.recorded_torchlean
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.read_from_value
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.step_history
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.runs_history
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.completed_arrivals
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.run_event_prefix
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.arrival_origin
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.no_store_after
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.store_before_arrival
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.store_before_completion
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Producers.read_gathered
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.no_access_zero
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.preserves_gather
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.preserves_gather
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.continuation
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.continuation_read
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.VisibilityChecks.key
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.VisibilityChecks.completion
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.VisibilityChecks.ordered_producers
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.VisibilityChecks.read
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.VisibilityChecks.observed_value
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.VisibilityChecks.stale_read_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.append_complete
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.synchronize_history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.History.ordinary_history

@@ -51,7 +51,7 @@ private theorem fresh_release (before : List (Event n)) (key : Barrier.Key) (sel
       exact ⟨a,by omega,by simp [List.getElem?_append,bound,atIndex]⟩
   · simp at h
 
-private theorem append_complete (old : CompleteOrigins before) (new : FreshCompletions before added) :
+theorem append_complete (old : CompleteOrigins before) (new : FreshCompletions before added) :
     CompleteOrigins (before++added) := by
   intro c key atC t
   by_cases early : c < before.length
@@ -69,7 +69,7 @@ private theorem key_of_waiter (cfg : Config n) (s : State n) (selected t : Fin n
     Barrier.key (barrierConfig cfg s selected) s.barrier = activeKey cfg s := by
   simp [Barrier.key,barrierConfig,activeKey,aligned t waiting]
 
-private theorem synchronize_history (cfg : Config n) (s : State n) (thread : Fin n) (resource : Fin 16)
+theorem synchronize_history (cfg : Config n) (s : State n) (thread : Fin n) (resource : Fin 16)
     (before : List (Event n)) (aligned : Aligned s) (origin : WaitingOrigin cfg s before) :
     WaitingOrigin cfg (synchronize cfg s thread resource).state
       (before++(synchronize cfg s thread resource).events) ∧
@@ -116,7 +116,7 @@ private theorem synchronize_history (cfg : Config n) (s : State n) (thread : Fin
       show barrierRequest cfg s thread resource = r from rfl,Barrier.step,same,↓reduceIte,List.append_nil] using
       And.intro origin (fresh_empty before)
 
-private theorem ordinary_history {cfg : Config n} {s : State n} {before : List (Event n)}
+theorem ordinary_history {cfg : Config n} {s : State n} {before : List (Event n)}
     (out : Outcome n) (origin : WaitingOrigin cfg s before)
     (barrier : out.state.barrier = s.barrier) (site : out.state.site = s.site)
     (noCompletion : ∀ key, .barrier (.completion key) ∉ out.events) :
