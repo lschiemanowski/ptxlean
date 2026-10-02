@@ -442,6 +442,14 @@ COUNTS['PtxTorchLean.Poisson.PTX.CellPrologue.Context'] = COUNTS.get('PtxTorchLe
 COUNTS['PtxTorchLean.Poisson.PTX.CellPrologue.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellPrologue.Checks', 0) + 8
 TARGETS.update(['PoissonPTX.CellPrologue', 'PoissonPTX.CellPrologueEntry', 'PoissonPTX.CellPrologueChecks'])
 
+COUNTS['PtxTorchLean.Poisson.PTX'] = COUNTS.get('PtxTorchLean.Poisson.PTX', 0) + 11
+COUNTS['PtxTorchLean.Poisson.PTX.Indexed'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Indexed', 0) + 20
+COUNTS['PtxTorchLean.Poisson.PTX.CellGather'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellGather', 0) + 24
+COUNTS['PtxTorchLean.Poisson.PTX.CellGather.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellGather.Checks', 0) + 9
+TARGETS.update(['PoissonPTX.Bytes32', 'PoissonPTX.IndexedMemory', 'PoissonPTX.CellGather', 'PoissonPTX.CellGatherLayout', 'PoissonPTX.CellGatherText', 'PoissonPTX.CellGatherChecks', 'PoissonPTX.CellGatherTensor'])
+
+COUNTS['PtxTorchLean.Poisson'] += 1
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -511,7 +519,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks", "CellGatherChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

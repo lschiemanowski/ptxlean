@@ -30,10 +30,12 @@
     "Prove each completed active lane's actual stored word equals TorchLean in the same concurrent run; derive distinct writers' disjoint output bytes from launch lane IDs and a common cell ID.",
     "Require explicit nonwrapping launch index/address bounds for all lanes, including padding; distinguish mathematical global publication from CUDA host visibility.",
     "Derive store occurrence and recorded values from completed execution, then recover the TorchLean tensor by publishing actual disjoint global stores independently of order.",
-    "Derive register setup from the emitted element prologue, preserving memory and keeping the later gather and barrier as separate execution obligations."
+    "Derive register setup from the emitted element prologue, preserving memory and keeping the later gather and barrier as separate execution obligations.",
+    "Gather through an actual four-byte unsigned connectivity load and eight-byte value load/store, with distinct bounds and preserved entry registers.",
+    "Prove the twelve-step active gather from four-byte connectivity and eight-byte source storage, derive access safety from array bounds, preserve setup registers and connect its stored bits to TorchLean input gathering; concurrent sources and first-barrier composition remain open."
   ],
   "realization": "partial",
-  "remaining": "Actual global-store occurrence, addresses and recorded values are derived from completed execution and launch bounds. Publishing the records in any order yields the TorchLean local-cell tensor. The register prologue is proved as a fetched prefix. Gather and composition through its first barrier, arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations.",
+  "remaining": "Actual global-store occurrence, addresses and recorded values are derived from completed execution and launch bounds. Publishing the records in any order yields the TorchLean local-cell tensor. The register prologue is proved as a fetched prefix. The active gather has a fetched snapshot proof; concurrent gather and composition through its first barrier, arbitrary-input source-admitted existence, complete PTX memory admission, CUDA host visibility, host/launch composition, assembly, reductions and remaining solver instructions retain separate obligations.",
   "links": [
     {
       "kind": "implementation",
@@ -1412,6 +1414,66 @@
         "path": "integration/torchlean/PoissonPTX/CellPrologueChecks.lean",
         "passage": {
           "quote": "theorem all_lanes : \u2200 w : Fin 4, \u2200 lane : Fin 32,\n    (execute (ctx lane.val) (program (w.val+2)) 7 start).map\n      (fun s => (s.core.pc,[s.core.regs 0,s.core.regs 3,s.core.regs 14,s.core.regs 15,\n        s.core.regs 16,s.core.regs 17,s.core.regs 11],s.live,[s.core.global 4100,s.core.shared 260]))=\n    some (7,[4096,256,BitVec.ofNat 64 lane.val,37,\n      BitVec.ofNat 64 (lane.val/(w.val+2)),BitVec.ofNat 64 (lane.val%(w.val+2)),\n      0xffffffffffffffff],decide (lane.val<(w.val+2)*(w.val+2)),[0xa5,0x5a])"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The twelve active gather instructions have a fetched execution proof for arbitrary\nsource bits, including NaN payloads and signed zero."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGather.lean",
+        "passage": {
+          "quote": "theorem fetched_correct (pre suffix : List Indexed.Instr) (pc : s.pc=pre.length)\n    (run : Indexed.Runs (pre++code width cells source++suffix) s t)\n    (done : t.pc=pre.length+(code width cells source).length)\n    (valid : Valid s width cells source) : t=finish s width cells source :=\n  correct (Indexed.fetched_block pre _ suffix run pc done) valid\n\ntheorem fetched_exists (pre suffix : List Indexed.Instr) (pc : s.pc=pre.length)\n    (valid : Valid s width cells source) :\n    \u2203 t, Indexed.Runs (pre++code width cells source++suffix) s t \u2227 t.pc=pre.length+12"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "nonwrapping addresses, a valid cell and lane, and connectivity entries within\nthe source vector imply every access is valid."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGatherLayout.lean",
+        "passage": {
+          "quote": "theorem valid_of_layout (layout : Layout s width cells source) : Valid s width cells source"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The gathered word and unchanged\nbase, cell, lane, row and column registers follow from execution."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGather.lean",
+        "passage": {
+          "quote": "theorem registers (run : Indexed.Block (code width cells source) s t)\n    (valid : Valid s width cells source)\n    (untouched : r\u22601 \u2227 r\u22602 \u2227 r\u226011 \u2227 r\u226013 \u2227 r\u226018) : t.regs r=s.regs r"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The decoded shared word equals the corresponding entry of TorchLean's cell\ngather when initial connectivity and source bytes represent the input arrays."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGatherTensor.lean",
+        "passage": {
+          "quote": "theorem torchlean (o : Operator) (values : Array Float) (e : Nat)\n    (layout : Layout s o.nodes.size cells source)\n    (cell : (s.regs 15).toNat=e) (i j : Fin o.nodes.size)\n    (lane : (s.regs 14).toNat=i.val*o.nodes.size+j.val)\n    (connectivity : \u2200 k<o.nodes.size*o.nodes.size,\n      (read32 s.global (s.globalStart+cells.toNat+(e*(o.nodes.size*o.nodes.size)+k)*4)).toNat=\n        (o.mesh.cells[e]!)[k]!)\n    (contents : \u2200 k<layout.pointCount,\n      decode (read64 s.global (s.globalStart+source.toNat+k*8))=values[k]!)\n    (run : Indexed.Block (code o.nodes.size cells source) s t) :\n    decode (read64 t.shared (destination s).toNat)=Spec.get2 (gather o values e) i j"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Kernel checks cover four-byte-only allocations, adjacent index entries,\nunaligned or truncated indices and out-of-range nodes."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/CellGatherChecks.lean",
+        "passage": {
+          "quote": "theorem four_byte_extent :\n    Valid32 4 4 4 \u2227 \u00acValid64 4 4 4 \u2227\n    (Indexed.eval (.load32 18 2) {(start 0) with regs:=fun _ => 4, globalStart:=4,globalBytes:=4}).isSome=true"
         }
       }
     }

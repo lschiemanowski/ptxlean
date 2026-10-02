@@ -1,9 +1,29 @@
 {
   "status": "pass",
-  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nComplete middle-phase bodies are bound to the concurrent Lean program with\nkernel-checked control, address and numerical certificates for Q1--Q4. Completed\nmiddle-slice executions satisfying necessary byte-source constraints store all\nsix TorchLean intermediate tensors. The final body has a fetched, snapshot-based\nstore theorem and phase-by-phase composition with actual middle stores. A\nconcurrent arithmetic extension now justifies the actual final loads using one\nwhole-history source assignment and connects its result to the fetched store.\nThe arithmetic theorem derives its middle prefix and continuation at the last\nbarrier from a single run. A combined concurrent index/store/return machine now\nderives that arithmetic execution, its ordered event embedding and result\nregister relation, with only global output stores omitted. Byte-source\nrestriction preserves retained reads when those stores are beyond the bounded\ncoefficient region. Actual store addresses now follow from launch bounds, and\neach completed active lane's stored bytes have its TorchLean value. Actual store\noccurrence and recorded values imply an order-independent published global\ntensor equal to TorchLean. This mathematical publication leaves CUDA host\nvisibility, gather, entry composition and complete PTX memory admission open.\nThe seven-instruction register prologue is separately proved from launch context\nand bound with its declarations to each emitted element entry. Its gather and\nfirst-barrier connection to the arithmetic slice remains open.\nSaved output extents are checked disjoint; this is concrete layout evidence,\nseparate from the general launch-derived address theorem and GPU conformance.",
+  "scope": "Bind local cell contraction and shared-store blocks to their proved Lean programs.\n\nComplete middle-phase bodies are bound to the concurrent Lean program with\nkernel-checked control, address and numerical certificates for Q1--Q4. Completed\nmiddle-slice executions satisfying necessary byte-source constraints store all\nsix TorchLean intermediate tensors. The final body has a fetched, snapshot-based\nstore theorem and phase-by-phase composition with actual middle stores. A\nconcurrent arithmetic extension now justifies the actual final loads using one\nwhole-history source assignment and connects its result to the fetched store.\nThe arithmetic theorem derives its middle prefix and continuation at the last\nbarrier from a single run. A combined concurrent index/store/return machine now\nderives that arithmetic execution, its ordered event embedding and result\nregister relation, with only global output stores omitted. Byte-source\nrestriction preserves retained reads when those stores are beyond the bounded\ncoefficient region. Actual store addresses now follow from launch bounds, and\neach completed active lane's stored bytes have its TorchLean value. Actual store\noccurrence and recorded values imply an order-independent published global\ntensor equal to TorchLean. This mathematical publication leaves CUDA host\nvisibility, entry composition and complete PTX memory admission open.\nThe seven-instruction register prologue is separately proved from launch context\nand bound with its declarations to each emitted element entry. The twelve-step\nactive gather has a fetched snapshot proof, derived layout safety and a TorchLean\ninput theorem; its complete body is bound for all three source vectors. Concurrent\ngather and first-barrier connection to the arithmetic slice remain open.\nSaved output extents are checked disjoint; this is concrete layout evidence,\nseparate from the general launch-derived address theorem and GPU conformance.",
   "checked": [
     {
       "directory": "00-n1-q1",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -448,6 +468,26 @@
     },
     {
       "directory": "01-n2-q1",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -892,6 +932,26 @@
     },
     {
       "directory": "02-n4-q1",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -1336,6 +1396,26 @@
     },
     {
       "directory": "03-n1-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -1780,6 +1860,26 @@
     },
     {
       "directory": "04-n2-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -2224,6 +2324,26 @@
     },
     {
       "directory": "05-n4-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -2668,6 +2788,26 @@
     },
     {
       "directory": "06-n1-q3",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -3112,6 +3252,26 @@
     },
     {
       "directory": "07-n2-q3",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -3556,6 +3716,26 @@
     },
     {
       "directory": "08-n4-q3",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -4000,6 +4180,26 @@
     },
     {
       "directory": "09-n1-q4",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -4444,6 +4644,26 @@
     },
     {
       "directory": "10-n2-q4",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -4888,6 +5108,26 @@
     },
     {
       "directory": "11-n4-q4",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -5332,6 +5572,26 @@
     },
     {
       "directory": "12-n8-q4",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -5776,6 +6036,26 @@
     },
     {
       "directory": "13-n2-q1",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -6220,6 +6500,26 @@
     },
     {
       "directory": "14-n2-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -6664,6 +6964,26 @@
     },
     {
       "directory": "15-n2-q3",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -7108,6 +7428,26 @@
     },
     {
       "directory": "16-n2-q4",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -7552,6 +7892,26 @@
     },
     {
       "directory": "17-n2-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -7996,6 +8356,26 @@
     },
     {
       "directory": "18-n2-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -8440,6 +8820,26 @@
     },
     {
       "directory": "19-n2-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -8884,6 +9284,26 @@
     },
     {
       "directory": "20-n2-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -9328,6 +9748,26 @@
     },
     {
       "directory": "21-n2-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -9772,6 +10212,26 @@
     },
     {
       "directory": "22-n3-q1",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -10216,6 +10676,26 @@
     },
     {
       "directory": "23-n3-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -10660,6 +11140,26 @@
     },
     {
       "directory": "24-n3-q3",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -11104,6 +11604,26 @@
     },
     {
       "directory": "25-n3-q4",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -11548,6 +12068,26 @@
     },
     {
       "directory": "26-n8-q4",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -11992,6 +12532,26 @@
     },
     {
       "directory": "27-n16-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -12436,6 +12996,26 @@
     },
     {
       "directory": "28-n4-q3",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -12880,6 +13460,26 @@
     },
     {
       "directory": "29-n2-q2",
+      "gather": [
+        {
+          "entry": "element_probe",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_p",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        },
+        {
+          "entry": "element_x",
+          "instructions": 12,
+          "index_bytes": 4,
+          "value_bytes": 8
+        }
+      ],
       "prologue": [
         {
           "entry": "element_probe",
@@ -13447,14 +14047,26 @@
     "PtxTorchLean.Poisson.PTX.CellPrologue.other_register",
     "PtxTorchLean.Poisson.PTX.CellPrologue.ready",
     "PtxTorchLean.Poisson.PTX.CellPrologue.coordinates",
-    "PtxTorchLean.Poisson.PTX.CellPrologue.thread_registers"
+    "PtxTorchLean.Poisson.PTX.CellPrologue.thread_registers",
+    "PtxTorchLean.Poisson.PTX.CellGather.execution",
+    "PtxTorchLean.Poisson.PTX.CellGather.correct",
+    "PtxTorchLean.Poisson.PTX.CellGather.stored",
+    "PtxTorchLean.Poisson.PTX.CellGather.registers",
+    "PtxTorchLean.Poisson.PTX.CellGather.fetched_correct",
+    "PtxTorchLean.Poisson.PTX.CellGather.fetched_exists",
+    "PtxTorchLean.Poisson.PTX.CellGather.index_exact",
+    "PtxTorchLean.Poisson.PTX.CellGather.connectivity_address",
+    "PtxTorchLean.Poisson.PTX.CellGather.node_inside",
+    "PtxTorchLean.Poisson.PTX.CellGather.valid_of_layout",
+    "PtxTorchLean.Poisson.PTX.CellGather.torchlean"
   ],
-  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.run_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.stored_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.published_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.shared_stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.global_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.input_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.initial_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.runs_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_location' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.all_reads' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.inputs_of_matrices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.index_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.location_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.output_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.read_wordBytes' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.phase_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.completed_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.run_append_code' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.compatible_prefix' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.performed_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.view_append' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.results' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.load_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.all_reads' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.register_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_local' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_completion' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.split' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_run' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.crossing_state' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.step_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.split_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.across' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.performed' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.separated_by_fence' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.checked' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.read_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.after_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.fetched_preserves_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.distinct_outputs' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.projected_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.halted_blocks' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.synchronize_related' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.front_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.project_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.clipped' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.padding_return' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.tail_events' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.arithmetic_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_under_store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.tail_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_keeps' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.store_address' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.stored_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.coefficient_nowrap' depends on axioms: [propext,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stored_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stores_disjoint' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.store_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.completed_wrote' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.safe_records' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.present_record' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_outside' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.location_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_tensor' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.word' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.permuted_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.outside' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_sound' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_complete' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.memories' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.other_register' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.ready' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.thread_registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
+  "axiom_audit": "'PtxTorchLean.Poisson.PTX.Contraction.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.valid_of_matrix' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Contraction.plans_accumulator' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.valid_of_plane' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedStore.fetched_contraction_store_exists' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.store_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_store' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.published_contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.order_independent' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.SharedPlane.contraction_value' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q1' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q2' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q3' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.q4' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.coverage' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.unique' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Checks.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.run_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.contraction' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.stored_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Replay.published_contraction' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.shared_stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.global_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.input_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Inputs.initial_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.data_sound' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Symbolic.runs_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.stores' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.load_location' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.all_reads' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.store_expression' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.producer' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.plane_equations' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_middle' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellMiddle.Numeric.completed_store' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.arithmetic_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.inputs_of_matrices' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.index_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.location_exact' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.output_valid' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.read_wordBytes' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.phase_result' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.completed_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellFinal.exists_from_middle' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.run_append_code' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.compatible_prefix' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.performed_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Extension.view_append' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.checked' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.loads' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.results' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.publication' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.load_view' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_readonly' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.all_reads' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.register_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_local' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.tail_completion' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.split' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.completed_run' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.stored_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.crossing_state' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.step_prefix' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Cut.split_run' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.compatible' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.across' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.performed' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.Projection.separated_by_fence' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.checked' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Coefficients.read_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.after_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.fetched_preserves_coefficients' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.distinct_outputs' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Output.projected_arithmetic' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.halted_blocks' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.synchronize_related' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.front_step' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.WithTail.project_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.clipped' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.padding_return' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.tail_events' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.arithmetic_filtered' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_under_store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.tail_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_ready' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.runs_keeps' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.store_address' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Address.stored_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.store_bounds' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.coefficient_nowrap' depends on axioms: [propext,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.result_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stored_from_launch' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.stores_disjoint' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.store_value' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.completed_wrote' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.safe_records' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.present_record' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_outside' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.location_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_entry' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.WithOutput.Publication.published_tensor' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.word' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.permuted_word' depends on axioms: [propext,\n Classical.choice,\n Quot.sound]\n'PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.outside' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_sound' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execute_complete' depends on axioms: [propext, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.memories' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.other_register' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.ready' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.coordinates' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellPrologue.thread_registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.execution' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.stored' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.registers' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_correct' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.fetched_exists' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.index_exact' depends on axioms: [propext]\n'PtxTorchLean.Poisson.PTX.CellGather.connectivity_address' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.node_inside' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.valid_of_layout' depends on axioms: [propext, Classical.choice, Quot.sound]\n'PtxTorchLean.Poisson.PTX.CellGather.torchlean' depends on axioms: [propext, Classical.choice, Quot.sound]\n",
   "source_sha256": {
     "integration/torchlean/PoissonPTX/Arithmetic.lean": "8fd4f79048a2452ec06f11fa6dd491ba1c2ceac1f0f73941aeb55558b9e16e2c",
     "integration/torchlean/PoissonPTX/BarrierChecks.lean": "b821ce1ae932bbb62dd1bf151c3bf62e17865382805a394467179e9714681780",
     "integration/torchlean/PoissonPTX/BarrierSources.lean": "b1c114dbc5ca25231c698ee764cb98bb9bc70066e2728a835b618022ef5c55bb",
     "integration/torchlean/PoissonPTX/Bytes.lean": "b1405bdaa8d08aabbe28aaa5880063e71cd5c1f25acfb961cf543172b3b26857",
+    "integration/torchlean/PoissonPTX/Bytes32.lean": "93bdb8d5fe94a567cfe67342fd3acfe9617e9ac0d6702e5f524a7da93c31d9a2",
     "integration/torchlean/PoissonPTX/CellCoefficientProgram.lean": "9f0fcbdc5882bbd3badf7a946346fa7cbe14443b0c7697847a7d156ddb23aa8d",
     "integration/torchlean/PoissonPTX/CellCoefficientReads.lean": "b3455bd4ea10dceb4065ec08d3afc13a951d36e4ddb60ec4cceffda6024d1620",
     "integration/torchlean/PoissonPTX/CellConsumerChecks.lean": "ad5b6e1bf3775925e5851e96d6de94ad0f51f13be41f0c41b3b4804a2b4fb7d2",
@@ -13470,6 +14082,11 @@
     "integration/torchlean/PoissonPTX/CellFinalSnapshot.lean": "122c3973e5e94e21e64576ef834a7fb2ee434a52478be50adc8ed5317bd75ea4",
     "integration/torchlean/PoissonPTX/CellFinalTensor.lean": "13d9194bf59b7e82b26b9b9724ffbc9efebe7fde377244d13d18a2251b4a0502",
     "integration/torchlean/PoissonPTX/CellFinalText.lean": "5409e370af7fa9729000ca285270f5c351cd9d64709c82c49dcf0bd51e34e547",
+    "integration/torchlean/PoissonPTX/CellGather.lean": "856ea46dbea1d82fa8877c2498678614e29cd552ea30be97d0ca619cd7214fe8",
+    "integration/torchlean/PoissonPTX/CellGatherChecks.lean": "ffdb41be34f420a8ca6b9dc46ef09a1e65f0d7b64f5f3025d67614b3595f4f95",
+    "integration/torchlean/PoissonPTX/CellGatherLayout.lean": "6eb1c8fe0a0f758524adf41b3169e55999ca096fc7eb2a0951266d8439e43d56",
+    "integration/torchlean/PoissonPTX/CellGatherTensor.lean": "95425eb23a4bf2d94363630fa5d644978f4405fb2a91db854631e2ec5f7cb015",
+    "integration/torchlean/PoissonPTX/CellGatherText.lean": "bb72465970734d64868e2407b1f48eab1a891737cda4e672d8bfc5939c1a9f33",
     "integration/torchlean/PoissonPTX/CellLaunch.lean": "80fda293996ee7cb04367616264559f49db105a71d66a4685bbd295fcebed848",
     "integration/torchlean/PoissonPTX/CellMiddle.lean": "92c1e82e960ec182e24b4061092b5acbf01318279e87a52cd67e8a2a60382b5f",
     "integration/torchlean/PoissonPTX/CellMiddleChecks.lean": "4a099bec0ae7364837f5b56f550e213a9483b8128831310598e8847cdaece7d4",
@@ -13529,6 +14146,7 @@
     "integration/torchlean/PoissonPTX/ContractionLoads.lean": "313a35403b8a6b62efc373867a354e7772f1595dc1b6ea0abff077d0896df53c",
     "integration/torchlean/PoissonPTX/ContractionText.lean": "6dd3164161a87f853175f34ff587fab704ab644673563f48ba9521ea01e6f4a2",
     "integration/torchlean/PoissonPTX/GlobalPublication.lean": "5c0f5002f713a69029328c0a4b933531ab291509d37ace14fbb930c9df52d4c4",
+    "integration/torchlean/PoissonPTX/IndexedMemory.lean": "7dde53ff3e831fe7adde920461a968cef61a49c355acae5260013482206994e8",
     "integration/torchlean/PoissonPTX/Kernel.lean": "ea4455c6b5c72b1566b369ff99c144751a62f5ca25647bfa71ba5550b16e82d6",
     "integration/torchlean/PoissonPTX/Layout.lean": "584efde27d90c4591c76ace8a6c4064daf83ff43db5c07850dd4b807ed26a031",
     "integration/torchlean/PoissonPTX/Machine.lean": "cf3f3031dac0c1a78a272f43b41076c19335996ab627b2676a71b7652fac95f3",
@@ -13552,18 +14170,18 @@
     "integration/torchlean/PoissonPTX/TailFrontProjection.lean": "9f0b70b2beb732dad439c8ec7cf3f3050d527f79938003c4b30f534490039fd9",
     "integration/torchlean/PoissonPTX/TailRunProjection.lean": "c856028564801b107b73a7d5890ef3a6d7d9a21ad9fa8a260ff1a542b346d580",
     "integration/torchlean/PoissonPTX/Tensor.lean": "b92554c8e1c4f74f2d0e10e5dc9088e51204067e2683dfa00952d208ef6a7cfd",
-    "integration/torchlean/PoissonPTX/Text.lean": "c20438c287690dcdd756fb56bc74ab2583eee3673ea4633d2766a68f5bffeefd",
+    "integration/torchlean/PoissonPTX/Text.lean": "2e67a471fa2e6192a980c112b5808c1e93729b4e29d285187793d21228507510",
     "integration/torchlean/PoissonPTX/Weak.lean": "76ec84dcb9cb808b6e816ef57de62f2cdcf4b10fbe76dc604b6ead19b91a4a8d",
     "integration/torchlean/PoissonPTX/WeakPadding.lean": "920a80b3d0047288905e9bc2573b42937dbf7259c022c3adbb7c602ed9e43279",
     "integration/torchlean/PoissonPTX/WeakResidual.lean": "0b8438f59d104b68834763b204674f7ae4cc428e192d7dc1bced7127a012de33",
     "integration/torchlean/PoissonPTX/ZeroSources.lean": "efbd8cea410e6ea0c7820b4b4f081e805206641ab808951692bf4af91ca4c079",
-    "integration/torchlean/PoissonContractionsMain.lean": "4c2f86aab7f001741a8f8c8c3eee84a1fe476d1d93f08cfd8aa3b2c5786705bb",
+    "integration/torchlean/PoissonContractionsMain.lean": "e79d93ebcc52f1e780816237531e64a9802d79e31e04c37cd8daeba2af7fd47f",
     "integration/torchlean/PoissonQuadCorrespondence.lean": "e5d177ec11019881d2732da0a605d7dd3c4f98ed23acfc2f84fb2b5f5441a211",
-    "integration/torchlean/check.py": "679bcfd93129d32c74396b2f1d84900f919b7daea2129918be900b8b341288b2",
-    "integration/torchlean/lakefile.toml": "e7090724b11394c8ed33255922e174736c6293050e8490df2efb2a2a57daf472",
+    "integration/torchlean/check.py": "d5a3fe31684459ce30206d4434425020c8caf83a130f611c44530b96b90c4618",
+    "integration/torchlean/lakefile.toml": "f37cd0bfa068b9154b0461d79f12dead530e977e1721ba767923aed1fc4d59df",
     "integration/torchlean/lake-manifest.json": "aa2971177378aec3470b52445d109297d8ddb4f686092c10a3a013d5d6b62d01",
     "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
-    "hardware/check_poisson_contractions.py": "d9bdd7c791d2b780381e6dacb75ebed103df2a08a1b18cf9178d4ad5ff27cc7e",
+    "hardware/check_poisson_contractions.py": "59d96529be48183f3c3903882d0cf947fd3f1fd34ee266d95f95cd81f72c4279",
     "hardware/check_poisson_ptx.py": "6165a8e3962b76285ffa475379ff3d44483ed248e42d5a1497ff4b34d9a99447"
   },
   "source_run_report_sha256": "c0334cbcbb6c4393c3045a73dbaf9ffb303e5103c33ce5b8f16196c3810ad613",

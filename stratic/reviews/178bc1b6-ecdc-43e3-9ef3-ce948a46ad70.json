@@ -1,0 +1,133 @@
+{
+  "id": "178bc1b6-ecdc-43e3-9ef3-ce948a46ad70",
+  "base": "bb296c63b29e4396a29328a1d424f11aa2fc394e",
+  "contentTree": "27bb20562acb2e8be6630c97a3c7cbd7b4e99f9d",
+  "reviewer": "Codex",
+  "summary": "Prove and bind four-byte indexed cell gathering to TorchLean inputs.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Add a fetched twelve-step active gather theorem, explicit four-byte index semantics, layout-derived safety and input-representation correspondence. Keep concurrent sources and first-barrier composition open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Record the local gather milestone while retaining full concurrent entry, assembly, reductions, host composition and hardware boundaries; remove stale statement that output publication is unproved."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Expose the existing gather definition for proofs; its body, numerical specification and solver are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Verified pinned PTX 9.4 hash 0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed and reviewed mad.lo.u32, mul.wide.u32, ld and st. Four-byte loads are separate from eight-byte values; no synchronization is invented. Exact Lean dependency audit remains distinct from source fidelity and hardware conformance."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "27bb20562acb2e8be6630c97a3c7cbd7b4e99f9d",
+      "method": "Complete registered Lean build, fresh CellGatherChecks, exact axiom audit, pinned source fidelity review, saved-PTX binding, 23 Poisson unit tests, receipt and link consistency checks",
+      "outcome": "pass",
+      "environment": "Pinned Lean toolchain and 16 locked dependencies; local CPU checking; saved GPU artifacts reused without rerunning GPU",
+      "evidence": "3650 exact dependency reports use only standard Lean axioms; 387 guarded source files; 90 gathers plus prior 90 prologues, 720 contractions and 630 shared stores bound across 30 layouts; receipt source hashes checked; Stratic and Markdown links valid; README unchanged. Existing interpreter checks reused via build; new gather checks freshly evaluated.",
+      "tests": [],
+      "id": "fa81c7d7-f1ee-4541-bd3a-b10e88d5d06a",
+      "recordedAt": "2026-10-02T07:27:07.028Z"
+    }
+  ],
+  "recordedAt": "2026-10-02T07:28:00.534Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-entry.md",
+      "reason": "Reconcile implemented local gather, input and safety premises, remaining concurrent barrier composition and exact proof links."
+    },
+    {
+      "path": "hardware/check_poisson_contractions.py",
+      "reason": "Check complete active gather body and immediate barrier; validate four-byte connectivity and eight-byte sources; audit new proof endpoints."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Refresh exact binding and dependency evidence against saved PTX; no GPU rerun."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Refresh exact binding and dependency evidence against saved PTX; no GPU rerun."
+    },
+    {
+      "path": "hardware/test_poisson_contractions.py",
+      "reason": "Reject load width, stride, index, destination, extra-instruction and source-order mutations."
+    },
+    {
+      "path": "integration/torchlean/PoissonContractionsMain.lean",
+      "reason": "Render typed gather program, node register and three actual source offsets for text binding."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Bytes32.lean",
+      "reason": "Four-byte little-endian words, bounds, modular addresses and disjoint preservation, including mixed four/eight-byte storage."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGather.lean",
+      "reason": "Twelve actual instructions copy arbitrary source bits, preserve setup registers and have exact-state, fetched correctness and existence results; local snapshot boundary explicit."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGatherChecks.lean",
+      "reason": "Kernel-checked bit copies, adjacent indices and rejected invalid allocations/nodes."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGatherLayout.lean",
+      "reason": "Derive every access bound from input layout and connectivity validity, including 32-bit index and 64-bit address bounds."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGatherTensor.lean",
+      "reason": "Derive TorchLean gather result from actual connectivity/source bytes; no desired output or assumed source index."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGatherText.lean",
+      "reason": "Render typed gather program, node register and three actual source offsets for text binding."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/IndexedMemory.lean",
+      "reason": "Bounded indexed instruction wrapper preserves existing arithmetic rules; canonical no-FP execution and fetched/block equivalence are proved."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/Text.lean",
+      "reason": "Render typed gather program, node register and three actual source offsets for text binding."
+    },
+    {
+      "path": "integration/torchlean/PoissonQuad.lean",
+      "reason": "Make the existing cell-input gather available to the new theorem; unchanged definition body."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Register seven modules, all 64 new named declarations and public gather; retain exact axiom accounting and add fresh checks."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Register seven modules, all 64 new named declarations and public gather; retain exact axiom accounting and add fresh checks."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Register seven modules, all 64 new named declarations and public gather; retain exact axiom accounting and add fresh checks."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reconcile implemented local gather, input and safety premises, remaining concurrent barrier composition and exact proof links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reconcile implemented local gather, input and safety premises, remaining concurrent barrier composition and exact proof links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reconcile implemented local gather, input and safety premises, remaining concurrent barrier composition and exact proof links."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reconcile implemented local gather, input and safety premises, remaining concurrent barrier composition and exact proof links."
+    }
+  ]
+}

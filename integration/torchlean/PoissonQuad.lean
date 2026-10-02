@@ -175,7 +175,8 @@ private def checkVector (values : Array Float) (size : Nat) : Except String Unit
   if values.size != size then throw s!"expected vector of length {size}, got {values.size}"
   if !(values.all Float.isFinite) then throw "vector must be finite"
 
-private def gather (o : Operator) (values : Array Float) (e : Nat) : Mat Float o.nodes.size o.nodes.size :=
+/-- The local cell view used by the operator; public for instruction correspondence. -/
+def gather (o : Operator) (values : Array Float) (e : Nat) : Mat Float o.nodes.size o.nodes.size :=
   matrix fun i j => values[(o.mesh.cells[e]!)[i.val*o.nodes.size+j.val]!]!
 
 private def applyRaw (o : Operator) (values : Array Float) : Array Float :=

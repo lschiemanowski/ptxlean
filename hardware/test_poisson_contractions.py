@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue
+from check_poisson_contractions import parameters, verify_blocks, verify_stores, verify_control, verify_middle, verify_final, verify_prologue, verify_gather
 from poisson_kernels import Layout, module, PTX
 
 
@@ -48,6 +48,27 @@ class ContractionBinding(unittest.TestCase):
         for expected_bad in (expected[:-1], expected[::-1], expected+[expected[0]]):
             with self.assertRaises(ValueError):
                 verify_prologue(self.ptx, expected_bad, self.layout)
+
+    def test_complete_gather(self):
+        import re
+        expected = []
+        for entry in ('element_probe', 'element_p', 'element_x'):
+            body = re.search(r'\.visible \.entry '+entry+r'\(.*?\n}', self.ptx, re.S)[0].splitlines()
+            expected.append(body[body.index('@!%live bra stage_0_done;')+1:body.index('stage_0_done:')])
+        self.assertEqual(len(verify_gather(self.ptx, expected, self.layout)), 3)
+        for old, new in [('ld.global.u32 %node, [%addr];', 'ld.global.u64 %node, [%addr];'),
+                         ('mul.wide.u32 %off, %idx, 4;', 'mul.wide.u32 %off, %idx, 8;'),
+                         ('mul.wide.u32 %off, %node, 8;', 'mul.wide.u32 %off, %lane, 8;'),
+                         ('st.shared.f64 [%addr+0], %value;', 'st.shared.f64 [%addr+8], %value;'),
+                         ('stage_0_done:', 'mov.u32 %i, 0;\nstage_0_done:')]:
+            with self.subTest(new=new):
+                self.assertIn(old, self.ptx)
+                with self.assertRaises(ValueError):
+                    verify_gather(self.ptx.replace(old,new,1), expected, self.layout)
+        with self.assertRaises(ValueError): verify_gather(self.ptx, expected[::-1], self.layout)
+        bad = copy.deepcopy(self.layout)
+        bad['fields']['cells']['kind'] = 'd'
+        with self.assertRaises(ValueError): parameters(bad)
 
     def test_stores(self):
         g = PTX(self.obj)

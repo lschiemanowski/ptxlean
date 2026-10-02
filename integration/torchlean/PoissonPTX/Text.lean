@@ -10,7 +10,7 @@ def register : Nat → String
   | 4 => "%a" | 5 => "%b" | 6 => "%c" | 7 => "%d"
   | 8 => "%acc" | 9 => "%acc2" | 10 => "%prod" | 11 => "%value"
   | 12 => "%global" | 13 => "%idx" | 14 => "%lane" | 15 => "%cell"
-  | 16 => "%i" | 17 => "%j"
+  | 16 => "%i" | 17 => "%j" | 18 => "%node"
   | n => s!"%unmapped{n}"
 
 def operand : Operand → String

@@ -95,8 +95,7 @@ TorchLean local cell result, with allocation and index conditions explicit.
 
 The middle slice starts with gathered bytes and prepared base/lane/coordinate
 registers. The final phase's entry registers are also explicit. The prologue and
-gather must establish those inputs. The combined concurrent output tail still
-needs composition of its per-lane stored words into one global output tensor. Complete PTX memory
+gather must establish those inputs. The combined concurrent output tail publishes its actual stores as one tensor. Complete PTX memory
 admission, general execution existence, hardware progress and whole-solver
 instruction correspondence remain separate obligations. Documentation and saved
 empirical evidence distinguish these from the completed phase-by-phase theorem.
@@ -131,5 +130,8 @@ The seven-instruction register prologue is also proved from its launch context.
 It establishes arena and shared addresses, lane and cell IDs, an active-lane
 flag, and row/column coordinates, preserving memory and unrelated registers.
 Its instructions and declarations are bound to the emitted element entries.
-This is the state before gather; connecting the connectivity load, source-vector
-load, shared store and first barrier to the arithmetic entry remains open.
+The active gather now separately proves its four-byte connectivity load, indexed
+eight-byte source load and shared store, with derived access bounds and preserved
+setup registers. Its stored word agrees with TorchLean input gathering. This is
+a fixed-input memory proof; concurrent source justification and the first barrier
+still need to connect it to the arithmetic entry.

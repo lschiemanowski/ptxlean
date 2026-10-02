@@ -488,9 +488,8 @@ derives the six register values used by the arithmetic entry contract.
 
 The prefix ends before gather, not at a kernel return. It does not reset a
 program counter or install gathered bytes to identify this state with the
-post-gather arithmetic entry. The indexed connectivity and input loads, shared
-store, first barrier and preservation of the setup registers through those
-instructions remain separate execution obligations. Shared-symbol resolution,
+post-gather arithmetic entry. The active gather now has a separate fetched snapshot proof;
+concurrent gather and its first barrier remain execution obligations. Shared-symbol resolution,
 parameter passing and special-register inputs are launch context assumptions,
 not a CUDA driver/ABI theorem. Zero divisors are outside this bounded fragment;
 PTX does not specify a unique result for them.
@@ -508,3 +507,34 @@ Kernel-checked examples cover all 32 lanes at widths two through five with
 nonzero initial registers and bytes. They also check the maximum unsigned lane,
 wrong initial counter, unsupported zero divisor and mutations to the row and
 active-lane computations.
+
+Gathering a cell input must read each connectivity entry as exactly four
+little-endian bytes, interpret it as an unsigned node index, then read the
+corresponding eight-byte source value and store its unchanged bits in shared
+memory. Four-byte bounds and alignment must be checked separately from the
+eight-byte value accesses; adjacent connectivity entries must not be treated as
+one oversized load. The address calculation must retain modular integer
+semantics, with ordinary nonwrapping array bounds establishing the intended
+layout. The gather must preserve the prologue registers needed by arithmetic.
+
+The twelve active gather instructions have a fetched execution proof for arbitrary
+source bits, including NaN payloads and signed zero. They derive the node index
+from the actual four-byte connectivity entry, load the corresponding source
+word and store it into the lane's shared slot. Allocation sizes, alignment,
+nonwrapping addresses, a valid cell and lane, and connectivity entries within
+the source vector imply every access is valid. The gathered word and unchanged
+base, cell, lane, row and column registers follow from execution.
+
+The decoded shared word equals the corresponding entry of TorchLean's cell
+gather when initial connectivity and source bytes represent the input arrays.
+These are input representation conditions, not assumptions about the output.
+This theorem currently reads a fixed input memory; it does not establish the
+concurrent read sources or visibility through the first barrier. Those remain
+necessary to connect the whole entry to the arithmetic execution.
+
+The typed gather program also renders the complete guarded body for each of
+the three source vectors. Binding checks reject incorrect load width, index
+stride, source index, shared destination, extra instructions or a missing first
+barrier. Kernel checks cover four-byte-only allocations, adjacent index entries,
+unaligned or truncated indices and out-of-range nodes. Bit-copy checks include
+nonzero cells, lanes and base addresses and unusual floating-point encodings.

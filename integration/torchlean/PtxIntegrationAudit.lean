@@ -1,3 +1,10 @@
+import PoissonPTX.Bytes32
+import PoissonPTX.IndexedMemory
+import PoissonPTX.CellGather
+import PoissonPTX.CellGatherLayout
+import PoissonPTX.CellGatherText
+import PoissonPTX.CellGatherChecks
+import PoissonPTX.CellGatherTensor
 import PoissonPTX.CellPrologue
 import PoissonPTX.CellPrologueEntry
 import PoissonPTX.CellPrologueChecks
@@ -4057,3 +4064,71 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.row_mutation_rejected
 #print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.wrong_guard_rejected
 #print axioms PtxTorchLean.Poisson.PTX.CellPrologue.Checks.high_unsigned_lane
+
+#print axioms PtxTorchLean.Poisson.PTX.read32
+#print axioms PtxTorchLean.Poisson.PTX.write32
+#print axioms PtxTorchLean.Poisson.PTX.Valid32
+#print axioms PtxTorchLean.Poisson.PTX.write32_outside
+#print axioms PtxTorchLean.Poisson.PTX.read32_write32_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.read32_write64_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.address32
+#print axioms PtxTorchLean.Poisson.PTX.address32_exact
+#print axioms PtxTorchLean.Poisson.PTX.valid32_of_array
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.Instr
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.mad
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.wide
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.Eval
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.eval
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.noFP
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.Block
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.Step
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.Runs
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.run
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.eval_sound
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.eval_complete
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.eval_pc
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.run_sound
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.run_complete
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.block_pc
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.block_fetched
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.runs_pc_le
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.runs_eq_of_pc
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.fetched_block
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.code
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.index
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.connectivityAddress
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.node
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.sourceAddress
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.value
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.destination
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Valid
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.finish
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.execution
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.correct
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.stored
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.registers
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.fetched_correct
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.fetched_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.index_exact
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Layout
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.index_inside
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.connectivity_address
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.node_inside
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.valid_of_layout
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.render
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.rendered
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Checks.addresses
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Checks.bits_copied
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Checks.four_byte_extent
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Checks.unaligned_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Checks.truncated_index_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Checks.invalid_node_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Checks.neighboring_index
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.Checks.mixed_overlap_rejected
+#print axioms PtxTorchLean.Poisson.PTX.CellGather.torchlean
+
+#print axioms PtxTorchLean.Poisson.gather
+
+#print axioms PtxTorchLean.Poisson.PTX.write32_at
+#print axioms PtxTorchLean.Poisson.PTX.read32_write32

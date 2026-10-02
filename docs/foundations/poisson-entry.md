@@ -88,11 +88,43 @@ It also checks the maximum unsigned lane, unsupported zero width, a wrong entry
 counter, and mutations to the row calculation and predicate boundary. Python
 mutation tests exercise the emitted-code binding.
 
-The indexed gather still needs an actual 32-bit connectivity load, the following
-64-bit input load, a shared store, and the first barrier. Those instructions must
-preserve the prologue registers and establish the arithmetic slice's initial
-shared tensor. We do not reset the program counter or install gathered bytes to
-claim that this composition has already been proved.
+## Gathering the cell input
+
+Each active lane first reads one connectivity entry: an unsigned node number
+stored in four bytes. That number selects an eight-byte value from the source
+vector. The lane copies that word into its own shared-memory slot. There is no
+floating-point arithmetic here: even signed zero and NaN payloads are copied
+unchanged. Using an eight-byte load for connectivity would incorrectly combine
+adjacent indices and could cross an allocation boundary.
+
+[CellGather](../../integration/torchlean/PoissonPTX/CellGather.lean) describes all
+twelve instructions and proves both existence and the final state of their
+fetched execution. [The layout proof](../../integration/torchlean/PoissonPTX/CellGatherLayout.lean)
+turns ordinary array conditions into memory-access validity: aligned allocations,
+indices in range and sizes small enough that integer addresses do not wrap.
+The prologue's base addresses and cell, lane, row and column registers survive.
+
+[The TorchLean theorem](../../integration/torchlean/PoissonPTX/CellGatherTensor.lean)
+relates the stored word to `gather o values e`. Its premises say how the initial
+connectivity bytes and source-vector bytes represent those inputs. The source
+index is obtained by executing the load; the desired result is not supplied.
+
+This is a snapshot proof: the loads read a fixed initial input memory. Establishing
+that the concurrent execution sees those inputs, and that the first barrier
+makes the shared stores visible to later arithmetic, remains open. We do not
+reset the program counter or install gathered bytes and call that composition.
+
+The pinned PTX review covers unsigned `mad.lo.u32`, `mul.wide.u32`, and
+ordinary global/shared loads and stores. The index multiply-add wraps at 32 bits;
+the widening multiply produces a 64-bit product. The memory forms have no
+synchronization of their own. These are bounded forms, not whole-family coverage.
+
+The same typed program renders the complete guarded body of all three emitted
+source-vector variants. The checker binds the body and its immediate barrier.
+Mutation tests reject incorrect widths, strides, operands, destinations and
+extra instructions. [Kernel checks](../../integration/torchlean/PoissonPTX/CellGatherChecks.lean)
+cover adjacent four-byte indices, invalid bounds and alignments, nonzero addresses
+and preservation of unusual floating-point bit patterns.
 
 Run `integration/torchlean/check.sh` for the registered proofs and axiom audit,
 and `python3 -m unittest discover -s hardware -p 'test_*.py'` for binding tests.
