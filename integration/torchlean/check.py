@@ -600,6 +600,12 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction'] = COUNTS.get('PtxTorchLe
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness', 0) + 34
 TARGETS.update(['PoissonPTX.ReductionSources', 'PoissonPTX.ReductionStageSources', 'PoissonPTX.ReductionTreeWitness', 'PoissonPTX.ReductionTreeSources', 'PoissonPTX.ReductionTreeAdmission'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Limits'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Limits', 0) + 5
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.AddressHold'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.AddressHold', 0) + 12
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control', 0) + 39
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks', 0) + 3
+TARGETS.update(['PoissonPTX.ConcurrentLimits', 'PoissonPTX.ConcurrentAddressHold', 'PoissonPTX.ReductionControl', 'PoissonPTX.ReductionOwnership', 'PoissonPTX.ReductionPublication', 'PoissonPTX.ReductionReads', 'PoissonPTX.ReductionControlChecks'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -669,7 +675,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks", "CellGatherChecks", "CellEntryChecks", "CellEntryProducerChecks", "CellEntryVisibilityChecks", "CellEntryRebaseChecks", "CellEntryJointChecks", "CellWholeChecks", "CellWholeZero", "AssemblyChecks", "AssemblyEntryChecks", "AssemblyArenaChecks", "ObservedChecks", "AssemblyParallelChecks", "AssemblyTableChecks", "CellAssemblyWitness", "CellAssemblyChecks", "OperatorArrayChecks", "CellGridChecks", "CellGridExistsChecks", "CellGridResidualChecks", "RepeatedSharedChecks", "RepeatedSharedOrderChecks", "ReductionUpdateChecks", "ReductionTreeWitness", "ReductionTreeAdmission"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks", "CellGatherChecks", "CellEntryChecks", "CellEntryProducerChecks", "CellEntryVisibilityChecks", "CellEntryRebaseChecks", "CellEntryJointChecks", "CellWholeChecks", "CellWholeZero", "AssemblyChecks", "AssemblyEntryChecks", "AssemblyArenaChecks", "ObservedChecks", "AssemblyParallelChecks", "AssemblyTableChecks", "CellAssemblyWitness", "CellAssemblyChecks", "OperatorArrayChecks", "CellGridChecks", "CellGridExistsChecks", "CellGridResidualChecks", "RepeatedSharedChecks", "RepeatedSharedOrderChecks", "ReductionUpdateChecks", "ReductionTreeWitness", "ReductionTreeAdmission", "ReductionControlChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

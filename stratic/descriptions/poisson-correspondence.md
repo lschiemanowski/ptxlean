@@ -1076,9 +1076,9 @@ edge supplies the cross-thread order. The active ranges include the initial
 256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read
 value, a chosen source nor the general repeated-write history condition is
 assumed by these selection theorems. Store coverage, actual publication
-occurrences, increasing sites, read positions and the barrier edge remain
-explicit premises to derive
-from the full kernel; they are not yet discharged for the emitted entry.
+occurrences, increasing sites, read positions and the barrier edge are explicit
+premises of these reusable lemmas. The shared-tree result below now derives
+them; their connection to the full emitted entry remains separate.
 
 A four-lane, two-stage regression connects the real pair-update body to actual
 fetched execution and the necessary shared-source rules. The initial words
@@ -1097,3 +1097,50 @@ from this example.
 A second actual candidate reads the overwritten neighbor value two. Its byte
 sources are compatible, but the repeated-write ordering rules reject them;
 this rejection does not rely on an impossible candidate-execution premise.
+
+The reduction's shrinking active ranges must follow from fetched control, not
+from a premise about the event history. A program-position invariant records
+how many lanes may reach each arithmetic instruction. The eight-stage shared
+tree begins with all 256 lanes publishing their supplied partial sums; each
+guard admits only the first 128, 64, down to 1 lanes to its update. All lanes
+meet again at each barrier. A proof over arbitrary finite interleavings must
+classify every store by its publication stage. This shared-tree fragment uses
+the existing combined lane-test/branch operation. The native predicate/branch
+translation, strided input loop and final global publication remain separate
+obligations; arbitrary initial partial sums do not establish their provenance.
+
+
+Store ownership also follows from executed address arithmetic. The lane's
+identity and shared base remain fixed; address preparation computes that
+lane's eight-byte slot, and the intervening loads and addition preserve the
+address register. With a base leaving room for 2048 bytes without wrapping,
+every shared store must write its lane's own slot. This combines with the
+control classification to establish stage coverage without assuming it.
+
+
+Reading beyond a reduction barrier must also establish that each still-needed
+producer actually published its word. For any lane active at the preceding
+publication, guards cannot skip that lane's store, and no guard can skip the
+following barrier. The observed later access therefore entails a real store,
+arrival and completed barrier in the same execution. This supplies the causal
+edge used by source selection; an assumed publication table is insufficient.
+
+
+For each actual own-word or neighbor-word read in the shared tree, the proof
+must derive the read address and recover the preceding publication's value
+and all eight source bytes. It may require byte compatibility and the stated
+necessary coherence rules, but not an assumed read value, producer occurrence,
+store-coverage table or barrier edge. This establishes visibility for arbitrary
+finite executions of the fragment; complete execution existence and composition
+of its rounded additions into the numerical tree remain distinct results.
+
+The 256-lane shared-tree fragment now derives those control, address and
+publication facts for arbitrary finite interleavings. Every recorded read is
+classified as an own-word or neighbor-word read at one of the eight stages.
+Under byte compatibility and the necessary repeated-write rules, it recovers
+the preceding publication's word and all eight byte-source identities. No
+producer occurrence, read address, coverage table or barrier edge is assumed
+by the combined result. Negative regressions reject excess active writers, a
+skipped barrier and an overwritten address register. This universal visibility
+result does not yet construct a complete 256-lane execution or compose its
+actual additions into the specified numerical tree.

@@ -324,3 +324,11 @@ values. A completed four-lane example checks two real rounded update stages,
 barriers and explicit byte sources, including rejection of an obsolete neighbor
 value. Deriving the required coverage and control facts for the emitted
 256-lane entry, and composing its input loop and tree, remain separate work.
+
+The 256-lane shared-tree fragment now derives every read's preceding
+publication from actual lane guards, address arithmetic and barrier execution.
+Its source-selection theorem covers arbitrary finite interleavings under the
+explicit necessary byte-source rules. The fragment uses combined lane-test
+guards and supplied partial sums; native predicate/branch translation, the
+input loop, numerical tree composition, complete execution existence and the
+output epilogue remain separate obligations.

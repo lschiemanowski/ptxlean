@@ -36,12 +36,14 @@ own-word gap and the neighbor's last-write property. Publication sites are
 parameters, required to increase. This avoids confusing instruction indices in
 a restricted control representation with indices in emitted PTX text.
 
-The full reduction must still prove its **store coverage**: every shared store
+The generic source lemmas require **store coverage**: every shared store
 has the owning lane's address, occurs at a designated publication site, and
 comes from a lane active at that stage. The selected publication must also be
 shown to occur as an actual event. Read positions and the actual barrier edge
-remain explicit obligations for that entry. These lemmas do not
-pretend that those control and address proofs have already been completed.
+remain explicit obligations for that entry. The [shared-tree control proof](poisson-reduction-control.md) now derives
+these premises for the 256-lane shared-tree fragment, including every read
+address and preceding publication. Native predicate/branch translation and
+the full entry remain separate obligations.
 
 ## A checked two-stage execution
 

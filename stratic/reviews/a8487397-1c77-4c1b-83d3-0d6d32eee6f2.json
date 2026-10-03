@@ -1,0 +1,121 @@
+{
+  "id": "a8487397-1c77-4c1b-83d3-0d6d32eee6f2",
+  "base": "c97b7ea715b2de4db21d09d0cd982e37ccb51f03",
+  "contentTree": "00e26a7b403750cb5045f79d7cd76f54f574b60e",
+  "reviewer": "Codex",
+  "summary": "Derive every 256-lane shared-tree read source from fetched control, ownership and barrier publication.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Discharge generic stage-source premises for the actual 68-position shared-tree fragment. Every read now has derived stage, address, publication and byte sources. Preserve explicit native guard refinement, input/output, numerical composition and complete-existence obligations."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "State the arbitrary-interleaving shared-tree visibility result without claiming whole emitted reduction or solver correctness."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Mathematical equations, reference algorithms, numerical order and actual emitted kernels are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Primitive semantics and admission constraints are unchanged. Kernel proof validity remains distinct from PTX fidelity. Combined lane guards are explicitly an unrefined control representation. The universal visibility theorem assumes actual execution and does not replace a construction of complete admitted executions."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "00e26a7b403750cb5045f79d7cd76f54f574b60e",
+      "method": "Seven sequential capped Lean module checks; exact declaration dependency audit; dependency/source guards; saved PTX binding refresh; manual proof and scope review; receipt hash, Stratic link and snapshot checks.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins. Heavy checks use hard 6 GiB cgroups, no swap and 150 percent CPU quota; new proofs and dependency audit use one Lean thread. No GPU or paid model calls.",
+      "evidence": "4831 exact dependency reports with only standard Lean axioms; 575 guarded source files. All seven new modules compile without errors or warnings. Program-position lane bounds and address-holding invariants derive stage store coverage for the 256-lane shared-tree fragment. Actual fetched control forces preceding publications and real barrier causality. Every actual read is classified and derives its address, producer, loaded word and eight byte sources from compatibility and necessary repeated-write rules. No store-coverage, producer-occurrence, address, barrier-edge or read-value premise is supplied to every_read. Three kernel-checked negative regressions reject excess writers, a skipped barrier and a clobbered address. No old semantics, theorem premises, numerical reference, emitted program or README changed. This does not construct arbitrary-input complete tree executions, prove the numerical tree composition, or refine native predicate/branch control. Input loop, output epilogue, whole solver and full PTX/hardware conformance remain explicit. Bindings refreshed for 720 contractions, 630 stores, 30 residual entries and 1440 local reduction updates in 30 saved layouts. Source-identical legacy targets reused after hash verification; actual binding/dependency audits reran. Full legacy build/interpreter suite and hardware runs were not repeated. All receipt hashes match current sources; Stratic links validate and final snapshots agree.",
+      "tests": [],
+      "id": "e5a40132-0d25-4c18-a0e6-6705519c3356",
+      "recordedAt": "2026-10-03T07:30:44.074Z"
+    }
+  ],
+  "recordedAt": "2026-10-03T07:31:57.115Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-reduction-control.md",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "docs/foundations/poisson-reduction-sources.md",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentAddressHold.lean",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentLimits.lean",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionControl.lean",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionControlChecks.lean",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionOwnership.lean",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionPublication.lean",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionReads.lean",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed shared-tree control/address invariants, source selection, negative regressions, audit registration, current binding receipts and explanatory documentation."
+    }
+  ]
+}

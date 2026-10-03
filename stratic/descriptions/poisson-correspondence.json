@@ -24,7 +24,8 @@
     "Connect actual cell and assembly publication to fresh-residual subtraction, deriving preservation of the right-hand side from store bounds.",
     "Derive repeated shared-word read sources from actual ordering and explicit necessary coherence constraints; distinguish obsolete and future writes from initialization.",
     "Derive each active binary64 reduction update, its fetched execution and allocation bounds; concurrent stage visibility and the whole reduction remain separate.",
-    "Derive reduction sources from lane ownership and shrinking stage coverage, and check a completed two-stage concurrent witness; full emitted-entry coverage remains open."
+    "Derive reduction sources from lane ownership and shrinking stage coverage, and check a completed two-stage concurrent witness; full emitted-entry coverage remains open.",
+    "Derive every shared-tree read source from actual 256-lane control, address preparation and barrier publications; native entry translation, numerical composition and whole-tree existence remain separate."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3320,7 +3321,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge are explicit\npremises of these reusable lemmas. The shared-tree result below now derives\nthem; their connection to the full emitted entry remains separate."
       },
       "to": {
         "path": "integration/torchlean/PoissonPTX/ReductionSources.lean",
@@ -3332,7 +3333,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge are explicit\npremises of these reusable lemmas. The shared-tree result below now derives\nthem; their connection to the full emitted entry remains separate."
       },
       "to": {
         "path": "integration/torchlean/PoissonPTX/ReductionSources.lean",
@@ -3344,7 +3345,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge are explicit\npremises of these reusable lemmas. The shared-tree result below now derives\nthem; their connection to the full emitted entry remains separate."
       },
       "to": {
         "path": "integration/torchlean/PoissonPTX/ReductionStageSources.lean",
@@ -3356,7 +3357,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge are explicit\npremises of these reusable lemmas. The shared-tree result below now derives\nthem; their connection to the full emitted entry remains separate."
       },
       "to": {
         "path": "integration/torchlean/PoissonPTX/ReductionStageSources.lean",
@@ -3368,7 +3369,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge remain\nexplicit premises to derive\nfrom the full kernel; they are not yet discharged for the emitted entry."
+        "quote": "The reduction source lemmas now derive the current word byte by byte from\nlane ownership, forward instruction order and the classification of stores\nby stage. Overlap identifies a store's owning lane. For an own-word read,\nconsecutive publication sites leave no intervening write; later writes follow\nthe read in that same thread. For a neighbor read, the shrinking active ranges\nprove that its owner cannot write again. An actual barrier arrival/completion\nedge supplies the cross-thread order. The active ranges include the initial\n256 lane sums followed by 128, 64, 32, 16, 8, 4, 2 and 1 writers. Neither a read\nvalue, a chosen source nor the general repeated-write history condition is\nassumed by these selection theorems. Store coverage, actual publication\noccurrences, increasing sites, read positions and the barrier edge are explicit\npremises of these reusable lemmas. The shared-tree result below now derives\nthem; their connection to the full emitted entry remains separate."
       },
       "to": {
         "path": "integration/torchlean/PoissonPTX/ReductionStageSources.lean",
@@ -3458,6 +3459,90 @@
         "path": "integration/torchlean/PoissonPTX/ReductionTreeAdmission.lean",
         "passage": {
           "quote": "theorem stale_candidate : ∃ final,\n    Runs cfg program start (history four two) final ∧\n    Visibility.Compatible (fun _ _ => 0) (history four two) stale_sources ∧\n    ¬OrderedSources (history four two) stale_sources := by\n  have record : (execution four two).map Outcome.events=some (history four two) := by\n    decide +kernel\n  obtain ⟨out,executed,events⟩ := Option.map_eq_some_iff.mp record\n  have run : Runs cfg program start (history four two) out.state :=\n    events ▸ execute_sound executed\n  exact ⟨out.state,run,stale_compatible,stale_neighbor_rejected run stale_compatible⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The reduction's shrinking active ranges must follow from fetched control, not\nfrom a premise about the event history."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentLimits.lean",
+        "passage": {
+          "quote": "theorem access_active {start : State n} (run : Runs cfg program start events final)\n    (aligned : Aligned start) (inv : Invariant limit start) (bounds : Boundaries n program limit)\n    (member : Event.data thread access∈events) : thread.val<limit access.data.pc := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Store ownership also follows from executed address arithmetic."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentAddressHold.lean",
+        "passage": {
+          "quote": "theorem runs_invariant (run : Runs cfg program start events final)\n    (aligned : Aligned start) (inv : Invariant program start) (entries : Entries program)\n    (base : Keeps program 3) (lane : Keeps program 14) : Invariant program final := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "This combines with the\ncontrol classification to establish stage coverage without assuming it."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionOwnership.lean",
+        "passage": {
+          "quote": "theorem stage_stores {start : State 256} (run : Runs cfg program start events final)\n    (aligned : Aligned start) (entry : ∀ t, (start.lanes t).pc=0)\n    (baseReg : ∀ t, ((start.lanes t).regs 3).toNat=base)\n    (laneReg : ∀ t, ((start.lanes t).regs 14).toNat=t.val)\n    (noWrap : base+2048≤2^64) : StageStores events base site := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The observed later access therefore entails a real store,\narrival and completed barrier in the same execution."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionPublication.lean",
+        "passage": {
+          "quote": "theorem published {start : State 256} (run : Runs cfg program start events final)\n    (reset : start.barrier=Ptx.Barrier.reset generation)\n    (entry : ∀ t, (start.lanes t).pc=0)\n    (k : Fin 9) (writer : Fin 256) (live : writer.val<active k)\n    (observed : events[r]?=some (.data reader access)) (later : site k+1<access.data.pc) :\n    ∃ w wa, events[w]?=some (.data writer wa) ∧ wa.data.pc=site k ∧\n      wa.data.store=true ∧ wa.space=.shared ∧ Visibility.Across events w r := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The 256-lane shared-tree fragment now derives those control, address and\npublication facts for arbitrary finite interleavings."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionReads.lean",
+        "passage": {
+          "quote": "theorem every_read {start : State 256} (run : Runs cfg program start events final)\n    (reset : start.barrier=Ptx.Barrier.reset generation) (entry : ∀ t, (start.lanes t).pc=0)\n    (baseReg : ∀ t, ((start.lanes t).regs 3).toNat=base)\n    (laneReg : ∀ t, ((start.lanes t).regs 14).toNat=t.val)\n    (noWrap : base+2048≤2^64)\n    (compatible : Visibility.Compatible initial events source) (ordered : OrderedSources events source)\n    (observed : events[r]?=some (.data thread access)) (read : access.data.store=false) :\n    ∃ (k : Fin 8) (right : Bool) (w : Nat) (owner : Fin 256) (wa : Access),\n      access.data.pc=readPC k right ∧\n      owner.val=thread.val+(if right then active (current k) else 0) ∧\n      events[w]?=some (.data owner wa) ∧ wa.data.pc=site (previous k) ∧\n      wa.data.store=true ∧ wa.space=.shared ∧ access.data.value=wa.data.value ∧\n      ∀ byte, source r byte=.store w byte := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Negative regressions reject excess active writers, a\nskipped barrier and an overwritten address register."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionControlChecks.lean",
+        "passage": {
+          "quote": "theorem extra_writers_rejected :\n    ¬Limits.Boundaries 256 (program.set 4 (.skip 256 11)) limit := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The eight-stage shared\ntree begins with all 256 lanes publishing their supplied partial sums; each\nguard admits only the first 128, 64, down to 1 lanes to its update."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionControl.lean",
+        "passage": {
+          "quote": "def program : List Instr :=\n  (SharedStore.code 0 8).map .data ++ [.sync 0] ++ (List.finRange 8).flatMap stage"
         }
       }
     }

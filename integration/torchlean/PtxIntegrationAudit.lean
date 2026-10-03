@@ -1,3 +1,10 @@
+import PoissonPTX.ConcurrentLimits
+import PoissonPTX.ConcurrentAddressHold
+import PoissonPTX.ReductionControl
+import PoissonPTX.ReductionOwnership
+import PoissonPTX.ReductionPublication
+import PoissonPTX.ReductionReads
+import PoissonPTX.ReductionControlChecks
 import PoissonPTX.ReductionSources
 import PoissonPTX.ReductionStageSources
 import PoissonPTX.ReductionTreeWitness
@@ -5457,3 +5464,63 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.stale_sources
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.stale_compatible
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Witness.stale_candidate
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Limits.Invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Limits.Boundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Limits.step_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Limits.runs_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Limits.access_active
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.keep
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.keep_correct
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.nextTag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.tag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.tag_zero
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.tag_next
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.ready_kept
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.data_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.Entries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.Invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.step_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.AddressHold.runs_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.site
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.stage
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.program
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.limit
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.length
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.sites
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_boundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.boundaries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_forward
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.forward
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.store_coverage
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_frames
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.frames
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_entries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.entries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_addresses
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.lane_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.stage_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.storeAddress
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.store_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.barrier_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_writer_paths
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.writer_stops
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_barrier_paths
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.barrier_stops
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.published
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.previous
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.current
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.readPC
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.readOffset
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.readAddress
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.ranges
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.read_geometry
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_read_sites
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.read_coverage
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.selected_read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.every_read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks.extra_writers_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks.skipped_barrier_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks.clobbered_address_rejected
