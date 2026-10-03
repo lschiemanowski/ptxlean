@@ -330,5 +330,15 @@ publication from actual lane guards, address arithmetic and barrier execution.
 Its source-selection theorem covers arbitrary finite interleavings under the
 explicit necessary byte-source rules. The fragment uses combined lane-test
 guards and supplied partial sums; native predicate/branch translation, the
-input loop, numerical tree composition, complete execution existence and the
-output epilogue remain separate obligations.
+input loop and output epilogue remain separate obligations. The numerical
+composition and complete execution result below apply to this shared-tree
+fragment.
+
+The shared-tree fragment now has both numerical correctness and general
+execution existence. Every completed admitted execution stores the prescribed
+eight-round binary64 reduction of its 256 input words. Valid input storage
+gives a constructed complete execution with admitted byte sources and all
+barriers completed; every actual memory access stays within the shared
+allocation. The universal result preserves permitted floating-point encodings
+and operation order. This closes the shared-tree milestone, while the complete
+emitted dot-product entry and solver composition remain unfinished.

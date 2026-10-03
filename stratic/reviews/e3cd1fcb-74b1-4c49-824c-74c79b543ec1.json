@@ -1,0 +1,145 @@
+{
+  "id": "e3cd1fcb-74b1-4c49-824c-74c79b543ec1",
+  "base": "331fcfd072e4a93e2841c96fa7db3a77d1f7b209",
+  "contentTree": "49ea5595969638d461e712c42db2c6211f33c4d6",
+  "reviewer": "Codex",
+  "summary": "Prove numerical correctness and complete admitted execution existence for the 256-lane shared reduction tree.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Complete the shared-tree milestone: actual publication values, arbitrary-input complete candidate construction, proved byte-source admission and universal memory bounds. The universal theorem retains arbitrary admitted interleavings and all permitted NaN encodings; the constructor chooses one finite schedule and canonical arithmetic results only for existence."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Promote the shared-tree numerical and existence result while retaining full emitted entry, native control, input/output and solver composition as explicit remaining obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The reference solver, discrete equations, numerical reduction specification, emitted kernels and independent residual certificate are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive semantics or source-admission rules changed. Chronological coherence is an explicit existence witness, not a restriction on the universal theorem. Mathematical execution existence is not arbitrary-scheduler progress or GPU conformance. The existing combined lane guard remains separate from native predicate/branch refinement."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "49ea5595969638d461e712c42db2c6211f33c4d6",
+      "method": "Fourteen sequential capped Lean module checks; exact full declaration dependency audit; dependency/source guards; saved PTX binding refresh; manual theorem/assumption/scope review; receipt hashes, Stratic links and identical final snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins. Heavy checks use hard 6 GiB cgroups, no swap and 150 percent CPU quota; new proofs and full audit use one Lean thread. No GPU execution or paid model calls.",
+      "evidence": "4907 exact dependency reports with only standard Lean axioms; 589 guarded source files. All 14 new modules compile with no warnings. Actual register analysis and preceding-store selection prove every publication follows the exact eight-round binary64 tree; completed admitted runs contain the correct actual final store. Separate symbolic construction handles arbitrary initial words, active/inactive lane bodies and all nine full-block barriers, proves valid accesses, and constructs compatible byte sources plus necessary repeated-write admission from real producers. The existence theorem takes no execution, desired read value, publication table or source witness as a premise. A separate universal theorem bounds every access within the original aligned 2048-byte shared region. The cancellation instantiation constructs a completed admitted execution returning decoded two, preserving its distinction from the existing sequential-fold result one. No finiteness restriction on input words or canonical-output restriction on the universal theorem. Primitive semantics, previous theorem premises, emitted PTX, numerical reference and README unchanged. Full native predicate/branch translation, input accumulation, global-output epilogue, solver composition and hardware/full PTX admission remain separate. Saved bindings refreshed for 720 contractions, 630 stores, 30 residual layouts and 1440 reduction updates. Source-identical legacy targets reused after hash verification; actual binding/dependency audits reran. Full legacy build/interpreter suite not repeated. Receipt hashes match current sources; Stratic validates, whitespace check passes and final snapshots agree.",
+      "tests": [],
+      "id": "697dd97f-427a-4d7e-ad2a-b58eaf875367",
+      "recordedAt": "2026-10-03T17:22:59.814Z"
+    }
+  ],
+  "recordedAt": "2026-10-03T17:24:09.174Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-reduction-control.md",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentLocalBlock.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentSerialLanes.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentValues.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionComplete.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionCompleteChecks.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionCorrect.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionLocal.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionNumerics.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionSafety.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionWaves.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionWitnessAdmission.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionWitnessLayout.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionWitnessWords.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RepeatedSharedAdmission.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed register analysis, symbolic execution composition, actual source admission, numerical/safety proofs and checks, audit registration, refreshed binding receipts and explanatory documentation."
+    }
+  ]
+}

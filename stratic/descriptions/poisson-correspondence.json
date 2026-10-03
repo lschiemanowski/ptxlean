@@ -25,7 +25,8 @@
     "Derive repeated shared-word read sources from actual ordering and explicit necessary coherence constraints; distinguish obsolete and future writes from initialization.",
     "Derive each active binary64 reduction update, its fetched execution and allocation bounds; concurrent stage visibility and the whole reduction remain separate.",
     "Derive reduction sources from lane ownership and shrinking stage coverage, and check a completed two-stage concurrent witness; full emitted-entry coverage remains open.",
-    "Derive every shared-tree read source from actual 256-lane control, address preparation and barrier publications; native entry translation, numerical composition and whole-tree existence remain separate."
+    "Derive every shared-tree read source from actual 256-lane control, address preparation and barrier publications; native entry translation remains separate.",
+    "Prove every completed admitted shared-tree run computes the prescribed rounded reduction; construct a complete admitted execution for arbitrary initial words and bound every access within its 2048-byte allocation."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3543,6 +3544,90 @@
         "path": "integration/torchlean/PoissonPTX/ReductionControl.lean",
         "passage": {
           "quote": "def program : List Instr :=\n  (SharedStore.code 0 8).map .data ++ [.sync 0] ++ (List.finRange 8).flatMap stage"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A conservative\nregister analysis obtains load values from recorded accesses, follows the\nfloating-point addition and inspects the real store-source register."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ConcurrentValues.lean",
+        "passage": {
+          "quote": "theorem runs_invariant (run : Runs cfg program start events final) (aligned : Aligned start)\n    (inv : Invariant program initial loads start) (entries : Entries program initial loads)\n    (reads : Reads loads events) : Invariant program initial loads final := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every completed admitted run\nhas lane zero's actual final store, whose decoded word equals that reduction\nof the initial partial sums."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionCorrect.lean",
+        "passage": {
+          "quote": "theorem completed_result {start : State 256} (run : Runs cfg program start events final)\n    (reset : start.barrier=Ptx.Barrier.reset generation) (entry : ∀ t, (start.lanes t).pc=0)\n    (baseReg : ∀ t, ((start.lanes t).regs 3).toNat=base)\n    (laneReg : ∀ t, ((start.lanes t).regs 14).toNat=t.val)\n    (inputs : ∀ t, decode ((start.lanes t).regs 8)=input t.val)\n    (noWrap : base+2048≤2^64)\n    (compatible : Visibility.Compatible initialMemory events source) (ordered : OrderedSources events source)\n    (done : ∀ t, (final.lanes t).pc=program.length) :\n    ∃ (w : Nat) (access : Access), events[w]?=some (.data 0 access) ∧\n      access.data.pc=66 ∧ access.data.store=true ∧ access.space=.shared ∧\n      access.data.address=base ∧ decode access.data.value=Binary64.reduce256 input := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The combined existence theorem takes only input registers and physical\nstorage conditions, not a supplied execution or desired intermediate answer."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionComplete.lean",
+        "passage": {
+          "quote": "theorem exists_correct (start : State 256) (ready : ReadyAt base 0 generation start)\n    (aligned : base%8=0) (inputs : ∀ t, (start.lanes t).regs 8=input t.val)\n    (initialMemory : Space → Memory) :\n    ∃ final events source,\n      Runs cfg program start events final ∧ (∀ t, (final.lanes t).pc=program.length) ∧\n      Visibility.Compatible initialMemory events source ∧ OrderedSources events source ∧\n      ∃ (w : Nat) (a : Access), events[w]?=some (.data 0 a) ∧\n        a.data.pc=66 ∧ a.data.store=true ∧ a.space=.shared ∧ a.data.address=base ∧\n        decode a.data.value=Binary64.reduce256 (fun i => decode (input i)) := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Each phase executes its active lane bodies and inactive branches, then\nall 256 lanes complete the barrier."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionWaves.lean",
+        "passage": {
+          "quote": "theorem stage_wave (start : State 256) (k : Fin 8)\n    (ready : ReadyAt base (4+8*k.val) generation start) (aligned : base%8=0) (input : Nat → Word) :\n    ∃ final events, Runs cfg program start events final ∧ ReadyAt base (4+8*(k.val+1)) (generation+1) final ∧\n      ∀ e, e∈events → Expected input e := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "It\nrecords exact producer and load words; actual control and ordering then\nconstruct byte-compatible sources and a witness of the necessary repeated-write\nrules."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionWitnessAdmission.lean",
+        "passage": {
+          "quote": "theorem admitted {start : State 256} (run : Runs cfg program start events final)\n    (reset : start.barrier=Ptx.Barrier.reset generation) (entry : ∀ t, (start.lanes t).pc=0)\n    (baseReg : ∀ t, ((start.lanes t).regs 3).toNat=base)\n    (laneReg : ∀ t, ((start.lanes t).regs 14).toNat=t.val)\n    (noWrap : base+2048≤2^64)\n    (expected : ∀ e, e∈events → Expected input e) :\n    ∃ source, Visibility.Compatible initialMemory events source ∧ OrderedSources events source := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every observed access of the fragment is additionally proved to stay within\nits original aligned 2048-byte shared region, independently of numerical\nvalues or memory-source admission."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionSafety.lean",
+        "passage": {
+          "quote": "theorem memory_safety {start : State 256} (run : Runs cfg program start events final)\n    (aligned : Aligned start) (entry : ∀ t, (start.lanes t).pc=0)\n    (baseReg : ∀ t, ((start.lanes t).regs 3).toNat=base)\n    (laneReg : ∀ t, ((start.lanes t).regs 14).toNat=t.val)\n    (baseAligned : base%8=0) (noWrap : base+2048≤2^64)\n    (member : Event.data thread access∈events) :\n    access.space=.shared ∧ Valid64 base 2048 access.data.address := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A complete admitted cancellation example\nproduces two in the specified parallel order, while the existing sequential\nfold example produces one."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionCompleteChecks.lean",
+        "passage": {
+          "quote": "theorem cancellation_result :\n    ∃ final events source,\n      Runs cfg program (start (fun i => encode (Binary64.cancellation i))) events final ∧\n      (∀ t, (final.lanes t).pc=program.length) ∧\n      Visibility.Compatible (fun _ _ => 0) events source ∧ Visibility.Repeated.OrderedSources events source ∧\n      ∃ (w : Nat) (a : Access), events[w]?=some (.data 0 a) ∧\n        a.data.pc=66 ∧ a.data.store=true ∧ a.space=.shared ∧ a.data.address=0 ∧\n        (decode a.data.value).toBits=0x4000000000000000 := by"
         }
       }
     }

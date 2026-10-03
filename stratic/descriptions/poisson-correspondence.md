@@ -1141,6 +1141,50 @@ Under byte compatibility and the necessary repeated-write rules, it recovers
 the preceding publication's word and all eight byte-source identities. No
 producer occurrence, read address, coverage table or barrier edge is assumed
 by the combined result. Negative regressions reject excess active writers, a
-skipped barrier and an overwritten address register. This universal visibility
-result does not yet construct a complete 256-lane execution or compose its
-actual additions into the specified numerical tree.
+skipped barrier and an overwritten address register. The numerical and
+existence results below now compose this visibility argument with actual
+arithmetic and a constructed complete execution.
+
+The shared tree must connect its actual arithmetic to the eight specified
+rounds of binary64 addition. Each publication starts from the lane's initial
+partial sum or combines the preceding round's own and neighbor words, without
+reordering operations. A register-value proof must derive the stored answer
+from the fetched loads and arithmetic. Canonical decoding may identify NaN
+payloads; the instruction relation must retain all permitted output words.
+Complete execution existence additionally requires a constructed schedule,
+valid accesses and sources admitted by the stated memory rules. Neither
+correctness conditioned on execution nor a numerical recurrence alone
+establishes that existence result.
+
+The numerical tree result now covers every actual publication. A conservative
+register analysis obtains load values from recorded accesses, follows the
+floating-point addition and inspects the real store-source register. Induction
+over the eight rounds connects preceding publications to the specified
+binary64 reduction, without using associativity. Every completed admitted run
+has lane zero's actual final store, whose decoded word equals that reduction
+of the initial partial sums. Equality is after logical decoding, so permitted
+NaN payload choices are retained. No finite-input restriction is added.
+
+A separate construction now produces a complete execution for arbitrary initial
+words. Each phase executes its active lane bodies and inactive branches, then
+all 256 lanes complete the barrier. The construction preserves the common
+shared base and lane identities and proves all required access bounds. It
+records exact producer and load words; actual control and ordering then
+construct byte-compatible sources and a witness of the necessary repeated-write
+rules. The combined existence theorem takes only input registers and physical
+storage conditions, not a supplied execution or desired intermediate answer.
+The input conditions require an aligned shared base, at least 2048 allocated
+bytes without wrapping, matching lane-number registers, empty barrier state
+and entry instruction positions. Old shared bytes and initial arithmetic
+words are arbitrary, including exceptional floating-point encodings.
+
+Every observed access of the fragment is additionally proved to stay within
+its original aligned 2048-byte shared region, independently of numerical
+values or memory-source admission. A complete admitted cancellation example
+produces two in the specified parallel order, while the existing sequential
+fold example produces one. The constructed schedule proves existence of a
+finite completed run; it does not promise progress under arbitrary scheduling.
+The shared-tree theorem still excludes the native predicate/branch translation,
+strided input accumulation and final global-output epilogue. It remains a
+result in the stated necessary memory fragment, not complete PTX admission,
+hardware conformance or a finished PCG solver proof.

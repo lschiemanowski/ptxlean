@@ -606,6 +606,16 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control'] = COUNTS.get('Pt
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks', 0) + 3
 TARGETS.update(['PoissonPTX.ConcurrentLimits', 'PoissonPTX.ConcurrentAddressHold', 'PoissonPTX.ReductionControl', 'PoissonPTX.ReductionOwnership', 'PoissonPTX.ReductionPublication', 'PoissonPTX.ReductionReads', 'PoissonPTX.ReductionControlChecks'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Values'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Values', 0) + 14
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric', 0) + 12
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Local'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Local', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Serial'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Serial', 0) + 5
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256', 0) + 32
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.Checks', 0) + 5
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control', 0) + 3
+TARGETS.update(['PoissonPTX.ConcurrentValues', 'PoissonPTX.ReductionNumerics', 'PoissonPTX.ReductionCorrect', 'PoissonPTX.ConcurrentLocalBlock', 'PoissonPTX.ConcurrentSerialLanes', 'PoissonPTX.ReductionLocal', 'PoissonPTX.ReductionWitnessWords', 'PoissonPTX.ReductionWitnessLayout', 'PoissonPTX.ReductionWaves', 'PoissonPTX.RepeatedSharedAdmission', 'PoissonPTX.ReductionWitnessAdmission', 'PoissonPTX.ReductionComplete', 'PoissonPTX.ReductionCompleteChecks', 'PoissonPTX.ReductionSafety'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
@@ -675,7 +685,7 @@ def main():
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/SharedStoreChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/BarrierChecks.lean"], cwd=HERE, check=True)
         subprocess.run(["lake", "--no-cache", "env", "lean", "PoissonPTX/ProducerChecks.lean"], cwd=HERE, check=True)
-        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks", "CellGatherChecks", "CellEntryChecks", "CellEntryProducerChecks", "CellEntryVisibilityChecks", "CellEntryRebaseChecks", "CellEntryJointChecks", "CellWholeChecks", "CellWholeZero", "AssemblyChecks", "AssemblyEntryChecks", "AssemblyArenaChecks", "ObservedChecks", "AssemblyParallelChecks", "AssemblyTableChecks", "CellAssemblyWitness", "CellAssemblyChecks", "OperatorArrayChecks", "CellGridChecks", "CellGridExistsChecks", "CellGridResidualChecks", "RepeatedSharedChecks", "RepeatedSharedOrderChecks", "ReductionUpdateChecks", "ReductionTreeWitness", "ReductionTreeAdmission", "ReductionControlChecks"):
+        for module in ("CellMiddleChecks", "CellMiddleWitness", "CellMiddleInputs", "ConcurrentReplayChecks", "CellSymbolic", "CellMiddleNumericChecks", "CellFinalChecks", "CellConsumerProgram", "CellConsumerChecks", "CellCoefficientProgram", "ProjectionChecks", "CellTailProgram", "CellTailChecks", "CellTailWitnessSources", "CellTailShape", "CellTailAddressChecks", "CellPublicationChecks", "CellPrologueChecks", "CellGatherChecks", "CellEntryChecks", "CellEntryProducerChecks", "CellEntryVisibilityChecks", "CellEntryRebaseChecks", "CellEntryJointChecks", "CellWholeChecks", "CellWholeZero", "AssemblyChecks", "AssemblyEntryChecks", "AssemblyArenaChecks", "ObservedChecks", "AssemblyParallelChecks", "AssemblyTableChecks", "CellAssemblyWitness", "CellAssemblyChecks", "OperatorArrayChecks", "CellGridChecks", "CellGridExistsChecks", "CellGridResidualChecks", "RepeatedSharedChecks", "RepeatedSharedOrderChecks", "ReductionUpdateChecks", "ReductionTreeWitness", "ReductionTreeAdmission", "ReductionControlChecks", "ReductionCompleteChecks"):
             subprocess.run(["lake", "--no-cache", "env", "lean", f"PoissonPTX/{module}.lean"], cwd=HERE, check=True)
         # Executable wrappers share global main; audit them in separate environments.
         for wrapper_file in ("PoissonQuadMain.lean", "PoissonResidualMain.lean", "PoissonPTXMain.lean", "PoissonContractionsMain.lean"):

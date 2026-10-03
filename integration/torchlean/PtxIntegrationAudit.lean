@@ -1,3 +1,17 @@
+import PoissonPTX.ConcurrentValues
+import PoissonPTX.ReductionNumerics
+import PoissonPTX.ReductionCorrect
+import PoissonPTX.ConcurrentLocalBlock
+import PoissonPTX.ConcurrentSerialLanes
+import PoissonPTX.ReductionLocal
+import PoissonPTX.ReductionWitnessWords
+import PoissonPTX.ReductionWitnessLayout
+import PoissonPTX.ReductionWaves
+import PoissonPTX.RepeatedSharedAdmission
+import PoissonPTX.ReductionWitnessAdmission
+import PoissonPTX.ReductionComplete
+import PoissonPTX.ReductionCompleteChecks
+import PoissonPTX.ReductionSafety
 import PoissonPTX.ConcurrentLimits
 import PoissonPTX.ConcurrentAddressHold
 import PoissonPTX.ReductionControl
@@ -5524,3 +5538,80 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks.extra_writers_rejected
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks.skipped_barrier_rejected
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Checks.clobbered_address_rejected
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.empty
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.operand
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.transfer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.Ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.empty_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.operand_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.assign_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.data_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.tag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.Entries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.Reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.Invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.step_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Values.runs_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.values
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.final_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.initial
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.loads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.initial_tag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.update_tag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.checked_targets
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.entries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.stored
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.publication_limits
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.publication_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Numeric.completed_result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Local.Block
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Local.pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Local.lift
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Serial.partialState
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Serial.prefix_zero
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Serial.prefix_all
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Serial.prefix_next
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Serial.run_lanes
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.sum
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.prepared
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.loaded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.finish
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.updateEvents
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.update_block
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.initialEvents
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.initial_block
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.words
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.Expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.initial_expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.update_expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.Frame
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.frame_advance
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.frame_initial
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.frame_update
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.initial_valid
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.update_valid
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.initial_pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.update_pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.initial_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.update_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.guard_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.barrier_events
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.ReadyAt
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.round_expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.initial_wave
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.stageTarget
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.stage_wave
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.Producer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.construct_sources
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.admitted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.candidate_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.exists_correct
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.Checks.cfg
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.Checks.start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.Checks.ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.Checks.arbitrary_words
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.Witness256.Checks.cancellation_result
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_memory_spaces
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.access_shared
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.memory_safety

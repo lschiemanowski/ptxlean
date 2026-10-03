@@ -1,14 +1,19 @@
-# From tree control to shared-memory visibility
+# Correctness and existence of the shared reduction tree
 
-The 256-lane shared reduction tree now has a source-selection theorem for
-**every read in every finite execution admitted by the fragment's explicit
-source rules**. It does not assume the answer to a load, a table of preceding
-stores, or the presence of a barrier edge. It derives those facts from the
-instructions and their execution.
+The 256-lane shared reduction tree now has three complementary results:
 
-This closes the structural premises identified in the
-[reduction source guide](poisson-reduction-sources.md) for the shared-tree
-fragment. It is not yet a theorem for the complete emitted dot-product entry.
+- **Correctness:** every completed execution admitted by the stated source
+  rules contains a final store computing the specified eight-round binary64
+  reduction of its original lane partial sums.
+- **Existence:** valid input storage and arbitrary initial words give a
+  constructed finite execution, completed barriers and admitted byte sources.
+- **Memory safety:** every recorded access belongs to the original aligned
+  2048-byte shared allocation, independently of source admission.
+
+These are results for the shared-tree fragment. The complete emitted dot-product
+entry still needs its native control translation, global input loop and output
+epilogue connected. No exact-real summation or bitwise equality to a sequential
+CPU reduction is asserted.
 
 ## The fragment and its inputs
 
@@ -78,7 +83,7 @@ required causal edges.
 
 ## Reading the Lean result
 
-The main theorem is `Control.every_read` in
+The source-selection theorem is `Control.every_read` in
 [`ReductionReads.lean`](../../integration/torchlean/PoissonPTX/ReductionReads.lean).
 Its premises are an actual finite execution, the entry register and barrier
 conditions above, byte-compatible sources, and `OrderedSources`, the explicit
@@ -106,19 +111,68 @@ too many writers, a branch that skips the barrier, and an addition that
 clobbers the address register. The earlier four-lane positive and obsolete
 source executions remain independent concrete regressions.
 
-## What this does not establish
+## From read sources to the numerical answer
 
-This is a universal conditional visibility result, not a construction of a
-complete 256-lane execution. Existence for arbitrary initial words, the
-composition of the actual additions into the specified rounded numerical
-tree, and full memory-safety/progress results remain separate obligations.
-The local six-instruction update already has its own correctness, execution
-existence and allocation bounds; this change does not silently lift those to
-the whole entry.
+[`ReductionCorrect.lean`](../../integration/torchlean/PoissonPTX/ReductionCorrect.lean)
+proves `Numeric.publication_value` for every publication and
+`Numeric.completed_result` for the actual final store. At round zero, the store
+contains the lane's original accumulator. At each later round, source selection
+recovers the preceding publications. A reusable register analysis in
+`ConcurrentValues.lean` follows the actual loads and floating-point addition
+and identifies the actual store-source register. Induction over the eight
+rounds gives `Binary64.reduce256`, the existing numerical specification.
 
-`OrderedSources` is a necessary fragment of the PTX memory rules, not a full
-PTX admission model. The model remains restricted to synchronous full-block
-barriers and separate identity-addressed shared/global spaces. Native branch
-translation, the input accumulation loop, output publication, host launch
-composition, the complete PCG solver and hardware conformance remain open.
-No GPU execution or new empirical claim is part of this result.
+The addition order is exactly the tree order. Each addition rounds separately.
+The result equates decoded binary64 values, including their exceptional
+classifications, while preserving the primitive instruction contract's freedom
+in NaN payload bits. The universal theorem does not restrict input words to
+finite numbers or impose the constructor's canonical choice of output bits.
+
+## Constructing a complete admitted execution
+
+[`ReductionComplete.lean`](../../integration/torchlean/PoissonPTX/ReductionComplete.lean)
+proves `Witness256.exists_correct`. Its inputs describe registers, allocation,
+alignment, entry positions and an empty barrier with no pending site. It takes
+no execution, read result, expected publication table or numerical answer as a
+premise.
+
+The construction runs each phase's lane bodies sequentially, then completes
+the barrier with all 256 participants. Sequential scheduling is a convenient
+existence witness; the correctness theorem still covers arbitrary admitted
+interleavings. Generic local-block and lane-family lemmas avoid expanding one
+enormous concrete interpreter computation.
+
+The chosen loads use exact preceding word encodings. Each arithmetic operation
+chooses its permitted canonical encoding. The constructor proves these facts
+about its actual event records. Fetched control then provides the actual
+producer occurrences and barrier edges. Those facts construct compatible byte
+sources and a coherence witness satisfying `OrderedSources`. Thus successful
+instruction execution and source admission hold for the same constructed run.
+No value needed for a future load is installed in a thread's shared memory as
+an unexplained assumption.
+
+[`ReductionSafety.lean`](../../integration/torchlean/PoissonPTX/ReductionSafety.lean)
+proves the separate universal access bound. The construction also proves each
+instruction's required access validity and preserves the input layout across
+all rounds.
+
+`ReductionCompleteChecks.lean` instantiates existence with arbitrary initial
+bit patterns. Its cancellation example constructs a complete admitted run with
+result two, whereas the existing sequential-fold example gives one. This
+exercises the connection to the specified numerical ordering without evaluating
+an entire 256-thread trace inside the proof checker.
+
+## Remaining boundaries
+
+The full emitted entry still needs native predicate/branch translation, the
+strided global input accumulation loop and the final global output store. The
+fragment begins with supplied partial sums, so it does not yet prove that those
+sums represent the original input vectors.
+
+`OrderedSources` remains a necessary fragment of the PTX memory rules, not a
+full PTX admission model. The model uses synchronous full-block barriers and
+separate identity-addressed shared/global spaces. The existence theorem proves
+that a finite completed schedule exists; it does not guarantee progress under
+arbitrary external scheduling. Host launch composition, the complete PCG solver
+and hardware conformance remain separate. No new GPU execution or empirical
+claim is part of this result.
