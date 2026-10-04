@@ -1,3 +1,26 @@
+import PoissonPTX.DotComplete
+import PoissonPTX.DotCompleteCandidate
+import PoissonPTX.DotInitialWave
+import PoissonPTX.DotInputRecorded
+import PoissonPTX.DotInputTreeCandidate
+import PoissonPTX.DotInputWave
+import PoissonPTX.DotOutputExists
+import PoissonPTX.DotStageWave
+import PoissonPTX.DotTailBody
+import PoissonPTX.DotTailGuard
+import PoissonPTX.DotTailLane
+import PoissonPTX.DotTailWave
+import PoissonPTX.DotTreeWitness
+import PoissonPTX.DotWitnessAdmission
+import PoissonPTX.DotWitnessGuard
+import PoissonPTX.DotWitnessLayout
+import PoissonPTX.DotWitnessProducers
+import PoissonPTX.DotWitnessWords
+import PoissonPTX.GlobalSharedAdmission
+import PoissonPTX.NativeFlowLayout
+import PoissonPTX.NativeFlowLocal
+import PoissonPTX.NativeFlowRound
+import PoissonPTX.NativeFlowSerial
 import PoissonPTX.DotFinalRead
 import PoissonPTX.DotNumerics
 import PoissonPTX.DotOutputValue
@@ -6018,3 +6041,75 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.flow_ready
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.step_invariant
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.runs_invariant
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.complete
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.CandidateEvent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.complete_candidate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.initial_wave
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.input_global_frame
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.input_access_read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.input_recorded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.inputWords
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.input_tree_candidate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.InputEvent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.input_wave
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.protects_output
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.output_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.stageTarget
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.stage_wave
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.code
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.prepared
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.finish
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.events
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.body_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.block
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.compared
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.guarded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.guard_pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.guard_core
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.comparison
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.guard_halted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.guard_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.target
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.records
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.target_halted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail.lane_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.TailEvent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.tail_wave
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.tree_candidate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.admitted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.compared
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.guarded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.guarded_frame
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.guarded_live
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.guarded_pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.guard_run
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.ReadyAt
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.initial_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.update_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.compare_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.branch_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.round_expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.tree_producer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.final_producer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.initial_expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.update_expected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated.construct_global_shared
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.memoryLayout
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.eval_layout
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.runs_layout
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.update_self
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.update_twice
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.lift_local
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.lift_block
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.afterRound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.roundPrefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.prefix_dispatch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.barrier_round_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial.allLanes
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial.partialState
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial.prefix_zero
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial.prefix_all
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial.prefix_next
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial.run_lanes

@@ -1,0 +1,197 @@
+{
+  "id": "c8c839af-02d5-4523-aee4-4b3884ccef7f",
+  "base": "20320a53f690cb29453a1daf4105741d49d3f0c1",
+  "contentTree": "05e1b14a06e43c1ea505424b5454d0a11fe62114",
+  "reviewer": "Codex",
+  "summary": "Construct and admit a complete native dot-product execution with actual correct output.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Complete the native dot execution witness, preserving actual input/tree/tail records and proving source admission, all-lane return and a numerically correct actual output store. Full PCG remains open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "State complete finite native dot-entry existence and universal numerical correspondence while preserving PTX-memory, hardware and solver composition boundaries."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The reference solver, discrete equations, rounded dot operation order and residual-certificate target are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive semantics changed. The construction reuses fetched data/control/barrier effects and proves sources for the same trace; validity, text binding and hardware claims remain distinct."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "05e1b14a06e43c1ea505424b5454d0a11fe62114",
+      "method": "Sequential memory-capped Lean checks, complete exact dependency audit, source and dependency guards, six saved-PTX binding checks, frontend mutation tests, manual event/source/termination review, receipt hashes and matching Stratic snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, 16 dependency pins; one heavy job at a time, one Lean thread, 6 GiB memory cap, swap disabled, 150 percent CPU. No GPU or paid model calls.",
+      "evidence": "All 23 new modules checked without warnings. 5307 exact dependency reports use only allowed standard Lean axioms; 682 sources pass forbidden-proof guards. Native local-block and all-lane scheduling preserve actual word/index events and the existing barrier state. Input reads retain original global bytes. The constructed full native tree uses the actual comparisons, branches, shared stores and nine all-participant barrier rounds, without an extra input barrier. The epilogue derives lane-zero selection from actual register comparison, lets other lanes return, and executes the final shared read, address calculation, global store and return. Complete-candidate existence starts from explicit valid input/output allocations, correct lane contexts, bounded count, common initial bytes and aligned nonwrapping scratch. Source admission is proved on that same complete history: global initialization reads, actual shared producers, actual barrier paths and exclusion of competing writes. Lane-zero return entails an actual output store. The combined theorem constructs a returned source-admitted execution and derives its decoded output from the independent universal numerical theorem, with explicit disjoint output and nonwrapping arena assumptions. It asserts finite existence in the necessary-source fragment, not universal schedule progress, full PTX admission, GPU conformance or complete PCG correspondence. All 40 frontend tests pass. Six receipts hash-checked and refreshed; all 180 complete dot programs in 30 layouts bind, now auditing complete execution existence/admission. Legacy executables reused only after unchanged import-closure checks; updated full audit and comparisons reran. Peak audit RSS 4825528 KiB. Full unchanged legacy interpreter suite not rerun. README and emitted kernels unchanged. Stratic descriptions, summaries and exact links updated, including stale standalone-tree boundaries.",
+      "tests": [],
+      "id": "6c8f0d5d-a54b-455d-9dae-6a00149c94a9",
+      "recordedAt": "2026-10-04T10:57:22.828Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T10:58:41.074Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-reduction-control.md",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/check_poisson_dot_entry.py",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotComplete.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotCompleteCandidate.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInitialWave.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputRecorded.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputTreeCandidate.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputWave.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotOutputExists.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotStageWave.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotTailBody.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotTailGuard.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotTailLane.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotTailWave.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotTreeWitness.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotWitnessAdmission.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotWitnessGuard.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotWitnessLayout.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotWitnessProducers.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotWitnessWords.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/GlobalSharedAdmission.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlowLayout.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlowLocal.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlowRound.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlowSerial.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed native execution constructors, exact candidate events, same-history causal source admission, actual output existence, registered audit and binding checks, refreshed receipts and supporting documentation."
+    }
+  ]
+}

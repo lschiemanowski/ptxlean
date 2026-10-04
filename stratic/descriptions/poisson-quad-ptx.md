@@ -278,8 +278,8 @@ cell source contracts from the one tagged history and proves that chronological
 publication preserves both cell results and assembly metadata. The next launch
 then computes the same operator. Mathematical publication remains distinct from
 CUDA visibility. Arbitrary-input cell-grid existence, GPU scheduling progress,
-external serialization, remaining reductions and solver instructions remain
-explicit work.
+external serialization and remaining solver instructions remain explicit work.
+The dot reductions now have the complete native-entry result described below.
 
 The executable array reference and the tensor operator now have a proved
 connection. The actual reference loops enumerate cells and local coordinates
@@ -322,15 +322,15 @@ active ranges. Once store sites and active lanes are established, the own-word
 and neighbor reads recover the intended previous write without presumed load
 values. A completed four-lane example checks two real rounded update stages,
 barriers and explicit byte sources, including rejection of an obsolete neighbor
-value. Deriving the required coverage and control facts for the emitted
-256-lane entry, and composing its input loop and tree, remain separate work.
+value. The complete native-entry proofs below additionally derive the coverage
+and control facts and compose the actual input loop, tree and output tail.
 
 The 256-lane shared-tree fragment now derives every read's preceding
 publication from actual lane guards, address arithmetic and barrier execution.
 Its source-selection theorem covers arbitrary finite interleavings under the
-explicit necessary byte-source rules. The fragment uses combined lane-test
-guards and supplied partial sums; native predicate/branch translation, the
-input loop and output epilogue remain separate obligations. The numerical
+explicit necessary byte-source rules. The standalone fragment uses combined lane-test
+guards and supplied partial sums. The complete native-entry result below removes
+those boundaries using actual predicates, input loops and the output epilogue. The numerical
 composition and complete execution result below apply to this shared-tree
 fragment.
 
@@ -340,8 +340,8 @@ eight-round binary64 reduction of its 256 input words. Valid input storage
 gives a constructed complete execution with admitted byte sources and all
 barriers completed; every actual memory access stays within the shared
 allocation. The universal result preserves permitted floating-point encodings
-and operation order. This closes the shared-tree milestone, while the complete
-emitted dot-product entry and solver composition remain unfinished.
+and operation order. The complete emitted dot-product entry now has the stronger result described
+below; solver composition remains unfinished.
 
 The reduction components now include separately scheduled native lane
 comparisons and branches, with correctness and execution existence inherited
@@ -377,8 +377,8 @@ PTX, including the conditional return, final shared load, output address
 arithmetic and global store. Output-address ownership is proved independently
 of the stored numerical value. The native numerical theorem now connects the
 same input execution, shared tree, final shared read and actual output store.
-A complete admitted native-entry execution witness and the full PCG launch
-sequence remain open.
+A complete admitted native-entry execution witness is also constructed. The
+full PCG launch sequence remains open.
 
 The first shared publication is connected to that same thread's admitted
 input traversal. A stronger projection tracks the recovered registers until
@@ -417,8 +417,28 @@ The native dot-output theorem applies to every recorded global store in an
 admitted execution, with 256 correctly numbered lanes, common initialized input
 bytes, bounded input count, valid arrays, disjoint output storage and nonwrapping
 addresses. It preserves the freedom of exceptional binary64 encodings by stating
-decoded-value equality. A complete admitted native-entry execution witness is
-still required; standalone input and tree existence theorems do not establish
-that combined witness. The remaining PCG kernels and host launch composition are
-also unfinished. Byte compatibility and ordered sources are explicit necessary
+decoded-value equality. A separate complete native-entry witness establishes
+that the source-admitted execution and its output store exist. The remaining
+PCG kernels and host launch composition are unfinished. Byte compatibility and ordered sources are explicit necessary
 memory constraints, not a claim of full PTX admission or hardware conformance.
+
+A complete native dot execution can be constructed from valid launch data.
+Each lane executes its input loop from the common initialized global bytes.
+The lanes then execute their initial shared stores, all nine real barrier
+rounds, the actual comparison and branch instructions, and the reduction
+updates. Nonzero lanes return after the final barrier; lane zero reads the
+last shared publication, writes the global output and returns. The chosen
+schedule is finite and may run lane bodies in sequence. It inserts no extra
+barrier and does not replace shared reads with a local memory snapshot.
+
+The construction retains every actual memory and barrier event. Global input
+reads name initialization. Each shared read names the appropriate actual store;
+its barrier path, lane ownership and instruction order exclude competing writes.
+Byte compatibility and the fragment's ordered-source constraints hold for that
+same combined history. The execution contains a real output store, and the
+universal numerical theorem proves its decoded word equals the prescribed
+binary64 reduction of the computed input-loop partial sums. This establishes
+existence as well as conditional output correctness for the native dot entry.
+It does not establish progress for every GPU schedule, full PTX memory admission,
+or hardware conformance. Remaining PCG kernels and host launch composition are
+separate obligations.

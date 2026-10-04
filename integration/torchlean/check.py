@@ -639,6 +639,14 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow'] = COUNTS.get('PtxTorchL
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric', 0) + 7
 TARGETS.update(['PoissonPTX.DotFinalRead', 'PoissonPTX.DotNumerics', 'PoissonPTX.DotOutputValue', 'PoissonPTX.DotSetupRegisters', 'PoissonPTX.DotStoreProtection', 'PoissonPTX.DotSuffixOrder', 'PoissonPTX.DotTreeAddress', 'PoissonPTX.DotTreeControl', 'PoissonPTX.DotTreeCorrect', 'PoissonPTX.DotTreeOwnership', 'PoissonPTX.DotTreeReads', 'PoissonPTX.DotTreeSources', 'PoissonPTX.NativeFlowAccessOrder', 'PoissonPTX.NativeFlowEventPrefix', 'PoissonPTX.NativeFlowInitialized', 'PoissonPTX.NativeFlowProducer', 'PoissonPTX.NativeFlowReadBarrier', 'PoissonPTX.NativeFlowStageSources', 'PoissonPTX.NativeFlowValues'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness', 0) + 29
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Dot'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Dot', 0) + 7
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.Tail', 0) + 17
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Visibility.Repeated', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow', 0) + 11
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial', 0) + 6
+TARGETS.update(['PoissonPTX.DotComplete', 'PoissonPTX.DotCompleteCandidate', 'PoissonPTX.DotInitialWave', 'PoissonPTX.DotInputRecorded', 'PoissonPTX.DotInputTreeCandidate', 'PoissonPTX.DotInputWave', 'PoissonPTX.DotOutputExists', 'PoissonPTX.DotStageWave', 'PoissonPTX.DotTailBody', 'PoissonPTX.DotTailGuard', 'PoissonPTX.DotTailLane', 'PoissonPTX.DotTailWave', 'PoissonPTX.DotTreeWitness', 'PoissonPTX.DotWitnessAdmission', 'PoissonPTX.DotWitnessGuard', 'PoissonPTX.DotWitnessLayout', 'PoissonPTX.DotWitnessProducers', 'PoissonPTX.DotWitnessWords', 'PoissonPTX.GlobalSharedAdmission', 'PoissonPTX.NativeFlowLayout', 'PoissonPTX.NativeFlowLocal', 'PoissonPTX.NativeFlowRound', 'PoissonPTX.NativeFlowSerial'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
