@@ -1,0 +1,230 @@
+{
+  "id": "60bdf892-8b58-4895-b7c9-3cdbc34057d7",
+  "base": "81a72e4c2a56cc9b67be21d160f6d53a36bf1d10",
+  "contentTree": "07f02a4235a2a8d8bb905625c02c1ab83a9efbca",
+  "reviewer": "Codex",
+  "summary": "Prove complete solver initialization and scalar coefficient entries from actual instructions.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Add actual fetched start/alpha/beta output, frame and execution existence with explicit physical layouts, NaN/rounding freedom and exact guards. Leave scalar admission, full launches and host composition open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe complete sequential start and coefficient proofs and full text binding. Existing admitted concurrent results remain unchanged; no full solver claim is made."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Discrete equations, source solver, residual certificate, numerical policy and emitted PTX are unchanged. The milestone substantiates scalar instruction correspondence without changing the parent contract."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive instruction contracts change. Existing pinned-source scalar contracts are reused; exact bindings and seven guard-policy examples supplement proof checking without asserting hardware fidelity."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "No instruction or memory semantics are broadened. Physical scalar arena and composed entry proofs use existing contracts and retain the distinction between sequential execution, necessary source admission and hardware behavior."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "07f02a4235a2a8d8bb905625c02c1ab83a9efbca",
+      "method": "Sequential capped Lean checks and exact dependency audit; twelve saved PTX bindings; frontend mutation tests; manual fetched-instruction, arithmetic, guard, scalar-byte publication/frame and finite-execution review; receipt hashes and Stratic snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy job at a time, one Lean thread, 6 GiB hard memory limit, swap disabled, CPU 150 percent. No GPU runs or paid calls.",
+      "evidence": "All 23 new modules checked without warnings. 6048 exact dependency reports use only allowed standard Lean axioms; 794 guarded source files and all pins pass. Complete fetched start (39 instructions), coefficient_alpha (49) and coefficient_beta (63) derive actual memory outputs, flag policy, byte frames and finite execution witnesses for arbitrary input words under physical layout conditions. Seven kernel-checked guard cases cover old broken flags, inactive nonfinite values, NaN, negative zero and negative finite rho_next. All 70 frontend tests pass; twelve receipts refreshed and hash-verified, including 90 complete start/alpha/beta entries. No desired output, numerical bound, guard outcome or execution trace is assumed by the finite witnesses. Scalar weak-memory admission, complete-launch composition, finite host PCG composition, CUDA transport and GPU conformance remain separate open claims. Legacy executable reuse was limited to verified unchanged import closures; current audit and text checks reran. Peak audit RSS 4986088 KiB. Unchanged legacy interpreter suite not rerun. Stratic summaries, exact links, study guide and snapshots agree. README and emitted PTX are unchanged.",
+      "tests": [],
+      "id": "1a7da99b-409d-4688-85f0-02c65ae1a875",
+      "recordedAt": "2026-10-04T14:02:10.908Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T14:03:41.307Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-pcg-updates.md",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/check_poisson_control.py",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-control-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-initialize-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-restart-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-scalar-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-xrz-binding.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "hardware/test_poisson_control.py",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarAlpha.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarAlphaCorrect.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarAlphaValues.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarArena.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarArithmetic.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarBeta.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarBetaCorrect.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarBetaExists.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarBetaGuards.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarBetaSegments.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarBetaValues.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarCoefficientGuards.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarCoefficientInputs.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarConditionalDivide.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarControl.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarControlChecks.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarControlText.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarFlagFrames.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarStart.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarStartExists.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarStartPublication.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarStartResult.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarStartValues.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed actual scalar start/coefficient instruction sequences, physical layouts, arithmetic and guard outputs, byte frames, finite witnesses, complete source binding, mutation tests, audit registration, receipts and documentation."
+    }
+  ]
+}

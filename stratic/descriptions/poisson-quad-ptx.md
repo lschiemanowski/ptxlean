@@ -602,7 +602,37 @@ Kernel-checked corner cases support the manual pinned-source review but do not
 establish hardware fidelity.
 
 Full-entry text binding checks both scalar programs across saved layouts.
-Coefficient selection, solver status initialization, weak-memory justification
-for scalar entries, and host-loop composition remain separate obligations.
+Scalar weak-memory justification and host-loop composition remain separate
+obligations; the start and coefficient proofs below cover their sequential
+instruction behavior.
 The norm computation itself is not a residual certificate: the accepted solver
 claim still requires a fresh residual bound for the same discrete equations.
+
+The solver's start, alpha and beta entries have complete fetched-instruction
+proofs in the single-thread sequential byte-memory model. Start computes the
+rounded square root of the stored RHS squared norm, copies that result into
+the initial residual field, computes max(rtol times norm, atol) with separate
+binary64 rounding, and writes active=1 and broken=0. Alpha reads the stored
+denominator, rho and flags. It enables rho/denominator only when the active
+flag is nonzero and both floating inputs are finite and strictly positive;
+otherwise it stores positive zero. A failed active guard sets broken. An old
+broken flag is preserved but does not itself disable this alpha division.
+
+Beta marks a nonfinite rho_next as broken when active is nonzero, while a
+negative finite rho_next alone does not fail that guard. The use_step flag
+controls rho_next/rho; the disabled case stores positive zero. Beta also copies
+the actual rho_next word into rho. Its final active flag requires use_step,
+an ordered comparison of the stored recursive residual square with the rounded
+tolerance square, and a zero broken flag. This recursive residual test is not
+the fresh residual certificate and does not by itself establish convergence.
+
+These results derive arithmetic and predicate inputs from the actual loads,
+retain permitted rounded-result encodings, describe every output byte and
+preserve all other bytes. Their finite execution witnesses require only a
+valid physical scalar layout, with no numerical result or guard outcome assumed.
+The scalar layout has separate aligned eight-byte numerical fields and
+four-byte status fields, all within a nonwrapping allocation. Complete text
+binding covers 39 start instructions, 49 alpha instructions and 63 beta
+instructions, including launch setup and return. Scalar weak-memory admission,
+whole-launch composition and the finite host PCG loop remain separate
+obligations; CUDA transport and GPU conformance are not established here.

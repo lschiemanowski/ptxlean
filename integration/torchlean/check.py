@@ -694,6 +694,19 @@ COUNTS['PtxTorchLean.Poisson.PTX.Scalar.RestartFlag'] = COUNTS.get('PtxTorchLean
 COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Text'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Text', 0) + 9
 TARGETS.update(['PoissonPTX.ScalarDeterministic', 'PoissonPTX.ScalarEntry', 'PoissonPTX.ScalarExecution', 'PoissonPTX.ScalarExtras', 'PoissonPTX.ScalarExtrasChecks', 'PoissonPTX.ScalarFrames', 'PoissonPTX.ScalarMemory', 'PoissonPTX.ScalarNorm', 'PoissonPTX.ScalarRestartFlag', 'PoissonPTX.ScalarSegments', 'PoissonPTX.ScalarText'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Alpha'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Alpha', 0) + 33
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar', 0) + 7
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Field'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Field', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Arena', 0) + 19
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Beta'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Beta', 0) + 53
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Coefficient'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Coefficient', 0) + 37
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide', 0) + 9
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Control'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Control', 0) + 8
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Checks', 0) + 8
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Text'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Text', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Start'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Start', 0) + 37
+TARGETS.update(['PoissonPTX.ScalarAlpha', 'PoissonPTX.ScalarAlphaCorrect', 'PoissonPTX.ScalarAlphaValues', 'PoissonPTX.ScalarArena', 'PoissonPTX.ScalarArithmetic', 'PoissonPTX.ScalarBeta', 'PoissonPTX.ScalarBetaCorrect', 'PoissonPTX.ScalarBetaExists', 'PoissonPTX.ScalarBetaGuards', 'PoissonPTX.ScalarBetaSegments', 'PoissonPTX.ScalarBetaValues', 'PoissonPTX.ScalarCoefficientGuards', 'PoissonPTX.ScalarCoefficientInputs', 'PoissonPTX.ScalarConditionalDivide', 'PoissonPTX.ScalarControl', 'PoissonPTX.ScalarControlChecks', 'PoissonPTX.ScalarControlText', 'PoissonPTX.ScalarFlagFrames', 'PoissonPTX.ScalarStart', 'PoissonPTX.ScalarStartExists', 'PoissonPTX.ScalarStartPublication', 'PoissonPTX.ScalarStartResult', 'PoissonPTX.ScalarStartValues'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

@@ -1,3 +1,26 @@
+import PoissonPTX.ScalarAlpha
+import PoissonPTX.ScalarAlphaCorrect
+import PoissonPTX.ScalarAlphaValues
+import PoissonPTX.ScalarArena
+import PoissonPTX.ScalarArithmetic
+import PoissonPTX.ScalarBeta
+import PoissonPTX.ScalarBetaCorrect
+import PoissonPTX.ScalarBetaExists
+import PoissonPTX.ScalarBetaGuards
+import PoissonPTX.ScalarBetaSegments
+import PoissonPTX.ScalarBetaValues
+import PoissonPTX.ScalarCoefficientGuards
+import PoissonPTX.ScalarCoefficientInputs
+import PoissonPTX.ScalarConditionalDivide
+import PoissonPTX.ScalarControl
+import PoissonPTX.ScalarControlChecks
+import PoissonPTX.ScalarControlText
+import PoissonPTX.ScalarFlagFrames
+import PoissonPTX.ScalarStart
+import PoissonPTX.ScalarStartExists
+import PoissonPTX.ScalarStartPublication
+import PoissonPTX.ScalarStartResult
+import PoissonPTX.ScalarStartValues
 import PoissonPTX.ScalarDeterministic
 import PoissonPTX.ScalarEntry
 import PoissonPTX.ScalarExecution
@@ -6733,3 +6756,220 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.instruction
 #print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.norm
 #print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.restartFlag
+
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.flagCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.prefixCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.body
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.entry
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.guarded
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.flagsStored
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.beforeDivide
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.finished
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.guarded_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.flags_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.before_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.before_running
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.flags_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.prefix_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.prefix_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.prefix_state
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.body_segment
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.body_result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.body_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.entry_publication
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.entry_exists
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.published_outside
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.good
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.useStep
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.broken
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.flags
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.Allowed
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.flags_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.before_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.allowed_iff
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.publish
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Alpha.finished_global
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Field
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Field.width
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Field.width_positive
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.slot
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.context
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.start
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.address
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.valid64
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.valid32
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.separate
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.word_separate
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.flag_word_separate
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.Ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.setup_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.state_address
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.state_valid64
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.state_valid32
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.ready_load64
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.ready_store64
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sqrt_result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.max_result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.fp_result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.selectCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.selected
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.prefixCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.middleCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.tailCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.body
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.entry
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.guarded
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.brokenStored
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.beforeDivide
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.betaStored
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.rhoStored
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.rrLoaded
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.middle
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.squared
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.finished
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.selected_supported
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.guarded_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.selected_frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.before_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.before_running
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.prefix_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.prefix_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.Result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.body_result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.nextActive
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.publish
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.finished_global
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.entry_publication
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.published_outside
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.body_exists
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.entry_exists
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.betaBrokenCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.betaBroken
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.betaGuarded
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.betaFinalCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.betaActive
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.betaFinal
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.beta_broken_supported
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.beta_final_supported
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.beta_broken_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.beta_final_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.beta_broken_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.beta_final_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.middle_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.squared_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.final_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.middle_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.tail_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.middle_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.tail_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.body_segment
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.middle_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.tail_global
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.broken
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.useStep
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.flagged
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.Allowed
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.select_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.before_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.allowed_iff
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.readySquare
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.dividedMemory
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Beta.ready_square_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.largestFinite
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.finiteGuard
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.finiteCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alphaCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alphaGood
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.active
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alphaUse
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alphaBroken
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alpha
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alpha_supported
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alpha_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alpha_state
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alpha_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.alpha_frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.inputCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.firstLoaded
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.rhoLoaded
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.activeLoaded
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.inputs
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.inputs_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.inputs_frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.inputs_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.inputs_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.inputs_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Coefficient.inputs_state
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide.code
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide.zeroed
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide.finish
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide.Allowed
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide.result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide.trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide.exists_allowed
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide.frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ConditionalDivide.ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Control.supported
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Control.apply
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Control.fold
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Control.step
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Control.running
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Control.plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Control.trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Control.unique
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.coefficientState
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.alpha_old_broken_does_not_disable
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.alpha_inactive_nonfinite_is_disabled
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.alpha_inactive_nonfinite_does_not_mark_broken
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.alpha_active_nan_marks_broken
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.alpha_zero_denominator_marks_broken
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.beta_negative_finite_does_not_mark_broken
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.beta_active_infinity_marks_broken
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.start
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.alpha
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.beta
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.loaded32_frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.stored32_frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.ready_load32
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.ready_store32
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Arena.ready_assign
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.middleCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.tailCode
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.body
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.entry
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.rooted
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.normStored
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.residualStored
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.relativeLoaded
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.middle
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.scaled
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.maximumStored
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.toleranceStored
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.activeStored
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.finished
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.middle_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.tail_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.body_segment
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.rooted_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.middle_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.middle_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.body_exists
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.entry_exists
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.publish
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.result_publication
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.published_fields
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.published_outside
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.entry_publication
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.scaled_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.maximum_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.Result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.body_result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.middle_values
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.tail_ready
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.tail_halted
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.tail_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.tail_global
