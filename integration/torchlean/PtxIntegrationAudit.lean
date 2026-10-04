@@ -1,3 +1,22 @@
+import PoissonPTX.DotFinalRead
+import PoissonPTX.DotNumerics
+import PoissonPTX.DotOutputValue
+import PoissonPTX.DotSetupRegisters
+import PoissonPTX.DotStoreProtection
+import PoissonPTX.DotSuffixOrder
+import PoissonPTX.DotTreeAddress
+import PoissonPTX.DotTreeControl
+import PoissonPTX.DotTreeCorrect
+import PoissonPTX.DotTreeOwnership
+import PoissonPTX.DotTreeReads
+import PoissonPTX.DotTreeSources
+import PoissonPTX.NativeFlowAccessOrder
+import PoissonPTX.NativeFlowEventPrefix
+import PoissonPTX.NativeFlowInitialized
+import PoissonPTX.NativeFlowProducer
+import PoissonPTX.NativeFlowReadBarrier
+import PoissonPTX.NativeFlowStageSources
+import PoissonPTX.NativeFlowValues
 import PoissonPTX.DotBarriers
 import PoissonPTX.DotPublicationAddress
 import PoissonPTX.DotPublicationRegisters
@@ -5898,3 +5917,104 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.completed_arrivals
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.prefix_track
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.prefix_step_exact
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.final_load_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.final_read_layout
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.final_read_source
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.loads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.input_entry_table
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.checked_numeric_targets
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.entries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.update_tag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.stored
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.outputLoads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.output_tag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.stored_output
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.output_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.input_keeps_lane
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.input_keeps_scratch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_tree_registers
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_keeps_setup
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.keeps_setup
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.SetupRegisters
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.setup_registers_flow
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.setup_registers
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.storeAddress
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_store_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.store_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_store_protection
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.protects_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_across
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_forward_targets
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.suffix_forward
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.addressCode
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.treeAddressTag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.TreeAddress
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_address_outside
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_tree_address
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_address_native
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_address_flow
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_address_sync
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_addresses
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.treeLimit
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.treeGuard
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.TreeControl
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_control_outside
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_tree_control
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_control_native
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_control_flow
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_control_sync
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_control
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.store_properties
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.tree_publication_values
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.partialInputs
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Numeric.publication_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.storeSite
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.store_sites
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_shared_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.shared_store_site
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.shared_store_ownership
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.shared_stage_stores
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.stride
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.readPC
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.readOffset
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.readOperand
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_read_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.read_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_read_layout
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_read_layout
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.stride_double
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.tree_read_source
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.ForwardFrom
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.eval_rank
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.step_rank
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.runs_rank
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.eval_access_pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.access_single
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.access_post
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.access_rank_bound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.SuffixAccessOrder
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.access_order
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.access_unique
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.before_of_pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.event_prefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.step_arrival_origin
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.initialized_flow
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.initialized_sync
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Protects
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.step_crosses_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.crossed_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.store_before_arrival
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.producer_across
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.access_after_barrier_index
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.own_writers_around
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.neighbor_writers_around
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.stage_own_read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.stage_neighbor_read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.transfer
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.tag
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.Entries
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.Invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.flow_ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.step_invariant
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Numeric.runs_invariant

@@ -375,11 +375,10 @@ value, partial-sum equation, local execution or phase boundary.
 The complete program and its absolute branch targets are compared with emitted
 PTX, including the conditional return, final shared load, output address
 arithmetic and global store. Output-address ownership is proved independently
-of the stored numerical value. The remaining dot-entry obligations are to join
-the recovered input states to the shared-tree execution, transport its ordered
-sources through that projection, justify the final shared read and output
-value, and construct a complete admitted execution. The full PCG launch sequence
-and solver correspondence are not yet established.
+of the stored numerical value. The native numerical theorem now connects the
+same input execution, shared tree, final shared read and actual output store.
+A complete admitted native-entry execution witness and the full PCG launch
+sequence remain open.
 
 The first shared publication is connected to that same thread's admitted
 input traversal. A stronger projection tracks the recovered registers until
@@ -398,3 +397,28 @@ same resource, instruction site and barrier round. This follows from fetched
 branch targets, return placement and the barrier state transitions. These
 facts provide synchronization evidence for later reads; they do not by
 themselves identify those reads' byte sources or numerical values.
+
+The complete native dot entry derives the shared tree's read sources and
+numerical values from its own execution. The input loop may revisit instructions,
+but each shared-memory instruction occurs at most once per lane. Setup fixes
+the shared base and lane number. Actual comparisons and branches restrict each
+successive stage to half as many lanes, and actual address instructions keep
+each writer in its own eight-byte slot. A later read has an earlier publication
+connected through the same barrier's arrival and completion events. Lane
+ownership and instruction order exclude stale or competing publications.
+Consequently each read obtains the required preceding word, and each actual
+rounded addition produces the next tree value. The last shared read obtains
+lane zero's final publication; the output-address instructions preserve that
+word until the global store. The resulting decoded output is the prescribed
+binary64 reduction of the actual input-loop partial sums. Neither input sums,
+shared snapshots, desired read values nor phase boundaries are assumed.
+
+The native dot-output theorem applies to every recorded global store in an
+admitted execution, with 256 correctly numbered lanes, common initialized input
+bytes, bounded input count, valid arrays, disjoint output storage and nonwrapping
+addresses. It preserves the freedom of exceptional binary64 encodings by stating
+decoded-value equality. A complete admitted native-entry execution witness is
+still required; standalone input and tree existence theorems do not establish
+that combined witness. The remaining PCG kernels and host launch composition are
+also unfinished. Byte compatibility and ordered sources are explicit necessary
+memory constraints, not a claim of full PTX admission or hardware conformance.

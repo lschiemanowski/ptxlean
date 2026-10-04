@@ -306,23 +306,66 @@ barrier instruction cannot be crossed by an ordinary step or branch.
 `DotReturns.returned_barriers` connects this to the real halt flag: it covers
 both the conditional nonzero-lane return and lane zero's final return.
 
-The next numerical obligation is still to justify the tree reads and updates
-in this complete history. Having the right initial stores and real barriers
-supplies essential evidence, but does not replace that source-selection proof.
+Suffix instruction order supplies same-thread causal edges even though the
+input prefix loops. Cross-thread edges use actual stores, arrivals, completions
+and reads. The shared-slot ownership and shrinking lane ranges exclude competing
+writes before applying byte-source admission.
+
+## The native tree and final output
+
+The complete native dot entry derives the shared tree's read sources and
+numerical values from its own execution. The input loop may revisit instructions,
+but each shared-memory instruction occurs at most once per lane. Setup fixes
+the shared base and lane number. Actual comparisons and branches restrict each
+successive stage to half as many lanes, and actual address instructions keep
+each writer in its own eight-byte slot. A later read has an earlier publication
+connected through the same barrier's arrival and completion events. Lane
+ownership and instruction order exclude stale or competing publications.
+Consequently each read obtains the required preceding word, and each actual
+rounded addition produces the next tree value. The last shared read obtains
+lane zero's final publication; the output-address instructions preserve that
+word until the global store. The resulting decoded output is the prescribed
+binary64 reduction of the actual input-loop partial sums. Neither input sums,
+shared snapshots, desired read values nor phase boundaries are assumed.
+
+For example, at the first stage lane seven reads its own publication and lane
+135's publication. The proof first locates both actual reads and their address
+instructions. Lane 135 cannot write again after this stage because the active
+range has shrunk to 128 lanes. Lane seven's next write follows its read in that
+same thread. Their preceding stores and the completed barrier therefore exclude
+both initialization and a different in-place update as sources. The same argument
+repeats with strides 64, 32, and so on, down to one.
+
+`DotTreeSources.tree_read_source` contains that source argument for every stage.
+`DotTreeCorrect.publication_value` then follows the actual load/add/store
+instructions and their explicit rounding order. Its initial case uses the
+already-derived input-loop accumulator. `DotFinalRead.final_read_source` handles
+the last barrier and lane-zero word, and `DotOutputValue.output_value` reaches
+the actual global store. Together with `DotStores.stores_output`, this identifies
+both the output word's address and its decoded value.
 
 ## Remaining boundaries
 
 The complete program and its absolute branch targets are compared with emitted
 PTX, including the conditional return, final shared load, output address
 arithmetic and global store. Output-address ownership is proved independently
-of the stored numerical value. The remaining dot-entry obligations are to join
-the recovered input states to the shared-tree execution, transport its ordered
-sources through that projection, justify the final shared read and output
-value, and construct a complete admitted execution. The full PCG launch sequence
-and solver correspondence are not yet established.
+of the stored numerical value. The native numerical theorem now connects the
+same input execution, shared tree, final shared read and actual output store.
+A complete admitted native-entry execution witness and the full PCG launch
+sequence remain open.
 
 `OrderedSources` remains a necessary fragment of the PTX memory rules. The
 model uses synchronous full-block barriers, identity addresses, separate
 shared/global spaces and no concurrent external writer. The standalone
 existence results construct finite schedules; they do not guarantee progress
 under arbitrary scheduling. No new GPU run is part of this checkpoint.
+
+The native dot-output theorem applies to every recorded global store in an
+admitted execution, with 256 correctly numbered lanes, common initialized input
+bytes, bounded input count, valid arrays, disjoint output storage and nonwrapping
+addresses. It preserves the freedom of exceptional binary64 encodings by stating
+decoded-value equality. A complete admitted native-entry execution witness is
+still required; standalone input and tree existence theorems do not establish
+that combined witness. The remaining PCG kernels and host launch composition are
+also unfinished. Byte compatibility and ordered sources are explicit necessary
+memory constraints, not a claim of full PTX admission or hardware conformance.

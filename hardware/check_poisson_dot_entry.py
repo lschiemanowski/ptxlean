@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Bind complete Poisson dot entries to the 104-position concurrent program.
 
-The current theorems recover each returned lane's rounded input partial sum
-from whole-history source admission, identify its initial shared publication,
-and prove output-address ownership and actual completion of all nine barriers.
-The concurrent tree value join, final result publication and whole-entry existence
-remain separate obligations. This check does not establish GPU conformance.
+The current theorems derive actual input partial sums, shared-tree read sources
+and rounded additions, and the final global store value from one source-admitted
+native execution. Actual store addresses, active lanes and barrier paths are
+proved separately. Whole-entry existence and full solver composition remain
+open. This check does not establish complete PTX admission or GPU conformance.
 """
 import argparse
 import hashlib
@@ -100,7 +100,7 @@ def check(run, output):
         return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     before = hashes()
     names = ['PtxTorchLean.Poisson.PTX.Concurrent.Dot.'+name for name in
-             ('completed_input_correct', 'publication_contents', 'publication_memory_bound', 'returned_barriers', 'stores_output', 'input_observations', 'input_region', 'length')]
+             ('completed_input_correct', 'publication_contents', 'publication_memory_bound', 'returned_barriers', 'stores_output', 'tree_read_source', 'final_read_source', 'shared_stage_stores', 'Numeric.publication_value', 'Numeric.output_value', 'input_observations', 'input_region', 'length')]
     layouts = [parameters(json.loads(read_artifact(run, report, case['directory']+'/layout.json')))
                for case in report['cases']]
     expressions = []
@@ -112,7 +112,7 @@ def check(run, output):
     lean = ['lake', '--no-cache', 'env', 'lean', '-j1', '-M5120']
     with tempfile.TemporaryDirectory(prefix='poisson-dot-entry-') as tmp:
         path = Path(tmp)/'Render.lean'
-        path.write_text('import PoissonPTX.DotProgramText\nimport PoissonPTX.DotPublicationSafety\nimport PoissonPTX.DotReturns\nopen PtxTorchLean.Poisson.PTX\n'+
+        path.write_text('import PoissonPTX.DotProgramText\nimport PoissonPTX.DotPublicationSafety\nimport PoissonPTX.DotReturns\nimport PoissonPTX.DotOutputValue\nopen PtxTorchLean.Poisson.PTX\n'+
             ''.join('#print axioms '+name+'\n' for name in names)+
             'def main : IO Unit := IO.println (Lean.toJson (['+', '.join(expressions)+
             '] : List (List (String × List String)))).compress\n')

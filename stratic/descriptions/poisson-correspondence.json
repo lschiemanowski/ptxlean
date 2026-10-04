@@ -25,13 +25,15 @@
     "Derive repeated shared-word read sources from actual ordering and explicit necessary coherence constraints; distinguish obsolete and future writes from initialization.",
     "Derive each active binary64 reduction update, its fetched execution and allocation bounds; concurrent stage visibility and the whole reduction remain separate.",
     "Derive reduction sources from lane ownership and shrinking stage coverage, and check a completed two-stage concurrent witness; full emitted-entry coverage remains open.",
-    "Derive every shared-tree read source from actual 256-lane control, address preparation and barrier publications; native entry translation remains separate.",
+    "Derive every shared-tree read source from actual 256-lane control, address preparation and barrier publications in both the standalone tree and complete native entry.",
     "Prove every completed admitted shared-tree run computes the prescribed rounded reduction; construct a complete admitted execution for arbitrary initial words and bound every access within its 2048-byte allocation.",
     "Relate separately scheduled unsigned lane comparisons and predicated branches to the shared-tree guard, deriving outcomes from preserved registers and retaining the emitted instruction order.",
     "Derive the strided input accumulation from actual global loads, separate rounded multiply/add operations and nonwrapping 32-bit index progress.",
-    "Recover every returned lane’s rounded input partial sum from the complete concurrent dot program and its actual byte sources; derive input footprints and output-address ownership, while tree composition and final output value remain unfinished.",
+    "Recover every returned lane’s rounded input partial sum from the complete concurrent dot program and its actual byte sources; derive input footprints and output-address ownership, with the shared tree and final output now joined in the same actual execution.",
     "Derive each actual initial shared store’s rounded partial sum and lane-specific address from the same admitted input execution, with an explicit shared-allocation bound.",
-    "Prove that every returned lane has passed all nine native tree barriers and that each completion has earlier real arrivals from every participant."
+    "Prove that every returned lane has passed all nine native tree barriers and that each completion has earlier real arrivals from every participant.",
+    "Derive actual native shared read sources, shrinking writer ranges and barrier paths, then prove every dot output equals the prescribed rounded reduction of its actual input-loop partial sums.",
+    "Keep complete native-entry existence, remaining PCG kernels and host composition separate from universal output correctness; ordered sources do not establish complete PTX or hardware conformance."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3819,7 +3821,7 @@
     {
       "kind": "implementation",
       "from": {
-        "quote": "The complete program and its absolute branch targets are compared with emitted\nPTX, including the conditional return, final shared load, output address\narithmetic and global store. Output-address ownership is proved independently\nof the stored numerical value. The remaining dot-entry obligations are to join\nthe recovered input states to the shared-tree execution, transport its ordered\nsources through that projection, justify the final shared read and output\nvalue, and construct a complete admitted execution. The full PCG launch sequence\nand solver correspondence are not yet established."
+        "quote": "The complete program and its absolute branch targets are compared with emitted\nPTX, including the conditional return, final shared load, output address\narithmetic and global store. Output-address ownership is proved independently\nof the stored numerical value. The native numerical theorem now connects the\nsame input execution, shared tree, final shared read and actual output store.\nA complete admitted native-entry execution witness and the full PCG launch\nsequence remain open."
       },
       "to": {
         "path": "integration/torchlean/PoissonPTX/DotProgramText.lean",
@@ -4077,6 +4079,234 @@
         "path": "integration/torchlean/PoissonPTX/NativeFlowPrefixTrack.lean",
         "passage": {
           "quote": "theorem prefix_track {P : State n → Flow.State → Prop}\n    (region : Region program pre)\n    (actual : Runs cfg ctx program s events indices t) (aligned : Aligned s.core)\n    (related : Related pre.length (lane s owner) shadow) (initial : P s shadow)\n    (preserves : ∀ selected s out shadow, Step cfg ctx program selected s out →\n      Aligned s.core → Related pre.length (lane s owner) shadow → P s shadow →\n      P out.state (if owner=selected ∧ (s.core.lanes owner).pc<pre.length\n        then lane out.state owner else shadow)) :\n    ∃ next words localIndices,\n      Flow.Observed.Runs (ctx owner) pre shadow words localIndices next ∧\n      Related pre.length (lane t owner) next ∧ P t next ∧\n      (∀ a∈words, Event.data owner a∈events) ∧ (∀ a∈localIndices, (owner,a)∈indices) := by\n  induction actual generalizing shadow with\n  | nil => exact ⟨shadow,[],[],.nil,related,initial,by simp,by simp⟩\n  | @cons selected before out restWords restIndices final one rest ih =>\n    obtain ⟨middle,first,firstIndices,run,link,words,reads,equal⟩ :=\n      prefix_step_exact region one aligned related\n    have nextP : P out.state middle := by rw [equal]; exact preserves _ _ _ _ one aligned related initial\n    obtain ⟨final,later,laterIndices,tail,finalLink,finalP,laterWords,laterReads⟩ :=\n      ih (step_aligned one aligned) link nextP\n    refine ⟨final,first++later,firstIndices++laterIndices,Flow.Observed.append run tail,\n      finalLink,finalP,?_,?_⟩\n    · intro a member\n      rcases List.mem_append.mp member with early | late\n      · exact List.mem_append_left _ (words a early)\n      · exact List.mem_append_right _ (laterWords a late)\n    · intro a member\n      rcases List.mem_append.mp member with early | late\n      · exact List.mem_append_left _ (reads a early)\n      · exact List.mem_append_right _ (laterReads a late)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotFinalRead.lean",
+        "passage": {
+          "quote": "theorem final_read_source {cfg : Config 256} {ctx : Fin 256 → Kernel.Context} {r : Nat}\n    (run : NativeFlow.Runs cfg ctx (program count left right output scratch) start events indices final)\n    (reset : start.core.barrier=Ptx.Barrier.reset generation)\n    (entry : ∀ thread, (start.core.lanes thread).pc=0)\n    (laneMap : ∀ thread, (ctx thread).lane.toNat=thread.val)\n    (noWrap : scratch.toNat+2048≤2^64)\n    (compatible : Visibility.Compatible initial events source) (ordered : OrderedSources events source)\n    (observed : events[r]?=some (.data reader access)) (site : access.data.pc=98) :\n    ∃ w wa, events[w]?=some (.data 0 wa) ∧ wa.data.pc=storeSite 8 ∧\n      wa.data.store=true ∧ wa.space=.shared ∧ Visibility.Across events w r ∧\n      access.data.value=wa.data.value ∧ ∀ k, source r k=.store w k := by\n  have aligned : Aligned start.core := by intro t h; simp [reset,Ptx.Barrier.reset] at h\n  obtain ⟨read,shared,address⟩ := final_read_layout run aligned entry (List.mem_of_getElem? observed) site\n  obtain ⟨w,wa,found,previous,write,sw,across⟩ := publication_across (writer:=0) run reset entry laneMap\n    8 (by decide +kernel) observed (by rw [site]; decide +kernel)\n  have stores := shared_stage_stores run aligned entry laneMap noWrap\n  have address' : access.data.address=scratch.toNat+(0 : Fin 256).val*8 := by simpa using address\n  have allEarlier : ∀ (other : Nat) (a : Access), events[other]?=some (.data (0 : Fin 256) a) →\n      a.data.store=true → a.space=.shared → a.data.pc≤wa.data.pc := by\n    intro other a found write shared\n    obtain ⟨phase,position,active⟩ := stores.2 other 0 a found write shared\n    rw [position,previous]\n    exact store_sites.monotone (by change phase.val≤8; have := phase.isLt; omega)\n  have writers := NativeFlow.neighbor_writers_around (r:=r) run suffix_forward stores\n    (fun phase => by simp [storeSite]; omega) found address' allEarlier\n  have same : wa.data.address=access.data.address := (stores.1 w 0 wa found write sw).trans address'.symm\n  have result := read_from_stage compatible ordered found observed write read sw shared same (.edge (.inr across)) writers\n  exact ⟨w,wa,found,previous,write,sw,across,result⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotNumerics.lean",
+        "passage": {
+          "quote": "def loads (input : Nat → Float) (phase : Fin 8) (pc : Nat) : Option (Fin 256 → Float) :=\n  if pc=readPC phase false then some (fun t => values input phase.val t.val)\n  else if pc=readPC phase true then some (fun t => values input phase.val (t.val+stride phase))\n  else none"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotOutputValue.lean",
+        "passage": {
+          "quote": "theorem output_value\n    (run : NativeFlow.Runs cfg ctx (program count left right output scratch) start events indices final)\n    (reset : start.core.barrier=Ptx.Barrier.reset generation)\n    (entry : ∀ thread, (start.core.lanes thread).pc=0) (live : ∀ thread, start.halted thread=false)\n    (arena : ∀ thread, (ctx thread).arena=base) (laneMap : ∀ thread, (ctx thread).lane.toNat=thread.val)\n    (sameInitial : ∀ thread, (start.core.lanes thread).global=initial .global)\n    (bounded : count<2^30) (apart : OutputApart count left right output)\n    (arrays : ∀ thread, DotInput.Arrays (DotInput.setup (ctx thread) scratch (NativeFlow.lane start thread)).core count left right)\n    (outputFits : base.toNat+output.toNat+8≤2^64) (noWrap : scratch.toNat+2048≤2^64)\n    (compatible : Visibility.Compatible initial events source) (ordered : Visibility.Repeated.OrderedSources events source)\n    (observed : events[w]?=some (.data thread access)) (write : access.data.store=true) (global : access.space=.global) :\n    decode access.data.value=Binary64.reduce256 (partialInputs ctx scratch start count left right) := by\n  have aligned : Aligned start.core := by intro t h; simp [reset,Ptx.Barrier.reset] at h\n  have atSite : access.data.pc=102 := by\n    obtain ⟨before,earlier,earlierIndices,selected,out,prior,step,member⟩ := NativeFlow.access_prefix run (List.mem_of_getElem? observed)\n    obtain ⟨same,i,next,index,fetch,effect⟩ := NativeFlow.step_access_origin step member\n    obtain ⟨sp,addr,src,op,shape⟩ := Flow.Observed.store_shape effect write\n    have spaceEq : sp=.global := by simpa only [shape] using global\n    subst sp; subst i\n    have position := (global_store_site fetch).1\n    simpa only [shape,NativeFlow.lane] using position\n  apply stored_output run aligned entry ?_ observed atSite\n  intro reader ra member read f known\n  unfold outputLoads at known\n  split at known\n  · rename_i atRead\n    cases known\n    obtain ⟨r,found⟩ := List.mem_iff_getElem?.mp member\n    obtain ⟨v,wa,published,pc,write,shared,across,value,bytes⟩ :=\n      final_read_source run reset entry laneMap noWrap compatible ordered found atRead\n    rw [value]\n    exact publication_value run reset entry live arena laneMap sameInitial bounded apart arrays outputFits noWrap compatible ordered 8 published pc\n  · cases known"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotSetupRegisters.lean",
+        "passage": {
+          "quote": "theorem input_keeps_lane (fetch : (DotInput.inputProgram count left right scratch)[pc]?=some i)\n    (other : pc≠2) : NativeFlow.keeps 14 i := by\n  have small : pc<20 := by\n    have := (List.getElem?_eq_some_iff.mp fetch).1\n    simpa only [DotInput.input_length] using this\n  interval_cases pc <;>\n    simp_all [DotInput.inputProgram,Flow.OperandWindow.program,Flow.OperandWindow.header,\n      DotInput.setupCode,DotInput.body,loadCode,addressCode]\n  all_goals cases fetch; simp [NativeFlow.keeps,Indexed.keeps,SharedStore.keeps]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotStoreProtection.lean",
+        "passage": {
+          "quote": "def storeAddress (phase : Fin 9) : Operand := if phase.val=0 then .offset 2 0 else .reg 2"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotSuffixOrder.lean",
+        "passage": {
+          "quote": "theorem checked_forward_targets : ∀ slot : Fin 76,\n    (match Reduction.Native.code[slot.val]? with\n    | some (.branch target) => decide (slot.val≤target)\n    | _ => true)=true := by decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotTreeAddress.lean",
+        "passage": {
+          "quote": "def addressCode : List Instr := Reduction.Native.code.map fun i => match i with\n  | .data op => .data op\n  | _ => .sync 0"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotTreeControl.lean",
+        "passage": {
+          "quote": "def treeLimit (pc : Nat) : Nat :=\n  if 24≤pc ∧ pc<96 ∧ 2≤(pc-24)%9 ∧ (pc-24)%9≤7 then 256 / 2^((pc-24)/9+1) else 256"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotTreeCorrect.lean",
+        "passage": {
+          "quote": "theorem publication_value\n    (run : NativeFlow.Runs cfg ctx (program count left right output scratch) start events indices final)\n    (reset : start.core.barrier=Ptx.Barrier.reset generation)\n    (entry : ∀ thread, (start.core.lanes thread).pc=0) (live : ∀ thread, start.halted thread=false)\n    (arena : ∀ thread, (ctx thread).arena=base) (laneMap : ∀ thread, (ctx thread).lane.toNat=thread.val)\n    (sameInitial : ∀ thread, (start.core.lanes thread).global=initial .global)\n    (bounded : count<2^30) (apart : OutputApart count left right output)\n    (arrays : ∀ thread, DotInput.Arrays (DotInput.setup (ctx thread) scratch (NativeFlow.lane start thread)).core count left right)\n    (outputFits : base.toNat+output.toNat+8≤2^64) (noWrap : scratch.toNat+2048≤2^64)\n    (compatible : Visibility.Compatible initial events source) (ordered : OrderedSources events source)\n    (phase : Fin 9) (observed : events[w]?=some (.data thread access)) (pc : access.data.pc=storeSite phase) :\n    decode access.data.value=values (partialInputs ctx scratch start count left right) phase.val thread.val := by\n  apply tree_publication_values run reset entry laneMap noWrap compatible ordered ?_ phase observed pc\n  intro index owner a found atStore\n  have aligned : Aligned start.core := by intro t h; simp [reset,Ptx.Barrier.reset] at h\n  have props := store_properties run found 0 atStore\n  have value := (publication_contents run aligned entry (live owner) arena (sameInitial owner) compatible\n    bounded apart (arrays owner) outputFits (List.mem_of_getElem? found) props.1 atStore).2.2\n  simpa [partialInputs,owner.isLt] using value"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotTreeOwnership.lean",
+        "passage": {
+          "quote": "theorem shared_stage_stores {cfg : Config 256} {ctx : Fin 256 → Kernel.Context}\n    (run : NativeFlow.Runs cfg ctx (program count left right output scratch) start events indices final)\n    (aligned : Aligned start.core) (entry : ∀ thread, (start.core.lanes thread).pc=0)\n    (laneMap : ∀ thread, (ctx thread).lane.toNat=thread.val)\n    (noWrap : scratch.toNat+2048≤2^64) : Reduction.StageStores events scratch.toNat storeSite := by\n  constructor\n  · intro index owner access found write shared\n    exact (shared_store_ownership run aligned entry laneMap noWrap (List.mem_of_getElem? found) write shared).1\n  · intro index owner access found write shared\n    exact (shared_store_ownership run aligned entry laneMap noWrap (List.mem_of_getElem? found) write shared).2"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotTreeReads.lean",
+        "passage": {
+          "quote": "def stride (phase : Fin 8) : Nat := Reduction.active ⟨phase.val+1,by omega⟩\ndef readPC (phase : Fin 8) (neighbor : Bool) : Nat := 28+9*phase.val+if neighbor then 1 else 0\ndef readOffset (phase : Fin 8) (neighbor : Bool) : Nat := if neighbor then stride phase else 0\ndef readOperand (phase : Fin 8) (neighbor : Bool) : Operand :=\n  if neighbor then .offset 2 (BitVec.ofNat 64 (8*stride phase)) else .reg 2"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotTreeSources.lean",
+        "passage": {
+          "quote": "theorem tree_read_source {cfg : Config 256} {ctx : Fin 256 → Kernel.Context} {r : Nat}\n    (run : NativeFlow.Runs cfg ctx (program count left right output scratch) start events indices final)\n    (reset : start.core.barrier=Ptx.Barrier.reset generation)\n    (entry : ∀ thread, (start.core.lanes thread).pc=0)\n    (laneMap : ∀ thread, (ctx thread).lane.toNat=thread.val)\n    (noWrap : scratch.toNat+2048≤2^64)\n    (compatible : Visibility.Compatible initial events source) (ordered : OrderedSources events source)\n    (observed : events[r]?=some (.data reader access)) (phase : Fin 8) (neighbor : Bool)\n    (site : access.data.pc=readPC phase neighbor) :\n    ∃ (writer : Fin 256) (w : Nat) (wa : Access),\n      writer.val=reader.val+readOffset phase neighbor ∧\n      events[w]?=some (.data writer wa) ∧ wa.data.pc=storeSite ⟨phase.val,by omega⟩ ∧\n      wa.data.store=true ∧ wa.space=.shared ∧ Visibility.Across events w r ∧\n      access.data.value=wa.data.value ∧ ∀ k, source r k=.store w k := by\n  have aligned : Aligned start.core := by intro t h; simp [reset,Ptx.Barrier.reset] at h\n  obtain ⟨read,shared,active,within,address⟩ := tree_read_layout run aligned entry laneMap noWrap\n    (List.mem_of_getElem? observed) phase neighbor site\n  let writer : Fin 256 := ⟨reader.val+readOffset phase neighbor,within⟩\n  have writerActive : writer.val<Reduction.active ⟨phase.val,by omega⟩ := by\n    rw [stride_double]\n    change reader.val+readOffset phase neighbor<2*stride phase\n    cases neighbor <;> simp only [readOffset,Bool.false_eq_true,ite_false,ite_true,Nat.add_zero] <;> omega\n  have later : barrierSite ⟨phase.val,by omega⟩<access.data.pc := by\n    rw [site]; unfold barrierSite readPC; cases neighbor <;> simp\n  obtain ⟨w,wa,found,previous,write,sw,across⟩ := publication_across run reset entry laneMap\n    ⟨phase.val,by omega⟩ writerActive observed later\n  have stores := shared_stage_stores run aligned entry laneMap noWrap\n  have suffix : ∀ stage, 20≤storeSite stage := by intro stage; simp [storeSite]; omega\n  have address' : access.data.address=scratch.toNat+writer.val*8 := address\n  have value : access.data.value=wa.data.value ∧ ∀ k, source r k=.store w k := by\n    cases neighbor with\n    | false =>\n      have same : writer=reader := by apply Fin.ext; simp [writer,readOffset]\n      subst writer\n      exact NativeFlow.stage_own_read run suffix_forward stores store_sites suffix compatible ordered phase\n        found observed write read sw shared address' previous\n        (by rw [previous,site]; simp [storeSite,readPC])\n        (by rw [site]; simp [storeSite,readPC]; omega)\n    | true =>\n      exact NativeFlow.stage_neighbor_read run suffix_forward stores store_sites suffix compatible ordered phase\n        found observed write read sw shared address' previous\n        (by change stride phase≤reader.val+readOffset phase true; simp [readOffset]) across\n  exact ⟨writer,w,wa,rfl,found,previous,write,sw,across,value⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowAccessOrder.lean",
+        "passage": {
+          "quote": "def ForwardFrom (program : List Instr) (cut : Nat) : Prop :=\n  ∀ pc i, program[pc]?=some (.flow i) → targets (fun target => max cut pc≤max cut target) i"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowEventPrefix.lean",
+        "passage": {
+          "quote": "theorem event_prefix (run : Runs cfg ctx program start events indices final)\n    (observed : events[index]?=some event) :\n    ∃ before earlier earlierIndices selected out suffix suffixIndices localIndex,\n      Runs cfg ctx program start earlier earlierIndices before ∧ Step cfg ctx program selected before out ∧\n      out.events[localIndex]?=some event ∧ Runs cfg ctx program out.state suffix suffixIndices final ∧\n      events=earlier++out.events++suffix ∧ index=earlier.length+localIndex := by\n  induction run generalizing index with\n  | nil => simp at observed\n  | @cons thread s out rest indices final step tail ih =>\n    by_cases now : index<out.events.length\n    · have atNow : out.events[index]?=some event := by\n        simpa [List.getElem?_append,now] using observed\n      exact ⟨s,[],[],thread,out,rest,indices,index,Runs.nil,step,atNow,tail,rfl,by simp⟩\n    · have atLater : rest[index-out.events.length]?=some event := by\n        simpa [List.getElem?_append,now] using observed\n      obtain ⟨before,earlier,earlierIndices,selected,next,suffix,suffixIndices,j,hp,hs,hm,ht,he,hi⟩ := ih atLater\n      refine ⟨before,out.events++earlier,out.indices++earlierIndices,selected,next,suffix,suffixIndices,j,Runs.cons step hp,hs,hm,ht,?_,?_⟩\n      · simp [he,List.append_assoc]\n      · simp only [List.length_append]; omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowInitialized.lean",
+        "passage": {
+          "quote": "theorem initialized_flow\n    (actual : Flow.Observed.Eval ctx i s t access index)\n    (fetch : program[s.core.pc]?=some (.flow i))\n    (ready : initPC<s.core.pc → s.core.regs r=value)\n    (before : ∀ pc i, pc < initPC → program[pc]?=some (.flow i) → targets (· ≤ initPC) i)\n    (assigns : ∀ i s t access index, s.core.pc=initPC → program[initPC]?=some (.flow i) →\n      Flow.Observed.Eval ctx i s t access index → t.core.regs r=value)\n    (preserves : ∀ pc i, initPC<pc → program[pc]?=some (.flow i) → keeps r i) :\n    initPC<t.core.pc → t.core.regs r=value := by\n  intro later\n  rcases lt_trichotomy s.core.pc initPC with early | same | past\n  · have bound := eval_upper actual early (before _ _ early fetch); omega\n  · exact assigns i s t access index same (same ▸ fetch) actual\n  · exact (eval_keeps actual (preserves _ _ past fetch)).trans (ready past)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowProducer.lean",
+        "passage": {
+          "quote": "theorem producer_across {start : State n} {events : List (Event n)} {r : Nat}\n    (run : Runs cfg ctx program start events indices final)\n    (reset : start.core.barrier=Ptx.Barrier.reset generation)\n    (store : program[storePC]?=some (.flow (.data (.data (.store64 sp addr src)))))\n    (protection : ∀ before earlier earlierIndices, Runs cfg ctx program start earlier earlierIndices before →\n      Protects (ctx writer) program storePC (lane before writer))\n    (writerInitial : (start.core.lanes writer).pc≤storePC) (beforeBarrier : storePC<boundary)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : ∀ t, (start.core.lanes t).pc≤boundary)\n    (observed : events[r]?=some (.data reader access)) (later : boundary<access.data.pc) :\n    ∃ w wa, events[w]?=some (.data writer wa) ∧ wa.data.pc=storePC ∧\n      wa.data.store=true ∧ wa.space=sp ∧ Visibility.Across events w r := by\n  have aligned : Aligned start.core := by intro t h; simp [reset,Ptx.Barrier.reset] at h\n  obtain ⟨c,key,hcr,hc,site⟩ := access_after_barrier_index run aligned barrier stops initial observed later\n  obtain ⟨a,hac,ha⟩ := completed_arrivals run reset c key hc writer\n  obtain ⟨w,wa,hwa,hw,pc,write,space⟩ := store_before_arrival run aligned store protection writerInitial ha (by omega)\n  exact ⟨w,wa,hw,pc,write,space,writer,reader,wa,access,key,a,c,hw,observed,ha,hc,hwa,hac,hcr⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowReadBarrier.lean",
+        "passage": {
+          "quote": "theorem access_after_barrier_index {start : State n} {events : List (Event n)} {r : Nat}\n    (run : Runs cfg ctx program start events indices final) (aligned : Aligned start.core)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (initial : ∀ t, (start.core.lanes t).pc≤boundary)\n    (observed : events[r]?=some (Event.data reader access)) (later : boundary<access.data.pc) :\n    ∃ c key, c<r ∧ events[c]?=some (.barrier (.completion key)) ∧ key.site=boundary := by\n  obtain ⟨before,earlier,earlierIndices,selected,out,suffix,suffixIndices,j,hp,hs,hm,ht,he,hi⟩ := event_prefix run observed\n  have mem := List.mem_of_getElem? hm\n  obtain ⟨eq,op,next,index,fetch,hd⟩ := step_access_origin hs mem\n  subst reader\n  have pc := (eval_access_pc hd).1\n  change access.data.pc=(before.core.lanes selected).pc at pc\n  obtain ⟨key,hkey,site⟩ := crossed_barrier hp aligned barrier stops (initial selected) (by omega)\n  obtain ⟨c,hc,hce⟩ := List.mem_iff_getElem.mp hkey\n  refine ⟨c,key,by omega,?_,site⟩\n  rw [he]\n  simp [List.getElem?_append,hc,hce]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowStageSources.lean",
+        "passage": {
+          "quote": "theorem own_writers_around\n    (run : Runs cfg ctx program start events indices final) (forward : ForwardFrom program cut)\n    (stores : StageStores events base site) (suffix : ∀ stage, cut≤site stage)\n    (hw : events[w]?=some (.data owner wa)) (hr : events[r]?=some (.data owner ra))\n    (address : ra.data.address=base+owner.val*8)\n    (gap : ∀ (other : Nat) (access : Access), events[other]?=some (.data owner access) →\n      access.data.store=true → access.space=.shared →\n      access.data.pc≤wa.data.pc ∨ ra.data.pc<access.data.pc)\n    (readSuffix : cut≤ra.data.pc) : WritersAround events w r ra.data.address := by\n  intro other thread access found store space j k overlap\n  have same := owner_of_overlap stores.1 found store space (j:=j) (k:=k) (by simpa [address] using overlap)\n  subst thread\n  obtain ⟨stage,pc,_⟩ := stores.2 other owner access found store space\n  have accessSuffix : cut≤access.data.pc := pc ▸ suffix stage\n  rcases gap other access found store space with old | later\n  · rcases lt_or_eq_of_le old with lt | eq\n    · exact Or.inr (Or.inl (before_of_pc run forward found hw accessSuffix lt))\n    · exact Or.inl (access_unique run forward found hw accessSuffix eq)\n  · exact Or.inr (Or.inr (before_of_pc run forward hr found readSuffix later))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete native dot entry derives the shared tree's read sources and\nnumerical values from its own execution. The input loop may revisit instructions,\nbut each shared-memory instruction occurs at most once per lane. Setup fixes\nthe shared base and lane number. Actual comparisons and branches restrict each\nsuccessive stage to half as many lanes, and actual address instructions keep\neach writer in its own eight-byte slot. A later read has an earlier publication\nconnected through the same barrier's arrival and completion events. Lane\nownership and instruction order exclude stale or competing publications.\nConsequently each read obtains the required preceding word, and each actual\nrounded addition produces the next tree value. The last shared read obtains\nlane zero's final publication; the output-address instructions preserve that\nword until the global store. The resulting decoded output is the prescribed\nbinary64 reduction of the actual input-loop partial sums. Neither input sums,\nshared snapshots, desired read values nor phase boundaries are assumed."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowValues.lean",
+        "passage": {
+          "quote": "theorem runs_invariant\n    (actual : NativeFlow.Runs cfg ctx program start events indices final) (aligned : Aligned start.core)\n    (inv : Invariant program loads start) (entries : Entries program loads)\n    (reads : Reads loads events) : Invariant program loads final := by\n  induction actual with\n  | nil => exact inv\n  | cons step rest ih =>\n    exact ih (NativeFlow.step_aligned step aligned)\n      (step_invariant step aligned inv entries (fun t a h => reads t a (List.mem_append_left _ h)))\n      (fun t a h => reads t a (List.mem_append_right _ h))"
         }
       }
     }
