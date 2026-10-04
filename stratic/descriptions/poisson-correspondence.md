@@ -1583,3 +1583,41 @@ cannot supply a fifth byte. Complete PTX admission, the remaining whole-launch
 existence/composition and the finite host loop still need separate work. CUDA
 transport, external serialization and GPU conformance remain outside these
 instruction and source proofs.
+
+A finite gather execution is now constructed for arbitrary valid input bytes.
+Each lane executes its actual setup and connectivity load, copies the selected
+input word to its shared slot when active, and reaches the first barrier. Lanes
+outside the element's matrix still participate in that barrier. The witness
+records all arrivals and the collective release. Its four-byte connectivity and
+eight-byte input reads have compatible initial-byte sources, and each final lane
+state agrees with the independently proved local gather calculation.
+
+The arithmetic continuation also has a finite witness for every supported
+matrix width from two through five. Each phase runs its lanes in turn and then
+completes its actual full-block barrier; the final arithmetic phase has no
+additional barrier. A proof-only byte view folds the actual recorded stores.
+Each witness load chooses bytes from that view without replacing any thread's
+memory state. For each read byte, a source construction identifies initialization
+or the latest preceding store that covers it, with its actual byte offset. The
+construction proves byte compatibility, the necessary barrier-performed rule
+and exclusion of future store sources. This selected schedule and read policy
+witness existence only; universal correctness is not restricted to that policy,
+and complete PTX admission remains separate.
+
+Access validity comes from physical allocations and checked address
+expressions, not a premise asserting that every desired step succeeds. An
+address-only interpreter tracks the actual integer instructions and discards
+floating-point values. A proved single-pass checker establishes the same
+per-instruction address bounds, including alignment and complete eight-byte
+allocation coverage. The largest finite checks are split by matrix row and
+recombined by proofs. This changes checking cost, not the covered instructions,
+lanes, layouts or theorem assumptions.
+
+These are completed gather-prefix and arithmetic-continuation witnesses. The
+arithmetic witness takes a starting register/allocation state and a byte view;
+the whole-cell constructor still has to supply them from the real prefix and
+join the emitted final branch, output store and return into one admitted
+history. A helper already relates the real prefix history to its published
+byte view. Full whole-cell execution existence, remaining rounded launches and
+the finite host solver composition are not established by these separate
+pieces. The exact residual certificate remains a distinct correctness layer.

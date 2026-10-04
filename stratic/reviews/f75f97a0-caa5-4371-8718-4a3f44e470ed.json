@@ -1,0 +1,270 @@
+{
+  "id": "f75f97a0-caa5-4371-8718-4a3f44e470ed",
+  "base": "9d88adf716341d0f2f6f7296b99622f60b418c03",
+  "contentTree": "38e8d50011bab78d1f2f6625a44f947575c33738",
+  "reviewer": "Codex",
+  "summary": "Construct arbitrary-input cell gather and arithmetic execution witnesses with real barriers and recorded byte sources.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Record completed prefix/arithmetic witnesses, physical finite address certificates, necessary source admission and the exact remaining whole-cell join."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "unchanged",
+      "reason": "Parent still correctly requires full whole-cell existence and host composition. Separate completed witness pieces do not establish that remaining join or change emitted instructions."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Discrete equations, numerical reference, residual target, implementation and external input representation unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive PTX semantics changes. Existing instruction/barrier rules are reused; finite certificates are kernel-checked and the single-pass checker is proved sufficient. Necessary source admission remains distinct from full PTX/hardware fidelity."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "No instruction or memory semantics broadened. Byte-wise publication is a witness helper, not a replacement admission model; actual memory accesses remain aligned and allocated."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "38e8d50011bab78d1f2f6625a44f947575c33738",
+      "method": "Sequential capped Lean checks, exact dependency audit and source guards; twelve saved emitted-PTX bindings; frontend tests; manual actual-step, barrier-release, recorded-byte source and allocation-certificate review; Stratic validation and exact snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy process at a time, one Lean thread, 6 GiB cgroup, swap disabled, CPU quota 150 percent. No GPU runs or paid model calls.",
+      "evidence": "All 37 new Lean modules check without warnings, adding 108 declarations. The exact audit passes all 6308 dependency reports and 856 guarded sources with only allowed standard Lean axioms. Constructed arbitrary-input admitted gather prefixes including padding and real collective release; constructed arithmetic continuation witnesses through three actual barrier rounds and final arithmetic. Read bytes are chosen from actual preceding recorded stores, with necessary compatibility/performed and no-future source proofs. Physical address validity follows from allocation geometry and a proved single-pass finite checker for every active lane/instruction of widths 2 through 5. Four byte-helper checks cover partial overlap, offsets, address spaces and exclusive end bounds; these unaligned helper records are not claimed as PTX executions. Large certificates were split by row after clean memory-limit failures, without changing their universal contract. Row checks peak below 4 GiB; final audit peak RSS 5046636 KiB. All 70 frontend tests and twelve refreshed hash-verified receipts pass. Legacy executable reuse is limited to verified unchanged import closures; current audit and rendering checks reran. The whole-cell final branch/store/return join, remaining launches, host composition, complete PTX admission, external serialization, CUDA transport and GPU conformance remain separate obligations. Existing universal results, README and emitted PTX unchanged. The unchanged legacy interpreter suite was not rerun. Stratic summaries, exact links, study guide and snapshots agree.",
+      "tests": [],
+      "id": "1d38c013-9076-4dcb-93a7-af2d409cd268",
+      "recordedAt": "2026-10-04T15:17:16.904Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T15:18:46.305Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-cell-existence.md",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-control-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-initialize-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-restart-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-scalar-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-xrz-binding.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ByteHistory.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ByteHistoryAdmission.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ByteHistoryChecks.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ByteHistoryFrame.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ByteHistoryReads.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ByteHistoryStep.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessBounds.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessBoundsQ1.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessBoundsQ2.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessBoundsQ3.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessBoundsQ4.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessCertificate.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessCertified.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessQ3Row0.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessQ3Row1.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessQ3Row2.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessQ3Row3.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessQ4Row0.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessQ4Row1.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessQ4Row2.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessQ4Row3.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellAccessQ4Row4.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellArithmeticExists.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryBefore.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryExists.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryRecordLocal.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryRecorded.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryRound.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntrySerial.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellEntryWave.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellMiddleExists.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessAllocation.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessBlock.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessPhase.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessProgram.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessRound.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessWave.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual gather/phase steps, collective releases, arbitrary bytes, recorded-source construction, allocation/address certificates, audit registration, receipts and documentation; the full cell join is explicitly still pending."
+    }
+  ]
+}

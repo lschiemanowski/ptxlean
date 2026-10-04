@@ -1,3 +1,40 @@
+import PoissonPTX.ByteHistory
+import PoissonPTX.ByteHistoryAdmission
+import PoissonPTX.ByteHistoryChecks
+import PoissonPTX.ByteHistoryFrame
+import PoissonPTX.ByteHistoryReads
+import PoissonPTX.ByteHistoryStep
+import PoissonPTX.CellAccessBounds
+import PoissonPTX.CellAccessBoundsQ1
+import PoissonPTX.CellAccessBoundsQ2
+import PoissonPTX.CellAccessBoundsQ3
+import PoissonPTX.CellAccessBoundsQ4
+import PoissonPTX.CellAccessCertificate
+import PoissonPTX.CellAccessCertified
+import PoissonPTX.CellAccessQ3Row0
+import PoissonPTX.CellAccessQ3Row1
+import PoissonPTX.CellAccessQ3Row2
+import PoissonPTX.CellAccessQ3Row3
+import PoissonPTX.CellAccessQ4Row0
+import PoissonPTX.CellAccessQ4Row1
+import PoissonPTX.CellAccessQ4Row2
+import PoissonPTX.CellAccessQ4Row3
+import PoissonPTX.CellAccessQ4Row4
+import PoissonPTX.CellArithmeticExists
+import PoissonPTX.CellEntryBefore
+import PoissonPTX.CellEntryExists
+import PoissonPTX.CellEntryRecordLocal
+import PoissonPTX.CellEntryRecorded
+import PoissonPTX.CellEntryRound
+import PoissonPTX.CellEntrySerial
+import PoissonPTX.CellEntryWave
+import PoissonPTX.CellMiddleExists
+import PoissonPTX.CellWitnessAllocation
+import PoissonPTX.CellWitnessBlock
+import PoissonPTX.CellWitnessPhase
+import PoissonPTX.CellWitnessProgram
+import PoissonPTX.CellWitnessRound
+import PoissonPTX.CellWitnessWave
 import PoissonPTX.ScalarAdmittedPublication
 import PoissonPTX.ScalarAlphaSources
 import PoissonPTX.ScalarBetaSources
@@ -7151,3 +7188,112 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.chunks_valid
 #print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.reads_before_writes
 #print axioms PtxTorchLean.Poisson.PTX.Scalar.Start.admitted_body
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.applyEvent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.publish
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.Covers
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.origin
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.publish_append
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.origin_initial
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.origin_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.Reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.sources
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.admitted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.source_earlier
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.Checks.writes
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.Checks.partial_overlap
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.Checks.real_offsets
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.Checks.spaces_remain_separate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.Checks.store_end_is_exclusive
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.publish_readonly
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.reads_recorded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.ReadEvent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.Recorded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.recorded_reads
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.recorded_append
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.read_event_of_values
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.recorded_admitted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.ValidOp
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.data_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.data_recorded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.data_allocation
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.extent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.accessCheck
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.AccessBounds
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q1
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.bounds_q1
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q2
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.bounds_q2
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q3
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.bounds_q3
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q4
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.bounds_q4
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.AccessSafe
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.SequenceSafe
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.sequence_safe_at
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.Certificate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_bounds
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.access_bounds
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q3_row0
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q3_row1
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q3_row2
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q3_row3
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q4_row0
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q4_row1
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q4_row2
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q4_row3
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.certificate_q4_row4
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.arithmetic_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Before.code
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Before.finish
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Before.length
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Before.program_eq
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Before.no_sync
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Before.finish_pc
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Before.exists_trace
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.step_read_global
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.read_global
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.initial_sources
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.admitted_prefix_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.record_local_step
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.set_lane_self
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.set_lane_twice
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.record_local_run
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.recorded_prefix
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.afterRound
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.roundPrefix
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.prefix_dispatch
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.barrier_round_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Serial.allLanes
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Serial.partialState
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Serial.prefix_zero
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Serial.prefix_all
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Serial.prefix_next
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Serial.append
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Serial.run_lanes
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.prefix_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.middle_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.Allocation
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.allocation_data
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.valid_operand
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.next_valid
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.block_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.lane_phase_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.stageBody
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.startPC
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.segment
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.beforeCode
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.afterCode
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.before_length
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.segments
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.stage_guard
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.stage_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.stage_sync
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.next_stage
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.last_end
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.recorded_barriers
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.ready_round
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.round_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.Ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.ready_update
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.body_wave
