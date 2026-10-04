@@ -742,6 +742,18 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.WithTail'] = COUNTS.get('PtxTorchLea
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent', 0) + 2
 TARGETS.update(['PoissonPTX.ByteHistoryRelocate', 'PoissonPTX.CellExecutionExists', 'PoissonPTX.CellGridInputExists', 'PoissonPTX.CellWholeExists', 'PoissonPTX.CellWitnessBody', 'PoissonPTX.CellWitnessFinalFront', 'PoissonPTX.CellWitnessFinalWave', 'PoissonPTX.CellWitnessFront', 'PoissonPTX.CellWitnessLaunch', 'PoissonPTX.CellWitnessOutput', 'PoissonPTX.CellWitnessTail', 'PoissonPTX.CellWitnessTailLocal', 'PoissonPTX.CellWitnessTailWave', 'PoissonPTX.ConcurrentAllocation'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.AffineUpdate.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.AffineUpdate.Arena', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly.Arena', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.Assembly'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Assembly', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Initialize.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Initialize.Arena', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.Flow.Observed'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Observed', 0) + 8
+COUNTS['PtxTorchLean.Poisson.PTX.Flow.Parallel'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Parallel', 0) + 27
+COUNTS['PtxTorchLean.Poisson.PTX.RestartVectors.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.RestartVectors.Arena', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.Rounded'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Rounded', 0) + 8
+COUNTS['PtxTorchLean.Poisson.PTX.Rounded.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Rounded.Checks', 0) + 4
+COUNTS['PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena', 0) + 3
+TARGETS.update(['PoissonPTX.AffineUpdateRounded', 'PoissonPTX.AffineUpdateRoundedCorrect', 'PoissonPTX.AssemblyRoundedCorrect', 'PoissonPTX.AssemblyRoundedExists', 'PoissonPTX.AssemblyRoundedProgram', 'PoissonPTX.InitializeRounded', 'PoissonPTX.InitializeRoundedCorrect', 'PoissonPTX.ObservedPadding', 'PoissonPTX.ObservedPaddingUnique', 'PoissonPTX.ObservedParallelExtend', 'PoissonPTX.ObservedParallelPadding', 'PoissonPTX.ObservedParallelRestrict', 'PoissonPTX.ObservedRoundedHistory', 'PoissonPTX.ObservedRoundedProjectSources', 'PoissonPTX.ObservedRoundedSources', 'PoissonPTX.RestartVectorsRounded', 'PoissonPTX.RestartVectorsRoundedCorrect', 'PoissonPTX.RoundedLaunch', 'PoissonPTX.RoundedLaunchChecks', 'PoissonPTX.RoundedLaunchProjection', 'PoissonPTX.UpdateXRZRounded', 'PoissonPTX.UpdateXRZRoundedCorrect'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

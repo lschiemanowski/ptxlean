@@ -1,3 +1,25 @@
+import PoissonPTX.AffineUpdateRounded
+import PoissonPTX.AffineUpdateRoundedCorrect
+import PoissonPTX.AssemblyRoundedCorrect
+import PoissonPTX.AssemblyRoundedExists
+import PoissonPTX.AssemblyRoundedProgram
+import PoissonPTX.InitializeRounded
+import PoissonPTX.InitializeRoundedCorrect
+import PoissonPTX.ObservedPadding
+import PoissonPTX.ObservedPaddingUnique
+import PoissonPTX.ObservedParallelExtend
+import PoissonPTX.ObservedParallelPadding
+import PoissonPTX.ObservedParallelRestrict
+import PoissonPTX.ObservedRoundedHistory
+import PoissonPTX.ObservedRoundedProjectSources
+import PoissonPTX.ObservedRoundedSources
+import PoissonPTX.RestartVectorsRounded
+import PoissonPTX.RestartVectorsRoundedCorrect
+import PoissonPTX.RoundedLaunch
+import PoissonPTX.RoundedLaunchChecks
+import PoissonPTX.RoundedLaunchProjection
+import PoissonPTX.UpdateXRZRounded
+import PoissonPTX.UpdateXRZRoundedCorrect
 import PoissonPTX.ByteHistoryRelocate
 import PoissonPTX.CellExecutionExists
 import PoissonPTX.CellGridInputExists
@@ -7346,3 +7368,68 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.tail_wave
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_allocation
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.runs_allocation
+
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.rounded_exists
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.rounded_correct
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.rounded_outside
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.rounded_value
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.rounded_outside
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.Arena.rounded_exists
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.guardedBody
+#print axioms PtxTorchLean.Poisson.PTX.Assembly.entry_guarded
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.rounded_exists
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.rounded_correct
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.rounded_outside
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.pure
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.pure_eval
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.pure_observation
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.pure_sequence
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.vector_padding
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.consume_pure
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.halted_history
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.vector_padding_unique
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.extend
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.extend_active
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.extend_update
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.renameEvent
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.extend_run
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.no_barriers
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.empty_words
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.silent_all
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.complete_padding
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.restrict
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.restrictEvent
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.restrictIndex
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.restrict_update_active
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.restrict_update_padding
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.restrict_run
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.vector_active_records
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.recover_words
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.recover_indices
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.unrename_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.unrename_index_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.unrename_thread_sources
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.renamed_data
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.rename_data
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.rename_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.rename_index_compatible
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.rename_thread_sources
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.rename_publication
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.rounded_exists
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.rounded_correct
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.rounded_outside
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.count
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.enough
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.count_bound
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.context
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.index
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.live
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.run
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.Checks.sizes
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.Checks.first_padding
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.Checks.last_active
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.Checks.large_padding
+#print axioms PtxTorchLean.Poisson.PTX.Rounded.history
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.rounded_exists
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.rounded_correct
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.rounded_outside

@@ -1,0 +1,218 @@
+{
+  "id": "2b1aaf9b-3eab-4dd5-9f1d-b568706b45d6",
+  "base": "553b61ede7335e140cfa6b04d35e7fbb208fcb5e",
+  "contentTree": "4408ccd5a0c68188588954092f3ff2f1d68db4e7",
+  "reviewer": "Codex",
+  "summary": "Prove full rounded PCG vector and assembly launches, including actual padding returns, source preservation, universal numerical publication and byte frames.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Replace joint-padding gaps for initialization, direction update, combined update, restart and assembly with full rounded execution and universal publication proofs; retain fresh-residual and host-loop gaps."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe five complete rounded launch kinds and remove obsolete joint-padding gaps while keeping the remaining residual and host obligations explicit."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Discrete equations, numerical reference, residual target, implementation and external input representation unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive PTX semantics changes. Existing instruction/barrier rules are reused; finite certificates are kernel-checked and the single-pass checker is proved sufficient. Necessary source admission remains distinct from full PTX/hardware fidelity."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "No instruction or memory semantics broadened. Byte-wise publication is a witness helper, not a replacement admission model; actual memory accesses remain aligned and allocated."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "4408ccd5a0c68188588954092f3ff2f1d68db4e7",
+      "method": "Sequential capped Lean checks, exact dependency audit and source guards; twelve saved emitted-PTX bindings; frontend tests; manual actual-step, barrier-release, recorded-byte source and allocation-certificate review; Stratic validation and exact snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy process at a time, one Lean thread, 6 GiB cgroup, swap disabled, CPU quota 150 percent. No GPU runs or paid model calls.",
+      "evidence": "All 22 new Lean modules check without warnings, adding 64 declarations. The exact audit passes 6406 dependency reports and 892 guarded sources with only standard Lean axioms; all 16 dependency pins pass. Proved exact nonwrapping 256-lane rounding and actual memory-free padding prologue/return execution. Constructed full rounded initialization, direction-update, combined-update, restart and assembly launches from arbitrary valid input words. Universal completed-history projection derives padding silence, retains all access occurrences, transfers arbitrary byte-source assignments and same-thread no-future admission, and preserves global publication. Existing numerical theorems and frames now apply to all five rounded launch kinds. The assembly decomposition is proved equal to the original loop and jump targets. Four kernel-checked examples cover empty, exact-block and adjacent sizes, plus the largest supported node count. All 70 frontend tests and twelve refreshed hash-verified PTX receipts pass. Legacy executable reuse is limited to verified unchanged import closures; current audit and rendering checks reran. README and emitted PTX unchanged. Rounded fresh-residual execution, finite host-loop composition, full PTX admission, external serialization, CUDA visibility and GPU conformance remain separate obligations. Stratic summaries, exact links, study guide and matching snapshots agree. The unchanged legacy interpreter suite was not rerun. Audit peak RSS 5073752 KiB",
+      "tests": [],
+      "id": "c8812a66-40b6-473c-87f1-e78cc49d7b21",
+      "recordedAt": "2026-10-04T16:13:39.476Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T16:15:17.959Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-rounded-launches.md",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-control-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-initialize-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-restart-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-scalar-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-xrz-binding.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateRounded.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateRoundedCorrect.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyRoundedCorrect.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyRoundedExists.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AssemblyRoundedProgram.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/InitializeRounded.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/InitializeRoundedCorrect.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedPadding.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedPaddingUnique.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedParallelExtend.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedParallelPadding.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedParallelRestrict.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedRoundedHistory.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedRoundedProjectSources.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedRoundedSources.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsRounded.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsRoundedCorrect.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RoundedLaunch.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RoundedLaunchChecks.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RoundedLaunchProjection.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZRounded.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZRoundedCorrect.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed actual rounded indexing, silent padding traces, universal history projection, source transport, five concrete launch instances, output frames, dependency registration, receipts and documentation. No desired read value or output is supplied."
+    }
+  ]
+}

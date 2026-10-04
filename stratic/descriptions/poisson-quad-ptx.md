@@ -525,9 +525,9 @@ sources and the no-future constraint. Arbitrary input words, including exception
 values and zero diagonals, are permitted; numerical acceptance remains separate.
 The emitted entry is bound instruction for instruction across the saved layouts.
 These are necessary fragment admission constraints, not the complete PTX memory
-model. Joint padding scheduling, CUDA visibility, hardware conformance,
-scalar decision kernels and full host PCG
-composition remain separate obligations.
+model. The rounded-launch extension below includes the padding lanes.
+CUDA visibility, hardware conformance and full host PCG composition remain
+separate obligations; scalar decision kernels have their own proofs below.
 
 Restart copies the freshly recomputed residual into r and divides it by the
 diagonal to obtain z and p. At boundary coordinates it substitutes the exact
@@ -551,10 +551,10 @@ is needed for execution. Numerical acceptance is a separate question.
 The emitted restart entry is compared instruction for instruction across saved
 layouts. The necessary fragment source constraints do not establish the complete
 PTX memory model, and finite schedule existence does not establish GPU fairness.
-Joint padding scheduling, CUDA visibility and hardware conformance remain
-separate. Scalar decision kernels and host-loop composition
-still need their corresponding results before claiming complete solver
-correspondence.
+The rounded-launch extension below includes the padding lanes. CUDA
+visibility and hardware conformance remain separate. Scalar decision kernels
+have their own proofs below; host-loop composition remains necessary for
+complete solver correspondence.
 
 Initialization reads each coordinate's load and boundary flag. It substitutes
 positive zero for the load at boundary coordinates, copies that same word to
@@ -578,9 +578,9 @@ exceptional values do not prevent execution; numerical acceptance is separate.
 
 The exact emitted instruction list is bound across saved layouts, including
 both zero-word instructions and the boundary divisor. These results use necessary
-fragment admission constraints, not the complete PTX memory model. Joint padding
-scheduling, GPU fairness, CUDA visibility and hardware conformance remain
-separate. Scalar decision kernels and host-loop composition remain obligations
+fragment admission constraints, not the complete PTX memory model. The
+rounded-launch extension below includes the padding lanes. GPU fairness, CUDA
+visibility and hardware conformance remain separate. Host-loop composition remains an obligation
 for full solver correspondence.
 
 The scalar residual-norm entry loads the stored sum of residual squares,
@@ -669,3 +669,32 @@ cannot supply a fifth byte. Complete PTX admission, the remaining whole-launch
 existence/composition and the finite host loop still need separate work. CUDA
 transport, external serialization and GPU conformance remain outside these
 instruction and source proofs.
+
+Rounded launches include every lane in whole blocks of 256 threads. The
+number of launched lanes is the smallest multiple of 256 containing all active
+coordinates. Actual lane and block indices compute the corresponding unsigned
+vector index without wrapping under the supported node-count bound. Lanes past
+the vector execute the real six-instruction index setup, guard and return; they
+produce no word or connectivity-index memory records.
+
+For initialization, direction update, combined solution/residual/preconditioner
+update, restart and assembly, complete rounded executions are constructed from
+arbitrary valid input storage. The added lanes execute actual instructions;
+their silence preserves the exact active history, admitted byte sources and
+published global memory. No allocation is required for a padding lane's absent
+vector access.
+
+Universal correctness also covers the complete rounded launch. Projecting any
+completed interleaving onto its active coordinates yields their actual fetched
+execution. The guard proof shows that the discarded lanes have no memory
+records, so the projection retains every access occurrence. Source assignments
+and the same-thread no-future condition transfer without supplying read values.
+The existing numerical theorem then determines the full launch's publication,
+including in-place reads and the assembly accumulation order. Every byte outside
+the actual output arrays is preserved.
+
+These results establish finite model execution and numerical publication for
+those five launch kinds. They do not assert GPU scheduling fairness, CUDA
+visibility or complete PTX admission. Rounded fresh-residual execution and
+composition of all launches through the finite host PCG loop remain separate
+obligations; residual certification remains the accepted-result guarantee.
