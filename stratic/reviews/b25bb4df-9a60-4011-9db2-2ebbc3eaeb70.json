@@ -1,0 +1,185 @@
+{
+  "id": "b25bb4df-9a60-4011-9db2-2ebbc3eaeb70",
+  "base": "f9dcb00c37073bf564fc5a1b652e001e4702bcab",
+  "contentTree": "7af3059511e2c26ae23a767ee78fd92f2a014737",
+  "reviewer": "Codex",
+  "summary": "Prove complete parallel PCG residual restart.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Prove restart from actual fetched instructions and read-only byte sources, with bitwise residual copy, equal quotient words, parallel publication/frame and independent finite admitted existence. Keep initialization, scalar decisions and host composition open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe the complete restart active-coordinate parallel proof, actual sources, finite existence and exact emitted instruction binding, retaining numerical acceptance, memory-model, padding and solver-composition boundaries."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The source solver, discrete equations, kernel implementation, residual certificate and numerical policies remain unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Restart uses existing byte compatibility on physically read-only inputs. No primitive instruction semantics changed; manual fidelity, proof validity, binding and hardware claims remain distinct."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "7af3059511e2c26ae23a767ee78fd92f2a014737",
+      "method": "Sequential capped Lean checks, exact dependency audit and source/dependency guards; nine saved PTX bindings; frontend mutation tests; manual input ownership, instruction trace, output publication and existence review; receipt hashes and Stratic snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy job at a time, one Lean thread, 6 GiB hard memory limit, swap disabled, CPU 150 percent. No GPU runs or paid calls.",
+      "evidence": "All 16 new modules checked without warnings. 5631 exact dependency reports use only allowed standard Lean axioms; 744 guarded source files and all pins pass. The full 34-instruction restart entry derives its actual residual copy and quotient outputs from initial bytes, preserving the same quotient word in z and p. Generic physical array layout bounds and separates all five arrays and boundary flags. Actual instruction-address invariants classify every access; no output can supply any input read, so word and four-byte compatibility force initial input values. Universal parallel publication and preservation outside output arrays are proved, alongside independent finite admitted execution from arbitrary words. Padding paths remain local, not joint padding scheduling. Initialization, scalar decision kernels and host composition remain open; necessary fragment admission is not the full PTX memory model, GPU fairness, CUDA visibility or hardware conformance. All 55 frontend tests pass; nine receipts refreshed and hash-verified, including all 30 complete restart entries. Legacy executable reuse was limited to verified unchanged import closures; current audit and text checks reran. Peak audit RSS 4895740 KiB. Unchanged legacy interpreter suite not rerun. Stratic summaries, exact links, study guide and snapshots agree. README and emitted PTX are unchanged.",
+      "tests": [],
+      "id": "70ea1a17-0a69-4319-928b-60a17cf8b194",
+      "recordedAt": "2026-10-04T12:37:26.166Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T12:38:51.504Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-pcg-updates.md",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/check_poisson_restart.py",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-restart-binding.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-xrz-binding.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/test_poisson_restart.py",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ArrayArena.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ArrayArenaSafety.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DividePair.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectors.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsAccess.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsAddress.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsArena.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsCorrect.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsEntry.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsExists.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsInputs.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsParallel.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsRecorded.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsState.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RestartVectorsText.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/VectorCopy.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed actual restart instruction trace, input/output separation, read-only input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    }
+  ]
+}

@@ -1,3 +1,19 @@
+import PoissonPTX.ArrayArena
+import PoissonPTX.ArrayArenaSafety
+import PoissonPTX.DividePair
+import PoissonPTX.RestartVectors
+import PoissonPTX.RestartVectorsAccess
+import PoissonPTX.RestartVectorsAddress
+import PoissonPTX.RestartVectorsArena
+import PoissonPTX.RestartVectorsCorrect
+import PoissonPTX.RestartVectorsEntry
+import PoissonPTX.RestartVectorsExists
+import PoissonPTX.RestartVectorsInputs
+import PoissonPTX.RestartVectorsParallel
+import PoissonPTX.RestartVectorsRecorded
+import PoissonPTX.RestartVectorsState
+import PoissonPTX.RestartVectorsText
+import PoissonPTX.VectorCopy
 import PoissonPTX.ControlFlowScalarSegments
 import PoissonPTX.ControlFlowSegments
 import PoissonPTX.PreconditionUpdate
@@ -6397,3 +6413,93 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.VectorFlowEntry.inactive
 #print axioms PtxTorchLean.Poisson.PTX.VectorFlowEntry.completed_body
 #print axioms PtxTorchLean.Poisson.PTX.VectorFlowEntry.executes
+
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.context
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.start
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.slot
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.index
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.live
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.vector_address
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.boundary_address
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.setup_address
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.setup_boundary
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.owners
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.boundary_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.overlap_owner
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.vector_valid
+#print axioms PtxTorchLean.Poisson.PTX.ArrayArena.boundary_valid
+#print axioms PtxTorchLean.Poisson.PTX.DividePair.code
+#print axioms PtxTorchLean.Poisson.PTX.DividePair.first
+#print axioms PtxTorchLean.Poisson.PTX.DividePair.finish
+#print axioms PtxTorchLean.Poisson.PTX.DividePair.result
+#print axioms PtxTorchLean.Poisson.PTX.DividePair.executes
+#print axioms PtxTorchLean.Poisson.PTX.DividePair.state_result
+#print axioms PtxTorchLean.Poisson.PTX.DividePair.finish_global
+#print axioms PtxTorchLean.Poisson.PTX.DividePair.finish_frame
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.prefixCode
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.body
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.entry
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.copied
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.ready
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.finish
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Valid
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.copied_mask
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.prefix_trace
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.prefix_plain
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.body_segment
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.ready_frame
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.AccessAt
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.access_step
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.accesses
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.index_step
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.index_accesses
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.entry_linear
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.AddressReady
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.address_initial
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.address_step
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Field
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.program
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.local_valid
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.local_separate
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.access_shape
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.parallel_access
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.parallel_index
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Separate
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.quotient
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.divisor_value
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.ready_result
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.correct
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.entry_correct
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.entry_exists
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.inactive
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.inactive_exists
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.local_exists
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.parallel_exists
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.Inputs
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.inputs_initial
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.inputs_step
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.quotient
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.separated
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.publication
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.local_correct
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.parallel_correct
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.publication_outside
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.Arena.recorded_witness
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.ready_address
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.state_result
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.body_exists
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.ready_word
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.ready_divisor
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.finish_global
+#print axioms PtxTorchLean.Poisson.PTX.RestartVectors.rendered
+#print axioms PtxTorchLean.Poisson.PTX.VectorCopy.code
+#print axioms PtxTorchLean.Poisson.PTX.VectorCopy.loaded
+#print axioms PtxTorchLean.Poisson.PTX.VectorCopy.finish
+#print axioms PtxTorchLean.Poisson.PTX.VectorCopy.executes
+#print axioms PtxTorchLean.Poisson.PTX.VectorCopy.block_eq
+#print axioms PtxTorchLean.Poisson.PTX.VectorCopy.finish_global
+#print axioms PtxTorchLean.Poisson.PTX.VectorCopy.finish_frame
+#print axioms PtxTorchLean.Poisson.PTX.VectorCopy.finish_address

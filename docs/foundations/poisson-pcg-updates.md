@@ -139,7 +139,7 @@ values and zero diagonals, are permitted; numerical acceptance remains separate.
 The emitted entry is bound instruction for instruction across the saved layouts.
 These are necessary fragment admission constraints, not the complete PTX memory
 model. Joint padding scheduling, CUDA visibility, hardware conformance,
-initialization/restart kernels, scalar decision kernels and full host PCG
+initialization kernels, scalar decision kernels and full host PCG
 composition remain separate obligations.
 
 The important order is visible in the instruction counters:
@@ -171,9 +171,51 @@ constant is kernel-checked by `PreconditionUpdate.decode_one`. The source-bindin
 checker compares all 54 rendered instructions, including the boundary selector
 and division operand order, and audits the named theorem dependencies.
 
+## Restarting from a freshly recomputed residual
+
+Restart copies the freshly recomputed residual into r and divides it by the
+diagonal to obtain z and p. At boundary coordinates it substitutes the exact
+binary64 word for one as divisor. The two quotient stores use the same actual
+result word, including any permitted exceptional-value encoding. The residual
+copy is bit for bit. These are statements about the actual loads, arithmetic
+instruction and stores, not supplied numerical answers.
+
+The complete 34-instruction fetched entry includes launch indexing, the active
+and padding paths, the four-byte boundary load and return. A physical layout
+bounds and aligns five mutually separate binary64 arrays and separate boundary
+flags. Actual instruction addresses derive array ownership. No output store
+can overlap a source-residual, diagonal or boundary read, so byte-source
+compatibility forces every input read to the initial memory. Every completed
+admitted active-coordinate interleaving publishes r, z and p with the stated
+values and preserves bytes outside those output arrays. Independently, the
+same instruction list has a finite joint execution with compatible initial-byte
+sources for arbitrary input words; no nonzero-diagonal or finiteness assumption
+is needed for execution. Numerical acceptance is a separate question.
+
+The emitted restart entry is compared instruction for instruction across saved
+layouts. The necessary fragment source constraints do not establish the complete
+PTX memory model, and finite schedule existence does not establish GPU fairness.
+Joint padding scheduling, CUDA visibility and hardware conformance remain
+separate. Initialization, scalar decision kernels and host-loop composition
+still need their corresponding results before claiming complete solver
+correspondence.
+
+The residual-copy load is at instruction 9, its r store at 13, the diagonal
+load at 17, the boundary flag load at 21, division at 24, quotient stores at
+28 and 32, and return at 33. The load source is the separate `true_r` array.
+This separation is why restart can use ordinary source replay: unlike the
+in-place x/r and direction updates, none of its input arrays is overwritten.
+
+`RestartVectorsCorrect.entry_correct` relates a completed fetched thread to
+its input bytes. `RestartVectorsParallel.Arena.parallel_correct` derives the
+joint publication from actual admitted observations. `RestartVectorsExists.Arena.parallel_exists`
+constructs one actual finite schedule and its sources. `ArrayArena` shares the
+physical array-layout facts across such kernels; `DividePair` preserves the
+actual quotient word rather than forcing every result to a chosen encoding.
+
 ## Remaining work
 
-The initialization and restart updates, scalar decision kernels and the host PCG loop still need
+The initialization update, scalar decision kernels and the host PCG loop still need
 their instruction-level composition. The accepted solver target remains a fresh
 residual bound for the same discrete equations, rather than CPU-iterate bitwise
 identity or a convergence claim for every input.

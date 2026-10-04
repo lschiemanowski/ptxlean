@@ -1421,5 +1421,41 @@ values and zero diagonals, are permitted; numerical acceptance remains separate.
 The emitted entry is bound instruction for instruction across the saved layouts.
 These are necessary fragment admission constraints, not the complete PTX memory
 model. Joint padding scheduling, CUDA visibility, hardware conformance,
-initialization/restart kernels, scalar decision kernels and full host PCG
+initialization kernels, scalar decision kernels and full host PCG
 composition remain separate obligations.
+
+Initialization and restart must establish the solver vectors from actual input
+bytes. Initialization masks the load to zero on boundary coordinates, copies it
+to rhs and r, divides by the boundary-adjusted diagonal to obtain z and p, and
+zeros x. Restart copies the fresh residual to r and recomputes z and p with the
+same division policy. Their read-only inputs and output arrays must be proved
+physically separate, their full fetched entries must match emitted PTX, and
+actual source admission, numerical publication and finite execution existence
+must be provided before composing them into the host solver loop.
+
+Restart copies the freshly recomputed residual into r and divides it by the
+diagonal to obtain z and p. At boundary coordinates it substitutes the exact
+binary64 word for one as divisor. The two quotient stores use the same actual
+result word, including any permitted exceptional-value encoding. The residual
+copy is bit for bit. These are statements about the actual loads, arithmetic
+instruction and stores, not supplied numerical answers.
+
+The complete 34-instruction fetched entry includes launch indexing, the active
+and padding paths, the four-byte boundary load and return. A physical layout
+bounds and aligns five mutually separate binary64 arrays and separate boundary
+flags. Actual instruction addresses derive array ownership. No output store
+can overlap a source-residual, diagonal or boundary read, so byte-source
+compatibility forces every input read to the initial memory. Every completed
+admitted active-coordinate interleaving publishes r, z and p with the stated
+values and preserves bytes outside those output arrays. Independently, the
+same instruction list has a finite joint execution with compatible initial-byte
+sources for arbitrary input words; no nonzero-diagonal or finiteness assumption
+is needed for execution. Numerical acceptance is a separate question.
+
+The emitted restart entry is compared instruction for instruction across saved
+layouts. The necessary fragment source constraints do not establish the complete
+PTX memory model, and finite schedule existence does not establish GPU fairness.
+Joint padding scheduling, CUDA visibility and hardware conformance remain
+separate. Initialization, scalar decision kernels and host-loop composition
+still need their corresponding results before claiming complete solver
+correspondence.
