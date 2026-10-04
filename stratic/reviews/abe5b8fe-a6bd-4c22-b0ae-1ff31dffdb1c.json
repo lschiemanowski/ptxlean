@@ -1,0 +1,186 @@
+{
+  "id": "abe5b8fe-a6bd-4c22-b0ae-1ff31dffdb1c",
+  "base": "83112cf301e8bfc1d7d8e56f64a23caaed83db26",
+  "contentTree": "b49c878c5e0ddf2e1c057451d1cdab707b9e9e6a",
+  "reviewer": "Codex",
+  "summary": "Complete arbitrary-input cell and finite-grid execution witnesses and connect their actual publications to TorchLean.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Record complete cell and grid existence from input-only representation, with real barriers, stores, returns and necessary byte sources."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Replace the obsolete arbitrary-input cell/grid existence gap with the completed constructor; retain host composition and external boundaries."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Discrete equations, numerical reference, residual target, implementation and external input representation unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive PTX semantics changes. Existing instruction/barrier rules are reused; finite certificates are kernel-checked and the single-pass checker is proved sufficient. Necessary source admission remains distinct from full PTX/hardware fidelity."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "No instruction or memory semantics broadened. Byte-wise publication is a witness helper, not a replacement admission model; actual memory accesses remain aligned and allocated."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "b49c878c5e0ddf2e1c057451d1cdab707b9e9e6a",
+      "method": "Sequential capped Lean checks, exact dependency audit and source guards; twelve saved emitted-PTX bindings; frontend tests; manual actual-step, barrier-release, recorded-byte source and allocation-certificate review; Stratic validation and exact snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy process at a time, one Lean thread, 6 GiB cgroup, swap disabled, CPU quota 150 percent. No GPU runs or paid model calls.",
+      "evidence": "All 14 new Lean modules check without warnings, adding 34 declarations. The exact audit passes 6342 dependency reports and 870 guarded sources with only standard Lean axioms; all 16 dependency pins pass. Constructed the actual emitted final guard, active six-instruction store/return tail and padding return. Physical output validity follows from launch indices and preserved allocations. Joined arbitrary-input gather and arithmetic into a complete fetched history with all four barrier rounds, recorded reads and actual output stores. An input-only representation interface constructs the full execution and its TorchLean tensor correspondence; a finite input family constructs an admitted grid without assumed local runs. All 70 frontend tests and twelve refreshed hash-verified PTX receipts pass. Legacy executable reuse is limited to verified unchanged import closures; current audit and rendering checks reran. README and emitted PTX unchanged. The remaining rounded launches, finite host loop, full PTX admission, external serialization, CUDA visibility and GPU conformance remain separate. Stratic summaries, passage links, study guide and exact snapshots agree. The unchanged legacy interpreter suite was not rerun. Audit peak RSS 5055852 KiB. Registration mistakenly included one comment word at first; removing that nonexistent declaration corrected the registry without changing proofs or weakening guards",
+      "tests": [],
+      "id": "c1e200bb-f62a-4d43-9fdc-11029ba9e0db",
+      "recordedAt": "2026-10-04T15:46:37.159Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T15:48:16.334Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-cell-existence.md",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-control-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-initialize-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-restart-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-scalar-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-xrz-binding.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ByteHistoryRelocate.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellExecutionExists.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGridInputExists.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWholeExists.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessBody.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessFinalFront.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessFinalWave.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessFront.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessLaunch.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessOutput.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessTail.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessTailLocal.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellWitnessTailWave.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ConcurrentAllocation.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed actual full-cell and grid construction, allocation-preserving joins, recorded-source admission, input-only TorchLean interface, registration, receipts and documentation. No desired output or supplied completed run is an input."
+    }
+  ]
+}

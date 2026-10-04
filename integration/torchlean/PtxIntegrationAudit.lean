@@ -1,3 +1,17 @@
+import PoissonPTX.ByteHistoryRelocate
+import PoissonPTX.CellExecutionExists
+import PoissonPTX.CellGridInputExists
+import PoissonPTX.CellWholeExists
+import PoissonPTX.CellWitnessBody
+import PoissonPTX.CellWitnessFinalFront
+import PoissonPTX.CellWitnessFinalWave
+import PoissonPTX.CellWitnessFront
+import PoissonPTX.CellWitnessLaunch
+import PoissonPTX.CellWitnessOutput
+import PoissonPTX.CellWitnessTail
+import PoissonPTX.CellWitnessTailLocal
+import PoissonPTX.CellWitnessTailWave
+import PoissonPTX.ConcurrentAllocation
 import PoissonPTX.ByteHistory
 import PoissonPTX.ByteHistoryAdmission
 import PoissonPTX.ByteHistoryChecks
@@ -7297,3 +7311,38 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.Ready
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.ready_update
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.body_wave
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.apply_relocate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.publish_relocate
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory.recorded_relocate
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Inputs
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Inputs.Realizes
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Inputs.exists_execution
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.Inputs.exists_corresponding
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.InputFamily
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.InputFamily.exists_grid
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.exists_recorded
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.recorded_sources
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.body_exists
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.final_data_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.final_front_lane
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.final_front_wave
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.front_output_valid
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.front_prefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.front_fetch_before
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.run_before_guard
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.middle_front
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.lift_front
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.Local.finish_allocation
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.witness_ready
+#print axioms PtxTorchLean.Poisson.PTX.CellEntry.witness_output
+#print axioms PtxTorchLean.Poisson.PTX.CellFinal.tail_exists_complete
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.writes_recorded
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.tail_lane
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.noLoad
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.access_writes
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.tail_exec_lift
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.WithTail.runs_append
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness.tail_wave
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.step_allocation
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.runs_allocation

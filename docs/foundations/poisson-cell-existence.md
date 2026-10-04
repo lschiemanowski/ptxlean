@@ -68,16 +68,39 @@ per-instruction contract. The larger certificates are checked a matrix row at
 a time and combined into the same universal statement. This limits proof-checker
 memory without reducing coverage or trusting a native computation result.
 
-## What still needs joining
+## One complete cell and grid
 
-The gather-prefix witness and arithmetic-continuation witness are complete
-separately. The latter explicitly takes its starting registers, allocations and
-byte view. `CellEntry.recorded_prefix` provides the prefix's recorded-view fact,
-but the whole-cell constructor still needs to connect these actual states and
-include the emitted final branch, output store and return in one admitted run.
+`CellWhole.exists_recorded` joins the actual prefix to the actual body. It
+starts from arbitrary valid input bytes, physical allocations and launch
+indices. The continuation receives the prefix's computed registers and byte
+publication. Nothing installs a presumed shared tensor into its machine state.
+
+The final branch follows the emitted program. Active lanes execute the two
+final contractions, separately rounded addition, output index calculation,
+eight-byte store and return. Padding lanes jump past the arithmetic and store
+to the same return instruction. `tail_exists_complete` proves the active tail
+executes all six instructions. The complete witness ends with every lane halted
+and all four collective barrier rounds released.
+
+`CellWhole.Inputs` adds the connection between input bytes and TorchLean:
+connectivity, vector contents and coefficient tables represent the specified
+operator. It contains no execution, expected result or read-source choices.
+`Inputs.exists_corresponding` constructs an actual execution and applies the
+universal cell theorem to prove that its published output is the TorchLean
+cell action. The output word comes from the actual result register and store.
+
+`InputFamily.exists_grid` repeats this construction for a finite mesh and uses
+the existing grid scheduling and source-lifting proofs. Blocks share the global
+input memory and output array; each block has private shared storage and
+barriers. A serial block schedule suffices to prove existence. It does not
+restrict the existing universal result to serial GPU scheduling.
+
+## What remains outside this result
 
 The remaining rounded launches and finite host PCG composition are further
 obligations. The accepted solver target is a fresh residual bound for the same
 discrete equations. An exact residual certificate is already a separate layer;
 it does not by itself prove the PTX execution/host correspondence or convergence
-for every input.
+for every input. Necessary byte-source admission, complete PTX admission,
+external table serialization, CUDA visibility and GPU conformance remain
+distinct claims.

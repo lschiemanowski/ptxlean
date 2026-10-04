@@ -730,6 +730,18 @@ COUNTS['PtxTorchLean.Poisson.PTX.CellEntry'] = COUNTS.get('PtxTorchLean.Poisson.
 COUNTS['PtxTorchLean.Poisson.PTX.CellEntry.Serial'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellEntry.Serial', 0) + 7
 TARGETS.update(['PoissonPTX.ByteHistory', 'PoissonPTX.ByteHistoryAdmission', 'PoissonPTX.ByteHistoryChecks', 'PoissonPTX.ByteHistoryFrame', 'PoissonPTX.ByteHistoryReads', 'PoissonPTX.ByteHistoryStep', 'PoissonPTX.CellAccessBounds', 'PoissonPTX.CellAccessBoundsQ1', 'PoissonPTX.CellAccessBoundsQ2', 'PoissonPTX.CellAccessBoundsQ3', 'PoissonPTX.CellAccessBoundsQ4', 'PoissonPTX.CellAccessCertificate', 'PoissonPTX.CellAccessCertified', 'PoissonPTX.CellAccessQ3Row0', 'PoissonPTX.CellAccessQ3Row1', 'PoissonPTX.CellAccessQ3Row2', 'PoissonPTX.CellAccessQ3Row3', 'PoissonPTX.CellAccessQ4Row0', 'PoissonPTX.CellAccessQ4Row1', 'PoissonPTX.CellAccessQ4Row2', 'PoissonPTX.CellAccessQ4Row3', 'PoissonPTX.CellAccessQ4Row4', 'PoissonPTX.CellArithmeticExists', 'PoissonPTX.CellEntryBefore', 'PoissonPTX.CellEntryExists', 'PoissonPTX.CellEntryRecordLocal', 'PoissonPTX.CellEntryRecorded', 'PoissonPTX.CellEntryRound', 'PoissonPTX.CellEntrySerial', 'PoissonPTX.CellEntryWave', 'PoissonPTX.CellMiddleExists', 'PoissonPTX.CellWitnessAllocation', 'PoissonPTX.CellWitnessBlock', 'PoissonPTX.CellWitnessPhase', 'PoissonPTX.CellWitnessProgram', 'PoissonPTX.CellWitnessRound', 'PoissonPTX.CellWitnessWave'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.ByteHistory', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.CellWhole'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellWhole', 0) + 4
+COUNTS['PtxTorchLean.Poisson.PTX.CellWhole.Inputs'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellWhole.Inputs', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.CellWhole.InputFamily'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellWhole.InputFamily', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.CellConsumer.Witness', 0) + 13
+COUNTS['PtxTorchLean.Poisson.PTX.CellEntry.Local'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellEntry.Local', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.CellEntry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellEntry', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.CellFinal'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellFinal', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.WithTail'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.WithTail', 0) + 4
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent', 0) + 2
+TARGETS.update(['PoissonPTX.ByteHistoryRelocate', 'PoissonPTX.CellExecutionExists', 'PoissonPTX.CellGridInputExists', 'PoissonPTX.CellWholeExists', 'PoissonPTX.CellWitnessBody', 'PoissonPTX.CellWitnessFinalFront', 'PoissonPTX.CellWitnessFinalWave', 'PoissonPTX.CellWitnessFront', 'PoissonPTX.CellWitnessLaunch', 'PoissonPTX.CellWitnessOutput', 'PoissonPTX.CellWitnessTail', 'PoissonPTX.CellWitnessTailLocal', 'PoissonPTX.CellWitnessTailWave', 'PoissonPTX.ConcurrentAllocation'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

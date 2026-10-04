@@ -277,8 +277,9 @@ keeps each block's shared memory and barriers private. It derives the original
 cell source contracts from the one tagged history and proves that chronological
 publication preserves both cell results and assembly metadata. The next launch
 then computes the same operator. Mathematical publication remains distinct from
-CUDA visibility. Arbitrary-input cell-grid existence, GPU scheduling progress,
-external serialization and remaining solver instructions remain explicit work.
+CUDA visibility. Arbitrary-input cell-grid existence is constructed below;
+GPU scheduling progress, external serialization and host solver composition
+remain separate obligations.
 The dot reductions now have the complete native-entry result described below.
 
 The executable array reference and the tensor operator now have a proved
@@ -291,9 +292,12 @@ its input validation is needed.
 Supplied admitted cell executions with common entry arguments now construct an
 actual grid schedule and its admitted sources. A serial block order is used
 only to witness existence; the correctness theorem still covers arbitrary
-admitted interleavings. Constructing the local cell runs for arbitrary inputs
-remains separate. The nonzero cell/assembly regression checks both constructed
-launches rather than assuming a grid execution.
+admitted interleavings. The local cell runs are also constructed from arbitrary
+valid represented input storage: actual gathering, four barrier rounds, final
+arithmetic, computed output stores and all padding returns form one recorded
+execution. An input-only family therefore constructs a whole admitted grid
+without assuming completed cell runs or output values. The nonzero cell/assembly
+regression continues to check both constructed launches.
 
 The fresh-residual subtraction consumes actual cell/assembly publication.
 Right-hand-side preservation follows from the preceding stores and disjoint

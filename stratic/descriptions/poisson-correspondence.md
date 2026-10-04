@@ -1613,11 +1613,22 @@ allocation coverage. The largest finite checks are split by matrix row and
 recombined by proofs. This changes checking cost, not the covered instructions,
 lanes, layouts or theorem assumptions.
 
-These are completed gather-prefix and arithmetic-continuation witnesses. The
-arithmetic witness takes a starting register/allocation state and a byte view;
-the whole-cell constructor still has to supply them from the real prefix and
-join the emitted final branch, output store and return into one admitted
-history. A helper already relates the real prefix history to its published
-byte view. Full whole-cell execution existence, remaining rounded launches and
-the finite host solver composition are not established by these separate
-pieces. The exact residual certificate remains a distinct correctness layer.
+The whole-cell constructor joins these pieces into one finite fetched
+execution for arbitrary valid represented inputs. The gather supplies the real
+continuation registers, allocation metadata and published byte view. Three more
+collective barrier rounds precede the final arithmetic. Active lanes then
+calculate their output address, store their computed register and return;
+padding lanes jump directly to the actual return. Every lane finishes, and all
+word and connectivity sources belong to this same history. Moving the body's
+instruction-number origin preserves its recorded byte effects and barriers.
+
+An input-only interface describes physical storage, launch indices, connectivity
+and coefficient representation. It contains no completed run, assumed output or
+prescribed future read value. From these inputs the constructor supplies the
+execution required by the universal TorchLean cell theorem. A finite family of
+such inputs also supplies actual cell runs and an admitted grid schedule. The
+selected serial schedule witnesses existence; universal correspondence remains
+valid for arbitrary admitted interleavings. Necessary source admission is still
+distinct from the complete PTX memory model and GPU progress. Remaining rounded
+launches and finite host solver composition are further obligations; the exact
+residual certificate remains a separate correctness layer.
