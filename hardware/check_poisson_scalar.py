@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Bind complete scalar residual-norm and restart-flag entries to Lean.
 
-The proofs cover actual fetched instructions in the single-thread sequential
-byte-memory model, their numerical/status outputs, outside-byte preservation
-and finite execution existence. This binding is separate from weak-memory
-admission, CUDA transport, host composition and GPU conformance.
+The proofs cover fetched instructions, actual byte sources, numerical/status
+publication, byte frames and finite source-compatible execution. Necessary
+single-thread causality is explicit; complete PTX memory admission, CUDA
+transport, host composition and GPU conformance remain separate.
 """
 import argparse
 import hashlib
@@ -16,32 +16,15 @@ import subprocess
 import tempfile
 
 from check_poisson_ptx import ROOT, INTEGRATION, read_artifact, HEADER
+from check_poisson_control import arena_parameters, FIELDS
 
 
 def parameters(layout):
-    n, degree = layout['n'], layout['degree']
-    if type(n) is not int or n < 1 or type(degree) is not int or degree not in (1, 2, 3, 4):
-        raise ValueError('unsupported mesh dimensions')
-    count = (n*degree+1)**2
-    if count >= 2**30 or type(layout['bytes']) is not int or not 0 < layout['bytes'] < 2**64:
-        raise ValueError('unsupported index or allocation extent')
-    fields = [('true_square', 1, 'd', 8), ('residual', 1, 'd', 8), ('active', 1, 'I', 4)]
-    ranges = []
-    for name, size, kind, width in fields:
-        field = layout['fields'][name]
-        off = field['offset']
-        if field['kind'] != kind or field['count'] != size or type(off) is not int or off < 0 or off % width:
-            raise ValueError('invalid field representation')
-        end = off + size*width
-        if end > layout['bytes']:
-            raise ValueError('field outside arena')
-        if any(not (end <= start or stop <= off) for start, stop in ranges):
-            raise ValueError('overlapping fields')
-        ranges.append((off, end))
+    offsets = dict(zip((name for name, _ in FIELDS), arena_parameters(layout), strict=True))
     for entry in ('residual_norm', 'restart_flag'):
         if layout['launches'][entry] != dict(groups=1, threads=1, shared_bytes=0):
             raise ValueError('unreviewed scalar launch')
-    return [start for start, _ in ranges]
+    return [offsets[name] for name in ('true_square', 'residual', 'active')]
 
 
 def verify_entry(ptx, expected, layout, entry):
@@ -77,12 +60,12 @@ def check(run, output):
     checker.dependencies()
     paths = [*checker.sources(), INTEGRATION/'lakefile.toml', INTEGRATION/'lake-manifest.json',
              INTEGRATION/'lean-toolchain', INTEGRATION/'check.py', Path(__file__).resolve(),
-             ROOT/'hardware/check_poisson_ptx.py', ROOT/'hardware/poisson_kernels.py']
+             ROOT/'hardware/check_poisson_ptx.py', ROOT/'hardware/check_poisson_control.py', ROOT/'hardware/poisson_kernels.py']
     def hashes():
         return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     before = hashes()
     names = ['PtxTorchLean.Poisson.PTX.Scalar.'+namespace+'.'+name
-             for namespace in ('Norm', 'RestartFlag') for name in ('entry_correct', 'entry_exists', 'entry_length')]
+             for namespace in ('Norm', 'RestartFlag') for name in ('entry_correct', 'entry_exists', 'entry_length', 'admitted_publication', 'admitted_exists')]
     layouts = [json.loads(read_artifact(run, report, case['directory']+'/layout.json'))
                for case in report['cases']]
     expressions = []
@@ -92,7 +75,7 @@ def check(run, output):
     lean = ['lake', '--no-cache', 'env', 'lean', '-j1', '-M5120']
     with tempfile.TemporaryDirectory(prefix='poisson-scalar-') as tmp:
         path = Path(tmp)/'Render.lean'
-        path.write_text('import PoissonPTX.ScalarText\nopen PtxTorchLean.Poisson.PTX\n'+
+        path.write_text('import PoissonPTX.ScalarText\nimport PoissonPTX.ScalarNormAdmission\nopen PtxTorchLean.Poisson.PTX\n'+
             ''.join('#print axioms '+name+'\n' for name in names)+
             'def main : IO Unit := IO.println (Lean.toJson (['+', '.join(expressions)+
             '] : List (List String))).compress\n')

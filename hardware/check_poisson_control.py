@@ -2,9 +2,10 @@
 """Bind complete solver start, alpha, and beta entries to Lean.
 
 The universal results derive coefficient/status outputs from actual scalar
-loads, predicate operations and rounded arithmetic. Finite witnesses and byte
-frames are proved in the sequential model. Weak-memory admission, CUDA
-transport, host-loop composition and GPU conformance remain separate.
+loads, predicate operations and rounded arithmetic. Necessary single-thread
+source admission derives the sequential model, with actual mixed-width
+publication and finite source-compatible witnesses. Complete PTX admission,
+CUDA transport, host-loop composition and GPU conformance remain separate.
 """
 import argparse
 import hashlib
@@ -27,7 +28,7 @@ FIELDS = [
 ENTRIES = dict(start=39, coefficient_alpha=49, coefficient_beta=63)
 
 
-def parameters(layout):
+def arena_parameters(layout):
     n, degree = layout['n'], layout['degree']
     if type(n) is not int or n < 1 or type(degree) is not int or degree not in (1, 2, 3, 4):
         raise ValueError('unsupported mesh dimensions')
@@ -48,10 +49,15 @@ def parameters(layout):
         if any(not (end <= start or stop <= off) for start, stop in ranges):
             raise ValueError('overlapping fields')
         ranges.append((off, end))
+    return [start for start, _ in ranges]
+
+
+def parameters(layout):
+    offsets = arena_parameters(layout)
     for entry in ENTRIES:
         if layout['launches'][entry] != dict(groups=1, threads=1, shared_bytes=0):
             raise ValueError('unreviewed scalar launch')
-    return [start for start, _ in ranges]
+    return offsets
 
 
 def verify_entry(ptx, expected, layout, entry):
@@ -92,7 +98,7 @@ def check(run, output):
         return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     before = hashes()
     names = ['PtxTorchLean.Poisson.PTX.Scalar.'+namespace+'.'+name
-             for namespace in ('Start', 'Alpha', 'Beta') for name in ('entry_publication', 'entry_exists', 'entry_length')]
+             for namespace in ('Start', 'Alpha', 'Beta') for name in ('entry_publication', 'entry_exists', 'entry_length', 'admitted_publication', 'admitted_exists')]
     layouts = [json.loads(read_artifact(run, report, case['directory']+'/layout.json'))
                for case in report['cases']]
     expressions = []
@@ -104,7 +110,7 @@ def check(run, output):
     lean = ['lake', '--no-cache', 'env', 'lean', '-j1', '-M5120']
     with tempfile.TemporaryDirectory(prefix='poisson-control-') as tmp:
         path = Path(tmp)/'Render.lean'
-        path.write_text('import PoissonPTX.ScalarControlText\nopen PtxTorchLean.Poisson.PTX\n'+
+        path.write_text('import PoissonPTX.ScalarControlText\nimport PoissonPTX.ScalarAdmittedPublication\nopen PtxTorchLean.Poisson.PTX\n'+
             ''.join('#print axioms '+name+'\n' for name in names)+
             'def main : IO Unit := IO.println (Lean.toJson (['+', '.join(expressions)+
             '] : List (List String))).compress\n')

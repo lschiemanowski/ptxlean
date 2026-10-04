@@ -63,3 +63,14 @@ NaN bit rule, positive-zero preference for maximum, and actual four-byte store
 bounds. Kernel-checked exceptional-value examples supplement manual source
 comparison. Sequential execution proofs, source-text binding, weak-memory
 admission and GPU conformance remain distinct claims.
+
+For the Poisson scalar entries, source compatibility retains each actual
+four- or eight-byte width. Same-thread program order excludes future same-width,
+same-address store sources; the proof separately derives that all possible
+writers are in this case. This is the existing necessary synchronous generic
+causality rule applied to a single-thread history. Fetched address calculations,
+physical layout separation and instruction order discharge the application
+conditions. Kernel-checked counterexamples distinguish compatibility from
+causality and enforce the four-byte boundary. Neither a candidate witness nor
+these necessary constraints establish full PTX memory admission or hardware
+conformance.

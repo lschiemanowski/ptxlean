@@ -259,9 +259,9 @@ actual result. Its complete 13-instruction fetched execution determines the
 numerical output and preserves bytes outside the output word. The separate
 8-instruction restart-flag entry stores the four-byte unsigned value one and
 preserves every other byte. Both entries have finite execution witnesses for
-arbitrary input bytes in valid allocations. These are single-thread sequential
-byte-memory results; they do not yet derive this execution model from weak-memory
-candidate admission or connect it to CUDA transport between launches.
+arbitrary input bytes in valid allocations. The scalar source bridge below derives these sequential
+results from candidate byte sources and necessary same-thread causality; CUDA
+transport between launches remains separate.
 
 The additional scalar instruction contracts distinguish numerical value from
 bits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have
@@ -276,9 +276,8 @@ Kernel-checked corner cases support the manual pinned-source review but do not
 establish hardware fidelity.
 
 Full-entry text binding checks both scalar programs across saved layouts.
-Scalar weak-memory justification and host-loop composition remain separate
-obligations; the start and coefficient proofs below cover their sequential
-instruction behavior.
+The scalar source bridge below supplies necessary byte-source justification.
+Complete PTX memory admission and host-loop composition remain separate.
 The norm computation itself is not a residual certificate: the accepted solver
 claim still requires a fresh residual bound for the same discrete equations.
 
@@ -318,8 +317,8 @@ valid physical scalar layout, with no numerical result or guard outcome assumed.
 The scalar layout has separate aligned eight-byte numerical fields and
 four-byte status fields, all within a nonwrapping allocation. Complete text
 binding covers 39 start instructions, 49 alpha instructions and 63 beta
-instructions, including launch setup and return. Scalar weak-memory admission,
-whole-launch composition and the finite host PCG loop remain separate
+instructions, including launch setup and return. Necessary scalar byte-source admission is supplied below. Complete PTX
+admission, whole-launch composition and the finite host PCG loop remain separate
 obligations; CUDA transport and GPU conformance are not established here.
 
 The main results are `Scalar.Start.entry_publication`,
@@ -333,9 +332,44 @@ rounding, operand order, predicates, widths, layout and launch shape. Seven
 kernel-checked guard examples include old broken flags, inactive infinities,
 NaN and signed-zero denominators, and negative finite rho_next.
 
+## Scalar source admission
+
+All five scalar entries now connect candidate execution to the sequential
+proofs through necessary byte-source admission. The history records each actual
+load and store with its address, instruction position, width and bits, including
+four-byte status writes. A load can choose arbitrary candidate bits. Compatibility
+requires each byte to match initialization or a real recorded store byte within
+that store's width. The same-thread causality rule excludes a later write to the
+same address and width as the source of an earlier read. These are necessary
+rules for the synchronous, generic, non-aliasing fragment, not a definition of
+complete PTX memory admission.
+
+The bridge proves the missing access facts from the fetched instructions.
+Address calculations recover the named arena fields, and every read precedes
+all writes to that field. Distinct fields occupy disjoint byte ranges. Thus a
+compatible store source would have to be a later same-field write, which
+causality rules out. Earlier writes to other fields preserve the input bytes.
+These facts derive the sequential read values; no loaded word, predicate
+outcome or numerical result is assumed. Proof groups collect the existing
+address-and-transfer instruction sequences, and kernel-checked equalities show
+that concatenating those groups gives the original program.
+
+Complete start, alpha, beta, residual-norm and restart-flag executions therefore
+publish the already proved outputs through their actual recorded stores and
+preserve unrelated bytes. Each entry also has a finite candidate execution with
+compatible initial-byte sources and the no-future rule. Counterexamples show
+why byte compatibility alone is insufficient and why a four-byte flag write
+cannot supply a fifth byte. Complete PTX admission, the remaining whole-launch
+existence/composition and the finite host loop still need separate work. CUDA
+transport, external serialization and GPU conformance remain outside these
+instruction and source proofs.
+
+See [the scalar source walkthrough](poisson-scalar-sources.md) for the
+in-place-read counterexample and the proof dependencies.
+
 ## Remaining work
 
-Scalar weak-memory admission and the host PCG loop still need their
-instruction-level composition. The accepted solver target remains a fresh
+Complete PTX memory admission, remaining whole-launch existence/composition
+and the finite host PCG loop still need separate work. The accepted solver target remains a fresh
 residual bound for the same discrete equations, rather than CPU-iterate bitwise
 identity or a convergence claim for every input.

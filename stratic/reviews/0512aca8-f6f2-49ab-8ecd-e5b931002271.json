@@ -1,0 +1,254 @@
+{
+  "id": "0512aca8-f6f2-49ab-8ecd-e5b931002271",
+  "base": "2fa5ff2fc7a45527264a95a3131cac92ce687a9a",
+  "contentTree": "5b424817079b67b9834a68404c37ed30ba715d8d",
+  "reviewer": "Codex",
+  "summary": "Derive scalar solver publications from actual mixed-width candidate histories and necessary causality, with finite witnesses.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Close the necessary scalar source bridge for all five entries without assuming read values. Keep full memory admission, whole launches and solver composition open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe actual scalar history replay and publication plus finite admitted witnesses; no full solver or hardware claim."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Discrete equations, source solver, residual certificate, numerical policy and emitted PTX unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "Record source review and adversarial actual-width checks, deriving applicability of necessary same-thread causality separately from full PTX admission."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "No primitive instruction meaning changes. Mixed-width scalar history applies existing necessary causality only to derived same-field nonaliasing cases; general overlapping mixed-size accesses remain unsupported."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "5b424817079b67b9834a68404c37ed30ba715d8d",
+      "method": "Sequential capped Lean checks and exact dependency audit; twelve saved PTX bindings; frontend mutation tests; pinned PTX source and manual actual-width source, footprint, causality, replay, publication and finite-execution review; receipt hashes and Stratic snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy job at a time, one Lean thread, 6 GiB hard memory limit, swap disabled, CPU 150 percent. No GPU runs or paid calls.",
+      "evidence": "All 25 new modules checked without warnings, adding 152 audited declarations. 6200 exact dependency reports use only allowed standard Lean axioms; 819 guarded source files and all pins pass. All five fetched scalar entries derive sequential execution and actual-store publication from candidate histories with actual four/eight-byte widths, physical arena separation, byte compatibility and necessary same-thread no-future sources. Finite admitted witnesses use arbitrary initial words. Three kernel-checked adversarial results distinguish compatibility from causality and reject a fifth flag byte. All 70 frontend tests pass; twelve receipts refreshed and hash-verified, including 150 complete scalar entries. No desired read value, output, guard outcome or execution trace is assumed by existence. Pinned PTX 9.4 sections 8.7, 8.9.1, 8.9.5 and 8.10.6 support the restricted synchronous same-thread same-address generic rule; full PTX admission is not claimed. Arbitrary-input whole-cell existence, complete launches, finite host composition, external serialization, CUDA transport and GPU conformance remain separate. Legacy executable reuse was limited to verified unchanged import closures; current audit and text checks reran. Peak audit RSS 5021672 KiB. Unchanged legacy interpreter suite not rerun. Stratic summaries, links, study guide and snapshots agree; README and emitted PTX unchanged.",
+      "tests": [],
+      "id": "0c7884a8-2d1e-4b40-82dd-ac12c6975ce4",
+      "recordedAt": "2026-10-04T14:41:35.818Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T14:43:05.328Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-pcg-updates.md",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "docs/foundations/poisson-scalar-sources.md",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/check_poisson_control.py",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/check_poisson_scalar.py",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-control-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-initialize-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-restart-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-scalar-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-xrz-binding.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "hardware/test_poisson_scalar.py",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarAdmittedPublication.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarAlphaSources.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarBetaSources.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarChunks.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarControlAdmission.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarEntrySources.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarFootprints.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarNormAdmission.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarNormSources.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObserved.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObservedAccess.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObservedAddress.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObservedBase.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObservedExecution.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObservedMemory.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObservedOrder.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObservedReplay.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObservedSegments.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarObservedTransfers.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarPublication.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarRecorded.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarSourceBridge.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarSourceChecks.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarSources.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarStartSources.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.md",
+      "reason": "Reviewed actual scalar histories, address/width footprints, physical field separation, causality, replay, publication, finite witnesses, audit registrations, saved text bindings, frontend tests, receipts and documentation."
+    }
+  ]
+}

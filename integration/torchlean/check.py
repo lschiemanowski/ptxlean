@@ -707,6 +707,21 @@ COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Text'] = COUNTS.get('PtxTorchLean.Poisso
 COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Start'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Start', 0) + 37
 TARGETS.update(['PoissonPTX.ScalarAlpha', 'PoissonPTX.ScalarAlphaCorrect', 'PoissonPTX.ScalarAlphaValues', 'PoissonPTX.ScalarArena', 'PoissonPTX.ScalarArithmetic', 'PoissonPTX.ScalarBeta', 'PoissonPTX.ScalarBetaCorrect', 'PoissonPTX.ScalarBetaExists', 'PoissonPTX.ScalarBetaGuards', 'PoissonPTX.ScalarBetaSegments', 'PoissonPTX.ScalarBetaValues', 'PoissonPTX.ScalarCoefficientGuards', 'PoissonPTX.ScalarCoefficientInputs', 'PoissonPTX.ScalarConditionalDivide', 'PoissonPTX.ScalarControl', 'PoissonPTX.ScalarControlChecks', 'PoissonPTX.ScalarControlText', 'PoissonPTX.ScalarFlagFrames', 'PoissonPTX.ScalarStart', 'PoissonPTX.ScalarStartExists', 'PoissonPTX.ScalarStartPublication', 'PoissonPTX.ScalarStartResult', 'PoissonPTX.ScalarStartValues'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Start'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Start', 0) + 8
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Alpha'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Alpha', 0) + 8
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Beta'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Beta', 0) + 8
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar', 0) + 15
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Chunk'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Chunk', 0) + 5
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Footprint'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Footprint', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Norm'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Norm', 0) + 7
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.RestartFlag'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.RestartFlag', 0) + 7
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Observed'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Observed', 0) + 68
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Sources'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Sources', 0) + 18
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.SourceChecks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.SourceChecks', 0) + 5
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Sources.Width'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Sources.Width', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Sources.Access'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Sources.Access', 0) + 1
+TARGETS.update(['PoissonPTX.ScalarAdmittedPublication', 'PoissonPTX.ScalarAlphaSources', 'PoissonPTX.ScalarBetaSources', 'PoissonPTX.ScalarChunks', 'PoissonPTX.ScalarControlAdmission', 'PoissonPTX.ScalarEntrySources', 'PoissonPTX.ScalarFootprints', 'PoissonPTX.ScalarNormAdmission', 'PoissonPTX.ScalarNormSources', 'PoissonPTX.ScalarObserved', 'PoissonPTX.ScalarObservedAccess', 'PoissonPTX.ScalarObservedAddress', 'PoissonPTX.ScalarObservedBase', 'PoissonPTX.ScalarObservedExecution', 'PoissonPTX.ScalarObservedMemory', 'PoissonPTX.ScalarObservedOrder', 'PoissonPTX.ScalarObservedReplay', 'PoissonPTX.ScalarObservedSegments', 'PoissonPTX.ScalarObservedTransfers', 'PoissonPTX.ScalarPublication', 'PoissonPTX.ScalarRecorded', 'PoissonPTX.ScalarSourceBridge', 'PoissonPTX.ScalarSourceChecks', 'PoissonPTX.ScalarSources', 'PoissonPTX.ScalarStartSources'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

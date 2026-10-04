@@ -12,7 +12,8 @@
     "Reproduce selected integration proofs with pinned unchanged dependencies, complete named axiom audits and stable local sources.",
     "Acquire vendor documentation locally by pinned hash and distribute source references and explicitly scoped evidence instead of copied manuals or raw transcripts.",
     "Check selected publication history for known vendor artifacts while keeping original evidence identities and private backups distinct.",
-    "Review Poisson scalar binary64 and predicate/status contracts against the pinned source, preserving exceptional-value and byte-width details while separating sequential proofs, source binding, weak-memory admission and hardware behavior."
+    "Review Poisson scalar binary64 and predicate/status contracts against the pinned source, preserving exceptional-value and byte-width details while separating sequential proofs, source binding, weak-memory admission and hardware behavior.",
+    "Check scalar source admission with real access widths, derived physical footprints and necessary same-thread causality, retaining the explicit boundary to complete PTX admission and hardware."
   ],
   "realization": "partial",
   "remaining": "Reviews against the pinned source and checked connections between formal components cover restricted memory, byte sources for aligned 32-bit reads, execution environments, scalar proof rules and vector addition in a shared global allocation, actual CTA shared-memory barrier publication, the encoded binary32 numerical adapter, reviewed floating-point instructions, and actual mixed affine execution with source-linked memory witnesses. How mixed-source reads observe writes remains unresolved and explicit, as does exact quiet-versus-signaling NaN output realizability. Byte ordering uses separately attributed NVIDIA binary-interface guidance. General correspondence for data-dependent interactions and different access sizes, and hardware validation, remain unimplemented. Model-assisted generation now has an instruction-section inventory and recorded headless runs; full form coverage, generalized capability evidence and cost-effectiveness evaluation remain unfinished.",
@@ -134,6 +135,30 @@
         "path": "integration/torchlean/PoissonPTX/ScalarExtras.lean",
         "passage": {
           "quote": "def segment : Instr → Bool\n  | .base i => Flow.segment i\n  | _ => true"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For the Poisson scalar entries, source compatibility retains each actual\nfour- or eight-byte width. Same-thread program order excludes future same-width,\nsame-address store sources; the proof separately derives that all possible\nwriters are in this case. This is the existing necessary synchronous generic\ncausality rule applied to a single-thread history. Fetched address calculations,\nphysical layout separation and instruction order discharge the application\nconditions. Kernel-checked counterexamples distinguish compatibility from\ncausality and enforce the four-byte boundary. Neither a candidate witness nor\nthese necessary constraints establish full PTX memory admission or hardware\nconformance."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarSources.lean",
+        "passage": {
+          "quote": "theorem flag_value {pc address : Nat} {store : Bool} {value : BitVec 32} (bytes : ∀ k : Fin 4, (flag pc store address value).byte k.val=memory (address+k.val)) :\n    value=read32 memory address := by\n  apply IndexSources.word_eq_of_bytes\n  intro k\n  simpa only [flag_byte,IndexSources.byte_read32] using bytes k"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For the Poisson scalar entries, source compatibility retains each actual\nfour- or eight-byte width. Same-thread program order excludes future same-width,\nsame-address store sources; the proof separately derives that all possible\nwriters are in this case. This is the existing necessary synchronous generic\ncausality rule applied to a single-thread history. Fetched address calculations,\nphysical layout separation and instruction order discharge the application\nconditions. Kernel-checked counterexamples distinguish compatibility from\ncausality and enforce the four-byte boundary. Neither a candidate witness nor\nthese necessary constraints establish full PTX memory admission or hardware\nconformance."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarSourceChecks.lean",
+        "passage": {
+          "quote": "theorem fifth_flag_byte_rejected :\n    ¬Sources.Compatible (fun _ _ => 0) futureFlag (fun _ _ => .store 1 ⟨4,by decide⟩) := by\n  intro compatible\n  have bad := compatible 0 (Sources.flag 0 false 0 1) rfl rfl ⟨0,by decide⟩ (by decide)\n  obtain ⟨wa,found,write,space,small,address,value⟩ := bad\n  have same : wa=Sources.flag 1 true 0 1 := by simpa [futureFlag] using found.symm\n  subst wa\n  simp [Sources.flag,Sources.Width.bytes] at small"
         }
       }
     }

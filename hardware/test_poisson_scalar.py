@@ -45,6 +45,7 @@ class ScalarBinding(unittest.TestCase):
     def test_reject_bad_layouts(self):
         for field, key, value in [('active', 'kind', 'd'), ('active', 'count', 2), ('residual', 'offset', 1),
                                    ('active', 'offset', self.layout['bytes']),
+                                   ('rho', 'offset', self.layout['fields']['alpha']['offset']),
                                    ('residual', 'offset', self.layout['fields']['true_square']['offset'])]:
             layout = copy.deepcopy(self.layout)
             layout['fields'][field][key] = value
