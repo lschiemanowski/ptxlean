@@ -205,13 +205,12 @@ a decreasing count of remaining indices, constructing a finite execution for
 arbitrary input words. Short and uneven arrays naturally leave some lanes
 empty or with fewer iterations.
 
-This input-loop theorem uses a scalar global-byte snapshot. The full parallel
-entry still must derive that snapshot from admitted memory sources, join its
-computed partial sums to the tree under interleaving, and prove the final
-shared load and global output store. The native-tree and input-loop results
-are individually complete components, not a completed dot-product or PCG
-correspondence. Their text bindings are frontend checks; neither Lean checking
-nor successful text comparison establishes compiler or GPU conformance.
+The standalone input-loop theorem uses a scalar global-byte snapshot. The
+complete concurrent entry now derives that input snapshot from actual memory
+sources. Joining the resulting partial sums to the shared-tree theorem and
+proving the final shared load and output value remain separate obligations.
+Text bindings are frontend checks; neither Lean checking nor successful text
+comparison establishes compiler or GPU conformance.
 
 [DotInputComplete.lean](../../integration/torchlean/PoissonPTX/DotInputComplete.lean)
 proves `input_correct` and `input_exists` for the actual setup and loop.
@@ -223,17 +222,60 @@ size bound would permit wraparound. `hardware/check_poisson_dot_input.py`
 compares every input-loop instruction, resolves its labels and checks field
 bounds and the single-block launch shape.
 
+## Complete concurrent entry and input sources
+
+The complete dot entry has one concurrent fetched program with 104 instruction
+positions: input setup and accumulation, the shared tree, and the output tail.
+Its predicates are thread-local values and its barriers use actual arrival and
+completion events. A returned thread has executed a return instruction; that
+is not inferred from a convenient instruction counter. A fast thread may
+publish its partial sum while another is still reading input vectors. There
+is no additional barrier between those phases.
+
+For every returned thread, the proof recovers its actual input execution from
+the interleaving. Other threads and later instructions leave this recorded
+input execution unchanged. Every retained read is connected to the original
+whole-kernel memory history. The unsigned loop guard and address instructions
+prove that each read belongs to one of the input arrays. Every global store in
+the complete entry is proved to use the designated output address. When that
+word is disjoint from the inputs, byte-source compatibility forces every input
+read to recover its initialized bytes. Thus the lane's rounded partial sum
+follows from actual execution and memory admission, without a supplied read
+value, partial-sum equation, local execution or phase boundary.
+
+For example, lane zero can finish a short input traversal and write its shared
+slot while lane one is still loading an input. `NativeFlow` allows this
+schedule. `prefix_complete` reconstructs lane one's real traversal even though
+other threads have progressed farther. It proves completion because a thread
+cannot return inside the input prefix or jump back into it from the tail.
+
+`input_observations` proves which array element each actual read addresses.
+`stores_output` reconstructs the output address from registers prepared by the
+epilogue. `admitted_input` combines these facts with per-byte source
+compatibility; shared writes cannot supply global input bytes, and the one
+global output field is physically separate. `completed_input_correct` then
+uses the already proved rounded fold, preserving its order and NaN behavior.
+These are universal statements about admitted runs, not tests of a few words.
+
+`hardware/check_poisson_dot_entry.py` compares all 104 instructions with the
+Lean renderer, resolving every label to its absolute position. Its layout
+checks enforce the single 256-thread block, 2048 shared bytes, aligned array
+fields, bounded count and disjoint output word. This is source binding, not a
+claim that NVIDIA hardware implements the modeled instructions.
+
 ## Remaining boundaries
 
-The full emitted entry still needs the strided input loop, shared tree and
-final global output store composed under one admitted concurrent execution. The
-fragment begins with supplied partial sums, so it does not yet prove that those
-sums represent the original input vectors.
+The complete program and its absolute branch targets are compared with emitted
+PTX, including the conditional return, final shared load, output address
+arithmetic and global store. Output-address ownership is proved independently
+of the stored numerical value. The remaining dot-entry obligations are to join
+the recovered input states to the shared-tree execution, transport its ordered
+sources through that projection, justify the final shared read and output
+value, and construct a complete admitted execution. The full PCG launch sequence
+and solver correspondence are not yet established.
 
-`OrderedSources` remains a necessary fragment of the PTX memory rules, not a
-full PTX admission model. The model uses synchronous full-block barriers and
-separate identity-addressed shared/global spaces. The existence theorem proves
-that a finite completed schedule exists; it does not guarantee progress under
-arbitrary external scheduling. Host launch composition, the complete PCG solver
-and hardware conformance remain separate. No new GPU execution or empirical
-claim is part of this result.
+`OrderedSources` remains a necessary fragment of the PTX memory rules. The
+model uses synchronous full-block barriers, identity addresses, separate
+shared/global spaces and no concurrent external writer. The standalone
+existence results construct finite schedules; they do not guarantee progress
+under arbitrary scheduling. No new GPU run is part of this checkpoint.

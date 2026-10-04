@@ -28,7 +28,8 @@
     "Derive every shared-tree read source from actual 256-lane control, address preparation and barrier publications; native entry translation remains separate.",
     "Prove every completed admitted shared-tree run computes the prescribed rounded reduction; construct a complete admitted execution for arbitrary initial words and bound every access within its 2048-byte allocation.",
     "Relate separately scheduled unsigned lane comparisons and predicated branches to the shared-tree guard, deriving outcomes from preserved registers and retaining the emitted instruction order.",
-    "Derive the strided input accumulation from actual global loads, separate rounded multiply/add operations and nonwrapping 32-bit index progress."
+    "Derive the strided input accumulation from actual global loads, separate rounded multiply/add operations and nonwrapping 32-bit index progress.",
+    "Recover every returned lane’s rounded input partial sum from the complete concurrent dot program and its actual byte sources; derive input footprints and output-address ownership, while tree composition and final output value remain unfinished."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3690,6 +3691,234 @@
         "path": "integration/torchlean/PoissonPTX/DotInputComplete.lean",
         "passage": {
           "quote": "theorem input_exists (ctx : Kernel.Context) (scratch : Word) (s : Flow.State)\n    (pc : s.core.pc=0) (running : s.halted=false) (bounded : count<2^30)\n    (arrays : Arrays (setup ctx scratch s).core count left right) :\n    ∃ t, Flow.Runs ctx (inputProgram count left right scratch) s t ∧\n      t.core.pc=20 ∧ t.halted=false ∧\n      decode (t.core.regs 8)=partialSum ctx scratch s count left right ∧\n      Stable (setup ctx scratch s).core t.core := by\n  have first : Flow.Runs ctx (inputProgram count left right scratch) s (setup ctx scratch s) := by\n    have witness := Flow.sequence_run (setup_sequence (ctx:=ctx) (scratch:=scratch) running)\n      (by simp [setupCode,Flow.linear]) []\n      (Flow.OperandWindow.header (setupCode scratch).length 12 (.imm (BitVec.ofNat 64 count))\n        ((body left right).map Indexed.Instr.data) ++\n        ((body left right).map Indexed.Instr.data).map Flow.Instr.data ++\n        [.jump (setupCode scratch).length]) pc\n    simpa [inputProgram,Flow.OperandWindow.program,List.append_assoc] using witness\n  obtain ⟨core,traverse⟩ := traversal_exists (origin:=(setupCode scratch).length)\n    (setup ctx scratch s).core bounded (stable_refl _) (fun i hi => arrays_valid arrays bounded hi)\n  have setupPC : (setup ctx scratch s).core.pc=(setupCode scratch).length := by\n    simp [setup,setupCode,assign,advance,pc]\n  obtain ⟨t,second,same,live⟩ := Flow.OperandWindow.traversal_runs (pre:=setupCode scratch) (post:=[])\n    (ctx:=ctx) traverse (setup ctx scratch s) rfl setupPC running\n  have actual := Flow.append first second\n  have done : t.core.pc=20 := by\n    rw [same,Flow.OperandWindow.exit_pc traverse]\n    simp [setupCode,body,loadCode,addressCode]\n  exact ⟨t,actual,done,live,input_correct actual pc running done bounded arrays⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotAddress.lean",
+        "passage": {
+          "quote": "def AddressReady (base output : Word) (s : Flow.State) : Prop :=\n  (2≤s.core.pc → s.core.regs 0=base) ∧\n  (s.core.pc=100 → s.core.regs 1=0) ∧\n  (s.core.pc=101 → s.core.regs 2=base) ∧\n  (s.core.pc=102 → s.core.regs 2=base+output)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotAddressSyntax.lean",
+        "passage": {
+          "quote": "theorem input_keeps_base (fetch : (DotInput.inputProgram count left right scratch)[pc]?=some i)\n    (other : pc≠1) : NativeFlow.keeps 0 i := by\n  have small : pc<20 := by\n    have := (List.getElem?_eq_some_iff.mp fetch).1\n    simpa only [DotInput.input_length] using this\n  interval_cases pc <;>\n    simp_all [DotInput.inputProgram,Flow.OperandWindow.program,Flow.OperandWindow.header,\n      DotInput.setupCode,DotInput.body,loadCode,addressCode]\n  all_goals cases fetch; simp [NativeFlow.keeps,Indexed.keeps,SharedStore.keeps]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotAddressTail.lean",
+        "passage": {
+          "quote": "theorem tail_address (pc : s.core.pc=96+slot) (fetch : (tail output)[slot]?=some i)\n    (actual : Flow.Observed.Eval ctx i s t access index)\n    (ready : AddressReady ctx.arena output s) : AddressReady ctx.arena output t := by\n  have bound : slot<8 := by\n    have h := (List.getElem?_eq_some_iff.mp fetch).1\n    simpa [tail] using h\n  interval_cases slot <;> simp [tail] at fetch <;> cases fetch\n  all_goals cases actual\n  all_goals try { rename_i ordinary; exact False.elim (ordinary _ rfl) }\n  all_goals (first | cases_type* Indexed.Candidate.Data Concurrent.Data PTX.Eval | skip)\n  all_goals simp_all [Concurrent.ordinary,AddressReady,assign,advance,Operand.eval,\n    Flow.simple,Flow.next,Flow.halt,put]\n  all_goals split <;> simp_all"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotCompletedInput.lean",
+        "passage": {
+          "quote": "theorem completed_input_correct\n    (whole : NativeFlow.Runs cfg ctx (program count left right output scratch) start events allIndices final)\n    (aligned : Aligned start.core) (entry : ∀ thread, (start.core.lanes thread).pc=0)\n    (live : start.halted owner=false) (returned : final.halted owner=true)\n    (arena : ∀ thread, (ctx thread).arena=base)\n    (sameInitial : (start.core.lanes owner).global=initial .global)\n    (compatible : Visibility.Compatible initial events source)\n    (bounded : count<2^30) (apart : OutputApart count left right output)\n    (arrays : DotInput.Arrays (DotInput.setup (ctx owner) scratch (NativeFlow.lane start owner)).core count left right)\n    (outputFits : base.toNat+output.toNat+8≤2^64) :\n    ∃ next words indices,\n      Flow.Observed.Runs (ctx owner) (DotInput.inputProgram count left right scratch)\n        (NativeFlow.lane start owner) words indices next ∧\n      (∀ a∈words, Event.data owner a∈events) ∧\n      Flow.Runs (ctx owner) (DotInput.inputProgram count left right scratch)\n        (NativeFlow.lane start owner) next ∧ next.core.pc=20 ∧ next.halted=false ∧\n      decode (next.core.regs 8)=DotInput.partialSum (ctx owner) scratch (NativeFlow.lane start owner) count left right ∧\n      DotInput.Stable (DotInput.setup (ctx owner) scratch (NativeFlow.lane start owner)).core next.core := by\n  obtain ⟨next,words,indices,observed,done,stillLive,recorded,_⟩ :=\n    completed_input whole aligned (entry owner) live returned\n  have room := arrays_room arrays\n  rw [arena owner] at room\n  have scalar := admitted_input whole aligned entry arena sameInitial compatible observed recorded\n    bounded apart room outputFits\n  have result := DotInput.input_correct scalar (entry owner) live done bounded arrays\n  exact ⟨next,words,indices,observed,recorded,scalar,done,stillLive,result⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotInputAccess.lean",
+        "passage": {
+          "quote": "theorem input_load_site\n    (fetch : (DotInput.inputProgram count left right scratch)[pc]?=\n      some (.data (.data (.load64 sp dst addr)))) :\n    sp=.global ∧ addr=.reg 2 ∧ (pc=11 ∨ pc=15) := by\n  have small : pc<20 := by\n    have h := (List.getElem?_eq_some_iff.mp fetch).1\n    simpa only [DotInput.input_length] using h\n  interval_cases pc <;>\n    simp [DotInput.inputProgram,Flow.OperandWindow.program,Flow.OperandWindow.header,\n      DotInput.setupCode,DotInput.body,loadCode,addressCode] at fetch\n  all_goals obtain ⟨rfl,rfl,rfl⟩ := fetch; simp"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotInputAdmitted.lean",
+        "passage": {
+          "quote": "theorem admitted_input\n    (whole : NativeFlow.Runs cfg ctx (program count left right output scratch) start events allIndices final)\n    (aligned : Aligned start.core) (entry : ∀ owner, (start.core.lanes owner).pc=0)\n    (arena : ∀ owner, (ctx owner).arena=base)\n    (sameInitial : (start.core.lanes owner).global=initial .global)\n    (compatible : Visibility.Compatible initial events source)\n    (run : Flow.Observed.Runs (ctx owner) (DotInput.inputProgram count left right scratch)\n      (NativeFlow.lane start owner) words indices next)\n    (recorded : ∀ a∈words, Event.data owner a∈events)\n    (bounded : count<2^30) (apart : OutputApart count left right output)\n    (inputsFit : ∀ off∈[left,right], base.toNat+off.toNat+count*8≤2^64)\n    (outputFits : base.toNat+output.toNat+8≤2^64) :\n    Flow.Runs (ctx owner) (DotInput.inputProgram count left right scratch)\n      (NativeFlow.lane start owner) next := by\n  obtain ⟨footprints,noIndices⟩ := input_observations run (entry owner) bounded\n    (by rw [arena owner]; exact inputsFit)\n  subst indices\n  apply Flow.Observed.replay (initial:=(start.core.lanes owner).memory) run\n  · intro a member read\n    obtain ⟨r,found⟩ := List.mem_iff_getElem?.mp (recorded a member)\n    have footprint := footprints a member\n    have readonly : Visibility.ReadOnly events a.space a.data.address := by\n      rw [footprint.1]\n      apply readonly_input whole aligned entry\n      intro thread\n      rw [arena thread]\n      apply input_word_separate _ apart outputFits\n      simpa only [arena owner] using footprint\n    have value := Visibility.read_only_value compatible found read readonly\n    simpa only [footprint.1,PTX.State.memory,sameInitial] using value\n  · simp\n  · constructor\n    · intro w member store\n      have noStore := (footprints w member).2.1\n      rw [noStore] at store\n      cases store\n    · simp\n  · exact ⟨fun _ _ _ => rfl,by simp⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotInputFootprint.lean",
+        "passage": {
+          "quote": "def InputReady (count : Nat) (left right : Word) (s : Flow.State) : Prop :=\n  (s.core.pc=7 → s.predicates 0=decide (count≤DotInput.cursor s.core)) ∧\n  (8≤s.core.pc → s.core.pc≤18 → DotInput.cursor s.core<count) ∧\n  (s.core.pc=9 ∨ s.core.pc=13 → s.core.regs 1=wide s.core 12) ∧\n  (s.core.pc=10 ∨ s.core.pc=14 → s.core.regs 2=s.core.regs 0+wide s.core 12) ∧\n  (s.core.pc=11 → s.core.regs 2=address s.core 12 left) ∧\n  (s.core.pc=15 → s.core.regs 2=address s.core 12 right)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotInputObservations.lean",
+        "passage": {
+          "quote": "theorem input_observations\n    (run : Flow.Observed.Runs ctx (DotInput.inputProgram count left right scratch) s words indices t)\n    (entry : s.core.pc=0) (bounded : count<2^30)\n    (room : ∀ off∈[left,right], ctx.arena.toNat+off.toNat+count*8≤2^64) :\n    (∀ a∈words, InputWord ctx.arena count left right a) ∧ indices=[] := by\n  have walked := Flow.Observed.walk (P:=fun u => AddressReady ctx.arena 0 u ∧ InputReady count left right u)\n    (W:=InputWord ctx.arena count left right) (I:=fun _ => False)\n    run (fun _ member => member) (fun _ member => member)\n    ⟨address_ready_initial entry,input_ready_initial entry⟩ (by\n      intro before after access index step _ _ ready\n      obtain ⟨_,i,fetch,actual⟩ := step\n      refine ⟨⟨input_address fetch actual ready.1,input_footprint_step fetch actual bounded ready.2⟩,?_,?_⟩\n      · intro a observed\n        rw [observed] at actual\n        exact input_access fetch actual bounded ready.2 ready.1.1 room\n      · intro a observed\n        have absent := input_no_index actual (input_safe (List.mem_of_getElem? fetch))\n        rw [observed] at absent\n        cases absent)\n  refine ⟨walked.2.1,?_⟩\n  cases indices with\n  | nil => rfl\n  | cons a rest => exact False.elim (walked.2.2 a (by simp))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete dot entry has one concurrent fetched program with 104 instruction\npositions: input setup and accumulation, the shared tree, and the output tail.\nIts predicates are thread-local values and its barriers use actual arrival and\ncompletion events. A returned thread has executed a return instruction; that\nis not inferred from a convenient instruction counter. A fast thread may\npublish its partial sum while another is still reading input vectors. There\nis no additional barrier between those phases."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotProgram.lean",
+        "passage": {
+          "quote": "def program (count : Nat) (left right output scratch : Word) : List NativeFlow.Instr :=\n  (DotInput.inputProgram count left right scratch).map .flow ++\n    Reduction.Native.code.map treeInstruction ++ (tail output).map .flow"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotProgramRegion.lean",
+        "passage": {
+          "quote": "theorem input_syntax (member : i∈DotInput.inputProgram count left right scratch) :\n    NativeFlow.targets (·≤20) i ∧ NativeFlow.continues i := by\n  simp only [DotInput.inputProgram,Flow.OperandWindow.program,Flow.OperandWindow.header,\n    DotInput.setupCode,DotInput.body,loadCode,addressCode,List.map_cons,List.map_nil,\n    List.map_append,List.mem_append,List.mem_cons,List.not_mem_nil,or_false,or_assoc] at member\n  rcases member with rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl|rfl\n  all_goals simp [NativeFlow.targets,NativeFlow.continues]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete program and its absolute branch targets are compared with emitted\nPTX, including the conditional return, final shared load, output address\narithmetic and global store. Output-address ownership is proved independently\nof the stored numerical value. The remaining dot-entry obligations are to join\nthe recovered input states to the shared-tree execution, transport its ordered\nsources through that projection, justify the final shared read and output\nvalue, and construct a complete admitted execution. The full PCG launch sequence\nand solver correspondence are not yet established."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotProgramText.lean",
+        "passage": {
+          "quote": "def rendered (count : Nat) (left right output : Word) : List String :=\n  (program count left right output 0).map render"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotStoreSyntax.lean",
+        "passage": {
+          "quote": "def inputSafe : Flow.Instr → Bool\n  | .data (.data (.store64 ..)) | .data (.data (.load64 .shared ..)) | .data (.load32 ..) => false\n  | _ => true"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotStores.lean",
+        "passage": {
+          "quote": "theorem stores_output\n    (run : NativeFlow.Runs cfg ctx (program count left right output scratch) s events indices t)\n    (aligned : Aligned s.core) (entry : ∀ owner, (s.core.lanes owner).pc=0)\n    (member : Event.data owner access∈events) (store : access.data.store=true)\n    (global : access.space=.global) :\n    access.data.pc=102 ∧ access.data.address=((ctx owner).arena+output).toNat := by\n  obtain ⟨before,earlier,earlierIndices,selected,out,earlierRun,one,observed⟩ :=\n    NativeFlow.access_prefix run member\n  obtain ⟨same,i,next,index,fetch,effect⟩ := NativeFlow.step_access_origin one observed\n  subst selected\n  obtain ⟨sp,addr,src,opcode,shape⟩ := Flow.Observed.store_shape effect store\n  subst access\n  simp only at global\n  subst sp\n  rw [opcode] at fetch\n  obtain ⟨position,address,source⟩ := global_store_site fetch\n  have ready := run_addresses earlierRun aligned entry owner\n  have prepared := ready.2.2.2 position\n  exact ⟨position,by simp only [address,Operand.eval,NativeFlow.lane] at prepared ⊢; rw [prepared]⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete dot entry has one concurrent fetched program with 104 instruction\npositions: input setup and accumulation, the shared tree, and the output tail.\nIts predicates are thread-local values and its barriers use actual arrival and\ncompletion events. A returned thread has executed a return instruction; that\nis not inferred from a convenient instruction counter. A fast thread may\npublish its partial sum while another is still reading input vectors. There\nis no additional barrier between those phases."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlow.lean",
+        "passage": {
+          "quote": "inductive Step (cfg : Config n) (ctx : Fin n → Kernel.Context) (program : List Instr)\n    (thread : Fin n) : State n → Outcome n → Prop where\n  | flow (running : s.halted thread=false) (fresh : s.core.barrier.arrived thread=false)\n      (fetch : program[(s.core.lanes thread).pc]?=some (.flow instruction))\n      (actual : Flow.Observed.Eval (ctx thread) instruction (lane s thread) next access index) :\n      Step cfg ctx program thread s\n        ⟨update s thread next,access.toList.map (Event.data thread),index.toList.map (thread,·)⟩\n  | sync (running : s.halted thread=false) (fresh : s.core.barrier.arrived thread=false)\n      (fetch : program[(s.core.lanes thread).pc]?=some (.sync resource)) :\n      Step cfg ctx program thread s\n        ⟨{s with core:=(synchronize cfg s.core thread resource).state},\n          (synchronize cfg s.core thread resource).events,[]⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete dot entry has one concurrent fetched program with 104 instruction\npositions: input setup and accumulation, the shared tree, and the output tail.\nIts predicates are thread-local values and its barriers use actual arrival and\ncompletion events. A returned thread has executed a return instruction; that\nis not inferred from a convenient instruction counter. A fast thread may\npublish its partial sum while another is still reading input vectors. There\nis no additional barrier between those phases."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowFrame.lean",
+        "passage": {
+          "quote": "def keeps (r : Nat) : Flow.Instr → Prop\n  | .data op => Indexed.keeps r op\n  | .context dst _ | .select _ _ dst _ => r≠dst\n  | _ => True"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowOrigins.lean",
+        "passage": {
+          "quote": "theorem step_access_origin (actual : Step cfg ctx program selected s out)\n    (member : Event.data owner access∈out.events) :\n    owner=selected ∧ ∃ i next index,\n      program[(s.core.lanes selected).pc]?=some (.flow i) ∧\n      Flow.Observed.Eval (ctx selected) i (lane s selected) next (some access) index := by\n  cases actual with\n  | @flow instruction _ next word index running fresh fetch execution =>\n    obtain ⟨a,recorded,equal⟩ := List.mem_map.mp member\n    cases equal\n    have same : word=some access := by simpa using recorded\n    exact ⟨rfl,instruction,next,index,fetch,same ▸ execution⟩\n  | sync =>\n    simp only [synchronize] at member\n    split at member <;> simp_all"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowPrefix.lean",
+        "passage": {
+          "quote": "theorem prefix_step (region : Region program pre)\n    (actual : Step cfg ctx program selected s out) (aligned : Aligned s.core)\n    (related : Related pre.length (lane s owner) shadow) :\n    ∃ next words indices, Flow.Observed.Runs (ctx owner) pre shadow words indices next ∧\n      Related pre.length (lane out.state owner) next ∧\n      (∀ a∈words, Event.data owner a∈out.events) ∧ (∀ a∈indices, (owner,a)∈out.indices) := by\n  cases actual with\n  | @flow instruction _ next access index running fresh fetch execution =>\n    by_cases sameOwner : owner=selected\n    · subst owner\n      by_cases before : (s.core.lanes selected).pc<pre.length\n      · have same : lane s selected=shadow := by simpa only [Related,lane,before,↓reduceIte] using related\n        have localFetch : pre[(s.core.lanes selected).pc]?=some instruction := by\n          rw [region.fetch _ before] at fetch\n          obtain ⟨i,found,equal⟩ := Option.map_eq_some_iff.mp fetch\n          cases equal\n          exact found\n        have one : Flow.Observed.Step (ctx selected) pre shadow next access index := by\n          rw [← same]\n          exact ⟨running,instruction,localFetch,execution⟩\n        have upper := eval_upper execution before (region.inside _ _ before localFetch)\n        refine ⟨next,access.toList,index.toList,?_,?_,?_,?_⟩\n        · simpa using Flow.Observed.Runs.cons one Flow.Observed.Runs.nil\n        · rw [lane_update_self]; exact related_initial next upper\n        · intro a member; exact List.mem_map.mpr ⟨a,member,rfl⟩\n        · intro a member; exact List.mem_map.mpr ⟨a,member,rfl⟩\n      · have past : pre.length≤(s.core.lanes selected).pc := by omega\n        have lower := eval_lower execution past (region.outside _ _ past fetch)\n        refine ⟨shadow,[],[],.nil,?_,by simp,by simp⟩\n        rw [lane_update_self]\n        simpa only [Related,lane,before,show ¬next.core.pc<pre.length by omega,↓reduceIte] using related\n    · exact ⟨shadow,[],[],.nil,by simpa only [lane_update_other s selected owner sameOwner next] using related,\n        by simp,by simp⟩\n  | @sync _ resource running fresh fetch =>\n    refine ⟨shadow,[],[],.nil,?_,by simp,by simp⟩\n    by_cases before : (s.core.lanes owner).pc<pre.length\n    · rw [sync_prefix_unchanged region aligned before fetch]\n      exact related\n    · have increase := sync_monotone s cfg selected owner resource\n      have after : ¬((synchronize cfg s.core selected resource).state.lanes owner).pc<pre.length := by omega\n      simpa only [Related,lane,before,after,↓reduceIte] using related"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowPrefixComplete.lean",
+        "passage": {
+          "quote": "theorem prefix_complete (region : Region program pre)\n    (ordinary : ∀ i∈pre, continues i)\n    (actual : Runs cfg ctx program s events indices t) (aligned : Aligned s.core)\n    (start : (s.core.lanes owner).pc≤pre.length) (live : s.halted owner=false)\n    (returned : t.halted owner=true) :\n    ∃ next words localIndices,\n      Flow.Observed.Runs (ctx owner) pre (lane s owner) words localIndices next ∧\n      next.core.pc=pre.length ∧ next.halted=false ∧\n      (∀ a∈words, Event.data owner a∈events) ∧ (∀ a∈localIndices, (owner,a)∈indices) := by\n  obtain ⟨next,words,indices,run,related,wordMem,indexMem⟩ :=\n    prefix_run region actual aligned (related_initial (lane s owner) start)\n  have stillLive := observed_live run ordinary live\n  refine ⟨next,words,indices,run,?_,stillLive,wordMem,indexMem⟩\n  unfold Related at related\n  split at related\n  · have same := congrArg Flow.State.halted related\n    simp only [lane] at same\n    rw [returned,stillLive] at same\n    cases same\n  · exact related"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete dot entry has one concurrent fetched program with 104 instruction\npositions: input setup and accumulation, the shared tree, and the output tail.\nIts predicates are thread-local values and its barriers use actual arrival and\ncompletion events. A returned thread has executed a return instruction; that\nis not inferred from a convenient instruction counter. A fast thread may\npublish its partial sum while another is still reading input vectors. There\nis no additional barrier between those phases."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowRegion.lean",
+        "passage": {
+          "quote": "def targets (bound : Nat → Prop) : Flow.Instr → Prop\n  | .branch _ _ target | .jump target => bound target\n  | _ => True"
         }
       }
     }

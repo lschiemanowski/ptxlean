@@ -1240,10 +1240,37 @@ a decreasing count of remaining indices, constructing a finite execution for
 arbitrary input words. Short and uneven arrays naturally leave some lanes
 empty or with fewer iterations.
 
-This input-loop theorem uses a scalar global-byte snapshot. The full parallel
-entry still must derive that snapshot from admitted memory sources, join its
-computed partial sums to the tree under interleaving, and prove the final
-shared load and global output store. The native-tree and input-loop results
-are individually complete components, not a completed dot-product or PCG
-correspondence. Their text bindings are frontend checks; neither Lean checking
-nor successful text comparison establishes compiler or GPU conformance.
+The standalone input-loop theorem uses a scalar global-byte snapshot. The
+complete concurrent entry now derives that input snapshot from actual memory
+sources. Joining the resulting partial sums to the shared-tree theorem and
+proving the final shared load and output value remain separate obligations.
+Text bindings are frontend checks; neither Lean checking nor successful text
+comparison establishes compiler or GPU conformance.
+
+The complete dot entry has one concurrent fetched program with 104 instruction
+positions: input setup and accumulation, the shared tree, and the output tail.
+Its predicates are thread-local values and its barriers use actual arrival and
+completion events. A returned thread has executed a return instruction; that
+is not inferred from a convenient instruction counter. A fast thread may
+publish its partial sum while another is still reading input vectors. There
+is no additional barrier between those phases.
+
+For every returned thread, the proof recovers its actual input execution from
+the interleaving. Other threads and later instructions leave this recorded
+input execution unchanged. Every retained read is connected to the original
+whole-kernel memory history. The unsigned loop guard and address instructions
+prove that each read belongs to one of the input arrays. Every global store in
+the complete entry is proved to use the designated output address. When that
+word is disjoint from the inputs, byte-source compatibility forces every input
+read to recover its initialized bytes. Thus the lane's rounded partial sum
+follows from actual execution and memory admission, without a supplied read
+value, partial-sum equation, local execution or phase boundary.
+
+The complete program and its absolute branch targets are compared with emitted
+PTX, including the conditional return, final shared load, output address
+arithmetic and global store. Output-address ownership is proved independently
+of the stored numerical value. The remaining dot-entry obligations are to join
+the recovered input states to the shared-tree execution, transport its ordered
+sources through that projection, justify the final shared read and output
+value, and construct a complete admitted execution. The full PCG launch sequence
+and solver correspondence are not yet established.

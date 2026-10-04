@@ -26,7 +26,7 @@
     "Connect shrinking reduction ownership to source selection and a completed two-stage example without claiming the full emitted reduction.",
     "Derive shared-tree visibility for all 256 lanes from executed control and addresses; keep the full emitted reduction and solver correspondence explicit.",
     "Prove shared-tree numerical correctness and construct complete admitted executions for arbitrary initial words, with memory bounds; the full emitted dot-product entry remains separate.",
-    "Prove native two-instruction tree guards and complete per-lane strided input execution; retain their joint concurrent admission and output tail as explicit remaining work."
+    "Recover every returned lane’s rounded input partial sum from the complete concurrent dot program and its actual byte sources; derive input footprints and output-address ownership, while tree composition and final output value remain unfinished."
   ],
   "realization": "implemented",
   "links": [
@@ -183,6 +183,42 @@
         "path": "integration/torchlean/PoissonPTX/DotInputComplete.lean",
         "passage": {
           "quote": "theorem input_correct\n    (run : Flow.Runs ctx (inputProgram count left right scratch) s t)\n    (pc : s.core.pc=0) (running : s.halted=false) (done : t.core.pc=20)\n    (bounded : count<2^30) (arrays : Arrays (setup ctx scratch s).core count left right) :\n    decode (t.core.regs 8)=partialSum ctx scratch s count left right ∧\n      Stable (setup ctx scratch s).core t.core := by\n  obtain ⟨steps,counted⟩ := Flow.counted run\n  obtain ⟨remaining,afterSetup⟩ := consume_setup counted pc running done\n  have setupPC : (setup ctx scratch s).core.pc=(setupCode scratch).length := by\n    simp [setup,setupCode,assign,advance,pc]\n  obtain ⟨_,ready,_,traverse,exit,_,rest⟩ := Flow.OperandWindow.cut afterSetup setupPC running\n    (by simp [done,setupCode,body,loadCode,addressCode])\n  have readyPC : ready.core.pc=20 := by simpa [setupCode,body,loadCode,addressCode] using exit\n  have finalEq := no_continuation rest (by\n    change (inputProgram count left right scratch)[ready.core.pc]?=none\n    rw [readyPC,← input_length (count:=count) (left:=left) (right:=right) (scratch:=scratch)]; simp)\n  rw [finalEq]\n  have result := traversal_correct traverse bounded (stable_refl _)\n    (fun i hi => arrays_valid arrays bounded hi)\n  simpa only [partialSum,setup_cursor,setup_zero] using result"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "For every returned thread, the proof recovers its actual input execution from\nthe interleaving. Other threads and later instructions leave this recorded\ninput execution unchanged. Every retained read is connected to the original\nwhole-kernel memory history. The unsigned loop guard and address instructions\nprove that each read belongs to one of the input arrays. Every global store in\nthe complete entry is proved to use the designated output address. When that\nword is disjoint from the inputs, byte-source compatibility forces every input\nread to recover its initialized bytes. Thus the lane's rounded partial sum\nfollows from actual execution and memory admission, without a supplied read\nvalue, partial-sum equation, local execution or phase boundary."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotCompletedInput.lean",
+        "passage": {
+          "quote": "theorem completed_input_correct\n    (whole : NativeFlow.Runs cfg ctx (program count left right output scratch) start events allIndices final)\n    (aligned : Aligned start.core) (entry : ∀ thread, (start.core.lanes thread).pc=0)\n    (live : start.halted owner=false) (returned : final.halted owner=true)\n    (arena : ∀ thread, (ctx thread).arena=base)\n    (sameInitial : (start.core.lanes owner).global=initial .global)\n    (compatible : Visibility.Compatible initial events source)\n    (bounded : count<2^30) (apart : OutputApart count left right output)\n    (arrays : DotInput.Arrays (DotInput.setup (ctx owner) scratch (NativeFlow.lane start owner)).core count left right)\n    (outputFits : base.toNat+output.toNat+8≤2^64) :\n    ∃ next words indices,\n      Flow.Observed.Runs (ctx owner) (DotInput.inputProgram count left right scratch)\n        (NativeFlow.lane start owner) words indices next ∧\n      (∀ a∈words, Event.data owner a∈events) ∧\n      Flow.Runs (ctx owner) (DotInput.inputProgram count left right scratch)\n        (NativeFlow.lane start owner) next ∧ next.core.pc=20 ∧ next.halted=false ∧\n      decode (next.core.regs 8)=DotInput.partialSum (ctx owner) scratch (NativeFlow.lane start owner) count left right ∧\n      DotInput.Stable (DotInput.setup (ctx owner) scratch (NativeFlow.lane start owner)).core next.core := by\n  obtain ⟨next,words,indices,observed,done,stillLive,recorded,_⟩ :=\n    completed_input whole aligned (entry owner) live returned\n  have room := arrays_room arrays\n  rw [arena owner] at room\n  have scalar := admitted_input whole aligned entry arena sameInitial compatible observed recorded\n    bounded apart room outputFits\n  have result := DotInput.input_correct scalar (entry owner) live done bounded arrays\n  exact ⟨next,words,indices,observed,recorded,scalar,done,stillLive,result⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete program and its absolute branch targets are compared with emitted\nPTX, including the conditional return, final shared load, output address\narithmetic and global store. Output-address ownership is proved independently\nof the stored numerical value. The remaining dot-entry obligations are to join\nthe recovered input states to the shared-tree execution, transport its ordered\nsources through that projection, justify the final shared read and output\nvalue, and construct a complete admitted execution. The full PCG launch sequence\nand solver correspondence are not yet established."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotProgramText.lean",
+        "passage": {
+          "quote": "def rendered (count : Nat) (left right output : Word) : List String :=\n  (program count left right output 0).map render"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete program and its absolute branch targets are compared with emitted\nPTX, including the conditional return, final shared load, output address\narithmetic and global store. Output-address ownership is proved independently\nof the stored numerical value. The remaining dot-entry obligations are to join\nthe recovered input states to the shared-tree execution, transport its ordered\nsources through that projection, justify the final shared read and output\nvalue, and construct a complete admitted execution. The full PCG launch sequence\nand solver correspondence are not yet established."
+      },
+      "to": {
+        "path": "hardware/check_poisson_dot_entry.py",
+        "passage": {
+          "quote": "def verify_entry(ptx, rendered):\n    if any(token in ptx for token in ('//', '/*', '*/')):\n        raise ValueError('comments outside reviewed dialect')\n    lines = [line.strip() for line in ptx.splitlines() if line.strip()]\n    if lines[:3] not in ([f'.version {v}', '.target sm_120', '.address_size 64'] for v in ('9.2', '9.4')):\n        raise ValueError('unreviewed target/version')\n    if set(rendered) != set(FIELDS):\n        raise ValueError('missing or extra rendered dot entries')\n    checked = []\n    for entry, expected in rendered.items():\n        if len(expected) != 104:\n            raise ValueError('expected complete 104-instruction dot entry')\n        bodies = re.findall(r'\\.visible \\.entry '+entry+r'\\(\\.param \\.u64 arena\\)\\s*([^}]+)}', ptx)\n        if len(bodies) != 1 or len(re.findall(r'\\.entry\\s+'+entry+r'\\b', ptx)) != 1:\n            raise ValueError('entry missing or duplicated')\n        body = [line.strip() for line in bodies[0].splitlines() if line.strip()]\n        header = HEADER + ['.shared .align 8 .b8 scratch[2048];']\n        if body[:len(header)] != header:\n            raise ValueError('unexpected entry declaration')\n        instructions, labels = [], {}\n        for line in body[len(header):]:\n            if line.endswith(':'):\n                name = line[:-1]\n                if name in labels:\n                    raise ValueError('duplicate label')\n                labels[name] = len(instructions)\n            else:\n                instructions.append(line)\n        expected_labels = dict(loop=6, finish=20)\n        expected_labels.update({f'next_{stride}': 32+9*i for i, stride in enumerate((128,64,32,16,8,4,2,1))})\n        if labels != expected_labels:\n            raise ValueError('incorrect control boundaries')\n        for pos, line in enumerate(instructions):\n            branch = re.fullmatch(r'(@%p0 )?bra (\\w+);', line)\n            if branch:\n                if branch[2] not in labels:\n                    raise ValueError('unknown branch target')\n                instructions[pos] = f'{branch[1] or \"\"}bra #{labels[branch[2]]};'\n        if instructions != expected:\n            raise ValueError(entry+': differs from complete proved instruction list')\n        checked.append(dict(entry=entry, instructions=len(instructions),\n            sha256=hashlib.sha256(('\\n'.join(instructions)+'\\n').encode()).hexdigest()))\n    return checked"
         }
       }
     }

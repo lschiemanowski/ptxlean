@@ -625,6 +625,10 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard'] = COUNTS.get('PtxTorch
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native', 0) + 20
 TARGETS.update(['PoissonPTX.ControlFlowBoundary', 'PoissonPTX.ControlFlowOperandWindow', 'PoissonPTX.ControlFlowOperandWindowExists', 'PoissonPTX.DotInputBody', 'PoissonPTX.DotInputChecks', 'PoissonPTX.DotInputComplete', 'PoissonPTX.DotInputExists', 'PoissonPTX.DotInputLayout', 'PoissonPTX.DotInputLoop', 'PoissonPTX.DotInputSetup', 'PoissonPTX.DotInputText', 'PoissonPTX.DotInputTraversal', 'PoissonPTX.IndexedScalar', 'PoissonPTX.NativeGuard', 'PoissonPTX.NativeGuardExists', 'PoissonPTX.NativeGuardInvariant', 'PoissonPTX.ReductionNative', 'PoissonPTX.ReductionNativeCode', 'PoissonPTX.ReductionNativeText'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Dot'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Dot', 0) + 51
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow', 0) + 36
+TARGETS.update(['PoissonPTX.DotAddress', 'PoissonPTX.DotAddressSyntax', 'PoissonPTX.DotAddressTail', 'PoissonPTX.DotCompletedInput', 'PoissonPTX.DotInputAccess', 'PoissonPTX.DotInputAdmitted', 'PoissonPTX.DotInputFootprint', 'PoissonPTX.DotInputObservations', 'PoissonPTX.DotProgram', 'PoissonPTX.DotProgramRegion', 'PoissonPTX.DotProgramText', 'PoissonPTX.DotStoreSyntax', 'PoissonPTX.DotStores', 'PoissonPTX.NativeFlow', 'PoissonPTX.NativeFlowFrame', 'PoissonPTX.NativeFlowOrigins', 'PoissonPTX.NativeFlowPrefix', 'PoissonPTX.NativeFlowPrefixComplete', 'PoissonPTX.NativeFlowRegion'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

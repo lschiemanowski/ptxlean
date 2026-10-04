@@ -1,0 +1,185 @@
+{
+  "id": "49778963-de8a-4d02-988c-a94b5a04e222",
+  "base": "961753cc4f6e9e4ca20c3f21e34223da2399f5e5",
+  "contentTree": "3571b6173966e077d21cdd45821c75a954cc012b",
+  "reviewer": "Codex",
+  "summary": "Derive dot-product input correspondence from the complete concurrent entry and actual byte sources.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Add complete fetched dot program, prefix recovery, actual input footprints and global-store ownership; derive scalar input execution and rounded partial sums from whole-history source admission. Keep tree join, final value and full solver obligations explicit."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Record full 104-instruction source binding and admitted input correspondence, without claiming complete dot-entry correctness or existence."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Reference solver, equations, numerical operation order, result certificate, runtime kernels and README are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Primitive arithmetic and byte-source rules remain unchanged. The combined machine reuses actual data, predicate and barrier effects; universal source reconstruction preserves the distinction between formal validity, text binding and hardware fidelity."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "3571b6173966e077d21cdd45821c75a954cc012b",
+      "method": "Sequential capped Lean module checks, full exact dependency audit, source/dependency/target guards, complete saved-PTX bindings, frontend mutation tests, manual theorem-premise and interleaving review, receipt hashes, Stratic validation and matching final snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0, 16 dependency pins; heavy jobs sequential, one Lean thread, hard 6 GiB memory cap with swap disabled and 150 percent CPU quota. No GPU run or paid calls.",
+      "evidence": "19 new modules passed with no warnings; 5095 exact dependency reports use only allowed standard Lean axioms; 627 Lean files passed source guards. The new concurrent machine fetches actual ordinary instructions and full-block barriers, with private predicates, explicit halted state and candidate byte observations. The dot entry has 104 actual instruction positions, including the input loop, native tree and eight-instruction output tail. Prefix recovery derives each returned lane's real completed input trace without inserting a phase barrier. Actual loop comparisons and address instructions prove every read belongs to an input array. An invariant reconstructs every global store address from its output-address instructions. For disjoint output storage, byte-source compatibility across the entire actual history forces every input byte to initialization. Replaying those observations yields the previously proved exact ordered rounded partial sum; no desired read, partial sum, local execution or synthetic phase boundary is assumed. A complete frontend binding checks all 180 dot entries across 30 saved layouts and rejects altered tail loads, returns, stores, branch targets and layouts. All 40 hardware frontend tests pass. Existing tree/input/contraction/residual/update bindings refreshed against exact current source hashes; source-identical legacy executables reused only after hash checks, while the current audit and text comparisons reran. Peak audit RSS 4774840 KiB. The full unchanged legacy interpreter suite was not rerun. README and emitted kernels are unchanged. The input-state-to-shared-tree join, ordered-source projection, final shared read/output value, whole-entry existence and full PCG/host correspondence remain open. Full PTX admission and hardware conformance remain distinct. All receipt hashes, Stratic links and final snapshots match.",
+      "tests": [],
+      "id": "f9e19533-f5da-4c7e-9783-baec22c42b92",
+      "recordedAt": "2026-10-04T09:08:02.864Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T09:09:14.203Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-reduction-control.md",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/check_poisson_dot_entry.py",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "hardware/test_poisson_dot_entry.py",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotAddress.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotAddressSyntax.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotAddressTail.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotCompletedInput.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputAccess.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputAdmitted.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputFootprint.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputObservations.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotProgram.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotProgramRegion.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotProgramText.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotStoreSyntax.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotStores.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlow.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlowFrame.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlowOrigins.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlowPrefix.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlowPrefixComplete.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeFlowRegion.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed full concurrent fetched model, prefix projection, input/address/source proofs, complete emitted-entry binding and mutation tests, registered dependency audit, current receipts and supporting documentation."
+    }
+  ]
+}
