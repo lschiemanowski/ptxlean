@@ -381,6 +381,23 @@ recovering the actual lane-zero output store from its completed execution.
 The numerical result then uses `DotOutputValue.output_value`, independently of
 the particular schedule used by the witness.
 
+## Publishing the dot result
+
+A returned lane-zero execution must contain the actual dot output store: its
+computed predicate prevents the early return. Merging the actual global stores
+in any order yields the prescribed decoded dot result at the output address and
+preserves every other byte. This also holds for a constructed complete admitted
+execution. The theorem concerns mathematical publication of complete recorded
+stores. It does not assume atomic hardware reads, fix exceptional encodings,
+or prove CUDA visibility or transport between hardware launches.
+
+`DotPublication.published_output` uses all actual store records and the universal
+numerical theorem. `DotZeroReturn.zero_returned_store` rules out a vacuous result
+for a returned lane zero. `DotPublishedComplete.complete_published` joins this
+boundary to the constructed admitted execution. The mathematical merge still
+needs a separate CUDA-visibility argument before it can describe hardware
+launch-to-launch transport.
+
 ## Remaining boundaries
 
 The complete program and its absolute branch targets are compared with emitted

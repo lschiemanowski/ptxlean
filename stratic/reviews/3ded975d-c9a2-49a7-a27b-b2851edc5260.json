@@ -1,0 +1,169 @@
+{
+  "id": "3ded975d-c9a2-49a7-a27b-b2851edc5260",
+  "base": "c64464029080f829b1aecc791695ce8603210346",
+  "contentTree": "4d3b05fffb57d4d948b5e2419c47fb80619382dc",
+  "reviewer": "Codex",
+  "summary": "Publish completed dot results and prove the fetched PCG direction-update entry.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Connect complete native dot execution to published bytes; prove direction-update per-thread instructions and introduce explicit same-thread future-store exclusion with an adversarial counterexample. Keep concurrent update replay and PCG composition open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe actual-byte dot publication, complete direction-update thread paths and exact source binding, and the new necessary admission rule without claiming a complete parallel update."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The source solver, discrete equations, kernel implementation, residual certificate and numerical policies remain unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The additional necessary no-future constraint is explicitly tied to the pinned PTX same-thread generic-address causality rule, with a counterexample and limited scope. No primitive instruction semantics changed; manual fidelity, proof validity, binding and hardware claims remain distinct."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "4d3b05fffb57d4d948b5e2419c47fb80619382dc",
+      "method": "Sequential capped Lean checks and exact dependency audit; pinned PTX source review; source/target/dependency guards; seven saved-PTX bindings; frontend mutation tests; manual memory-source, fetched-control and publication review; receipt hashes and Stratic snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy job at a time, one Lean thread, 6 GiB hard memory limit, swap disabled, CPU 150 percent. No GPU runs or paid calls.",
+      "evidence": "All 12 new modules checked without warnings. 5357 exact dependency reports use only allowed standard Lean axioms; 694 guarded source files and all pins pass. A generic decoded-value publication proof preserves exceptional encoding freedom. Actual lane-zero predicate/return control entails an output store in every returned native dot run. Publishing actual stores in any order gives its specified decoded result and leaves every other byte unchanged; complete admitted native existence composes with that publication theorem. Same-thread future-store exclusion was reviewed against the exact pinned PTX 9.4 program-order, causality-order and causality sections after SHA-256/byte/anchor verification; its restricted necessary-source contract is explicit. A kernel-checked circular read/store example passes compatibility alone and fails that new rule. The PCG direction-update scalar and vector loads, separate rounded product/add, actual product register, in-place store, memory frame, fetched launch prologue and return are proved per thread, with active and padding existence. A new frontend binds all 30 saved update_p entries to the complete 25-instruction Lean program and audits its theorems. The in-place concurrent ownership/source/replay proof remains open and is not concealed in the per-thread theorem. Full PCG composition, full PTX admission, CUDA visibility and hardware conformance remain separate. All 45 frontend tests pass; seven receipts refreshed and hash-verified. The complete dot binding checks all 180 entries across 30 layouts with publication theorems added. Existing legacy executables reused only after unchanged imported-source verification; current audit and text checks reran. Peak audit RSS 4835848 KiB. Unchanged legacy interpreter suite not rerun. Stratic summaries, exact links, study guides, and final snapshots agree. README and emitted PTX are unchanged.",
+      "tests": [],
+      "id": "abac0f80-7221-493c-b361-e01706aa08e3",
+      "recordedAt": "2026-10-04T11:22:22.932Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T11:23:42.494Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-pcg-updates.md",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "docs/foundations/poisson-reduction-control.md",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/check_poisson_dot_entry.py",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/check_poisson_update_p.py",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "hardware/test_poisson_update_p.py",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdate.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateCorrect.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateEntry.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateText.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DecodedPublication.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotPublication.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotPublishedComplete.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotZeroReturn.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/GlobalThreadSourceChecks.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/GlobalThreadSources.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarLoad.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/VectorEntry.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed actual-store publication, lane-zero return control, restricted global source rule, counterexample, scalar/vector load and update proofs, exact instruction binding/mutations, registered audit, receipts and documentation."
+    }
+  ]
+}

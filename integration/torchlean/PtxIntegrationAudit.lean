@@ -1,3 +1,15 @@
+import PoissonPTX.AffineUpdate
+import PoissonPTX.AffineUpdateCorrect
+import PoissonPTX.AffineUpdateEntry
+import PoissonPTX.AffineUpdateText
+import PoissonPTX.DecodedPublication
+import PoissonPTX.DotPublication
+import PoissonPTX.DotPublishedComplete
+import PoissonPTX.DotZeroReturn
+import PoissonPTX.GlobalThreadSourceChecks
+import PoissonPTX.GlobalThreadSources
+import PoissonPTX.ScalarLoad
+import PoissonPTX.VectorEntry
 import PoissonPTX.DotComplete
 import PoissonPTX.DotCompleteCandidate
 import PoissonPTX.DotInitialWave
@@ -6113,3 +6125,54 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial.prefix_all
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial.prefix_next
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial.run_lanes
+
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.code
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.scalar
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.left
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.loaded
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.product
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.result
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.finish
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.load_executes
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.loads_eq
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.executes
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.correct
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.entry
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.entry_correct
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.entry_exists
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.inactive_correct
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.inactive_exists
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.rendered
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.NumericSafe
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.NumericPresent
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.numeric_apply_preserves
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.numeric_preserves
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.numeric_word
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication.numeric_permuted
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_outside
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.published_output
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness.complete_published
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.ZeroControl
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.zero_flow
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.zero_sync
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.zero_returned_store
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ThreadSourceChecks.read
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ThreadSourceChecks.write
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ThreadSourceChecks.events
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ThreadSourceChecks.circular
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ThreadSourceChecks.compatibility_alone
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ThreadSourceChecks.circular_rejected
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.GlobalThreadSources
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.before_own_writes_initial
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Visibility.initial_thread_sources
+#print axioms PtxTorchLean.Poisson.PTX.ScalarLoad.code
+#print axioms PtxTorchLean.Poisson.PTX.ScalarLoad.addressed
+#print axioms PtxTorchLean.Poisson.PTX.ScalarLoad.loaded
+#print axioms PtxTorchLean.Poisson.PTX.ScalarLoad.executes
+#print axioms PtxTorchLean.Poisson.PTX.ScalarLoad.block_eq
+#print axioms PtxTorchLean.Poisson.PTX.VectorEntry.program
+#print axioms PtxTorchLean.Poisson.PTX.VectorEntry.setup_run
+#print axioms PtxTorchLean.Poisson.PTX.VectorEntry.inactive
+#print axioms PtxTorchLean.Poisson.PTX.VectorEntry.completed_body
+#print axioms PtxTorchLean.Poisson.PTX.VectorEntry.executes

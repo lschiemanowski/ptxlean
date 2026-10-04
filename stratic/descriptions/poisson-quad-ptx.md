@@ -442,3 +442,33 @@ existence as well as conditional output correctness for the native dot entry.
 It does not establish progress for every GPU schedule, full PTX memory admission,
 or hardware conformance. Remaining PCG kernels and host launch composition are
 separate obligations.
+
+A returned lane-zero execution must contain the actual dot output store: its
+computed predicate prevents the early return. Merging the actual global stores
+in any order yields the prescribed decoded dot result at the output address and
+preserves every other byte. This also holds for a constructed complete admitted
+execution. The theorem concerns mathematical publication of complete recorded
+stores. It does not assume atomic hardware reads, fix exceptional encodings,
+or prove CUDA visibility or transport between hardware launches.
+
+The search-direction update has a complete per-thread fetched proof. Each
+active thread executes the real launch-parameter and index setup, loads scalar
+β and its old p and z words, computes the separately rounded product β · p,
+adds z, stores the result and returns. Every other byte remains unchanged.
+Padding threads return without memory accesses. Valid allocations give finite
+execution witnesses for both paths. The 25-instruction Lean program is compared
+with the emitted update_p entry, including the product register, scalar address,
+in-place output address and unsigned guard. This establishes the per-thread
+instruction result, not yet its concurrent in-place source admission or the
+full PCG loop.
+
+In-place updates need a source rule beyond byte compatibility. For synchronous
+same-thread accesses using ordinary addresses and the generic memory proxy,
+PTX causality forbids a read from taking bytes from a later overlapping store.
+The restricted rule is explicit: it applies to actual same-thread occurrence
+order at the same word address. If ownership excludes other writers, it forces
+the old value to come from initialization. It does not order unrelated threads
+or cover aliases, asynchronous accesses or the full PTX memory model. A
+kernel-checked counterexample shows that byte compatibility alone accepts a
+circular read justified by its own later write; the new rule rejects it.
+Concurrent direction-update ownership and source proofs remain to be supplied.

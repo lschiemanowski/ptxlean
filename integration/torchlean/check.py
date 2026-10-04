@@ -647,6 +647,16 @@ COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow'] = COUNTS.get('PtxTorchL
 COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.Serial', 0) + 6
 TARGETS.update(['PoissonPTX.DotComplete', 'PoissonPTX.DotCompleteCandidate', 'PoissonPTX.DotInitialWave', 'PoissonPTX.DotInputRecorded', 'PoissonPTX.DotInputTreeCandidate', 'PoissonPTX.DotInputWave', 'PoissonPTX.DotOutputExists', 'PoissonPTX.DotStageWave', 'PoissonPTX.DotTailBody', 'PoissonPTX.DotTailGuard', 'PoissonPTX.DotTailLane', 'PoissonPTX.DotTailWave', 'PoissonPTX.DotTreeWitness', 'PoissonPTX.DotWitnessAdmission', 'PoissonPTX.DotWitnessGuard', 'PoissonPTX.DotWitnessLayout', 'PoissonPTX.DotWitnessProducers', 'PoissonPTX.DotWitnessWords', 'PoissonPTX.GlobalSharedAdmission', 'PoissonPTX.NativeFlowLayout', 'PoissonPTX.NativeFlowLocal', 'PoissonPTX.NativeFlowRound', 'PoissonPTX.NativeFlowSerial'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.AffineUpdate'] = COUNTS.get('PtxTorchLean.Poisson.PTX.AffineUpdate', 0) + 18
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.GlobalPublication', 0) + 6
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Dot'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Dot', 0) + 6
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Dot.Witness', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ThreadSourceChecks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Visibility.ThreadSourceChecks', 0) + 6
+COUNTS['PtxTorchLean.Poisson.PTX.Concurrent.Visibility'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Concurrent.Visibility', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.ScalarLoad'] = COUNTS.get('PtxTorchLean.Poisson.PTX.ScalarLoad', 0) + 5
+COUNTS['PtxTorchLean.Poisson.PTX.VectorEntry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.VectorEntry', 0) + 5
+TARGETS.update(['PoissonPTX.AffineUpdate', 'PoissonPTX.AffineUpdateCorrect', 'PoissonPTX.AffineUpdateEntry', 'PoissonPTX.AffineUpdateText', 'PoissonPTX.DecodedPublication', 'PoissonPTX.DotPublication', 'PoissonPTX.DotPublishedComplete', 'PoissonPTX.DotZeroReturn', 'PoissonPTX.GlobalThreadSourceChecks', 'PoissonPTX.GlobalThreadSources', 'PoissonPTX.ScalarLoad', 'PoissonPTX.VectorEntry'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

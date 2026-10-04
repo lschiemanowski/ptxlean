@@ -31,7 +31,10 @@
     "Prove that every returned lane has passed all nine native tree barriers and that each completion has earlier real arrivals from every participant.",
     "Derive actual native shared read sources, shrinking writer ranges and barrier paths, then prove every dot output equals the prescribed rounded reduction of its actual input-loop partial sums.",
     "Establish complete native-entry execution existence alongside universal output correctness, while keeping remaining PCG kernels, host composition, full PTX admission and hardware conformance separate.",
-    "Construct a complete finite native dot execution, admit its actual input/tree/output history, prove every lane returns, and exhibit a numerically correct output store without assuming intermediate read values."
+    "Construct a complete finite native dot execution, admit its actual input/tree/output history, prove every lane returns, and exhibit a numerically correct output store without assuming intermediate read values.",
+    "Recover the dot result in mathematically published global bytes, independently of store order, and preserve every byte outside its output word.",
+    "Prove the complete per-thread direction-update entry, active and padding execution existence, and exact 25-instruction binding; keep concurrent in-place admission and PCG composition explicit remaining work.",
+    "Use an explicit same-thread no-future byte-source constraint for in-place updates, with a counterexample demonstrating why compatibility alone is insufficient."
   ],
   "realization": "implemented",
   "links": [
@@ -320,6 +323,54 @@
         "path": "integration/torchlean/PoissonPTX/DotOutputExists.lean",
         "passage": {
           "quote": "theorem output_exists {start : NativeFlow.State 256}\n    (run : NativeFlow.Runs cfg ctx (program count left right output scratch) start events indices final)\n    (reset : start.core.barrier=Ptx.Barrier.reset generation)\n    (entry : (start.core.lanes 0).pc=0) (returned : (final.core.lanes 0).pc=104) :\n    ∃ access, Event.data 0 access∈events ∧ access.data.pc=102 ∧ access.data.store=true ∧ access.space=.global := by\n  apply NativeFlow.crossed_store run (by intro t h; simp [reset,Ptx.Barrier.reset] at h)\n    (sp:=.global) (addr:=.reg 2) (src:=.reg 8)\n  · rw [show 102=96+6 by rfl,tail_fetch]; rfl\n  · intro before earlier earlierIndices prior; exact protects_output\n  · rw [entry]; decide\n  · rw [returned]; decide"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A returned lane-zero execution must contain the actual dot output store: its\ncomputed predicate prevents the early return. Merging the actual global stores\nin any order yields the prescribed decoded dot result at the output address and\npreserves every other byte. This also holds for a constructed complete admitted\nexecution. The theorem concerns mathematical publication of complete recorded\nstores. It does not assume atomic hardware reads, fix exceptional encodings,\nor prove CUDA visibility or transport between hardware launches."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotPublication.lean",
+        "passage": {
+          "quote": "theorem published_output {cfg : Config 256} {ctx : Fin 256 → Kernel.Context}\n    (run : NativeFlow.Runs cfg ctx (program count left right output scratch) start events indices final)\n    (reset : start.core.barrier=Ptx.Barrier.reset generation)\n    (entry : ∀ thread, (start.core.lanes thread).pc=0) (live : ∀ thread, start.halted thread=false)\n    (arena : ∀ thread, (ctx thread).arena=base) (laneMap : ∀ thread, (ctx thread).lane.toNat=thread.val)\n    (sameInitial : ∀ thread, (start.core.lanes thread).global=initial .global)\n    (bounded : count<2^30) (apart : OutputApart count left right output)\n    (arrays : ∀ thread, DotInput.Arrays (DotInput.setup (ctx thread) scratch (NativeFlow.lane start thread)).core count left right)\n    (outputFits : base.toNat+output.toNat+8≤2^64) (noWrap : scratch.toNat+2048≤2^64)\n    (compatible : Visibility.Compatible initial events source) (ordered : Visibility.Repeated.OrderedSources events source)\n    (returned : final.halted 0=true) (permutation : order.Perm events) :\n    decode (read64 (GlobalPublication.publish (initial .global) order) (base+output).toNat)=\n      Binary64.reduce256 (Numeric.partialInputs ctx scratch start count left right) := by\n  have aligned : Aligned start.core := by intro t h; simp [reset,Ptx.Barrier.reset] at h\n  apply GlobalPublication.numeric_permuted permutation\n  · intro owner access member global write\n    obtain ⟨w,found⟩ := List.mem_iff_getElem?.mp member\n    have address := (stores_output run aligned entry member write global).2\n    rw [arena] at address\n    exact Or.inl ⟨address,Numeric.output_value run reset entry live arena laneMap sameInitial bounded apart arrays\n      outputFits noWrap compatible ordered found write global⟩\n  · have zero : (ctx 0).lane=0 := by apply BitVec.eq_of_toNat_eq; exact laneMap 0\n    obtain ⟨access,member,position,write,global⟩ := zero_returned_store run reset entry (live 0) zero returned\n    have address := (stores_output run aligned entry member write global).2\n    rw [arena] at address\n    exact ⟨0,access,member,global,write,address⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "A returned lane-zero execution must contain the actual dot output store: its\ncomputed predicate prevents the early return. Merging the actual global stores\nin any order yields the prescribed decoded dot result at the output address and\npreserves every other byte. This also holds for a constructed complete admitted\nexecution. The theorem concerns mathematical publication of complete recorded\nstores. It does not assume atomic hardware reads, fix exceptional encodings,\nor prove CUDA visibility or transport between hardware launches."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotPublishedComplete.lean",
+        "passage": {
+          "quote": "theorem complete_published (start : NativeFlow.State 256)\n    (entry : ∀ thread, (start.core.lanes thread).pc=0) (live : ∀ thread, start.halted thread=false)\n    (reset : start.core.barrier=Ptx.Barrier.reset generation) (noSite : start.core.site=none)\n    (sameInitial : ∀ thread, (start.core.lanes thread).global=initial .global)\n    (arena : ∀ thread, (ctx thread).arena=base)\n    (laneMap : ∀ thread, (ctx thread).lane.toNat=thread.val)\n    (bounded : count<2^30)\n    (arrays : ∀ thread, DotInput.Arrays (DotInput.setup (ctx thread) scratch (NativeFlow.lane start thread)).core count left right)\n    (aligned : scratch.toNat%8=0)\n    (shared : ∀ thread, (start.core.lanes thread).sharedStart=scratch.toNat ∧\n      2048≤(start.core.lanes thread).sharedBytes ∧ scratch.toNat+(start.core.lanes thread).sharedBytes≤2^64)\n    (outputs : ∀ thread, Valid64 (start.core.lanes thread).globalStart (start.core.lanes thread).globalBytes\n      ((ctx thread).arena+output).toNat)\n    (apart : OutputApart count left right output)\n    (outputFits : base.toNat+output.toNat+8≤2^64) :\n    ∃ final events indices source,\n      NativeFlow.Runs cfg ctx (program count left right output scratch) start events indices final ∧\n      (∀ t, final.halted t=true) ∧ Visibility.Compatible initial events source ∧\n      Visibility.Repeated.OrderedSources events source ∧\n      ∀ order, order.Perm events →\n        decode (read64 (GlobalPublication.publish (initial .global) order) (base+output).toNat)=\n          Binary64.reduce256 (Numeric.partialInputs ctx scratch start count left right) ∧\n        ∀ p, p<(base+output).toNat ∨ (base+output).toNat+8≤p →\n          GlobalPublication.publish (initial .global) order p=initial .global p := by\n  obtain ⟨final,events,indices,source,access,run,returned,compatible,ordered,member,position,write,global,value⟩ :=\n    complete (cfg:=cfg) start entry live reset noSite sameInitial arena laneMap bounded arrays aligned shared outputs apart outputFits\n  have noWrap : scratch.toNat+2048≤2^64 := by have := (shared 0).2.1; have := (shared 0).2.2; omega\n  refine ⟨final,events,indices,source,run,returned,compatible,ordered,?_⟩\n  intro order permutation\n  exact ⟨published_output run reset entry live arena laneMap sameInitial bounded apart arrays outputFits noWrap compatible ordered (returned 0) permutation,\n    fun p outside => publication_outside run (by intro t h; simp [reset,Ptx.Barrier.reset] at h) entry arena permutation outside⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The search-direction update has a complete per-thread fetched proof. Each\nactive thread executes the real launch-parameter and index setup, loads scalar\nβ and its old p and z words, computes the separately rounded product β · p,\nadds z, stores the result and returns. Every other byte remains unchanged.\nPadding threads return without memory accesses. Valid allocations give finite\nexecution witnesses for both paths. The 25-instruction Lean program is compared\nwith the emitted update_p entry, including the product register, scalar address,\nin-place output address and unsigned guard. This establishes the per-thread\ninstruction result, not yet its concurrent in-place source admission or the\nfull PCG loop."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/AffineUpdateEntry.lean",
+        "passage": {
+          "quote": "theorem entry_correct (run : Flow.Runs ctx (entry count coefficient input shift output) s t)\n    (pc : s.core.pc=0) (running : s.halted=false) (done : t.halted=true)\n    (live : Kernel.Residual.live ctx count)\n    (hi : Valid64 s.core.globalStart s.core.globalBytes (address (Assembly.setup ctx count s).core 12 input).toNat)\n    (hz : Valid64 s.core.globalStart s.core.globalBytes (address (Assembly.setup ctx count s).core 12 shift).toNat)\n    (ho : Valid64 s.core.globalStart s.core.globalBytes (address (Assembly.setup ctx count s).core 12 output).toNat) :\n    decode (read64 t.core.global (address (Assembly.setup ctx count s).core 12 output).toNat)=\n      result (Assembly.setup ctx count s).core coefficient input shift ∧\n    (∀ p, p<(address (Assembly.setup ctx count s).core 12 output).toNat ∨\n      (address (Assembly.setup ctx count s).core 12 output).toNat+8≤p → t.core.global p=s.core.global p) := by\n  obtain ⟨core,body,same⟩ := VectorEntry.completed_body run pc running done live\n  have answer := correct body hi hz ho\n  subst t\n  exact ⟨answer.1,answer.2.1⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "In-place updates need a source rule beyond byte compatibility. For synchronous\nsame-thread accesses using ordinary addresses and the generic memory proxy,\nPTX causality forbids a read from taking bytes from a later overlapping store.\nThe restricted rule is explicit: it applies to actual same-thread occurrence\norder at the same word address. If ownership excludes other writers, it forces\nthe old value to come from initialization. It does not order unrelated threads\nor cover aliases, asynchronous accesses or the full PTX memory model. A\nkernel-checked counterexample shows that byte compatibility alone accepts a\ncircular read justified by its own later write; the new rule rejects it.\nConcurrent direction-update ownership and source proofs remain to be supplied."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/GlobalThreadSources.lean",
+        "passage": {
+          "quote": "theorem before_own_writes_initial\n    (compatible : Compatible initial events source) (admitted : GlobalThreadSources events source)\n    (observed : events[r]?=some (.data reader ra)) (read : ra.data.store=false) (global : ra.space=.global)\n    (writers : ∀ (w : Nat) (owner : Fin n) (wa : Access), events[w]?=some (.data owner wa) →\n      wa.data.store=true → wa.space=.global → ∀ j k : Fin 8,\n      wa.data.address+j.val=ra.data.address+k.val → owner=reader ∧ r<w ∧ wa.data.address=ra.data.address) :\n    (∀ k, source r k=.initial) ∧ ra.data.value=read64 (initial .global) ra.data.address := by\n  have chosen : ∀ k, source r k=.initial := by\n    intro k\n    have byteSource := compatible r reader ra observed read k\n    cases picked : source r k with\n    | initial => rfl\n    | store w j =>\n      rw [picked] at byteSource\n      obtain ⟨owner,wa,found,write,space,address,value⟩ := byteSource\n      have sharedSpace := space.trans global\n      obtain ⟨same,later,wordAddress⟩ := writers w owner wa found write sharedSpace j k address\n      subst owner\n      exact False.elim (admitted r w reader ra wa observed found read write global sharedSpace wordAddress.symm later j k address picked)\n  refine ⟨chosen,?_⟩\n  apply Sources.word_eq_of_bytes\n  intro k\n  have byteSource := compatible r reader ra observed read k\n  simpa only [chosen k,global,Sources.byte_read64] using byteSource"
         }
       }
     }
