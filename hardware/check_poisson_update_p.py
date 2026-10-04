@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Bind the complete update_p entry to its fetched per-thread Lean proof.
+"""Bind the complete update_p entry to its fetched parallel Lean proof.
 
-The proof includes active and padding threads, in-place scalar-body execution,
-separate rounded multiplication/addition and bytes outside the output. It does
-not yet establish concurrent in-place byte sources or a whole PCG execution.
+The proof includes active and padding thread paths, parallel in-place input
+sources, separately rounded multiplication/addition, publication, preservation
+outside the direction array and an admitted terminating active-thread witness.
+It uses explicit necessary byte-source constraints, not full PTX admission or
+a whole PCG execution. Padding paths are proved locally, not in the joint launch.
 Text binding is separate from compiler, CUDA visibility and GPU conformance.
 """
 import argparse
@@ -79,14 +81,14 @@ def check(run, output):
         return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     before = hashes()
     names = ['PtxTorchLean.Poisson.PTX.AffineUpdate.'+name for name in
-             ('correct', 'executes', 'entry_correct', 'entry_exists', 'inactive_correct', 'inactive_exists', 'entry_length')]
+             ('correct', 'executes', 'entry_correct', 'entry_exists', 'inactive_correct', 'inactive_exists', 'entry_length', 'Arena.parallel_value', 'Arena.parallel_exists', 'Arena.publication_outside', 'Arena.read_value')]
     layouts = [json.loads(read_artifact(run, report, case['directory']+'/layout.json'))
                for case in report['cases']]
     expressions = ['AffineUpdate.rendered '+' '.join(map(str, parameters(layout))) for layout in layouts]
     lean = ['lake', '--no-cache', 'env', 'lean', '-j1', '-M5120']
     with tempfile.TemporaryDirectory(prefix='poisson-update-p-') as tmp:
         path = Path(tmp)/'Render.lean'
-        path.write_text('import PoissonPTX.AffineUpdateText\nopen PtxTorchLean.Poisson.PTX\n'+
+        path.write_text('import PoissonPTX.AffineUpdateText\nimport PoissonPTX.AffineUpdateExists\nopen PtxTorchLean.Poisson.PTX\n'+
             ''.join('#print axioms '+name+'\n' for name in names)+
             'def main : IO Unit := IO.println (Lean.toJson (['+', '.join(expressions)+
             '] : List (List String))).compress\n')

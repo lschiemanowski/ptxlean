@@ -1357,9 +1357,8 @@ adds z, stores the result and returns. Every other byte remains unchanged.
 Padding threads return without memory accesses. Valid allocations give finite
 execution witnesses for both paths. The 25-instruction Lean program is compared
 with the emitted update_p entry, including the product register, scalar address,
-in-place output address and unsigned guard. This establishes the per-thread
-instruction result, not yet its concurrent in-place source admission or the
-full PCG loop.
+in-place output address and unsigned guard. The parallel proof derives old inputs from the same actual interleaved history
+and publishes the separately rounded update. The full PCG loop remains separate.
 
 In-place updates need a source rule beyond byte compatibility. For synchronous
 same-thread accesses using ordinary addresses and the generic memory proxy,
@@ -1370,4 +1369,27 @@ the old value to come from initialization. It does not order unrelated threads
 or cover aliases, asynchronous accesses or the full PTX memory model. A
 kernel-checked counterexample shows that byte compatibility alone accepts a
 circular read justified by its own later write; the new rule rejects it.
-Concurrent direction-update ownership and source proofs remain to be supplied.
+Actual launch-derived ownership and instruction order discharge these conditions for the direction update.
+
+The parallel direction update derives all input reads from its actual
+interleaved history. Launch registers select disjoint eight-byte p slots.
+The coefficient and z array are read-only. The old p read occurs at instruction
+13 and its owning thread's store at instruction 23; no other thread can write
+that word. Actual same-thread instruction order and the explicit no-future
+source constraint force the read to obtain initialization bytes. Neither old
+input values nor desired output equations are assumptions.
+
+Scalar replay preserves only reads that remain to execute. It permits the
+in-place write after the last read instead of requiring input/output separation.
+Every completed admitted active-thread interleaving publishes z + beta*p with
+separate binary64 multiply and add roundings. Bytes outside the p array remain
+unchanged, including the coefficient, other vectors and padding. The result
+states decoded equality and allows exceptional encoding freedom.
+
+A finite execution with compatible initial-byte sources and the no-future
+constraint exists for every valid array layout and arbitrary input words.
+Its numerical result follows from the same universal publication theorem.
+The joint launch contains active coordinates; padding returns are proved
+separately at the per-thread level. This does not establish full PTX admission,
+CUDA visibility, progress for every schedule, hardware conformance or complete
+PCG launch composition.

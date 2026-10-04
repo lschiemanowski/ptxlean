@@ -657,6 +657,12 @@ COUNTS['PtxTorchLean.Poisson.PTX.ScalarLoad'] = COUNTS.get('PtxTorchLean.Poisson
 COUNTS['PtxTorchLean.Poisson.PTX.VectorEntry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.VectorEntry', 0) + 5
 TARGETS.update(['PoissonPTX.AffineUpdate', 'PoissonPTX.AffineUpdateCorrect', 'PoissonPTX.AffineUpdateEntry', 'PoissonPTX.AffineUpdateText', 'PoissonPTX.DecodedPublication', 'PoissonPTX.DotPublication', 'PoissonPTX.DotPublishedComplete', 'PoissonPTX.DotZeroReturn', 'PoissonPTX.GlobalThreadSourceChecks', 'PoissonPTX.GlobalThreadSources', 'PoissonPTX.ScalarLoad', 'PoissonPTX.VectorEntry'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.AffineUpdate'] = COUNTS.get('PtxTorchLean.Poisson.PTX.AffineUpdate', 0) + 13
+COUNTS['PtxTorchLean.Poisson.PTX.AffineUpdate.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.AffineUpdate.Arena', 0) + 21
+COUNTS['PtxTorchLean.Poisson.PTX.Flow.Parallel'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Parallel', 0) + 5
+COUNTS['PtxTorchLean.Poisson.PTX.Flow.Observed'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Observed', 0) + 4
+TARGETS.update(['PoissonPTX.AffineUpdateAccess', 'PoissonPTX.AffineUpdateAddress', 'PoissonPTX.AffineUpdateArena', 'PoissonPTX.AffineUpdateExists', 'PoissonPTX.AffineUpdateParallel', 'PoissonPTX.AffineUpdateRecorded', 'PoissonPTX.AffineUpdateSources', 'PoissonPTX.ObservedParallelNative', 'PoissonPTX.ObservedTemporalReplay'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

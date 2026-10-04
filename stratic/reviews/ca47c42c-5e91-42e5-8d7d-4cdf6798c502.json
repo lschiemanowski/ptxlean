@@ -1,0 +1,145 @@
+{
+  "id": "ca47c42c-5e91-42e5-8d7d-4cdf6798c502",
+  "base": "ddb81ca92c0beb84029886ac514bfa38e17af71a",
+  "contentTree": "1373632c4c8fe8a2517f6a10d532161998fd985f",
+  "reviewer": "Codex",
+  "summary": "Prove admitted parallel in-place PCG direction updates and publication.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Derive in-place read sources from actual ownership and instruction order, recover scalar execution with future-read preservation, publish rounded outputs and construct an admitted finite parallel execution. Keep full PCG composition open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe the complete active-coordinate parallel direction update, actual source derivation, byte frame, publication and admitted existence, with explicit memory-model and padding boundaries."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The source solver, discrete equations, kernel implementation, residual certificate and numerical policies remain unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The additional necessary no-future constraint is explicitly tied to the pinned PTX same-thread generic-address causality rule, with a counterexample and limited scope. No primitive instruction semantics changed; manual fidelity, proof validity, binding and hardware claims remain distinct."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "1373632c4c8fe8a2517f6a10d532161998fd985f",
+      "method": "Sequential capped Lean checks and exact dependency audit; source/target/dependency guards; seven saved-PTX bindings; frontend mutation tests; manual actual-source, ownership, temporal replay and publication review; receipt hashes and Stratic snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy job at a time, one Lean thread, 6 GiB hard memory limit, swap disabled, CPU 150 percent. No GPU runs or paid calls.",
+      "evidence": "All 9 new modules checked without warnings. 5400 exact dependency reports use only allowed standard Lean axioms; 703 guarded source files and all pins pass. Actual instruction counters and launch-derived address registers determine all three input loads and the sole in-place store. Disjoint array geometry excludes writers for beta and z, and excludes other owners for p. Actual same-thread order plus the explicit no-future source constraint forces old p to initialization. Temporal replay preserves future reads only, without an incorrect full input/output separation premise. Every completed admitted active-thread history publishes the separately rounded z+beta*p result and preserves every byte outside p. A complete finite witness derives actual load observations from scalar execution, constructs the joint history and proves compatibility, no-future admission, return and numerical publication. Initial words need not be finite; exceptional encoding freedom is retained. Padding paths remain separate local proofs, not a claim about the joint active-only scheduler. Full PCG composition, full PTX admission, CUDA visibility and hardware conformance remain separate. All 45 frontend tests pass; seven receipts refreshed and hash-verified. Updated direction binding checks all 30 complete 25-instruction entries and audits the parallel/source/existence theorems. Legacy executables reused only after unchanged imported-source verification; current audit and text checks reran. Peak audit RSS 4848528 KiB. Unchanged legacy interpreter suite not rerun. Stratic summaries, exact links, study guide and final snapshots agree. README and emitted PTX are unchanged.",
+      "tests": [],
+      "id": "5675a18e-89a4-4a1b-ae73-377ca56f1dff",
+      "recordedAt": "2026-10-04T11:42:49.811Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T11:44:04.682Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-pcg-updates.md",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/check_poisson_update_p.py",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateAccess.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateAddress.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateArena.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateExists.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateParallel.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateRecorded.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/AffineUpdateSources.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedParallelNative.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ObservedTemporalReplay.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed actual in-place address/source ownership, native instruction-order embedding, future-read replay, publication and frame, execution existence, updated source binding, audit registrations, receipts and documentation."
+    }
+  ]
+}

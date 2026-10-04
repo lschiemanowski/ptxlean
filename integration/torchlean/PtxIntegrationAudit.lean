@@ -1,3 +1,12 @@
+import PoissonPTX.AffineUpdateAccess
+import PoissonPTX.AffineUpdateAddress
+import PoissonPTX.AffineUpdateArena
+import PoissonPTX.AffineUpdateExists
+import PoissonPTX.AffineUpdateParallel
+import PoissonPTX.AffineUpdateRecorded
+import PoissonPTX.AffineUpdateSources
+import PoissonPTX.ObservedParallelNative
+import PoissonPTX.ObservedTemporalReplay
 import PoissonPTX.AffineUpdate
 import PoissonPTX.AffineUpdateCorrect
 import PoissonPTX.AffineUpdateEntry
@@ -6176,3 +6185,47 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.VectorEntry.inactive
 #print axioms PtxTorchLean.Poisson.PTX.VectorEntry.completed_body
 #print axioms PtxTorchLean.Poisson.PTX.VectorEntry.executes
+
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.AccessAt
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.access_step
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.accesses
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.no_index_step
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.no_indices
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.entry_linear
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.AddressReady
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.address_initial
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.address_step
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.context
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.start
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.program
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.slot
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.value
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.index
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.live
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.scalar_address
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.vector_address
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.setup_address
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.vector_valid
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.owners
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.local_exists
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.parallel_exists
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.replay
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.publication
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.publication_outside
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.local_value
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.parallel_value
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.BeforeStore
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.before_store_step
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.recorded_witness
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.parallel_access
+#print axioms PtxTorchLean.Poisson.PTX.AffineUpdate.Arena.read_value
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.native
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.native_update
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.native_run
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.linear_forward
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Parallel.before_of_pc
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.eval_linear_pc
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.word_lower
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.step_future_frame
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.replay_temporal
