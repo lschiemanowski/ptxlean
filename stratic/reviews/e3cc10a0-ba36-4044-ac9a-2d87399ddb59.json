@@ -1,0 +1,217 @@
+{
+  "id": "e3cc10a0-ba36-4044-ac9a-2d87399ddb59",
+  "base": "ed390b65d5361da5d42a97bbbf42946d5bff7a91",
+  "contentTree": "29a0ae8b8ef2efdfb2934604518e4848695b4718",
+  "reviewer": "Codex",
+  "summary": "Prove complete parallel PCG solution, residual and preconditioner updates.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Prove the complete fetched combined update, actual word and boundary-flag sources, initial-input numerical formulas, parallel publication/frame and independent finite admitted existence. Keep initialization, restart, scalar decisions and host composition open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe the combined x/r/z active-coordinate parallel update, exact instruction binding, actual source derivation and existence, while retaining explicit numerical acceptance, memory-model, padding and solver-composition boundaries."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The source solver, discrete equations, kernel implementation, residual certificate and numerical policies remain unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "The additional necessary no-future constraint is explicitly tied to the pinned PTX same-thread generic-address causality rule, with a counterexample and limited scope. No primitive instruction semantics changed; manual fidelity, proof validity, binding and hardware claims remain distinct."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "29a0ae8b8ef2efdfb2934604518e4848695b4718",
+      "method": "Sequential capped Lean checks and exact dependency audit; source/target/dependency guards; eight saved-PTX bindings; frontend mutation tests; manual actual-source, field ownership, mixed instruction composition, future-read preservation and publication review; receipt hashes and Stratic snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy job at a time, one Lean thread, 6 GiB hard memory limit, swap disabled, CPU 150 percent. No GPU runs or paid calls.",
+      "evidence": "All 25 new modules checked without warnings. 5542 exact dependency reports use only allowed standard Lean axioms; 728 guarded source files and all pins pass. Reusable extraction of mixed arithmetic/predicate segments retains actual permitted floating result encodings. The complete 54-instruction update_xrz entry derives its x, r and z formulas from initial bytes, respecting separate multiply/add/sub/div roundings and exact boundary divisor one. Actual address and instruction invariants derive every word/flag access and thread/field ownership. Compatibility and the existing explicit same-thread no-future rule force initial in-place reads; four-byte compatibility separately supplies boundary flags. Temporal replay and actual-store publication prove the three formulas and preserve bytes outside the output arrays. A pending-input invariant supports an independent actual terminating parallel witness with compatible sources, without requiring finiteness, nonzero diagonals or desired output assumptions. Numerical acceptance remains separate. Padding paths remain local proofs, not joint padding scheduling. Full PCG composition, full PTX admission, CUDA visibility and hardware conformance remain separate. All 50 frontend tests pass; eight receipts refreshed and hash-verified. New combined-update binding checks all 30 complete entries and audits universal parallel, source, existence and frame theorems. Legacy executables reused only after unchanged imported-source verification; current audit and text checks reran. Peak audit RSS 4878032 KiB. Unchanged legacy interpreter suite not rerun. Stratic summaries, exact links, study guide and final snapshots agree. README and emitted PTX are unchanged.",
+      "tests": [],
+      "id": "5ef4ad7a-ed1b-47d8-8d55-989ddefa492f",
+      "recordedAt": "2026-10-04T12:14:22.232Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T12:15:46.857Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-pcg-updates.md",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/check_poisson_update_xrz.py",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-xrz-binding.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/test_poisson_update_xrz.py",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowScalarSegments.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowSegments.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/PreconditionUpdate.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/PreconditionUpdateCorrect.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RegisterUpdate.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/RegisterUpdateFrame.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZ.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZAccess.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZAddress.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZArena.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZArenaSafety.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZCorrect.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZExists.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZFootprint.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZLayout.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZMemory.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZNumeric.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZParallel.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZParallelExists.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZPending.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZRecorded.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZSources.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZState.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/UpdateXRZText.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/VectorFlowEntry.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed actual mixed-control arithmetic, in-place field/thread ownership, pending-input preservation, word/flag source derivation, numerical publication and byte frame, finite execution existence, exact new binding and mutations, audit registrations, receipts and documentation."
+    }
+  ]
+}

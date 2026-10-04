@@ -110,9 +110,70 @@ a source. This manual interpretation is distinct from Lean proof checking.
 The new source predicate records only that necessary restriction. It is not a
 complete memory-model admission checker or a GPU execution guarantee.
 
+## Updating the solution and residual together
+
+The combined PCG update computes x := x + alpha*p, then r := r - alpha*ap,
+then z := r/diagonal. Here ap is the already computed operator applied to the
+search direction. At boundary coordinates the divisor is the exact binary64
+word for one. Alpha is loaded once and reused; each multiplication, addition,
+subtraction and division rounds separately. The preconditioner uses the newly
+computed residual register. No real-number rearrangement or fused operation
+replaces the emitted arithmetic.
+
+The full 54-instruction fetched entry is proved, including launch indexing,
+active and padding paths, all input loads, three stores and return. Its physical
+layout bounds and aligns one scalar, six disjoint binary64 arrays and the
+four-byte boundary flags. Output arrays x and r reuse their own initial storage.
+Earlier stores preserve every later input field. Actual instruction addresses
+and array ownership exclude stores by other threads; the x and r reads precede
+their own writes. Byte compatibility and the explicit same-thread no-future
+source rule therefore derive the old input words from initialization. The
+boundary load is separately justified by four-byte source compatibility.
+
+Every completed admitted active-coordinate interleaving publishes the three
+rounded initial-input formulas and preserves every byte outside x, r and z.
+A separate construction executes the same entry, preserves only not-yet-consumed
+input words, and produces a finite joint history with compatible initial-byte
+sources and the no-future constraint. Arbitrary input words, including exceptional
+values and zero diagonals, are permitted; numerical acceptance remains separate.
+The emitted entry is bound instruction for instruction across the saved layouts.
+These are necessary fragment admission constraints, not the complete PTX memory
+model. Joint padding scheduling, CUDA visibility, hardware conformance,
+initialization/restart kernels, scalar decision kernels and full host PCG
+composition remain separate obligations.
+
+The important order is visible in the instruction counters:
+
+| Access | Load | Store |
+| --- | ---: | ---: |
+| alpha scalar | 9 | read-only |
+| p | 13 | read-only |
+| x | 17 | 23 |
+| ap | 27 | read-only |
+| r | 31 | 37 |
+| diagonal | 41 | read-only |
+| boundary flag, four bytes | 45 | read-only |
+| z | not read | 52 |
+
+For example, the store to x precedes the load of r. The proof needs physical
+separation between those fields; merely saying that each lane owns one index
+would not suffice. Conversely, x is read before it is overwritten, so requiring
+that input x and output x occupy separate buffers would reject the real kernel.
+`UpdateXRZSources.Arena.read_value` handles both cases from recorded accesses.
+`UpdateXRZPending.Arena.pending_step` preserves just the inputs whose load
+instructions remain ahead, which supports the independent execution witness.
+
+`UpdateXRZCorrect.entry_correct` covers a single fetched thread. The universal
+joint result is `UpdateXRZParallel.Arena.parallel_value`; it obtains local
+execution by temporal replay and merges actual output stores. The independent
+witness is `UpdateXRZParallelExists.Arena.parallel_exists`. The exact one-word
+constant is kernel-checked by `PreconditionUpdate.decode_one`. The source-binding
+checker compares all 54 rendered instructions, including the boundary selector
+and division operand order, and audits the named theorem dependencies.
+
 ## Remaining work
 
-The other state updates, scalar decision kernels and the host PCG loop still need
+The initialization and restart updates, scalar decision kernels and the host PCG loop still need
 their instruction-level composition. The accepted solver target remains a fresh
 residual bound for the same discrete equations, rather than CPU-iterate bitwise
 identity or a convergence claim for every input.

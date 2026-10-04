@@ -1,3 +1,28 @@
+import PoissonPTX.ControlFlowScalarSegments
+import PoissonPTX.ControlFlowSegments
+import PoissonPTX.PreconditionUpdate
+import PoissonPTX.PreconditionUpdateCorrect
+import PoissonPTX.RegisterUpdate
+import PoissonPTX.RegisterUpdateFrame
+import PoissonPTX.UpdateXRZ
+import PoissonPTX.UpdateXRZAccess
+import PoissonPTX.UpdateXRZAddress
+import PoissonPTX.UpdateXRZArena
+import PoissonPTX.UpdateXRZArenaSafety
+import PoissonPTX.UpdateXRZCorrect
+import PoissonPTX.UpdateXRZExists
+import PoissonPTX.UpdateXRZFootprint
+import PoissonPTX.UpdateXRZLayout
+import PoissonPTX.UpdateXRZMemory
+import PoissonPTX.UpdateXRZNumeric
+import PoissonPTX.UpdateXRZParallel
+import PoissonPTX.UpdateXRZParallelExists
+import PoissonPTX.UpdateXRZPending
+import PoissonPTX.UpdateXRZRecorded
+import PoissonPTX.UpdateXRZSources
+import PoissonPTX.UpdateXRZState
+import PoissonPTX.UpdateXRZText
+import PoissonPTX.VectorFlowEntry
 import PoissonPTX.AffineUpdateAccess
 import PoissonPTX.AffineUpdateAddress
 import PoissonPTX.AffineUpdateArena
@@ -6229,3 +6254,146 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.word_lower
 #print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.step_future_frame
 #print axioms PtxTorchLean.Poisson.PTX.Flow.Observed.replay_temporal
+
+#print axioms PtxTorchLean.Poisson.PTX.Flow.scalar_segment
+#print axioms PtxTorchLean.Poisson.PTX.Flow.scalar_sequence
+#print axioms PtxTorchLean.Poisson.PTX.Flow.segment
+#print axioms PtxTorchLean.Poisson.PTX.Flow.segment_linear
+#print axioms PtxTorchLean.Poisson.PTX.Flow.segment_running
+#print axioms PtxTorchLean.Poisson.PTX.Flow.peel_segment
+#print axioms PtxTorchLean.Poisson.PTX.Flow.sequence_split
+#print axioms PtxTorchLean.Poisson.PTX.Flow.sequence_pc
+#print axioms PtxTorchLean.Poisson.PTX.Flow.sequence_running
+#print axioms PtxTorchLean.Poisson.PTX.Flow.sequence_unique
+#print axioms PtxTorchLean.Poisson.PTX.Flow.sequence_data_block
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.one
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.decode_one
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.setupCode
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.code
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.diagonalLoaded
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.prepared
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.ready
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.divisor
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.result
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.finish
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.setup_trace
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.ready_values
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.ready_frame
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.setup_plain
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.code_segment
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.state_result
+#print axioms PtxTorchLean.Poisson.PTX.PreconditionUpdate.executes
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.code
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.left
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.loaded
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.product
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.result
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.finish
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.loads_execute
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.loads_eq
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.executes
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.state_result
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.finish_global
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.finish_regs
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.finish_address
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.finish_frame
+#print axioms PtxTorchLean.Poisson.PTX.RegisterUpdate.finish_read
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.body
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.entry
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.coefficient
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.solution
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.residual
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.finish
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.body_segment
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.AccessAt
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.access_step
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.accesses
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.index_step
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.index_accesses
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.entry_linear
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.AddressReady
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.address_initial
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.address_step
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Field
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.context
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.start
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.program
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.slot
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.index
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.live
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.scalar_address
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.vector_address
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.boundary_address
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.setup_address
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.setup_boundary
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.owners
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.alpha_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.boundary_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.overlap_owner
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.vector_valid
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.local_valid
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.local_separate
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.correct
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.entry_correct
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.body_exists
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.entry_exists
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.inactive
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.inactive_exists
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.storePC
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.readPC
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.access_shape
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.parallel_access
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.parallel_index
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.SameGeometry
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Valid
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.SameGeometry.address
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.SameGeometry.mask
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.SameGeometry.valid
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.coefficient_geometry
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.solution_geometry
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.residual_geometry
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.coefficient_global
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.coefficient_word
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.solution_global
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.solution_word
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.residual_global
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.residual_word
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.finish_global
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Separate
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.alphaValue
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.vectorValue
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.xValue
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.rValue
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.zValue
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.x_value
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.r_value
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.divisor_value
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.z_value
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.stored_words
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.value
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.replay
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.publication
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.local_value
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.parallel_value
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.publication_outside
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.local_exists
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.parallel_exists
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.Pending
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.pending_initial
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.pending_advance
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.pending_step
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.recorded_witness
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.read_value
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.index_value
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.future_apart
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.index_apart
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.state_result
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.instruction
+#print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.rendered
+#print axioms PtxTorchLean.Poisson.PTX.VectorFlowEntry.program
+#print axioms PtxTorchLean.Poisson.PTX.VectorFlowEntry.setup_run
+#print axioms PtxTorchLean.Poisson.PTX.VectorFlowEntry.inactive
+#print axioms PtxTorchLean.Poisson.PTX.VectorFlowEntry.completed_body
+#print axioms PtxTorchLean.Poisson.PTX.VectorFlowEntry.executes

@@ -494,3 +494,33 @@ The joint launch contains active coordinates; padding returns are proved
 separately at the per-thread level. This does not establish full PTX admission,
 CUDA visibility, progress for every schedule, hardware conformance or complete
 PCG launch composition.
+
+The combined PCG update computes x := x + alpha*p, then r := r - alpha*ap,
+then z := r/diagonal. Here ap is the already computed operator applied to the
+search direction. At boundary coordinates the divisor is the exact binary64
+word for one. Alpha is loaded once and reused; each multiplication, addition,
+subtraction and division rounds separately. The preconditioner uses the newly
+computed residual register. No real-number rearrangement or fused operation
+replaces the emitted arithmetic.
+
+The full 54-instruction fetched entry is proved, including launch indexing,
+active and padding paths, all input loads, three stores and return. Its physical
+layout bounds and aligns one scalar, six disjoint binary64 arrays and the
+four-byte boundary flags. Output arrays x and r reuse their own initial storage.
+Earlier stores preserve every later input field. Actual instruction addresses
+and array ownership exclude stores by other threads; the x and r reads precede
+their own writes. Byte compatibility and the explicit same-thread no-future
+source rule therefore derive the old input words from initialization. The
+boundary load is separately justified by four-byte source compatibility.
+
+Every completed admitted active-coordinate interleaving publishes the three
+rounded initial-input formulas and preserves every byte outside x, r and z.
+A separate construction executes the same entry, preserves only not-yet-consumed
+input words, and produces a finite joint history with compatible initial-byte
+sources and the no-future constraint. Arbitrary input words, including exceptional
+values and zero diagonals, are permitted; numerical acceptance remains separate.
+The emitted entry is bound instruction for instruction across the saved layouts.
+These are necessary fragment admission constraints, not the complete PTX memory
+model. Joint padding scheduling, CUDA visibility, hardware conformance,
+initialization/restart kernels, scalar decision kernels and full host PCG
+composition remain separate obligations.

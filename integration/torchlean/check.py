@@ -663,6 +663,15 @@ COUNTS['PtxTorchLean.Poisson.PTX.Flow.Parallel'] = COUNTS.get('PtxTorchLean.Pois
 COUNTS['PtxTorchLean.Poisson.PTX.Flow.Observed'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow.Observed', 0) + 4
 TARGETS.update(['PoissonPTX.AffineUpdateAccess', 'PoissonPTX.AffineUpdateAddress', 'PoissonPTX.AffineUpdateArena', 'PoissonPTX.AffineUpdateExists', 'PoissonPTX.AffineUpdateParallel', 'PoissonPTX.AffineUpdateRecorded', 'PoissonPTX.AffineUpdateSources', 'PoissonPTX.ObservedParallelNative', 'PoissonPTX.ObservedTemporalReplay'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Flow'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Flow', 0) + 11
+COUNTS['PtxTorchLean.Poisson.PTX.PreconditionUpdate'] = COUNTS.get('PtxTorchLean.Poisson.PTX.PreconditionUpdate', 0) + 17
+COUNTS['PtxTorchLean.Poisson.PTX.RegisterUpdate'] = COUNTS.get('PtxTorchLean.Poisson.PTX.RegisterUpdate', 0) + 15
+COUNTS['PtxTorchLean.Poisson.PTX.UpdateXRZ'] = COUNTS.get('PtxTorchLean.Poisson.PTX.UpdateXRZ', 0) + 53
+COUNTS['PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena', 0) + 38
+COUNTS['PtxTorchLean.Poisson.PTX.UpdateXRZ.SameGeometry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.UpdateXRZ.SameGeometry', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.VectorFlowEntry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.VectorFlowEntry', 0) + 5
+TARGETS.update(['PoissonPTX.ControlFlowScalarSegments', 'PoissonPTX.ControlFlowSegments', 'PoissonPTX.PreconditionUpdate', 'PoissonPTX.PreconditionUpdateCorrect', 'PoissonPTX.RegisterUpdate', 'PoissonPTX.RegisterUpdateFrame', 'PoissonPTX.UpdateXRZ', 'PoissonPTX.UpdateXRZAccess', 'PoissonPTX.UpdateXRZAddress', 'PoissonPTX.UpdateXRZArena', 'PoissonPTX.UpdateXRZArenaSafety', 'PoissonPTX.UpdateXRZCorrect', 'PoissonPTX.UpdateXRZExists', 'PoissonPTX.UpdateXRZFootprint', 'PoissonPTX.UpdateXRZLayout', 'PoissonPTX.UpdateXRZMemory', 'PoissonPTX.UpdateXRZNumeric', 'PoissonPTX.UpdateXRZParallel', 'PoissonPTX.UpdateXRZParallelExists', 'PoissonPTX.UpdateXRZPending', 'PoissonPTX.UpdateXRZRecorded', 'PoissonPTX.UpdateXRZSources', 'PoissonPTX.UpdateXRZState', 'PoissonPTX.UpdateXRZText', 'PoissonPTX.VectorFlowEntry'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
