@@ -59,7 +59,7 @@ Each also has `rounded_outside`, preserving all bytes outside its actual output
 arrays. These results use the existing physical layout and necessary source
 constraints. They establish model execution and publication, not complete PTX
 admission, CUDA visibility, GPU fairness or hardware conformance. Fresh-residual
-execution joins this framework below; finite host-loop composition remains.
+execution joins this framework below; finite host-loop composition is covered in the [host correspondence guide](poisson-host-correspondence.md).
 
 ## Fresh residual and the represented operator
 
@@ -88,5 +88,7 @@ constructed from valid uploaded metadata.
 
 This is a correspondence with the rounded operator, not an exact-real residual
 bound. The exact residual certificate remains the accepted-result guarantee.
-Finite host-loop composition, full PTX memory-model admission, external table
-serialization, CUDA visibility and GPU conformance remain separate obligations.
+The [host correspondence guide](poisson-host-correspondence.md) covers finite
+host-loop composition and accepted final-memory certification. Full PTX memory
+admission, external serialization, CUDA visibility and GPU conformance remain
+separate boundaries.

@@ -44,6 +44,20 @@ class CertificateBinding(unittest.TestCase):
                     certify(folder, folder/'certificate')
             self.assertEqual(json.loads((folder/'certificate/certification.json').read_text())['status'], 'fail')
 
+    def test_different_uploaded_boundary_is_rejected(self):
+        ref = json.loads(REFERENCE.read_text())['outputs'][1]
+        layout = Layout(ref, {})
+        manifest = layout.manifest()
+        data = bytearray(layout.data)
+        struct.pack_into('<I', data, manifest['fields']['boundary']['offset'], 0)
+        with tempfile.TemporaryDirectory() as name:
+            folder = Path(name)
+            (folder/'layout.json').write_text(json.dumps(manifest))
+            (folder/'arena.bin').write_bytes(data)
+            (folder/'observed.json').write_text(json.dumps({'solution': ref['solution']}))
+            with self.assertRaisesRegex(ValueError, 'uploaded boundary disagrees'):
+                request(folder)
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,0 +1,23 @@
+{
+  "status": "pass",
+  "cases": 168,
+  "source_sha256": {
+    "hardware/check_poisson_host.py": "f4f6d564395095ee1d4b34ede765547dc8925f717b892ddf721dfffd231d6e79",
+    "hardware/test_poisson_host.py": "c4a38c300967da46222eeefbe761b1daa81845a2b7b34b86ad6bf81e18e4a5c2",
+    "hardware/poisson_runtime.py": "69fdb21be21b7ba5ee8e6a732709b65a29ea15d18e8234392d8b2dd08a14a653",
+    "integration/torchlean/lean-toolchain": "8733782dc070a99b312039cda424f601b80f3be6f6f512627da5ba25adc27632",
+    "integration/torchlean/PoissonPTX/HostSchedule.lean": "1ba34c04a7f170123a72242f5a11863960d30fc4e6c1a40499019e7ad7fedda6",
+    "integration/torchlean/PoissonPTX/HostExecution.lean": "adbddfe39496880f8497cdbde62970173f2717b85d467118ccab3cf08656689d",
+    "integration/torchlean/PoissonPTX/HostScheduleEval.lean": "a5f29ead6ea4d9c3d6a396b483875a4e55615648758482352308546d0639f46b",
+    "integration/torchlean/PoissonPTX/HostScheduleTest.lean": "f727db6c1f25e1c8e5639cf3307fddce6627b843b032d0701398446fffc37534"
+  },
+  "claim": "Differential host control with mocked launches; not kernel or hardware verification.",
+  "compared": [
+    "launch order",
+    "iteration count",
+    "stop reason",
+    "restart count",
+    "residual words",
+    "check positions and flags"
+  ]
+}

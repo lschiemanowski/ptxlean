@@ -76,6 +76,18 @@ def request(folder):
     observed = json.loads((folder / 'observed.json').read_text())
     data = (folder / 'arena.bin').read_bytes()
     fields = layout['fields']
+    # The wire checker reconstructs the uniform-square boundary. Bind that
+    # mask to the uploaded bytes too, rather than silently certifying a
+    # different boundary condition if an archive was assembled incorrectly.
+    width = layout['n'] * layout['degree'] + 1
+    boundary = fields['boundary']
+    if boundary['kind'] != 'I' or boundary['count'] != width * width:
+        raise ValueError('invalid boundary buffer shape')
+    flags = struct.unpack_from('<' + 'I' * boundary['count'], data, boundary['offset'])
+    expected = [i % width in (0, width - 1) or i // width in (0, width - 1)
+                for i in range(width * width)]
+    if [bool(flag) for flag in flags] != expected:
+        raise ValueError('uploaded boundary disagrees with certificate equations')
     cell = fields['cells']
     if cell['kind'] != 'I':
         raise ValueError('expected 32-bit connectivity')

@@ -93,26 +93,18 @@ solutions, nonfinite weights, malformed shapes and altered connectivity in
 negative controls. Iteration-limit and breakdown results are recorded as
 uncertified, rather than treated as successful solutions.
 
-## What remains outside this proof
+## Connection to the instruction and host proofs
 
-This is **accepted-result correspondence**, not a proof that the PTX solver
-always terminates, converges, or returns an acceptable vector. The [residual instruction proofs](poisson-instructions.md) connect the complete
-`true_residual` entry to TorchLean subtraction, including its guard and byte
-addresses. A parallel theorem recovers the whole output tensor from necessary
-byte-source constraints and disjoint stores, without assuming sequential reads. The three middle cell phases also have instruction-level numerical correspondence;
-a [final-body proof](poisson-final-output.md) extends it through a constructed
-byte snapshot to the stored local cell result. A [concurrent extension](poisson-final-consumers.md)
-now also justifies actual final arithmetic loads and connects its result state
-to a [combined concurrent output tail](poisson-concurrent-output.md), whose actual
-store records publish to the whole TorchLean local-cell tensor in any order.
-CUDA host visibility, gather, complete memory
-admission, remaining kernels and host
-launch composition still require their instruction-level connections. Bounds on scalar array indices alone are not a full memory-safety
-proof. GPU tests and the existing sanitizer evidence remain separate.
+The [host correspondence guide](poisson-host-correspondence.md) covers the
+complete finite modeled solver execution and binds this exact acceptance gate
+to its actual final solution bytes. Cell gathering, all contractions and
+barriers, assembly, reductions, vector updates and scalar decisions have their
+instruction and necessary byte-source proofs. The host composition preserves
+uploaded inputs and has a proved launch bound.
 
-For the full numerical suite, running the compiled checker additionally trusts
-Lean's compiler/runtime, the Python extraction of saved GPU words and the
-input/output transport. Source and artifact hashes make this boundary
-inspectable; they are not hardware-conformance proofs. The small recorded
-acceptance instance is checked directly by Lean's kernel, so it does not rely
-on compiled evaluation to establish that particular rational inequality.
+Accepted-result certification and instruction correspondence remain different
+claims. A certificate alone does not explain how a solver obtained x; the
+instruction proofs do. Neither unconditional convergence nor bitwise agreement
+with CPU PCG follows. Full PTX memory admission, compiler correctness, CUDA
+visibility, external serialization and physical GPU conformance remain outside
+the restricted formal result. There is also no continuous PDE error estimate.

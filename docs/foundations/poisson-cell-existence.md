@@ -97,9 +97,9 @@ restrict the existing universal result to serial GPU scheduling.
 
 ## What remains outside this result
 
-Finite host PCG composition remains an obligation. The accepted solver target is a fresh residual bound for the same
-discrete equations. An exact residual certificate is already a separate layer;
-it does not by itself prove the PTX execution/host correspondence or convergence
-for every input. Necessary byte-source admission, complete PTX admission,
-external table serialization, CUDA visibility and GPU conformance remain
-distinct claims.
+Finite host PCG composition and certification of its actual returned memory
+are covered in the [host correspondence guide](poisson-host-correspondence.md).
+The accepted target is a fresh residual bound for the same discrete equations;
+this does not promise convergence for every input. Necessary byte-source
+admission, complete PTX admission, external table serialization, CUDA visibility
+and GPU conformance remain distinct claims.

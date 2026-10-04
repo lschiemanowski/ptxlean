@@ -1,3 +1,29 @@
+import PoissonPTX.CellWholeStoreBounds
+import PoissonPTX.HostAssemblyLayout
+import PoissonPTX.HostBudget
+import PoissonPTX.HostCellExists
+import PoissonPTX.HostCellFrames
+import PoissonPTX.HostCellGather
+import PoissonPTX.HostCellLayout
+import PoissonPTX.HostCertificate
+import PoissonPTX.HostCertificateDecode
+import PoissonPTX.HostDotLaunch
+import PoissonPTX.HostDotLayout
+import PoissonPTX.HostExecution
+import PoissonPTX.HostInputPreservation
+import PoissonPTX.HostKernelLaunch
+import PoissonPTX.HostLaunch
+import PoissonPTX.HostLayout
+import PoissonPTX.HostScalarExists
+import PoissonPTX.HostScalarFrames
+import PoissonPTX.HostSchedule
+import PoissonPTX.HostScheduleEval
+import PoissonPTX.HostScheduleTest
+import PoissonPTX.HostSolverCorrespondence
+import PoissonPTX.HostStorage
+import PoissonPTX.HostUpdateLayout
+import PoissonPTX.HostVectorExists
+import PoissonPTX.HostVectorFrames
 import PoissonPTX.CellGridRoundedAssembly
 import PoissonPTX.CellGridRoundedExists
 import PoissonPTX.CellGridRoundedResidual
@@ -7502,3 +7528,146 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.step_project
 #print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.halted_run
 #print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.run_project
+
+#print axioms PtxTorchLean.Poisson.PTX.CellWhole.global_store_active
+#print axioms PtxTorchLean.Poisson.PTX.Host.assemblyOutput
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.assembly
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.assembly_separated
+#print axioms PtxTorchLean.Poisson.PTX.Host.loop_budget
+#print axioms PtxTorchLean.Poisson.PTX.Host.program_budget
+#print axioms PtxTorchLean.Poisson.PTX.Host.program_launch_bound
+#print axioms PtxTorchLean.Poisson.PTX.Host.program_exists_of_launches
+#print axioms PtxTorchLean.Poisson.PTX.Host.CellLaunch
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.cell_indices
+#print axioms PtxTorchLean.Poisson.PTX.Host.cell_local_exists
+#print axioms PtxTorchLean.Poisson.PTX.Host.cell_exists
+#print axioms PtxTorchLean.Poisson.PTX.Host.cell_frame
+#print axioms PtxTorchLean.Poisson.PTX.Host.cell_static
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.beforeGather
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.gather_fields
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.gatherLayout
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.cell_output
+#print axioms PtxTorchLean.Poisson.PTX.Host.CellEntryKind
+#print axioms PtxTorchLean.Poisson.PTX.Host.CellEntryKind.entry
+#print axioms PtxTorchLean.Poisson.PTX.Host.CellEntryKind.source
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.Coefficients
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.cellBases
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.cellContext
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.cellStart
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.cellLaunch
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.Connectivity
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.cell_count
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.cell_index
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.cell_physical
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.problem
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.accept
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.accept_sound
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.Represents.solution_real
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.decodeWords
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.decodeWords_sound
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.Values
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.matrixWords
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.vectorWords
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.decode
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.Represents
+#print axioms PtxTorchLean.Poisson.PTX.Host.Certificate.decode_sound
+#print axioms PtxTorchLean.Poisson.PTX.Host.DotLaunch
+#print axioms PtxTorchLean.Poisson.PTX.Host.dot_exists
+#print axioms PtxTorchLean.Poisson.PTX.Host.dot_frame
+#print axioms PtxTorchLean.Poisson.PTX.Host.dot_static
+#print axioms PtxTorchLean.Poisson.PTX.Host.DotEntry
+#print axioms PtxTorchLean.Poisson.PTX.Host.DotEntry.entry
+#print axioms PtxTorchLean.Poisson.PTX.Host.DotEntry.left
+#print axioms PtxTorchLean.Poisson.PTX.Host.DotEntry.right
+#print axioms PtxTorchLean.Poisson.PTX.Host.DotEntry.output
+#print axioms PtxTorchLean.Poisson.PTX.Host.DotEntry.output_width
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.dotContext
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.dotStart
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.dotCode
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.dot_lane
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.dot_arrays
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.dot_apart
+#print axioms PtxTorchLean.Poisson.PTX.Host.Execution
+#print axioms PtxTorchLean.Poisson.PTX.Host.Budget
+#print axioms PtxTorchLean.Poisson.PTX.Host.Budget.weaken
+#print axioms PtxTorchLean.Poisson.PTX.Host.launches_budget
+#print axioms PtxTorchLean.Poisson.PTX.Host.Execution.launch_bound
+#print axioms PtxTorchLean.Poisson.PTX.Host.Budget.execution_exists
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.Static.read32
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.Static.connectivity
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.Static.assembly
+#print axioms PtxTorchLean.Poisson.PTX.Host.Launch
+#print axioms PtxTorchLean.Poisson.PTX.Host.Launch.static
+#print axioms PtxTorchLean.Poisson.PTX.Host.launch_exists
+#print axioms PtxTorchLean.Poisson.PTX.Host.solver_exists
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.flowStart
+#print axioms PtxTorchLean.Poisson.PTX.Host.VectorLaunch
+#print axioms PtxTorchLean.Poisson.PTX.Host.ScalarLaunch
+#print axioms PtxTorchLean.Poisson.PTX.Host.VectorEntry
+#print axioms PtxTorchLean.Poisson.PTX.Host.VectorEntry.entry
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.vectorCode
+#print axioms PtxTorchLean.Poisson.PTX.Host.ScalarEntry
+#print axioms PtxTorchLean.Poisson.PTX.Host.ScalarEntry.entry
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.scalarCode
+#print axioms PtxTorchLean.Poisson.PTX.Host.Field
+#print axioms PtxTorchLean.Poisson.PTX.Host.Field.width
+#print axioms PtxTorchLean.Poisson.PTX.Host.Field.count
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.slot
+#print axioms PtxTorchLean.Poisson.PTX.Host.field_width
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.align_width
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.scalar
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.arrays
+#print axioms PtxTorchLean.Poisson.PTX.Host.initializeField
+#print axioms PtxTorchLean.Poisson.PTX.Host.restartField
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.initialize
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.restart
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.residual
+#print axioms PtxTorchLean.Poisson.PTX.Host.scalar_exists
+#print axioms PtxTorchLean.Poisson.PTX.Host.scalar_frame
+#print axioms PtxTorchLean.Poisson.PTX.Host.scalar_static
+#print axioms PtxTorchLean.Poisson.PTX.Host.Entry
+#print axioms PtxTorchLean.Poisson.PTX.Host.Entry.name
+#print axioms PtxTorchLean.Poisson.PTX.Host.preparation
+#print axioms PtxTorchLean.Poisson.PTX.Host.iteration
+#print axioms PtxTorchLean.Poisson.PTX.Host.checkResidual
+#print axioms PtxTorchLean.Poisson.PTX.Host.restart
+#print axioms PtxTorchLean.Poisson.PTX.Host.Options
+#print axioms PtxTorchLean.Poisson.PTX.Host.Reason
+#print axioms PtxTorchLean.Poisson.PTX.Host.Check
+#print axioms PtxTorchLean.Poisson.PTX.Host.Report
+#print axioms PtxTorchLean.Poisson.PTX.Host.Plan
+#print axioms PtxTorchLean.Poisson.PTX.Host.launches
+#print axioms PtxTorchLean.Poisson.PTX.Host.finite
+#print axioms PtxTorchLean.Poisson.PTX.Host.within
+#print axioms PtxTorchLean.Poisson.PTX.Host.inspectCheck
+#print axioms PtxTorchLean.Poisson.PTX.Host.loop
+#print axioms PtxTorchLean.Poisson.PTX.Host.program
+#print axioms PtxTorchLean.Poisson.PTX.Host.evaluate
+#print axioms PtxTorchLean.Poisson.PTX.Host.evaluate_execution
+#print axioms PtxTorchLean.Poisson.PTX.Host.Test.offset
+#print axioms PtxTorchLean.Poisson.PTX.Host.Test.arena
+#print axioms PtxTorchLean.Poisson.PTX.Host.Test.field
+#print axioms PtxTorchLean.Poisson.PTX.Host.Test.word
+#print axioms PtxTorchLean.Poisson.PTX.Host.Test.reasonName
+#print axioms PtxTorchLean.Poisson.PTX.Host.Test.runCase
+#print axioms PtxTorchLean.Poisson.PTX.Host.Execution.static
+#print axioms PtxTorchLean.Poisson.PTX.Host.accepted_solver
+#print axioms PtxTorchLean.Poisson.PTX.Host.Field.mutable
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.Static
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.Writes
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.static_refl
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.static_trans
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.Writes.static
+#print axioms PtxTorchLean.Poisson.PTX.Host.VectorEntry.writes
+#print axioms PtxTorchLean.Poisson.PTX.Host.ScalarEntry.writes
+#print axioms PtxTorchLean.Poisson.PTX.Host.vector_writes_mutable
+#print axioms PtxTorchLean.Poisson.PTX.Host.scalar_writes_mutable
+#print axioms PtxTorchLean.Poisson.PTX.Host.updateField
+#print axioms PtxTorchLean.Poisson.PTX.Host.update_fields
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.updateXRZ
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.updateP
+#print axioms PtxTorchLean.Poisson.PTX.Host.Layout.assembly_contents
+#print axioms PtxTorchLean.Poisson.PTX.Host.vector_exists
+#print axioms PtxTorchLean.Poisson.PTX.Host.vector_frame
+#print axioms PtxTorchLean.Poisson.PTX.Host.vector_static

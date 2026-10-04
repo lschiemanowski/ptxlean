@@ -761,6 +761,25 @@ COUNTS['PtxTorchLean.Poisson.PTX.FreshResidual.Arena'] = COUNTS.get('PtxTorchLea
 COUNTS['PtxTorchLean.Poisson.PTX.Kernel.ToFlow'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Kernel.ToFlow', 0) + 11
 TARGETS.update(['PoissonPTX.CellGridRoundedAssembly', 'PoissonPTX.CellGridRoundedExists', 'PoissonPTX.CellGridRoundedResidual', 'PoissonPTX.FreshResidualAccess', 'PoissonPTX.FreshResidualAddress', 'PoissonPTX.FreshResidualArena', 'PoissonPTX.FreshResidualEntry', 'PoissonPTX.FreshResidualExists', 'PoissonPTX.FreshResidualParallel', 'PoissonPTX.FreshResidualRecorded', 'PoissonPTX.FreshResidualRounded', 'PoissonPTX.FreshResidualRoundedCorrect', 'PoissonPTX.KernelToFlow', 'PoissonPTX.KernelToFlowRun'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.CellWhole'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellWhole', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Host'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host', 0) + 60
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Layout'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Layout', 0) + 39
+COUNTS['PtxTorchLean.Poisson.PTX.Host.CellEntryKind'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.CellEntryKind', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Certificate'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Certificate', 0) + 11
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Certificate.Represents'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Certificate.Represents', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Host.DotEntry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.DotEntry', 0) + 5
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Budget'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Budget', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Execution'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Execution', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Layout.Static'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Layout.Static', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Launch'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Launch', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Host.VectorEntry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.VectorEntry', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Host.ScalarEntry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.ScalarEntry', 0) + 2
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Field'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Field', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Entry'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Entry', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Test'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Test', 0) + 6
+COUNTS['PtxTorchLean.Poisson.PTX.Host.Layout.Writes'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Host.Layout.Writes', 0) + 1
+TARGETS.update(['PoissonPTX.CellWholeStoreBounds', 'PoissonPTX.HostAssemblyLayout', 'PoissonPTX.HostBudget', 'PoissonPTX.HostCellExists', 'PoissonPTX.HostCellFrames', 'PoissonPTX.HostCellGather', 'PoissonPTX.HostCellLayout', 'PoissonPTX.HostCertificate', 'PoissonPTX.HostCertificateDecode', 'PoissonPTX.HostDotLaunch', 'PoissonPTX.HostDotLayout', 'PoissonPTX.HostExecution', 'PoissonPTX.HostInputPreservation', 'PoissonPTX.HostKernelLaunch', 'PoissonPTX.HostLaunch', 'PoissonPTX.HostLayout', 'PoissonPTX.HostScalarExists', 'PoissonPTX.HostScalarFrames', 'PoissonPTX.HostSchedule', 'PoissonPTX.HostScheduleEval', 'PoissonPTX.HostScheduleTest', 'PoissonPTX.HostSolverCorrespondence', 'PoissonPTX.HostStorage', 'PoissonPTX.HostUpdateLayout', 'PoissonPTX.HostVectorExists', 'PoissonPTX.HostVectorFrames'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")
