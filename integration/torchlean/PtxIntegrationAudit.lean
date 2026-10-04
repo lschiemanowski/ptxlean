@@ -1,3 +1,14 @@
+import PoissonPTX.ScalarDeterministic
+import PoissonPTX.ScalarEntry
+import PoissonPTX.ScalarExecution
+import PoissonPTX.ScalarExtras
+import PoissonPTX.ScalarExtrasChecks
+import PoissonPTX.ScalarFrames
+import PoissonPTX.ScalarMemory
+import PoissonPTX.ScalarNorm
+import PoissonPTX.ScalarRestartFlag
+import PoissonPTX.ScalarSegments
+import PoissonPTX.ScalarText
 import PoissonPTX.Initialize
 import PoissonPTX.InitializeAccess
 import PoissonPTX.InitializeAddress
@@ -6603,3 +6614,122 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.StoreZero.block_eq
 #print axioms PtxTorchLean.Poisson.PTX.StoreZero.finish_global
 #print axioms PtxTorchLean.Poisson.PTX.StoreZero.finish_frame
+
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.noFP
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence_sound
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.eval_complete
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.eval_unique
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence_unique
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.prologue
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.setup
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.program
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.setup_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.prologue_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.prologue_segment
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.setup_frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.entry_result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.entry_executes
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.eval
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.eval_sound
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.tick
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.execute
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.tick_sound
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.execute_sound
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.segment_pc
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.segment_running
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence_append
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence_split
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence_pc
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence_running
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence_base
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence_base_block
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.absolute
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.maximum
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Comparison
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Comparison.apply
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Instr
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.put32
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.simple
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ordinary
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Eval
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Step
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Runs
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Sequence
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.segment
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.absolute_nan
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.absolute_subnormal
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.absolute_negative_zero
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.maximum_positive_zero_left
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.maximum_positive_zero_right
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.maximum_negative_zeros
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.maximum_one_nan
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.comparison_nan_gt
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.comparison_nan_le
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.sqrt_negative_zero
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Checks.sqrt_four
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.loaded64_frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.loaded64_reg
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.stored64_frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.stored64_global
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.addressed_reg
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.stored32_global
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.read64_write32_disjoint
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ops
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ops_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.ops_block
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.load64Code
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.loaded64
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.load64_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.load64_state
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.store64Ops
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.store64Code
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.stored64
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.store64_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.store64_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.store64_state
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.address4Code
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.load32Code
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.loaded32
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.store32Code
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.stored32
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.load32_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.store32_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.load32_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.store32_plain
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.load32_state
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.store32_state
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.body
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.entry
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.rooted
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.finish
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.rooted_frame
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.body_segment
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.body_trace
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.body_result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.finish_global
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.entry_correct
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.entry_exists
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Norm.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.RestartFlag.body
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.RestartFlag.entry
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.RestartFlag.body_segment
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.RestartFlag.entry_correct
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.RestartFlag.entry_exists
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.RestartFlag.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.peel_segment
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.halted_result
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.completed_body
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.sequence_run
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.append
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.executes_body
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.register
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.operand
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.floating
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.data
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.indexed
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.base
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.instruction
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.norm
+#print axioms PtxTorchLean.Poisson.PTX.Scalar.Text.restartFlag

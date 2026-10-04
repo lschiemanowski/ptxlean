@@ -40,7 +40,8 @@
     "Use an explicit same-thread no-future byte-source constraint for in-place updates, with a counterexample demonstrating why compatibility alone is insufficient.",
     "Prove the complete 54-instruction combined x/r/z update, derive in-place word and boundary-flag reads from actual interleavings, publish all three rounded formulas, preserve other bytes and construct an admitted finite active-coordinate execution.",
     "Prove the full 34-instruction restart entry, derive its read-only inputs from actual byte sources, publish the residual copy and equal quotient words, preserve other bytes and construct a finite admitted active-coordinate execution.",
-    "Prove the full 43-instruction initializer, derive boundary and load bytes from actual sources, publish masked rhs/r, equal z/p quotient words and zero x, preserve other bytes and construct a finite admitted active-coordinate execution."
+    "Prove the full 43-instruction initializer, derive boundary and load bytes from actual sources, publish masked rhs/r, equal z/p quotient words and zero x, preserve other bytes and construct a finite admitted active-coordinate execution.",
+    "Prove complete scalar residual-norm and restart-flag entries in the sequential byte-memory model, with actual outputs, byte frames and finite witnesses; preserve explicit NaN, signed-zero and predicate contracts and keep scalar admission and host composition open."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -5526,6 +5527,138 @@
         "path": "integration/torchlean/PoissonPTX/StoreZero.lean",
         "passage": {
           "quote": "theorem finish_frame : (finish s output).globalStart=s.globalStart ∧\n    (finish s output).globalBytes=s.globalBytes ∧ (finish s output).shared=s.shared ∧\n    (finish s output).regs 0=s.regs 0 ∧ (finish s output).regs 12=s.regs 12 := by\n  simp [finish,put,addressed,assign,advance]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarDeterministic.lean",
+        "passage": {
+          "quote": "theorem sequence_unique (one : Sequence ctx code s t) (two : Sequence ctx code s u)\n    (plain : ∀ i∈code, noFP i=true) : t=u := by\n  induction one generalizing u with\n  | nil => cases two; rfl\n  | cons running step rest ih =>\n    cases two with\n    | cons alive actual tail =>\n      have same := eval_unique step actual (plain _ (by simp))\n      subst_vars\n      exact ih tail (fun i member => plain i (by simp[member]))"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarEntry.lean",
+        "passage": {
+          "quote": "theorem entry_executes (trace : Sequence ctx body (setup ctx s) middle)\n    (plain : ∀ i∈body, segment i=true) (pc : s.core.pc=0) (running : s.halted=false) :\n    Runs ctx (program body) s (Flow.halt middle) := by\n  exact executes_body (sequence_append (setup_trace running) trace)\n    (by intro i member; rcases List.mem_append.mp member with h|h; exact prologue_segment i h; exact plain i h) pc running"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarExecution.lean",
+        "passage": {
+          "quote": "theorem sequence_base_block (run : Sequence ctx (code.map Instr.base) s t) : Flow.Sequence ctx code s t := by\n  induction code generalizing s with\n  | nil => cases run; exact .nil\n  | cons i code ih =>\n    cases run with\n    | cons running step rest =>\n      cases step with\n      | base actual => exact .cons running actual (ih rest)\n      | simple ordinary => simp [Scalar.ordinary] at ordinary"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarExtras.lean",
+        "passage": {
+          "quote": "def segment : Instr → Bool\n  | .base i => Flow.segment i\n  | _ => true"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarExtrasChecks.lean",
+        "passage": {
+          "quote": "theorem sqrt_four : Float.sqrt (decode 0x4010000000000000)=decode 0x4000000000000000 := by decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarFrames.lean",
+        "passage": {
+          "quote": "theorem read64_write32_disjoint (memory : Memory) (a b : Nat) (value : BitVec 32)\n    (apart : a+4≤b ∨ b+8≤a) : read64 (write32 memory a value) b=read64 memory b := by\n  have keep (i : Nat) (small : i<8) : write32 memory a value (b+i)=memory (b+i) := write32_outside _ _ _ _ (by omega)\n  simp only [read64]\n  rw [keep 7 (by omega),keep 6 (by omega),keep 5 (by omega),keep 4 (by omega),\n    keep 3 (by omega),keep 2 (by omega),keep 1 (by omega),\n    show write32 memory a value b=memory b from by simpa using keep 0 (by omega)]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarMemory.lean",
+        "passage": {
+          "quote": "theorem store32_state (actual : Sequence ctx (store32Code offset value) s t)\n    (valid : Valid32 s.core.globalStart s.core.globalBytes (s.core.regs 0+offset).toNat)\n    (running : s.halted=false) : t=stored32 s offset value :=\n  sequence_unique actual (store32_trace running valid) store32_plain"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarNorm.lean",
+        "passage": {
+          "quote": "theorem entry_length : (entry source output).length=13 := by\n  simp [entry,program,prologue,body,load64Code,ops,ScalarLoad.code,store64Code,store64Ops]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarRestartFlag.lean",
+        "passage": {
+          "quote": "theorem entry_length : (entry active).length=8 := by\n  simp [entry,program,prologue,body,store32Code,address4Code]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarSegments.lean",
+        "passage": {
+          "quote": "theorem executes_body (trace : Sequence ctx body s t) (plain : ∀ i∈body, segment i=true)\n    (pc : s.core.pc=0) (running : s.halted=false) : Runs ctx (body++[.base .ret]) s (Flow.halt t) := by\n  have bodyRun := sequence_run trace plain [] [.base .ret] pc\n  have tPC : t.core.pc=body.length := by simpa [pc] using sequence_pc trace plain\n  have tRunning := (sequence_running trace plain).trans running\n  exact append bodyRun (.cons ⟨tRunning,.base .ret,by simp [tPC],.base (.simple (by intro op h; cases h))⟩ .nil)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The scalar residual-norm entry loads the stored sum of residual squares,\ncomputes its binary64 square root with rounding to nearest, and stores that\nactual result. Its complete 13-instruction fetched execution determines the\nnumerical output and preserves bytes outside the output word. The separate\n8-instruction restart-flag entry stores the four-byte unsigned value one and\npreserves every other byte. Both entries have finite execution witnesses for\narbitrary input bytes in valid allocations. These are single-thread sequential\nbyte-memory results; they do not yet derive this execution model from weak-memory\ncandidate admission or connect it to CUDA transport between launches.\n\nThe additional scalar instruction contracts distinguish numerical value from\nbits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have\nonly their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN\nencodings when both inputs are NaN, and prefers positive zero to negative zero.\nOrdered floating comparisons return false on either NaN input. Predicate\nconjunction, negation, unsigned selection and conditional arithmetic read the\nactual predicate registers. Four-byte status stores check actual addresses and\nallocation bounds. These contracts and the existing base instructions form a\nseparate wrapper, leaving the earlier concurrent instruction semantics intact.\nKernel-checked corner cases support the manual pinned-source review but do not\nestablish hardware fidelity.\n\nFull-entry text binding checks both scalar programs across saved layouts.\nCoefficient selection, solver status initialization, weak-memory justification\nfor scalar entries, and host-loop composition remain separate obligations.\nThe norm computation itself is not a residual certificate: the accepted solver\nclaim still requires a fresh residual bound for the same discrete equations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarText.lean",
+        "passage": {
+          "quote": "def restartFlag (active : Word) : List String := (RestartFlag.entry active).map instruction"
         }
       }
     }

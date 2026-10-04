@@ -686,6 +686,14 @@ COUNTS['PtxTorchLean.Poisson.PTX.StorePair'] = COUNTS.get('PtxTorchLean.Poisson.
 COUNTS['PtxTorchLean.Poisson.PTX.StoreZero'] = COUNTS.get('PtxTorchLean.Poisson.PTX.StoreZero', 0) + 6
 TARGETS.update(['PoissonPTX.Initialize', 'PoissonPTX.InitializeAccess', 'PoissonPTX.InitializeAddress', 'PoissonPTX.InitializeArena', 'PoissonPTX.InitializeCorrect', 'PoissonPTX.InitializeEntry', 'PoissonPTX.InitializeExists', 'PoissonPTX.InitializeInputs', 'PoissonPTX.InitializeParallel', 'PoissonPTX.InitializePrefix', 'PoissonPTX.InitializeRecorded', 'PoissonPTX.InitializeState', 'PoissonPTX.InitializeText', 'PoissonPTX.InitializeValues', 'PoissonPTX.StorePair', 'PoissonPTX.StoreZero'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar', 0) + 78
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Comparison'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Comparison', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Checks'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Checks', 0) + 11
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Norm'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Norm', 0) + 13
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.RestartFlag'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.RestartFlag', 0) + 6
+COUNTS['PtxTorchLean.Poisson.PTX.Scalar.Text'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Scalar.Text', 0) + 9
+TARGETS.update(['PoissonPTX.ScalarDeterministic', 'PoissonPTX.ScalarEntry', 'PoissonPTX.ScalarExecution', 'PoissonPTX.ScalarExtras', 'PoissonPTX.ScalarExtrasChecks', 'PoissonPTX.ScalarFrames', 'PoissonPTX.ScalarMemory', 'PoissonPTX.ScalarNorm', 'PoissonPTX.ScalarRestartFlag', 'PoissonPTX.ScalarSegments', 'PoissonPTX.ScalarText'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

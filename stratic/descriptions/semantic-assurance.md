@@ -55,3 +55,11 @@ reachable from a selected publication revision, including evidence archive
 members. It rejects known manual artifacts and raw model event transcripts.
 This is a check for those artifact types, not an exhaustive audit of quotations.
 Private recovery bundles and local caches are outside the published history.
+
+The Poisson scalar fragment adds explicitly reviewed binary64 square root,
+absolute value, maximum, ordered comparisons and predicate/status operations.
+Its review preserves NaN encoding freedom where allowed, the pinned abs.f64
+NaN bit rule, positive-zero preference for maximum, and actual four-byte store
+bounds. Kernel-checked exceptional-value examples supplement manual source
+comparison. Sequential execution proofs, source-text binding, weak-memory
+admission and GPU conformance remain distinct claims.

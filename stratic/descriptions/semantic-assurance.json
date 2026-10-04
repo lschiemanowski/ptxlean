@@ -11,7 +11,8 @@
     "Delegate instruction formalization to smaller models on reviewed foundations, evaluating semantic accuracy separately from proof validity and generation cost.",
     "Reproduce selected integration proofs with pinned unchanged dependencies, complete named axiom audits and stable local sources.",
     "Acquire vendor documentation locally by pinned hash and distribute source references and explicitly scoped evidence instead of copied manuals or raw transcripts.",
-    "Check selected publication history for known vendor artifacts while keeping original evidence identities and private backups distinct."
+    "Check selected publication history for known vendor artifacts while keeping original evidence identities and private backups distinct.",
+    "Review Poisson scalar binary64 and predicate/status contracts against the pinned source, preserving exceptional-value and byte-width details while separating sequential proofs, source binding, weak-memory admission and hardware behavior."
   ],
   "realization": "partial",
   "remaining": "Reviews against the pinned source and checked connections between formal components cover restricted memory, byte sources for aligned 32-bit reads, execution environments, scalar proof rules and vector addition in a shared global allocation, actual CTA shared-memory barrier publication, the encoded binary32 numerical adapter, reviewed floating-point instructions, and actual mixed affine execution with source-linked memory witnesses. How mixed-source reads observe writes remains unresolved and explicit, as does exact quiet-versus-signaling NaN output realizability. Byte ordering uses separately attributed NVIDIA binary-interface guidance. General correspondence for data-dependent interactions and different access sizes, and hardware validation, remain unimplemented. Model-assisted generation now has an instruction-section inventory and recorded headless runs; full form coverage, generalized capability evidence and cost-effectiveness evaluation remain unfinished.",
@@ -121,6 +122,18 @@
         "path": "scripts/check_distribution.py",
         "passage": {
           "quote": "def check_history(root, revision, manual_sha):\n    \"\"\"Check every reachable tree, including deleted files and archive members.\"\"\""
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The Poisson scalar fragment adds explicitly reviewed binary64 square root,\nabsolute value, maximum, ordered comparisons and predicate/status operations.\nIts review preserves NaN encoding freedom where allowed, the pinned abs.f64\nNaN bit rule, positive-zero preference for maximum, and actual four-byte store\nbounds. Kernel-checked exceptional-value examples supplement manual source\ncomparison. Sequential execution proofs, source-text binding, weak-memory\nadmission and GPU conformance remain distinct claims."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ScalarExtras.lean",
+        "passage": {
+          "quote": "def segment : Instr → Bool\n  | .base i => Flow.segment i\n  | _ => true"
         }
       }
     }

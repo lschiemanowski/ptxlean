@@ -1,0 +1,190 @@
+{
+  "id": "a99df874-e181-4425-9bd3-7ae6489f2637",
+  "base": "e58057b4dbfec83badac761edb31be2de75f158a",
+  "contentTree": "f19ea6257c873f1408b5b25fb7e1a70368c911b2",
+  "reviewer": "Codex",
+  "summary": "Prove complete scalar norm and restart-flag entries and review additional instruction contracts.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Prove fetched norm and restart-flag output/frame/existence, adding explicitly reviewed scalar instruction contracts. Keep scalar weak-memory admission, coefficients, initial status and host composition open."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe the complete sequential norm and restart-flag proofs with actual loaded and stored bytes, finite existence and exact text bindings. Retain source-admission, other scalar kernel and solver-composition obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "The source solver, discrete equations, kernel implementation, residual certificate and numerical policies remain unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "revised",
+      "reason": "New scalar wrapper contracts were manually reviewed against pinned PTX, explicitly preserving NaN encodings, signed zero, ordered comparisons, predication and four-byte store bounds. Kernel-checked corner cases supplement the review; proof validity, weak-memory admission, binding and hardware claims remain distinct."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "The parent already distinguishes per-thread instruction execution, candidate memory admission, existence, semantic fidelity and hardware correspondence. The new scalar wrapper is explicitly a restricted sequential fragment and does not change those contracts."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "f19ea6257c873f1408b5b25fb7e1a70368c911b2",
+      "method": "Sequential capped Lean checks and exact dependency audit; pinned-source scalar semantic review and kernel-checked corner cases; eleven saved PTX bindings; frontend mutation tests; manual fetched-instruction, actual scalar load/store, byte-frame and finite-execution review; receipt hashes and Stratic snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy job at a time, one Lean thread, 6 GiB hard memory limit, swap disabled, CPU 150 percent. No GPU runs or paid calls.",
+      "evidence": "All 11 new modules checked without warnings. 5832 exact dependency reports use only allowed standard Lean axioms; 771 guarded source files and all pins pass. Additional binary64 sqrt, abs, max, ordered comparisons, predicate operations and four-byte status stores retain explicit signed-zero and exceptional-value contracts. Manual review against pinned PTX SHA-256 0aa31c15735a30b5d7c0fa1fe02570dcd37fe80800afca74bcc96c9132b81fed covers these definitions; eleven kernel-checked corner cases supplement but do not replace fidelity review. Complete 13-instruction residual_norm and 8-instruction restart_flag proofs derive actual output values, outside-byte preservation and finite execution witnesses from fetched instructions in the single-thread sequential byte-memory model. No desired result, predicate outcome or unverified floating axioms are assumed. Weak-memory justification for these scalar entries, coefficient and initial-status kernels, host composition, CUDA transport and GPU conformance remain open. All 65 frontend tests pass; eleven receipts refreshed and hash-verified, including 60 complete scalar entries. Legacy executable reuse was limited to verified unchanged import closures; current audit and text checks reran. Peak audit RSS 4942608 KiB. Unchanged legacy interpreter suite not rerun. Stratic summaries, exact links, study guide, source review and snapshots agree. README and emitted PTX are unchanged.",
+      "tests": [],
+      "id": "9a1ed911-9d17-48a6-96fb-bc853df7e720",
+      "recordedAt": "2026-10-04T13:15:57.109Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T13:19:02.519Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-pcg-updates.md",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "docs/foundations/poisson-scalar-source-review.md",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/check_poisson_scalar.py",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-initialize-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-restart-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-scalar-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-xrz-binding.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "hardware/test_poisson_scalar.py",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarDeterministic.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarEntry.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarExecution.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarExtras.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarExtrasChecks.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarFrames.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarMemory.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarNorm.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarRestartFlag.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarSegments.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ScalarText.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.json",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    },
+    {
+      "path": "stratic/descriptions/semantic-assurance.md",
+      "reason": "Reviewed scalar instruction contracts, exceptional-value corner cases, actual fetched norm and flag entries, memory widths and frames, finite execution witnesses, exact bindings and mutations, registrations, receipts and documentation."
+    }
+  ]
+}

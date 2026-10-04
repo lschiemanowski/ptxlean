@@ -251,9 +251,48 @@ the actual boundary predicate through the copied vectors and diagonal read.
 actual sources, and `InitializeExists.Arena.parallel_exists` constructs a finite
 execution. `StoreZero` models the emitted immediate store explicitly.
 
+## Scalar residual norm and restart flag
+
+The scalar residual-norm entry loads the stored sum of residual squares,
+computes its binary64 square root with rounding to nearest, and stores that
+actual result. Its complete 13-instruction fetched execution determines the
+numerical output and preserves bytes outside the output word. The separate
+8-instruction restart-flag entry stores the four-byte unsigned value one and
+preserves every other byte. Both entries have finite execution witnesses for
+arbitrary input bytes in valid allocations. These are single-thread sequential
+byte-memory results; they do not yet derive this execution model from weak-memory
+candidate admission or connect it to CUDA transport between launches.
+
+The additional scalar instruction contracts distinguish numerical value from
+bits. The pinned abs.f64 rule preserves NaN input bits; ordinary inputs have
+only their sign bit cleared. Unmodified max.f64 ignores a sole NaN, permits NaN
+encodings when both inputs are NaN, and prefers positive zero to negative zero.
+Ordered floating comparisons return false on either NaN input. Predicate
+conjunction, negation, unsigned selection and conditional arithmetic read the
+actual predicate registers. Four-byte status stores check actual addresses and
+allocation bounds. These contracts and the existing base instructions form a
+separate wrapper, leaving the earlier concurrent instruction semantics intact.
+Kernel-checked corner cases support the manual pinned-source review but do not
+establish hardware fidelity.
+
+Full-entry text binding checks both scalar programs across saved layouts.
+Coefficient selection, solver status initialization, weak-memory justification
+for scalar entries, and host-loop composition remain separate obligations.
+The norm computation itself is not a residual certificate: the accepted solver
+claim still requires a fresh residual bound for the same discrete equations.
+
+`ScalarNorm.entry_correct` derives the stored norm from the source memory word;
+it does not assume that this input already equals a mathematical residual norm.
+The dot-product and operator proofs must supply that connection during
+composition. `ScalarRestartFlag.entry_correct` covers the actual four-byte
+status write. Each module also provides `entry_exists`. The renderer and binding
+check use the same entry definitions, including the three-instruction launch
+prologue and return. See [the scalar source review](poisson-scalar-source-review.md)
+for the exceptional-value choices and their limits.
+
 ## Remaining work
 
-The scalar decision kernels and the host PCG loop still need
+Status initialization, coefficient selection and the host PCG loop still need
 their instruction-level composition. The accepted solver target remains a fresh
 residual bound for the same discrete equations, rather than CPU-iterate bitwise
 identity or a convergence claim for every input.
