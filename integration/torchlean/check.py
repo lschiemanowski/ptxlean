@@ -754,6 +754,13 @@ COUNTS['PtxTorchLean.Poisson.PTX.Rounded.Checks'] = COUNTS.get('PtxTorchLean.Poi
 COUNTS['PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena', 0) + 3
 TARGETS.update(['PoissonPTX.AffineUpdateRounded', 'PoissonPTX.AffineUpdateRoundedCorrect', 'PoissonPTX.AssemblyRoundedCorrect', 'PoissonPTX.AssemblyRoundedExists', 'PoissonPTX.AssemblyRoundedProgram', 'PoissonPTX.InitializeRounded', 'PoissonPTX.InitializeRoundedCorrect', 'PoissonPTX.ObservedPadding', 'PoissonPTX.ObservedPaddingUnique', 'PoissonPTX.ObservedParallelExtend', 'PoissonPTX.ObservedParallelPadding', 'PoissonPTX.ObservedParallelRestrict', 'PoissonPTX.ObservedRoundedHistory', 'PoissonPTX.ObservedRoundedProjectSources', 'PoissonPTX.ObservedRoundedSources', 'PoissonPTX.RestartVectorsRounded', 'PoissonPTX.RestartVectorsRoundedCorrect', 'PoissonPTX.RoundedLaunch', 'PoissonPTX.RoundedLaunchChecks', 'PoissonPTX.RoundedLaunchProjection', 'PoissonPTX.UpdateXRZRounded', 'PoissonPTX.UpdateXRZRoundedCorrect'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.CellGrid'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellGrid', 0) + 3
+COUNTS['PtxTorchLean.Poisson.PTX.CellGrid.ResidualLayout'] = COUNTS.get('PtxTorchLean.Poisson.PTX.CellGrid.ResidualLayout', 0) + 1
+COUNTS['PtxTorchLean.Poisson.PTX.FreshResidual'] = COUNTS.get('PtxTorchLean.Poisson.PTX.FreshResidual', 0) + 17
+COUNTS['PtxTorchLean.Poisson.PTX.FreshResidual.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.FreshResidual.Arena', 0) + 22
+COUNTS['PtxTorchLean.Poisson.PTX.Kernel.ToFlow'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Kernel.ToFlow', 0) + 11
+TARGETS.update(['PoissonPTX.CellGridRoundedAssembly', 'PoissonPTX.CellGridRoundedExists', 'PoissonPTX.CellGridRoundedResidual', 'PoissonPTX.FreshResidualAccess', 'PoissonPTX.FreshResidualAddress', 'PoissonPTX.FreshResidualArena', 'PoissonPTX.FreshResidualEntry', 'PoissonPTX.FreshResidualExists', 'PoissonPTX.FreshResidualParallel', 'PoissonPTX.FreshResidualRecorded', 'PoissonPTX.FreshResidualRounded', 'PoissonPTX.FreshResidualRoundedCorrect', 'PoissonPTX.KernelToFlow', 'PoissonPTX.KernelToFlowRun'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

@@ -1629,8 +1629,7 @@ execution required by the universal TorchLean cell theorem. A finite family of
 such inputs also supplies actual cell runs and an admitted grid schedule. The
 selected serial schedule witnesses existence; universal correspondence remains
 valid for arbitrary admitted interleavings. Necessary source admission is still
-distinct from the complete PTX memory model and GPU progress. Remaining rounded
-launches and finite host solver composition are further obligations; the exact
+distinct from the complete PTX memory model and GPU progress. Finite host solver composition remains a further obligation; the exact
 residual certificate remains a separate correctness layer.
 
 Rounded launches include every lane in whole blocks of 256 threads. The
@@ -1658,6 +1657,34 @@ the actual output arrays is preserved.
 
 These results establish finite model execution and numerical publication for
 those five launch kinds. They do not assert GPU scheduling fairness, CUDA
-visibility or complete PTX admission. Rounded fresh-residual execution and
-composition of all launches through the finite host PCG loop remain separate
-obligations; residual certification remains the accepted-result guarantee.
+visibility or complete PTX admission. Fresh-residual execution joins the rounded framework below. Composition of
+all launches through the finite host PCG loop remains a separate obligation;
+residual certification remains the accepted-result guarantee.
+
+The fresh-residual launch includes all threads in rounded blocks of 256.
+Every active thread loads the right-hand side and the assembled operator value,
+subtracts them with one binary64 rounding, stores that result and returns.
+Padding threads execute the actual index calculation and guard and return
+without accessing either array. The output is disjoint from both inputs; the
+two read-only inputs may overlap. All non-output bytes are preserved.
+
+The original single-predicate instruction representation and the indexed
+control-flow representation are connected by proofs in both directions.
+Instruction fetching, input loads, subtraction, output store and return are
+preserved. The observed-memory proof separately derives each recorded address
+and shows that compatible input sources must supply the initial bytes. It does
+not assume a numerical answer or a local execution for the thread.
+
+A finite complete launch exists for arbitrary valid input words, including
+nonfinite values. Every completed source-compatible interleaving has the same
+stated rounded-subtraction result, retaining the existing allowed floating-point
+representations. Composing the actual cell publication, rounded assembly and
+rounded residual launch yields the residual of the represented TorchLean
+operator. The same uploaded right-hand side survives both preceding launches
+by their proved write footprints. A finite rounded assembly execution is also
+constructed from valid uploaded metadata.
+
+This is a correspondence with the rounded operator, not an exact-real residual
+bound. The exact residual certificate remains the accepted-result guarantee.
+Finite host-loop composition, full PTX memory-model admission, external table
+serialization, CUDA visibility and GPU conformance remain separate obligations.

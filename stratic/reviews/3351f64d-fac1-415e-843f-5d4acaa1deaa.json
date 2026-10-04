@@ -1,0 +1,190 @@
+{
+  "id": "3351f64d-fac1-415e-843f-5d4acaa1deaa",
+  "base": "fc713f0c0809b60c511cf5c83ef265fd5d9dfe7b",
+  "contentTree": "92cfac9cdfcbecb91a8d792b4a44e0da5d7eef8d",
+  "reviewer": "Codex",
+  "summary": "Complete rounded fresh-residual execution and connect its publication to the represented Poisson operator.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Close the rounded fresh-residual gap using a proved instruction translation, actual observation footprints, execution existence and universal publication; compose the same operator and right-hand side, retaining the finite host-loop gap."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe the complete rounded fresh-residual launch and its operator connection while retaining host composition and external fidelity boundaries."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Discrete equations, numerical reference, residual target, implementation and external input representation unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "No primitive PTX semantics changes. Existing instruction/barrier rules are reused; finite certificates are kernel-checked and the single-pass checker is proved sufficient. Necessary source admission remains distinct from full PTX/hardware fidelity."
+    },
+    {
+      "id": "ptx-semantics",
+      "outcome": "unchanged",
+      "reason": "No instruction or memory semantics broadened. Byte-wise publication is a witness helper, not a replacement admission model; actual memory accesses remain aligned and allocated."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "92cfac9cdfcbecb91a8d792b4a44e0da5d7eef8d",
+      "method": "Sequential capped Lean checks, exact dependency audit and source guards; twelve saved emitted-PTX bindings; frontend tests; manual actual-step, barrier-release, recorded-byte source and allocation-certificate review; Stratic validation and exact snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 and 16 dependency pins; one heavy process at a time, one Lean thread, 6 GiB cgroup, swap disabled, CPU quota 150 percent. No GPU runs or paid model calls.",
+      "evidence": "All 14 new Lean modules check without warnings, adding 54 declarations. The exact audit passes 6460 dependency reports and 906 guarded sources with only standard Lean axioms; all 16 dependency pins pass. The original residual kernel instruction representation translates to Flow in both directions with fetched execution and return retained. Actual observation footprints derive both input loads and the single store, and initial-byte source compatibility follows from output separation. Complete rounded residual executions exist for arbitrary valid words; every completed admitted interleaving publishes the existing rounded subtraction and preserves all non-output bytes. Input arrays may overlap. Full rounded assembly and residual are composed with actual cell publication to prove correspondence with the represented TorchLean operator and preservation of the same right-hand side. All 70 frontend tests and twelve refreshed hash-verified PTX receipts pass. Legacy executable reuse is limited to verified unchanged import closures; current audit and rendering checks reran. README and emitted PTX unchanged. Finite host-loop composition, full PTX admission, external serialization, CUDA visibility and GPU conformance remain separate obligations. Stratic summaries, exact links, study guide and matching snapshots agree. The unchanged legacy interpreter suite was not rerun. Audit peak RSS 5086824 KiB",
+      "tests": [],
+      "id": "bcb2b1e0-6d6e-43ce-8e9b-d45b39a9665a",
+      "recordedAt": "2026-10-04T16:34:02.518Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T16:35:38.475Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-cell-existence.md",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "docs/foundations/poisson-rounded-launches.md",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-control-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-entry-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-initialize-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-restart-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-scalar-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-p-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "hardware/receipts/poisson-update-xrz-binding.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGridRoundedAssembly.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGridRoundedExists.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/CellGridRoundedResidual.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/FreshResidualAccess.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/FreshResidualAddress.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/FreshResidualArena.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/FreshResidualEntry.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/FreshResidualExists.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/FreshResidualParallel.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/FreshResidualRecorded.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/FreshResidualRounded.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/FreshResidualRoundedCorrect.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/KernelToFlow.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/KernelToFlowRun.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed exact instruction translation, residual observations, physical layout reuse, rounded execution witnesses, universal publication, composed operator and right-hand-side preservation, registrations, receipts and documentation. No desired read value or output is supplied."
+    }
+  ]
+}

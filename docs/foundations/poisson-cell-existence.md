@@ -97,8 +97,7 @@ restrict the existing universal result to serial GPU scheduling.
 
 ## What remains outside this result
 
-The remaining rounded launches and finite host PCG composition are further
-obligations. The accepted solver target is a fresh residual bound for the same
+Finite host PCG composition remains an obligation. The accepted solver target is a fresh residual bound for the same
 discrete equations. An exact residual certificate is already a separate layer;
 it does not by itself prove the PTX execution/host correspondence or convergence
 for every input. Necessary byte-source admission, complete PTX admission,

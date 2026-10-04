@@ -1,3 +1,17 @@
+import PoissonPTX.CellGridRoundedAssembly
+import PoissonPTX.CellGridRoundedExists
+import PoissonPTX.CellGridRoundedResidual
+import PoissonPTX.FreshResidualAccess
+import PoissonPTX.FreshResidualAddress
+import PoissonPTX.FreshResidualArena
+import PoissonPTX.FreshResidualEntry
+import PoissonPTX.FreshResidualExists
+import PoissonPTX.FreshResidualParallel
+import PoissonPTX.FreshResidualRecorded
+import PoissonPTX.FreshResidualRounded
+import PoissonPTX.FreshResidualRoundedCorrect
+import PoissonPTX.KernelToFlow
+import PoissonPTX.KernelToFlowRun
 import PoissonPTX.AffineUpdateRounded
 import PoissonPTX.AffineUpdateRoundedCorrect
 import PoissonPTX.AssemblyRoundedCorrect
@@ -7433,3 +7447,58 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.rounded_exists
 #print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.rounded_correct
 #print axioms PtxTorchLean.Poisson.PTX.UpdateXRZ.Arena.rounded_outside
+
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.rounded_assembly_operator
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.ResidualLayout.rounded_rhs_preserved
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.rounded_assembly_exists
+#print axioms PtxTorchLean.Poisson.PTX.CellGrid.rounded_residual_correspondence
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.AccessAt
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.access_step
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.accesses
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.no_index_step
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.no_indices
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.entry_linear
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.AddressReady
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.address_initial
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.address_step
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.context
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.start
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.program
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.slot
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.live
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.address
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.valid
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.owners
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.separate
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.parallel_access
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.indices_empty
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.entry
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.entry_guarded
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.entry_correct
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.local_exists
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.parallel_exists
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.value
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.separated
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.publication
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.local_value
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.parallel_value
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.publication_outside
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.BeforeStore
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.before_store_step
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.recorded_witness
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.rounded_exists
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.rounded_correct
+#print axioms PtxTorchLean.Poisson.PTX.FreshResidual.Arena.rounded_outside
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.instruction
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.state
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.project
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.project_state
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.eval_project
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.eval_lift
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.step_lift
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.run_lift
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.step_project
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.halted_run
+#print axioms PtxTorchLean.Poisson.PTX.Kernel.ToFlow.run_project
