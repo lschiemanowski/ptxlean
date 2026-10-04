@@ -139,7 +139,7 @@ values and zero diagonals, are permitted; numerical acceptance remains separate.
 The emitted entry is bound instruction for instruction across the saved layouts.
 These are necessary fragment admission constraints, not the complete PTX memory
 model. Joint padding scheduling, CUDA visibility, hardware conformance,
-initialization kernels, scalar decision kernels and full host PCG
+scalar decision kernels and full host PCG
 composition remain separate obligations.
 
 The important order is visible in the instruction counters:
@@ -196,7 +196,7 @@ The emitted restart entry is compared instruction for instruction across saved
 layouts. The necessary fragment source constraints do not establish the complete
 PTX memory model, and finite schedule existence does not establish GPU fairness.
 Joint padding scheduling, CUDA visibility and hardware conformance remain
-separate. Initialization, scalar decision kernels and host-loop composition
+separate. Scalar decision kernels and host-loop composition
 still need their corresponding results before claiming complete solver
 correspondence.
 
@@ -213,9 +213,47 @@ constructs one actual finite schedule and its sources. `ArrayArena` shares the
 physical array-layout facts across such kernels; `DividePair` preserves the
 actual quotient word rather than forcing every result to a chosen encoding.
 
+## Initializing the solver vectors
+
+Initialization reads each coordinate's load and boundary flag. It substitutes
+positive zero for the load at boundary coordinates, copies that same word to
+rhs and r, divides by the diagonal (substituting one on the boundary), and
+stores the same actual quotient word to z and p. A separate immediate-word
+store initializes x to positive zero. The predicate chosen from the boundary
+flag survives the intervening stores and diagonal load; no desired predicate
+outcome or numerical input is supplied to the proof.
+
+The complete 43-instruction fetched entry includes actual launch indexing,
+active and padding paths, word and four-byte loads, all five stores and return.
+Its bounded, aligned physical layout separates seven binary64 arrays and the
+boundary flags. In particular the early rhs/r stores cannot alter the later
+diagonal load. Actual access classification and physical ownership show that
+no output store can supply any input read. Word and four-byte source
+compatibility therefore force the initial input bytes. Every completed admitted
+active-coordinate interleaving publishes all five stated outputs and preserves
+every byte outside rhs, r, z, p and x. Independently, a finite joint execution
+with compatible sources exists for arbitrary input words. Zero diagonals and
+exceptional values do not prevent execution; numerical acceptance is separate.
+
+The exact emitted instruction list is bound across saved layouts, including
+both zero-word instructions and the boundary divisor. These results use necessary
+fragment admission constraints, not the complete PTX memory model. Joint padding
+scheduling, GPU fairness, CUDA visibility and hardware conformance remain
+separate. Scalar decision kernels and host-loop composition remain obligations
+for full solver correspondence.
+
+The boundary load is at instruction 9, the load-vector read at 13, the rhs/r
+stores at 19 and 23, diagonal read at 27, division at 29, z/p stores at 33 and
+37, zero-x store at 41 and return at 42. `InitializePrefix.prefix_trace` keeps
+the actual boundary predicate through the copied vectors and diagonal read.
+`InitializeCorrect.entry_correct` proves the single fetched entry;
+`InitializeParallel.Arena.parallel_correct` derives joint publication from
+actual sources, and `InitializeExists.Arena.parallel_exists` constructs a finite
+execution. `StoreZero` models the emitted immediate store explicitly.
+
 ## Remaining work
 
-The initialization update, scalar decision kernels and the host PCG loop still need
+The scalar decision kernels and the host PCG loop still need
 their instruction-level composition. The accepted solver target remains a fresh
 residual bound for the same discrete equations, rather than CPU-iterate bitwise
 identity or a convergence claim for every input.

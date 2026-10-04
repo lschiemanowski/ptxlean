@@ -680,6 +680,12 @@ COUNTS['PtxTorchLean.Poisson.PTX.RestartVectors.Arena'] = COUNTS.get('PtxTorchLe
 COUNTS['PtxTorchLean.Poisson.PTX.VectorCopy'] = COUNTS.get('PtxTorchLean.Poisson.PTX.VectorCopy', 0) + 8
 TARGETS.update(['PoissonPTX.ArrayArena', 'PoissonPTX.ArrayArenaSafety', 'PoissonPTX.DividePair', 'PoissonPTX.RestartVectors', 'PoissonPTX.RestartVectorsAccess', 'PoissonPTX.RestartVectorsAddress', 'PoissonPTX.RestartVectorsArena', 'PoissonPTX.RestartVectorsCorrect', 'PoissonPTX.RestartVectorsEntry', 'PoissonPTX.RestartVectorsExists', 'PoissonPTX.RestartVectorsInputs', 'PoissonPTX.RestartVectorsParallel', 'PoissonPTX.RestartVectorsRecorded', 'PoissonPTX.RestartVectorsState', 'PoissonPTX.RestartVectorsText', 'PoissonPTX.VectorCopy'])
 
+COUNTS['PtxTorchLean.Poisson.PTX.Initialize'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Initialize', 0) + 51
+COUNTS['PtxTorchLean.Poisson.PTX.Initialize.Arena'] = COUNTS.get('PtxTorchLean.Poisson.PTX.Initialize.Arena', 0) + 19
+COUNTS['PtxTorchLean.Poisson.PTX.StorePair'] = COUNTS.get('PtxTorchLean.Poisson.PTX.StorePair', 0) + 7
+COUNTS['PtxTorchLean.Poisson.PTX.StoreZero'] = COUNTS.get('PtxTorchLean.Poisson.PTX.StoreZero', 0) + 6
+TARGETS.update(['PoissonPTX.Initialize', 'PoissonPTX.InitializeAccess', 'PoissonPTX.InitializeAddress', 'PoissonPTX.InitializeArena', 'PoissonPTX.InitializeCorrect', 'PoissonPTX.InitializeEntry', 'PoissonPTX.InitializeExists', 'PoissonPTX.InitializeInputs', 'PoissonPTX.InitializeParallel', 'PoissonPTX.InitializePrefix', 'PoissonPTX.InitializeRecorded', 'PoissonPTX.InitializeState', 'PoissonPTX.InitializeText', 'PoissonPTX.InitializeValues', 'PoissonPTX.StorePair', 'PoissonPTX.StoreZero'])
+
 def main():
     if len(sys.argv) != 1:
         raise ValueError("Usage: integration/torchlean/check.sh (no arguments)")

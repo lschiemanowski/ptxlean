@@ -1,3 +1,19 @@
+import PoissonPTX.Initialize
+import PoissonPTX.InitializeAccess
+import PoissonPTX.InitializeAddress
+import PoissonPTX.InitializeArena
+import PoissonPTX.InitializeCorrect
+import PoissonPTX.InitializeEntry
+import PoissonPTX.InitializeExists
+import PoissonPTX.InitializeInputs
+import PoissonPTX.InitializeParallel
+import PoissonPTX.InitializePrefix
+import PoissonPTX.InitializeRecorded
+import PoissonPTX.InitializeState
+import PoissonPTX.InitializeText
+import PoissonPTX.InitializeValues
+import PoissonPTX.StorePair
+import PoissonPTX.StoreZero
 import PoissonPTX.ArrayArena
 import PoissonPTX.ArrayArenaSafety
 import PoissonPTX.DividePair
@@ -6503,3 +6519,87 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.VectorCopy.finish_global
 #print axioms PtxTorchLean.Poisson.PTX.VectorCopy.finish_frame
 #print axioms PtxTorchLean.Poisson.PTX.VectorCopy.finish_address
+
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.prefixCode
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.body
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.entry
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.maskLoaded
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.loadLoaded
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.masked
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.copied
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.diagonalLoaded
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.ready
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.divided
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.finish
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Valid
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.prefix_plain
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.body_segment
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.entry_length
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.AccessAt
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.access_step
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.accesses
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.index_step
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.index_accesses
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.entry_linear
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.AddressReady
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.address_initial
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.address_step
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Field
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.program
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.local_valid
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.local_separate
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.access_shape
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.parallel_access
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.parallel_index
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Separate
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.correct
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.entry_correct
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.entry_exists
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.inactive
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.inactive_exists
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.local_exists
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.parallel_exists
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.Inputs
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.inputs_initial
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.inputs_step
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.loadWord
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.quotient
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.separated
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.publication
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.local_correct
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.parallel_correct
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.publication_outside
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.masked_frame
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.copied_frame
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.ready_frame
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.ready_address
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.prefix_trace
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.Arena.recorded_witness
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.divided_address
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.divided_frame
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.state_result
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.body_exists
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.instruction
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.rendered
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.loadWord
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.masked_word
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.copied_global
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.ready_word
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.ready_divisor
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.quotient
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.ready_result
+#print axioms PtxTorchLean.Poisson.PTX.Initialize.finish_global
+#print axioms PtxTorchLean.Poisson.PTX.StorePair.code
+#print axioms PtxTorchLean.Poisson.PTX.StorePair.first
+#print axioms PtxTorchLean.Poisson.PTX.StorePair.finish
+#print axioms PtxTorchLean.Poisson.PTX.StorePair.executes
+#print axioms PtxTorchLean.Poisson.PTX.StorePair.block_eq
+#print axioms PtxTorchLean.Poisson.PTX.StorePair.finish_global
+#print axioms PtxTorchLean.Poisson.PTX.StorePair.finish_frame
+#print axioms PtxTorchLean.Poisson.PTX.StoreZero.code
+#print axioms PtxTorchLean.Poisson.PTX.StoreZero.finish
+#print axioms PtxTorchLean.Poisson.PTX.StoreZero.executes
+#print axioms PtxTorchLean.Poisson.PTX.StoreZero.block_eq
+#print axioms PtxTorchLean.Poisson.PTX.StoreZero.finish_global
+#print axioms PtxTorchLean.Poisson.PTX.StoreZero.finish_frame
