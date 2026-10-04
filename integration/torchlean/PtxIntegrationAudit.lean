@@ -1,3 +1,16 @@
+import PoissonPTX.DotBarriers
+import PoissonPTX.DotPublicationAddress
+import PoissonPTX.DotPublicationRegisters
+import PoissonPTX.DotPublicationSafety
+import PoissonPTX.DotPublicationSyntax
+import PoissonPTX.DotPublicationTrack
+import PoissonPTX.DotPublicationValue
+import PoissonPTX.DotReturns
+import PoissonPTX.NativeFlowBarrier
+import PoissonPTX.NativeFlowDecompose
+import PoissonPTX.NativeFlowHalting
+import PoissonPTX.NativeFlowHistory
+import PoissonPTX.NativeFlowPrefixTrack
 import PoissonPTX.DotAddress
 import PoissonPTX.DotAddressSyntax
 import PoissonPTX.DotAddressTail
@@ -5843,3 +5856,45 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.no_prefix_sync
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.sync_prefix_unchanged
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.sync_monotone
+
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.barrierSite
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_barriers
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_barrier_targets
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.barrier_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.barrier_stops
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.passed_barrier
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.PublicationAddress
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_address_early
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_address_late
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_address_flow
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_address_sync
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_addresses
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_registers
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_location
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_memory_bound
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.checked_tree_entry
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.outside_publication_targets
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_prefix
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_keeps
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.no_early_sync
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.PublicationLink
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_track_step
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_input
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.publication_contents
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.continues_through_tree
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.returned_after_tree
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Dot.returned_barriers
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.StopsAt
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.step_crosses_barrier
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.crossed_barrier
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.access_decompose
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.halting_eval
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.HaltedAfter
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.step_halted_after
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.runs_halted_after
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.step_history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.runs_history
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.completed_arrivals
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.prefix_track
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeFlow.prefix_step_exact

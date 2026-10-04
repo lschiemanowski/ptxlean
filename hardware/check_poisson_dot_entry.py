@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Bind complete Poisson dot entries to the 104-position concurrent program.
 
-The current theorem recovers each returned lane's rounded input partial sum
-from whole-history source admission and proves output-address ownership. The
-concurrent tree value join, final result publication and whole-entry existence
+The current theorems recover each returned lane's rounded input partial sum
+from whole-history source admission, identify its initial shared publication,
+and prove output-address ownership and actual completion of all nine barriers.
+The concurrent tree value join, final result publication and whole-entry existence
 remain separate obligations. This check does not establish GPU conformance.
 """
 import argparse
@@ -99,7 +100,7 @@ def check(run, output):
         return {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     before = hashes()
     names = ['PtxTorchLean.Poisson.PTX.Concurrent.Dot.'+name for name in
-             ('completed_input_correct', 'stores_output', 'input_observations', 'input_region', 'length')]
+             ('completed_input_correct', 'publication_contents', 'publication_memory_bound', 'returned_barriers', 'stores_output', 'input_observations', 'input_region', 'length')]
     layouts = [parameters(json.loads(read_artifact(run, report, case['directory']+'/layout.json')))
                for case in report['cases']]
     expressions = []
@@ -111,7 +112,7 @@ def check(run, output):
     lean = ['lake', '--no-cache', 'env', 'lean', '-j1', '-M5120']
     with tempfile.TemporaryDirectory(prefix='poisson-dot-entry-') as tmp:
         path = Path(tmp)/'Render.lean'
-        path.write_text('import PoissonPTX.DotProgramText\nopen PtxTorchLean.Poisson.PTX\n'+
+        path.write_text('import PoissonPTX.DotProgramText\nimport PoissonPTX.DotPublicationSafety\nimport PoissonPTX.DotReturns\nopen PtxTorchLean.Poisson.PTX\n'+
             ''.join('#print axioms '+name+'\n' for name in names)+
             'def main : IO Unit := IO.println (Lean.toJson (['+', '.join(expressions)+
             '] : List (List (String × List String)))).compress\n')

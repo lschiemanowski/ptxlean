@@ -380,3 +380,21 @@ the recovered input states to the shared-tree execution, transport its ordered
 sources through that projection, justify the final shared read and output
 value, and construct a complete admitted execution. The full PCG launch sequence
 and solver correspondence are not yet established.
+
+The first shared publication is connected to that same thread's admitted
+input traversal. A stronger projection tracks the recovered registers until
+the actual store: only the two temporary address registers may change. The
+shared base, lane number and accumulator therefore come from the executed
+setup and input calculation. The two address instructions produce the lane's
+own eight-byte slot. With a lane number below 256 and an aligned, nonwrapping
+2048-byte shared allocation, the store is within bounds. Its decoded word is
+that lane's ordered rounded partial sum; neither the word nor a shared-memory
+snapshot is supplied as a premise.
+
+Every returned thread has crossed all nine tree barriers, including a lane
+taking the conditional return after the final barrier. Each crossing entails
+an actual completion event with earlier arrivals from every thread at the
+same resource, instruction site and barrier round. This follows from fetched
+branch targets, return placement and the barrier state transitions. These
+facts provide synchronization evidence for later reads; they do not by
+themselves identify those reads' byte sources or numerical values.

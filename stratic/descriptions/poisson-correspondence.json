@@ -29,7 +29,9 @@
     "Prove every completed admitted shared-tree run computes the prescribed rounded reduction; construct a complete admitted execution for arbitrary initial words and bound every access within its 2048-byte allocation.",
     "Relate separately scheduled unsigned lane comparisons and predicated branches to the shared-tree guard, deriving outcomes from preserved registers and retaining the emitted instruction order.",
     "Derive the strided input accumulation from actual global loads, separate rounded multiply/add operations and nonwrapping 32-bit index progress.",
-    "Recover every returned lane’s rounded input partial sum from the complete concurrent dot program and its actual byte sources; derive input footprints and output-address ownership, while tree composition and final output value remain unfinished."
+    "Recover every returned lane’s rounded input partial sum from the complete concurrent dot program and its actual byte sources; derive input footprints and output-address ownership, while tree composition and final output value remain unfinished.",
+    "Derive each actual initial shared store’s rounded partial sum and lane-specific address from the same admitted input execution, with an explicit shared-allocation bound.",
+    "Prove that every returned lane has passed all nine native tree barriers and that each completion has earlier real arrivals from every participant."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3894,7 +3896,7 @@
       "to": {
         "path": "integration/torchlean/PoissonPTX/NativeFlowPrefix.lean",
         "passage": {
-          "quote": "theorem prefix_step (region : Region program pre)\n    (actual : Step cfg ctx program selected s out) (aligned : Aligned s.core)\n    (related : Related pre.length (lane s owner) shadow) :\n    ∃ next words indices, Flow.Observed.Runs (ctx owner) pre shadow words indices next ∧\n      Related pre.length (lane out.state owner) next ∧\n      (∀ a∈words, Event.data owner a∈out.events) ∧ (∀ a∈indices, (owner,a)∈out.indices) := by\n  cases actual with\n  | @flow instruction _ next access index running fresh fetch execution =>\n    by_cases sameOwner : owner=selected\n    · subst owner\n      by_cases before : (s.core.lanes selected).pc<pre.length\n      · have same : lane s selected=shadow := by simpa only [Related,lane,before,↓reduceIte] using related\n        have localFetch : pre[(s.core.lanes selected).pc]?=some instruction := by\n          rw [region.fetch _ before] at fetch\n          obtain ⟨i,found,equal⟩ := Option.map_eq_some_iff.mp fetch\n          cases equal\n          exact found\n        have one : Flow.Observed.Step (ctx selected) pre shadow next access index := by\n          rw [← same]\n          exact ⟨running,instruction,localFetch,execution⟩\n        have upper := eval_upper execution before (region.inside _ _ before localFetch)\n        refine ⟨next,access.toList,index.toList,?_,?_,?_,?_⟩\n        · simpa using Flow.Observed.Runs.cons one Flow.Observed.Runs.nil\n        · rw [lane_update_self]; exact related_initial next upper\n        · intro a member; exact List.mem_map.mpr ⟨a,member,rfl⟩\n        · intro a member; exact List.mem_map.mpr ⟨a,member,rfl⟩\n      · have past : pre.length≤(s.core.lanes selected).pc := by omega\n        have lower := eval_lower execution past (region.outside _ _ past fetch)\n        refine ⟨shadow,[],[],.nil,?_,by simp,by simp⟩\n        rw [lane_update_self]\n        simpa only [Related,lane,before,show ¬next.core.pc<pre.length by omega,↓reduceIte] using related\n    · exact ⟨shadow,[],[],.nil,by simpa only [lane_update_other s selected owner sameOwner next] using related,\n        by simp,by simp⟩\n  | @sync _ resource running fresh fetch =>\n    refine ⟨shadow,[],[],.nil,?_,by simp,by simp⟩\n    by_cases before : (s.core.lanes owner).pc<pre.length\n    · rw [sync_prefix_unchanged region aligned before fetch]\n      exact related\n    · have increase := sync_monotone s cfg selected owner resource\n      have after : ¬((synchronize cfg s.core selected resource).state.lanes owner).pc<pre.length := by omega\n      simpa only [Related,lane,before,after,↓reduceIte] using related"
+          "quote": "theorem prefix_step_exact (region : Region program pre)\n    (actual : Step cfg ctx program selected s out) (aligned : Aligned s.core)\n    (related : Related pre.length (lane s owner) shadow) :\n    ∃ next words indices, Flow.Observed.Runs (ctx owner) pre shadow words indices next ∧\n      Related pre.length (lane out.state owner) next ∧\n      (∀ a∈words, Event.data owner a∈out.events) ∧ (∀ a∈indices, (owner,a)∈out.indices) ∧\n      next=(if owner=selected ∧ (s.core.lanes owner).pc<pre.length then lane out.state owner else shadow) := by\n  cases actual with\n  | @flow instruction _ next access index running fresh fetch execution =>\n    by_cases sameOwner : owner=selected\n    · subst owner\n      by_cases before : (s.core.lanes selected).pc<pre.length\n      · have same : lane s selected=shadow := by simpa only [Related,lane,before,↓reduceIte] using related\n        have localFetch : pre[(s.core.lanes selected).pc]?=some instruction := by\n          rw [region.fetch _ before] at fetch\n          obtain ⟨i,found,equal⟩ := Option.map_eq_some_iff.mp fetch\n          cases equal\n          exact found\n        have one : Flow.Observed.Step (ctx selected) pre shadow next access index := by\n          rw [← same]\n          exact ⟨running,instruction,localFetch,execution⟩\n        have upper := eval_upper execution before (region.inside _ _ before localFetch)\n        refine ⟨next,access.toList,index.toList,?_,?_,?_,?_,?_⟩\n        · simpa using Flow.Observed.Runs.cons one Flow.Observed.Runs.nil\n        · rw [lane_update_self]; exact related_initial next upper\n        · intro a member; exact List.mem_map.mpr ⟨a,member,rfl⟩\n        · intro a member; exact List.mem_map.mpr ⟨a,member,rfl⟩\n        · simp [before,lane_update_self]\n      · have past : pre.length≤(s.core.lanes selected).pc := by omega\n        have lower := eval_lower execution past (region.outside _ _ past fetch)\n        refine ⟨shadow,[],[],.nil,?_,by simp,by simp,by simp [before]⟩\n        rw [lane_update_self]\n        simpa only [Related,lane,before,show ¬next.core.pc<pre.length by omega,↓reduceIte] using related\n    · exact ⟨shadow,[],[],.nil,by simpa only [lane_update_other s selected owner sameOwner next] using related,\n        by simp,by simp,by simp [sameOwner]⟩\n  | @sync _ resource running fresh fetch =>\n    have outside : ¬(s.core.lanes selected).pc<pre.length := by\n      intro inside; exact no_prefix_sync region inside fetch\n    refine ⟨shadow,[],[],.nil,?_,by simp,by simp,?_⟩\n    swap\n    · by_cases same : owner=selected <;> simp [same,outside]\n    by_cases before : (s.core.lanes owner).pc<pre.length\n    · rw [sync_prefix_unchanged region aligned before fetch]\n      exact related\n    · have increase := sync_monotone s cfg selected owner resource\n      have after : ¬((synchronize cfg s.core selected resource).state.lanes owner).pc<pre.length := by omega\n      simpa only [Related,lane,before,after,↓reduceIte] using related"
         }
       }
     },
@@ -3919,6 +3921,162 @@
         "path": "integration/torchlean/PoissonPTX/NativeFlowRegion.lean",
         "passage": {
           "quote": "def targets (bound : Nat → Prop) : Flow.Instr → Prop\n  | .branch _ _ target | .jump target => bound target\n  | _ => True"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every returned thread has crossed all nine tree barriers, including a lane\ntaking the conditional return after the final barrier. Each crossing entails\nan actual completion event with earlier arrivals from every thread at the\nsame resource, instruction site and barrier round. This follows from fetched\nbranch targets, return placement and the barrier state transitions. These\nfacts provide synchronization evidence for later reads; they do not by\nthemselves identify those reads' byte sources or numerical values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotBarriers.lean",
+        "passage": {
+          "quote": "def barrierSite (phase : Fin 9) : Nat := 23+9*phase.val"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first shared publication is connected to that same thread's admitted\ninput traversal. A stronger projection tracks the recovered registers until\nthe actual store: only the two temporary address registers may change. The\nshared base, lane number and accumulator therefore come from the executed\nsetup and input calculation. The two address instructions produce the lane's\nown eight-byte slot. With a lane number below 256 and an aligned, nonwrapping\n2048-byte shared allocation, the store is within bounds. Its decoded word is\nthat lane's ordered rounded partial sum; neither the word nor a shared-memory\nsnapshot is supplied as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotPublicationAddress.lean",
+        "passage": {
+          "quote": "def PublicationAddress (s : Flow.State) : Prop :=\n  (s.core.pc=21 → s.core.regs 1=wide s.core 14) ∧\n  (s.core.pc=22 → s.core.regs 2=s.core.regs 3+wide s.core 14)"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first shared publication is connected to that same thread's admitted\ninput traversal. A stronger projection tracks the recovered registers until\nthe actual store: only the two temporary address registers may change. The\nshared base, lane number and accumulator therefore come from the executed\nsetup and input calculation. The two address instructions produce the lane's\nown eight-byte slot. With a lane number below 256 and an aligned, nonwrapping\n2048-byte shared allocation, the store is within bounds. Its decoded word is\nthat lane's ordered rounded partial sum; neither the word nor a shared-memory\nsnapshot is supplied as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotPublicationRegisters.lean",
+        "passage": {
+          "quote": "theorem publication_registers\n    (whole : NativeFlow.Runs cfg ctx (program count left right output scratch) start events allIndices final)\n    (aligned : Aligned start.core) (entry : ∀ thread, (start.core.lanes thread).pc=0)\n    (live : start.halted owner=false) (arena : ∀ thread, (ctx thread).arena=base)\n    (sameInitial : (start.core.lanes owner).global=initial .global)\n    (compatible : Visibility.Compatible initial events source)\n    (bounded : count<2^30) (apart : OutputApart count left right output)\n    (arrays : DotInput.Arrays (DotInput.setup (ctx owner) scratch (NativeFlow.lane start owner)).core count left right)\n    (outputFits : base.toNat+output.toNat+8≤2^64)\n    (earlierRun : NativeFlow.Runs cfg ctx (program count left right output scratch) start earlier earlierIndices before)\n    (included : ∀ e∈earlier, e∈events) (atStore : (before.core.lanes owner).pc=22) :\n    (before.core.lanes owner).regs 3=scratch ∧\n    (before.core.lanes owner).regs 14=(ctx owner).lane.setWidth 64 ∧\n    decode ((before.core.lanes owner).regs 8)=\n      DotInput.partialSum (ctx owner) scratch (NativeFlow.lane start owner) count left right := by\n  obtain ⟨ready,words,indices,input,done,saved,wordMem⟩ :=\n    publication_input earlierRun aligned (entry owner) atStore\n  have room := arrays_room arrays\n  rw [arena owner] at room\n  have scalar := admitted_input whole aligned entry arena sameInitial compatible input\n    (fun a member => included _ (wordMem a member)) bounded apart room outputFits\n  obtain ⟨result,stable⟩ := DotInput.input_correct scalar (entry owner) live done bounded arrays\n  obtain ⟨_,_,_,_,_,_,_,baseReg,laneReg⟩ := stable\n  refine ⟨?_,?_,?_⟩\n  · rw [saved 3 (by decide) (by decide),baseReg]\n    simp [DotInput.setup,assign,advance]\n  · rw [saved 14 (by decide) (by decide),laneReg]\n    simp [DotInput.setup,assign,advance]\n  · rw [saved 8 (by decide) (by decide)]\n    exact result"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first shared publication is connected to that same thread's admitted\ninput traversal. A stronger projection tracks the recovered registers until\nthe actual store: only the two temporary address registers may change. The\nshared base, lane number and accumulator therefore come from the executed\nsetup and input calculation. The two address instructions produce the lane's\nown eight-byte slot. With a lane number below 256 and an aligned, nonwrapping\n2048-byte shared allocation, the store is within bounds. Its decoded word is\nthat lane's ordered rounded partial sum; neither the word nor a shared-memory\nsnapshot is supplied as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotPublicationSafety.lean",
+        "passage": {
+          "quote": "theorem publication_memory_bound {access : Access} {scratch : Word} {lane : BitVec 32}\n    (location : access.data.address=(scratch+BitVec.ofNat 64 (lane.toNat*8)).toNat)\n    (within : lane.toNat<256) (aligned : scratch.toNat%8=0)\n    (noWrap : scratch.toNat+2048≤2^64) : Valid64 scratch.toNat 2048 access.data.address := by\n  rw [location,publication_location scratch lane within noWrap]\n  exact ⟨by omega,by simp [Nat.add_mod,aligned],by omega,noWrap⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first shared publication is connected to that same thread's admitted\ninput traversal. A stronger projection tracks the recovered registers until\nthe actual store: only the two temporary address registers may change. The\nshared base, lane number and accumulator therefore come from the executed\nsetup and input calculation. The two address instructions produce the lane's\nown eight-byte slot. With a lane number below 256 and an aligned, nonwrapping\n2048-byte shared allocation, the store is within bounds. Its decoded word is\nthat lane's ordered rounded partial sum; neither the word nor a shared-memory\nsnapshot is supplied as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotPublicationSyntax.lean",
+        "passage": {
+          "quote": "theorem checked_tree_entry : ∀ slot : Fin 76,\n    (match Reduction.Native.code[slot.val]? with\n    | some (.branch target) => decide (3≤target)\n    | _ => true)=true := by decide +kernel"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first shared publication is connected to that same thread's admitted\ninput traversal. A stronger projection tracks the recovered registers until\nthe actual store: only the two temporary address registers may change. The\nshared base, lane number and accumulator therefore come from the executed\nsetup and input calculation. The two address instructions produce the lane's\nown eight-byte slot. With a lane number below 256 and an aligned, nonwrapping\n2048-byte shared allocation, the store is within bounds. Its decoded word is\nthat lane's ordered rounded partial sum; neither the word nor a shared-memory\nsnapshot is supplied as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotPublicationTrack.lean",
+        "passage": {
+          "quote": "def PublicationLink (owner : Fin n) (s : NativeFlow.State n) (shadow : Flow.State) : Prop :=\n  20≤(NativeFlow.lane s owner).core.pc → (NativeFlow.lane s owner).core.pc≤22 →\n    ∀ r, r≠1 → r≠2 → (NativeFlow.lane s owner).core.regs r=shadow.core.regs r"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first shared publication is connected to that same thread's admitted\ninput traversal. A stronger projection tracks the recovered registers until\nthe actual store: only the two temporary address registers may change. The\nshared base, lane number and accumulator therefore come from the executed\nsetup and input calculation. The two address instructions produce the lane's\nown eight-byte slot. With a lane number below 256 and an aligned, nonwrapping\n2048-byte shared allocation, the store is within bounds. Its decoded word is\nthat lane's ordered rounded partial sum; neither the word nor a shared-memory\nsnapshot is supplied as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotPublicationValue.lean",
+        "passage": {
+          "quote": "theorem publication_contents\n    (whole : NativeFlow.Runs cfg ctx (program count left right output scratch) start events allIndices final)\n    (aligned : Aligned start.core) (entry : ∀ thread, (start.core.lanes thread).pc=0)\n    (live : start.halted owner=false) (arena : ∀ thread, (ctx thread).arena=base)\n    (sameInitial : (start.core.lanes owner).global=initial .global)\n    (compatible : Visibility.Compatible initial events source)\n    (bounded : count<2^30) (apart : OutputApart count left right output)\n    (arrays : DotInput.Arrays (DotInput.setup (ctx owner) scratch (NativeFlow.lane start owner)).core count left right)\n    (outputFits : base.toNat+output.toNat+8≤2^64)\n    (member : Event.data owner access∈events) (store : access.data.store=true)\n    (initialStore : access.data.pc=22) :\n    access.space=.shared ∧\n    access.data.address=(scratch+BitVec.ofNat 64 ((ctx owner).lane.toNat*8)).toNat ∧\n    decode access.data.value=\n      DotInput.partialSum (ctx owner) scratch (NativeFlow.lane start owner) count left right := by\n  obtain ⟨before,earlier,earlierIndices,selected,out,suffix,earlierRun,one,observed,history⟩ :=\n    NativeFlow.access_decompose whole member\n  obtain ⟨same,i,next,index,fetch,effect⟩ := NativeFlow.step_access_origin one observed\n  subst selected\n  obtain ⟨sp,addr,src,opcode,shape⟩ := Flow.Observed.store_shape effect store\n  have atStore : (before.core.lanes owner).pc=22 := by\n    simpa only [shape,NativeFlow.lane] using initialStore\n  rw [atStore,publication_fetch] at fetch\n  have instruction : i=.data (.data (.store64 .shared (.offset 2 0) (.reg 8))) :=\n    (NativeFlow.Instr.flow.inj (Option.some.inj fetch)).symm\n  rw [instruction] at opcode\n  cases opcode\n  have included : ∀ e∈earlier, e∈events := by\n    intro e belongs\n    rw [history]\n    exact List.mem_append_left _ (List.mem_append_left _ belongs)\n  have registers := publication_registers whole aligned entry live arena sameInitial compatible\n    bounded apart arrays outputFits earlierRun included atStore\n  have value : access.data.value=(before.core.lanes owner).regs 8 :=\n    congrArg (fun a : Access => a.data.value) shape\n  have prepared := (publication_addresses earlierRun aligned entry owner).2 atStore\n  have observedAddress : access.data.address=((before.core.lanes owner).regs 2).toNat := by\n    have located := congrArg (fun a : Access => a.data.address) shape\n    simpa [Operand.eval,NativeFlow.lane] using located\n  have wideLane : wide (before.core.lanes owner) 14=BitVec.ofNat 64 ((ctx owner).lane.toNat*8) := by\n    simp [wide,registers.2.1,Nat.mod_eq_of_lt (ctx owner).lane.isLt]\n  refine ⟨congrArg Access.space shape,?_,by rw [value]; exact registers.2.2⟩\n  simp only [NativeFlow.lane] at prepared\n  rw [observedAddress,prepared,registers.1,wideLane]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every returned thread has crossed all nine tree barriers, including a lane\ntaking the conditional return after the final barrier. Each crossing entails\nan actual completion event with earlier arrivals from every thread at the\nsame resource, instruction site and barrier round. This follows from fetched\nbranch targets, return placement and the barrier state transitions. These\nfacts provide synchronization evidence for later reads; they do not by\nthemselves identify those reads' byte sources or numerical values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotReturns.lean",
+        "passage": {
+          "quote": "theorem returned_barriers\n    (run : NativeFlow.Runs cfg ctx (program count left right output scratch) start events indices final)\n    (reset : start.core.barrier=Ptx.Barrier.reset generation)\n    (entry : (start.core.lanes owner).pc=0) (live : ∀ thread, start.halted thread=false)\n    (returned : final.halted owner=true) :\n    ∀ phase : Fin 9, ∃ (c : Nat) (key : Ptx.Barrier.Key), events[c]?=some (.barrier (.completion key)) ∧ key.site=barrierSite phase ∧\n      ∀ thread, ∃ a : Nat, a<c ∧ events[a]?=some (.barrier (.arrival key thread)) := by\n  intro phase\n  have done := returned_after_tree run live returned\n  apply passed_barrier run reset entry phase\n  have := phase.isLt\n  unfold barrierSite\n  omega"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every returned thread has crossed all nine tree barriers, including a lane\ntaking the conditional return after the final barrier. Each crossing entails\nan actual completion event with earlier arrivals from every thread at the\nsame resource, instruction site and barrier round. This follows from fetched\nbranch targets, return placement and the barrier state transitions. These\nfacts provide synchronization evidence for later reads; they do not by\nthemselves identify those reads' byte sources or numerical values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowBarrier.lean",
+        "passage": {
+          "quote": "theorem crossed_barrier\n    (run : Runs cfg ctx program start events indices final) (aligned : Aligned start.core)\n    (barrier : program[boundary]?=some (.sync 0)) (stops : StopsAt program boundary)\n    (before : (start.core.lanes owner).pc≤boundary) (after : boundary<(final.core.lanes owner).pc) :\n    ∃ key, Event.barrier (.completion key)∈events ∧ key.site=boundary := by\n  induction run with\n  | nil => omega\n  | @cons selected s out restWords restIndices final one rest ih =>\n    by_cases passed : boundary<(out.state.core.lanes owner).pc\n    · obtain ⟨key,found,site⟩ := step_crosses_barrier one aligned barrier stops before passed\n      exact ⟨key,List.mem_append_left _ found,site⟩\n    · obtain ⟨key,found,site⟩ := ih (step_aligned one aligned) (by omega) after\n      exact ⟨key,List.mem_append_right _ found,site⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first shared publication is connected to that same thread's admitted\ninput traversal. A stronger projection tracks the recovered registers until\nthe actual store: only the two temporary address registers may change. The\nshared base, lane number and accumulator therefore come from the executed\nsetup and input calculation. The two address instructions produce the lane's\nown eight-byte slot. With a lane number below 256 and an aligned, nonwrapping\n2048-byte shared allocation, the store is within bounds. Its decoded word is\nthat lane's ordered rounded partial sum; neither the word nor a shared-memory\nsnapshot is supplied as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowDecompose.lean",
+        "passage": {
+          "quote": "theorem access_decompose (run : Runs cfg ctx program start events indices final)\n    (member : Event.data owner access∈events) :\n    ∃ before earlier earlierIndices selected out suffix,\n      Runs cfg ctx program start earlier earlierIndices before ∧\n      Step cfg ctx program selected before out ∧ Event.data owner access∈out.events ∧\n      events=earlier++out.events++suffix := by\n  induction run with\n  | nil => simp at member\n  | @cons selected s out rest indices final step tail ih =>\n    rcases List.mem_append.mp member with now | later\n    · exact ⟨s,[],[],selected,out,rest,.nil,step,now,rfl⟩\n    · obtain ⟨before,earlier,earlierIndices,thread,next,suffix,earlierRun,one,found,same⟩ := ih later\n      exact ⟨before,out.events++earlier,out.indices++earlierIndices,thread,next,suffix,\n        .cons step earlierRun,one,found,by simp [same,List.append_assoc]⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every returned thread has crossed all nine tree barriers, including a lane\ntaking the conditional return after the final barrier. Each crossing entails\nan actual completion event with earlier arrivals from every thread at the\nsame resource, instruction site and barrier round. This follows from fetched\nbranch targets, return placement and the barrier state transitions. These\nfacts provide synchronization evidence for later reads; they do not by\nthemselves identify those reads' byte sources or numerical values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowHalting.lean",
+        "passage": {
+          "quote": "theorem halting_eval (actual : Flow.Observed.Eval ctx i s t access index)\n    (running : s.halted=false) (returned : t.halted=true) :\n    t.core.pc=s.core.pc+1 ∧ ¬continues i := by\n  cases actual with\n  | data => simp_all\n  | simple =>\n    cases i <;> simp_all [continues,Flow.simple,Flow.next,Flow.goto,Flow.halt,assign,advance]\n    all_goals split at returned <;> simp_all"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "Every returned thread has crossed all nine tree barriers, including a lane\ntaking the conditional return after the final barrier. Each crossing entails\nan actual completion event with earlier arrivals from every thread at the\nsame resource, instruction site and barrier round. This follows from fetched\nbranch targets, return placement and the barrier state transitions. These\nfacts provide synchronization evidence for later reads; they do not by\nthemselves identify those reads' byte sources or numerical values."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowHistory.lean",
+        "passage": {
+          "quote": "theorem completed_arrivals (actual : Runs cfg ctx program s events indices t)\n    (reset : s.core.barrier=Ptx.Barrier.reset generation) : History.CompleteOrigins events := by\n  have aligned : Aligned s.core := by intro thread waiting; simp [reset,Ptx.Barrier.reset] at waiting\n  have origin : History.WaitingOrigin cfg s.core [] := by intro thread waiting; simp [reset,Ptx.Barrier.reset] at waiting\n  have complete : History.CompleteOrigins ([] : List (Event n)) := by intro c key found; simp at found\n  simpa using (runs_history actual aligned origin complete).2"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The first shared publication is connected to that same thread's admitted\ninput traversal. A stronger projection tracks the recovered registers until\nthe actual store: only the two temporary address registers may change. The\nshared base, lane number and accumulator therefore come from the executed\nsetup and input calculation. The two address instructions produce the lane's\nown eight-byte slot. With a lane number below 256 and an aligned, nonwrapping\n2048-byte shared allocation, the store is within bounds. Its decoded word is\nthat lane's ordered rounded partial sum; neither the word nor a shared-memory\nsnapshot is supplied as a premise."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/NativeFlowPrefixTrack.lean",
+        "passage": {
+          "quote": "theorem prefix_track {P : State n → Flow.State → Prop}\n    (region : Region program pre)\n    (actual : Runs cfg ctx program s events indices t) (aligned : Aligned s.core)\n    (related : Related pre.length (lane s owner) shadow) (initial : P s shadow)\n    (preserves : ∀ selected s out shadow, Step cfg ctx program selected s out →\n      Aligned s.core → Related pre.length (lane s owner) shadow → P s shadow →\n      P out.state (if owner=selected ∧ (s.core.lanes owner).pc<pre.length\n        then lane out.state owner else shadow)) :\n    ∃ next words localIndices,\n      Flow.Observed.Runs (ctx owner) pre shadow words localIndices next ∧\n      Related pre.length (lane t owner) next ∧ P t next ∧\n      (∀ a∈words, Event.data owner a∈events) ∧ (∀ a∈localIndices, (owner,a)∈indices) := by\n  induction actual generalizing shadow with\n  | nil => exact ⟨shadow,[],[],.nil,related,initial,by simp,by simp⟩\n  | @cons selected before out restWords restIndices final one rest ih =>\n    obtain ⟨middle,first,firstIndices,run,link,words,reads,equal⟩ :=\n      prefix_step_exact region one aligned related\n    have nextP : P out.state middle := by rw [equal]; exact preserves _ _ _ _ one aligned related initial\n    obtain ⟨final,later,laterIndices,tail,finalLink,finalP,laterWords,laterReads⟩ :=\n      ih (step_aligned one aligned) link nextP\n    refine ⟨final,first++later,firstIndices++laterIndices,Flow.Observed.append run tail,\n      finalLink,finalP,?_,?_⟩\n    · intro a member\n      rcases List.mem_append.mp member with early | late\n      · exact List.mem_append_left _ (words a early)\n      · exact List.mem_append_right _ (laterWords a late)\n    · intro a member\n      rcases List.mem_append.mp member with early | late\n      · exact List.mem_append_left _ (reads a early)\n      · exact List.mem_append_right _ (laterReads a late)"
         }
       }
     }

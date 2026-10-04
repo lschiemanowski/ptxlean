@@ -263,6 +263,53 @@ checks enforce the single 256-thread block, 2048 shared bytes, aligned array
 fields, bounded count and disjoint output word. This is source binding, not a
 claim that NVIDIA hardware implements the modeled instructions.
 
+## From the input accumulator to shared publication
+
+The first shared publication is connected to that same thread's admitted
+input traversal. A stronger projection tracks the recovered registers until
+the actual store: only the two temporary address registers may change. The
+shared base, lane number and accumulator therefore come from the executed
+setup and input calculation. The two address instructions produce the lane's
+own eight-byte slot. With a lane number below 256 and an aligned, nonwrapping
+2048-byte shared allocation, the store is within bounds. Its decoded word is
+that lane's ordered rounded partial sum; neither the word nor a shared-memory
+snapshot is supplied as a premise.
+
+Suppose lane seven finishes its input loop. The proof retains that exact
+prefix state while the thread computes its shared address in the two temporary
+registers. Other threads may execute throughout. At instruction 22, the actual
+store operand is still the saved accumulator, and its address is the shared
+base plus 7 × 8 bytes. This avoids substituting an unrelated local execution
+that happens to have the right numerical answer.
+
+`NativeFlow.prefix_step_exact` and `prefix_track` keep this connection explicit.
+`DotPublicationRegisters` recovers the base, lane and accumulator from the same
+source-admitted trace. `DotPublicationAddress` checks the two address operations;
+`DotPublicationValue.publication_contents` combines the actual store address and
+decoded word. `DotPublicationSafety` converts the modular address into the
+nonwrapping lane slot and proves its allocation bound.
+
+## Returns and actual barrier completions
+
+Every returned thread has crossed all nine tree barriers, including a lane
+taking the conditional return after the final barrier. Each crossing entails
+an actual completion event with earlier arrivals from every thread at the
+same resource, instruction site and barrier round. This follows from fetched
+branch targets, return placement and the barrier state transitions. These
+facts provide synchronization evidence for later reads; they do not by
+themselves identify those reads' byte sources or numerical values.
+
+`NativeFlowHistory` reuses the proved barrier-state history rules, including
+all participants' arrival records. `NativeFlowBarrier` shows that a protected
+barrier instruction cannot be crossed by an ordinary step or branch.
+`DotBarriers` checks all nine sites and their incoming branch targets. Finally,
+`DotReturns.returned_barriers` connects this to the real halt flag: it covers
+both the conditional nonzero-lane return and lane zero's final return.
+
+The next numerical obligation is still to justify the tree reads and updates
+in this complete history. Having the right initial stores and real barriers
+supplies essential evidence, but does not replace that source-selection proof.
+
 ## Remaining boundaries
 
 The complete program and its absolute branch targets are compared with emitted
