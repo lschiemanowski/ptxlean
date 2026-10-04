@@ -25,7 +25,8 @@
     "Prove and bind the local rounded tree update while keeping full parallel reduction and solver correspondence explicit remaining work.",
     "Connect shrinking reduction ownership to source selection and a completed two-stage example without claiming the full emitted reduction.",
     "Derive shared-tree visibility for all 256 lanes from executed control and addresses; keep the full emitted reduction and solver correspondence explicit.",
-    "Prove shared-tree numerical correctness and construct complete admitted executions for arbitrary initial words, with memory bounds; the full emitted dot-product entry remains separate."
+    "Prove shared-tree numerical correctness and construct complete admitted executions for arbitrary initial words, with memory bounds; the full emitted dot-product entry remains separate.",
+    "Prove native two-instruction tree guards and complete per-lane strided input execution; retain their joint concurrent admission and output tail as explicit remaining work."
   ],
   "realization": "implemented",
   "links": [
@@ -158,6 +159,30 @@
         "path": "integration/torchlean/PoissonPTX/CellAssemblyReference.lean",
         "passage": {
           "quote": "theorem cell_assembly_reference {o : Operator} {values : Array Float}\n    {words : List (Concurrent.Event o.mesh.points.size)}\n    {indices : List (Fin o.mesh.points.size × IndexSources.Access)}\n    {final : Fin o.mesh.points.size → Flow.State}\n    (family : CellWhole.Family o values) (shape : OperatorMesh o)\n    (same : o.q.size=o.nodes.size)\n    (order : List (Fin o.mesh.cells.size)) (complete : ∀ i, i∈order)\n    (a : Assembly.Arena o.mesh.points.size)\n    (base : a.base=family.base) (element : a.element=family.output)\n    (offsetsBefore : a.offsets.toNat+(o.mesh.points.size+1)*4≤family.output.toNat)\n    (entriesBefore : a.entries.toNat+a.entryCount*4≤family.output.toNat)\n    (boundaryBefore : a.boundary.toNat+o.mesh.points.size*4≤family.output.toNat)\n    (tables : a.RowsEncoded family.memory (Assembly.nodeRows o.mesh.points.size (Assembly.MeshRows.locations shape.connectivity)))\n    (separated : a.InputSeparation)\n    (regs : Fin o.mesh.points.size → Registers)\n    (run : Flow.Parallel.Runs a.context\n      (Assembly.entryCode (BitVec.ofNat 32 o.mesh.points.size) a.offsets a.entries a.element false a.boundary a.output)\n      (fun i => a.start (family.publish family.memory order) (regs i)) words indices final)\n    (compatible : Concurrent.Visibility.Compatible\n      (fun space => match space with | .global => family.publish family.memory order | .shared => fun _ => 0) words wordSource)\n    (indexCompatible : IndexSources.Compatible (family.publish family.memory order) words indices indexSource)\n    (done : ∀ i, (final i).halted=true)\n    (size : values.size=o.mesh.points.size) (finite : values.all Float.isFinite=true) :\n    Poisson.apply o values=.ok (Array.ofFn fun node : Fin o.mesh.points.size =>\n      decode (read64 (Concurrent.GlobalPublication.publish (family.publish family.memory order) words)\n        (Assembly.Snapshot.address a node))) := by\n  rw [ArrayOperator.apply_correspondence o shape same values size finite]\n  congr 1\n  apply congrArg Array.ofFn\n  funext node\n  have result := cell_assembly_operator family shape same order complete a base element\n    offsetsBefore entriesBefore boundaryBefore tables separated regs run compatible indexCompatible done node\n  simpa only [Bool.false_eq_true,false_and,ite_false] using result.symm"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The reduction components now include separately scheduled native lane\ncomparisons and branches, with correctness and execution existence inherited\nthrough a proved translation. A separate fetched proof establishes every lane's\nstrided input sum from actual global loads, the unsigned loop test and separate\nrounded multiply/add operations, with arbitrary-input execution existence.\nFrontend checks compare the entire native tree and input program with the\nemitted code. Joining these components into one admitted concurrent entry,\nincluding its final shared load and output store, remains part of complete\nsolver correspondence."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionNative.lean",
+        "passage": {
+          "quote": "theorem correct (run : NativeGuard.Runs cfg program s events t)\n    (clean : ∀ u, s.pending u=false)\n    (reset : s.core.barrier=Ptx.Barrier.reset generation)\n    (entry : ∀ u, (s.core.lanes u).pc=0)\n    (baseReg : ∀ u, ((s.core.lanes u).regs 3).toNat=base)\n    (laneReg : ∀ u, ((s.core.lanes u).regs 14).toNat=u.val)\n    (inputs : ∀ u, decode ((s.core.lanes u).regs 8)=input u.val)\n    (noWrap : base+2048≤2^64)\n    (compatible : Visibility.Compatible initialMemory events source)\n    (ordered : OrderedSources events source)\n    (done : ∀ u, (t.core.lanes u).pc=program.length) :\n    ∃ (w : Nat) (access : Access), events[w]?=some (.data 0 access) ∧\n      access.data.pc=66 ∧ access.data.store=true ∧ access.space=.shared ∧\n      access.data.address=base ∧ decode access.data.value=Binary64.reduce256 input := by\n  have ready : NativeGuard.Ready program s := ⟨by simp [clean],laneReg⟩\n  have projection := (NativeGuard.project run ready frames.2 counts (by decide +kernel)).1\n  exact Numeric.completed_result projection reset entry baseReg laneReg inputs noWrap compatible ordered done\n\n/-- The old complete admitted witness lifts to a complete native guard run.\nIts event history, byte choices and coherence witness are unchanged. -/"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The reduction components now include separately scheduled native lane\ncomparisons and branches, with correctness and execution existence inherited\nthrough a proved translation. A separate fetched proof establishes every lane's\nstrided input sum from actual global loads, the unsigned loop test and separate\nrounded multiply/add operations, with arbitrary-input execution existence.\nFrontend checks compare the entire native tree and input program with the\nemitted code. Joining these components into one admitted concurrent entry,\nincluding its final shared load and output store, remains part of complete\nsolver correspondence."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotInputComplete.lean",
+        "passage": {
+          "quote": "theorem input_correct\n    (run : Flow.Runs ctx (inputProgram count left right scratch) s t)\n    (pc : s.core.pc=0) (running : s.halted=false) (done : t.core.pc=20)\n    (bounded : count<2^30) (arrays : Arrays (setup ctx scratch s).core count left right) :\n    decode (t.core.regs 8)=partialSum ctx scratch s count left right ∧\n      Stable (setup ctx scratch s).core t.core := by\n  obtain ⟨steps,counted⟩ := Flow.counted run\n  obtain ⟨remaining,afterSetup⟩ := consume_setup counted pc running done\n  have setupPC : (setup ctx scratch s).core.pc=(setupCode scratch).length := by\n    simp [setup,setupCode,assign,advance,pc]\n  obtain ⟨_,ready,_,traverse,exit,_,rest⟩ := Flow.OperandWindow.cut afterSetup setupPC running\n    (by simp [done,setupCode,body,loadCode,addressCode])\n  have readyPC : ready.core.pc=20 := by simpa [setupCode,body,loadCode,addressCode] using exit\n  have finalEq := no_continuation rest (by\n    change (inputProgram count left right scratch)[ready.core.pc]?=none\n    rw [readyPC,← input_length (count:=count) (left:=left) (right:=right) (scratch:=scratch)]; simp)\n  rw [finalEq]\n  have result := traversal_correct traverse bounded (stable_refl _)\n    (fun i hi => arrays_valid arrays bounded hi)\n  simpa only [partialSum,setup_cursor,setup_zero] using result"
         }
       }
     }

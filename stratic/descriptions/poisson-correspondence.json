@@ -26,7 +26,9 @@
     "Derive each active binary64 reduction update, its fetched execution and allocation bounds; concurrent stage visibility and the whole reduction remain separate.",
     "Derive reduction sources from lane ownership and shrinking stage coverage, and check a completed two-stage concurrent witness; full emitted-entry coverage remains open.",
     "Derive every shared-tree read source from actual 256-lane control, address preparation and barrier publications; native entry translation remains separate.",
-    "Prove every completed admitted shared-tree run computes the prescribed rounded reduction; construct a complete admitted execution for arbitrary initial words and bound every access within its 2048-byte allocation."
+    "Prove every completed admitted shared-tree run computes the prescribed rounded reduction; construct a complete admitted execution for arbitrary initial words and bound every access within its 2048-byte allocation.",
+    "Relate separately scheduled unsigned lane comparisons and predicated branches to the shared-tree guard, deriving outcomes from preserved registers and retaining the emitted instruction order.",
+    "Derive the strided input accumulation from actual global loads, separate rounded multiply/add operations and nonwrapping 32-bit index progress."
   ],
   "realization": "partial",
   "remaining": "Arbitrary-input cell execution existence, external coefficient/index serialization, remaining solver/reduction instructions and host/launch orchestration remain open. Complete PTX admission and CUDA/hardware correspondence remain outside the fragment claim.",
@@ -3628,6 +3630,66 @@
         "path": "integration/torchlean/PoissonPTX/ReductionCompleteChecks.lean",
         "passage": {
           "quote": "theorem cancellation_result :\n    ∃ final events source,\n      Runs cfg program (start (fun i => encode (Binary64.cancellation i))) events final ∧\n      (∀ t, (final.lanes t).pc=program.length) ∧\n      Visibility.Compatible (fun _ _ => 0) events source ∧ Visibility.Repeated.OrderedSources events source ∧\n      ∃ (w : Nat) (a : Access), events[w]?=some (.data 0 a) ∧\n        a.data.pc=66 ∧ a.data.store=true ∧ a.space=.shared ∧ a.data.address=0 ∧\n        (decode a.data.value).toBits=0x4000000000000000 := by"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The shared-tree guard now also has a proof for two separately scheduled\ninstructions. The comparison reads the actual unsigned lane register and writes\na private predicate; the branch subsequently reads that predicate. Other\nthreads may run between them. The proof derives the predicate value and shows\nthat a waiting barrier cannot advance a thread still between comparison and\nbranch. Erasing comparisons produces an actual execution of the proved tree\nwith the same data and barrier events. Conversely, its complete admitted\nexecution expands to a run with the separate instructions, so correctness,\nexistence and memory safety all carry across."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionNative.lean",
+        "passage": {
+          "quote": "theorem correct (run : NativeGuard.Runs cfg program s events t)\n    (clean : ∀ u, s.pending u=false)\n    (reset : s.core.barrier=Ptx.Barrier.reset generation)\n    (entry : ∀ u, (s.core.lanes u).pc=0)\n    (baseReg : ∀ u, ((s.core.lanes u).regs 3).toNat=base)\n    (laneReg : ∀ u, ((s.core.lanes u).regs 14).toNat=u.val)\n    (inputs : ∀ u, decode ((s.core.lanes u).regs 8)=input u.val)\n    (noWrap : base+2048≤2^64)\n    (compatible : Visibility.Compatible initialMemory events source)\n    (ordered : OrderedSources events source)\n    (done : ∀ u, (t.core.lanes u).pc=program.length) :\n    ∃ (w : Nat) (access : Access), events[w]?=some (.data 0 access) ∧\n      access.data.pc=66 ∧ access.data.store=true ∧ access.space=.shared ∧\n      access.data.address=base ∧ decode access.data.value=Binary64.reduce256 input := by\n  have ready : NativeGuard.Ready program s := ⟨by simp [clean],laneReg⟩\n  have projection := (NativeGuard.project run ready frames.2 counts (by decide +kernel)).1\n  exact Numeric.completed_result projection reset entry baseReg laneReg inputs noWrap compatible ordered done\n\n/-- The old complete admitted witness lifts to a complete native guard run.\nIts event history, byte choices and coherence witness are unchanged. -/"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The shared-tree guard now also has a proof for two separately scheduled\ninstructions. The comparison reads the actual unsigned lane register and writes\na private predicate; the branch subsequently reads that predicate. Other\nthreads may run between them. The proof derives the predicate value and shows\nthat a waiting barrier cannot advance a thread still between comparison and\nbranch. Erasing comparisons produces an actual execution of the proved tree\nwith the same data and barrier events. Conversely, its complete admitted\nexecution expands to a run with the separate instructions, so correctness,\nexistence and memory safety all carry across."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionNative.lean",
+        "passage": {
+          "quote": "theorem exists_correct {input : Nat → Word} (s : Concurrent.State 256)\n    (ready : Witness256.ReadyAt base 0 generation s) (aligned : base%8=0)\n    (inputs : ∀ u, (s.lanes u).regs 8=input u.val) (initialMemory : Space → Memory)\n    (flags : Fin 256 → Bool) :\n    ∃ final flags' events source,\n      NativeGuard.Runs cfg program (NativeGuard.start s flags) events (NativeGuard.start final flags') ∧\n      (∀ u, (final.lanes u).pc=program.length) ∧\n      Visibility.Compatible initialMemory events source ∧ OrderedSources events source ∧\n      ∃ (w : Nat) (a : Access), events[w]?=some (.data 0 a) ∧\n        a.data.pc=66 ∧ a.data.store=true ∧ a.space=.shared ∧ a.data.address=base ∧\n        decode a.data.value=Binary64.reduce256 (fun i => decode (input i)) := by\n  obtain ⟨final,events,source,run,done,compatible,ordered,result⟩ :=\n    Witness256.exists_correct s ready aligned inputs initialMemory (cfg:=cfg)\n  obtain ⟨flags',native⟩ := NativeGuard.lift run (fun u => (ready.1 u).2.1)\n    frames.2 counts (by decide +kernel) flags\n  exact ⟨final,flags',events,source,native,done,compatible,ordered,result⟩"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The counter representation records an instruction slot and whether its guard\nis between comparison and branch. A checked position map connects these to the\n76 actual instruction positions, including branch targets and barrier release.\nEvent counters retain stable slot identities; they are not native instruction\nindices or machine byte addresses. A frontend resolves emitted labels and\ncompares the entire tree to the rendered Lean program, rejecting altered\npredicates, targets, stores, barriers and branches entering from outside."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/ReductionNativeCode.lean",
+        "passage": {
+          "quote": "theorem branch_fetch {s : NativeGuard.State 256} (phase : s.pending thread=true)\n    (fetch : program[(s.core.lanes thread).pc]?=some (.skip count target)) :\n    code[pc s thread]?=some (.branch (position target)) ∧\n    pc (NativeGuard.branched s thread target) thread=\n      if s.predicate thread then position target else pc s thread+1 := by\n  refine ⟨by simpa [pc,phase] using (located fetch).2.1,?_⟩\n  cases flag : s.predicate thread <;>\n    simp [pc,NativeGuard.branched,setLane,flag,phase,(located fetch).2.2.1,Nat.add_assoc]"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete 20-instruction setup and input loop now has a per-lane fetched\nexecution proof. Setup derives the lane, arena and shared-base registers from\nlaunch context and initializes the accumulator to positive zero. The loop\ncompares the actual unsigned cursor with the array length, reads both input\nwords, performs separate rounded multiplication and addition, and advances\nby 256. Every completed run equals the ordered fold over lane, lane+256 and\nsubsequent in-range indices; no loaded values or partial-sum answers are assumed.\nAligned contiguous fields in a nonwrapping arena supply all access bounds.\nThe supported length below 2^30 prevents unsigned index wraparound and gives\na decreasing count of remaining indices, constructing a finite execution for\narbitrary input words. Short and uneven arrays naturally leave some lanes\nempty or with fewer iterations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotInputComplete.lean",
+        "passage": {
+          "quote": "theorem input_correct\n    (run : Flow.Runs ctx (inputProgram count left right scratch) s t)\n    (pc : s.core.pc=0) (running : s.halted=false) (done : t.core.pc=20)\n    (bounded : count<2^30) (arrays : Arrays (setup ctx scratch s).core count left right) :\n    decode (t.core.regs 8)=partialSum ctx scratch s count left right ∧\n      Stable (setup ctx scratch s).core t.core := by\n  obtain ⟨steps,counted⟩ := Flow.counted run\n  obtain ⟨remaining,afterSetup⟩ := consume_setup counted pc running done\n  have setupPC : (setup ctx scratch s).core.pc=(setupCode scratch).length := by\n    simp [setup,setupCode,assign,advance,pc]\n  obtain ⟨_,ready,_,traverse,exit,_,rest⟩ := Flow.OperandWindow.cut afterSetup setupPC running\n    (by simp [done,setupCode,body,loadCode,addressCode])\n  have readyPC : ready.core.pc=20 := by simpa [setupCode,body,loadCode,addressCode] using exit\n  have finalEq := no_continuation rest (by\n    change (inputProgram count left right scratch)[ready.core.pc]?=none\n    rw [readyPC,← input_length (count:=count) (left:=left) (right:=right) (scratch:=scratch)]; simp)\n  rw [finalEq]\n  have result := traversal_correct traverse bounded (stable_refl _)\n    (fun i hi => arrays_valid arrays bounded hi)\n  simpa only [partialSum,setup_cursor,setup_zero] using result"
+        }
+      }
+    },
+    {
+      "kind": "implementation",
+      "from": {
+        "quote": "The complete 20-instruction setup and input loop now has a per-lane fetched\nexecution proof. Setup derives the lane, arena and shared-base registers from\nlaunch context and initializes the accumulator to positive zero. The loop\ncompares the actual unsigned cursor with the array length, reads both input\nwords, performs separate rounded multiplication and addition, and advances\nby 256. Every completed run equals the ordered fold over lane, lane+256 and\nsubsequent in-range indices; no loaded values or partial-sum answers are assumed.\nAligned contiguous fields in a nonwrapping arena supply all access bounds.\nThe supported length below 2^30 prevents unsigned index wraparound and gives\na decreasing count of remaining indices, constructing a finite execution for\narbitrary input words. Short and uneven arrays naturally leave some lanes\nempty or with fewer iterations."
+      },
+      "to": {
+        "path": "integration/torchlean/PoissonPTX/DotInputComplete.lean",
+        "passage": {
+          "quote": "theorem input_exists (ctx : Kernel.Context) (scratch : Word) (s : Flow.State)\n    (pc : s.core.pc=0) (running : s.halted=false) (bounded : count<2^30)\n    (arrays : Arrays (setup ctx scratch s).core count left right) :\n    ∃ t, Flow.Runs ctx (inputProgram count left right scratch) s t ∧\n      t.core.pc=20 ∧ t.halted=false ∧\n      decode (t.core.regs 8)=partialSum ctx scratch s count left right ∧\n      Stable (setup ctx scratch s).core t.core := by\n  have first : Flow.Runs ctx (inputProgram count left right scratch) s (setup ctx scratch s) := by\n    have witness := Flow.sequence_run (setup_sequence (ctx:=ctx) (scratch:=scratch) running)\n      (by simp [setupCode,Flow.linear]) []\n      (Flow.OperandWindow.header (setupCode scratch).length 12 (.imm (BitVec.ofNat 64 count))\n        ((body left right).map Indexed.Instr.data) ++\n        ((body left right).map Indexed.Instr.data).map Flow.Instr.data ++\n        [.jump (setupCode scratch).length]) pc\n    simpa [inputProgram,Flow.OperandWindow.program,List.append_assoc] using witness\n  obtain ⟨core,traverse⟩ := traversal_exists (origin:=(setupCode scratch).length)\n    (setup ctx scratch s).core bounded (stable_refl _) (fun i hi => arrays_valid arrays bounded hi)\n  have setupPC : (setup ctx scratch s).core.pc=(setupCode scratch).length := by\n    simp [setup,setupCode,assign,advance,pc]\n  obtain ⟨t,second,same,live⟩ := Flow.OperandWindow.traversal_runs (pre:=setupCode scratch) (post:=[])\n    (ctx:=ctx) traverse (setup ctx scratch s) rfl setupPC running\n  have actual := Flow.append first second\n  have done : t.core.pc=20 := by\n    rw [same,Flow.OperandWindow.exit_pc traverse]\n    simp [setupCode,body,loadCode,addressCode]\n  exact ⟨t,actual,done,live,input_correct actual pc running done bounded arrays⟩"
         }
       }
     }

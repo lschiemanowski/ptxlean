@@ -1,3 +1,22 @@
+import PoissonPTX.ControlFlowBoundary
+import PoissonPTX.ControlFlowOperandWindow
+import PoissonPTX.ControlFlowOperandWindowExists
+import PoissonPTX.DotInputBody
+import PoissonPTX.DotInputChecks
+import PoissonPTX.DotInputComplete
+import PoissonPTX.DotInputExists
+import PoissonPTX.DotInputLayout
+import PoissonPTX.DotInputLoop
+import PoissonPTX.DotInputSetup
+import PoissonPTX.DotInputText
+import PoissonPTX.DotInputTraversal
+import PoissonPTX.IndexedScalar
+import PoissonPTX.NativeGuard
+import PoissonPTX.NativeGuardExists
+import PoissonPTX.NativeGuardInvariant
+import PoissonPTX.ReductionNative
+import PoissonPTX.ReductionNativeCode
+import PoissonPTX.ReductionNativeText
 import PoissonPTX.ConcurrentValues
 import PoissonPTX.ReductionNumerics
 import PoissonPTX.ReductionCorrect
@@ -5615,3 +5634,105 @@ Fresh elaboration is checked by check.py; imported build logs are not reused. -/
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.checked_memory_spaces
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.access_shared
 #print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Control.memory_safety
+
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Boundary.peel
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Boundary.peel_simple
+#print axioms PtxTorchLean.Poisson.PTX.Flow.Boundary.peel_block
+#print axioms PtxTorchLean.Poisson.PTX.Flow.OperandWindow.header
+#print axioms PtxTorchLean.Poisson.PTX.Flow.OperandWindow.program
+#print axioms PtxTorchLean.Poisson.PTX.Flow.OperandWindow.exhausted
+#print axioms PtxTorchLean.Poisson.PTX.Flow.OperandWindow.Traversal
+#print axioms PtxTorchLean.Poisson.PTX.Flow.OperandWindow.cut
+#print axioms PtxTorchLean.Poisson.PTX.Flow.OperandWindow.exit_pc
+#print axioms PtxTorchLean.Poisson.PTX.Flow.OperandWindow.traversal_runs
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.body
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Valid
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.product
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Stable
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.loaded
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.loads
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.loaded_eq
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.correct
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.exists_execution
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.cursor
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.progress
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Checks.uneven_tail
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Checks.empty_lane
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Checks.wraparound
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Checks.truncated_guard
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Checks.initial
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Checks.context
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Checks.arbitrary_input
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.partialSum
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.input_correct
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.input_exists
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.traversal_exists
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.Arrays
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.address_at
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.arrays_valid
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.element
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.contribution_array
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.program
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.program_length
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.no_continuation
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.correct_loop
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.exists_loop
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.setupCode
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.setup
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.setup_sequence
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.lane_copy
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.setup_cursor
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.setup_zero
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.inputProgram
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.input_length
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.consume_setup
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.render
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.rendered
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.indices
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.atCursor
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.contribution
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.stable_refl
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.stable_trans
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.valid_at
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.product_at
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.test
+#print axioms PtxTorchLean.Poisson.PTX.DotInput.traversal_correct
+#print axioms PtxTorchLean.Poisson.PTX.Indexed.underlying_block
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.State
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.start
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.compared
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.branched
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.Step
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.Runs
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.Ready
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.CountsFit
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.initial
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.compare_value
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.branch_core
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.project_step
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.append
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.lift_step
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.lift
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.pending_sync
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.preserved
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.NativeGuard.project
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.correct
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.exists_correct
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.safe
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.Instr
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.position
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.expand
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.code
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.pc
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.length
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.positions
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.located
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.counts
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.compare_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.branch_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.data_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.sync_fetch
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.sync_release
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.render
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.rendered
+#print axioms PtxTorchLean.Poisson.PTX.Concurrent.Reduction.Native.zero_displacement

@@ -1188,3 +1188,62 @@ The shared-tree theorem still excludes the native predicate/branch translation,
 strided input accumulation and final global-output epilogue. It remains a
 result in the stated necessary memory fragment, not complete PTX admission,
 hardware conformance or a finished PCG solver proof.
+
+The native reduction guard has two separately scheduled instructions: an
+unsigned 32-bit comparison writes a private predicate, then a predicated
+branch reads that predicate. Its correspondence must derive the branch
+outcome from the preserved lane-number register, including schedules that
+run other threads between comparison and branch. A factored instruction
+position may identify the original operation and its comparison/branch phase,
+but its expansion must match the actual emitted instruction order and targets.
+Erasing the comparison step must preserve data events, barrier participation
+and all permitted arithmetic choices; it must not install a desired branch
+outcome or change the memory-source constraints.
+
+Each dot-product lane accumulates indices lane, lane+256, lane+512 and so
+on, stopping before the array length. Every iteration loads the two actual
+input words, rounds their multiplication, then separately rounds addition to
+the accumulator. It must preserve that order and the positive-zero initial
+accumulator. The index increment is unsigned 32-bit arithmetic; its proof
+must derive nonwrapping progress from the supported array-size bound.
+The input-loop correspondence must derive its loads from unchanged global
+input bytes, rather than presume that supplied partial sums are dot products.
+
+The shared-tree guard now also has a proof for two separately scheduled
+instructions. The comparison reads the actual unsigned lane register and writes
+a private predicate; the branch subsequently reads that predicate. Other
+threads may run between them. The proof derives the predicate value and shows
+that a waiting barrier cannot advance a thread still between comparison and
+branch. Erasing comparisons produces an actual execution of the proved tree
+with the same data and barrier events. Conversely, its complete admitted
+execution expands to a run with the separate instructions, so correctness,
+existence and memory safety all carry across.
+
+The counter representation records an instruction slot and whether its guard
+is between comparison and branch. A checked position map connects these to the
+76 actual instruction positions, including branch targets and barrier release.
+Event counters retain stable slot identities; they are not native instruction
+indices or machine byte addresses. A frontend resolves emitted labels and
+compares the entire tree to the rendered Lean program, rejecting altered
+predicates, targets, stores, barriers and branches entering from outside.
+
+The complete 20-instruction setup and input loop now has a per-lane fetched
+execution proof. Setup derives the lane, arena and shared-base registers from
+launch context and initializes the accumulator to positive zero. The loop
+compares the actual unsigned cursor with the array length, reads both input
+words, performs separate rounded multiplication and addition, and advances
+by 256. Every completed run equals the ordered fold over lane, lane+256 and
+subsequent in-range indices; no loaded values or partial-sum answers are assumed.
+Aligned contiguous fields in a nonwrapping arena supply all access bounds.
+The supported length below 2^30 prevents unsigned index wraparound and gives
+a decreasing count of remaining indices, constructing a finite execution for
+arbitrary input words. Short and uneven arrays naturally leave some lanes
+empty or with fewer iterations.
+
+This input-loop theorem uses a scalar global-byte snapshot. The full parallel
+entry still must derive that snapshot from admitted memory sources, join its
+computed partial sums to the tree under interleaving, and prove the final
+shared load and global output store. The native-tree and input-loop results
+are individually complete components, not a completed dot-product or PCG
+correspondence. Their text bindings are frontend checks; neither Lean checking
+nor successful text comparison establishes compiler or GPU conformance.

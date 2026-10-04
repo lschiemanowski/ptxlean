@@ -342,3 +342,13 @@ barriers completed; every actual memory access stays within the shared
 allocation. The universal result preserves permitted floating-point encodings
 and operation order. This closes the shared-tree milestone, while the complete
 emitted dot-product entry and solver composition remain unfinished.
+
+The reduction components now include separately scheduled native lane
+comparisons and branches, with correctness and execution existence inherited
+through a proved translation. A separate fetched proof establishes every lane's
+strided input sum from actual global loads, the unsigned loop test and separate
+rounded multiply/add operations, with arbitrary-input execution existence.
+Frontend checks compare the entire native tree and input program with the
+emitted code. Joining these components into one admitted concurrent entry,
+including its final shared load and output store, remains part of complete
+solver correspondence.

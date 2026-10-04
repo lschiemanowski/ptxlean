@@ -11,8 +11,9 @@ The 256-lane shared reduction tree now has three complementary results:
   2048-byte shared allocation, independently of source admission.
 
 These are results for the shared-tree fragment. The complete emitted dot-product
-entry still needs its native control translation, global input loop and output
-epilogue connected. No exact-real summation or bitwise equality to a sequential
+entry still needs its input loop, tree and output epilogue joined under
+one concurrent execution and source history. Native guard translation and the
+scalar input-loop result are described below. No exact-real summation or bitwise equality to a sequential
 CPU reduction is asserted.
 
 ## The fragment and its inputs
@@ -29,7 +30,7 @@ and ends with a barrier attended by all lanes.
 
 The fragment uses the existing combined lane-test/branch instruction.
 The emitted PTX uses a predicate-producing instruction followed by a
-predicated branch. Their translation still needs a proof. The fragment also
+predicated branch. The separate-instruction extension below now proves their translation. The fragment also
 starts **after** the global strided accumulation loop and ends **before** the
 final global output store. In particular, its arbitrary input partial sums
 are not presumed to be the correct dot products.
@@ -162,10 +163,70 @@ result two, whereas the existing sequential-fold example gives one. This
 exercises the connection to the specified numerical ordering without evaluating
 an entire 256-thread trace inside the proof checker.
 
+## Separate native comparisons and branches
+
+The shared-tree guard now also has a proof for two separately scheduled
+instructions. The comparison reads the actual unsigned lane register and writes
+a private predicate; the branch subsequently reads that predicate. Other
+threads may run between them. The proof derives the predicate value and shows
+that a waiting barrier cannot advance a thread still between comparison and
+branch. Erasing comparisons produces an actual execution of the proved tree
+with the same data and barrier events. Conversely, its complete admitted
+execution expands to a run with the separate instructions, so correctness,
+existence and memory safety all carry across.
+
+The counter representation records an instruction slot and whether its guard
+is between comparison and branch. A checked position map connects these to the
+76 actual instruction positions, including branch targets and barrier release.
+Event counters retain stable slot identities; they are not native instruction
+indices or machine byte addresses. A frontend resolves emitted labels and
+compares the entire tree to the rendered Lean program, rejecting altered
+predicates, targets, stores, barriers and branches entering from outside.
+
+The proof lives in [ReductionNative.lean](../../integration/torchlean/PoissonPTX/ReductionNative.lean).
+`NativeGuardInvariant.project` permits arbitrary interleavings; `NativeGuardExists.lift`
+constructs one expanded schedule. `ReductionNativeCode` checks the instruction
+positions, and `hardware/check_poisson_reduction_tree.py` compares the emitted
+slice with Lean's renderer. The input accumulator remains an explicit input to
+this tree theorem.
+
+## Strided input accumulation
+
+The complete 20-instruction setup and input loop now has a per-lane fetched
+execution proof. Setup derives the lane, arena and shared-base registers from
+launch context and initializes the accumulator to positive zero. The loop
+compares the actual unsigned cursor with the array length, reads both input
+words, performs separate rounded multiplication and addition, and advances
+by 256. Every completed run equals the ordered fold over lane, lane+256 and
+subsequent in-range indices; no loaded values or partial-sum answers are assumed.
+Aligned contiguous fields in a nonwrapping arena supply all access bounds.
+The supported length below 2^30 prevents unsigned index wraparound and gives
+a decreasing count of remaining indices, constructing a finite execution for
+arbitrary input words. Short and uneven arrays naturally leave some lanes
+empty or with fewer iterations.
+
+This input-loop theorem uses a scalar global-byte snapshot. The full parallel
+entry still must derive that snapshot from admitted memory sources, join its
+computed partial sums to the tree under interleaving, and prove the final
+shared load and global output store. The native-tree and input-loop results
+are individually complete components, not a completed dot-product or PCG
+correspondence. Their text bindings are frontend checks; neither Lean checking
+nor successful text comparison establishes compiler or GPU conformance.
+
+[DotInputComplete.lean](../../integration/torchlean/PoissonPTX/DotInputComplete.lean)
+proves `input_correct` and `input_exists` for the actual setup and loop.
+For 257 elements, lane zero reads indices 0 and 256; lane one reads only
+index 1. With one element, lanes 1 through 255 perform no loads and retain
+positive zero. The proof does not reassociate any floating-point sums.
+`DotInputChecks` covers these boundaries and shows why removing the unsigned
+size bound would permit wraparound. `hardware/check_poisson_dot_input.py`
+compares every input-loop instruction, resolves its labels and checks field
+bounds and the single-block launch shape.
+
 ## Remaining boundaries
 
-The full emitted entry still needs native predicate/branch translation, the
-strided global input accumulation loop and the final global output store. The
+The full emitted entry still needs the strided input loop, shared tree and
+final global output store composed under one admitted concurrent execution. The
 fragment begins with supplied partial sums, so it does not yet prove that those
 sums represent the original input vectors.
 

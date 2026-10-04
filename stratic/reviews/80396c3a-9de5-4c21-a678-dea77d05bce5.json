@@ -1,0 +1,189 @@
+{
+  "id": "80396c3a-9de5-4c21-a678-dea77d05bce5",
+  "base": "75c8d0b5807b448c6e2c6f35fa1b24157869cd07",
+  "contentTree": "37482b2eacf0fc6c47b8a0f5bfe0efbe36a36ac2",
+  "reviewer": "Codex",
+  "summary": "Prove native reduction guard translation and complete strided dot-product input execution.",
+  "examined": [
+    {
+      "id": "poisson-correspondence",
+      "outcome": "revised",
+      "reason": "Add separately scheduled native guard simulation in both directions, exact physical instruction positions, inherited tree results and complete fetched input-loop correctness/existence. Keep joint concurrent source admission and output/solver composition explicitly unfinished."
+    },
+    {
+      "id": "poisson-quad-ptx",
+      "outcome": "revised",
+      "reason": "Describe the completed native-tree and scalar-input components and their exact emitted-text bindings, retaining the remaining full-entry obligations."
+    },
+    {
+      "id": "poisson-quad",
+      "outcome": "unchanged",
+      "reason": "Reference solver, numerical operations, discrete equations, independent residual certificate and actual emitted kernels are unchanged."
+    },
+    {
+      "id": "semantic-assurance",
+      "outcome": "unchanged",
+      "reason": "Existing primitive semantics and byte-source constraints are unchanged. The new guard phase representation is justified by fetched comparisons, preserved predicates and a checked physical position map. Text binding, Lean validity, scalar snapshot reasoning, concurrent admission and hardware conformance remain distinct."
+    }
+  ],
+  "unresolved": [],
+  "results": [
+    {
+      "tree": "37482b2eacf0fc6c47b8a0f5bfe0efbe36a36ac2",
+      "method": "Sequential memory-capped Lean module checks and full dependency audit; exact saved PTX bindings; frontend mutation tests; source/dependency/registry guards; manual semantics and theorem-premise review; receipt hashes and Stratic validation on identical final snapshots.",
+      "outcome": "pass",
+      "environment": "Pinned Lean 4.34.0 with 16 dependency pins. Heavy work sequential, one Lean thread, hard 6 GiB memory cap, swap disabled and 150 percent CPU quota. No GPU run or paid model calls.",
+      "evidence": "19 new modules checked with no warnings; 5008 exact declaration dependency reports use only allowed standard Lean axioms; 608 Lean source files passed guards. Native guard comparisons and branches are separately scheduled; the proved invariant derives private predicates from unchanged lane registers and rules out barrier advancement of a pending guard. Forward projection and reverse construction preserve actual memory/barrier events, all permitted arithmetic encodings, source admission, numerical correctness and memory safety. A checked map relates factored counters to 76 real instruction positions, including branch targets and barrier release. The exact zero-address-displacement renderer normalization has a proof. A complete 20-instruction setup and input loop has universal fetched scalar correctness and arbitrary-input execution existence, deriving its positive-zero initial accumulator, strided indices, two loads, separately rounded multiply/add and nonwrapping unsigned increment from actual instructions and contiguous-array bounds. No loop result, read value or execution is supplied to existence. Generic control-boundary lemmas avoid inventing a return at a barrier boundary. Uneven-tail, empty-lane, unsigned-wrap and truncated-limit Lean regressions pass. 36 hardware frontend tests pass. Saved PTX binding checks cover 180 native trees and 180 complete input programs across 30 layouts; existing bindings refreshed for 720 contractions, 630 stores, 30 residual entries and 1440 local updates. Source-identical legacy executable targets reused after hash verification, while current proof and binding audits reran. Full unchanged legacy build and interpreter suite were not rerun. Existing instruction/source semantics and README unchanged. The scalar input snapshot still needs derivation from the full concurrent entry; input/tree/tail composition, output publication and remaining PCG/host correspondence are not claimed complete. Complete PTX admission and compiler/GPU conformance remain separate. All receipt hashes and Stratic passage links match; final snapshots agree.",
+      "tests": [],
+      "id": "7c9805aa-e160-459d-a73e-d0082289f93b",
+      "recordedAt": "2026-10-04T08:25:12.907Z"
+    }
+  ],
+  "recordedAt": "2026-10-04T08:26:24.942Z",
+  "unmapped": [
+    {
+      "path": "docs/foundations/poisson-reduction-control.md",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/check_poisson_dot_input.py",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/check_poisson_reduction_tree.py",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-contraction-binding.json",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-dot-input-binding.json",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-instruction-binding.json",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-tree-binding.json",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/receipts/poisson-reduction-update-binding.json",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/test_poisson_dot_input.py",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "hardware/test_poisson_reduction_tree.py",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowBoundary.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowOperandWindow.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ControlFlowOperandWindowExists.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputBody.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputChecks.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputComplete.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputExists.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputLayout.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputLoop.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputSetup.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputText.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/DotInputTraversal.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/IndexedScalar.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeGuard.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeGuardExists.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/NativeGuardInvariant.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionNative.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionNativeCode.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PoissonPTX/ReductionNativeText.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/PtxIntegrationAudit.lean",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/check.py",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "integration/torchlean/lakefile.toml",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.json",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-correspondence.md",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.json",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    },
+    {
+      "path": "stratic/descriptions/poisson-quad-ptx.md",
+      "reason": "Reviewed native guard semantics/projection/construction, fetched input-loop and array-layout proofs, regression checks, exact source bindings, audit registration, receipts and explanatory documentation."
+    }
+  ]
+}
